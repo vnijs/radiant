@@ -1,0 +1,1 @@
+<script src="https://github.com/livereload/livereload-js/raw/master/dist/livereload.js?host=localhost"></script>

@@ -1,0 +1,12 @@
+Package: damshiny
+Type: Shiny-app
+Title: Data Analysis Menu using Shiny
+Version: 0.02
+Date: 2013-1-2
+Author: Vincent Nijs <vnijs AT rady dot ucsd dot edu>
+Maintainer: Vincent Nijs <vnijs AT rady dot ucsd dot edu>
+Description: Interactive data analysis using R and Shiny
+License: GPL-3
+Depends: R (>= 2.14.1), shiny (>= 0.2.4), car, foreign, tools
+URL: https://github.com/mostly-harmless/damshiny 
+BugReports: https://github.com/mostly-harmless/damshiny/issues
