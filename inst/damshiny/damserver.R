@@ -7,19 +7,43 @@ varnames <- function() {
 	colnames
 }
 
+# Our datasets can change over time (i.e. the changedata function). Therefore,
+# these need to be reactive values; otherwise, the other reactive functions
+# and outputs that depend on these datasets won't know that they are changed.
+#
+# We'll create an environment to hold these reactive values, and prepopulate
+# it with the initial contents of these datasets.
+#
+# Note that once we populate datasetEnv, we never get or assign the "original"
+# copies of mtcars, morley, or rock. This way, all user sessions are independent
+# from each other (since datasetEnv is being defined in a scope that's local to
+# a particular invocation of the shinyServer function).
+datasetEnv <- new.env()
+datasetEnv$mtcars <- reactiveValue(mtcars)
+datasetEnv$morley <- reactiveValue(morley)
+datasetEnv$rock <- reactiveValue(rock)
+
 changedata <- function(addCol = NULL, addColName = "") {
 
 	# function that changes data as needed
 	if(is.null(addCol) || addColName == "") return()
-
-	dat <- getdata()
-	dat[,addColName] <- addCol
-	assign(input$datasets, dat, inherits = TRUE)
+  
+  # We don't want to take a reactive dependency on anything
+  isolate({
+    # rdat isn't the dataset, it's a reactive value that holds the dataset.
+    # We use value() to read it, and value<-() to write to it.
+    rdat <- get(input$datasets, pos=datasetEnv)
+    dat <- value(rdat)
+    dat[,addColName] <- addCol
+    value(rdat) <- dat
+  })
 }
 
-getdata <- function(addCol = NULL, addColName = "") {
+getdata <- function() {
 
-	dat <- get(input$datasets)
+  # First we get the reactive value from datasetEnv. Then we need to use the
+  # value() function to actually retrieve the dataset.
+	dat <- value(get(input$datasets, pos=datasetEnv))
 	dat
 }
 
