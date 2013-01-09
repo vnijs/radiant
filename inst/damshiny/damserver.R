@@ -9,6 +9,16 @@ varnames <- function() {
 	colnames
 }
 
+changedata <- function(addCol = NULL, addColName = "") {
+
+	# function that changes data as needed
+	if(is.null(addCol) || addColName == "") return()
+
+	dat <- getdata()
+	dat[,addColName] <- addCol
+	assign(input$datasets, dat, inherits = TRUE)
+}
+
 getdata <- function(addCol = NULL, addColName = "") {
 
 	dat <- get(input$datasets)
@@ -18,6 +28,11 @@ getdata <- function(addCol = NULL, addColName = "") {
 	}
 	dat
 }
+
+output$addvariable <- reactiveUI(function() {
+	if(is.null(input$datasets)) return()
+	checkboxInput("addvariable", "Save output?", value = NULL)
+})
 
 output$columns <- reactiveUI(function() {
 	# input$columns # need this so choose columns gets updated when data is changed
@@ -123,29 +138,28 @@ output$visualize <- reactivePlot(function() {
 ################################################################
 # Analysis reactives - functions have the same names as the 
 # values for the toolChoices values # in global.R
-# If calling a reactive several times is more efficient than 
-# calling a regular function several times I might want to use
-# these
+# Calling a reactive several times is more efficient than 
+# calling a regular function several times
 ################################################################
 
-# regression <- reactive(function() {
-# 	if(is.null(input$var2)) return()
-# 	main.regression(as.list(input))
-# })
+regression <- reactive(function() {
+	if(is.null(input$var2)) return()
+	main.regression(as.list(input))
+})
 
-# compareMeans <- reactive(function() {
-# 	if(is.null(input$var2)) return()
-# 	as.list(input)
-# })
+compareMeans <- reactive(function() {
+	if(is.null(input$var2)) return()
+	as.list(input)
+})
 
-# hclustering <- reactive(function() {
-# 	if(is.null(input$varinterdep)) return()
-# 	main.hclustering(as.list(input))
-# })
+hclustering <- reactive(function() {
+	if(is.null(input$varinterdep)) return()
+	main.hclustering(as.list(input))
+})
 
-# kmeansClustering <- reactive(function() {
-# 	main.kmeansClustering(as.list(input))
-# })
+kmeansClustering <- reactive(function() {
+	main.kmeansClustering(as.list(input))
+})
 
 ################################################################
 # Output controls for the the Summary, Plots, and Extra tabs
@@ -156,10 +170,8 @@ output$summary <- reactivePrint(function() {
 
 	# getting the summary function and feeding it the output from 
 	# one of the analysis reactives above
-	f <- get(paste("summary",input$tool,sep = '.'))
-	f(get(input$tool)())
-
-	# calling regular functions directly
+	# using the get-function structure because I'll have a large
+	# set of tools that will have the same output structure
 	f <- get(paste("summary",input$tool,sep = '.'))
 	f(get(input$tool)())
 
