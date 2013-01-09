@@ -86,19 +86,19 @@ main.regression <- function(state) {
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
 
-	if(input$addvariable) {
-		var.name <- "residuals"
-		changedata(result$residuals, var.name)
+	# if(input$addvariable) {
+	# 	var.name <- "residuals"
+	# 	changedata(result$residuals, var.name)
 
-		# was the data updated?
-		dat <- NULL
-		dat <- getdata()
-		print("Was the data updated?")
-		print(colnames(dat))
+	# 	# was the data updated?
+	# 	dat <- NULL
+	# 	dat <- getdata()
+	# 	print("Was the data updated?")
+	# 	print(colnames(dat))
 
 		# would like to result the addvariable checkbox
 		# after saving - probably beter to use actionButton
-	}
+	# }
 
 	result
 }
@@ -183,19 +183,19 @@ main.kmeansClustering <- function(state) {
 	nr.clus <- 3.0 	# fixed for now
 	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = nr.clus, nstart = 50, iter.max = 500)
 
-	if(input$addvariable) {
-		var.name <- paste("kclus#",as.integer(nr.clus),sep="")
-		changedata(as.factor(result$cluster), var.name)
+	# if(input$addvariable) {
+	# 	var.name <- paste("kclus#",as.integer(nr.clus),sep="")
+	# 	changedata(as.factor(result$cluster), var.name)
 
 		# was the data updated?
-		dat <- NULL
-		dat <- getdata()
-		print("Was the data updated?")
-		print(colnames(dat))
+		# dat <- NULL
+		# dat <- getdata()
+		# print("Was the data updated?")
+		# print(colnames(dat))
 
 		# would like to result the addvariable checkbox
 		# after saving - probably beter to use actionButton
-	}
+	# }
 
 	result
 }
