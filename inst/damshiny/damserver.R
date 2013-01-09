@@ -63,6 +63,8 @@ output$columns <- reactiveUI(function() {
 output$dataviewer <- reactiveTable(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
+	is.null(input$addvariable)
+
 	dat <- getdata()
 
 	# Show only the selected columns
