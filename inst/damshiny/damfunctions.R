@@ -1,34 +1,74 @@
+# all regular functions used in damshiny app 
+
+varnames <- function() {
+	if(is.null(input$datasets)) return()
+
+	dat <- getdata()
+	colnames <- names(dat)
+	names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
+	colnames
+}
+
+changedata <- function(addCol = NULL, addColName = "") {
+
+	# function that changes data as needed
+	if(is.null(addCol) || addColName == "") return()
+  
+  # We don't want to take a reactive dependency on anything
+  isolate({
+    # rdat isn't the dataset, it's a reactive value that holds the dataset.
+    # We use value() to read it, and value<-() to write to it.
+    rdat <- get(input$datasets, pos=datasetEnv)
+    dat <- value(rdat)
+    dat[,addColName] <- addCol
+    value(rdat) <- dat
+  })
+}
+
+getdata <- function() {
+
+  # First we get the reactive value from datasetEnv. Then we need to use the
+  # value() function to actually retrieve the dataset.
+	dat <- value(get(input$datasets, pos=datasetEnv))
+	dat
+}	
+
 loadUserData <- function(uFile) {
 
 	filename <- uFile$name
 	ext <- file_ext(filename)
-	file <- newdata <- sub(paste(".",ext,sep = ""),"",filename)
+	file <- objname <- sub(paste(".",ext,sep = ""),"",filename)
 	ext <- tolower(ext)
 
 	if(ext == 'rda' || ext == 'rdata') {
-  	# FIX - avoid loading into global
-  	# newdata <- load(inFile$datapath)
 		# newdata will hold the name of the object inside the R datafile
-	  newdata <- load(uFile$datapath, envir = .GlobalEnv)
+	  objname <- load(uFile$datapath, envir = datasetEnv)
 	}
 
 	if(datasets[1] == 'choosefile') {
-		datasets <<- c(newdata)
+		datasets <<- c(objname)
 	} else {
-		datasets <<- unique(c(newdata,datasets))
+		datasets <<- unique(c(objname,datasets))
 	}
 
 	if(ext == 'sav') {
-		assign(file, read.sav(uFile$datapath), inherits = TRUE)
+		# assign(file, read.sav(uFile$datapath), envir = datasetEnv)
+		datasetEnv[file] <- reactiveValue(read.sav(uFile$datapath))
 	} else if(ext == 'dta') {
-		assign(file, read.dta(uFile$datapath), inherits = TRUE)
+		# assign(file, read.dta(uFile$datapath), envir = datasetEnv)
+		datasetEnv[file] <- reactiveValue(read.dta(uFile$datapath))
 	} else if(ext == 'csv') {
-		assign(file, read.csv(uFile$datapath, header = TRUE), inherits = TRUE)
+		# assign(file, read.csv(uFile$datapath, header = TRUE), envir = datasetEnv)
+		datasetEnv[file] <- reactiveValue(read.csv(uFile$datapath))
 	}
 }
 
 loadPackData <- function(pFile) {
-	data(list = pFile)
+
+	objname <- data(list = pFile, envir = datasetEnv)
+
+	# if strings pFile and objname are not the same stop
+	if(objname != pFile) stop()
 
 	if(datasets[1] == 'choosefile') {
 		datasets <<- c(pFile)

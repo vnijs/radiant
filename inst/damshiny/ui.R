@@ -38,14 +38,14 @@ shinyUI(
 
       conditionalPanel(condition = inOrChange,
         conditionalPanel(condition = "input.analysistabs == 'Summary'",
-          helpText("This doesn't work yet. The data is changed (i.e., residuals or cluster-membership are added) but the change is not propagated throughout the app."),
+          # helpText("This doesn't work yet. The data is changed (i.e., residuals or cluster-membership are added) but the change is not propagated throughout the app."),
           wellPanel(uiOutput("addvariable"))
         )
       )
     ),
     
     mainPanel(
-      # includeHTML('lr.js'), # needed for livereload
+      includeHTML('lr.js'), # needed for livereload
       conditionalPanel(condition = "input.datasets != 'choosefile'",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
