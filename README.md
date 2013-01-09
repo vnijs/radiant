@@ -13,8 +13,7 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 ### To use the damshiny package locally
 Assuming you copied (or cloned) the repository to your desktop
 
-`install.packages('shiny'); library(shiny)
-shiny::runApp('~/Desktop/damshiny/inst/damshiny/')`
+`install.packages('shiny'); library(shiny); shiny::runApp('~/Desktop/damshiny/inst/damshiny/')`
 
 <!-- install.packages('devtools'); library(devtools)
 
