@@ -1,57 +1,52 @@
-loadlocaldata <- function(inFile) {
+loadUserData <- function(uFile) {
 
-	filename <- inFile$name
+	filename <- uFile$name
 	ext <- file_ext(filename)
-	# f <- file <- newdata <- sub(paste(".",ext,sep = ""),"",filename)
 	file <- newdata <- sub(paste(".",ext,sep = ""),"",filename)
 	ext <- tolower(ext)
 
 	if(ext == 'rda' || ext == 'rdata') {
   	# FIX - avoid loading into global
   	# newdata <- load(inFile$datapath)
-	  newdata <- load(inFile$datapath, envir = .GlobalEnv)
+
+		# newdata will hold the name of the object inside the R datafile
+	  newdata <- load(uFile$datapath, envir = .GlobalEnv)
 	}
 
-	# needed to get the name of the object inside the R data file
-	if(data_sets[1] == 'choosefile') {
-		data_sets <<- c(newdata)
+	if(datasets[1] == 'choosefile') {
+		datasets <<- c(newdata)
 	} else {
-		data_sets <<- unique(c(newdata,data_sets))
+		datasets <<- unique(c(newdata,datasets))
 	}
 
 	if(ext == 'sav') {
-		assign(file, read.sav(inFile$datapath), inherits = TRUE)
-		# assign(file, read.spss(inFile$datapath), envir = .GlobalEnv)
-		# `<<-`(f, read.spss(inFile$datapath))
+		assign(file, read.sav(uFile$datapath), inherits = TRUE)
 	} else if(ext == 'dta') {
-		assign(file, read.dta(inFile$datapath), inherits = TRUE)
-		# assign(file, read.dta(inFile$datapath), envir = .GlobalEnv)
-		# `<<-`(f, read.dta(inFile$datapath))
+		assign(file, read.dta(uFile$datapath), inherits = TRUE)
 	} else if(ext == 'csv') {
-		assign(file, read.csv(inFile$datapath, header = TRUE), inherits = TRUE)
-		# assign(file, read.csv(inFile$datapath, header = TRUE), envir = .GlobalEnv)
-		# `<<-`(f, read.csv(inFile$datapath, header = TRUE))
+		assign(file, read.csv(uFile$datapath, header = TRUE), inherits = TRUE)
 	}
 }
 
-loadpackagedata <- function(pFile) {
+loadPackData <- function(pFile) {
 	data(list = pFile)
 
-	if(data_sets[1] == 'choosefile') {
-		data_sets <<- c(pFile)
+	if(datasets[1] == 'choosefile') {
+		datasets <<- c(pFile)
 	} else {
-		data_sets <<- unique(c(pFile,data_sets))
+		datasets <<- unique(c(pFile,datasets))
 	}
 }      
 
-summary.dataView <- plot.dataView <- extra.dataView <- function(state) {
+summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
 	return()
 }
 
 main.regression <- function(state) {
 	if(is.null(state$dataset)) return()
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
-	lm(formula, data = get(state$dataset))
+	# lm(formula, data = get(state$dataset))
+	lm(formula, data = getdata())
 }
 
 summary.regression <- function(state) {
@@ -78,17 +73,19 @@ extra.regression <- function(state) {
 
 summary.compareMeans <- function(state) {
 	if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
-	if(is.null(state$dataset)) return()
+	if(is.null(state$datasets)) return()
 
 	formula <- as.formula(paste(state$var2, "~", state$var1))
-	t.test(formula, data = get(state$dataset))
+	# t.test(formula, data = get(state$dataset))
+	t.test(formula, data = getdata())
 }
 
 plot.compareMeans <- function(state) {
-	if(is.null(state$dataset)) return()
+	if(is.null(state$datasets)) return()
 	if(is.null(state$var2)) return()
 
-	dat <- get(state$dataset)
+	# dat <- get(state$datasets)
+	dat <- getdata()
 	# y <- dat[,state$var2]
 	# x <- as.factor(dat[,state$var1])
 	# dat <- data.frame(cbind(x,y))
@@ -102,7 +99,8 @@ extra.compareMeans <- function(state) {
 }
 
 main.hclustering <- function(state) {
-	dat <- get(state$dataset)
+	# dat <- get(state$dataset)
+	dat <- getdata()
 	dist.data <- as.dist(dist(dat[,state$varinterdep], method = "euclidean")^2)
 	hc <- hclust(d = dist.data, method= "ward")
 	hc
@@ -124,32 +122,29 @@ extra.hclustering <- function(state) {
 }
 
 main.kmeansClustering <- function(state) {
-	# if(is.null(state$interdepvar)) return(cat("Please select one or more variables\n"))
-	if(is.null(state$dataset)) return()
+	# if(is.null(state$varinterdep)) return(cat("Please select one or more variables\n"))
 
 	set.seed(1234)
-	dat <- get(state$dataset)
+	# dat <- get(state$dataset)
+	dat <- getdata()
 	nr.clus <- 3.0
-	# kmc <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = nr.clus, nstart = 50, iter.max = 500)
 
+	print(state$interdepvar)
+	# kmc <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = nr.clus, nstart = 50, iter.max = 500)
 	kmc <- kmeans(na.omit(object = dat[,'mpg']), centers = nr.clus, nstart = 50, iter.max = 500)
 
-	var.name <- paste("kclus#",as.integer(nr.clus),sep="")
-
-	dat[,var.name] <- as.factor(kmc$cluster)
-
-	assign(state$dataset, dat, inherit = TRUE)
-
-	print("------ In main.kmeansClustering ------")
-	print(varnames())
-
-	kmc
-
+	# var.name <- paste("kclus#",as.integer(nr.clus),sep="")
+	# dat[,var.name] <- as.factor(kmc$cluster)
+	# assign(state$dataset, dat, inherit = TRUE)
+	# assign(state$dataset, dat)
+	# print(varnames())
 	# browser();stop()
 }
 
 summary.kmeansClustering <- function(state) {
-	state
+	# state
+	kmc <- main.kmeansClustering(as.list(state))
+	kmc 
 }
 
 plot.kmeansClustering <- function(state) {
@@ -157,6 +152,5 @@ plot.kmeansClustering <- function(state) {
 }
 
 extra.kmeansClustering <- function(state) {
-	 # print(head(get(state$dataset, envir = globalenv()),10))
 	return()
 }

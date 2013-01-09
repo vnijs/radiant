@@ -9,11 +9,11 @@ library(ggplot2)
 # Labels for variable selectors
 labels1 <- c("X-variable", "Dependent variable","Group variable","")
 labels2 <- c("Y-variable", "Independent variables","Variables","")
-labtools <- c("dataView", "regression", "compareMeans","hclustering")
+labtools <- c("dataview", "regression", "compareMeans","hclustering")
 names(labels1) <- names(labels2) <- labtools
 
 # from ui.R
-toolChoices <- list("Data view" = "dataView", "Regression" = "regression", "Compare means" = "compareMeans", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
+toolChoices <- list("Data view" = "dataview", "Regression" = "regression", "Compare means" = "compareMeans", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
 
 # depChoices <- c("visualize", "regression", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")

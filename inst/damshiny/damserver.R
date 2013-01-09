@@ -1,104 +1,111 @@
 # varnames <- reactive(function() {
 varnames <- function() {
-	if(is.null(input$dataset)) return()
+	if(is.null(input$datasets)) return()
 
-	dat <- get(input$dataset)
+	# dat <- get(input$dataset)
+	dat <- getdata()
 	colnames <- names(dat)
-	# names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
-
-	return(colnames)
+	names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
+	colnames
 }
 
-output$choose_columns <- reactiveUI(function() {
+getdata <- function(addCol = NULL, addColName = "") {
+
+	dat <- get(input$datasets)
+	if(!is.null(addCol)) {
+		dat[,addColName] <- addCol
+		head(dat,10)
+	}
+	dat
+}
+
+output$columns <- reactiveUI(function() {
+	# input$columns # need this so choose columns gets updated when data is changed
+	cols <- varnames()
+
 	# Create a group of checkboxes and select them all by default
-	columns <- varnames()
-	# main.kmeansClustering(as.list(input))
-	# checkboxGroupInput("columns", "Choose columns", choices  = as.list(columns), selected = names(columns))
-	checkboxGroupInput("columns", "Choose columns", choices  = columns, selected = columns)
-	# selectInput("columns", "Choose columns", choices  = colnames, selected = colnames, multiple = TRUE)
+	checkboxGroupInput("columns", "Choose columns", choices  = as.list(cols), selected = names(cols))
 })
 
-output$data <- reactiveTable(function() {
-	if(is.null(input$dataset)) return()
-	dat <- get(input$dataset)
+output$dataviewer <- reactiveTable(function() {
+	if(is.null(input$datasets) || is.null(input$columns)) return()
 
-	main.kmeansClustering(as.list(input))
+	# dat <- get(input$dataset)
+	dat <- getdata()
 
-	output$choose_columns
-	input$columns
-
-	print("------ In output.data ------")
-	print(varnames())
-	print("local - dat")
-	print(head(dat, 2))
-	# print("local - input$dataset")
-	# print(head(get(input$dataset), 2))
-	print("inherit - input$dataset")
-	print(head(get(input$dataset, inherits = TRUE), 2))
-	print(date())
-	
 	# Keep the selected columns
-	# dat <- dat[, input$columns, drop = FALSE]
+	dat <- dat[, input$columns, drop = FALSE]
 
 	head(dat, input$nrRows)
+	# head(dat, 1)
 })
 
-output$dataloaded <- reactiveUI(function() {
+output$datasets <- reactiveUI(function() {
+
 	state <- as.list(input)
+	# loading user data
 	if(!is.null(state$upload)) {
-		if(state$upload$name != last_loaded_data_files$localfile && state$upload$name != '') {
-			loadlocaldata(state$upload)
-			last_loaded_data_files$localfile <<- state$upload$name
+		if(state$upload$name != lastLoadedData$userData && state$upload$name != '') {
+			loadUserData(state$upload)
+			lastLoadedData$userData <<- state$upload$name
 	  }
 	} 
-	if(!is.null(state$pdataloaded) && state$pdataloaded != "") {
-		if(state$pdataloaded != last_loaded_data_files$packagefile) {
-			loadpackagedata(state$pdataloaded)
-			last_loaded_data_files$packagefile <<- state$pdataloaded 
+	# loading package data
+	if(!is.null(state$packData) && state$packData != "") {
+		if(state$packData != lastLoadedData$packData) {
+			loadPackData(state$packData)
+			lastLoadedData$packData <<- state$packData 
 		}
 	}
 
 	# Drop-down selection of data set
-	selectInput(inputId = "dataset", label = "Data sets", choices = data_sets, selected = data_sets[1], multiple = FALSE)
+	selectInput(inputId = "datasets", label = "Data sets", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
-output$packagedata <- reactiveUI(function() {
-	# Drop-down selection of data sets from install packages
-	selectInput(inputId = "pdataloaded", label = "Load package data sets", choices = pdata_sets, selected = '', multiple = FALSE)
+output$packData <- reactiveUI(function() {
+
+	# Drop-down selection of data sets from 'car' package
+	selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
 })
 
-output$rowsToShow <- reactiveUI(function() {
-	if(is.null(input$dataset)) return()
-	dat <- get(input$dataset)
+output$nrRows <- reactiveUI(function() {
+	if(is.null(input$datasets)) return()
+	# dat <- get(input$dataset)
+	dat <- getdata()
 
 	# number of observations to show in data view
-	nrRow <- dim(dat)[1]
-	sliderInput("nrRows", "# of rows to show:", min = 1, max = nrRow, value = min(15,nrRow), step = 1)
+	nr <- nrow(dat)
+	sliderInput("nrRows", "# of rows to show:", min = 1, max = nr, value = min(10,nr), step = 1)
 })
 
 # variable selection
 output$var1 <- reactiveUI(function() {
-	selectInput(inputId = "var1", label = labels1[input$tool], choices = varnames(), selected = NULL, multiple = FALSE)
+	vars <- varnames()
+	if(is.null(vars)) return()
+
+	selectInput(inputId = "var1", label = labels1[input$tool], choices = vars, selected = NULL, multiple = FALSE)
 })
 
 # variable selection
 output$var2 <- reactiveUI(function() {
-	selectInput(inputId = "var2", label = labels2[input$tool], choices = varnames()[-which(varnames() == input$var1)], selected = NULL, multiple = TRUE)
+	vars <- varnames()
+	if(is.null(vars)) return()
+	selectInput(inputId = "var2", label = labels2[input$tool], choices = vars[-which(vars == input$var1)], selected = NULL, multiple = TRUE)
 })
 
 output$varinterdep <- reactiveUI(function() {
-	selectInput(inputId = "varinterdep", label = "Variables", choices = varnames(), selected = NULL, multiple = TRUE)
+	vars <- varnames()
+	if(is.null(vars)) return()
+	selectInput(inputId = "varinterdep", label = "Variables", choices = vars, selected = NULL, multiple = TRUE)
 })
-
-
 
 # Analysis reactives
 output$visualize <- reactivePlot(function() {
-	if(is.null(input$dataset)) return()
+	if(is.null(input$datasets) || is.null(input$columns)) return()
 
-	# main.kmeansClustering(as.list(input))
+	# dat <- get(input$dataset)
+	dat <- getdata()
 
-	dat <- get(input$dataset)
 	x <- dat[,input$var1]
 	ifelse(is.factor(x), bw <- .1, bw <- diff(range(x)) / 12)
 
@@ -113,37 +120,57 @@ output$visualize <- reactivePlot(function() {
 	print(p)
 })
 
-regression <- reactive(function() {
-	# calling a reactive several times may be more efficient than calling a regular function several time
-	if(is.null(input$var2)) return()
-	main.regression(as.list(input))
-})
+################################################################
+# Analysis reactives - functions have the same names as the 
+# values for the toolChoices values # in global.R
+# If calling a reactive several times is more efficient than 
+# calling a regular function several times I might want to use
+# these
+################################################################
 
-compareMeans <- reactive(function() {
-	if(is.null(input$var2)) return()
-	as.list(input)
-})
+# regression <- reactive(function() {
+# 	if(is.null(input$var2)) return()
+# 	main.regression(as.list(input))
+# })
 
-hclustering <- reactive(function() {
-	if(is.null(input$varinterdep)) return()
-	main.hclustering(as.list(input))
-})
+# compareMeans <- reactive(function() {
+# 	if(is.null(input$var2)) return()
+# 	as.list(input)
+# })
 
-kmeansClustering <- reactive(function() {
-	main.kmeansClustering(as.list(input))
-})
+# hclustering <- reactive(function() {
+# 	if(is.null(input$varinterdep)) return()
+# 	main.hclustering(as.list(input))
+# })
 
+# kmeansClustering <- reactive(function() {
+# 	main.kmeansClustering(as.list(input))
+# })
+
+################################################################
+# Output controls for the the Summary, Plots, and Extra tabs
+################################################################
 # Generate output for the summary tab
 output$summary <- reactivePrint(function() {
+	if(is.null(input$datasets)) return()
 
-	print(as.list(input))
+	# getting the summary function and feeding it the output from 
+	# one of the analysis reactives above
+	f <- get(paste("summary",input$tool,sep = '.'))
+	f(get(input$tool)())
 
+	# calling regular functions directly
 	f <- get(paste("summary",input$tool,sep = '.'))
 	f(get(input$tool)())
 
 })
 
 output$plots <- reactivePlot(function() {
+
+	# plotting could be expensive so only done
+	# when tab is being viewed
+	if(!input$analysistabs == 'Plots') return()
+
 	f <- get(paste("plot",input$tool,sep = '.'))
 	f(get(input$tool)())
 }, width=600, height=600)
@@ -151,7 +178,10 @@ output$plots <- reactivePlot(function() {
 # Generate output for the correlation tab
 output$extra <- reactivePrint(function() {
 
-	# print(as.list(input))
+	# if extra calculations are expensive
+	# do only when tab is being viewed
+	if(!input$analysistabs == 'Extra') return()
+
 	f <- get(paste("extra",input$tool,sep = '.'))
 	f(get(input$tool)())
 })
