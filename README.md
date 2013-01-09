@@ -1,20 +1,19 @@
-# Data Analysis Menu in Shiny
+## Data Analysis Menu in Shiny
 
 This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/). If you would like to see the app in action please visit Rstudio's Glimmer-server at [http://glimmer.rstudio.com/mostlyhrmls/damshiny/](http://glimmer.rstudio.com/mostlyhrmls/damshiny/)
 
-## Todo:
-- Additional tools (e.g., factor, conjoint)
-- Help files
-- Options for compare means (e.g., one-sided) and regression (e.g., F-test for competing models)
+### Todo:
+- Add analysis-tools (e.g., factor, conjoint)
+- Create help files
+- Add options for compare means (e.g., one-sided) and regression (e.g., F-test for competing models)
 - Add time-series plots with 1 or 2 y-axes
-- Develop install structure so users can pick-and-choose menu-components. For an amazing implementation see [Boostrap](http://twitter.github.com/bootstrap/customize.html) which is *well* beyond what I have in mind.
+- Develop install structure so users can pick-and-choose menu-components. For an amazing implementation see [Bootstrap](http://twitter.github.com/bootstrap/customize.html) although this is *well* beyond what I have in mind.
 - etc. etc.
 		
-## To use the damshiny package locally:
+### To use the damshiny package locally
 Assuming you copied (or cloned) the repository to your desktop
 
-`install.packages('shiny')
-library(shiny)
+`install.packages('shiny'); library(shiny)
 shiny::runApp('~/Desktop/damshiny/inst/damshiny/')`
 
 <!-- install.packages('devtools'); library(devtools)
