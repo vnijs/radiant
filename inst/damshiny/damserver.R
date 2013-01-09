@@ -1,8 +1,6 @@
-# varnames <- reactive(function() {
 varnames <- function() {
 	if(is.null(input$datasets)) return()
 
-	# dat <- get(input$dataset)
 	dat <- getdata()
 	colnames <- names(dat)
 	names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
@@ -22,10 +20,6 @@ changedata <- function(addCol = NULL, addColName = "") {
 getdata <- function(addCol = NULL, addColName = "") {
 
 	dat <- get(input$datasets)
-	if(!is.null(addCol)) {
-		dat[,addColName] <- addCol
-		head(dat,10)
-	}
 	dat
 }
 
@@ -45,14 +39,12 @@ output$columns <- reactiveUI(function() {
 output$dataviewer <- reactiveTable(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
-	# dat <- get(input$dataset)
 	dat <- getdata()
 
-	# Keep the selected columns
+	# Show only the selected columns
 	dat <- dat[, input$columns, drop = FALSE]
 
 	head(dat, input$nrRows)
-	# head(dat, 1)
 })
 
 output$datasets <- reactiveUI(function() {
@@ -85,18 +77,22 @@ output$packData <- reactiveUI(function() {
 
 output$nrRows <- reactiveUI(function() {
 	if(is.null(input$datasets)) return()
-	# dat <- get(input$dataset)
 	dat <- getdata()
 
 	# number of observations to show in data view
 	nr <- nrow(dat)
-	sliderInput("nrRows", "# of rows to show:", min = 1, max = nr, value = min(10,nr), step = 1)
+	sliderInput("nrRows", "# of rows to show:", min = 1, max = nr, value = min(15,nr), step = 1)
 })
 
 # variable selection
 output$var1 <- reactiveUI(function() {
 	vars <- varnames()
 	if(is.null(vars)) return()
+
+	if(input$tool == 'compareMeans') {
+		isFct <- sapply(getdata(), is.factor)
+		vars <- vars[isFct]
+	}
 
 	selectInput(inputId = "var1", label = labels1[input$tool], choices = vars, selected = NULL, multiple = FALSE)
 })
@@ -118,7 +114,6 @@ output$varinterdep <- reactiveUI(function() {
 output$visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
-	# dat <- get(input$dataset)
 	dat <- getdata()
 
 	x <- dat[,input$var1]

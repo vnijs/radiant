@@ -109,7 +109,7 @@ plot.compareMeans <- function(state) {
 
 extra.compareMeans <- function(state) {
 	# nothing here yet, could put in test variance equality
-	return()
+	cat("Nothing yet\n")
 }
 
 main.hclustering <- function(state) {
@@ -120,11 +120,12 @@ main.hclustering <- function(state) {
 }
 
 summary.hclustering <- function(result) {
-	if(is.null(state)) return(cat("Please select one or more variables\n"))
+	if(is.null(result)) return(cat("Please select one or more variables\n"))
 		result
 }
 
 plot.hclustering <- function(result) {
+	if(is.null(result)) return()
 	# use ggdendro when it gets back on cran
 	plot(result, main = "Dendrogram")
 }
@@ -160,15 +161,31 @@ main.kmeansClustering <- function(state) {
 }
 
 summary.kmeansClustering <- function(result) {
+	# result$cluster <- NULL
 	result
 }
 
-plot.kmeansClustering <- function(state) {
-	# nothing yet
-	return()
+plot.kmeansClustering <- function(result) {
+
+	if(is.null(input$datasets) || is.null(input$varinterdep)) return()
+
+	dat <- getdata()[,input$varinterdep, drop = FALSE]
+	# gg.xlim <- quantile(as.vector(as.matrix(dat)),probs = c(.01,.99))
+	dat$clusvar <- as.factor(result$cluster)
+
+	if(ncol(dat) > 2) {
+		plots <- list()
+		for(var in input$varinterdep) {
+			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + xlim(gg.xlim[1],gg.xlim[2]) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
+			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
+			plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 1.5) 
+		}
+		print(do.call(grid.arrange, plots))
+	} else {
+			print(ggplot(dat, aes_string(x=input$varinterdep[1], colour='clusvar')) + geom_density(adjust = 1.5))
+	}
 }
 
-extra.kmeansClustering <- function(state) {
-	# nothing yet
-	return()
+extra.kmeansClustering <- function(result) {
+	cat("Nothing yet\n")
 }

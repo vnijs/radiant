@@ -3,6 +3,7 @@ library(car)
 library(tools)
 library(foreign)
 library(ggplot2)
+library(gridExtra)
 
 # variables are in global.R so they will be available in both ui.R and server.R
 # from server.R
@@ -13,7 +14,7 @@ labtools <- c("dataview", "regression", "compareMeans","hclustering")
 names(labels1) <- names(labels2) <- labtools
 
 # from ui.R
-toolChoices <- list("Data view" = "dataview", "Regression" = "regression", "Compare means" = "compareMeans", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
+toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
 
 depChoices <- c("visualize", "regression", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")
@@ -24,3 +25,4 @@ inOr <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || "
 # there will be more in the future
 toolsThatCanChangeData <- c("regression", "kmeansClustering")
 inOrChange <- paste("input.tool == '",toolsThatCanChangeData,"'", sep = "", collapse = " || ")
+# inOrChange <- paste(inOrChange,"&& input.analysistabs == 'Summary'")

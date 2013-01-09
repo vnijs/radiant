@@ -14,6 +14,7 @@ shinyUI(
       conditionalPanel(condition = "input.tool == 'dataview'",
         wellPanel(
           fileInput("upload", "Load data (Rdata, CSV, Spss, or Stata format)"),
+          # helpText("Loading user data disabled on Glimmer"),
           uiOutput("packData")
         ),
         conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != 'choosefile'",
@@ -36,17 +37,21 @@ shinyUI(
       ),
 
       conditionalPanel(condition = inOrChange,
-        wellPanel(uiOutput("addvariable"))
+        conditionalPanel(condition = "input.analysistabs == 'Summary'",
+          helpText("This doesn't work yet. The data is changed (i.e., residuals or cluster-membership are added) but the change is not propagated throughout the app."),
+          wellPanel(uiOutput("addvariable"))
+        )
       )
     ),
     
     mainPanel(
-      includeHTML('shiny/lr.js'), # needed for livereload
+      # includeHTML('lr.js'), # needed for livereload
       conditionalPanel(condition = "input.datasets != 'choosefile'",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
-            tabPanel("Visualize", plotOutput("visualize")) 
+            tabPanel("Visualize", plotOutput("visualize")),
+            tabPanel("About", includeHTML("about.html"))
           )
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",

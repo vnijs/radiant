@@ -3,10 +3,16 @@ source('damglobal.R')
 
 shinyServer(function(input, output) {
 
-  datasets <- c("mymtcars","mtcars", "morley", "rock")
-  mymtcars <- mtcars[,1:4]
+	# making a local copy of the data
+	mtcars <- mtcars
+	mtcars$vs <- as.factor(mtcars$vs)
+	mtcars$am <- as.factor(mtcars$am)
+	morley <- morley
+	rock <- rock
 
-	# Get the data set with the appropriate name
+	datasets <- c("mtcars", "morley", "rock")
+
+	# sourcing (reactive) functions
 	source('damfunctions.R', local = TRUE)
 	source('damserver.R', local = TRUE)
 
