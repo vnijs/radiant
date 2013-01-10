@@ -1,3 +1,10 @@
+# all reactive functions used in damshiny app 
+
+output$addvariable <- reactiveUI(function() {
+	if(is.null(input$datasets)) return()
+	checkboxInput("addvariable", "Save output?", value = NULL)
+})
+
 output$columns <- reactiveUI(function() {
 	# input$columns # need this so choose columns gets updated when data is changed
 	cols <- varnames()
@@ -8,6 +15,8 @@ output$columns <- reactiveUI(function() {
 
 output$dataviewer <- reactiveTable(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
+
+	is.null(input$addvariable)
 
 	dat <- getdata()
 
@@ -127,8 +136,9 @@ kmeansClustering <- reactive(function() {
 })
 
 ################################################################
-# Output controls for the the Summary, Plots, and Extra tabs
+# Output controls for the Summary, Plots, and Extra tabs
 ################################################################
+
 # Generate output for the summary tab
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets)) return()
@@ -142,6 +152,7 @@ output$summary <- reactivePrint(function() {
 
 })
 
+# Generate output for the plots tab
 output$plots <- reactivePlot(function() {
 
 	# plotting could be expensive so only done
@@ -152,7 +163,7 @@ output$plots <- reactivePlot(function() {
 	f(get(input$tool)())
 }, width=600, height=600)
 
-# Generate output for the correlation tab
+# Generate output for the extra tab
 output$extra <- reactivePrint(function() {
 
 	# if extra calculations are expensive

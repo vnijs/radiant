@@ -1,3 +1,5 @@
+# all regular functions used in damshiny app 
+
 varnames <- function() {
 	if(is.null(input$datasets)) return()
 
@@ -11,49 +13,62 @@ changedata <- function(addCol = NULL, addColName = "") {
 
 	# function that changes data as needed
 	if(is.null(addCol) || addColName == "") return()
-
-	dat <- getdata()
-	dat[,addColName] <- addCol
-	assign(input$datasets, dat, inherits = TRUE)
+  
+  # We don't want to take a reactive dependency on anything
+  isolate({
+    # rdat isn't the dataset, it's a reactive value that holds the dataset.
+    # We use value() to read it, and value<-() to write to it.
+    rdat <- get(input$datasets, pos=datasetEnv)
+    dat <- value(rdat)
+    dat[,addColName] <- addCol
+    value(rdat) <- dat
+  })
 }
 
-getdata <- function(addCol = NULL, addColName = "") {
+getdata <- function() {
 
-	dat <- get(input$datasets)
+  # First we get the reactive value from datasetEnv. Then we need to use the
+  # value() function to actually retrieve the dataset.
+	dat <- value(get(input$datasets, pos=datasetEnv))
 	dat
-}
+}	
 
 loadUserData <- function(uFile) {
 
 	filename <- uFile$name
 	ext <- file_ext(filename)
-	file <- newdata <- sub(paste(".",ext,sep = ""),"",filename)
+	file <- objname <- sub(paste(".",ext,sep = ""),"",filename)
 	ext <- tolower(ext)
 
 	if(ext == 'rda' || ext == 'rdata') {
-  	# FIX - avoid loading into global
-  	# newdata <- load(inFile$datapath)
 		# newdata will hold the name of the object inside the R datafile
-	  newdata <- load(uFile$datapath, envir = .GlobalEnv)
+	  objname <- load(uFile$datapath, envir = datasetEnv)
 	}
 
 	if(datasets[1] == 'choosefile') {
-		datasets <<- c(newdata)
+		datasets <<- c(objname)
 	} else {
-		datasets <<- unique(c(newdata,datasets))
+		datasets <<- unique(c(objname,datasets))
 	}
 
 	if(ext == 'sav') {
-		assign(file, read.sav(uFile$datapath), inherits = TRUE)
+		# assign(file, read.sav(uFile$datapath), envir = datasetEnv)
+		datasetEnv[file] <- reactiveValue(read.sav(uFile$datapath))
 	} else if(ext == 'dta') {
-		assign(file, read.dta(uFile$datapath), inherits = TRUE)
+		# assign(file, read.dta(uFile$datapath), envir = datasetEnv)
+		datasetEnv[file] <- reactiveValue(read.dta(uFile$datapath))
 	} else if(ext == 'csv') {
-		assign(file, read.csv(uFile$datapath, header = TRUE), inherits = TRUE)
+		# assign(file, read.csv(uFile$datapath, header = TRUE), envir = datasetEnv)
+		datasetEnv[file] <- reactiveValue(read.csv(uFile$datapath))
 	}
 }
 
 loadPackData <- function(pFile) {
-	data(list = pFile)
+
+	objname <- data(list = pFile, envir = datasetEnv)
+
+	# if strings pFile and objname are not the same stop
+	if(objname != pFile) stop()
 
 	if(datasets[1] == 'choosefile') {
 		datasets <<- c(pFile)
@@ -70,6 +85,21 @@ main.regression <- function(state) {
 	if(is.null(state$dataset)) return()
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
+
+	# if(input$addvariable) {
+	# 	var.name <- "residuals"
+	# 	changedata(result$residuals, var.name)
+
+	# 	# was the data updated?
+	# 	dat <- NULL
+	# 	dat <- getdata()
+	# 	print("Was the data updated?")
+	# 	print(colnames(dat))
+
+		# would like to result the addvariable checkbox
+		# after saving - probably beter to use actionButton
+	# }
+
 	result
 }
 
@@ -149,8 +179,24 @@ main.kmeansClustering <- function(state) {
 	if(is.null(state$varinterdep)) return(cat("Please select one or more variables\n"))
 	set.seed(1234)
 	dat <- getdata()
+
 	nr.clus <- 3.0 	# fixed for now
 	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = nr.clus, nstart = 50, iter.max = 500)
+
+	# if(input$addvariable) {
+	# 	var.name <- paste("kclus#",as.integer(nr.clus),sep="")
+	# 	changedata(as.factor(result$cluster), var.name)
+
+		# was the data updated?
+		# dat <- NULL
+		# dat <- getdata()
+		# print("Was the data updated?")
+		# print(colnames(dat))
+
+		# would like to result the addvariable checkbox
+		# after saving - probably beter to use actionButton
+	# }
+
 	result
 }
 
@@ -174,7 +220,7 @@ plot.kmeansClustering <- function(result) {
 			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
 			plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 1.5) 
 		}
-		print(do.call(grid.arrange, c(plots, ncol = 2)))
+		print(do.call(grid.arrange, plots))
 	} else {
 			print(ggplot(dat, aes_string(x=input$varinterdep[1], colour='clusvar')) + geom_density(adjust = 1.5))
 	}

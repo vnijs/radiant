@@ -3,7 +3,7 @@
 This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/). If you would like to see the app in action please visit Rstudio's Glimmer-server at [http://glimmer.rstudio.com/mostlyhrmls/damshiny/](http://glimmer.rstudio.com/mostlyhrmls/damshiny/)
 
 ### Todo:
-- Add analysis-tools (e.g., factor, conjoint)
+- Add analysis-tools (e.g., MDS, factor, perceptual maps, conjoint)
 - Create help files
 - Add options for compare means (e.g., one-sided) and regression (e.g., F-test for competing models)
 - Add time-series plots with 1 or 2 y-axes
@@ -11,9 +11,22 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 - etc. etc.
 		
 ### To use the damshiny package locally
-Assuming you copied (or cloned) the repository to your desktop
 
-`install.packages('shiny'); library(shiny); shiny::runApp('~/Desktop/damshiny/inst/damshiny/')`
+	install.packages('shiny')
+	install.packages('damshiny', repos = c('http://vnijs.rady.ucsd.edu/site_media/R_packages/','http://cran.rtudio.com')
+	library(shiny)
+	shiny::runApp(system.file('damshiny',package='damshiny'))
+
+### To use the damshiny development version locally
+
+	install.packages('devtools')
+	library(devtools)
+	install_github('shiny', username = 'rstudio')
+	install_github('shiny-incubator', username = 'rstudio')
+	install_github('damshiny', username = 'mostly-harmless')
+	library(shiny)
+	shiny::runApp(system.file('dev',package='damshiny'))
+
 
 <!-- install.packages('devtools'); library(devtools)
 

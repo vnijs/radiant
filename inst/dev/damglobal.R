@@ -1,7 +1,8 @@
+# avoid breaks in R-output print, don't show error messages in Rstudio
 # options(width = 200, show.error.messages = FALSE, warn = -1)
 # options(width = 200, shiny.trace=TRUE, error = browser)
-# options(width = 200, shiny.trace=TRUE)
-options(width = 150)
+# options(width = 200, shiny.trace=TRUE, error = browser)
+options(width = 200)
 
 lastLoadedData <- list('userData' = "", 'packData' = "")
 
