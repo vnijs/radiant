@@ -1,6 +1,3 @@
-# options(width = 200, show.error.messages = FALSE, warn = -1)
-# options(width = 200, shiny.trace=TRUE, error = browser)
-# options(width = 200, shiny.trace=TRUE)
 options(width = 150)
 
 lastLoadedData <- list('userData' = "", 'packData' = "")
@@ -14,7 +11,4 @@ listPackData <- function(pack) {
 	as.list(lib)
 }
 
-# packDataSets <- c('')
-# packDataSets <- list("Choose a file" = "", "Data 1" = "morley", "Data 2" = "rock")
 packDataSets <- listPackData('car')
-# packDataSets <- listPackData('RadyMenu')

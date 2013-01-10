@@ -1,9 +1,8 @@
 # all reactive functions used in damshiny app 
 
-output$addvariable <- reactiveUI(function() {
-	if(is.null(input$datasets)) return()
-	checkboxInput("addvariable", "Save output?", value = NULL)
-})
+# output$addvariable <- reactiveUI(function() {
+# 	checkboxInput("addvariable", addvarlabel[input$tool], value = NULL)
+# })
 
 output$columns <- reactiveUI(function() {
 	# input$columns # need this so choose columns gets updated when data is changed
@@ -15,8 +14,6 @@ output$columns <- reactiveUI(function() {
 
 output$dataviewer <- reactiveTable(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
-
-	is.null(input$addvariable)
 
 	dat <- getdata()
 
@@ -89,6 +86,11 @@ output$varinterdep <- reactiveUI(function() {
 	selectInput(inputId = "varinterdep", label = "Variables", choices = vars, selected = NULL, multiple = TRUE)
 })
 
+output$nrClus <- reactiveUI(function() {
+	selectInput(inputId = "nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE)
+})
+
+
 # Analysis reactives
 output$visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
@@ -143,6 +145,8 @@ kmeansClustering <- reactive(function() {
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets)) return()
 
+
+	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
 	# getting the summary function and feeding it the output from 
 	# one of the analysis reactives above
 	# using the get-function structure because I'll have a large

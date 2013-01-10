@@ -25,11 +25,11 @@ changedata <- function(addCol = NULL, addColName = "") {
   })
 }
 
-getdata <- function() {
+getdata <- function(dataset = input$datasets) {
 
   # First we get the reactive value from datasetEnv. Then we need to use the
   # value() function to actually retrieve the dataset.
-	dat <- value(get(input$datasets, pos=datasetEnv))
+	dat <- value(get(dataset, pos=datasetEnv))
 	dat
 }	
 
@@ -37,12 +37,14 @@ loadUserData <- function(uFile) {
 
 	filename <- uFile$name
 	ext <- file_ext(filename)
-	file <- objname <- sub(paste(".",ext,sep = ""),"",filename)
+	objname <- robjname <- sub(paste(".",ext,sep = ""),"",filename)
 	ext <- tolower(ext)
 
 	if(ext == 'rda' || ext == 'rdata') {
-		# newdata will hold the name of the object inside the R datafile
-	  objname <- load(uFile$datapath, envir = datasetEnv)
+		# objname will hold the name of the object inside the R datafile
+	  # objname <- load(uFile$datapath, envir = datasetEnv)
+	  objname <- robjname <- load(uFile$datapath, envir = datasetEnv)
+		assign(robjname, reactiveValue(get(objname, pos = datasetEnv)), pos = datasetEnv)
 	}
 
 	if(datasets[1] == 'choosefile') {
@@ -52,29 +54,25 @@ loadUserData <- function(uFile) {
 	}
 
 	if(ext == 'sav') {
-		# assign(file, read.sav(uFile$datapath), envir = datasetEnv)
-		datasetEnv[file] <- reactiveValue(read.sav(uFile$datapath))
+		assign(objname, reactiveValue(read.sav(uFile$datapath)), pos = datasetEnv)
 	} else if(ext == 'dta') {
-		# assign(file, read.dta(uFile$datapath), envir = datasetEnv)
-		datasetEnv[file] <- reactiveValue(read.dta(uFile$datapath))
+		assign(objname, reactiveValue(read.dta(uFile$datapath)), pos = datasetEnv)
 	} else if(ext == 'csv') {
-		# assign(file, read.csv(uFile$datapath, header = TRUE), envir = datasetEnv)
-		datasetEnv[file] <- reactiveValue(read.csv(uFile$datapath))
+		assign(objname, reactiveValue(read.csv(uFile$datapath)), pos = datasetEnv)
 	}
 }
 
 loadPackData <- function(pFile) {
 
-	objname <- data(list = pFile, envir = datasetEnv)
-
-	# if strings pFile and objname are not the same stop
-	if(objname != pFile) stop()
+	robjname <- data(list = pFile, envir = datasetEnv)
 
 	if(datasets[1] == 'choosefile') {
-		datasets <<- c(pFile)
+		datasets <<- c(robjname)
 	} else {
-		datasets <<- unique(c(pFile,datasets))
+		datasets <<- unique(c(robjname,datasets))
 	}
+
+	assign(robjname, reactiveValue(get(robjname, pos = datasetEnv)), pos = datasetEnv)
 }      
 
 summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
@@ -86,19 +84,16 @@ main.regression <- function(state) {
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
 
-	# if(input$addvariable) {
-	# 	var.name <- "residuals"
-	# 	changedata(result$residuals, var.name)
+  # Note that just by virtue of checking the value of input$recalcButton,
+  # we're now going to get called whenever it is pushed.
+  if(state$addoutput != 0) {
+	  isolate({
+			var.name <- "residuals"
+			changedata(result$residuals, var.name)
+	  })
+	}
 
-	# 	# was the data updated?
-	# 	dat <- NULL
-	# 	dat <- getdata()
-	# 	print("Was the data updated?")
-	# 	print(colnames(dat))
-
-		# would like to result the addvariable checkbox
-		# after saving - probably beter to use actionButton
-	# }
+	cat("Value of the addoutput button in main.regression: ",input$addoutput,"  ") 
 
 	result
 }
@@ -130,7 +125,7 @@ summary.compareMeans <- function(state) {
 	if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
 	if(is.null(state$datasets)) return()
 	# expand to more than two groups
-	formula <- as.formula(paste(state$var2, "~", state$var1))
+	formula <- as.formula(paste(state$var2[1], "~", state$var1))
 	t.test(formula, data = getdata())
 }
 
@@ -142,7 +137,7 @@ plot.compareMeans <- function(state) {
 	# y <- dat[,state$var2]
 	# x <- as.factor(dat[,state$var1])
 	# dat <- data.frame(cbind(x,y))
-	print(qplot(factor(dat[,state$var1]), dat[,state$var2], data = dat, xlab = state$var1, ylab = state$var2, geom = c("boxplot", "jitter")))
+	print(qplot(factor(dat[,state$var1]), dat[,state$var2[1]], data = dat, xlab = state$var1, ylab = state$var2, geom = c("boxplot", "jitter")))
 	# print(ggplot(dat, aes_string(x=x, y=state$var2)) + geom_boxplot()) # x must be specified as a factor --> doesn't work with aes_string
 	# print(ggplot(dat, aes(x=x, y=y)) + geom_boxplot()) # x must be specified as a factor --> doesn't work with aes_string
 }
@@ -180,22 +175,18 @@ main.kmeansClustering <- function(state) {
 	set.seed(1234)
 	dat <- getdata()
 
-	nr.clus <- 3.0 	# fixed for now
-	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = nr.clus, nstart = 50, iter.max = 500)
+	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
 
-	# if(input$addvariable) {
-	# 	var.name <- paste("kclus#",as.integer(nr.clus),sep="")
-	# 	changedata(as.factor(result$cluster), var.name)
-
-		# was the data updated?
-		# dat <- NULL
-		# dat <- getdata()
-		# print("Was the data updated?")
-		# print(colnames(dat))
-
-		# would like to result the addvariable checkbox
-		# after saving - probably beter to use actionButton
+  # Note that just by virtue of checking the value of input$recalcButton,
+  # we're now going to get called whenever it is pushed.
+ #  if(state$addoutput != 0) {
+	#   isolate({
+	# 		var.name <- paste("kclus",state$nrClus,sep="")
+	# 		changedata(as.factor(result$cluster), var.name)
+	#   })
 	# }
+
+	# cat("Value of the addoutput button in main.kmeansClustering: ",input$addoutput,"  ") 
 
 	result
 }

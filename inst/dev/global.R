@@ -1,4 +1,5 @@
 library(shiny)
+library(shinyIncubator)
 library(car)
 library(tools)
 library(foreign)
@@ -8,10 +9,15 @@ library(gridExtra)
 # variables are in global.R so they will be available in both ui.R and server.R
 # from server.R
 # Labels for variable selectors
-labels1 <- c("X-variable", "Dependent variable","Group variable","")
-labels2 <- c("Y-variable", "Independent variables","Variables","")
+labels1 <- c("X-variable", "Dependent variable","Group variable (only factors shown)","")
+labels2 <- c("Y-variable", "Independent variables","Variables (select one)","")
 labtools <- c("dataview", "regression", "compareMeans","hclustering")
 names(labels1) <- names(labels2) <- labtools
+
+# labels for output$addvariable
+addvarlabel <- c("Save residuals (see Data view)", "Save cluster membership (see Data view)")
+labtools <- c("regression", "kmeansClustering")
+names(addvarlabel) <- labtools
 
 # from ui.R
 toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
