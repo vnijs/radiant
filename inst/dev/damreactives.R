@@ -120,7 +120,10 @@ output$visualize <- reactivePlot(function() {
 
 regression <- reactive(function() {
 	if(is.null(input$var2)) return()
-	main.regression(as.list(input))
+	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	isolate({
+		main.regression(as.list(input))
+	})
 })
 
 compareMeans <- reactive(function() {
@@ -134,7 +137,10 @@ hclustering <- reactive(function() {
 })
 
 kmeansClustering <- reactive(function() {
-	main.kmeansClustering(as.list(input))
+	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	isolate({
+		main.kmeansClustering(as.list(input))
+	})
 })
 
 ################################################################
@@ -145,14 +151,13 @@ kmeansClustering <- reactive(function() {
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets)) return()
 
-
-	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
-	# getting the summary function and feeding it the output from 
-	# one of the analysis reactives above
-	# using the get-function structure because I'll have a large
-	# set of tools that will have the same output structure
-	f <- get(paste("summary",input$tool,sep = '.'))
-	f(get(input$tool)())
+		if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+		# getting the summary function and feeding it the output from 
+		# one of the analysis reactives above
+		# using the get-function structure because I'll have a large
+		# set of tools that will have the same output structure
+		f <- get(paste("summary",input$tool,sep = '.'))
+		f(get(input$tool)())
 
 })
 

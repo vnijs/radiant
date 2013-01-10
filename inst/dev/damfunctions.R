@@ -87,10 +87,10 @@ main.regression <- function(state) {
   # Note that just by virtue of checking the value of input$recalcButton,
   # we're now going to get called whenever it is pushed.
   if(state$addoutput != 0) {
-	  isolate({
+	  # isolate({
 			var.name <- "residuals"
 			changedata(result$residuals, var.name)
-	  })
+	  # })
 	}
 
 	cat("Value of the addoutput button in main.regression: ",input$addoutput,"  ") 
