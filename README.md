@@ -13,7 +13,7 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 ### To use the damshiny package locally
 
 	install.packages('shiny')
-	install.packages('damshiny', repos = c('http://vnijs.rady.ucsd.edu/site_media/R_packages/','http://cran.rtudio.com')
+	install.packages('damshiny', repos = c('http://vnijs.rady.ucsd.edu/site_media/R_packages/','http://cran.rtudio.com'))
 	library(shiny)
 	shiny::runApp(system.file('damshiny',package='damshiny'))
 

@@ -1,3 +1,0 @@
-# export(runDamshiny)
-# shiny::runApp(system.file('rtut/damshiny/inst/damshiny', package='damshiny'))
-# describe how user can install and run package on local machine
