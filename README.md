@@ -28,6 +28,12 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 	shiny::runApp(system.file('dev',package='damshiny'))
 
 
+### License
+The damshiny package is licensed under the GPLv3. See these files listed below for additional details:
+
+COPYING - damshiny package license (GPLv3)
+NOTICE - Copyright notices for additional included software
+
 <!-- install.packages('devtools'); library(devtools)
 
 Installing roxygen2 using install_github doesn't seem to work right now 1/3/2013

@@ -1,8 +1,10 @@
+################################################################
 # all reactive functions used in damshiny app 
+################################################################
 
-# output$addvariable <- reactiveUI(function() {
-# 	checkboxInput("addvariable", addvarlabel[input$tool], value = NULL)
-# })
+output$addoutput <- reactiveUI(function() {
+	checkboxInput("addoutput", addvarlabel[input$tool], value = FALSE)
+})
 
 output$columns <- reactiveUI(function() {
 	# input$columns # need this so choose columns gets updated when data is changed
@@ -86,14 +88,16 @@ output$varinterdep <- reactiveUI(function() {
 	selectInput(inputId = "varinterdep", label = "Variables", choices = vars, selected = NULL, multiple = TRUE)
 })
 
+# dropdown used to select the number of clusters to create
 output$nrClus <- reactiveUI(function() {
 	selectInput(inputId = "nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE)
 })
 
-
 # Analysis reactives
 output$visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
+
+	if(!input$datatabs == 'Vizualize') return()
 
 	dat <- getdata()
 
@@ -111,6 +115,24 @@ output$visualize <- reactivePlot(function() {
 	print(p)
 })
 
+# Analysis reactives
+output$log <- reactivePlot(function() {
+	if(is.null(input$datasets) || is.null(input$columns)) return()
+
+	if(!input$datatabs == 'Log') return()
+
+	# idea: When a user presses a log-button the output on screen is saved to an rda file
+	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-state
+	# and then call the relevant parts from an Rmd file that gets-sourced. By default all snap
+	# shots are shown in log but user can deseleted snap-shots as desired.
+	# take another look at Jeff's teaching log. this could be a great starting point
+	# ask Jeff about how to attribute code (and also Yihie) if you use some of their code
+	# https://github.com/jeffreyhorner/TeachingLab
+
+	cat("Analysis log here")
+
+})
+
 ################################################################
 # Analysis reactives - functions have the same names as the 
 # values for the toolChoices values # in global.R
@@ -120,10 +142,8 @@ output$visualize <- reactivePlot(function() {
 
 regression <- reactive(function() {
 	if(is.null(input$var2)) return()
-	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
-	isolate({
-		main.regression(as.list(input))
-	})
+	# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	main.regression(as.list(input))
 })
 
 compareMeans <- reactive(function() {
@@ -137,21 +157,26 @@ hclustering <- reactive(function() {
 })
 
 kmeansClustering <- reactive(function() {
-	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
-	isolate({
-		main.kmeansClustering(as.list(input))
-	})
+	# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	main.kmeansClustering(as.list(input))
 })
 
 ################################################################
 # Output controls for the Summary, Plots, and Extra tabs
+# The tabs are re-used for various tools. Depending on the tool
+# selected by the user the appropropriate analaysis function 
+# is called.
+# Naming conventions: The reactive function to be put in the
+# code block above must be of the same name as the tool
+# in the tools drop-down. See global.R for the current list
+# of tools (and tool-names) 
 ################################################################
 
 # Generate output for the summary tab
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets)) return()
 
-		if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+		# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
 		# getting the summary function and feeding it the output from 
 		# one of the analysis reactives above
 		# using the get-function structure because I'll have a large

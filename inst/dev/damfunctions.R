@@ -1,4 +1,6 @@
+################################################################
 # all regular functions used in damshiny app 
+################################################################
 
 varnames <- function() {
 	if(is.null(input$datasets)) return()
@@ -86,15 +88,13 @@ main.regression <- function(state) {
 
   # Note that just by virtue of checking the value of input$recalcButton,
   # we're now going to get called whenever it is pushed.
-  if(state$addoutput != 0) {
-	  # isolate({
-			var.name <- "residuals"
-			changedata(result$residuals, var.name)
-	  # })
+
+  if(input$addoutput == TRUE) {
+		var.name <- "residuals"
+		changedata(result$residuals, var.name)
 	}
 
 	cat("Value of the addoutput button in main.regression: ",input$addoutput,"  ") 
-
 	result
 }
 
@@ -176,6 +176,11 @@ main.kmeansClustering <- function(state) {
 	dat <- getdata()
 
 	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
+
+  if(input$addoutput == TRUE) {
+		var.name <- paste("kclus",state$nrClus,sep="")
+		changedata(as.factor(result$cluster), var.name)
+	}
 
   # Note that just by virtue of checking the value of input$recalcButton,
   # we're now going to get called whenever it is pushed.

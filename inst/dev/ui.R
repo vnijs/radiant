@@ -41,14 +41,20 @@ shinyUI(
 
       conditionalPanel(condition = inOrChange,
         conditionalPanel(condition = "input.analysistabs == 'Summary'",
-          conditionalPanel(condition = "input.tool == 'regression'",
-            actionButton("addoutput", "Save residuals (see Data view)")
-          ),
-          conditionalPanel(condition = "input.tool == 'kmeansClustering'",
-            actionButton("addoutput", "Save cluster membership (see Data view)")
-          )
+          uiOutput("addoutput") 
         )
       )
+
+      # conditionalPanel(condition = inOrChange,
+      #   conditionalPanel(condition = "input.analysistabs == 'Summary'",
+      #     conditionalPanel(condition = "input.tool == 'regression'",
+      #       actionButton("addoutput", "Save residuals (see Data view)")
+      #     ),
+      #     conditionalPanel(condition = "input.tool == 'kmeansClustering'",
+      #       actionButton("addoutput", "Save cluster membership (see Data view)")
+      #     )
+      #   )
+      # )
     ),
     
     mainPanel(
@@ -65,7 +71,8 @@ shinyUI(
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")), 
             tabPanel("Plots", plotOutput("plots", height = 1200)),
-            tabPanel("Extra", verbatimTextOutput("extra")) 
+            tabPanel("Extra", verbatimTextOutput("extra")),
+            tabPanel("Log", verbatimTextOutput("log")) 
           )
         )
       )
