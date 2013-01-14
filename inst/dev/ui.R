@@ -13,8 +13,8 @@ shinyUI(
 
       conditionalPanel(condition = "input.tool == 'dataview'",
         wellPanel(
-          fileInput("upload", "Load data (Rdata, CSV, Spss, or Stata format)"),
-          # actionButton("upload", "Load data (Rdata, CSV, Spss, or Stata format)")
+          helpText("Load user data (Rdata, CSV, Spss, or Stata format):"),
+          actionButton("upload", "Choose a file"),
           # helpText("Loading user data disabled on Glimmer"),
           uiOutput("packData")
         ),

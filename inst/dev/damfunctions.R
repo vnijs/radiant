@@ -37,15 +37,16 @@ getdata <- function(dataset = input$datasets) {
 
 loadUserData <- function(uFile) {
 
-	filename <- uFile$name
-	ext <- file_ext(filename)
-	objname <- robjname <- sub(paste(".",ext,sep = ""),"",filename)
+	# filename <- uFile$name
+	ext <- file_ext(uFile)
+	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
 	ext <- tolower(ext)
 
 	if(ext == 'rda' || ext == 'rdata') {
 		# objname will hold the name of the object inside the R datafile
 	  # objname <- load(uFile$datapath, envir = datasetEnv)
-	  objname <- robjname <- load(uFile$datapath, envir = datasetEnv)
+	  # objname <- robjname <- load(uFile$datapath, envir = datasetEnv)
+	  objname <- robjname <- load(uFile, envir = datasetEnv)
 		assign(robjname, reactiveValue(get(objname, pos = datasetEnv)), pos = datasetEnv)
 	}
 
@@ -56,11 +57,14 @@ loadUserData <- function(uFile) {
 	}
 
 	if(ext == 'sav') {
-		assign(objname, reactiveValue(read.sav(uFile$datapath)), pos = datasetEnv)
+		# assign(objname, reactiveValue(read.sav(uFile$datapath)), pos = datasetEnv)
+		assign(objname, reactiveValue(read.sav(uFile)), pos = datasetEnv)
 	} else if(ext == 'dta') {
-		assign(objname, reactiveValue(read.dta(uFile$datapath)), pos = datasetEnv)
+		# assign(objname, reactiveValue(read.dta(uFile$datapath)), pos = datasetEnv)
+		assign(objname, reactiveValue(read.dta(uFile)), pos = datasetEnv)
 	} else if(ext == 'csv') {
-		assign(objname, reactiveValue(read.csv(uFile$datapath)), pos = datasetEnv)
+		# assign(objname, reactiveValue(read.csv(uFile$datapath)), pos = datasetEnv)
+		assign(objname, reactiveValue(read.csv(uFile)), pos = datasetEnv)
 	}
 }
 

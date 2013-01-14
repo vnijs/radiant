@@ -13,6 +13,17 @@ buttonfunc <- reactive(function() {
   bval
 })
 
+# output$uploadfunc <- reactive(function() {
+uploadfunc <- reactive(function() {
+  if(input$upload == 0) return("")
+  fpath <- try(file.choose())
+  if(is(fpath, 'try-error')) {
+  	return("")
+  } else {
+  	return(fpath)
+  }
+})
+
 output$columns <- reactiveUI(function() {
 	# input$columns # need this so choose columns gets updated when data is changed
 	cols <- varnames()
@@ -24,13 +35,18 @@ output$columns <- reactiveUI(function() {
 output$datasets <- reactiveUI(function() {
 
 	state <- as.list(input)
+	fpath <- uploadfunc()
+	# print(fpath)
 	# loading user data
-	if(!is.null(state$upload)) {
-		if(state$upload$name != lastLoadedData$userData && state$upload$name != '') {
-			loadUserData(state$upload)
-			lastLoadedData$userData <<- state$upload$name
-	  }
+	if(fpath != "") {
+		loadUserData(fpath)
 	} 
+	# if(!is.null(state$upload)) {
+	# 	if(state$upload$name != lastLoadedData$userData && state$upload$name != '') {
+	# 		loadUserData(state$upload)
+	# 		lastLoadedData$userData <<- state$upload$name
+	#   }
+	# }
 	# loading package data
 	if(!is.null(state$packData) && state$packData != "") {
 		if(state$packData != lastLoadedData$packData) {
@@ -40,7 +56,7 @@ output$datasets <- reactiveUI(function() {
 	}
 
 	# Drop-down selection of data set
-	selectInput(inputId = "datasets", label = "Data sets", choices = datasets, selected = datasets[1], multiple = FALSE)
+	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
 output$packData <- reactiveUI(function() {
@@ -55,7 +71,7 @@ output$nrRows <- reactiveUI(function() {
 
 	# number of observations to show in data view
 	nr <- nrow(dat)
-	sliderInput("nrRows", "# of rows to show:", min = 1, max = nr, value = min(15,nr), step = 1)
+	sliderInput("nrRows", "# of rows to show:", min = 1, max = min(100,nr), value = min(15,nr), step = 1)
 })
 
 # variable selection
@@ -92,11 +108,15 @@ output$nrClus <- reactiveUI(function() {
 ################################################################
 # Data reactives - view, plot, transform data, and log your work
 ################################################################
-
 output$dataviewer <- reactiveTable(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
 	dat <- getdata()
+
+	# not sure why this is needed when files change ... but it is
+	# without it you will get errors the invalid columns have been
+	# selected
+	if(!all(input$columns %in% colnames(dat))) return()
 
 	# Show only the selected columns
 	dat <- dat[, input$columns, drop = FALSE]
@@ -106,7 +126,6 @@ output$dataviewer <- reactiveTable(function() {
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
 })
-
 
 # Analysis reactives
 output$visualize <- reactivePlot(function() {
