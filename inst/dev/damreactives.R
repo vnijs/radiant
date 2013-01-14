@@ -2,9 +2,9 @@
 # all reactive functions used in damshiny app 
 ################################################################
 
-output$addoutput <- reactiveUI(function() {
-	checkboxInput("addoutput", addvarlabel[input$tool], value = FALSE)
-})
+# output$addoutput <- reactiveUI(function() {
+# 	checkboxInput("addoutput", addvarlabel[input$tool], value = FALSE)
+# })
 
 buttonfunc <- reactive(function() {
   if(input$abutton == 0) return(FALSE)

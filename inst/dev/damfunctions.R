@@ -88,14 +88,13 @@ main.regression <- function(state) {
 
 	# calling buttonfunc put things into an infinite loop
 	# when the variable is used in Vizualize. Wierd
-  # if(buttonfunc() == TRUE) {
-  if(input$addoutput == TRUE) {
+  if(buttonfunc() == TRUE) {
+  # if(input$addoutput == TRUE) {
 		var.name <- "residuals"
 		changedata(result$residuals, var.name)
-		# bval <<- FALSE
-		# print(input$abutton)
+		bval <<- FALSE
+		print(input$abutton)
 	}
-
 
 	result
 }

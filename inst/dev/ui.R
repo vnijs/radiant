@@ -14,6 +14,7 @@ shinyUI(
       conditionalPanel(condition = "input.tool == 'dataview'",
         wellPanel(
           fileInput("upload", "Load data (Rdata, CSV, Spss, or Stata format)"),
+          # actionButton("upload", "Load data (Rdata, CSV, Spss, or Stata format)")
           # helpText("Loading user data disabled on Glimmer"),
           uiOutput("packData")
         ),
@@ -41,8 +42,8 @@ shinyUI(
 
       conditionalPanel(condition = inOrChange,
         conditionalPanel(condition = "input.analysistabs == 'Summary'",
-          uiOutput("addoutput")
-          # actionButton("abutton", "Press the button")
+          # uiOutput("addoutput"),
+          actionButton("abutton", "Press the button")
         )
       )
 
