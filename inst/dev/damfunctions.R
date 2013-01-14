@@ -86,15 +86,17 @@ main.regression <- function(state) {
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
 
-  # Note that just by virtue of checking the value of input$recalcButton,
-  # we're now going to get called whenever it is pushed.
-
+	# calling buttonfunc put things into an infinite loop
+	# when the variable is used in Vizualize. Wierd
+  # if(buttonfunc() == TRUE) {
   if(input$addoutput == TRUE) {
 		var.name <- "residuals"
 		changedata(result$residuals, var.name)
+		# bval <<- FALSE
+		# print(input$abutton)
 	}
 
-	cat("Value of the addoutput button in main.regression: ",input$addoutput,"  ") 
+
 	result
 }
 
@@ -181,17 +183,6 @@ main.kmeansClustering <- function(state) {
 		var.name <- paste("kclus",state$nrClus,sep="")
 		changedata(as.factor(result$cluster), var.name)
 	}
-
-  # Note that just by virtue of checking the value of input$recalcButton,
-  # we're now going to get called whenever it is pushed.
- #  if(state$addoutput != 0) {
-	#   isolate({
-	# 		var.name <- paste("kclus",state$nrClus,sep="")
-	# 		changedata(as.factor(result$cluster), var.name)
-	#   })
-	# }
-
-	# cat("Value of the addoutput button in main.kmeansClustering: ",input$addoutput,"  ") 
 
 	result
 }

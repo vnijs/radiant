@@ -10,6 +10,9 @@ shinyServer(function(input, output) {
 	morley <- morley
 	rock <- rock
 
+	# variable that tracks if the action button was pressed
+	bval <- FALSE
+
 	# Our datasets can change over time (i.e. the changedata function). Therefore,
 	# these need to be reactive values; otherwise, the other reactive functions
 	# and outputs that depend on these datasets won't know that they are changed.

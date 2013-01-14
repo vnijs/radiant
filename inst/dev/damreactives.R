@@ -6,23 +6,19 @@ output$addoutput <- reactiveUI(function() {
 	checkboxInput("addoutput", addvarlabel[input$tool], value = FALSE)
 })
 
+buttonfunc <- reactive(function() {
+  if(input$abutton == 0) return(FALSE)
+  
+  bval <<- TRUE
+  bval
+})
+
 output$columns <- reactiveUI(function() {
 	# input$columns # need this so choose columns gets updated when data is changed
 	cols <- varnames()
 
 	# Create a group of checkboxes and select them all by default
 	checkboxGroupInput("columns", "Choose columns", choices  = as.list(cols), selected = names(cols))
-})
-
-output$dataviewer <- reactiveTable(function() {
-	if(is.null(input$datasets) || is.null(input$columns)) return()
-
-	dat <- getdata()
-
-	# Show only the selected columns
-	dat <- dat[, input$columns, drop = FALSE]
-
-	head(dat, input$nrRows)
 })
 
 output$datasets <- reactiveUI(function() {
@@ -93,11 +89,29 @@ output$nrClus <- reactiveUI(function() {
 	selectInput(inputId = "nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE)
 })
 
+################################################################
+# Data reactives - view, plot, transform data, and log your work
+################################################################
+
+output$dataviewer <- reactiveTable(function() {
+	if(is.null(input$datasets) || is.null(input$columns)) return()
+
+	dat <- getdata()
+
+	# Show only the selected columns
+	dat <- dat[, input$columns, drop = FALSE]
+
+	head(dat, input$nrRows)
+
+	# idea: Add download button so data can be saved
+	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
+})
+
+
 # Analysis reactives
 output$visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
-
-	if(!input$datatabs == 'Vizualize') return()
+	if(input$datatabs != 'Visualize') return()
 
 	dat <- getdata()
 
@@ -113,13 +127,35 @@ output$visualize <- reactivePlot(function() {
 		p <- ggplot(dat, aes_string(x=input$var1, y=input$var2)) + geom_point() + geom_jitter(position = position_jitter(width = bw, height = jitt)) + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
 	}
 	print(p)
+
+	# idea: Add a download button so graphs can be saved
+	# idea: Add download button so data can be saved
+	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
+})
+
+# output$transform <- reactiveTable(function() {
+output$transform <- reactivePrint(function() {
+	if(is.null(input$datasets) || is.null(input$columns)) return()
+	if(input$datatabs != 'Transform') return()
+
+	# idea: use mutate to transformations on the data see links below
+	# If will probably be easiest to have this be a text-box input field
+	# that runs these. No need for an elaborate UI since it is basically
+	# what they would otherwise do in excel. Make sure to add
+	# some helptext with a bunch of examples of how the command would work.
+	# http://www.inside-r.org/packages/cran/plyr/docs/mutate
+	# https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/uZZT564y0i8
+	# https://gist.github.com/4515551 
+
+	cat("Command box and data view (in development)")
+
 })
 
 # Analysis reactives
-output$log <- reactivePlot(function() {
+output$logwork <- reactivePrint(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
-	if(!input$datatabs == 'Log') return()
+	if(input$datatabs != 'Log') return()
 
 	# idea: When a user presses a log-button the output on screen is saved to an rda file
 	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-state
@@ -129,7 +165,7 @@ output$log <- reactivePlot(function() {
 	# ask Jeff about how to attribute code (and also Yihie) if you use some of their code
 	# https://github.com/jeffreyhorner/TeachingLab
 
-	cat("Analysis log here")
+	cat("Work log (in development)")
 
 })
 
@@ -191,7 +227,7 @@ output$plots <- reactivePlot(function() {
 
 	# plotting could be expensive so only done
 	# when tab is being viewed
-	if(!input$analysistabs == 'Plots') return()
+	if(input$analysistabs != 'Plots') return()
 
 	f <- get(paste("plot",input$tool,sep = '.'))
 	f(get(input$tool)())
@@ -202,7 +238,7 @@ output$extra <- reactivePrint(function() {
 
 	# if extra calculations are expensive
 	# do only when tab is being viewed
-	if(!input$analysistabs == 'Extra') return()
+	if(input$analysistabs != 'Extra') return()
 
 	f <- get(paste("extra",input$tool,sep = '.'))
 	f(get(input$tool)())

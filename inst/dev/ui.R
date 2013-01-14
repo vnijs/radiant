@@ -28,23 +28,27 @@ shinyUI(
       conditionalPanel(condition = "input.tool != 'dataview' ||  input.datatabs == 'Visualize'",
         conditionalPanel(condition = notInAnd,
           wellPanel(uiOutput("var1")),
-          wellPanel(uiOutput("var2"))
+          wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 200px;}"))
         )
       ),
 
       conditionalPanel(condition = inOr,
         wellPanel(
-          uiOutput("varinterdep"),
-          uiOutput("nrClus")
+          uiOutput("nrClus"),
+          uiOutput("varinterdep"), tags$style(type='text/css', "#varinterdep { height: 200px;}")
         )
       ),
 
       conditionalPanel(condition = inOrChange,
         conditionalPanel(condition = "input.analysistabs == 'Summary'",
-          uiOutput("addoutput") 
+          uiOutput("addoutput")
+          # actionButton("abutton", "Press the button")
         )
       )
 
+      # Should be using an action button rather than a check box see above to add 
+      # variables to the dataset. Doesn't work right just yet so leaving this 
+      # here for now.
       # conditionalPanel(condition = inOrChange,
       #   conditionalPanel(condition = "input.analysistabs == 'Summary'",
       #     conditionalPanel(condition = "input.tool == 'regression'",
@@ -64,6 +68,9 @@ shinyUI(
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
             tabPanel("Visualize", plotOutput("visualize")),
+            # tabPanel("Transform", tableOutput("transform")),
+            tabPanel("Transform", verbatimTextOutput("transform")),
+            tabPanel("Log", verbatimTextOutput('logwork')),
             tabPanel("About", includeHTML("about.html"))
           )
         ),
