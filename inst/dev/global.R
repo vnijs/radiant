@@ -9,9 +9,9 @@ library(gridExtra)
 # variables are in global.R so they will be available in both ui.R and server.R
 # from server.R
 # Labels for variable selectors
-labels1 <- c("X-variable", "Dependent variable","Group variable (only factors shown)","")
-labels2 <- c("Y-variable", "Independent variables","Variables (select one)","")
-labtools <- c("dataview", "regression", "compareMeans","hclustering")
+labels1 <- c("Dependent variable","Group variable (only factors shown)")
+labels2 <- c("Independent variables","Variables (select one)")
+labtools <- c("regression", "compareMeans")
 names(labels1) <- names(labels2) <- labtools
 
 # labels for output$addvariable

@@ -1,16 +1,18 @@
 shinyUI(
 
   pageWithSidebar(
-    headerPanel("Data Analysis Menu in Shiny"),
+    headerPanel("Data Analysis Menu using Shiny"),
     
     sidebarPanel(
       wellPanel(
+        # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
           selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
         ),
         uiOutput("datasets")
       ),
 
+      # only show data loading and selection options when in dataview
       conditionalPanel(condition = "input.tool == 'dataview'",
         wellPanel(
           helpText("Load user data (Rdata, CSV, Spss, or Stata format):"),
@@ -20,19 +22,20 @@ shinyUI(
         )
       ),
 
-      conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != 'choosefile'",
+      conditionalPanel(condition = "input.tool == 'dataview' && input.datatabs == 'Data view' && input.datasets != 'choosefile'",
           wellPanel(
             uiOutput("nrRows"), 
             uiOutput("columns")
           )
       ),
      
-      conditionalPanel(condition = "input.datatabs == 'Visualize'",
+      conditionalPanel(condition = "input.tool == 'dataview' && input.datatabs == 'Visualize'",
           wellPanel(uiOutput("varview1")), 
           wellPanel(uiOutput("varview2"),tags$style(type='text/css', "#varview2 { height: 250px; padding-bottom: 35px;}"))
       ),
 
-      conditionalPanel(condition = "input.tool != 'dataview' && input.datatabs != 'Visualize'",
+      # conditionalPanel(condition = "input.tool != 'dataview' && input.datatabs != 'Visualize'",
+      conditionalPanel(condition = "input.tool != 'dataview'",
         conditionalPanel(condition = notInAnd,
           wellPanel(uiOutput("var1")), 
           wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 250px; padding-bottom: 35px;}"))
@@ -46,26 +49,17 @@ shinyUI(
         )
       ),
 
-      conditionalPanel(condition = inOrChange,
-        conditionalPanel(condition = "input.analysistabs == 'Summary'",
-          # uiOutput("addoutput"),
-          actionButton("abutton", "Press the button")
-        )
-      )
-
-      # Should be using an action button rather than a check box see above to add 
-      # variables to the dataset. Doesn't work right just yet so leaving this 
-      # here for now.
       # conditionalPanel(condition = inOrChange,
-      #   conditionalPanel(condition = "input.analysistabs == 'Summary'",
-      #     conditionalPanel(condition = "input.tool == 'regression'",
-      #       actionButton("addoutput", "Save residuals (see Data view)")
-      #     ),
-      #     conditionalPanel(condition = "input.tool == 'kmeansClustering'",
-      #       actionButton("addoutput", "Save cluster membership (see Data view)")
-      #     )
-      #   )
+        conditionalPanel(condition = "input.analysistabs == 'Summary'",
+          conditionalPanel(condition = "input.tool == 'regression'",
+            actionButton("abutton", "Save residuals (see Data view)")
+          ),
+          conditionalPanel(condition = "input.tool == 'kmeansClustering'",
+            actionButton("abutton", "Save cluster membership (see Data view)")
+          )
+        )
       # )
+
     ),
     
     mainPanel(
@@ -75,7 +69,7 @@ shinyUI(
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
             tabPanel("Visualize", plotOutput("visualize")),
-            # tabPanel("Transform", tableOutput("transform")),
+            # tabPanel("Transform", tableOutput("transform")),      # once transform has been implement use tableOutput
             tabPanel("Transform", verbatimTextOutput("transform")),
             tabPanel("Log", verbatimTextOutput('logwork')),
             tabPanel("About", includeHTML("about.html"))

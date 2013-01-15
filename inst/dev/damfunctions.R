@@ -44,7 +44,6 @@ loadUserData <- function(uFile) {
 
 	if(ext == 'rda' || ext == 'rdata') {
 		# objname will hold the name of the object inside the R datafile
-	  # objname <- load(uFile$datapath, envir = datasetEnv)
 	  # objname <- robjname <- load(uFile$datapath, envir = datasetEnv)
 	  objname <- robjname <- load(uFile, envir = datasetEnv)
 		assign(robjname, reactiveValue(get(objname, pos = datasetEnv)), pos = datasetEnv)
@@ -86,41 +85,35 @@ summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
 }
 
 main.regression <- function(state) {
-	if(is.null(state$datasets)) return()
-	if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
+	# if(is.null(state$datasets)) return()
+	# if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
 
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
 
-	# calling buttonfunc put things into an infinite loop
-	# when the variable is used in Vizualize. Wierd
-  if(buttonfunc() == TRUE) {
-  # if(input$addoutput == TRUE) {
-		# var.name <- "residuals"
-		var.name <- "resx"
-		changedata(result$residuals, var.name)
-		bval <<- FALSE
-		print(paste("I am in here", state$abutton, 'and', bval))
-		print(state)
+  if(input$abutton != 0) {
+  	isolate({
+			var.name <- "residuals"
+			changedata(result$residuals, var.name)
+ 		})
 	}
 
 	result
 }
 
 summary.regression <- function(result) {
-	if(is.null(result)) return(cat("Please select one or more independent variables\n"))
-
+	# if(is.null(result)) return(cat("Please select one or more independent variables\n"))
 	summary(result)
 }
 
 plot.regression <- function(result) {
-	if(is.null(result)) return()
+	# if(is.null(result)) return()
 	par(mfrow = c(2,2))
 	plot(result, ask = FALSE)
 }
 
 extra.regression <- function(result) {
-	if(is.null(result)) return()
+	# if(is.null(result)) return()
 	if(length(result$coefficients) > 2) {
   	cat("Variance Inflation Factors\n")
   	VIF <- sort(vif(result), decreasing = TRUE)
@@ -131,15 +124,14 @@ extra.regression <- function(result) {
 }
 
 summary.compareMeans <- function(state) {
-	if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
-	if(is.null(state$datasets)) return()
+	# if(is.null(state$datasets)) return()
 	# expand to more than two groups
 	formula <- as.formula(paste(state$var2[1], "~", state$var1))
 	t.test(formula, data = getdata())
 }
 
 plot.compareMeans <- function(state) {
-	if(is.null(state$datasets) || is.null(state$var2)) return()
+	# if(is.null(state$datasets) || is.null(state$var2)) return()
 
 	dat <- getdata()
 	# plotting through ggplot not working yet
@@ -153,7 +145,7 @@ plot.compareMeans <- function(state) {
 
 extra.compareMeans <- function(state) {
 	# nothing here yet, could put in test variance equality
-	cat("Nothing yet\n")
+	cat("Under development\n")
 }
 
 main.hclustering <- function(state) {
@@ -164,12 +156,12 @@ main.hclustering <- function(state) {
 }
 
 summary.hclustering <- function(result) {
-	if(is.null(result)) return(cat("Please select one or more variables\n"))
-		result
+	# if(is.null(result)) return(cat("Please select one or more variables\n"))
+	result
 }
 
 plot.hclustering <- function(result) {
-	if(is.null(result)) return()
+	# if(is.null(result)) return()
 	# use ggdendro when it gets back on cran
 	plot(result, main = "Dendrogram")
 }
@@ -180,32 +172,27 @@ extra.hclustering <- function(result) {
 }
 
 main.kmeansClustering <- function(state) {
-	if(is.null(state$varinterdep)) return(cat("Please select one or more variables for kmeans ..\n"))
 	set.seed(1234)
 	dat <- getdata()
 
 	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
 
-  if(buttonfunc() == TRUE) {
-  # if(input$addoutput == TRUE) {
-		var.name <- paste("kclus",state$nrClus,sep="")
-		changedata(as.factor(result$cluster), var.name)
-		bval <<- FALSE
-		print(input$abutton)
+	if(input$abutton != 0) {
+  	isolate({
+			var.name <- paste("kclus",state$nrClus,sep="")
+			changedata(as.factor(result$cluster), var.name)
+ 		})
 	}
 
 	result
 }
 
 summary.kmeansClustering <- function(result) {
-	# result$cluster <- NULL
 	result
 }
 
 plot.kmeansClustering <- function(result) {
-
-	if(is.null(input$datasets) || is.null(input$varinterdep)) return()
-
+	# if(is.null(input$datasets) || is.null(input$varinterdep)) return()
 	dat <- getdata()[,input$varinterdep, drop = FALSE]
 	# gg.xlim <- quantile(as.vector(as.matrix(dat)),probs = c(.01,.99))
 	dat$clusvar <- as.factor(result$cluster)
@@ -224,5 +211,5 @@ plot.kmeansClustering <- function(result) {
 }
 
 extra.kmeansClustering <- function(result) {
-	cat("Nothing yet\n")
+	cat("Under development\n")
 }

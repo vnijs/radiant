@@ -6,12 +6,12 @@
 # 	checkboxInput("addoutput", addvarlabel[input$tool], value = FALSE)
 # })
 
-buttonfunc <- reactive(function() {
-  if(input$abutton == 0) return(FALSE)
+# buttonfunc <- reactive(function() {
+#   if(input$abutton == 0) return(FALSE)
   
-  bval <<- TRUE
-  bval
-})
+#   bval <<- TRUE
+#   bval
+# })
 
 # output$uploadfunc <- reactive(function() {
 uploadfunc <- reactive(function() {
@@ -95,18 +95,18 @@ output$var2 <- reactiveUI(function() {
 })
 
 # variable selection in the datatabs views
-output$varviews1 <- reactiveUI(function() {
+output$varview1 <- reactiveUI(function() {
 	vars <- varnames()
 	if(is.null(vars)) return()
 
-	selectInput(inputId = "varviews1", label = labels1[input$tool], choices = vars, selected = NULL, multiple = FALSE)
+	selectInput(inputId = "varview1", label = "X-variable", choices = vars, selected = NULL, multiple = FALSE)
 })
 
 # variable selection
-output$varviews2 <- reactiveUI(function() {
+output$varview2 <- reactiveUI(function() {
 	vars <- varnames()
 	if(is.null(vars)) return()
-	selectInput(inputId = "varviews2", label = labels2[input$tool], choices = vars[-which(vars == input$varviews1)], selected = NULL, multiple = TRUE)
+	selectInput(inputId = "varview2", label = "Y-variable", choices = vars[-which(vars == input$varview1)], selected = NULL, multiple = TRUE)
 })
 
 output$varinterdep <- reactiveUI(function() {
@@ -144,21 +144,21 @@ output$dataviewer <- reactiveTable(function() {
 
 # Analysis reactives
 output$visualize <- reactivePlot(function() {
-	if(is.null(input$datasets) || is.null(input$columns)) return()
+	if(is.null(input$datasets) || is.null(input$varview1)) return()
 	if(input$datatabs != 'Visualize') return()
 
 	dat <- getdata()
 
-	x <- dat[,input$var1]
+	x <- dat[,input$varview1]
 	ifelse(is.factor(x), bw <- .1, bw <- diff(range(x)) / 12)
 
-	if(is.null(input$var2)) {
-		p <- ggplot(dat, aes_string(x=input$var1)) + geom_histogram(colour = 'black', fill = 'blue', binwidth = bw)
+	if(is.null(input$varview2)) {
+		p <- ggplot(dat, aes_string(x=input$varview1)) + geom_histogram(colour = 'black', fill = 'blue', binwidth = bw)
 	} else {
-		y <- dat[,input$var2]
+		y <- dat[,input$varview2]
 		ifelse(is.factor(y), jitt <- .1, jitt <- diff(range(y)) / 15)
 
-		p <- ggplot(dat, aes_string(x=input$var1, y=input$var2)) + geom_point() + geom_jitter(position = position_jitter(width = bw, height = jitt)) + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
+		p <- ggplot(dat, aes_string(x=input$varview1, y=input$varview2)) + geom_point() + geom_jitter(position = position_jitter(width = bw, height = jitt)) + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
 	}
 	print(p)
 
@@ -211,23 +211,22 @@ output$logwork <- reactivePrint(function() {
 ################################################################
 
 regression <- reactive(function() {
-	# if(is.null(input$var2)) return()
-	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	if(is.null(input$var2)) return("Please one or more independent variables")
 	main.regression(as.list(input))
 })
 
 compareMeans <- reactive(function() {
-	if(is.null(input$var2)) return()
+	if(is.null(input$var2)) return("Please select a variable")
 	as.list(input)
 })
 
 hclustering <- reactive(function() {
-	if(is.null(input$varinterdep)) return()
+	if(is.null(input$varinterdep)) return("Please select one or more variables")
 	main.hclustering(as.list(input))
 })
 
 kmeansClustering <- reactive(function() {
-	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	if(is.null(input$varinterdep)) return("Please select one or more variables")
 	main.kmeansClustering(as.list(input))
 })
 
@@ -244,29 +243,35 @@ kmeansClustering <- reactive(function() {
 
 # Generate output for the summary tab
 output$summary <- reactivePrint(function() {
-	if(is.null(input$datasets)) return()
-	# if(is.null(input$var2)) return()
-	# if(input$var2 == 'residuals') return()
+	if(is.null(input$datasets) || input$tool == 'dataview') return()
 
-		# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
-		# getting the summary function and feeding it the output from 
-		# one of the analysis reactives above
-		# using the get-function structure because I'll have a large
-		# set of tools that will have the same output structure
-		f <- get(paste("summary",input$tool,sep = '.'))
-		f(get(input$tool)())
-
+	# getting the summary function and feeding it the output from 
+	# one of the analysis reactives above
+	# using the get-function structure because there may be a large
+	# set of tools that will have the same output structure
+	f <- get(paste("summary",input$tool,sep = '.'))
+	result <- get(input$tool)()
+	if(is.character(result)) {
+		cat(result,"\n")
+	} else {
+		f(result)
+	}
 })
 
 # Generate output for the plots tab
 output$plots <- reactivePlot(function() {
 
-	# plotting could be expensive so only done
-	# when tab is being viewed
-	if(input$analysistabs != 'Plots') return()
+	# plotting could be expensive so only done when tab is being viewed
+	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
 
 	f <- get(paste("plot",input$tool,sep = '.'))
-	f(get(input$tool)())
+	result <- get(input$tool)()
+	if(!is.character(result)) {
+		f(result)
+	} else {
+		# plot(x = 1, main="No selection made", axes = FALSE, xlab = "", ylab = "")
+		plot(x = 1, type = 'n', main="No selection made", axes = FALSE, xlab = "", ylab = "")
+	}
 }, width=600, height=600)
 
 # Generate output for the extra tab
@@ -274,8 +279,13 @@ output$extra <- reactivePrint(function() {
 
 	# if extra calculations are expensive
 	# do only when tab is being viewed
-	if(input$analysistabs != 'Extra') return()
+	if(input$tool == 'dataview' || input$analysistabs != 'Extra') return()
 
 	f <- get(paste("extra",input$tool,sep = '.'))
-	f(get(input$tool)())
+	result <- get(input$tool)()
+	if(is.character(result)) {
+		cat(result,"\n")
+	} else {
+		f(result)
+	}
 })
