@@ -197,7 +197,7 @@ output$logwork <- reactivePrint(function() {
 
 regression <- reactive(function() {
 	if(is.null(input$var2)) return()
-	# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
 	main.regression(as.list(input))
 })
 
@@ -212,7 +212,7 @@ hclustering <- reactive(function() {
 })
 
 kmeansClustering <- reactive(function() {
-	# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
+	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
 	main.kmeansClustering(as.list(input))
 })
 

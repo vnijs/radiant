@@ -86,7 +86,9 @@ summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
 }
 
 main.regression <- function(state) {
-	if(is.null(state$dataset)) return()
+	if(is.null(state$datasets)) return()
+	if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
+
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
 
@@ -97,7 +99,8 @@ main.regression <- function(state) {
 		var.name <- "residuals"
 		changedata(result$residuals, var.name)
 		bval <<- FALSE
-		print(input$abutton)
+		# print(paste("I am in here", state$abutton))
+		# print(state)
 	}
 
 	result
@@ -182,9 +185,12 @@ main.kmeansClustering <- function(state) {
 
 	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
 
-  if(input$addoutput == TRUE) {
+  if(buttonfunc() == TRUE) {
+  # if(input$addoutput == TRUE) {
 		var.name <- paste("kclus",state$nrClus,sep="")
 		changedata(as.factor(result$cluster), var.name)
+		bval <<- FALSE
+		print(input$abutton)
 	}
 
 	result

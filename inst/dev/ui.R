@@ -28,15 +28,15 @@ shinyUI(
 
       conditionalPanel(condition = "input.tool != 'dataview' ||  input.datatabs == 'Visualize'",
         conditionalPanel(condition = notInAnd,
-          wellPanel(uiOutput("var1")),
-          wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 200px;}"))
+          wellPanel(uiOutput("var1")), 
+          wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 250px; padding-bottom: 35px;}"))
         )
       ),
 
       conditionalPanel(condition = inOr,
         wellPanel(
           uiOutput("nrClus"),
-          uiOutput("varinterdep"), tags$style(type='text/css', "#varinterdep { height: 200px;}")
+          uiOutput("varinterdep"), tags$style(type='text/css', "#varinterdep { height: 250px; padding-bottom: 35px;}")
         )
       ),
 
