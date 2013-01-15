@@ -96,11 +96,12 @@ main.regression <- function(state) {
 	# when the variable is used in Vizualize. Wierd
   if(buttonfunc() == TRUE) {
   # if(input$addoutput == TRUE) {
-		var.name <- "residuals"
+		# var.name <- "residuals"
+		var.name <- "resx"
 		changedata(result$residuals, var.name)
 		bval <<- FALSE
-		# print(paste("I am in here", state$abutton))
-		# print(state)
+		print(paste("I am in here", state$abutton, 'and', bval))
+		print(state)
 	}
 
 	result
@@ -179,7 +180,7 @@ extra.hclustering <- function(result) {
 }
 
 main.kmeansClustering <- function(state) {
-	if(is.null(state$varinterdep)) return(cat("Please select one or more variables\n"))
+	if(is.null(state$varinterdep)) return(cat("Please select one or more variables for kmeans ..\n"))
 	set.seed(1234)
 	dat <- getdata()
 

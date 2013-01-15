@@ -94,6 +94,21 @@ output$var2 <- reactiveUI(function() {
 	selectInput(inputId = "var2", label = labels2[input$tool], choices = vars[-which(vars == input$var1)], selected = NULL, multiple = TRUE)
 })
 
+# variable selection in the datatabs views
+output$varviews1 <- reactiveUI(function() {
+	vars <- varnames()
+	if(is.null(vars)) return()
+
+	selectInput(inputId = "varviews1", label = labels1[input$tool], choices = vars, selected = NULL, multiple = FALSE)
+})
+
+# variable selection
+output$varviews2 <- reactiveUI(function() {
+	vars <- varnames()
+	if(is.null(vars)) return()
+	selectInput(inputId = "varviews2", label = labels2[input$tool], choices = vars[-which(vars == input$varviews1)], selected = NULL, multiple = TRUE)
+})
+
 output$varinterdep <- reactiveUI(function() {
 	vars <- varnames()
 	if(is.null(vars)) return()
@@ -196,7 +211,7 @@ output$logwork <- reactivePrint(function() {
 ################################################################
 
 regression <- reactive(function() {
-	if(is.null(input$var2)) return()
+	# if(is.null(input$var2)) return()
 	if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
 	main.regression(as.list(input))
 })
@@ -230,6 +245,8 @@ kmeansClustering <- reactive(function() {
 # Generate output for the summary tab
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets)) return()
+	# if(is.null(input$var2)) return()
+	# if(input$var2 == 'residuals') return()
 
 		# if(!input$analysistabs %in% c('Summary','Plots','Extra')) return()
 		# getting the summary function and feeding it the output from 

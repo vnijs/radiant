@@ -17,16 +17,22 @@ shinyUI(
           actionButton("upload", "Choose a file"),
           # helpText("Loading user data disabled on Glimmer"),
           uiOutput("packData")
-        ),
-        conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != 'choosefile'",
+        )
+      ),
+
+      conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != 'choosefile'",
           wellPanel(
             uiOutput("nrRows"), 
             uiOutput("columns")
           )
-        )
+      ),
+     
+      conditionalPanel(condition = "input.datatabs == 'Visualize'",
+          wellPanel(uiOutput("varview1")), 
+          wellPanel(uiOutput("varview2"),tags$style(type='text/css', "#varview2 { height: 250px; padding-bottom: 35px;}"))
       ),
 
-      conditionalPanel(condition = "input.tool != 'dataview' ||  input.datatabs == 'Visualize'",
+      conditionalPanel(condition = "input.tool != 'dataview' && input.datatabs != 'Visualize'",
         conditionalPanel(condition = notInAnd,
           wellPanel(uiOutput("var1")), 
           wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 250px; padding-bottom: 35px;}"))
