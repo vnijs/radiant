@@ -2,18 +2,6 @@
 # all reactive functions used in damshiny app 
 ################################################################
 
-# output$addoutput <- reactiveUI(function() {
-# 	checkboxInput("addoutput", addvarlabel[input$tool], value = FALSE)
-# })
-
-# buttonfunc <- reactive(function() {
-#   if(input$abutton == 0) return(FALSE)
-  
-#   bval <<- TRUE
-#   bval
-# })
-
-# output$uploadfunc <- reactive(function() {
 uploadfunc <- reactive(function() {
   if(input$upload == 0) return("")
   fpath <- try(file.choose())
@@ -25,7 +13,6 @@ uploadfunc <- reactive(function() {
 })
 
 output$columns <- reactiveUI(function() {
-	# input$columns # need this so choose columns gets updated when data is changed
 	cols <- varnames()
 
 	# Create a group of checkboxes and select them all by default
@@ -36,17 +23,12 @@ output$datasets <- reactiveUI(function() {
 
 	state <- as.list(input)
 	fpath <- uploadfunc()
-	# print(fpath)
+
 	# loading user data
 	if(fpath != "") {
 		loadUserData(fpath)
 	} 
-	# if(!is.null(state$upload)) {
-	# 	if(state$upload$name != lastLoadedData$userData && state$upload$name != '') {
-	# 		loadUserData(state$upload)
-	# 		lastLoadedData$userData <<- state$upload$name
-	#   }
-	# }
+
 	# loading package data
 	if(!is.null(state$packData) && state$packData != "") {
 		if(state$packData != lastLoadedData$packData) {
@@ -142,7 +124,6 @@ output$dataviewer <- reactiveTable(function() {
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
 })
 
-# Analysis reactives
 output$visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$varview1)) return()
 	if(input$datatabs != 'Visualize') return()
@@ -185,7 +166,6 @@ output$transform <- reactivePrint(function() {
 
 })
 
-# Analysis reactives
 output$logwork <- reactivePrint(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
@@ -215,6 +195,17 @@ regression <- reactive(function() {
 	main.regression(as.list(input))
 })
 
+# function gets called when button is pressed to save residuals
+# to the dataset
+reg_residuals <- reactive(function() {
+  if(input$saveres == 0) return()
+  isolate({
+  	result <- regression()
+ 		var.name <- "residuals"
+		changedata(result$residuals, var.name)
+ 	})
+})
+
 compareMeans <- reactive(function() {
 	if(is.null(input$var2)) return("Please select a variable")
 	as.list(input)
@@ -228,6 +219,17 @@ hclustering <- reactive(function() {
 kmeansClustering <- reactive(function() {
 	if(is.null(input$varinterdep)) return("Please select one or more variables")
 	main.kmeansClustering(as.list(input))
+})
+
+# function gets called when button is pressed to save clustermembership 
+# to the dataset
+clus_members <- reactive(function() {
+  if(input$saveclus == 0) return()
+  isolate({
+	  result <- kmeansClustering()
+		var.name <- paste("kclus",input$nrClus,sep="")
+		changedata(as.factor(result$cluster), var.name)
+ 	})
 })
 
 ################################################################
@@ -245,9 +247,9 @@ kmeansClustering <- reactive(function() {
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets) || input$tool == 'dataview') return()
 
-	# getting the summary function and feeding it the output from 
-	# one of the analysis reactives above
-	# using the get-function structure because there may be a large
+	# get the summary function for currenly selected tool and feed
+	# it the output from one of the analysis reactives above
+	# get-function structure is used because there may be a large
 	# set of tools that will have the same output structure
 	f <- get(paste("summary",input$tool,sep = '.'))
 	result <- get(input$tool)()
@@ -269,8 +271,7 @@ output$plots <- reactivePlot(function() {
 	if(!is.character(result)) {
 		f(result)
 	} else {
-		# plot(x = 1, main="No selection made", axes = FALSE, xlab = "", ylab = "")
-		plot(x = 1, type = 'n', main="No selection made", axes = FALSE, xlab = "", ylab = "")
+		plot(x = 1, type = 'n', main="No variable selection made", axes = FALSE, xlab = "", ylab = "")
 	}
 }, width=600, height=600)
 

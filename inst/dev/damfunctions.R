@@ -85,35 +85,22 @@ summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
 }
 
 main.regression <- function(state) {
-	# if(is.null(state$datasets)) return()
-	# if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
-
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
 	result <- lm(formula, data = getdata())
-
-  if(input$abutton != 0) {
-  	isolate({
-			var.name <- "residuals"
-			changedata(result$residuals, var.name)
- 		})
-	}
-
-	result
+	reg_residuals()
+ 	result
 }
 
 summary.regression <- function(result) {
-	# if(is.null(result)) return(cat("Please select one or more independent variables\n"))
 	summary(result)
 }
 
 plot.regression <- function(result) {
-	# if(is.null(result)) return()
 	par(mfrow = c(2,2))
 	plot(result, ask = FALSE)
 }
 
 extra.regression <- function(result) {
-	# if(is.null(result)) return()
 	if(length(result$coefficients) > 2) {
   	cat("Variance Inflation Factors\n")
   	VIF <- sort(vif(result), decreasing = TRUE)
@@ -124,15 +111,12 @@ extra.regression <- function(result) {
 }
 
 summary.compareMeans <- function(state) {
-	# if(is.null(state$datasets)) return()
-	# expand to more than two groups
+	# todo: expand to more than two groups
 	formula <- as.formula(paste(state$var2[1], "~", state$var1))
 	t.test(formula, data = getdata())
 }
 
 plot.compareMeans <- function(state) {
-	# if(is.null(state$datasets) || is.null(state$var2)) return()
-
 	dat <- getdata()
 	# plotting through ggplot not working yet
 	# y <- dat[,state$var2]
@@ -144,15 +128,14 @@ plot.compareMeans <- function(state) {
 }
 
 extra.compareMeans <- function(state) {
-	# nothing here yet, could put in test variance equality
+	# nothing here yet, could put in a test of variance equality
 	cat("Under development\n")
 }
 
 main.hclustering <- function(state) {
 	dat <- getdata()
 	dist.data <- as.dist(dist(dat[,state$varinterdep], method = "euclidean")^2)
-	result <- hclust(d = dist.data, method= "ward")
-	result
+	hclust(d = dist.data, method= "ward")
 }
 
 summary.hclustering <- function(result) {
@@ -167,8 +150,7 @@ plot.hclustering <- function(result) {
 }
 
 extra.hclustering <- function(result) {
-	height <- data.frame('height' = rev(result$height[result$height > 0]))
-	height
+	data.frame('height' = rev(result$height[result$height > 0]))
 }
 
 main.kmeansClustering <- function(state) {
@@ -177,12 +159,8 @@ main.kmeansClustering <- function(state) {
 
 	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
 
-	if(input$abutton != 0) {
-  	isolate({
-			var.name <- paste("kclus",state$nrClus,sep="")
-			changedata(as.factor(result$cluster), var.name)
- 		})
-	}
+	# callin a reactive function to save clustermembership or not
+	clus_members()
 
 	result
 }
@@ -192,7 +170,7 @@ summary.kmeansClustering <- function(result) {
 }
 
 plot.kmeansClustering <- function(result) {
-	# if(is.null(input$datasets) || is.null(input$varinterdep)) return()
+	# several things to work on here to clean-up the plots
 	dat <- getdata()[,input$varinterdep, drop = FALSE]
 	# gg.xlim <- quantile(as.vector(as.matrix(dat)),probs = c(.01,.99))
 	dat$clusvar <- as.factor(result$cluster)

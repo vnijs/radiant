@@ -52,10 +52,10 @@ shinyUI(
       # conditionalPanel(condition = inOrChange,
         conditionalPanel(condition = "input.analysistabs == 'Summary'",
           conditionalPanel(condition = "input.tool == 'regression'",
-            actionButton("abutton", "Save residuals (see Data view)")
+            actionButton("saveres", "Save residuals (see Data view)")
           ),
           conditionalPanel(condition = "input.tool == 'kmeansClustering'",
-            actionButton("abutton", "Save cluster membership (see Data view)")
+            actionButton("saveclus", "Save cluster membership (see Data view)")
           )
         )
       # )
@@ -63,7 +63,7 @@ shinyUI(
     ),
     
     mainPanel(
-      includeHTML('lr.js'), # needed for livereload
+      # includeHTML('lr.js'), # needed for livereload
       conditionalPanel(condition = "input.datasets != 'choosefile'",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
