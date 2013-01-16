@@ -191,7 +191,7 @@ output$logwork <- reactivePrint(function() {
 ################################################################
 
 regression <- reactive(function() {
-	if(is.null(input$var2)) return("Please one or more independent variables")
+	if(is.null(input$var2)) return("Please select one or more independent variables")
 	main.regression(as.list(input))
 })
 
