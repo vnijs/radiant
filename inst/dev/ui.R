@@ -7,7 +7,39 @@ shinyUI(
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
-          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
+          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view'),
+          HTML("<div class='btn-group'>
+            <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'>
+              Action <span class='caret'></span> </a>
+              <ul class='dropdown-menu'>
+                  <li><option value='dataview' selected='selected'>Data view</option></li>
+                  <li><option value='compareMeans'>Compare means</option></li>
+                  <li><option value='regression'>Regression</option></li>
+                  <li class='divider'></li>
+                  <li><option value='hclustering'>Hierarchical clustering</option></li>
+                  <li><option value='kmeansClustering'>Kmeans clustering</option></li>
+                  <li>
+                  <select>
+                    <option value='1' >LIst Item 1</option> 
+                    <option value='2' >LIst Item 2</option>  
+                    <option value='3' >LIst Item 3</option>  
+                    <option value='4' >LIst Item 4</option>  
+                    <option value='5' >LIst Item 5</option>  
+                    <option value='6' >LIst Item 6</option>  
+                  </select>
+                  </li>
+              </ul>
+          </div>"),
+          # HTML("<span class='dropdown' id='filter-add'> <a href='#filter-add' id='addFilter' class='dropdown-toggle' data-toggle='dropdown' > More </a> <ul id='Channels' class='nav nav-pills'> <li class='dropdown'> <a href='#' class='dropdown-toggle' data-toggle='dropdown'>Channel</a> <ul class='dropdown-menu'> <li> <select> <option value='1' >LIst Item 1</option> <option value='2' >LIst Item 2</option> <option value='3' >LIst Item 3</option> <option value='4' >LIst Item 4</option> <option value='5' >LIst Item 5</option> <option value='6' >LIst Item 6</option> </select> </li> </ul> </li> <li><a>Cancel</a></li> </ul> </span> $('.dropdown select').click(function(e) { e.stopPropagation(); }); $('#Channels').hide(); $('#addFilter').click(function() { $('#Channels').show(); });"),
+          HTML("<label class='control-label' for='tool'>Tool:</label>
+                <select id='tool'>
+                  <option value='dataview' selected='selected'>Data view</option>
+                  <option value='compareMeans'>Compare means</option>
+                  <option value='regression'>Regression</option>
+                  <option value='hclustering'>Hierarchical clustering</option>
+
+                  <option value='kmeansClustering'>Kmeans clustering</option>
+                </select>")
         ),
         uiOutput("datasets")
       ),
