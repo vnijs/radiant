@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyIncubator)
 library(car)
+library(datasets)
 library(tools)
 library(foreign)
 library(ggplot2)
@@ -20,7 +21,17 @@ labtools <- c("regression", "kmeansClustering")
 names(addvarlabel) <- labtools
 
 # from ui.R
-toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
+# toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
+toolChoices <- list("Data view" = "dataview", "EDAT - Compare means" = "compareMeans", 
+										"Regression - Linear" = "regression", 
+										"Regression - Logistic (ud)" = "logistic", 
+										"Clustering - Hierarchical" = "hclustering", 
+										"Clustering - Kmeans" = "kmeansClustering",
+										"Product maps - MDS (ud)" = "mds",
+										"Product maps - Perceptual map (ud)" = "perceptualMap",
+										"Conjoint - Design (ud)" = "conjointDesign",
+										"Conjoint - Analysis (ud)" = "conjointAnalysis"
+										)
 
 depChoices <- c("visualize", "regression", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")

@@ -2,4 +2,5 @@
 <script src="js/select2.js"></script>
 <script>
     $(document).ready(function() { $("#tool").select2({ width: 'resolve' }); });
+    $(document).ready(function() { $("#packData").select2({ width: 'resolve' }); });
 </script>

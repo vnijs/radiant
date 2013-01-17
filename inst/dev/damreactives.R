@@ -41,12 +41,6 @@ output$datasets <- reactiveUI(function() {
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
-output$packData <- reactiveUI(function() {
-
-	# Drop-down selection of data sets from 'car' package
-	selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
-})
-
 output$nrRows <- reactiveUI(function() {
 	if(is.null(input$datasets)) return()
 	dat <- getdata()

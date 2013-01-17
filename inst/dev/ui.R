@@ -1,13 +1,16 @@
 shinyUI(
 
   pageWithSidebar(
+
     headerPanel("Data Analysis Menu using Shiny"),
     
     sidebarPanel(
+
+      includeHTML("www/js/damtools.js"),
+
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
-          includeHTML("www/js/damtools.js"),
           selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
         ),
         br(),
@@ -20,7 +23,9 @@ shinyUI(
           helpText("Load user data (Rdata, CSV, Spss, or Stata format):"),
           actionButton("upload", "Choose a file"),
           # helpText("Loading user data disabled on Shiny-Server"),
-          uiOutput("packData")
+          br(), br(),
+          # uiOutput("packData")
+          selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
         )
       ),
 

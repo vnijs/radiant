@@ -7,15 +7,19 @@ options(width = 150, shiny.trace=TRUE, error = traceback)
 lastLoadedData <- list('packData' = "")
 
 # loading list of data.frame in the car package
-listPackData <- function(pack) {
-	lib <- data(package = pack)$results
-	libnames <- c("Choose a file", paste(lib[,'Package'],lib[,'Item'], sep = '-'))
-	lib <- c('',lib[,'Item'])
+listPackData <- function(packs) {
+	libnames <- c("Choose a file")
+	lib <- c('')
+	for(ipack in packs) {
+		ilib <- data(package = ipack)$results
+		libnames <- c(libnames, paste(ilib[,'Package'],ilib[,'Item'], sep = '-'))
+		lib <- c(lib,ilib[,'Item'])
+	}
 	names(lib) <- libnames
 	as.list(lib)
 }
 
-packDataSets <- listPackData('car')
+packDataSets <- listPackData(c('car','datasets'))
 
 # n <- 200000
 # n.var <- 100

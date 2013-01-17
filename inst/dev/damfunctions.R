@@ -55,6 +55,7 @@ loadUserData <- function(uFile) {
 loadPackData <- function(pFile) {
 
 	robjname <- data(list = pFile)
+	# robjname <- data(pFile)
 
 	if(datasets[1] == 'choosefile') {
 		datasets <<- c(robjname)
