@@ -7,9 +7,10 @@ shinyUI(
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
+          includeHTML("www/js/damtools.js"),
           selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
-          # must use! http://ivaynberg.github.com/select2/
         ),
+        br(),
         uiOutput("datasets")
       ),
 
@@ -60,7 +61,7 @@ shinyUI(
     ),
     
     mainPanel(
-      includeHTML('lr.js'), # needed for livereload
+      includeHTML('www/js/lr.js'), # needed for livereload
       conditionalPanel(condition = "input.datasets != 'choosefile'",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
