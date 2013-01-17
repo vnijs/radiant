@@ -51,9 +51,9 @@ output$nrRows <- reactiveUI(function() {
 	if(is.null(input$datasets)) return()
 	dat <- getdata()
 
-	# number of observations to show in data view
+	# observations to show in data view
 	nr <- nrow(dat)
-	sliderInput("nrRows", "# of rows to show:", min = 1, max = min(100,nr), value = min(15,nr), step = 1)
+	sliderInput("nrRows", "Rows to show (max 50):", min = 1, max = nr, value = min(15,nr), step = 1)
 })
 
 # variable selection
@@ -115,10 +115,11 @@ output$dataviewer <- reactiveTable(function() {
 	# selected
 	if(!all(input$columns %in% colnames(dat))) return()
 
-	# Show only the selected columns
-	dat <- dat[, input$columns, drop = FALSE]
-
-	head(dat, input$nrRows)
+	# Show only the selected columns and no more than 50 rows
+	# at a time
+	nr <- input$nrRows
+	dat[max(1,nr-50):nr, input$columns, drop = FALSE] 
+	# head(dat, input$nrRows)
 
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
@@ -190,47 +191,9 @@ output$logwork <- reactivePrint(function() {
 # calling a regular function several times
 ################################################################
 
-regression <- reactive(function() {
-	if(is.null(input$var2)) return("Please select one or more independent variables")
-	main.regression(as.list(input))
-})
-
-# function gets called when button is pressed to save residuals
-# to the dataset
-reg_residuals <- reactive(function() {
-  if(input$saveres == 0) return()
-  isolate({
-  	result <- regression()
- 		var.name <- "residuals"
-		changedata(result$residuals, var.name)
- 	})
-})
-
-compareMeans <- reactive(function() {
-	if(is.null(input$var2)) return("Please select a variable")
-	as.list(input)
-})
-
-hclustering <- reactive(function() {
-	if(is.null(input$varinterdep)) return("Please select one or more variables")
-	main.hclustering(as.list(input))
-})
-
-kmeansClustering <- reactive(function() {
-	if(is.null(input$varinterdep)) return("Please select one or more variables")
-	main.kmeansClustering(as.list(input))
-})
-
-# function gets called when button is pressed to save clustermembership 
-# to the dataset
-clus_members <- reactive(function() {
-  if(input$saveclus == 0) return()
-  isolate({
-	  result <- kmeansClustering()
-		var.name <- paste("kclus",input$nrClus,sep="")
-		changedata(as.factor(result$cluster), var.name)
- 	})
-})
+source('regression.R', local = TRUE)
+source('cluster.R', local = TRUE)
+source('edat.R', local = TRUE)
 
 ################################################################
 # Output controls for the Summary, Plots, and Extra tabs

@@ -10,9 +10,6 @@ shinyServer(function(input, output) {
 	morley <- morley
 	rock <- rock
 
-	# variable that tracks if the action button was pressed
-	bval <- FALSE
-
 	# Our datasets can change over time (i.e. the changedata function). Therefore,
 	# these need to be reactive values; otherwise, the other reactive functions
 	# and outputs that depend on these datasets won't know that they are changed.
@@ -24,10 +21,17 @@ shinyServer(function(input, output) {
 	# copies of mtcars, morley, or rock. This way, all user sessions are independent
 	# from each other (since datasetEnv is being defined in a scope that's local to
 	# a particular invocation of the shinyServer function).
-	datasetEnv <- new.env()
-	datasetEnv$mtcars <- reactiveValue(mtcars)
-	datasetEnv$morley <- reactiveValue(morley)
-	datasetEnv$rock <- reactiveValue(rock)
+
+	# datasetEnv <- new.env()
+	# datasetEnv$mtcars <- reactiveValues(mtcars)
+	# datasetEnv$morley <- reactiveValues(morley)
+	# datasetEnv$rock <- reactiveValues(rock)
+
+	# datasetEnv <- new.env()
+	values <- reactiveValues()
+	values$mtcars <- mtcars
+	values$morley <- morley
+	values$rock <- rock
 
 	datasets <- c("mtcars", "morley", "rock")
 

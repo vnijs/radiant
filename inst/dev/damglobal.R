@@ -4,7 +4,7 @@
 options(width = 150, shiny.trace=TRUE, error = traceback)
 # options(width = 150)
 
-lastLoadedData <- list('userData' = "", 'packData' = "")
+lastLoadedData <- list('packData' = "")
 
 # loading list of data.frame in the car package
 listPackData <- function(pack) {
@@ -16,3 +16,8 @@ listPackData <- function(pack) {
 }
 
 packDataSets <- listPackData('car')
+
+# n <- 200000
+# n.var <- 100
+# simdat <- data.frame(matrix(rnorm(n*n.var),nrow = n, ncol <- n.var))
+# save(simdat,file = "data/simdat.rda")

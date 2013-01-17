@@ -31,4 +31,3 @@ inOr <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || "
 # there will be more in the future
 toolsThatCanChangeData <- c("regression", "kmeansClustering")
 inOrChange <- paste("input.tool == '",toolsThatCanChangeData,"'", sep = "", collapse = " || ")
-# inOrChange <- paste(inOrChange,"&& input.analysistabs == 'Summary'")

@@ -20,10 +20,17 @@ changedata <- function(addCol = NULL, addColName = "") {
   isolate({
     # rdat isn't the dataset, it's a reactive value that holds the dataset.
     # We use value() to read it, and value<-() to write to it.
-    rdat <- get(input$datasets, pos=datasetEnv)
-    dat <- value(rdat)
-    dat[,addColName] <- addCol
-    value(rdat) <- dat
+    # rdat <- get(input$datasets, pos=datasetEnv)
+    # dat <- value(rdat)
+    # dat[,addColName] <- addCol
+    # value(rdat) <- dat
+
+    # dat <- values[[input$datasets]]
+    # dat[,addColName] <- addCol
+    # values[[input$datasets]] <- dat
+    # dat <- values[[input$datasets]]
+    # dat[,addColName] <- addCol
+    values[[input$datasets]][[addColName]] <- addCol
   })
 }
 
@@ -31,8 +38,9 @@ getdata <- function(dataset = input$datasets) {
 
   # First we get the reactive value from datasetEnv. Then we need to use the
   # value() function to actually retrieve the dataset.
-	dat <- value(get(dataset, pos=datasetEnv))
-	dat
+	# dat <- value(get(dataset, pos=datasetEnv))
+	# dat
+  values[[dataset]]
 }	
 
 loadUserData <- function(uFile) {
@@ -46,7 +54,7 @@ loadUserData <- function(uFile) {
 		# objname will hold the name of the object inside the R datafile
 	  # objname <- robjname <- load(uFile$datapath, envir = datasetEnv)
 	  objname <- robjname <- load(uFile, envir = datasetEnv)
-		assign(robjname, reactiveValue(get(objname, pos = datasetEnv)), pos = datasetEnv)
+		assign(robjname, reactiveValues(get(objname, pos = datasetEnv)), pos = datasetEnv)
 	}
 
 	if(datasets[1] == 'choosefile') {
@@ -56,14 +64,14 @@ loadUserData <- function(uFile) {
 	}
 
 	if(ext == 'sav') {
-		# assign(objname, reactiveValue(read.sav(uFile$datapath)), pos = datasetEnv)
-		assign(objname, reactiveValue(read.sav(uFile)), pos = datasetEnv)
+		# assign(objname, reactiveValues(read.sav(uFile$datapath)), pos = datasetEnv)
+		assign(objname, reactiveValues(read.sav(uFile)), pos = datasetEnv)
 	} else if(ext == 'dta') {
-		# assign(objname, reactiveValue(read.dta(uFile$datapath)), pos = datasetEnv)
-		assign(objname, reactiveValue(read.dta(uFile)), pos = datasetEnv)
+		# assign(objname, reactiveValues(read.dta(uFile$datapath)), pos = datasetEnv)
+		assign(objname, reactiveValues(read.dta(uFile)), pos = datasetEnv)
 	} else if(ext == 'csv') {
-		# assign(objname, reactiveValue(read.csv(uFile$datapath)), pos = datasetEnv)
-		assign(objname, reactiveValue(read.csv(uFile)), pos = datasetEnv)
+		# assign(objname, reactiveValues(read.csv(uFile$datapath)), pos = datasetEnv)
+		assign(objname, reactiveValues(read.csv(uFile)), pos = datasetEnv)
 	}
 }
 
@@ -77,117 +85,9 @@ loadPackData <- function(pFile) {
 		datasets <<- unique(c(robjname,datasets))
 	}
 
-	assign(robjname, reactiveValue(get(robjname, pos = datasetEnv)), pos = datasetEnv)
+	assign(robjname, reactiveValues(get(robjname, pos = datasetEnv)), pos = datasetEnv)
 }      
 
 summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
 	return()
-}
-
-main.regression <- function(state) {
-	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
-	result <- lm(formula, data = getdata())
-	reg_residuals()
- 	result
-}
-
-summary.regression <- function(result) {
-	summary(result)
-}
-
-plot.regression <- function(result) {
-	par(mfrow = c(2,2))
-	plot(result, ask = FALSE)
-}
-
-extra.regression <- function(result) {
-	if(length(result$coefficients) > 2) {
-  	cat("Variance Inflation Factors\n")
-  	VIF <- sort(vif(result), decreasing = TRUE)
-		data.frame(VIF)
-	} else {
-  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
-	}
-}
-
-summary.compareMeans <- function(state) {
-	# todo: expand to more than two groups
-	formula <- as.formula(paste(state$var2[1], "~", state$var1))
-	t.test(formula, data = getdata())
-}
-
-plot.compareMeans <- function(state) {
-	dat <- getdata()
-	# plotting through ggplot not working yet
-	# y <- dat[,state$var2]
-	# x <- as.factor(dat[,state$var1])
-	# dat <- data.frame(cbind(x,y))
-	print(qplot(factor(dat[,state$var1]), dat[,state$var2[1]], data = dat, xlab = state$var1, ylab = state$var2, geom = c("boxplot", "jitter")))
-	# print(ggplot(dat, aes_string(x=x, y=state$var2)) + geom_boxplot()) # x must be specified as a factor --> doesn't work with aes_string
-	# print(ggplot(dat, aes(x=x, y=y)) + geom_boxplot()) # x must be specified as a factor --> doesn't work with aes_string
-}
-
-extra.compareMeans <- function(state) {
-	# nothing here yet, could put in a test of variance equality
-	cat("Under development\n")
-}
-
-main.hclustering <- function(state) {
-	dat <- getdata()
-	dist.data <- as.dist(dist(dat[,state$varinterdep], method = "euclidean")^2)
-	hclust(d = dist.data, method= "ward")
-}
-
-summary.hclustering <- function(result) {
-	# if(is.null(result)) return(cat("Please select one or more variables\n"))
-	result
-}
-
-plot.hclustering <- function(result) {
-	# if(is.null(result)) return()
-	# use ggdendro when it gets back on cran
-	plot(result, main = "Dendrogram")
-}
-
-extra.hclustering <- function(result) {
-	data.frame('height' = rev(result$height[result$height > 0]))
-}
-
-main.kmeansClustering <- function(state) {
-	set.seed(1234)
-	dat <- getdata()
-
-	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
-
-	# callin a reactive function to save clustermembership or not
-	clus_members()
-
-	result
-}
-
-summary.kmeansClustering <- function(result) {
-	result
-}
-
-plot.kmeansClustering <- function(result) {
-	# several things to work on here to clean-up the plots
-	dat <- getdata()[,input$varinterdep, drop = FALSE]
-	# gg.xlim <- quantile(as.vector(as.matrix(dat)),probs = c(.01,.99))
-	dat$clusvar <- as.factor(result$cluster)
-
-	if(ncol(dat) > 2) {
-		plots <- list()
-		for(var in input$varinterdep) {
-			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + xlim(gg.xlim[1],gg.xlim[2]) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
-			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
-			plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 1.5) 
-		}
-		print(do.call(grid.arrange, plots))
-	} else {
-			print(ggplot(dat, aes_string(x=input$varinterdep[1], colour='clusvar')) + geom_density(adjust = 1.5))
-	}
-}
-
-extra.kmeansClustering <- function(result) {
-	cat("Under development\n")
 }
