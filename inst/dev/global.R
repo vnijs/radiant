@@ -22,7 +22,9 @@ names(addvarlabel) <- labtools
 
 # from ui.R
 # toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
-toolChoices <- list("Data view" = "dataview", "EDAT - Compare means" = "compareMeans", 
+toolChoices <- list("Data view" = "dataview", 
+										"EDAT - Single mean" = "singleMean", 
+										"EDAT - Compare means" = "compareMeans", 
 										"Regression - Linear" = "regression", 
 										"Regression - Logistic (ud)" = "logistic", 
 										"Clustering - Hierarchical" = "hclustering", 
@@ -33,7 +35,7 @@ toolChoices <- list("Data view" = "dataview", "EDAT - Compare means" = "compareM
 										"Conjoint - Analysis (ud)" = "conjointAnalysis"
 										)
 
-depChoices <- c("visualize", "regression", "compareMeans")
+# depChoices <- c("visualize", "regression", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")
 notInAnd <- paste("input.tool != '",interdepChoices,"'", sep = "", collapse = " && ")
 inOr <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || ")
