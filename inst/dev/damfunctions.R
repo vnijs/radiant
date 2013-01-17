@@ -55,7 +55,11 @@ loadUserData <- function(uFile) {
 loadPackData <- function(pFile) {
 
 	robjname <- data(list = pFile)
-	# robjname <- data(pFile)
+	dat <- get(robjname)
+	if(!is.data.frame(dat)) return("Not a data.frame. Choose another dataset")
+	if(pFile != robjname) return("R-object not found. Please choose another dataset")
+
+	values[[robjname]] <- dat
 
 	if(datasets[1] == 'choosefile') {
 		datasets <<- c(robjname)
@@ -63,7 +67,6 @@ loadPackData <- function(pFile) {
 		datasets <<- unique(c(robjname,datasets))
 	}
 
-	values[[robjname]] <- get(robjname)
 }      
 
 summary.dataview <- plot.dataview <- extra.dataview <- function(state) {

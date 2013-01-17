@@ -20,7 +20,7 @@ shinyUI(
       # only show data loading and selection options when in dataview
       conditionalPanel(condition = "input.tool == 'dataview'",
         wellPanel(
-          helpText("Load user data (Rdata, CSV, Spss, or Stata format):"),
+          HTML("<label>Load user data:<br>(.rda | .csv | .sav | .dta)</label>"),
           actionButton("upload", "Choose a file"),
           # helpText("Loading user data disabled on Shiny-Server"),
           br(), br(),
