@@ -13,21 +13,10 @@ shinyServer(function(input, output) {
 	# Our datasets can change over time (i.e. the changedata function). Therefore,
 	# these need to be reactive values; otherwise, the other reactive functions
 	# and outputs that depend on these datasets won't know that they are changed.
-	#
-	# We'll create an environment to hold these reactive values, and prepopulate
-	# it with the initial contents of these datasets.
-	#
-	# Note that once we populate datasetEnv, we never get or assign the "original"
-	# copies of mtcars, morley, or rock. This way, all user sessions are independent
-	# from each other (since datasetEnv is being defined in a scope that's local to
-	# a particular invocation of the shinyServer function).
 
-	# datasetEnv <- new.env()
-	# datasetEnv$mtcars <- reactiveValues(mtcars)
-	# datasetEnv$morley <- reactiveValues(morley)
-	# datasetEnv$rock <- reactiveValues(rock)
+	# Note that we never get or assign the "original" copies of mtcars, morley, 
+	# or rock. This way, all user sessions are independent from each other 
 
-	# datasetEnv <- new.env()
 	values <- reactiveValues()
 	values$mtcars <- mtcars
 	values$morley <- morley
