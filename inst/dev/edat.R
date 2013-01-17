@@ -1,7 +1,4 @@
 summary.compareMeans <- function(state) {
-	if(is.null(state$var2)) return(cat("Please select one or more variables\n"))
-	if(is.null(state$datasets)) return()
-	# expand to more than two groups
 	formula <- as.formula(paste(state$var2[1], "~", state$var1))
 	t.test(formula, data = getdata())
 }
@@ -25,6 +22,6 @@ extra.compareMeans <- function(state) {
 }
 
 compareMeans <- reactive(function() {
-	if(is.null(input$var2)) return()
+	if(is.null(input$var2)) return("Please select a variable")
 	as.list(input)
 })

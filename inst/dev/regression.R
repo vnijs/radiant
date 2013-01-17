@@ -1,8 +1,6 @@
 main.regression <- function(state) {
 	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
-	result <- lm(formula, data = getdata())
-	reg_residuals()
- 	result
+	lm(formula, data = getdata())
 }
 
 summary.regression <- function(result) {
@@ -31,9 +29,7 @@ regression <- reactive(function() {
 
 observe(function() {
 	if (input$saveres == 0) return()
-	isolate({
-		result <- regression()
-		var.name <- "residuals"
-		changedata(result$residuals, var.name)
-	})
+	isolate(
+		changedata(regression()$residuals, "residuals")
+	)
 })

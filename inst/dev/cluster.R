@@ -5,12 +5,10 @@ main.hclustering <- function(state) {
 }
 
 summary.hclustering <- function(result) {
-	# if(is.null(result)) return(cat("Please select one or more variables\n"))
 	result
 }
 
 plot.hclustering <- function(result) {
-	# if(is.null(result)) return()
 	# use ggdendro when it gets back on cran
 	plot(result, main = "Dendrogram")
 }
@@ -19,16 +17,15 @@ extra.hclustering <- function(result) {
 	data.frame('height' = rev(result$height[result$height > 0]))
 }
 
+hclustering <- reactive(function() {
+	if(is.null(input$varinterdep)) return("Please select one or more variables")
+	main.hclustering(as.list(input))
+})
+
 main.kmeansClustering <- function(state) {
 	set.seed(1234)
 	dat <- getdata()
-
-	result <- kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
-
-	# callin a reactive function to save clustermembership or not
-	clus_members()
-
-	result
+	kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
 }
 
 summary.kmeansClustering <- function(result) {
@@ -58,23 +55,15 @@ extra.kmeansClustering <- function(result) {
 	cat("Under development\n")
 }
 
-hclustering <- reactive(function() {
-	if(is.null(input$varinterdep)) return("Please select one or more variables")
-	main.hclustering(as.list(input))
-})
-
 kmeansClustering <- reactive(function() {
 	if(is.null(input$varinterdep)) return("Please select one or more variables")
 	main.kmeansClustering(as.list(input))
 })
 
-# function gets called when button is pressed to save clustermembership 
-# to the dataset
-clus_members <- reactive(function() {
-  if(input$saveclus == 0) return()
-  isolate({
-	  result <- kmeansClustering()
-		var.name <- paste("kclus",input$nrClus,sep="")
-		changedata(as.factor(result$cluster), var.name)
- 	})
+observe(function() {
+	if (input$saveclus == 0) return()
+	isolate({
+		clusmem <- kmeansClustering()$cluster
+		changedata(as.factor(clusmem), paste("kclus",input$nrClus,sep=""))
+	})
 })

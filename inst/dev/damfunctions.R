@@ -1,5 +1,5 @@
 ################################################################
-# all regular functions used in damshiny app 
+# regular functions used in damshiny app 
 ################################################################
 
 varnames <- function() {
@@ -12,34 +12,15 @@ varnames <- function() {
 }
 
 changedata <- function(addCol = NULL, addColName = "") {
-
 	# function that changes data as needed
 	if(is.null(addCol) || addColName == "") return()
-  
   # We don't want to take a reactive dependency on anything
-  isolate({
-    # rdat isn't the dataset, it's a reactive value that holds the dataset.
-    # We use value() to read it, and value<-() to write to it.
-    # rdat <- get(input$datasets, pos=datasetEnv)
-    # dat <- value(rdat)
-    # dat[,addColName] <- addCol
-    # value(rdat) <- dat
-
-    # dat <- values[[input$datasets]]
-    # dat[,addColName] <- addCol
-    # values[[input$datasets]] <- dat
-    # dat <- values[[input$datasets]]
-    # dat[,addColName] <- addCol
-    values[[input$datasets]][[addColName]] <- addCol
-  })
+  isolate(
+  	values[[input$datasets]][[addColName]] <- addCol
+  )
 }
 
 getdata <- function(dataset = input$datasets) {
-
-  # First we get the reactive value from datasetEnv. Then we need to use the
-  # value() function to actually retrieve the dataset.
-	# dat <- value(get(dataset, pos=datasetEnv))
-	# dat
   values[[dataset]]
 }	
 
@@ -52,9 +33,8 @@ loadUserData <- function(uFile) {
 
 	if(ext == 'rda' || ext == 'rdata') {
 		# objname will hold the name of the object inside the R datafile
-	  # objname <- robjname <- load(uFile$datapath, envir = datasetEnv)
-	  objname <- robjname <- load(uFile, envir = datasetEnv)
-		assign(robjname, reactiveValues(get(objname, pos = datasetEnv)), pos = datasetEnv)
+	  objname <- robjname <- load(uFile)
+		values[[robjname]] <- get(robjname)
 	}
 
 	if(datasets[1] == 'choosefile') {
@@ -64,20 +44,17 @@ loadUserData <- function(uFile) {
 	}
 
 	if(ext == 'sav') {
-		# assign(objname, reactiveValues(read.sav(uFile$datapath)), pos = datasetEnv)
-		assign(objname, reactiveValues(read.sav(uFile)), pos = datasetEnv)
+		values[[objname]] <- read.sav(uFile)
 	} else if(ext == 'dta') {
-		# assign(objname, reactiveValues(read.dta(uFile$datapath)), pos = datasetEnv)
-		assign(objname, reactiveValues(read.dta(uFile)), pos = datasetEnv)
+		values[[objname]] <- read.dta(uFile)
 	} else if(ext == 'csv') {
-		# assign(objname, reactiveValues(read.csv(uFile$datapath)), pos = datasetEnv)
-		assign(objname, reactiveValues(read.csv(uFile)), pos = datasetEnv)
+		values[[objname]] <- read.csv(uFile)
 	}
 }
 
 loadPackData <- function(pFile) {
 
-	robjname <- data(list = pFile, envir = datasetEnv)
+	robjname <- data(list = pFile)
 
 	if(datasets[1] == 'choosefile') {
 		datasets <<- c(robjname)
@@ -85,7 +62,7 @@ loadPackData <- function(pFile) {
 		datasets <<- unique(c(robjname,datasets))
 	}
 
-	assign(robjname, reactiveValues(get(robjname, pos = datasetEnv)), pos = datasetEnv)
+	values[[robjname]] <- get(robjname)
 }      
 
 summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
