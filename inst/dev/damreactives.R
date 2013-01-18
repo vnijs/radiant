@@ -16,7 +16,9 @@ output$columns <- reactiveUI(function() {
 	cols <- varnames()
 
 	# Create a group of checkboxes and select them all by default
-	checkboxGroupInput("columns", "Choose columns", choices  = as.list(cols), selected = names(cols))
+	# checkboxGroupInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols))
+	selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
+	# get select2 lifecyle for this. Awesome. http://ivaynberg.github.com/select2/
 })
 
 output$datasets <- reactiveUI(function() {
@@ -95,6 +97,13 @@ output$varinterdep <- reactiveUI(function() {
 output$nrClus <- reactiveUI(function() {
 	selectInput(inputId = "nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE)
 })
+
+# for alternative hypothesis
+alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greate")
+output$alternative <- reactiveUI(function() {
+	selectInput("alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided")
+})
+
 
 ################################################################
 # Data reactives - view, plot, transform data, and log your work

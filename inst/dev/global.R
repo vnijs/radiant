@@ -10,9 +10,9 @@ library(gridExtra)
 # variables are in global.R so they will be available in both ui.R and server.R
 # from server.R
 # Labels for variable selectors
-labels1 <- c("Dependent variable","Group variable (only factors shown)")
-labels2 <- c("Independent variables","Variables (select one)")
-labtools <- c("regression", "compareMeans")
+labels1 <- c("Dependent variable","Variable (select one)", "Group variable (only factors shown)")
+labels2 <- c("Independent variables","", "Variables (select one)")
+labtools <- c("regression", "singleMean", "compareMeans")
 names(labels1) <- names(labels2) <- labtools
 
 # labels for output$addvariable
@@ -21,7 +21,6 @@ labtools <- c("regression", "kmeansClustering")
 names(addvarlabel) <- labtools
 
 # from ui.R
-# toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering")
 toolChoices <- list("Data view" = "dataview", 
 										"EDAT - Single mean" = "singleMean", 
 										"EDAT - Compare means" = "compareMeans", 
@@ -35,10 +34,14 @@ toolChoices <- list("Data view" = "dataview",
 										"Conjoint - Analysis (ud)" = "conjointAnalysis"
 										)
 
-depChoices <- c("visualize", "regression", "compareMeans")
+# depChoices <- c("visualize", "regression", "singleMean", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")
 notInAnd <- paste("input.tool != '",interdepChoices,"'", sep = "", collapse = " && ")
 inOr <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || ")
+
+singleVar <- c("singleMean")
+notInSingle	<- paste("input.tool != '",singleVar,"'", sep = "", collapse = " || ")
+inSingle	<- paste("input.tool == '",singleVar,"'", sep = "", collapse = " || ")
 
 # there are two tools sofar that can change the data used
 # there will be more in the future

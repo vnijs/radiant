@@ -7,12 +7,13 @@ shinyUI(
     sidebarPanel(
 
       includeHTML("www/js/damtools.js"),
+      includeHTML('www/js/lr.js'), # needed for livereload
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
           # selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
-          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'EDAT - Compare means')
+          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'EDAT - Single mean')
         ),
         br(),
         uiOutput("datasets")
@@ -25,7 +26,6 @@ shinyUI(
           actionButton("upload", "Choose a file"),
           # helpText("Loading user data disabled on Shiny-Server"),
           br(), br(),
-          # uiOutput("packData")
           selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
         )
       ),
@@ -33,7 +33,8 @@ shinyUI(
       conditionalPanel(condition = "input.tool == 'dataview' && input.datatabs == 'Data view' && input.datasets != 'choosefile'",
           wellPanel(
             uiOutput("nrRows"), 
-            uiOutput("columns")
+            uiOutput("columns"), 
+            tags$style(type='text/css', "#columns { height: 250px; padding-bottom: 35px;}")
           )
       ),
      
@@ -44,8 +45,18 @@ shinyUI(
 
       conditionalPanel(condition = "input.tool != 'dataview'",
         conditionalPanel(condition = notInAnd,
-          wellPanel(uiOutput("var1")), 
-          wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 250px; padding-bottom: 35px;}"))
+          wellPanel(
+            uiOutput("var1"),
+            conditionalPanel(condition = inSingle,
+              uiOutput("alternative"),
+              sliderInput('sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
+              numericInput("compValue", "Comparison value:", 0)
+            )
+          ), 
+
+          conditionalPanel(condition = notInSingle,
+            wellPanel(uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 250px; padding-bottom: 35px;}"))
+          )
         )
       ),
 
@@ -67,7 +78,6 @@ shinyUI(
     ),
     
     mainPanel(
-      includeHTML('www/js/lr.js'), # needed for livereload
       conditionalPanel(condition = "input.datasets != 'choosefile'",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
@@ -81,8 +91,8 @@ shinyUI(
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
-            tabPanel("Plots", plotOutput("plots", height = 1200)),
             tabPanel("Summary", verbatimTextOutput("summary")), 
+            tabPanel("Plots", plotOutput("plots", height = 1200)),
             tabPanel("Extra", verbatimTextOutput("extra")),
             tabPanel("Log", verbatimTextOutput("log")) 
           )

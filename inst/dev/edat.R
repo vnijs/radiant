@@ -1,3 +1,40 @@
+summary.singleMean <- function(state) {
+	# varname <- state$var1
+	# assign(varname, getdata()[,state$var1])
+	dat <- getdata()[,state$var1]
+
+	comp <- 0
+	# alt <- "two.sided"
+	# conf <- .95
+
+	# t.test(dat, mu = comp, alternative = state$alternativealt, conf.level = conf )
+	t.test(dat, mu = state$compValue, alternative = state$alternative, conf.level = state$sigLevel)
+
+}
+
+plot.singleMean <- function(state) {
+
+	dat <- getdata()
+
+	x <- dat[,input$var1]
+	ifelse(is.factor(x), bw <- .1, bw <- diff(range(x)) / 12)
+
+	p <- ggplot(dat, aes_string(x=input$var1)) + 
+			geom_histogram(colour = 'black', fill = 'blue', binwidth = bw) + 
+			geom_vline(xintercept = state$compValue, color = 'red', linetype = 'longdash', size = 1) +
+			geom_vline(xintercept = mean(x), color = 'green', linetype = 'solid', size = 1)
+	print(p)
+}
+
+extra.singleMean <- function(state) {
+	cat("Under development\n")
+}
+
+singleMean <- reactive(function() {
+	if(is.null(input$var1)) return("Please select a variable")
+	as.list(input)
+})
+
 summary.compareMeans <- function(state) {
 	formula <- as.formula(paste(state$var2[1], "~", state$var1))
 	t.test(formula, data = getdata())
