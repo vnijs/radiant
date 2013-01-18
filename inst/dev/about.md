@@ -1,6 +1,6 @@
 ## Data Analysis Menu using Shiny (Development version)
 
-Version 0.03 (1/9/2013)
+Version 0.05 (1/17/2013)
 
 Code available on GitHub: [https://github.com/mostly-harmless/damshiny](https://github.com/mostly-harmless/damshiny)
 

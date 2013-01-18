@@ -194,9 +194,9 @@ output$logwork <- reactivePrint(function() {
 # calling a regular function several times
 ################################################################
 
+source('edat.R', local = TRUE)
 source('regression.R', local = TRUE)
 source('cluster.R', local = TRUE)
-source('edat.R', local = TRUE)
 
 ################################################################
 # Output controls for the Summary, Plots, and Extra tabs

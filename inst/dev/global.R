@@ -36,11 +36,11 @@ toolChoices <- list("Data view" = "dataview",
 
 # depChoices <- c("visualize", "regression", "singleMean", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")
-notInAnd <- paste("input.tool != '",interdepChoices,"'", sep = "", collapse = " && ")
-inOr <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || ")
+notInInterdep <- paste("input.tool != '",interdepChoices,"'", sep = "", collapse = " && ")
+inInterdep <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || ")
 
 singleVar <- c("singleMean")
-notInSingle	<- paste("input.tool != '",singleVar,"'", sep = "", collapse = " || ")
+notInSingle	<- paste("input.tool != '",singleVar,"'", sep = "", collapse = " && ")
 inSingle	<- paste("input.tool == '",singleVar,"'", sep = "", collapse = " || ")
 
 # there are two tools sofar that can change the data used

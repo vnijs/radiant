@@ -45,7 +45,7 @@ plot.kmeansClustering <- function(result) {
 			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
 			plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 1.5) 
 		}
-		print(do.call(grid.arrange, plots))
+		print(do.call(grid.arrange, c(plots, list(ncol = 2))))
 	} else {
 			print(ggplot(dat, aes_string(x=input$varinterdep[1], colour='clusvar')) + geom_density(adjust = 1.5))
 	}
