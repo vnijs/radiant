@@ -35,7 +35,7 @@ toolChoices <- list("Data view" = "dataview",
 										"Conjoint - Analysis (ud)" = "conjointAnalysis"
 										)
 
-# depChoices <- c("visualize", "regression", "compareMeans")
+depChoices <- c("visualize", "regression", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")
 notInAnd <- paste("input.tool != '",interdepChoices,"'", sep = "", collapse = " && ")
 inOr <- paste("input.tool == '",interdepChoices,"'", sep = "", collapse = " || ")

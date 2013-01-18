@@ -11,7 +11,8 @@ shinyUI(
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
-          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
+          # selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
+          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'EDAT - Compare means')
         ),
         br(),
         uiOutput("datasets")
@@ -80,8 +81,8 @@ shinyUI(
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
-            tabPanel("Summary", verbatimTextOutput("summary")), 
             tabPanel("Plots", plotOutput("plots", height = 1200)),
+            tabPanel("Summary", verbatimTextOutput("summary")), 
             tabPanel("Extra", verbatimTextOutput("extra")),
             tabPanel("Log", verbatimTextOutput("log")) 
           )
