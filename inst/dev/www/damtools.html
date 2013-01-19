@@ -1,10 +1,36 @@
-<!-- toolChoices <- list("Data view" = "dataview", "Compare means" = "compareMeans", "Regression" = "regression", "Hierarchical clustering" = "hclustering", "Kmeans clustering" = "kmeansClustering") -->
-
 <label>Tool:</label>
 <select id='tool'>
-	<option value='dataview'>Data view</option>
-	<option value='regression'>Regression</option>
-	<option value='kmeansClustering'>Kmeans clustering</option>
+	<option value='dataview', selected="dataview">Data view</option>
+  <optgroup label="EDAT">
+		<option value='singleMean'>Single mean</option>
+		<option value='compareMeans'>Compare means</option>
+		<option value='singleProp'>Single proportion</option>
+		<option value='compareProp'>Compare proportion</option>
+		<option value='crosstabRaw'>Cross-tab (raw)</option>
+		<option value='crosstabTab'>Cross-tab (tab)</option>
+		<option value='correlation'>Correlation</option>
+  </optgroup>
+  <optgroup label="Regression">
+		<option value='regression'>Linear (OLS)</option>
+		<option value='logisticReg'>Logistic</option>
+  </optgroup>
+  <optgroup label="Maps">
+		<option value='mapMds'>MDS</option>
+		<option value='mapPerceptual'>Perceptual</option>
+  </optgroup>
+  <optgroup label="Factor">
+		<option value='preFactor'>Pre-factor diagnostics</option>
+		<option value='factorAnalysis'>Factor analysis</option>
+  </optgroup>
+  <optgroup label="Cluster">
+		<option value='hclustering'>Hierarchical</option>
+		<option value='kmeansClustering'>K-means</option>
+  </optgroup>
+  <optgroup label="Conjoint">
+		<option value='hclustering'>Create profiles</option>
+		<option value='kmeansClustering'>Conjoint analysis</option>
+  </optgroup>
+	<option value='update'>Update app</option>
 </select>
 <br><br>
 

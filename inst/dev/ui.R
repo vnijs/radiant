@@ -13,9 +13,8 @@ shinyUI(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
           #selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
-          selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'EDAT - Compare means')
+          includeHTML('www/damtools.html')
         ),
-        br(),
         uiOutput("datasets")
       ),
 

@@ -45,7 +45,6 @@ plot.compareMeans <- function(result) {
 	plots[["Density"]] <- ggplot(dat, aes_string(x=input$var2, fill=input$var1)) +
 														geom_density(alpha=.3)
 
-
 	print(do.call(grid.arrange, c(plots, list(ncol = 1))))
 }
 
