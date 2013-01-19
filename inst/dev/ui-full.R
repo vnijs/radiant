@@ -1,15 +1,3 @@
-mypanelA <- function() {
-  sliderInput('newslider',"New slider A:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
-}
-
-mypanel.dataview <- function() {
-  sliderInput('newslider',"New slider dataview:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
-}
-
-aval <- 'A'
-bval <- 'B'
-
-
 shinyUI(
 
   pageWithSidebar(
@@ -21,9 +9,6 @@ shinyUI(
       includeHTML("www/js/damtools.js"),
       includeHTML('www/js/lr.js'), # needed for livereload
 
-      # get(paste('mypanel',aval, sep=""))(),
-      # get(paste('mypanel',bval, sep=""))(),
-
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != 'choosefile'",
@@ -32,14 +17,6 @@ shinyUI(
         ),
         uiOutput("datasets")
       ),
-
-      wellPanel(
-
-        get(paste('mypanel',input$tool, sep="."))(),
-
-      ),
-
-
 
       # only show data loading and selection options when in dataview
       conditionalPanel(condition = "input.tool == 'dataview'",
@@ -68,18 +45,14 @@ shinyUI(
         )
       ),
 
-
       conditionalPanel(condition = "input.tool != 'dataview'",
 
         conditionalPanel(condition = notInInterdep,
-
           wellPanel(
             uiOutput("var1"),
-
             conditionalPanel(condition = notInSingle,
               uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 200px; padding-bottom: 35px;}")
             ),
-
             conditionalPanel(condition = "input.tool == 'regression'",
               actionButton("saveres", "Save residuals (see Data view)")
             )

@@ -61,7 +61,7 @@ kmeansClustering <- reactive(function() {
 })
 
 observe(function() {
-	if (input$saveclus == 0) return()
+	if(is.null(input$saveclus) || input$saveclus == 0) return()
 	isolate({
 		clusmem <- kmeansClustering()$cluster
 		changedata(as.factor(clusmem), paste("kclus",input$nrClus,sep=""))

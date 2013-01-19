@@ -28,7 +28,7 @@ regression <- reactive(function() {
 })
 
 observe(function() {
-	if (input$saveres == 0) return()
+	if(is.null(input$saveres) || input$saveres == 0) return()
 	isolate(
 		changedata(regression()$residuals, "residuals")
 	)
