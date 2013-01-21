@@ -1,25 +1,3 @@
-
-controlsFor_singleMean <- function() {
-  wellPanel(
-    uiOutput("var1"),
-    uiOutput("alternative"),
-    sliderInput('sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
-    numericInput("compValue", "Comparison value:", 0)
-  )
-}
-
-controlsFor_compareMeans <- function() {
-  wellPanel(
-    uiOutput("var1"),
-    uiOutput("var2"),
-    uiOutput("alternative"),
-    sliderInput('sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
-  )
-}
-
-# toolselection <- "singleMean"
-toolselection <- "compareMeans"
-
 shinyUI(
 
   pageWithSidebar(
@@ -39,7 +17,6 @@ shinyUI(
         ),
         uiOutput("datasets")
       ),
-
 
       # only show data loading and selection options when in dataview
       conditionalPanel(condition = "input.tool == 'dataview'",
@@ -68,11 +45,38 @@ shinyUI(
         )
       ),
 
-
       conditionalPanel(condition = "input.tool != 'dataview'",
 
-        get(paste("controlsFor",toolselection,sep = "_"))()
-        
+        conditionalPanel(condition = notInInterdep,
+          wellPanel(
+            uiOutput("var1"),
+            conditionalPanel(condition = notInSingle,
+              uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 200px; padding-bottom: 35px;}")
+            ),
+            conditionalPanel(condition = "input.tool == 'regression'",
+              actionButton("saveres", "Save residuals (see Data view)")
+            )
+          ),
+
+
+          conditionalPanel(condition = "input.tool != 'regression'",
+            wellPanel(
+              uiOutput("alternative"),
+              sliderInput('sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
+              conditionalPanel(condition = "input.tool == 'singleMean'",
+                numericInput("compValue", "Comparison value:", 0)
+              )
+            )
+          )
+        ),
+
+        conditionalPanel(condition = inInterdep,
+          wellPanel(
+            uiOutput("nrClus"),
+            uiOutput("varinterdep"), tags$style(type='text/css', "#varinterdep { height: 250px; padding-bottom: 35px;}"),
+            actionButton("saveclus", "Save cluster membership (see Data view)")
+          )
+        )
       )
     ),
     
@@ -91,7 +95,7 @@ shinyUI(
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")), 
-            tabPanel("Plots", plotOutput("plots", height = "1200px")),
+            tabPanel("Plots", plotOutput("plots", height = 1200)),
             tabPanel("Extra", verbatimTextOutput("extra")),
             tabPanel("Log", verbatimTextOutput("log")) 
           )
