@@ -4,6 +4,7 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 
 ### Todo:
 - Add analysis-tools (e.g., conjoint, factor, perceptual maps, MDS, proportions, ANOVA)
+- Using knitr to allow logging of analyses
 - Create help files
 - etc. etc.
 		
