@@ -21,9 +21,9 @@ shinyServer(function(input, output) {
 	values$mtcars <- mtcars
 	values$morley <- morley
 	values$rock <- rock
-	values$diamonds <- diamonds[1:1000,]
-
-	datasets <- c("diamonds","mtcars", "morley", "rock")
+	# values$diamonds <- diamonds[1:1000,]
+	# datasets <- c("diamonds","mtcars", "morley", "rock")
+	datasets <- c("mtcars", "morley", "rock")
 	lastLoaded <- "" 		
 
 	# sourcing (reactive) functions

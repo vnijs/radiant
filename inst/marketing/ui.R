@@ -45,11 +45,14 @@ shinyUI(
             uiOutput("vizvars1"),
             # uiOutput("vizvars2"), tags$style(type='text/css', "#vizvars2 { height: 250px; padding-bottom: 35px;}")
             uiOutput("vizvars2"),
-            uiOutput("viz_color"),
-            checkboxInput('viz_jitter', 'Jitter'),
-            checkboxInput('viz_smooth', 'Smooth'),
-            uiOutput("viz_facet_row"),
-            uiOutput("viz_facet_col")
+
+            conditionalPanel(condition = "input.vizvars2 != ''",
+              uiOutput("viz_color"),
+              checkboxInput('viz_jitter', 'Jitter'),
+              checkboxInput('viz_smooth', 'Smooth'),
+              uiOutput("viz_facet_row"),
+              uiOutput("viz_facet_col")
+            )
           )
         )
       ),
@@ -82,7 +85,7 @@ shinyUI(
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
-            tabPanel("Visualize", plotOutput("visualize")),
+            tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
             # tabPanel("Transform", tableOutput("transform")),      # once transform has been implement use tableOutput
             tabPanel("Transform", verbatimTextOutput("transform")),
             tabPanel("About", includeMarkdown("about.md"))

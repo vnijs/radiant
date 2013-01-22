@@ -2,7 +2,6 @@
 output$sm_var <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
-
   selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars, selected = NULL, multiple = FALSE)
 })
 

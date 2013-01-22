@@ -63,25 +63,33 @@ output$vizvars2 <- reactiveUI(function() {
 	cols <- varnames()
 	if(is.null(cols)) return()
 	# selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
-	selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = FALSE)
-})
-
-output$viz_facet_row <- reactiveUI(function() {
-	cols <- varnames()
-	if(is.null(cols)) return()
-	selectInput('viz_facet_row', 'Facet row', c(None='.', cols))
-})
-
-output$viz_facet_col <- reactiveUI(function() {
-	cols <- varnames()
-	if(is.null(cols)) return()
-	selectInput('viz_facet_col', 'Facet column', c(None='.', cols))
+	selectInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "",as.list(cols[-which(cols == input$vizvars1)])), selected = "", multiple = FALSE)
 })
 
 output$viz_color <- reactiveUI(function() {
 	cols <- varnames()
 	if(is.null(cols)) return()
-	selectInput('viz_color', 'Color', c('None', cols))
+	isFct <- sapply(getdata(), is.factor)
+ 	cols <- cols[isFct]
+	selectInput('viz_color', 'Color', c('None'="", as.list(cols)))
+})
+
+output$viz_facet_row <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	isFct <- sapply(getdata(), is.factor)
+ 	cols <- cols[isFct]
+	# selectInput('viz_facet_row', 'Facet row', c(None='.', as.list(cols[-which(cols == input$viz_color)])))
+	selectInput('viz_facet_row', 'Facet row', c(None='.', as.list(cols)))
+})
+
+output$viz_facet_col <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	isFct <- sapply(getdata(), is.factor)
+ 	cols <- cols[isFct]
+	# selectInput('viz_facet_col', 'Facet col', c(None='.', as.list(cols[-which(cols == input$viz_color)])))
+	selectInput('viz_facet_col', 'Facet col', c(None='.', as.list(cols)))
 })
 
 ################################################################
@@ -101,7 +109,6 @@ output$dataviewer <- reactiveTable(function() {
 	# at a time
 	nr <- input$nrRows
 	data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE])
-	# head(dat, input$nrRows)
 
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
@@ -112,9 +119,15 @@ output$visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$vizvars2)) return()
 	if(input$datatabs != 'Visualize') return()
 
-	  p <- ggplot(getdata(), aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point()
-    
-    if (input$viz_color != 'None') {
+		dat <- getdata()
+
+		if(input$vizvars2 == "") {
+			p <- ggplot(dat, aes_string(x=input$vizvars1)) + geom_histogram(colour = 'black', fill = 'blue') 
+		} else {
+		  p <- ggplot(dat, aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point()
+		}
+
+    if (input$viz_color != '') {
     	p <- p + aes_string(color=input$viz_color)
     }
 
@@ -125,38 +138,10 @@ output$visualize <- reactivePlot(function() {
     if (input$viz_jitter)
       p <- p + geom_jitter()
     if (input$viz_smooth)
-      p <- p + geom_smooth()
+      p <- p + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
     
     print(p)
-})
-
-output$old_visualize <- reactivePlot(function() {
-	if(is.null(input$datasets) || is.null(input$vizvars1)) return()
-	if(input$datatabs != 'Visualize') return()
-
-	################################################################
-	# idea: add the ggplot2 demo stuff in here. should be very nice.
-	################################################################
-	
-	dat <- getdata()
-
-	x <- dat[,input$vizvars1]
-	ifelse(is.factor(x), bw <- .1, bw <- diff(range(x)) / 12)
-
-	if(is.null(input$vizvars2)) {
-		p <- ggplot(dat, aes_string(x=input$vizvars1)) + geom_histogram(colour = 'black', fill = 'blue', binwidth = bw)
-	} else {
-		y <- dat[,input$vizvars2]
-		ifelse(is.factor(y), jitt <- .1, jitt <- diff(range(y)) / 15)
-
-		p <- ggplot(dat, aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point() + geom_jitter(position = position_jitter(width = bw, height = jitt)) + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
-	}
-	print(p)
-
-	# idea: Add a download button so graphs can be saved
-	# although ... could just copy-and-paste right?
-	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
-})
+}, width = 800, height = 700)
 
 # output$transform <- reactiveTable(function() {
 output$transform <- reactivePrint(function() {
@@ -244,20 +229,4 @@ output$plots <- reactivePlot(function() {
 	} else {
 		plot(x = 1, type = 'n', main="No variable selection made", axes = FALSE, xlab = "", ylab = "")
 	}
-}, width = 600, height = 600)
-
-# Generate output for the extra tab
-# output$extra <- reactivePrint(function() {
-
-# 	# if extra calculations are expensive
-# 	# do only when tab is being viewed
-# 	if(input$tool == 'dataview' || input$analysistabs != 'Extra') return()
-
-# 	f <- get(paste("extra",input$tool,sep = '.'))
-# 	result <- get(input$tool)()
-# 	if(is.character(result)) {
-# 		cat(result,"\n")
-# 	} else {
-# 		f(result)
-# 	}
-# })
+}, width = 700, height = 700)
