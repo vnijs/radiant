@@ -19,7 +19,7 @@ output$cm_var1 <- reactiveUI(function() {
 output$cm_var2 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
-  selectInput(inputId = "cm_var2", label = "Variables (select one)", choices = vars[-which(vars == input$cm_var1)], selected = NULL, multiple = TRUE)
+  selectInput(inputId = "cm_var2", label = "Variables (select one):", choices = vars[-which(vars == input$cm_var1)], selected = NULL, multiple = TRUE)
 })
 
 # variable selection - regression
@@ -33,7 +33,14 @@ output$reg_var1 <- reactiveUI(function() {
 output$reg_var2 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
-  selectInput(inputId = "reg_var2", label = "Independent variables", choices = vars[-which(vars == input$reg_var1)], selected = NULL, multiple = TRUE)
+  selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars[-which(vars == input$reg_var1)], selected = NULL, multiple = TRUE)
+})
+
+# variable selection - compareMeans
+output$reg_var3 <- reactiveUI(function() {
+  vars <- input$reg_var2
+  if(is.null(vars)) return()
+  selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
 # variable selection - hclustering

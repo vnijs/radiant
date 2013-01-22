@@ -62,7 +62,26 @@ output$vizvars2 <- reactiveUI(function() {
 	# cols <- input$columns
 	cols <- varnames()
 	if(is.null(cols)) return()
-	selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
+	# selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
+	selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = FALSE)
+})
+
+output$viz_facet_row <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	selectInput('viz_facet_row', 'Facet row', c(None='.', cols))
+})
+
+output$viz_facet_col <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	selectInput('viz_facet_col', 'Facet column', c(None='.', cols))
+})
+
+output$viz_color <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	selectInput('viz_color', 'Color', c('None', cols))
 })
 
 ################################################################
@@ -81,14 +100,37 @@ output$dataviewer <- reactiveTable(function() {
 	# Show only the selected columns and no more than 50 rows
 	# at a time
 	nr <- input$nrRows
-	dat[max(1,nr-50):nr, input$columns, drop = FALSE] 
+	data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE])
 	# head(dat, input$nrRows)
 
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
 })
 
+
 output$visualize <- reactivePlot(function() {
+	if(is.null(input$datasets) || is.null(input$vizvars2)) return()
+	if(input$datatabs != 'Visualize') return()
+
+	  p <- ggplot(getdata(), aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point()
+    
+    if (input$viz_color != 'None') {
+    	p <- p + aes_string(color=input$viz_color)
+    }
+
+    facets <- paste(input$viz_facet_row, '~', input$viz_facet_col)
+    if (facets != '. ~ .')
+      p <- p + facet_grid(facets)
+    
+    if (input$viz_jitter)
+      p <- p + geom_jitter()
+    if (input$viz_smooth)
+      p <- p + geom_smooth()
+    
+    print(p)
+})
+
+output$old_visualize <- reactivePlot(function() {
 	if(is.null(input$datasets) || is.null(input$vizvars1)) return()
 	if(input$datatabs != 'Visualize') return()
 
@@ -130,15 +172,14 @@ output$transform <- reactivePrint(function() {
 	# https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/uZZT564y0i8
 	# https://gist.github.com/4515551 
 
-	cat("Command box and data view (in development)")
+	cat("Command box and data view (in development)\n")
 
 })
 
 output$logwork <- reactivePrint(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
-	if(input$datatabs != 'Log') return()
-
+	# if(input$datatabs != 'Log') return()
 	# idea: When a user presses a log-button the output on screen is saved to an rda file
 	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-input
 	# and then call the relevant parts from an Rmd file that gets-sourced. By default all snap
@@ -147,7 +188,7 @@ output$logwork <- reactivePrint(function() {
 	# ask Jeff about how to attribute code (and also Yihie) if you use some of their code
 	# https://github.com/jeffreyhorner/TeachingLab
 
-	cat("Work log (in development)")
+	cat("Analysis log (in development)\n")
 
 })
 
@@ -203,20 +244,20 @@ output$plots <- reactivePlot(function() {
 	} else {
 		plot(x = 1, type = 'n', main="No variable selection made", axes = FALSE, xlab = "", ylab = "")
 	}
-}, width=600, height=600)
+}, width = 600, height = 600)
 
 # Generate output for the extra tab
-output$extra <- reactivePrint(function() {
+# output$extra <- reactivePrint(function() {
 
-	# if extra calculations are expensive
-	# do only when tab is being viewed
-	if(input$tool == 'dataview' || input$analysistabs != 'Extra') return()
+# 	# if extra calculations are expensive
+# 	# do only when tab is being viewed
+# 	if(input$tool == 'dataview' || input$analysistabs != 'Extra') return()
 
-	f <- get(paste("extra",input$tool,sep = '.'))
-	result <- get(input$tool)()
-	if(is.character(result)) {
-		cat(result,"\n")
-	} else {
-		f(result)
-	}
-})
+# 	f <- get(paste("extra",input$tool,sep = '.'))
+# 	result <- get(input$tool)()
+# 	if(is.character(result)) {
+# 		cat(result,"\n")
+# 	} else {
+# 		f(result)
+# 	}
+# })

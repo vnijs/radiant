@@ -26,7 +26,6 @@ getdata <- function(dataset = input$datasets) {
 
 loadUserData <- function(uFile) {
 
-	# filename <- uFile$name
 	ext <- file_ext(uFile)
 	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
 	ext <- tolower(ext)
@@ -57,7 +56,7 @@ loadPackData <- function(pFile) {
 	robjname <- data(list = pFile)
 	dat <- get(robjname)
 	# if(!is.data.frame(dat)) return("Not a data.frame. Choose another dataset")
-	# if(pFile != robjname) return("R-object not found. Please choose another dataset")
+	if(pFile != robjname) return("R-object not found. Please choose another dataset")
 
 	values[[robjname]] <- dat
 
@@ -66,11 +65,4 @@ loadPackData <- function(pFile) {
 	} else {
 		datasets <<- unique(c(robjname,datasets))
 	}
-
-	print(robjname)
-	print(datasets)
-	datasets <<- unique(c(robjname,datasets))
-	print(datasets)
-	datasets
-
 }

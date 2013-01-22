@@ -23,14 +23,15 @@ shinyUI(
 
       # only show data loading and selection options when in dataview
       conditionalPanel(condition = "input.tool == 'dataview'",
-        wellPanel(
-          HTML("<label>Load user data: (.rda | .csv | .sav | .dta)</label>"),
-          actionButton("upload", "Choose a file"),
-          # helpText("Loading user data disabled on Shiny-Server"),
-          br(), br(),
-          selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
+        conditionalPanel(condition = "input.datatabs != 'Visualize'",
+          wellPanel(
+            HTML("<label>Load user data: (.rda | .csv | .sav | .dta)</label>"),
+            actionButton("upload", "Choose a file"),
+            # helpText("Loading user data disabled on Shiny-Server"),
+            br(), br(),
+            selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
+          )
         ),
-
         conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != ''",
           wellPanel(
             uiOutput("nrRows"), 
@@ -42,8 +43,13 @@ shinyUI(
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           wellPanel(
             uiOutput("vizvars1"),
+            # uiOutput("vizvars2"), tags$style(type='text/css', "#vizvars2 { height: 250px; padding-bottom: 35px;}")
             uiOutput("vizvars2"),
-            tags$style(type='text/css', "#vizvars2 { height: 250px; padding-bottom: 35px;}")
+            uiOutput("viz_color"),
+            checkboxInput('viz_jitter', 'Jitter'),
+            checkboxInput('viz_smooth', 'Smooth'),
+            uiOutput("viz_facet_row"),
+            uiOutput("viz_facet_col")
           )
         )
       ),
@@ -79,16 +85,14 @@ shinyUI(
             tabPanel("Visualize", plotOutput("visualize")),
             # tabPanel("Transform", tableOutput("transform")),      # once transform has been implement use tableOutput
             tabPanel("Transform", verbatimTextOutput("transform")),
-            tabPanel("Log", verbatimTextOutput('logwork')),
             tabPanel("About", includeMarkdown("about.md"))
           )
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")), 
-            tabPanel("Plots", plotOutput("plots", height = 1200)),
-            tabPanel("Extra", verbatimTextOutput("extra")),
-            tabPanel("Log", verbatimTextOutput("log")) 
+            tabPanel("Plots", plotOutput("plots", height = "1200px")),
+            tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )
       )

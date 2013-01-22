@@ -6,13 +6,16 @@
 		<option value='compareMeans'>Compare means</option>
 		<option value='singleProp' disabled = "disabled">Single proportion</option>
 		<option value='compareProp' disabled = "disabled">Compare proportion</option>
-		<option value='crosstabRaw' disabled = "disabled">Cross-tab (raw)</option>
-		<option value='crosstabTab' disabled = "disabled">Cross-tab (tab)</option>
+		<option value='crosstab' disabled = "disabled">Cross-tab</option>
 		<option value='correlation' disabled = "disabled">Correlation</option>
   </optgroup>
   <optgroup label="Regression">
 		<option value='regression'>Linear (OLS)</option>
 		<option value='logisticReg' disabled = "disabled">Logistic</option>
+  </optgroup>
+    <optgroup label="Cluster">
+		<option value='hclustering'>Hierarchical</option>
+		<option value='kmeansClustering'>K-means</option>
   </optgroup>
   <optgroup label="Maps">
 		<option value='mapMds' disabled = "disabled">MDS</option>
@@ -22,13 +25,9 @@
 		<option value='preFactor' disabled = "disabled">Pre-factor diagnostics</option>
 		<option value='factorAnalysis' disabled = "disabled">Factor analysis</option>
   </optgroup>
-  <optgroup label="Cluster">
-		<option value='hclustering'>Hierarchical</option>
-		<option value='kmeansClustering'>K-means</option>
-  </optgroup>
   <optgroup label="Conjoint">
-		<option value='hclustering' disabled = "disabled">Create profiles</option>
-		<option value='kmeansClustering' disabled = "disabled">Conjoint analysis</option>
+		<option value='conProfiles' disabled = "disabled">Create profiles</option>
+		<option value='conjoint' disabled = "disabled">Conjoint analysis</option>
   </optgroup>
 	<option value='update' disabled = "disabled">Update app</option>
 </select>
