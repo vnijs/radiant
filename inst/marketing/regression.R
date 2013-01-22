@@ -1,8 +1,3 @@
-main.regression <- function(state) {
-	formula <- paste(state$var1, "~", paste(state$var2, collapse = " + "))
-	lm(formula, data = getdata())
-}
-
 summary.regression <- function(result) {
 	summary(result)
 }
@@ -24,7 +19,8 @@ extra.regression <- function(result) {
 
 regression <- reactive(function() {
 	if(is.null(input$var2)) return("Please select one or more independent variables")
-	main.regression(as.list(input))
+	formula <- paste(input$var1, "~", paste(input$var2, collapse = " + "))
+	lm(formula, data = getdata())
 })
 
 observe(function() {

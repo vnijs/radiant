@@ -23,7 +23,6 @@ output$columns <- reactiveUI(function() {
 
 output$datasets <- reactiveUI(function() {
 
-	state <- as.list(input)
 	fpath <- uploadfunc()
 
 	# loading user data
@@ -32,10 +31,10 @@ output$datasets <- reactiveUI(function() {
 	} 
 
 	# loading package data
-	if(!is.null(state$packData) && state$packData != "") {
-		if(state$packData != lastLoadedData$packData) {
-			loadPackData(state$packData)
-			lastLoadedData$packData <<- state$packData 
+	if(!is.null(input$packData) && input$packData != "") {
+		if(input$packData != lastLoadedData$packData) {
+			loadPackData(input$packData)
+			lastLoadedData$packData <<- input$packData 
 		}
 	}
 
@@ -176,7 +175,7 @@ output$logwork <- reactivePrint(function() {
 	if(input$datatabs != 'Log') return()
 
 	# idea: When a user presses a log-button the output on screen is saved to an rda file
-	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-state
+	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-input
 	# and then call the relevant parts from an Rmd file that gets-sourced. By default all snap
 	# shots are shown in log but user can deseleted snap-shots as desired.
 	# take another look at Jeff's teaching log. this could be a great starting point

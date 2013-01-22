@@ -2,7 +2,7 @@ shinyUI(
 
   pageWithSidebar(
 
-    headerPanel("Data Analysis Menu using Shiny"),
+    headerPanel("Data Analysis for Marketing using Shiny"),
     
     sidebarPanel(
 
@@ -72,11 +72,12 @@ shinyUI(
 
         conditionalPanel(condition = inInterdep,
           wellPanel(
-            uiOutput("nrClus"),
             uiOutput("varinterdep"), tags$style(type='text/css', "#varinterdep { height: 250px; padding-bottom: 35px;}"),
+            uiOutput("nrClus"),
             actionButton("saveclus", "Save cluster membership (see Data view)")
           )
         )
+        # submitButton()
       )
     ),
     

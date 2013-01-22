@@ -54,7 +54,8 @@ loadUserData <- function(uFile) {
 
 loadYahooData <- function(symbol) {
 
-	if (symbol == "Choose a symbol") return()
+	# if (symbol == "Choose a symbol") return()
+	if (symbol == "") return()
 	if (!exists(symbol)) getSymbols(symbol)
 
 	values[[symbol]] <- get(symbol)

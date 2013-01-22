@@ -4,7 +4,7 @@ Version 0.01 (1/21/2013)
 
 By: Vincent Nijs (vnijs at rady.ucsd.edu)
 
-Dependencies for local use: shiny, shiny-incubator, car, tools, foreign, ggplot2, reshape
+Dependencies for local use: shiny, shiny-incubator, car, tools, foreign, ggplot2, reshape, markdown, fGarch, quantmod
 
 ## Some interesting links:
 - [R empirical finance](http://cran.r-project.org/web/views/Finance.html) page for additional tools.

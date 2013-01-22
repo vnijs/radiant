@@ -67,8 +67,4 @@ loadPackData <- function(pFile) {
 		datasets <<- unique(c(robjname,datasets))
 	}
 
-}      
-
-summary.dataview <- plot.dataview <- extra.dataview <- function(state) {
-	return()
 }

@@ -1,9 +1,3 @@
-main.hclustering <- function(state) {
-	dat <- getdata()
-	dist.data <- as.dist(dist(dat[,state$varinterdep], method = "euclidean")^2)
-	hclust(d = dist.data, method= "ward")
-}
-
 summary.hclustering <- function(result) {
 	result
 }
@@ -19,14 +13,17 @@ extra.hclustering <- function(result) {
 
 hclustering <- reactive(function() {
 	if(is.null(input$varinterdep)) return("Please select one or more variables")
-	main.hclustering(as.list(input))
+	dist.data <- as.dist(dist(getdata()[,input$varinterdep], method = "euclidean")^2)
+	hclust(d = dist.data, method= "ward")
 })
 
-main.kmeansClustering <- function(state) {
-	set.seed(1234)
-	dat <- getdata()
-	kmeans(na.omit(object = dat[,state$varinterdep]), centers = state$nrClus, nstart = 10, iter.max = 500)
-}
+observe(function() {
+	if(is.null(input$saveclus) || input$saveclus == 0 || input$tool != 'hclustering') return()
+	isolate({
+		clusmem <- cutree(hclustering(), k = input$nrClus)
+		changedata(as.factor(clusmem), paste("hclus",input$nrClus,sep=""))
+	})
+})
 
 summary.kmeansClustering <- function(result) {
 	result
@@ -57,11 +54,12 @@ extra.kmeansClustering <- function(result) {
 
 kmeansClustering <- reactive(function() {
 	if(is.null(input$varinterdep)) return("Please select one or more variables")
-	main.kmeansClustering(as.list(input))
+	set.seed(1234)
+	kmeans(na.omit(object = getdata()[,input$varinterdep]), centers = input$nrClus, nstart = 10, iter.max = 500)
 })
 
 observe(function() {
-	if(is.null(input$saveclus) || input$saveclus == 0) return()
+	if(is.null(input$saveclus) || input$saveclus == 0 || input$tool != 'kmeansClustering') return()
 	isolate({
 		clusmem <- kmeansClustering()$cluster
 		changedata(as.factor(clusmem), paste("kclus",input$nrClus,sep=""))

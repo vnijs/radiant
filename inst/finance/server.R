@@ -9,6 +9,10 @@ shinyServer(function(input, output) {
 	values[[robjname]] <- get(robjname)
 	datasets <- c(robjname)
 
+	# nasdaq_file <- read.csv('data/nasdaq-company-list.csv')
+	# symbol_list <- c("",nasdaq_file[,1])
+	# names(symbol_list) <- c("",nasdaq_file[,2])
+
 	# sourcing (reactive) functions
 	source('damfunctions.R', local = TRUE)
 	source('damreactives.R', local = TRUE)
