@@ -3,10 +3,8 @@
 This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/). If you would like to see the app in action please visit Rstudio's Glimmer-server at [http://glimmer.rstudio.com/mostlyhrmls/damshiny/](http://glimmer.rstudio.com/mostlyhrmls/damshiny/)
 
 ### Todo:
-- Add analysis-tools (e.g., MDS, factor, perceptual maps, conjoint)
+- Add analysis-tools (e.g., conjoint, factor, perceptual maps, MDS, proportions, ANOVA)
 - Create help files
-- Add options for regression (e.g., F-test for competing models)
-- Develop install structure so users can pick-and-choose menu-components. For an amazing implementation see [Bootstrap](http://twitter.github.com/bootstrap/customize.html) although this is *well* beyond what I have in mind.
 - etc. etc.
 		
 ### To use the damshiny package locally
