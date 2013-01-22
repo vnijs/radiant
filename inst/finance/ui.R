@@ -36,8 +36,7 @@ shinyUI(
 
         wellPanel(
           uiOutput("nrRows"), 
-
-          conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets == ''",
+          conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != ''",
             uiOutput("columns"), tags$style(type='text/css', "#columns { height: 250px; padding-bottom: 35px;}")
           )
         ),

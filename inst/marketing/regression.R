@@ -8,18 +8,22 @@ plot.regression <- function(result) {
 }
 
 extra.regression <- function(result) {
-	if(length(result$coefficients) > 2) {
-  	cat("Variance Inflation Factors\n")
-  	VIF <- sort(vif(result), decreasing = TRUE)
-		data.frame(VIF)
+	if(input$reg_vif) {
+		if(length(result$coefficients) > 2) {
+	  	cat("Variance Inflation Factors\n")
+	  	VIF <- sort(vif(result), decreasing = TRUE)
+			data.frame(VIF)
+		} else {
+	  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
+		}
 	} else {
-  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
+	  	cat("No extra's selected\n")
 	}
 }
 
 regression <- reactive(function() {
-	if(is.null(input$var2)) return("Please select one or more independent variables")
-	formula <- paste(input$var1, "~", paste(input$var2, collapse = " + "))
+	if(is.null(input$reg_var2)) return("Please select one or more independent variables")
+	formula <- paste(input$reg_var1, "~", paste(input$reg_var2, collapse = " + "))
 	lm(formula, data = getdata())
 })
 

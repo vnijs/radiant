@@ -21,18 +21,18 @@ labtools <- c("regression", "kmeansClustering")
 names(addvarlabel) <- labtools
 
 # from ui.R
-toolChoices <- list("Data view" = "dataview", 
-										"EDAT - Single mean" = "singleMean", 
-										"EDAT - Compare means" = "compareMeans", 
-										"Regression - Linear" = "regression", 
-										"Regression - Logistic (ud)" = "logistic", 
-										"Clustering - Hierarchical" = "hclustering", 
-										"Clustering - Kmeans" = "kmeansClustering",
-										"Product maps - MDS (ud)" = "mds",
-										"Product maps - Perceptual map (ud)" = "perceptualMap",
-										"Conjoint - Design (ud)" = "conjointDesign",
-										"Conjoint - Analysis (ud)" = "conjointAnalysis"
-										)
+# toolChoices <- list("Data view" = "dataview", 
+# 										"EDAT - Single mean" = "singleMean", 
+# 										"EDAT - Compare means" = "compareMeans", 
+# 										"Regression - Linear" = "regression", 
+# 										"Regression - Logistic (ud)" = "logistic", 
+# 										"Clustering - Hierarchical" = "hclustering", 
+# 										"Clustering - Kmeans" = "kmeansClustering",
+# 										"Product maps - MDS (ud)" = "mds",
+# 										"Product maps - Perceptual map (ud)" = "perceptualMap",
+# 										"Conjoint - Design (ud)" = "conjointDesign",
+# 										"Conjoint - Analysis (ud)" = "conjointAnalysis"
+# 										)
 
 # depChoices <- c("visualize", "regression", "singleMean", "compareMeans")
 interdepChoices <- c("hclustering","kmeansClustering")

@@ -1,6 +1,3 @@
-source('uiControls.R')
- # "dataview", "singleMean", "compareMeans", "regression", "logistic", "hclustering", "kmeansClustering", "mds", "perceptualMap", "conjointDesign", "conjointAnalysis"
-
 shinyUI(
 
   pageWithSidebar(
@@ -41,33 +38,45 @@ shinyUI(
      
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           wellPanel(
-            uiOutput("vizvars1"),
-            uiOutput("vizvars2"),
-            tags$style(type='text/css', "#vizvars2 { height: 250px; padding-bottom: 35px;}")
+            uiOutput("varview1"),
+            uiOutput("varview2"),
+            tags$style(type='text/css', "#varview2 { height: 250px; padding-bottom: 35px;}")
           )
         )
       ),
 
       conditionalPanel(condition = "input.tool != 'dataview'",
 
-        conditionalPanel(condition = "input.tool == 'singleMean'",
-          ui_singleMean()
+        conditionalPanel(condition = notInInterdep,
+          wellPanel(
+            uiOutput("var1"),
+            conditionalPanel(condition = notInSingle,
+              uiOutput("var2"),tags$style(type='text/css', "#var2 { height: 200px; padding-bottom: 35px;}")
+            ),
+            conditionalPanel(condition = "input.tool == 'regression'",
+              actionButton("saveres", "Save residuals (see Data view)")
+            )
+          ),
+
+
+          conditionalPanel(condition = "input.tool != 'regression'",
+            wellPanel(
+              uiOutput("alternative"),
+              sliderInput('sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
+              conditionalPanel(condition = "input.tool == 'singleMean'",
+                numericInput("compValue", "Comparison value:", 0)
+              )
+            )
+          )
         ),
-        conditionalPanel(condition = "input.tool == 'compareMeans'",
-          ui_compareMeans()
-        ),
-        conditionalPanel(condition = "input.tool == 'regression'",
-           ui_regression()
-        ),
-        conditionalPanel(condition = "input.tool == 'hclustering'",
-           ui_hclustering()
-        ),
-        conditionalPanel(condition = "input.tool == 'kmeansClustering'",
-           ui_kmeansClustering()
+
+        conditionalPanel(condition = inInterdep,
+          wellPanel(
+            uiOutput("varinterdep"), tags$style(type='text/css', "#varinterdep { height: 250px; padding-bottom: 35px;}"),
+            uiOutput("nrClus"),
+            actionButton("saveclus", "Save cluster membership (see Data view)")
+          )
         )
-  
-        # submitButton("Test")
-        # get(paste("controlsFor",toolselection,sep = "_"))()
       )
     ),
     
@@ -85,7 +94,8 @@ shinyUI(
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
-            tabPanel("Summary", verbatimTextOutput("summary")), 
+            # tabPanel("Summary", verbatimTextOutput("summary")), 
+            tabPanel("Summary", tableOutput("summary")), 
             tabPanel("Plots", plotOutput("plots", height = 1200)),
             tabPanel("Extra", verbatimTextOutput("extra")),
             tabPanel("Log", verbatimTextOutput("log")) 

@@ -12,15 +12,6 @@ uploadfunc <- reactive(function() {
   }
 })
 
-output$columns <- reactiveUI(function() {
-	cols <- varnames()
-
-	# Create a group of checkboxes and select them all by default
-	# checkboxGroupInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols))
-	selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
-	# get select2 lifecyle for this. Awesome. http://ivaynberg.github.com/select2/
-})
-
 output$datasets <- reactiveUI(function() {
 
 	fpath <- uploadfunc()
@@ -31,10 +22,10 @@ output$datasets <- reactiveUI(function() {
 	} 
 
 	# loading package data
-	if(!is.null(input$packData) && input$packData != "") {
-		if(input$packData != lastLoadedData$packData) {
+	if(input$packData != "") {
+		if(input$packData != lastLoaded) {
 			loadPackData(input$packData)
-			lastLoadedData$packData <<- input$packData 
+			lastLoaded <<- input$packData 
 		}
 	}
 
@@ -42,67 +33,37 @@ output$datasets <- reactiveUI(function() {
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
+output$columns <- reactiveUI(function() {
+	cols <- varnames()
+
+	selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
+})
+
 output$nrRows <- reactiveUI(function() {
 	if(is.null(input$datasets)) return()
 	dat <- getdata()
 
-	# observations to show in data view
+	# number of observations to show in dataview
 	nr <- nrow(dat)
 	sliderInput("nrRows", "Rows to show (max 50):", min = 1, max = nr, value = min(15,nr), step = 1)
 })
 
-# variable selection
-output$var1 <- reactiveUI(function() {
-	vars <- varnames()
-	if(is.null(vars)) return()
-
-	if(input$tool == 'compareMeans') {
-		isFct <- sapply(getdata(), is.factor)
-		vars <- vars[isFct]
-	}
-
-	selectInput(inputId = "var1", label = labels1[input$tool], choices = vars, selected = NULL, multiple = FALSE)
-})
-
-# variable selection
-output$var2 <- reactiveUI(function() {
-	vars <- varnames()
-	if(is.null(vars)) return()
-	selectInput(inputId = "var2", label = labels2[input$tool], choices = vars[-which(vars == input$var1)], selected = NULL, multiple = TRUE)
-})
-
 # variable selection in the datatabs views
-output$varview1 <- reactiveUI(function() {
-	vars <- varnames()
-	if(is.null(vars)) return()
+output$vizvars1 <- reactiveUI(function() {
+	# cols <- input$columns
+	cols <- varnames()
+	if(is.null(cols)) return()
 
-	selectInput(inputId = "varview1", label = "X-variable", choices = vars, selected = NULL, multiple = FALSE)
+	selectInput(inputId = "vizvars1", label = "X-variable", choices = as.list(cols), selected = NULL, multiple = FALSE)
 })
 
 # variable selection
-output$varview2 <- reactiveUI(function() {
-	vars <- varnames()
-	if(is.null(vars)) return()
-	selectInput(inputId = "varview2", label = "Y-variable", choices = vars[-which(vars == input$varview1)], selected = NULL, multiple = TRUE)
+output$vizvars2 <- reactiveUI(function() {
+	# cols <- input$columns
+	cols <- varnames()
+	if(is.null(cols)) return()
+	selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
 })
-
-output$varinterdep <- reactiveUI(function() {
-	vars <- varnames()
-	if(is.null(vars)) return()
-	selectInput(inputId = "varinterdep", label = "Variables", choices = vars, selected = NULL, multiple = TRUE)
-})
-
-# dropdown used to select the number of clusters to create
-output$nrClus <- reactiveUI(function() {
-	selectInput(inputId = "nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE)
-})
-
-# for alternative hypothesis
-alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greate")
-output$alternative <- reactiveUI(function() {
-	selectInput("alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided")
-})
-
 
 ################################################################
 # Data reactives - view, plot, transform data, and log your work
@@ -128,26 +89,30 @@ output$dataviewer <- reactiveTable(function() {
 })
 
 output$visualize <- reactivePlot(function() {
-	if(is.null(input$datasets) || is.null(input$varview1)) return()
+	if(is.null(input$datasets) || is.null(input$vizvars1)) return()
 	if(input$datatabs != 'Visualize') return()
 
+	################################################################
+	# idea: add the ggplot2 demo stuff in here. should be very nice.
+	################################################################
+	
 	dat <- getdata()
 
-	x <- dat[,input$varview1]
+	x <- dat[,input$vizvars1]
 	ifelse(is.factor(x), bw <- .1, bw <- diff(range(x)) / 12)
 
-	if(is.null(input$varview2)) {
-		p <- ggplot(dat, aes_string(x=input$varview1)) + geom_histogram(colour = 'black', fill = 'blue', binwidth = bw)
+	if(is.null(input$vizvars2)) {
+		p <- ggplot(dat, aes_string(x=input$vizvars1)) + geom_histogram(colour = 'black', fill = 'blue', binwidth = bw)
 	} else {
-		y <- dat[,input$varview2]
+		y <- dat[,input$vizvars2]
 		ifelse(is.factor(y), jitt <- .1, jitt <- diff(range(y)) / 15)
 
-		p <- ggplot(dat, aes_string(x=input$varview1, y=input$varview2)) + geom_point() + geom_jitter(position = position_jitter(width = bw, height = jitt)) + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
+		p <- ggplot(dat, aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point() + geom_jitter(position = position_jitter(width = bw, height = jitt)) + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
 	}
 	print(p)
 
 	# idea: Add a download button so graphs can be saved
-	# idea: Add download button so data can be saved
+	# although ... could just copy-and-paste right?
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
 })
 

@@ -23,9 +23,11 @@ shinyServer(function(input, output) {
 	values$rock <- rock
 
 	datasets <- c("mtcars", "morley", "rock")
+	lastLoaded <- "" 		
 
 	# sourcing (reactive) functions
 	source('damfunctions.R', local = TRUE)
 	source('damreactives.R', local = TRUE)
+	source('serverControls.R', local = TRUE)
 
 })

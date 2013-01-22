@@ -33,7 +33,7 @@ shinyUI(
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
-        conditionalPanel(condition = "input.datasets != 'choosefile'",
+        conditionalPanel(condition = "input.datasets != ''",
           #selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
           includeHTML('www/damtools.html')
         ),
@@ -51,7 +51,7 @@ shinyUI(
           selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
         ),
 
-        conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != 'choosefile'",
+        conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != ''",
           wellPanel(
             uiOutput("nrRows"), 
             uiOutput("columns"), 
@@ -77,7 +77,7 @@ shinyUI(
     ),
     
     mainPanel(
-      conditionalPanel(condition = "input.datasets != 'choosefile'",
+      conditionalPanel(condition = "input.datasets != ''",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
