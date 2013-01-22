@@ -5,8 +5,7 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 ### Todo:
 - Add analysis-tools (e.g., MDS, factor, perceptual maps, conjoint)
 - Create help files
-- Add options for compare means (e.g., one-sided) and regression (e.g., F-test for competing models)
-- Add time-series plots with 1 or 2 y-axes
+- Add options for regression (e.g., F-test for competing models)
 - Develop install structure so users can pick-and-choose menu-components. For an amazing implementation see [Bootstrap](http://twitter.github.com/bootstrap/customize.html) although this is *well* beyond what I have in mind.
 - etc. etc.
 		
@@ -17,7 +16,7 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 	library(shiny)
 	shiny::runApp(system.file('damshiny',package='damshiny'))
 
-### To use the damshiny development version locally
+### To use the development version of the marketing app locally
 
 	install.packages('devtools')
 	library(devtools)
@@ -25,9 +24,19 @@ This is a data-analysis menu for R using [shiny](http://www.rstudio.com/shiny/).
 	install_github('shiny-incubator', username = 'rstudio')
 	install_github('damshiny', username = 'mostly-harmless')
 	library(shiny)
-	shiny::runApp(system.file('dev',package='damshiny'))
+	shiny::runApp(system.file('marketing',package='damshiny'))
 
+<!-- ### To use the development version of the finance app locally
 
+	install.packages('devtools')
+	library(devtools)
+	install_github('shiny', username = 'rstudio')
+	install_github('shiny-incubator', username = 'rstudio')
+	install_github('damshiny', username = 'mostly-harmless')
+	library(shiny)
+	shiny::runApp(system.file('finance',package='damshiny'))
+
+ -->
 ### License
 The damshiny package is licensed under the GPLv3. See these files listed below for additional details:
 

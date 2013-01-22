@@ -15,4 +15,7 @@ Imports:
 	foreign, 
 	tools, 
 	ggplot2, 
-	reshape
+	gridExtra,
+	reshape,
+	fGarch,
+	quantmod

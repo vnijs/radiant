@@ -1,6 +1,6 @@
 ## Data Analysis for Marketing using Shiny
 
-Version 0.05 (1/17/2013)
+Version 0.05 (1/21/2013)
 
 Code available on GitHub: [https://github.com/mostly-harmless/damshiny](https://github.com/mostly-harmless/damshiny)
 
