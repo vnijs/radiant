@@ -48,10 +48,10 @@ shinyUI(
 
             conditionalPanel(condition = "input.vizvars2 != ''",
               uiOutput("viz_color"),
-              checkboxInput('viz_jitter', 'Jitter'),
-              checkboxInput('viz_smooth', 'Smooth'),
               uiOutput("viz_facet_row"),
-              uiOutput("viz_facet_col")
+              uiOutput("viz_facet_col"),
+              checkboxInput('viz_jitter', 'Jitter', value = FALSE),
+              checkboxInput('viz_smooth', 'Smooth', value = TRUE)
             )
           )
         )
@@ -85,7 +85,8 @@ shinyUI(
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
-            tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
+            # tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
+            tabPanel("Visualize", plotOutput("visualize", height = "700px")),
             # tabPanel("Transform", tableOutput("transform")),      # once transform has been implement use tableOutput
             tabPanel("Transform", verbatimTextOutput("transform")),
             tabPanel("About", includeMarkdown("about.md"))
@@ -94,7 +95,8 @@ shinyUI(
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")), 
-            tabPanel("Plots", plotOutput("plots", height = "1200px")),
+            # tabPanel("Plots", plotOutput("plots", height = "900px")),
+            tabPanel("Plots", plotOutput("plots", width = "700px")),
             tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )

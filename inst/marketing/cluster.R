@@ -4,7 +4,13 @@ summary.hclustering <- function(result) {
 
 plot.hclustering <- function(result) {
 	# use ggdendro when it gets back on cran
+	# dev.new(width="700px", height="1400px")
+	dev.new(width=6, height=12)
+	par(mfrow = c(2,1))
 	plot(result, main = "Dendrogram")
+	height = rev(result$height[result$height > 0])
+	nr_of_clusters = 1:length(height)
+	plot(nr_of_clusters,height, xlab = "Nr of clusters", ylab = "Height")
 }
 
 extra.hclustering <- function(result) {

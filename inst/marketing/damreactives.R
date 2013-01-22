@@ -69,8 +69,8 @@ output$vizvars2 <- reactiveUI(function() {
 output$viz_color <- reactiveUI(function() {
 	cols <- varnames()
 	if(is.null(cols)) return()
-	isFct <- sapply(getdata(), is.factor)
- 	cols <- cols[isFct]
+	# isFct <- sapply(getdata(), is.integer)
+ # 	cols <- cols[isFct]
 	selectInput('viz_color', 'Color', c('None'="", as.list(cols)))
 })
 
@@ -123,12 +123,14 @@ output$visualize <- reactivePlot(function() {
 
 		if(input$vizvars2 == "") {
 			p <- ggplot(dat, aes_string(x=input$vizvars1)) + geom_histogram(colour = 'black', fill = 'blue') 
+			return(print(p))
 		} else {
 		  p <- ggplot(dat, aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point()
 		}
 
     if (input$viz_color != '') {
-    	p <- p + aes_string(color=input$viz_color)
+    	# p <- p + aes_string(color=input$viz_color) + scale_colour_gradient(colors=rainbow(4))
+    	p <- p + aes_string(color=input$viz_color) + scale_fill_brewer()
     }
 
     facets <- paste(input$viz_facet_row, '~', input$viz_facet_col)
