@@ -1,12 +1,10 @@
 library(shiny)
 library(shinyIncubator)
 library(car)
-library(datasets)
 library(tools)
 library(foreign)
 library(ggplot2)
 library(gridExtra)
-library(tseries)
 
 # avoid breaks in R-output print, don't show error messages in Rstudio
 options(width = 150, shiny.trace=TRUE)
