@@ -1,5 +1,17 @@
-# sourcing global variables only needed in server.R. global.R is sourced automatically following edits to shiny.R
-source('damglobal.R')
+library(shiny)
+library(shinyIncubator)
+library(car)
+library(tools)
+library(foreign)
+library(ggplot2)
+library(gridExtra)
+library(fGarch)
+library(quantmod)
+library(R.utils)
+
+# avoid breaks in R-output print and show JSON packets transferred
+# over websockets
+options(width = 150, shiny.trace=TRUE)
 
 shinyServer(function(input, output) {
 
@@ -9,12 +21,15 @@ shinyServer(function(input, output) {
 	values[[robjname]] <- get(robjname)
 	datasets <- c(robjname)
 
-	# nasdaq_file <- read.csv('data/nasdaq-company-list.csv')
-	# symbol_list <- c("",nasdaq_file[,1])
-	# names(symbol_list) <- c("",nasdaq_file[,2])
+	# source base functions
+	source('radyant.R', local = TRUE)
 
-	# sourcing (reactive) functions
-	source('damfunctions.R', local = TRUE)
-	source('damreactives.R', local = TRUE)
+	# source enabled analysis tools
+	sourceDirectory('tools_enabled/')
 
+	# the 'grand' ui-element caller
+	output$analysis_ui_controls <- reactiveUI(function() {
+  	if(input$tool == "dataview") return()
+	  get(paste('ui_',input$tool, sep=""))()
+	})
 })

@@ -7,7 +7,8 @@ varnames <- function() {
 
 	dat <- getdata()
 	colnames <- names(dat)
-	names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
+	names(colnames) <- colnames
+	### names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
 	colnames
 }
 
@@ -51,19 +52,15 @@ loadUserData <- function(uFile) {
 	}
 }
 
-loadPackData <- function(pFile) {
+loadYahooData <- function(symbol) {
 
-	robjname <- data(list = pFile)
-	dat <- get(robjname)
-	if(pFile != robjname) return("R-object not found. Please choose another dataset")
+	# if (symbol == "Choose a symbol") return()
+	if (symbol == "") return()
+	if (!exists(symbol)) getSymbols(symbol)
 
-	values[[robjname]] <- dat
-
-	if(datasets[1] == '') {
-		datasets <<- c(robjname)
-	} else {
-		datasets <<- unique(c(robjname,datasets))
-	}
+	values[[symbol]] <- get(symbol)
+	datasets <<- unique(c(symbol,datasets))
+	
 }
 
 #################################################
@@ -96,11 +93,9 @@ output$datasets <- reactiveUI(function() {
 	} 
 
 	# loading package data
-	if(input$packData != "") {
-		if(input$packData != lastLoaded) {
-			loadPackData(input$packData)
-			lastLoaded <<- input$packData 
-		}
+	if(input$yahooData != "" && input$yahooData != lastLoadedYahooData) {
+		loadYahooData(input$yahooData)
+		lastLoadedYahooData <<- input$yahooData
 	}
 
 	# Drop-down selection of data set
@@ -113,7 +108,7 @@ output$nrRows <- reactiveUI(function() {
 
 	# number of observations to show in dataview
 	nr <- nrow(dat)
-	sliderInput("nrRows", "Rows to show (max 50):", min = 1, max = nr, value = min(15,nr), step = 1)
+	sliderInput("nrRows", "Number of days:", min = 1, max = nr, value = min(30,nr), step = 1)
 })
 
 # variable selection in the datatabs views
@@ -176,10 +171,24 @@ output$dataviewer <- reactiveTable(function() {
 	# Show only the selected columns and no more than 50 rows
 	# at a time
 	nr <- input$nrRows
-	data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE])
+	nrRows <- nrow(dat)
+	dat <- data.frame(dat[(nrRows-nr):nrRows, input$columns, drop = FALSE])
 
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
+})
+
+output$stockplot<- reactivePlot(function() {
+	if(is.null(input$datasets)) return()
+	if(input$datatabs != 'Stock plot') return()
+
+	# inspired by Winston's stocks app http://glimmer.rstudio.com/winston/stocks/
+	dat <- getdata()
+	if(input$sp_logdat) dat <- log(dat)
+
+	chartSeries(dat, name = input$datasets, type = input$sp_charttype, 
+		subset = paste("last", input$nrRows, "days"), theme     = "white")
+
 })
 
 output$visualize <- reactivePlot(function() {

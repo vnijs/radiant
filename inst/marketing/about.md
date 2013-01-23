@@ -1,9 +1,11 @@
-## Data Analysis for Marketing using Shiny
+## Radyant - Marketing analytics using Shiny
 
-Version 0.05 (1/21/2013)
-
-Code available on GitHub: [https://github.com/mostly-harmless/damshiny](https://github.com/mostly-harmless/damshiny)
+Version 0.09 (1/23/2013)
 
 By: Vincent Nijs (vnijs at rady.ucsd.edu)
 
+Built using [Shiny](http://www.rstudio.com/shiny/) by [Rstudio](http://www.rstudio.com/)
+
 Dependencies for local use: shiny, shiny-incubator, car, tools, foreign, ggplot2, gridExtra, reshape, markdown, R.utils
+
+Code available on [GitHub](https://github.com/mostly-harmless/radyant)

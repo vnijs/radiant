@@ -7,9 +7,9 @@ library(ggplot2)
 library(gridExtra)
 library(R.utils)
 
-# avoid breaks in R-output print, don't show error messages in Rstudio
+# avoid breaks in R-output print and show JSON packets transferred
+# over websockets
 options(width = 150, shiny.trace=TRUE)
-
 
 shinyServer(function(input, output) {
 
@@ -46,5 +46,4 @@ shinyServer(function(input, output) {
   	if(input$tool == "dataview") return()
 	  get(paste('ui_',input$tool, sep=""))()
 	})
-
 })

@@ -2,7 +2,7 @@ shinyUI(
 
   pageWithSidebar(
 
-    headerPanel("Radyant - Marketing analysis using Shiny"),
+    headerPanel("Radyant - Marketing analytics using Shiny"),
     
     sidebarPanel(
 
@@ -35,7 +35,7 @@ shinyUI(
             tags$style(type='text/css', "#columns { height: 250px; padding-bottom: 35px;}")
           )
         ),
-     
+
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           wellPanel(
             uiOutput("vizvars1"),
