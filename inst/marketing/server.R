@@ -29,6 +29,6 @@ shinyServer(function(input, output) {
 	# sourcing (reactive) functions
 	source('damfunctions.R', local = TRUE)
 	source('damreactives.R', local = TRUE)
-	source('serverControls.R', local = TRUE)
+	source('analysisUIControls.R', local = TRUE)
 
 })

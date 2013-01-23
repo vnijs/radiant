@@ -5,6 +5,7 @@ library(tools)
 library(foreign)
 library(ggplot2)
 library(gridExtra)
+library(R.utils)
 
 # avoid breaks in R-output print, don't show error messages in Rstudio
 options(width = 150, shiny.trace=TRUE)

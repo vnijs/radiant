@@ -1,3 +1,38 @@
+# UI-elements for regression
+
+# variable selection - regression
+output$reg_var1 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars, selected = NULL, multiple = FALSE)
+})
+
+# variable selection - compareMeans
+output$reg_var2 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars[-which(vars == input$reg_var1)], selected = NULL, multiple = TRUE)
+})
+
+# variable selection - compareMeans
+output$reg_var3 <- reactiveUI(function() {
+  vars <- input$reg_var2
+  if(is.null(vars)) return()
+  selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
+})
+
+ui_regression <- function() {
+  wellPanel(
+    uiOutput("reg_var1"),
+    uiOutput("reg_var2"),
+    uiOutput("reg_var3"),
+    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values", value = FALSE),
+    checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise", value = FALSE),
+    actionButton("saveres", "Save residuals")
+  )
+}
+
+# analysis functions
 summary.regression <- function(result) {
 	print(summary(result))
 	if(input$reg_vif) {
@@ -14,8 +49,9 @@ summary.regression <- function(result) {
 }
 
 plot.regression <- function(result) {
-	# par(mfrow = c(4,1))
-	par(mfrow = c(2,2))
+	par(mfrow = c(4,1))
+	# dev.new(width=6, height=12)
+	# par(mfrow = c(2,2))
 	plot(result, ask = FALSE)
 }
 

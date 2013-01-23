@@ -1,5 +1,5 @@
-source('uiControls.R')
- # "dataview", "singleMean", "compareMeans", "regression", "logistic", "hclustering", "kmeansClustering", "mds", "perceptualMap", "conjointDesign", "conjointAnalysis"
+# source('uiControls.R')
+# "dataview", "singleMean", "compareMeans", "regression", "logistic", "hclustering", "kmeansClustering", "mds", "perceptualMap", "conjointDesign", "conjointAnalysis"
 
 shinyUI(
 
@@ -15,7 +15,6 @@ shinyUI(
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         conditionalPanel(condition = "input.datasets != ''",
-          #selectInput(inputId = "tool", label = "Tool:", choices = toolChoices, selected = 'Data view')
           includeHTML('www/damtools.html')
         ),
         uiOutput("datasets")
@@ -58,25 +57,8 @@ shinyUI(
       ),
 
       conditionalPanel(condition = "input.tool != 'dataview'",
-
-        conditionalPanel(condition = "input.tool == 'singleMean'",
-          ui_singleMean()
-        ),
-        conditionalPanel(condition = "input.tool == 'compareMeans'",
-          ui_compareMeans()
-        ),
-        conditionalPanel(condition = "input.tool == 'regression'",
-           ui_regression()
-        ),
-        conditionalPanel(condition = "input.tool == 'hclustering'",
-           ui_hclustering()
-        ),
-        conditionalPanel(condition = "input.tool == 'kmeansClustering'",
-           ui_kmeansClustering()
-        )
-  
+        uiOutput("analysis_ui_controls")
         # submitButton("Test")
-        # get(paste("controlsFor",toolselection,sep = "_"))()
       )
     ),
     
@@ -85,8 +67,7 @@ shinyUI(
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", tableOutput("dataviewer")),
-            # tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
-            tabPanel("Visualize", plotOutput("visualize", height = "700px")),
+            tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
             # tabPanel("Transform", tableOutput("transform")),      # once transform has been implement use tableOutput
             tabPanel("Transform", verbatimTextOutput("transform")),
             tabPanel("About", includeMarkdown("about.md"))
@@ -95,8 +76,8 @@ shinyUI(
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")), 
-            # tabPanel("Plots", plotOutput("plots", height = "900px")),
-            tabPanel("Plots", plotOutput("plots", width = "700px")),
+            tabPanel("Plots", plotOutput("plots", width = "100%", height = "100%")),
+            # tabPanel("Plots", plotOutput("plots", height = "1200px")),
             tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )
