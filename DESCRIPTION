@@ -1,5 +1,5 @@
 Package: radyant
-Title: Data analytics using Shiny
+Title: Interactive data analytics using R and Shiny
 Type: Shiny-app
 Version: 0.10
 Date: 2013-1-23
