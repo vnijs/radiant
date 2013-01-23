@@ -2,10 +2,7 @@
 
 Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http://www.rstudio.com/shiny/) by [Rstudio](http://www.rstudio.com/). 
 
-<!-- If you would like to see the app in action please visit Rstudio's Glimmer-server at [http://glimmer.rstudio.com/mostlyhrmls/ ... /](http://glimmer.rstudio.com/mostlyhrmls/ .... /)
- -->
-
- ### Todo:
+### Todo:
 - Add analysis-tools (e.g., conjoint, factor, perceptual maps, MDS, GLM)
 - Use knitr to log analysis output
 - Create help files
@@ -19,7 +16,7 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 	shiny::runApp(system.file('marketing',package='radyant'))
  -->
 
- ### To use the development version of the marketing app locally
+### Run the development version of the marketing app locally
 
 	install.packages('devtools')
 	library(devtools)
@@ -40,6 +37,7 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 	shiny::runApp(system.file('finance',package='radyant'))
 
  -->
+ 
 ### License
 The radyant package is licensed under the GPLv3. See the files listed below for additional details.
 
