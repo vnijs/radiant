@@ -1,15 +1,3 @@
-library(shiny)
-library(shinyIncubator)
-library(car)
-library(tools)
-library(foreign)
-library(ggplot2)
-library(gridExtra)
-library(R.utils)
-
-# avoid breaks in R-output print, don't show error messages in Rstudio
-options(width = 150, shiny.trace=TRUE)
-
 # loading list of data.frame in the car package
 listPackData <- function(packs) {
 	libnames <- c('')
@@ -24,6 +12,7 @@ listPackData <- function(packs) {
 }
 
 packDataSets <- listPackData(c('car'))
+lastLoaded <- "" 		
 
 # Simulate a big data-file
 # n <- 200000

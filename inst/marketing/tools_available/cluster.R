@@ -1,17 +1,44 @@
+# variable selection - hclustering
+output$hc_vars <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  selectInput(inputId = "hc_vars", label = "Variables:", choices = vars, selected = NULL, multiple = TRUE)
+})
+
+ui_hclustering <- function() {
+  wellPanel(
+    uiOutput("hc_vars"), tags$style(type='text/css', "#hc_vars { height: 250px; padding-bottom: 35px;}"),
+    selectInput(inputId = "hc_nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE),
+    actionButton("hc_saveclus", "Save cluster membership")
+  )
+}
+
+output$km_vars <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  selectInput(inputId = "km_vars", label = "Variables:", choices = vars, selected = NULL, multiple = TRUE)
+})
+  
+ui_kmeansClustering <- function() {
+  wellPanel(
+    uiOutput("km_vars"), tags$style(type='text/css', "#km_vars { height: 250px; padding-bottom: 35px;}"),
+    numericInput("km_seed", "Set random seed:", 1234, min = 0),
+    selectInput(inputId = "km_nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE),
+    actionButton("km_saveclus", "Save cluster membership")
+  )
+}
+
 summary.hclustering <- function(result) {
 	result
 }
 
 plot.hclustering <- function(result) {
 	# use ggdendro when it gets back on cran
-	# dev.new(width="700px", height="1400px")
-	# dev.cur(width=6, height=12)
 	par(mfrow = c(2,1))
 	plot(result, main = "Dendrogram")
 	height = rev(result$height[result$height > 0])
 	nr_of_clusters = 1:length(height)
-	plot(nr_of_clusters,height, xlab = "Nr of clusters", ylab = "Height")
-	# dev.off()
+	plot(nr_of_clusters,height, xlab = "Nr of clusters", ylab = "Height", type = 'b')
 }
 
 extra.hclustering <- function(result) {
@@ -47,11 +74,11 @@ plot.kmeansClustering <- function(result) {
 		for(var in input$km_vars) {
 			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + xlim(gg.xlim[1],gg.xlim[2]) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
 			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
-			plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 1.5) 
+			plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) 
 		}
 		print(do.call(grid.arrange, c(plots, list(ncol = 2))))
 	} else {
-		print(ggplot(dat, aes_string(x=input$km_vars[1], colour='clusvar')) + geom_density(adjust = 1.5))
+		print(ggplot(dat, aes_string(x=input$km_vars[1], fill='clusvar')) + geom_density(adjust=1.5, alpha=.3))
 	}
 }
 

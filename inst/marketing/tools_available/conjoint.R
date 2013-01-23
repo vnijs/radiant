@@ -1,6 +1,8 @@
 # Conjoint profiles {{{
 conjointFractionalFactorialDesign<-function(data) { #{{{
 
+	test
+
 	experiment = expand.grid(data)
 	nr.levels <- 0
 	nr.vars <- length(data)

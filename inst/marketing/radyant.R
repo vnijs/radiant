@@ -1,6 +1,75 @@
 ################################################################
-# all reactive functions used in damshiny app 
+# functions used in Radyant
 ################################################################
+
+varnames <- function() {
+	if(is.null(input$datasets)) return()
+
+	dat <- getdata()
+	colnames <- names(dat)
+	names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
+	colnames
+}
+
+changedata <- function(addCol = NULL, addColName = "") {
+	# function that changes data as needed
+	if(is.null(addCol) || addColName == "") return()
+  # We don't want to take a reactive dependency on anything
+  isolate(
+  	values[[input$datasets]][[addColName]] <- addCol
+  )
+}
+
+getdata <- function(dataset = input$datasets) {
+  values[[dataset]]
+}	
+
+loadUserData <- function(uFile) {
+
+	ext <- file_ext(uFile)
+	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
+	ext <- tolower(ext)
+
+	if(ext == 'rda' || ext == 'rdata') {
+		# objname will hold the name of the object inside the R datafile
+	  objname <- robjname <- load(uFile)
+		values[[robjname]] <- get(robjname)
+	}
+
+	if(datasets[1] == '') {
+		datasets <<- c(objname)
+	} else {
+		datasets <<- unique(c(objname,datasets))
+	}
+
+	if(ext == 'sav') {
+		values[[objname]] <- read.sav(uFile)
+	} else if(ext == 'dta') {
+		values[[objname]] <- read.dta(uFile)
+	} else if(ext == 'csv') {
+		values[[objname]] <- read.csv(uFile)
+	}
+}
+
+loadPackData <- function(pFile) {
+
+	robjname <- data(list = pFile)
+	dat <- get(robjname)
+	# if(!is.data.frame(dat)) return("Not a data.frame. Choose another dataset")
+	if(pFile != robjname) return("R-object not found. Please choose another dataset")
+
+	values[[robjname]] <- dat
+
+	if(datasets[1] == '') {
+		datasets <<- c(robjname)
+	} else {
+		datasets <<- unique(c(robjname,datasets))
+	}
+}
+
+#################################################
+# reactive functions used in Radyant 
+#################################################
 
 uploadfunc <- reactive(function() {
   if(input$upload == 0) return("")
@@ -143,7 +212,7 @@ output$visualize <- reactivePlot(function() {
       p <- p + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
     
     print(p)
-}, width = 800, height = 700)
+}, width = 800, height = 800)
 
 # output$transform <- reactiveTable(function() {
 output$transform <- reactivePrint(function() {
@@ -178,19 +247,6 @@ output$logwork <- reactivePrint(function() {
 	cat("Analysis log (in development)\n")
 
 })
-
-################################################################
-# Analysis reactives - functions have the same names as the 
-# values for the toolChoices values # in global.R
-# Calling a reactive several times is more efficient than 
-# calling a regular function several times
-################################################################
-
-# source('tools/edat.R', local = TRUE)
-# source('tools/regression.R', local = TRUE)
-# source('tools/cluster.R', local = TRUE)
-# sourceDirectory('tools_enabled/', local = TRUE)
-sourceDirectory('tools_enabled/')
 
 ################################################################
 # Output controls for the Summary, Plots, and Extra tabs
@@ -233,4 +289,5 @@ output$plots <- reactivePlot(function() {
 	} else {
 		plot(x = 1, type = 'n', main="No variable selection made", axes = FALSE, xlab = "", ylab = "")
 	}
-}, width = 700, height = 700)
+}, width = 800, height = 1200)
+# })
