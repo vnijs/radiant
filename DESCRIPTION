@@ -1,11 +1,11 @@
-Package: damshiny
-Title: Data Analysis Menu using Shiny (damshiny)
+Package: radyant
+Title: Data analytics using Shiny
 Type: Shiny-app
-Version: 0.03
-Date: 2013-1-9
-Author: Vincent Nijs <vnijs@rady.ucsd.edu> with kind support from Joe Cheng and Winston Change (Rstudio)")
+Version: 0.10
+Date: 2013-1-23
+Author: Vincent Nijs <vnijs@rady.ucsd.edu> with kind support from Joe Cheng and Winston Chang (Rstudio)
 Maintainer: Vincent Nijs <vnijs@rady.ucsd.edu>
-Description: Interactive data analysis using R and Shiny
+Description: Interactive data analytics using R and Shiny
 License: GPL (>= 3)
 Depends: 
 	R (>= 2.15)
@@ -17,5 +17,7 @@ Imports:
 	ggplot2, 
 	gridExtra,
 	reshape,
+	markdown,
 	fGarch,
-	quantmod
+	quantmod,
+	R.utils
