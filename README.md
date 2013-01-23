@@ -7,7 +7,7 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 - Use knitr to log analysis output
 - Create help files
 - etc. etc.
-		
+
 <!-- ### To use the marketing app in the radyant package locally
 
 	install.packages('shiny')
