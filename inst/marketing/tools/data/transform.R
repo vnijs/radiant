@@ -27,6 +27,7 @@ output$ui_transform <- reactiveUI(function() {
 })
 
 ui_transform <- function() {
+	# Inspired by Ian Fellow's transform ui in JGR/Deducer
   wellPanel(
   	uiOutput("tr_nrRows"), 
     uiOutput("tr_columns"),
