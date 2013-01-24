@@ -16,11 +16,11 @@ output$tr_nrRows <- reactiveUI(function() {
 sq <<- function(x) x^2
 inv <<- function(x) 1/x
 st <<- scale
-
+cent <<- function(x) x - mean(x, na.rm = TRUE)
 
 # trans_options <- list("Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Sum" = "sum", "Mean" = "mean", "Standardize" = "", "Center" = "" )
 # trans_options <- list("None" = "", "Delete columns" = "NULL", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Standardize" = "stdize")
-trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Center" = "center", "Standardize" = "st", "Invert" = "inv")
+trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Center" = "cent", "Standardize" = "st", "Invert" = "inv")
 
 output$ui_transform <- reactiveUI(function() {
 	ui_transform()
