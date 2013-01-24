@@ -16,8 +16,7 @@ changedata <- function(addCol = NULL, addColName = "") {
 	if(is.null(addCol) || addColName == "") return()
   # We don't want to take a reactive dependency on anything
   isolate(
-  	# values[[input$datasets]][[addColName]] <- addCol
-  	values[[input$datasets]][,addColName] <- addCol
+  	values[[input$datasets]][[addColName]] <- addCol
   )
 }
 
@@ -81,6 +80,12 @@ uploadfunc <- reactive(function() {
   }
 })
 
+output$columns <- reactiveUI(function() {
+	cols <- varnames()
+
+	selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
+})
+
 output$datasets <- reactiveUI(function() {
 
 	fpath <- uploadfunc()
@@ -102,11 +107,6 @@ output$datasets <- reactiveUI(function() {
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
-output$columns <- reactiveUI(function() {
-	cols <- varnames()
-	selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
-})
-
 output$nrRows <- reactiveUI(function() {
 	if(is.null(input$datasets)) return()
 	dat <- getdata()
@@ -114,6 +114,50 @@ output$nrRows <- reactiveUI(function() {
 	# number of observations to show in dataview
 	nr <- nrow(dat)
 	sliderInput("nrRows", "Rows to show (max 50):", min = 1, max = nr, value = min(15,nr), step = 1)
+})
+
+# variable selection in the datatabs views
+output$vizvars1 <- reactiveUI(function() {
+	# cols <- input$columns
+	cols <- varnames()
+	if(is.null(cols)) return()
+
+	selectInput(inputId = "vizvars1", label = "X-variable", choices = as.list(cols), selected = NULL, multiple = FALSE)
+})
+
+# variable selection
+output$vizvars2 <- reactiveUI(function() {
+	# cols <- input$columns
+	cols <- varnames()
+	if(is.null(cols)) return()
+	# selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
+	selectInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "",as.list(cols[-which(cols == input$vizvars1)])), selected = "", multiple = FALSE)
+})
+
+output$viz_color <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	# isFct <- sapply(getdata(), is.integer)
+ # 	cols <- cols[isFct]
+	selectInput('viz_color', 'Color', c('None'="", as.list(cols)))
+})
+
+output$viz_facet_row <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	isFct <- sapply(getdata(), is.factor)
+ 	cols <- cols[isFct]
+	# selectInput('viz_facet_row', 'Facet row', c(None='.', as.list(cols[-which(cols == input$viz_color)])))
+	selectInput('viz_facet_row', 'Facet row', c(None='.', as.list(cols)))
+})
+
+output$viz_facet_col <- reactiveUI(function() {
+	cols <- varnames()
+	if(is.null(cols)) return()
+	isFct <- sapply(getdata(), is.factor)
+ 	cols <- cols[isFct]
+	# selectInput('viz_facet_col', 'Facet col', c(None='.', as.list(cols[-which(cols == input$viz_color)])))
+	selectInput('viz_facet_col', 'Facet col', c(None='.', as.list(cols)))
 })
 
 ################################################################
@@ -136,6 +180,71 @@ output$dataviewer <- reactiveTable(function() {
 
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
+})
+
+output$visualize <- reactivePlot(function() {
+	if(is.null(input$datasets) || is.null(input$vizvars2)) return()
+	if(input$datatabs != 'Visualize') return()
+
+		# inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
+		dat <- getdata()
+
+		if(input$vizvars2 == "") {
+			p <- ggplot(dat, aes_string(x=input$vizvars1)) + geom_histogram(colour = 'black', fill = 'blue') 
+			return(print(p))
+		} else {
+		  p <- ggplot(dat, aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point()
+		}
+
+    if (input$viz_color != '') {
+    	# p <- p + aes_string(color=input$viz_color) + scale_colour_gradient(colors=rainbow(4))
+    	p <- p + aes_string(color=input$viz_color) + scale_fill_brewer()
+    }
+
+    facets <- paste(input$viz_facet_row, '~', input$viz_facet_col)
+    if (facets != '. ~ .')
+      p <- p + facet_grid(facets)
+    
+    if (input$viz_jitter)
+      p <- p + geom_jitter()
+    if (input$viz_smooth)
+      p <- p + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
+    
+    print(p)
+}, width = 800, height = 800)
+
+# output$transform <- reactiveTable(function() {
+output$transform <- reactivePrint(function() {
+	if(is.null(input$datasets) || is.null(input$columns)) return()
+	if(input$datatabs != 'Transform') return()
+
+	# idea: use mutate to transformations on the data see links below
+	# If will probably be easiest to have this be a text-box input field
+	# that runs these. No need for an elaborate UI since it is basically
+	# what they would otherwise do in excel. Make sure to add
+	# some helptext with a bunch of examples of how the command would work.
+	# http://www.inside-r.org/packages/cran/plyr/docs/mutate
+	# https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/uZZT564y0i8
+	# https://gist.github.com/4515551 
+
+	cat("Command box and data view (in development)\n")
+
+})
+
+output$logwork <- reactivePrint(function() {
+	if(is.null(input$datasets) || is.null(input$columns)) return()
+
+	# if(input$datatabs != 'Log') return()
+	# idea: When a user presses a log-button the output on screen is saved to an rda file
+	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-input
+	# and then call the relevant parts from an Rmd file that gets-sourced. By default all snap
+	# shots are shown in log but user can deseleted snap-shots as desired.
+	# take another look at Jeff's teaching log. this could be a great starting point
+	# ask Jeff about how to attribute code (and also Yihie) if you use some of their code
+	# https://github.com/jeffreyhorner/TeachingLab
+
+	cat("Analysis log (in development)\n")
+
 })
 
 ################################################################
