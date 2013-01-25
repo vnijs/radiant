@@ -1,5 +1,5 @@
 library(shiny)
-library(shinyIncubator)
+# library(shinyIncubator)
 library(car)
 library(tools)
 library(foreign)

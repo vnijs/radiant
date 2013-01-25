@@ -3,7 +3,7 @@ shinyUI(
   pageWithSidebar(
 
     headerPanel("Radyant - Marketing analytics using Shiny"),
-    
+
     sidebarPanel(
 
       includeHTML("www/js/tools.js"),
