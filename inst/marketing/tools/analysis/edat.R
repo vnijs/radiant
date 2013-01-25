@@ -1,24 +1,20 @@
 # UI-elements for EDAT.R
-
-# variable selection - singleMean
 output$sm_var <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-# variable selection - compareMeans
 output$cm_var1 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
-  selectInput(inputId = "cm_var1", label = "Select group or numeria variable:", choices = vars, selected = NULL, multiple = FALSE)
+  selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-# variable selection - compareMeans
 output$cm_var2 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
-  selectInput(inputId = "cm_var2", label = "Variables (select one):", choices = vars[-which(vars == input$cm_var1)], selected = NULL, multiple = TRUE)
+  selectInput(inputId = "cm_var2", label = "Variables (select one or more):", choices = vars[-which(vars == input$cm_var1)], selected = NULL, multiple = TRUE)
 })
 
 # for alternative hypothesis
@@ -42,7 +38,8 @@ ui_compareMeans <- function() {
     conditionalPanel(condition = "input.analysistabs == 'Summary'",
       # selectInput(inputId = "cm_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
       sliderInput('cm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
-    )
+    ),
+    helpText("If you select a factor only one numerical variable from the lower box can be used")
   )
 }
 summary.singleMean <- function(result) {
@@ -76,29 +73,24 @@ singleMean <- reactive(function() {
 })
 
 summary.compareMeans <- function(result) {
-	# if(class(result)[1] == "aov") {
-		print(summary(result))
-		cat("\n")
-		print(model.tables(result,"means"),digits=3) 
-		cat("\n")
-		TukeyHSD(result, ordered = TRUE, conf.level = input$cm_sigLevel)
-	# } else {
-	# 	result
-	# }
+	result <- result$model
+	print(summary(result))
+	cat("\n")
+	print(model.tables(result,"means"),digits=3) 
+	cat("\n")
+	TukeyHSD(result, ordered = TRUE, conf.level = input$cm_sigLevel)
 }
 
 plot.compareMeans <- function(result) {
 
-	var1 <- input$cm_var1
-	var2 <- input$cm_var2
+	dat <- result$data
 
-	dat <- getdata()[,c(var1,var2)]
-
-	# dat[,var1] < as.factor(dat[,var1])
+	var1 <- colnames(dat)[1]
+	var2 <- colnames(dat)[-1]
 
 	plots <- list()
 	plots[["Boxplot"]] <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + 
-										geom_boxplot() + geom_jitter()
+										geom_boxplot(alpha=.3) + geom_jitter()
 
 	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) +
 														geom_density(alpha=.3)
@@ -117,16 +109,16 @@ compareMeans <- reactive(function() {
 	var2 <- input$cm_var2
 	dat <- getdata()[,c(var1,var2)]
 	if(!is.factor(dat[,var1])) {
-		dat <- data.frame(cbind(as.factor(c(rep(var1,nrow(dat)),rep(var2,nrow(dat)))),c(dat)))
-		# colnames(dat) <- c(var1,var2)
-		var1 <- "Numeric"
-		var2 <- "Factor"
-		colnames(dat) <- c(var1,var2)
+		nrRows <- nrow(dat)
+		Numeric <- c(t(dat))
+		dat <- list()
+		dat$Factor <- as.factor(c(rep(var1,nrRows), rep(var2,nrRows)))
+		dat$Numeric <- Numeric
+		var1 <- 'Factor'
+		var2 <- 'Numeric'
 	}
 
 	formula <- as.formula(paste(var2[1], "~", var1))
-	aov(formula, data = dat, conf.level = input$cm_sigLevel)
+	# list("model" = aov(formula, data = dat, conf.level = input$cm_sigLevel), "data" = data.frame(dat)) 
+	list("model" = aov(formula, data = dat), "data" = data.frame(dat)) 
 })
-
-
-

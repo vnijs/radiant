@@ -25,7 +25,9 @@ values$mtcars <- mtcars
 values$morley <- morley
 values$rock <- rock
 
-values$diamonds <- diamonds[1:1000,]
+n <- nrow(diamonds)
+
+values$diamonds <- diamonds[sample(1:n,3000),]
 
 datasets <- c("mtcars", "diamonds", "rock")
 
