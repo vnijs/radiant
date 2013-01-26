@@ -60,7 +60,7 @@ vif.regression <- function(result) {
 }
 
 test.regression <- function(result) {
-	if(!input$_stepwise) {
+	if(!input$glm_stepwise) {
 		not_selected <- setdiff(input$glm_var2,input$glm_var3)
 		if(length(not_selected) == 0) {
 			sub_formula <- paste(input$glm_var1, "~ 1")
