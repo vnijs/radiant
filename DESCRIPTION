@@ -21,4 +21,5 @@ Imports:
 	fGarch,
 	quantmod,
 	R.utils,
-	psych
+	psych,
+	plyr
