@@ -18,7 +18,15 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 
 ### Run the development version of the marketing app locally
 
-	install.packages('devtools')
+Required: [R](http://cran.rstudio.com/)
+Suggested: [Rstudio](http://www.rstudio.com/ide/download/desktop/)
+
+Start R(studio) and copy-and-paste the commands below:
+
+	install.packages('shiny')
+	shiny::runGitHub('radyant','mostly-harmless', subdir = 'inst/marketing')
+
+<!-- 	install.packages('devtools')
 	library(devtools)
 	install_github('shiny', username = 'rstudio')
 	install_github('shiny-incubator', username = 'rstudio')
@@ -26,6 +34,7 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 	library(shiny)
 	shiny::runApp(system.file('marketing',package='radyant'))
 
+ -->
 <!-- ### To use the development version of the finance app locally
 
 	install.packages('devtools')
