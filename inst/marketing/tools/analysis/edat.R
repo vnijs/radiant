@@ -37,11 +37,12 @@ ui_compareMeans <- function() {
     uiOutput("cm_var2"),
     conditionalPanel(condition = "input.analysistabs == 'Summary'",
       # selectInput(inputId = "cm_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
-      sliderInput('cm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
-    ),
-    helpText("If you select a factor only one numerical variable from the lower box can be used")
+      sliderInput('cm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
+    	helpText("If you select a factor only one numerical variable from the lower box can be used")
+    )
   )
 }
+
 summary.singleMean <- function(result) {
 	result
 }

@@ -68,6 +68,7 @@ shinyUI(
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")), 
             tabPanel("Plots", plotOutput("plots", height = "1000px")),
+            # plotOutput("plotswhich", height = "1000px")
             tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )
