@@ -62,10 +62,6 @@ plot.singleMean <- function(result) {
 	print(p)
 }
 
-extra.singleMean <- function(result) {
-	cat("Under development\n")
-}
-
 singleMean <- reactive(function() {
 	if(is.null(input$sm_var)) return("Please select a variable")
 	var <- input$sm_var
@@ -99,11 +95,6 @@ plot.compareMeans <- function(result) {
 	print(do.call(grid.arrange, c(plots, list(ncol = 1))))
 }
 
-extra.compareMeans <- function(result) {
-	# nothing here yet, could put in test variance equality
-	cat("Under development\n")
-}
-
 compareMeans <- reactive(function() {
 	if(is.null(input$cm_var2)) return("Please select a variable")
 	var1 <- input$cm_var1
@@ -122,4 +113,49 @@ compareMeans <- reactive(function() {
 	formula <- as.formula(paste(var2[1], "~", var1))
 	# list("model" = aov(formula, data = dat, conf.level = input$cm_sigLevel), "data" = data.frame(dat)) 
 	list("model" = aov(formula, data = dat), "data" = data.frame(dat)) 
+})
+
+output$sp_var <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  isFct <- sapply(getdata(), is.factor)
+ 	vars <- vars[isFct]
+  selectInput(inputId = "sp_var", label = "Variable (select one):", choices = vars, selected = NULL, multiple = FALSE)
+})
+
+ui_singleProp <- function() {
+  wellPanel(
+    uiOutput("sp_var"),
+    conditionalPanel(condition = "input.analysistabs == 'Summary'",
+	    selectInput(inputId = "sp_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
+  	  sliderInput('sp_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
+    	numericInput("sp_compValue", "Comparison value:", 0.5, min = 0.01, max = 0.99, step = 0.01)
+    )
+  )
+}
+
+summary.singleProp <- function(result) {
+	result
+}
+
+plot.singleProp <- function(result) {
+
+	var <- input$sp_var
+	dat <- getdata()[,var]
+	p <- qplot(factor(dat), fill = factor(dat)) + geom_bar() + theme(legend.position = "none") +
+	# p <- qplot(factor(dat)) + geom_bar(fill = 'red', alpha=.1) + theme(legend.position = "none") +
+		labs(list(title = paste("Single proportion -",var), x = "Factor levels", y = "Count"))
+	print(p)
+
+}
+
+singleProp <- reactive(function() {
+	if(is.null(input$sp_var)) return("Please select a variable")
+	var <- input$sp_var
+	dat <- getdata()[,var]
+	lev <- levels(dat)
+	if(length(lev) >2) return("")
+	prop.test(sum(dat == rev(lev)[1]), n = length(dat), 
+		p = input$sp_compValue, alternative = input$sp_alternative, conf.level = input$sp_sigLevel, correct = FALSE)
+
 })
