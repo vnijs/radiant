@@ -19,7 +19,7 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 ### Run the development version of the marketing app locally
 
 - Required: [R](http://cran.rstudio.com/)
-- Suggested: [Rstudio](http://www.rstudio.com/ide/download/desktop/)
+- Suggested: [Rstudio](http://www.rstudio.com/ide/download/)
 
 Start R(studio) and copy-and-paste the commands below:
 
