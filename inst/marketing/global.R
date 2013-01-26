@@ -1,6 +1,6 @@
 options(repos = c("http://vnijs.rady.ucsd.edu/site_media/R_packages/", "http://cran.rstudio.com/"))
 # libs <- c("shiny", "shinyIncubator", "car", "tools", "foreign", "ggplot2", "gridExtra", "R.utils", "plyr", "psych", 'x')
-libs <- c("shiny", "shinyIncubator", "car", "tools", "foreign", "ggplot2", "gridExtra", "R.utils", "plyr", "psych")
+libs <- c("shiny", "shinyIncubator", "car", "tools", "foreign", "ggplot2", "gridExtra", "R.utils", "plyr", "psych","markdown")
 available <- suppressWarnings(sapply(libs, require, character.only=TRUE))
 inst.libs <- libs[available == FALSE]
 if(length(inst.libs) != 0) install.packages(inst.libs, dependencies = TRUE)
