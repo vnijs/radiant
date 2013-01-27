@@ -1,8 +1,3 @@
-# avoid breaks in R-output print and show JSON packets transferred
-# over websockets
-# options(width = 150, shiny.trace=TRUE)
-options(width = 150)
-
 shinyServer(function(input, output) {
 
 	# source base functions

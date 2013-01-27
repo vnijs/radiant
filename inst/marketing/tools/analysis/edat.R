@@ -159,3 +159,57 @@ singleProp <- reactive(function() {
 		p = input$sp_compValue, alternative = input$sp_alternative, conf.level = input$sp_sigLevel, correct = FALSE)
 
 })
+
+###############################
+# Correlation
+###############################
+
+output$cor_var <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  # isFct <- sapply(getdata(), is.factor)
+ 	# vars <- vars[!isFct]
+  selectInput(inputId = "cor_var", label = "Select variables:", choices = vars, selected = NULL, multiple = TRUE)
+})
+
+ui_correlation <- function() {
+  wellPanel(
+    uiOutput("cor_var"),
+	  selectInput(inputId = "cor_type", label = "Method", choices = c("pearson", "kendall", "spearman"), selected = "pearson")
+  )
+}
+
+summary.correlation <- function(dat) {
+	cmat <- cor(dat, method = input$cor_type)
+	print(as.dist(cmat), digits = 1)
+}
+
+plot.correlation <- function(dat) {
+	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
+	rady.panel.plot <- function(x, y) {
+	    usr <- par("usr"); on.exit(par(usr))
+	    par(usr = c(0, 1, 0, 1))
+	    ct <- cor.test(x,y, method = input$cor_type)
+	    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
+	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+	                  symbols = c("***", "**", "*", ".", " "))
+	    r <- ct$estimate
+	    rt <- format(r, digits=2)[1]
+	    cex <- 0.5/strwidth(rt)
+	    
+	    text(.5, .5, rt, cex=cex * abs(r))
+	    text(.8, .8, sig, cex=cex, col='blue')
+	}
+	rady.panel.smooth <- function (x, y) {
+    points(x, y)
+    abline(lm(y~x), col="blue")
+	}
+	pairs(dat, lower.panel=rady.panel.smooth, upper.panel=rady.panel.plot)
+}
+
+correlation <- reactive(function() {
+	vars <- input$cor_var
+	if(is.null(vars) || (length(vars) < 2)) return("Please select two or more variables")
+	dat <- getdata()[,vars]
+	data.frame(lapply(dat,as.numeric))
+})

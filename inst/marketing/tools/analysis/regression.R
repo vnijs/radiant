@@ -86,6 +86,7 @@ output$plotswhich <- reactivePlot(function() {
 
 # analysis functions
 summary.regression <- function(result) {
+	# print(xtable(summary(result)), type = 'html')
 	print(summary(result))
 	if(input$reg_vif) {
 		if(!is.null(input$reg_var3)) {
@@ -125,6 +126,14 @@ test.regression <- function(result) {
 	} else {
 	  cat("Model comparisons are not conducted when Stepwise estimation has been selected.\n")
 	}
+}
+
+out <- function(outputId = "summary") {
+  if(class(output[[outputId]]) == 'xtable') {
+	  pre(id = outputId, class = "shiny-text-output")
+	 } else {
+	  div(id = outputId, class = "shiny-html-output")
+  }
 }
 
 regression <- reactive(function() {

@@ -1,3 +1,4 @@
+
 shinyUI(
 
   pageWithSidebar(
@@ -66,9 +67,8 @@ shinyUI(
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
-            tabPanel("Summary", verbatimTextOutput("summary")), 
-            tabPanel("Plots", plotOutput("plots", height = "1000px")),
-            # plotOutput("plotswhich", height = "1000px")
+            tabPanel("Summary", verbatimTextOutput("summary")),
+            tabPanel("Plots", plotOutput("plots", height = "800px")),
             tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )

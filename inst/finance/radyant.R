@@ -172,7 +172,7 @@ output$dataviewer <- reactiveTable(function() {
 	# at a time
 	nr <- input$nrRows
 	nrRows <- nrow(dat)
-	dat <- data.frame(dat[(nrRows-nr):nrRows, input$columns, drop = FALSE])
+	data.frame(dat[(nrRows-nr):nrRows, input$columns, drop = FALSE])
 
 	# idea: Add download button so data can be saved
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
