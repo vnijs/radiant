@@ -59,7 +59,6 @@ shinyUI(
             tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
             tabPanel("Transform", 
               tableOutput("transform_data"), br(),
-              # verbatimTextOutput("transform_summary")
               tableOutput("transform_summary")
             ),
             tabPanel("About", includeMarkdown("about.md"))

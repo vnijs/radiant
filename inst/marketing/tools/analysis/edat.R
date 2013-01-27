@@ -5,18 +5,6 @@ output$sm_var <- reactiveUI(function() {
   selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$cm_var1 <- reactiveUI(function() {
-  vars <- varnames()
-  if(is.null(vars)) return()
-  selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars, selected = NULL, multiple = FALSE)
-})
-
-output$cm_var2 <- reactiveUI(function() {
-  vars <- varnames()
-  if(is.null(vars)) return()
-  selectInput(inputId = "cm_var2", label = "Variables (select one or more):", choices = vars[-which(vars == input$cm_var1)], selected = NULL, multiple = TRUE)
-})
-
 # for alternative hypothesis
 alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 
@@ -26,20 +14,6 @@ ui_singleMean <- function() {
     selectInput(inputId = "sm_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
     sliderInput('sm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
     numericInput("sm_compValue", "Comparison value:", 0)
-  )
-}
-
-ui_compareMeans <- function() {
-  wellPanel(
-    # tags$head(tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }")),
-    # radioButtons(inputId = "cm_paired", label = "Test type:", c("Paired" = "paired", "Independent" = "independent"), selected = ""),
-    uiOutput("cm_var1"),
-    uiOutput("cm_var2"),
-    conditionalPanel(condition = "input.analysistabs == 'Summary'",
-      # selectInput(inputId = "cm_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
-      sliderInput('cm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
-    	helpText("If you select a factor only one numerical variable from the lower box can be used")
-    )
   )
 }
 
@@ -68,6 +42,39 @@ singleMean <- reactive(function() {
 	dat <- getdata()[,var]
 	t.test(dat, mu = input$sm_compValue, alternative = input$sm_alternative, conf.level = input$sm_sigLevel)
 })
+
+output$cm_var1 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars, selected = NULL, multiple = FALSE)
+})
+
+output$cm_var2 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  isFct <- sapply(getdata(), is.factor)
+ 	vars <- vars[!isFct]
+  sel <- which(vars == input$cm_var1)
+  if(length(sel) > 0) {
+  	vars <- vars[-sel]
+  }
+  selectInput(inputId = "cm_var2", label = "Variables (select one or more):", choices = vars, selected = NULL, multiple = TRUE)
+})
+
+
+ui_compareMeans <- function() {
+  wellPanel(
+    # tags$head(tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }")),
+    # radioButtons(inputId = "cm_paired", label = "Test type:", c("Paired" = "paired", "Independent" = "independent"), selected = ""),
+    uiOutput("cm_var1"),
+    uiOutput("cm_var2"),
+    conditionalPanel(condition = "input.analysistabs == 'Summary'",
+      # selectInput(inputId = "cm_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
+      sliderInput('cm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
+    	helpText("If you select a factor only one numerical variable from the lower box can be used")
+    )
+  )
+}
 
 summary.compareMeans <- function(result) {
 	result <- result$model
@@ -101,13 +108,9 @@ compareMeans <- reactive(function() {
 	var2 <- input$cm_var2
 	dat <- getdata()[,c(var1,var2)]
 	if(!is.factor(dat[,var1])) {
-		nrRows <- nrow(dat)
-		Numeric <- c(t(dat))
-		dat <- list()
-		dat$Factor <- as.factor(c(rep(var1,nrRows), rep(var2,nrRows)))
-		dat$Numeric <- Numeric
-		var1 <- 'Factor'
-		var2 <- 'Numeric'
+		dat <- melt(dat)
+		var1 <- colnames(dat)[1]
+		var2 <- colnames(dat)[2]
 	}
 
 	formula <- as.formula(paste(var2[1], "~", var1))
@@ -212,4 +215,62 @@ correlation <- reactive(function() {
 	if(is.null(vars) || (length(vars) < 2)) return("Please select two or more variables")
 	dat <- getdata()[,vars]
 	data.frame(lapply(dat,as.numeric))
+})
+
+output$cp_var1 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  isFct <- sapply(getdata(), is.factor)
+ 	vars <- vars[isFct]
+  selectInput(inputId = "cp_var1", label = "Select a grouping factor:", choices = vars, selected = NULL, multiple = FALSE)
+})
+
+output$cp_var2 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  dat <- getdata()
+  isFct <- sapply(dat, is.factor)
+ 	vars <- vars[isFct]
+  sel <- which(vars == input$cp_var1)
+  selectInput(inputId = "cp_var2", label = "Select a 2-level factor:", choices = vars[-sel], selected = NULL, multiple = FALSE)
+})
+
+ui_compareProps <- function() {
+  wellPanel(
+    uiOutput("cp_var1"),
+    uiOutput("cp_var2"),
+    conditionalPanel(condition = "input.analysistabs == 'Summary'",
+      selectInput(inputId = "cp_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
+      sliderInput('cp_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
+    )
+  )
+}
+summary.compareProps <- function(result) {
+	result
+}
+
+plot.compareProps <- function(result) {
+
+	dat <- getdata()[,c(input$cp_var1,input$cp_var2)]
+	p <- qplot(factor(dat[,1]), fill = factor(dat[,2])) + geom_bar() + 
+		labs(list(title = paste("Comparing proportions of ",input$cp_var2,"$",levels(dat[,1])[1], " across levels of ",input$cp_var1, sep = ""), 
+							x = paste("Factor levels for ", input$cp_var1), y = "Count", fill = input$cp_var2))
+
+	print(p)
+}
+
+compareProps <- reactive(function() {
+	if(is.null(input$cp_var2)) return("Please select a factor")
+	var1 <- input$cp_var1
+	var2 <- input$cp_var2
+	dat <- getdata()[,c(var1,var2)]
+	lev1 <- levels(dat[,1])
+	lev2 <- levels(dat[,2])
+
+	# tab <- table(group = input$cp_var1, variable = input$cp_var2)
+	tab <- table(group = dat[,input$cp_var1], variable = dat[,input$cp_var2])
+	pt <- prop.test(tab, correct = FALSE, alternative = input$cp_alternative, conf.level = input$cp_sigLevel)
+	pt$data.name <- paste("Group = ",var1,", variable = ",var2, " (level ", levels(dat[,var2])[1],")",sep = "")
+	names(pt$estimate) <-  paste(paste("P(",var2,"$",lev2[1],")|",var1, sep = ""),"$",lev1, sep = "")
+	pt
 })

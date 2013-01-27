@@ -51,6 +51,8 @@ transform <- reactive(function() {
 
 	dat <- getdata()
 	if(!all(input$tr_columns %in% colnames(dat))) return()
+	# dat <- lapply(dat[, input$tr_columns, drop = FALSE], as.numeric)
+	# dat <- data.frame(dat)
 	dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
 	if(input$tr_transfunction != '') {
 		cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
@@ -63,10 +65,11 @@ transform <- reactive(function() {
 })
 
 output$transform_data <- reactiveTable(function() {
-	if(is.null(input$datasets)) return()
+	# if(is.null(input$datasets)) return()
+	if(is.null(input$datasets) || is.null(input$tr_columns)) return()
 
 	nr <- input$tr_nrRows
-	dat <- transform()
+	dat <- data.frame(lapply(transform(), as.numeric))
 	dat[max(1,nr-50):nr,, drop = FALSE]
 })
 
