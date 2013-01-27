@@ -217,6 +217,7 @@ correlation <- reactive(function() {
 	data.frame(lapply(dat,as.numeric))
 })
 
+# compare proportions
 output$cp_var1 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
@@ -246,7 +247,8 @@ ui_compareProps <- function() {
   )
 }
 summary.compareProps <- function(result) {
-	result
+	print(result$test)
+	prop.table(result$tab, 1)
 }
 
 plot.compareProps <- function(result) {
@@ -272,5 +274,99 @@ compareProps <- reactive(function() {
 	pt <- prop.test(tab, correct = FALSE, alternative = input$cp_alternative, conf.level = input$cp_sigLevel)
 	pt$data.name <- paste("Group = ",var1,", variable = ",var2, " (level ", levels(dat[,var2])[1],")",sep = "")
 	names(pt$estimate) <-  paste(paste("P(",var2,"$",lev2[1],")|",var1, sep = ""),"$",lev1, sep = "")
-	pt
+	list('test' = pt, 'table' = tab)
+	# pt
+})
+
+# cross-tabs
+output$ct_var1 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  isFct <- sapply(getdata(), is.factor)
+ 	vars <- vars[isFct]
+  selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars, selected = NULL, multiple = FALSE)
+})
+
+output$ct_var2 <- reactiveUI(function() {
+  vars <- varnames()
+  if(is.null(vars)) return()
+  dat <- getdata()
+  isFct <- sapply(dat, is.factor)
+ 	vars <- vars[isFct]
+  sel <- which(vars == input$ct_var1)
+  selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars[-sel], selected = NULL, multiple = FALSE)
+})
+
+ui_crosstab <- function() {
+  wellPanel(
+    uiOutput("ct_var1"),
+    uiOutput("ct_var2"),
+	  checkboxInput("ct_expected", label = "Expected values", value = FALSE),
+	  checkboxInput("ct_contrib", label = "Contribution to chisquare value", value = FALSE),
+	  checkboxInput("ct_std_residuals", label = "Standarized residuals", value = FALSE),
+	  checkboxInput("ct_rowperc", label = "Row percentages", value = FALSE),
+	  checkboxInput("ct_colperc", label = "Column percentages", value = FALSE),
+	  checkboxInput("ct_cellperc", label = "Cell percentages", value = FALSE)
+  )
+}
+
+summary.crosstab <- function(result) {
+	cat("Observed values:\n")
+	print(result$cst$observed)
+	if(input$ct_expected) {
+		cat("\nExpected values:\n")
+		print(result$cst$expected, digits = 2)
+	}
+	if(input$ct_contrib) {
+		cat("\nContribution to chisquare value:\n")
+		print((result$cst$observed - result$cst$expected)^2 / result$cst$expected, digits = 2)
+	}
+	if(input$ct_std_residuals) {
+		cat("\nStandardized residuals:\n")
+		print(result$cst$stdres, digits = 2)
+	}
+	if(input$ct_cellperc) {
+		cat("\nCell percentages:\n")
+		print(prop.table(result$table), digits = 2)  	# cell percentages
+	}
+	if(input$ct_rowperc) {
+		cat("\nRow percentages:\n")
+		print(prop.table(result$table, 1), digits = 2) # row percentages 
+	}
+	if(input$ct_colperc) {
+		cat("\nColumn percentages:\n")
+		print(prop.table(result$table, 2), digits = 2) # column percentages
+	}
+
+	print(result$cst, digits = 2)
+	cat(paste("\n",sum(result$cst$expected < 5) / length(result$cst$expected),"% of cells have expected values below 5\n\n"), sep = "")
+}
+
+plot.crosstab <- function(result) {
+
+	dat <- getdata()[,c(input$ct_var1,input$ct_var2)]
+	p <- qplot(factor(dat[,1]), fill = factor(dat[,2])) + geom_bar() + 
+		labs(list(title = paste("Crosstab of of ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
+							x = paste("Factor levels for ", input$ct_var1), y = "Count", fill = input$ct_var2))
+
+	print(p)
+}
+
+crosstab <- reactive(function() {
+	if(is.null(input$ct_var2)) return("Please select a factor")
+	var1 <- input$ct_var1
+	var2 <- input$ct_var2
+	dat <- getdata()[,c(var1,var2)]
+	lev1 <- levels(dat[,1])
+	lev2 <- levels(dat[,2])
+
+	# tab <- table(group = input$ct_var1, variable = input$ct_var2)
+	tab <- table(group = dat[,input$ct_var1], variable = dat[,input$ct_var2])
+	cst <- chisq.test(tab, correct = FALSE)
+
+	# pt$data.name <- paste("Group = ",var1,", variable = ",var2, " (level ", levels(dat[,var2])[1],")",sep = "")
+	# names(pt$estimate) <-  paste(paste("P(",var2,"$",lev2[1],")|",var1, sep = ""),"$",lev1, sep = "")
+
+	list('cst' = cst, 'table' = tab)
+
 })
