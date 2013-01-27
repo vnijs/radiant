@@ -323,7 +323,8 @@ summary.crosstab <- function(result) {
 	}
 	if(input$ct_std_residuals) {
 		cat("\nStandardized residuals:\n")
-		print(result$cst$stdres, digits = 2)
+		print(result$cst$residuals, digits = 2) 	# these seem to be the correct std.residuals
+		# print(result$cst$stdres, digits = 2)
 	}
 	if(input$ct_cellperc) {
 		cat("\nCell percentages:\n")
