@@ -21,7 +21,7 @@ output$reg_var3 <- reactiveUI(function() {
   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
-plots <- list("Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
+r_plots <- list("Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
 	"Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6
 )
 
@@ -61,7 +61,6 @@ plot.regression <- function(result) {
 	print(p)
 }
 
-
 ui_regression <- function() {
   wellPanel(
     uiOutput("reg_var1"),
@@ -72,7 +71,7 @@ ui_regression <- function() {
   	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise", value = FALSE)
   	),
     conditionalPanel(condition = "input.analysistabs == 'Plots'",
-      selectInput("reg_plots", "Diagnostic plots:", choices = plots, selected = 1, multiple = FALSE)
+      selectInput("reg_plots", "Diagnostic plots:", choices = r_plots, selected = 1, multiple = FALSE)
     ),
     actionButton("saveres", "Save residuals")
   )
@@ -86,8 +85,7 @@ output$plotswhich <- reactivePlot(function() {
 
 # analysis functions
 summary.regression <- function(result) {
-	# print(xtable(summary(result)), type = 'html')
-	print(summary(result))
+	print(summary(result), digits = 2)
 	if(input$reg_vif) {
 		if(!is.null(input$reg_var3)) {
 			print(vif.regression(result))
@@ -128,13 +126,13 @@ test.regression <- function(result) {
 	}
 }
 
-out <- function(outputId = "summary") {
-  if(class(output[[outputId]]) == 'xtable') {
-	  pre(id = outputId, class = "shiny-text-output")
-	 } else {
-	  div(id = outputId, class = "shiny-html-output")
-  }
-}
+# out <- function(outputId = "summary") {
+#   if(class(output[[outputId]]) == 'xtable') {
+# 	  pre(id = outputId, class = "shiny-text-output")
+# 	 } else {
+# 	  div(id = outputId, class = "shiny-html-output")
+#   }
+# }
 
 regression <- reactive(function() {
 	if(is.null(input$reg_var2)) return("Please select one or more independent variables")
