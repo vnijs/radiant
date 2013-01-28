@@ -179,4 +179,4 @@ output$plots <- reactivePlot(function() {
 	} else {
 		plot(x = 1, type = 'n', main="No variable selection made", axes = FALSE, xlab = "", ylab = "")
 	}
-}, width=800, height=800)
+}, width=700, height=700)

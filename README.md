@@ -24,7 +24,7 @@ Interactive data analytics using [R](http://www.r-project.org/) and [Shiny](http
 
 Start R(studio) and copy-and-paste the commands below:
 
-	install.packages('shiny')
+	install.packages('shiny', repos = "http://cran.rstudio.com")
 	shiny::runGitHub('radyant','mostly-harmless', subdir = 'inst/marketing')
 
 <!-- 	install.packages('devtools')

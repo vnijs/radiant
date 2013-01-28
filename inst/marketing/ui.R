@@ -67,7 +67,7 @@ shinyUI(
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")),
-            tabPanel("Plots", plotOutput("plots", height = "800px")),
+            tabPanel("Plots", plotOutput("plots", height = "100%")),
             tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )

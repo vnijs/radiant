@@ -361,12 +361,9 @@ crosstab <- reactive(function() {
 	lev1 <- levels(dat[,1])
 	lev2 <- levels(dat[,2])
 
-	# tab <- table(group = input$ct_var1, variable = input$ct_var2)
-	tab <- table(group = dat[,input$ct_var1], variable = dat[,input$ct_var2])
+	dnn = c(paste("Group(",input$ct_var1,")",sep = ""), paste("Variable(",input$ct_var2,")",sep = ""))
+	tab <- table(dat[,input$ct_var1], dat[,input$ct_var2], dnn = dnn)
 	cst <- chisq.test(tab, correct = FALSE)
-
-	# pt$data.name <- paste("Group = ",var1,", variable = ",var2, " (level ", levels(dat[,var2])[1],")",sep = "")
-	# names(pt$estimate) <-  paste(paste("P(",var2,"$",lev2[1],")|",var1, sep = ""),"$",lev1, sep = "")
 
 	list('cst' = cst, 'table' = tab)
 
