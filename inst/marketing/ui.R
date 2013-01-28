@@ -55,7 +55,10 @@ shinyUI(
       conditionalPanel(condition = "input.datasets != ''",
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
-            tabPanel("Data view", tableOutput("dataviewer")),
+            tabPanel("Data view", 
+              downloadButton('downloadData', 'Save data'),
+              tableOutput("dataviewer")
+            ),
             tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
             tabPanel("Transform", 
               tableOutput("transform_data"), br(),
