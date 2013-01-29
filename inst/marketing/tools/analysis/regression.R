@@ -1,20 +1,15 @@
-# UI-elements for regression
-
-# variable selection - regression
 output$reg_var1 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-# variable selection - compareMeans
 output$reg_var2 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars[-which(vars == input$reg_var1)], selected = NULL, multiple = TRUE)
 })
 
-# variable selection - compareMeans
 output$reg_var3 <- reactiveUI(function() {
   vars <- input$reg_var2
   if(is.null(vars)) return()
@@ -23,7 +18,7 @@ output$reg_var3 <- reactiveUI(function() {
   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
-r_plots <- list("Coefficient plot" = "coef", "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
+r_plots <- list("Coefficient plot" = "coef", "Actual vs Fitted" = 0, "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
 	"Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6
 )
 
@@ -31,6 +26,12 @@ plot.regression <- function(result) {
 	mod <- fortify(result)
 	if(input$reg_plots == "coef") {
 		return(coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2))
+
+	} else if(input$reg_plots == 0) {
+		df <- data.frame(cbind(mod$.fitted,mod[1]))
+		colnames(df) <- c("x","y")
+		p <- ggplot(df, aes(x=x, y=y)) + geom_point() + stat_smooth(method="lm", se=TRUE) +
+			labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
 
 	} else if(input$reg_plots == 1) {
 		p <- qplot(.fitted, .resid, data = mod) + geom_hline(yintercept = 0) + geom_smooth(se = FALSE) +
@@ -113,31 +114,9 @@ ui_regression <- function() {
   )
 }
 
-output$plotswhich <- reactivePlot(function() {
-	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
-	# 'traditional' residual plots for lm
-	plot(regression(), which = as.integer(input$reg_plots))
-}, width=800, height=800)
-
-# analysis functions
-summary.regression <- function(result) {
-	print(summary(result), digits = 3)
-	if(input$reg_vif) {
-		if(!is.null(input$reg_var3)) {
-			print(vif.regression(result))
-			cat("\n")
-			test.regression(result)
-		} else {
-			vif.regression(result)
-		}
-	} else if(!is.null(input$reg_var3)) {
-		test.regression(result)
-	}
-}
-
 vif.regression <- function(result) {
 	if(input$reg_vif) {
-		if(length(result$reg_var2) > 1) {
+		if(length(input$reg_var2) > 1) {
 	  	cat("Variance Inflation Factors\n")
 	  	VIF <- as.matrix(vif(result))[,1]
 	  	VIF <- sort(VIF, decreasing = TRUE)
@@ -149,33 +128,33 @@ vif.regression <- function(result) {
 }
 
 test.regression <- function(result) {
-	if(!input$reg_stepwise) {
-		vars <- input$reg_var2
-	  if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
-		not_selected <- setdiff(vars,input$reg_var3)
-		if(length(not_selected) == 0) {
-			sub_formula <- paste(input$reg_var1, "~ 1")
-		} else {
-			sub_formula <- paste(input$reg_var1, "~", paste(not_selected, collapse = " + "))
-		}
+	dat <- getdata()
+	if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
 
-		dat <- getdata()
-		if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
+	sub_formula <- ". ~ 1"
+	vars <- input$reg_var2
+  if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
+	not_selected <- setdiff(vars,input$reg_var3)
+	if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
 
-		reg_sub <-lm(sub_formula, data = dat)
-		anova(reg_sub, result, test='F')
-	} else {
-	  cat("Model comparisons are not conducted when Stepwise estimation has been selected.\n")
-	}
+	reg_sub <- update(result, sub_formula)
+	anova(reg_sub, result, test='F')
 }
 
-# out <- function(outputId = "summary") {
-#   if(class(output[[outputId]]) == 'xtable') {
-# 	  pre(id = outputId, class = "shiny-text-output")
-# 	 } else {
-# 	  div(id = outputId, class = "shiny-html-output")
-#   }
-# }
+summary.regression <- function(result) {
+	print(summary(result), digits = 3)
+	if(input$reg_vif) {
+		print(vif.regression(result))
+		cat("\n")
+	} 
+	if(!is.null(input$reg_var3)) {
+		if(!input$reg_stepwise) {
+			test.regression(result)
+		} else {
+	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
+	  }
+	}
+}
 
 regression <- reactive(function() {
 	vars <- input$reg_var2
@@ -188,10 +167,9 @@ regression <- reactive(function() {
 	if(input$reg_stepwise) {
 		mod <- step(lm(as.formula(paste(input$reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
 	} else {
-
 		mod <- lm(formula, data = dat)
 	}
-
+	mod
 })
 
 observe(function() {
@@ -200,3 +178,17 @@ observe(function() {
 		changedata(regression()$residuals, "residuals")
 	)
 })
+
+# out <- function(outputId = "summary") {
+#   if(class(output[[outputId]]) == 'xtable') {
+# 	  pre(id = outputId, class = "shiny-text-output")
+# 	 } else {
+# 	  div(id = outputId, class = "shiny-html-output")
+#   }
+# }
+
+# output$plotswhich <- reactivePlot(function() {
+# 	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
+# 	# 'traditional' residual plots for lm
+# 	plot(regression(), which = as.integer(input$reg_plots))
+# }, width=800, height=800)

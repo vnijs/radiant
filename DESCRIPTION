@@ -12,14 +12,15 @@ Depends:
 Imports: 
 	shiny (>= 0.3), 
 	car, 
-	foreign, 
 	tools, 
+	foreign, 
 	ggplot2, 
 	gridExtra,
-	reshape,
+	reshape2,
+	plyr,
 	markdown,
+	R.utils,
 	fGarch,
 	quantmod,
-	R.utils,
 	psych,
-	plyr
+	arm

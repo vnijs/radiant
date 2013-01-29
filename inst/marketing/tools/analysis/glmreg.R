@@ -21,16 +21,54 @@ output$glm_var3 <- reactiveUI(function() {
   selectInput(inputId = "glm_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
-gplots <- list("Coefficient plot" = "coef", "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
-	"Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6)
+gplots <- list("Coefficient plot" = "coef", "Actual vs Fitted" = 0, "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
+	 "Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6)
+
 
 plot.glmreg <- function(result) {
 
-	if(input$glm_plots != "coef") {
-		plot(result, which = as.integer(input$glm_plots))
-	} else {
-		coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2)
+	mod <- fortify(result)
+	mod$.fitted <- predict(result, type = 'response')
+	mod$.actual <- as.numeric(mod[,1])
+	mod$.actual <- mod$.actual - max(mod$.actual) + 1 	# adjustment in case max > 1
+
+	if(input$glm_plots == "coef") {
+		return(coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2))
+
+	} else if(input$glm_plots == 0) {
+		p <- ggplot(mod, aes(x=.fitted, y=.actual)) + geom_point() + stat_smooth(method="glm", family="binomial", se=TRUE) +
+			geom_jitter(position = position_jitter(height = .05)) + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual"))
+
+	} else if(input$glm_plots == 1) {
+		p <- qplot(.fitted, .resid, data = mod) + geom_hline(yintercept = 0) + geom_smooth(se = FALSE) +
+			labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
+
+	} else if(input$glm_plots == 2) {
+		p <- qplot(sample =.stdresid, data = mod, stat = "qq") +
+			geom_abline() + 
+			labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
+
+	} else if(input$glm_plots == 3) {
+		p <- qplot(.fitted, sqrt(abs(.stdresid)), data = mod) + geom_smooth(se = FALSE) +
+			labs(list(title = "Scale-Location", x = "Fitted values", y = "Sqrt. standardized residuals"))
+
+	} else if(input$glm_plots == 4) {
+
+		p <- qplot(seq_along(.cooksd), .cooksd, data = mod, geom = "bar", stat="identity") +
+			labs(list(title = "Cook's distance", x = "Observation number", y = "Cook's distance"))
+
+	} else if(input$glm_plots == 5) {
+		p <- qplot(.hat, .stdresid, data = mod, size = .cooksd) + geom_smooth(se = FALSE, size = 0.5) +
+			labs(list(title = "Residuals vs Leverage", x = "Leverage", y = "Standardize residuals", size = "Cook's distance"))
+
+	} else if(input$glm_plots == 6) {
+		p <- ggplot(mod, aes(.hat, .cooksd)) + geom_vline(xintercept = 0, colour = NA) +
+			geom_abline(slope = seq(0, 3, by = 0.5), colour = "white") + geom_smooth(se = FALSE) +
+			geom_point() + labs(list(title = "Cook's distance vs Leverage", x = "Leverage", y = "Cook's distance"))
+		 	# p <- qplot(.hat, .cooksd, size = .cooksd / .hat, data = mod) + scale_area()
 	}
+
+	print(p)
 }
 
 # create all the interaction terms
@@ -76,26 +114,39 @@ ui_glmreg <- function() {
 	    uiOutput("glm_var3")
   	),
     conditionalPanel(condition = "input.analysistabs == 'Plots'",
+      # selectInput("glm_plots", "Plots:", choices = gplots, selected = "coef", multiple = FALSE)
       selectInput("glm_plots", "Plots:", choices = gplots, selected = "coef", multiple = FALSE)
     )
     # actionButton("saveglmres", "Save residuals")
   )
 }
 
+test.glmreg <- function(result, modeleval = TRUE) {
+
+	dat <- getdata()
+	dv <- which(colnames(dat) == input$glm_var1)
+	if(input$glm_standardize) dat[,-dv] <- data.frame(lapply(dat[,-dv, drop = FALSE],rescale))
+
+	sub_formula <- ". ~ 1"
+	if(modeleval == FALSE) {
+		vars <- input$glm_var2
+		if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
+		not_selected <- setdiff(vars,input$glm_var3)
+		if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
+	}
+
+	glm_sub <- update(result, sub_formula)
+	anova(glm_sub, result, test='Chi')
+}
+
 # analysis functions
 summary.glmreg <- function(result) {
 	print(summary(result), digits = 2)
-
-	vars <- input$glm_var2
-	if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
-
-	modsig <- wald.test(b = coef(result), Sigma = vcov(result), Terms = 1:length(vars))
-	cat("Model ")
-	print(modsig)
+	print(test.glmreg(result))
 
 	if(!is.null(input$glm_var3)) {
-		cat("\n\nCoefficient ")
-		wald.test(b = coef(result), Sigma = vcov(result), Terms = match(input$glm_var3,vars))
+		cat("\n")
+		test.glmreg(result, FALSE)
 	}
 }
 
@@ -107,10 +158,8 @@ glmreg <- reactive(function() {
 	formula <- paste(input$glm_var1, "~", paste(vars, collapse = " + "))
 
 	dat <- getdata()
-	if(input$glm_standardize) dat[,vars] <- data.frame(lapply(dat[,vars, drop = FALSE],rescale))
-
-
-	# data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE])
+	dv <- which(colnames(dat) == input$glm_var1)
+	if(input$glm_standardize) dat[,-dv] <- data.frame(lapply(dat[,-dv, drop = FALSE],rescale))
 
 	if(input$glm_glmtype == "bayesglm") {
 		mod <- bayesglm(formula, family = binomial(link = input$glm_linkfunc), data = dat)
