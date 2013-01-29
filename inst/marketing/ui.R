@@ -1,8 +1,6 @@
 # summary_panel <- function(tp = tabPanel("Summary", verbatimTextOutput("summary"))) {
 #   tp
 # }
-
-
 shinyUI(
 
   pageWithSidebar(
@@ -61,8 +59,9 @@ shinyUI(
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", 
               selectInput("saveAs", "", choices = c('rda','csv','dta'), selected = NULL, multiple = FALSE),
+              tags$style(type='text/css', "#saveAs { width: 85px;}"),
               downloadButton('downloadData', 'Save data'),
-              tags$style(type='text/css', "#downloadData { vertical-align: top;}"),
+              tags$style(type='text/css', "#downloadData { vertical-align: top; width: 70px;}"),
               # tags$style(type='text/css', "#downloadData { padding-bottom: 35px;}"),
               tableOutput("dataviewer")
             ),

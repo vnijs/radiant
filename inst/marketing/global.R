@@ -5,8 +5,8 @@ options(width = 150, shiny.trace=TRUE)
 
 # options(repos = c("http://vnijs.rady.ucsd.edu/site_media/R_packages/", "http://cran.rstudio.com/"))
 options(repos = c("http://132.239.212.164/site_media/R_packages/", "http://cran.rstudio.com/"))
-libs <- c("shiny", "shinyIncubator", "car", "foreign", "tools", "ggplot2", 
-	"gridExtra", "reshape2", "plyr", "markdown", "R.utils", "psych", "arm")
+libs <- c("shiny", "shinyIncubator", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", 
+	"gridExtra", "reshape2", "plyr", "markdown", "R.utils", "psych", "arm", "xts")
 available <- suppressWarnings(sapply(libs, require, character.only=TRUE))
 inst.libs <- libs[available == FALSE]
 if(length(inst.libs) != 0) install.packages(inst.libs, dependencies = TRUE)
@@ -35,19 +35,35 @@ values$diamonds <- diamonds[sample(1:n,3000),]
 datasets <- c("mtcars", "diamonds", "rock")
 
 # loading list of data.frame in the car package
-listPackData <- function(packs) {
-	libnames <- c('')
-	lib <- c('')
-	for(ipack in packs) {
-		ilib <- data(package = ipack)$results
-		libnames <- c(libnames, paste(ilib[,'Package'],ilib[,'Item'], sep = '-'))
-		lib <- c(lib,ilib[,'Item'])
-	}
-	names(lib) <- libnames
-	as.list(lib)
-}
+# listPackData <- function(packs) {
+# 	libnames <- c('')
+# 	lib <- c('')
+# 	for(ipack in packs) {
+# 		ilib <- data(package = ipack)$results
+# 		libnames <- c(libnames, paste(ilib[,'Package'],ilib[,'Item'], sep = '-'))
+# 		lib <- c(lib,ilib[,'Item'])
+# 	}
+# 	names(lib) <- libnames
+# 	as.list(lib)
+# }
 
-packDataSets <- listPackData(c('car'))
+# packDataSets <- listPackData(c('AER','Ecdat'))
+
+# pds <- list()
+# for(pd in 2:length(packDataSets)) {
+# 	data(list = packDataSets[[pd]])
+# 	dat <- get(packDataSets[[pd]])
+# 	if(!is.null(colnames(dat))) {
+# 		pds <- c(pds,packDataSets[pd])
+# 	}
+# }
+# # packDataSets <- packDataSets[-which(packDataSets == "DutchSales")]
+# # packDataSets <- c(list(''=''),pds)
+# packDataSets <- c('',pds)
+# save(packDataSets, file = '~/Desktop/packDataSets.rda')
+
+load('data/packDataSets.rda')
+
 lastLoaded <- "" 		
 
 # Simulate a big data-file

@@ -5,19 +5,18 @@ varnames <- function() {
 	if(is.null(input$datasets)) return()
 
 	dat <- getdata()
-	colnames <- names(dat)
-	names(colnames) <- paste(colnames, " {", sapply(dat,class), "}", sep = "")
-	colnames
+	cols <- colnames(dat)
+	names(cols) <- paste(cols, " {", sapply(dat,class), "}", sep = "")
+	cols
 }
 
 changedata <- function(addCol = NULL, addColName = "") {
 	# function that changes data as needed
 	if(is.null(addCol) || addColName == "") return()
   # We don't want to take a reactive dependency on anything
-  isolate(
-  	# values[[input$datasets]][[addColName]] <- addCol
+  isolate({
   	values[[input$datasets]][,addColName] <- addCol
-  )
+  })
 }
 
 getdata <- function(dataset = input$datasets) {
@@ -53,9 +52,15 @@ loadUserData <- function(uFile) {
 
 loadPackData <- function(pFile) {
 
-	robjname <- data(list = pFile)
+  robjname <- data(list = pFile)
 	dat <- get(robjname)
+
 	if(pFile != robjname) return("R-object not found. Please choose another dataset")
+
+	if(is.null(ncol(dat))) {
+		# values[[packDataSets]] <- packDataSets[-which(packDataSets == pFile)]
+		return()
+	}
 
 	values[[robjname]] <- dat
 
@@ -112,7 +117,6 @@ output$datasets <- reactiveUI(function() {
 			lastLoaded <<- input$packData 
 		}
 	}
-
 	# Drop-down selection of data set
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
