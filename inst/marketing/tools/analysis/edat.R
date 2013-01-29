@@ -303,12 +303,16 @@ ui_crosstab <- function() {
   wellPanel(
     uiOutput("ct_var1"),
     uiOutput("ct_var2"),
-	  checkboxInput("ct_expected", label = "Expected values", value = FALSE),
-	  checkboxInput("ct_contrib", label = "Contribution to chisquare value", value = FALSE),
-	  checkboxInput("ct_std_residuals", label = "Standarized residuals", value = FALSE),
-	  checkboxInput("ct_rowperc", label = "Row percentages", value = FALSE),
-	  checkboxInput("ct_colperc", label = "Column percentages", value = FALSE),
-	  checkboxInput("ct_cellperc", label = "Cell percentages", value = FALSE)
+
+    conditionalPanel(condition = "input.analysistabs == 'Summary'",
+    	# checkboxGroupInput('ct_tables', 'Cell content', list("Expected values" = "ct_expect"), selected = NULL)
+		  checkboxInput("ct_expected", label = "Expected values", value = FALSE),
+		  checkboxInput("ct_contrib", label = "Contribution to chisquare value", value = FALSE),
+		  checkboxInput("ct_std_residuals", label = "Standarized residuals", value = FALSE),
+		  checkboxInput("ct_rowperc", label = "Row percentages", value = FALSE),
+		  checkboxInput("ct_colperc", label = "Column percentages", value = FALSE),
+		  checkboxInput("ct_cellperc", label = "Cell percentages", value = FALSE)
+		)
   )
 }
 

@@ -5,10 +5,12 @@ shinyUI(
 
   pageWithSidebar(
 
-    headerPanel("Radyant - Marketing analytics using Shiny"),
+    # headerPanel("Radyant - Marketing analytics using Shiny"),
+    headerPanel(''),
 
     sidebarPanel(
 
+      includeHTML("www/navbar.html"),
       includeHTML("www/js/tools.js"),
       includeHTML('www/js/lr.js'), # needed for livereload
 
