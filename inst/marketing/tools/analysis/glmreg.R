@@ -107,12 +107,17 @@ glmreg <- reactive(function() {
 	formula <- paste(input$glm_var1, "~", paste(vars, collapse = " + "))
 
 	dat <- getdata()
-	if(input$glm_standardize) dat <- data.frame(lapply(dat,rescale))
+	if(input$glm_standardize) dat[,vars] <- data.frame(lapply(dat[,vars, drop = FALSE],rescale))
+
+
+	# data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE])
+
 	if(input$glm_glmtype == "bayesglm") {
 		mod <- bayesglm(formula, family = binomial(link = input$glm_linkfunc), data = dat)
 	} else {
 		mod <- glm(formula, family = binomial(link = input$glm_linkfunc), data = dat)
 	}
+	mod
 })
 
 observe(function() {

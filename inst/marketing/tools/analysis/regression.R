@@ -65,7 +65,6 @@ plot.regression <- function(result) {
 }
 
 # create all the interaction terms
-
 reg_int_vec <- function(reg_vars, nway) {
 	n <- length(reg_vars)
 	iway <- c()
@@ -122,7 +121,7 @@ output$plotswhich <- reactivePlot(function() {
 
 # analysis functions
 summary.regression <- function(result) {
-	print(summary(result), digits = 2)
+	print(summary(result), digits = 3)
 	if(input$reg_vif) {
 		if(!is.null(input$reg_var3)) {
 			print(vif.regression(result))
@@ -138,9 +137,10 @@ summary.regression <- function(result) {
 
 vif.regression <- function(result) {
 	if(input$reg_vif) {
-		if(length(result$coefficients) > 2) {
+		if(length(result$reg_var2) > 1) {
 	  	cat("Variance Inflation Factors\n")
-	  	VIF <- sort(vif(result), decreasing = TRUE)
+	  	VIF <- as.matrix(vif(result))[,1]
+	  	VIF <- sort(VIF, decreasing = TRUE)
 			t(data.frame(VIF))
 		} else {
 	  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
@@ -161,7 +161,7 @@ test.regression <- function(result) {
 
 		dat <- getdata()
 		if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
-		
+
 		reg_sub <-lm(sub_formula, data = dat)
 		anova(reg_sub, result, test='F')
 	} else {

@@ -1,3 +1,7 @@
+# summary_panel <- function(tp = tabPanel("Summary", verbatimTextOutput("summary"))) {
+#   tp
+# }
+
 
 shinyUI(
 
@@ -70,6 +74,8 @@ shinyUI(
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")),
+            # uiOutput("summary_panel"),
+            # summary_panel(),
             tabPanel("Plots", plotOutput("plots", height = "100%")),
             tabPanel("Log", verbatimTextOutput('logwork'))
           )
