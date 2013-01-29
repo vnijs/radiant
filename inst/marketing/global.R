@@ -7,10 +7,12 @@ options(width = 150, shiny.trace=TRUE)
 options(repos = c("http://132.239.212.164/site_media/R_packages/", "http://cran.rstudio.com/"))
 libs <- c("shiny", "shinyIncubator", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", 
 	"gridExtra", "reshape2", "plyr", "markdown", "R.utils", "psych", "arm", "xts")
-available <- suppressWarnings(sapply(libs, require, character.only=TRUE))
+available <- suppressWarnings(suppressPackageStartupMessages(sapply(libs, require, character.only=TRUE)))
 inst.libs <- libs[available == FALSE]
-if(length(inst.libs) != 0) install.packages(inst.libs, dependencies = TRUE)
-suppressWarnings(sapply(libs, require, character.only=TRUE))
+if(length(inst.libs) != 0) {
+	install.packages(inst.libs, dependencies = TRUE)
+	suppressWarnings(suppressPackageStartupMessages(sapply(inst.libs, require, character.only=TRUE)))
+}
 
 # setting up a few standard datasets to play with 
 mtcars$vs <- as.factor(mtcars$vs)
