@@ -1,7 +1,6 @@
 ################################################################
 # functions used in radyant
 ################################################################
-
 varnames <- function() {
 	if(is.null(input$datasets)) return()
 
@@ -81,33 +80,22 @@ uploadfunc <- reactive(function() {
   }
 })
 
-# output$downloadData <- downloadHandler(
-# 	filename = function() { paste(input$datasets[1], '.rda', sep='') },
-#   content = function(file) {
-
-# 	  ext <- tolower(file_ext(file))
-# 	  robj <- input$datasets[1]
-# 	  assign(robj, getdata())
-
-# 		if(ext == 'rda' || ext == 'rdata') {
-# 	    save(list = robj, file = file)
-# 		} 
-# 		else if(ext == 'dta') {
-# 			write.dta(get(robj), file)
-# 		} else if(ext == 'csv') {
-# 			write.csv(get(robj), file)
-# 		} else {
-# 			cat("Selected data-type not (yet) supported.\n Use .rda, .csv, or .dta\n")
-# 		}
-#   }
-# )
-
 output$downloadData <- downloadHandler(
-	filename = function() { paste(input$datasets[1], '.rda', sep='') },
+	filename = function() { paste(input$datasets[1],'.',input$saveAs, sep='') },
   content = function(file) {
+
+	  ext <- input$saveAs
 	  robj <- input$datasets[1]
 	  assign(robj, getdata())
-	  save(list = robj, file = file)
+
+		if(ext == 'rda' || ext == 'rdata') {
+	    save(list = robj, file = file)
+		} 
+		else if(ext == 'dta') {
+			write.dta(get(robj), file)
+		} else if(ext == 'csv') {
+			write.csv(get(robj), file)
+		}
   }
 )
 

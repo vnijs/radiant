@@ -37,7 +37,7 @@ shinyUI(
           wellPanel(
             uiOutput("nrRows"), 
             uiOutput("columns"), 
-            tags$style(type='text/css', "#columns { height: 250px; padding-bottom: 35px;}")
+            tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}")
           )
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
@@ -60,7 +60,10 @@ shinyUI(
         conditionalPanel(condition = "input.tool == 'dataview'", 
           tabsetPanel(id = "datatabs",
             tabPanel("Data view", 
+              selectInput("saveAs", "", choices = c('rda','csv','dta'), selected = NULL, multiple = FALSE),
               downloadButton('downloadData', 'Save data'),
+              tags$style(type='text/css', "#downloadData { vertical-align: top;}"),
+              # tags$style(type='text/css', "#downloadData { padding-bottom: 35px;}"),
               tableOutput("dataviewer")
             ),
             tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
