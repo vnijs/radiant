@@ -19,7 +19,11 @@ conjointFFD <-function(dat) { #{{{
 
 	nr.profiles <- dim(design$design)[1]
 	cat(paste("\nThe number of profiles selected is equal to",nr.profiles,"\n\n"))
-	if(nr.profiles > 24) cat(paste("The number of profiles required to generate an orthogonal design is greater than the recommended maximum of 24. Consider reducing the number of attributes and/or levels.\n\n"))
+	if(nr.profiles > 24) {
+		cat(paste("The number of profiles required to generate an 
+		orthogonal design is greater than the recommended maximum of 24. Consider 
+		reducing the number of attributes and/or levels.\n\n"))
+	}
 
 	return(list(frac = design$design, full = experiment))
 }
@@ -53,14 +57,6 @@ conjointCreateProfiles <- function() { #{{{
 
 }
 
-
-
-
-
-
-
-
-
 output$ca_var1 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
@@ -74,9 +70,33 @@ output$ca_var2 <- reactiveUI(function() {
 })
 
 plot.conjoint <- function(result) {
-	# mod <- fortify(result)
-	# return(coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2))
-	plot(1:10)
+
+	theTable <- ca_theTable(conjoint())
+
+	if(input$ca_plots == 'pw') {
+		PW.df <- theTable[['PW']]
+
+		plots <- list()
+		for(var in input$ca_var2) {
+			PW.var <- PW.df[PW.df[,'Attributes'] == var,]
+			# plot.ylim <- c(rangePW[var,'Min'],ceiling(rangePW[maxRangeInd,'Range']))
+			# plot.ylim[1] <- floor(plot.ylim[1])
+			# nr.ticks.max <- min(8, ceiling(rangePW[maxRangeInd,'Range']))
+			# plot.ylim[2] <- ceiling(plot.ylim[1] + plot.ylim[2])
+			# plots[[var]] <- ggplot(PW.var, aes_string(x='Levels', y='PW', group = 1)) +
+			plots[[var]] <- ggplot(PW.var, aes(x=Levels, y=PW, group = 1)) +
+				  geom_line(colour="blue", linetype = 'dotdash', size=.7) + 
+	  		  geom_point(colour="blue", size=4, shape=21, fill="white") +
+		  	  labs(list(title = paste("Part-worths for", var), x = ""))
+		}
+		print(do.call(grid.arrange, c(plots, list(ncol = 2))))
+	} else {
+
+		IW.df <- theTable[['IW']]
+		p <- ggplot(IW.df, aes(x=Attribute, y=IW, fill = Attribute)) + geom_bar(stat = 'identity', alpha = .5) + 
+			theme(legend.position = "none") + labs(list(title = "Importance weights"))
+		print(p)
+	}
 }
 
 # create all the interaction terms
@@ -115,44 +135,42 @@ ui_conjoint <- function() {
     uiOutput("ca_var2"),
 	  checkboxInput("ca_rev", label = "Reverse evaluation scores", value = FALSE),
     conditionalPanel(condition = "input.analysistabs == 'Summary'",
-	    checkboxInput(inputId = "ca_vif", label = "Calculate VIF-values", value = FALSE)
+	    checkboxInput(inputId = "ca_vif", label = "Calculate VIF-values", value = FALSE),
+	  	downloadButton('downloadPWs', 'Save PWs')
   	),
-  	radioButtons("ca_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
-    conditionalPanel(condition = "input.ca_interactions != 'none'",
-  		uiOutput("ca_intsel")
-  	),
+  	# radioButtons("ca_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
+    # conditionalPanel(condition = "input.ca_interactions != 'none'",
+  	# 	uiOutput("ca_intsel")
+  	# ),
+  	# br(),
     conditionalPanel(condition = "input.analysistabs == 'Plots'",
       selectInput("ca_plots", "Conjoint plots:", choices = ca_plots, selected = 'pw', multiple = FALSE)
     )
   )
 }
 
-ca_The_table <- function() {
-	PW.df <- NULL
-	levs <- unlist(lapply(movie,levels))
-	length(levs)
-	levs 
-	
-	lab <- c()
-	for(var in state$indep) {
-		n <- nlevels(c.data[,var])
-		l <- levels(c.data[,var])
-		for(i in 1:n) {
-			PW.df <- rbind(PW.df,c(var,l[i]))
-			lab <- c(lab,paste(var,l[i],sep="."))
-		}
-	}
-
-	PW.df <- as.data.frame(PW.df)
-	colnames(PW.df) <- c("Attribute","Levels")
-	PW.df$PW <- 0
-	rownames(PW.df) <- lab
-}
+output$downloadPWs <- downloadHandler(
+	filename = function() { paste(input$datasets[1], '_PWs.csv', sep='') },
+  content = function(file) {
+	  write.csv(ca_theTable(conjoint())[['PW']], file = file, row.names = FALSE)
+  }
+)
 
 summary.conjoint <- function(result) {
-	print(summary(result), digits = 4)
+
+	theTable <- ca_theTable(result)
+	cat("Conjoint part-worths:\n")
+	print(theTable[['PW']], row.names = FALSE)
+	cat("\nConjoint importance weights:\n")
+	print(theTable[['IW']], row.names = FALSE)
+	cat("\nConjoint regression coefficients:\n")
+
+	reg_coeff <- data.frame(round(result$coefficients, 3))
+	colnames(reg_coeff) <- "Coefficients"
+	print(reg_coeff)
 
 	if(input$ca_vif) {
+		cat("\n")
 		print(vif.conjoint(result))
 	}
 }
@@ -188,110 +206,60 @@ conjoint <- reactive(function() {
 
 })
 
-old.conjoint <- function() {
-
-	# if("Reverse" %in% state$opt) {
-	# 	reverse <- paste("Rev.",state$dep,sep = "")
-	# 	cn <- colnames(c.data)[-1]
-	# 	c.data[,reverse] <- abs(c.data[,state$dep] - max(c.data[,state$dep])) + 1
-	# 	state$dep <- reverse
-	# 	c.data <- c.data[,c(state$dep,cn)]
-	# }
-
-	for(var in state$indep)
-		c.data[,var] <- as.factor(c.data[,var])
-
+ca_theTable <- function(result) {
 	PW.df <- NULL
-	lab <- c()
-	for(var in state$indep) {
-		n <- nlevels(c.data[,var])
-		l <- levels(c.data[,var])
-		for(i in 1:n) {
-			PW.df <- rbind(PW.df,c(var,l[i]))
-			lab <- c(lab,paste(var,l[i],sep="."))
-		}
-	}
 
-	PW.df <- as.data.frame(PW.df)
-	colnames(PW.df) <- c("Attribute","Levels")
+	if(is.character(result)) return(list("PW", ""))
+
+	dat <- getdata()
+	attr <- data.frame(dat[ ,input$ca_var2, drop = FALSE])
+	vars <- colnames(attr)
+
+	levs <- lapply(attr,levels)
+	nlevs <- sapply(levs,length)
+	PW.df <- data.frame(rep(vars,nlevs), unlist(levs))
+	colnames(PW.df) <- c("Attributes","Levels")
 	PW.df$PW <- 0
-	rownames(PW.df) <- lab
 
-	# add a '.' so the factor level associated with a coeffieicent is clearer.
-	cn <- colnames(c.data)
-	colnames(c.data)[-1] <- paste(colnames(c.data)[-1],".",sep = "")
+	# Calculate PW and IW's when interactions are present
+	# http://www.slideshare.net/SunnyBose/conjoint-analysis-12090511
 
-	form <-paste(state$dep, " ~ " , colnames(c.data)[2])
-	for(var in colnames(c.data)[c(-1,-2)])
-		form <- paste(form,"+",var)
+	rownames(PW.df) <- paste(PW.df[,'Attributes'], PW.df[,'Levels'], sep = "")
 
-	# running the regression
-	conjoint <- lm(form, data = c.data)
-	colnames(c.data) <- cn
-	
-	coeff <- as.matrix(conjoint$coefficients)
-	colnames(coeff) <- c("Coefficients")
-	print(round(coeff,3))
-
-	if("VIF" %in% state$opt)
-		print(sort(vif(conjoint), decreasing = T), digits = 3)
-
-	BW.reg <- c("Utility base profile",coeff[1,])
-	PW.df[rownames(coeff)[-1],'PW'] <- coeff[-1]
-	row.below <- dim(PW.df)[1]+3
+	coeff <- result$coefficients
+	BW.reg <- list("Attributes" = "Base utility", "Levels" = "", "PW" = coeff[1])
+	PW.df[names(coeff)[-1],'PW'] <- coeff[-1]
 
 	minPW <- PW.df[tapply(1:nrow(PW.df),PW.df$Attribute,function(i) i[which.min(PW.df$PW[i])]),]
 	maxPW <- PW.df[tapply(1:nrow(PW.df),PW.df$Attribute,function(i) i[which.max(PW.df$PW[i])]),]
-	
 	rownames(minPW) <- minPW$Attribute
 	rownames(maxPW) <- maxPW$Attribute
 
-	rangePW <- data.frame(cbind(maxPW[state$indep,'PW'],minPW[state$indep,'PW']))
+	rangePW <- data.frame(cbind(maxPW[vars,'PW'],minPW[vars,'PW']))
 	rangePW$Range <- rangePW[,1] - rangePW[,2]
 	colnames(rangePW) <- c("Max","Min","Range")
-	rownames(rangePW) <- state$indep
+	rownames(rangePW) <- vars
 
 	maxRangeInd <- which.max(rangePW$Range)
 	ylim <- rangePW[maxRangeInd,c("Min","Max")]
 
-	IW <- data.frame(state$indep)
+	IW <- data.frame(vars)
 	IW$IW <- rangePW$Range / sum(rangePW$Range)
 	colnames(IW) <- c("Attribute","IW")
 
-	# writing output to excel
-	file.name <- paste('conjoint.',state$data,'.xls', sep = "")
-	wb <- loadWorkbook(file.name, create = TRUE)
+	PW.df[,'Attributes'] <- as.character(PW.df[,'Attributes'])
+	PW.df[,'Levels'] <- as.character(PW.df[,'Levels'])
+	PW.df <- rbind(PW.df, c("Base utility","~",coeff[1]))
+	PW.df[,'PW'] <- as.numeric(PW.df[,'PW'])
 
-	createSheet(wb, name = c('data','analysis','regression','plots'))
-	clearSheet(wb, sheet = c('data','analysis','regression','plots'))
+	PW.df[,'PW'] <- round(PW.df[,'PW'],3)
+	IW[,'IW'] <- round(IW[,'IW'],3)
 
-	writeWorksheet(wb, c.data, sheet = 'data', startRow = 1, startCol = 1)
-	writeWorksheet(wb, PW.df, sheet = 'analysis', startRow = 1, startCol = 1)
-	mergeCells(wb, sheet = "analysis", reference = paste("A",row.below,":B",row.below,sep = ""))
-	writeWorksheet(wb, "Utility base profile", sheet = 'analysis', header = FALSE, startRow = row.below, startCol = 1)
-	writeWorksheet(wb, coeff[1], sheet = 'analysis', header = FALSE, startRow = row.below, startCol = 3)
-	writeWorksheet(wb, IW, sheet = 'analysis', startRow = 1, startCol = 5)
-	writeWorksheet(wb, coeff, sheet = 'regression', rownames = 'Levels', startRow = 1, startCol = 1)
+	list('PW' = PW.df, 'IW' = IW)
+}
 
-	### setColumnWidth(wb,sheet = 'data',column = 1:20,width = -1)
-	### setColumnWidth(wb,sheet = 'analysis',column = 1:6,width = -1)
-	### setColumnWidth(wb,sheet = 'regression',column = 1:2,width = -1)
 
-	allRows = seq(length = row.below) + 1
-	nrFormat = createCellStyle(wb)
-	setDataFormat(nrFormat, format = "0.00")
-
-	setCellStyle(wb, sheet = 'analysis', row = allRows, col = 3, cellstyle = nrFormat)
-	setCellStyle(wb, sheet = 'regression', row = allRows, col = 2, cellstyle = nrFormat)
-
-	nrFormat = createCellStyle(wb)
-	setDataFormat(nrFormat, format = "0.0%")
-
-	setCellStyle(wb, sheet = 'analysis', row = allRows, col = 6, cellstyle = nrFormat)
-
-	setColumnWidth(wb,sheet = 'data',column = 1:20,width = -1)
-	setColumnWidth(wb,sheet = 'analysis',column = 1:6,width = -1)
-	setColumnWidth(wb,sheet = 'regression',column = 1:2,width = -1)
+old.conjoint <- function() {
 
 	plot.ylim <- c(rangePW[var,'Min'],ceiling(rangePW[maxRangeInd,'Range']))
 
@@ -320,10 +288,6 @@ old.conjoint <- function() {
 
 		### ggsave(graph.name, ggplot(PW.df[PW.df[,'Attribute'] == var,'PW'], aes(lev,PW)) + (xlab = "") + (ylab = "Part-Worth"), width = 3.25, height = 3.25, dip = 1200)
 		### ggsave(graph.name, ggplot(PW.df[PW.df[,'Attribute'] == var,'PW'], aes(PW,Levels)) + (xlab = "") + (ylab = "Part-Worth"), width = 3.25, height = 3.25, dip = 1200)
-
-		createName(wb, name = "graph", formula = paste("plots!$B$",plot.row,sep=''), overwrite = TRUE)
-		addImage(wb, filename = graph.name, name = "graph", originalSize = TRUE)
-		plot.row <- plot.row + 40
 	}
 
 	graph.name <- paste("IW.plots.",state$data,".png",sep = "")
@@ -336,7 +300,4 @@ old.conjoint <- function() {
 	box("figure", lwd = 4)
 	dev.off()
 	par(op)
-
-	createName(wb, name = "graph", formula = "plots!$M$2", overwrite = TRUE)
-	addImage(wb, filename = graph.name, name = "graph", originalSize = TRUE)
 }

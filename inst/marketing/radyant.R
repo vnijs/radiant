@@ -105,23 +105,17 @@ uploadfunc <- reactive(function() {
 output$downloadData <- downloadHandler(
 	filename = function() { paste(input$datasets[1], '.rda', sep='') },
   content = function(file) {
-
-	  ext <- tolower(file_ext(file))
 	  robj <- input$datasets[1]
 	  assign(robj, getdata())
 	  save(list = robj, file = file)
   }
 )
 
-
 output$datasets <- reactiveUI(function() {
 
 	fpath <- uploadfunc()
-
 	# loading user data
-	if(fpath != "") {
-		loadUserData(fpath)
-	} 
+	if(fpath != "") loadUserData(fpath)
 
 	# loading package data
 	if(input$packData != "") {
