@@ -17,6 +17,7 @@ output$glm_var2 <- reactiveUI(function() {
 output$glm_var3 <- reactiveUI(function() {
   vars <- input$glm_var2
   if(is.null(vars)) return()
+	if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
   selectInput(inputId = "glm_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
@@ -30,9 +31,34 @@ plot.glmreg <- function(result) {
 	} else {
 		coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2)
 	}
-	# cdplot(input$glm_var1 ~ input$glm_var2[1], data = getdata())
 }
 
+# create all the interaction terms
+glm_int_vec <- function(glm_vars, nway) {
+	n <- length(glm_vars)
+	iway <- c()
+	for(i in 1:(n-1)) {
+		for(j in (i+1):n) {
+			iway <- c(iway, paste(glm_vars[i],glm_vars[j],sep=":"))
+		}
+	}
+	if(n >= 3 && nway == '3way') {
+		for(i in 1:(n-2)) {
+			for(j in (i+1):(n-1)) {
+				for(k in (j+1):n) {
+					iway <- c(iway, paste(glm_vars[i],glm_vars[j],glm_vars[k],sep=":"))
+				}
+			}
+		}
+	}
+	iway
+}
+
+output$glm_intsel <- reactiveUI(function() {
+  vars <- input$glm_var2
+  if(is.null(vars) || length(vars) < 2) return()
+	selectInput("glm_intsel", label = "", choices = glm_int_vec(vars,input$glm_interactions), selected = NULL, multiple = TRUE)
+})
 
 ui_glmreg <- function() {
   wellPanel(
@@ -41,6 +67,11 @@ ui_glmreg <- function() {
     radioButtons(inputId = "glm_glmtype", label = "", c("GLM" = "glm", "Bayes GLM" = "bayesglm"), selected = "GLM"),
     uiOutput("glm_var1"),
     uiOutput("glm_var2"),
+ 	  checkboxInput(inputId = "glm_standardize", label = "Standardized coefficients", value = FALSE),
+    radioButtons(inputId = "glm_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
+    conditionalPanel(condition = "input.glm_interactions != 'none'",
+  		uiOutput("glm_intsel")
+  	),
     conditionalPanel(condition = "input.analysistabs == 'Summary'",
 	    uiOutput("glm_var3")
   	),
@@ -55,27 +86,32 @@ ui_glmreg <- function() {
 summary.glmreg <- function(result) {
 	print(summary(result), digits = 2)
 
-	# cat(paste("Log-likelihood:",round(logLik(result),3)))
-	modsig <- wald.test(b = coef(result), Sigma = vcov(result), Terms = 1:length(input$glm_var2))
-	# cat(paste("\nChange in deviance:",round(c_deviance,3),"  Change in df:",c_df,"\n"))
+	vars <- input$glm_var2
+	if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
+
+	modsig <- wald.test(b = coef(result), Sigma = vcov(result), Terms = 1:length(vars))
 	cat("Model ")
 	print(modsig)
 
-	# print(wald.test(b = coef(result), Sigma = vcov(result), Terms = 1:length(input$glm_var2))$result)
-
 	if(!is.null(input$glm_var3)) {
 		cat("\n\nCoefficient ")
-		wald.test(b = coef(result), Sigma = vcov(result), Terms = match(input$glm_var3,input$glm_var2))
+		wald.test(b = coef(result), Sigma = vcov(result), Terms = match(input$glm_var3,vars))
 	}
 }
 
 glmreg <- reactive(function() {
-	if(is.null(input$glm_var2)) return("Please select one or more independent variables")
-	formula <- paste(input$glm_var1, "~", paste(input$glm_var2, collapse = " + "))
+
+	vars <- input$glm_var2
+	if(is.null(vars)) return("Please select one or more independent variables")
+	if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
+	formula <- paste(input$glm_var1, "~", paste(vars, collapse = " + "))
+
+	dat <- getdata()
+	if(input$glm_standardize) dat <- data.frame(lapply(dat,rescale))
 	if(input$glm_glmtype == "bayesglm") {
-		mod <- bayesglm(formula, family = binomial(link = input$glm_linkfunc), data = getdata())
+		mod <- bayesglm(formula, family = binomial(link = input$glm_linkfunc), data = dat)
 	} else {
-		mod <- glm(formula, family = binomial(link = input$glm_linkfunc), data = getdata())
+		mod <- glm(formula, family = binomial(link = input$glm_linkfunc), data = dat)
 	}
 })
 

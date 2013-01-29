@@ -18,18 +18,21 @@ output$reg_var2 <- reactiveUI(function() {
 output$reg_var3 <- reactiveUI(function() {
   vars <- input$reg_var2
   if(is.null(vars)) return()
+	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
+
   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
-r_plots <- list("Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
+r_plots <- list("Coefficient plot" = "coef", "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
 	"Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6
 )
 
 plot.regression <- function(result) {
 	mod <- fortify(result)
-	# plot(result, ask = FALSE)
+	if(input$reg_plots == "coef") {
+		return(coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2))
 
-  if(input$reg_plots == 1) {
+	} else if(input$reg_plots == 1) {
 		p <- qplot(.fitted, .resid, data = mod) + geom_hline(yintercept = 0) + geom_smooth(se = FALSE) +
 			labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
 
@@ -61,17 +64,51 @@ plot.regression <- function(result) {
 	print(p)
 }
 
+# create all the interaction terms
+
+reg_int_vec <- function(reg_vars, nway) {
+	n <- length(reg_vars)
+	iway <- c()
+	for(i in 1:(n-1)) {
+		for(j in (i+1):n) {
+			iway <- c(iway, paste(reg_vars[i],reg_vars[j],sep=":"))
+		}
+	}
+	if(n >= 3 && nway == '3way') {
+		for(i in 1:(n-2)) {
+			for(j in (i+1):(n-1)) {
+				for(k in (j+1):n) {
+					iway <- c(iway, paste(reg_vars[i],reg_vars[j],reg_vars[k],sep=":"))
+				}
+			}
+		}
+	}
+	iway
+}
+
+output$reg_intsel <- reactiveUI(function() {
+  vars <- input$reg_var2
+  if(is.null(vars) || length(vars) < 2) return()
+	selectInput("reg_intsel", label = "", choices = reg_int_vec(vars,input$reg_interactions), selected = NULL, multiple = TRUE)
+})
+
 ui_regression <- function() {
   wellPanel(
+  	tags$head(tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }")),
     uiOutput("reg_var1"),
     uiOutput("reg_var2"),
+  	checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients", value = FALSE),
+    radioButtons(inputId = "reg_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
+    conditionalPanel(condition = "input.reg_interactions != 'none'",
+  		uiOutput("reg_intsel")
+  	),
     conditionalPanel(condition = "input.analysistabs == 'Summary'",
 	    uiOutput("reg_var3"),
 	    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values", value = FALSE),
   	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise", value = FALSE)
   	),
     conditionalPanel(condition = "input.analysistabs == 'Plots'",
-      selectInput("reg_plots", "Diagnostic plots:", choices = r_plots, selected = 1, multiple = FALSE)
+      selectInput("reg_plots", "Regression plots:", choices = r_plots, selected = 'coef', multiple = FALSE)
     ),
     actionButton("saveres", "Save residuals")
   )
@@ -113,13 +150,19 @@ vif.regression <- function(result) {
 
 test.regression <- function(result) {
 	if(!input$reg_stepwise) {
-		not_selected <- setdiff(input$reg_var2,input$reg_var3)
+		vars <- input$reg_var2
+	  if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
+		not_selected <- setdiff(vars,input$reg_var3)
 		if(length(not_selected) == 0) {
 			sub_formula <- paste(input$reg_var1, "~ 1")
 		} else {
 			sub_formula <- paste(input$reg_var1, "~", paste(not_selected, collapse = " + "))
 		}
-		reg_sub <-lm(sub_formula, data = getdata())
+
+		dat <- getdata()
+		if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
+		
+		reg_sub <-lm(sub_formula, data = dat)
 		anova(reg_sub, result, test='F')
 	} else {
 	  cat("Model comparisons are not conducted when Stepwise estimation has been selected.\n")
@@ -135,13 +178,20 @@ test.regression <- function(result) {
 # }
 
 regression <- reactive(function() {
-	if(is.null(input$reg_var2)) return("Please select one or more independent variables")
-	formula <- paste(input$reg_var1, "~", paste(input$reg_var2, collapse = " + "))
+	vars <- input$reg_var2
+	if(is.null(vars)) return("Please select one or more independent variables")
+	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
+
+	formula <- paste(input$reg_var1, "~", paste(vars, collapse = " + "))
+	dat <- getdata()
+	if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
 	if(input$reg_stepwise) {
-		mod <- step(lm(as.formula(paste(input$reg_var1, "~ 1")), data = getdata()), scope = list(upper = formula), direction = 'forward')
+		mod <- step(lm(as.formula(paste(input$reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
 	} else {
-		mod <- lm(formula, data = getdata())
+
+		mod <- lm(formula, data = dat)
 	}
+
 })
 
 observe(function() {
