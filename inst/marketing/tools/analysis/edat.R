@@ -233,6 +233,7 @@ output$cp_var2 <- reactiveUI(function() {
   isFct <- sapply(dat, is.factor)
  	vars <- vars[isFct]
   sel <- which(vars == input$cp_var1)
+  if(length(sel) == 0) return()
   selectInput(inputId = "cp_var2", label = "Select a 2-level factor:", choices = vars[-sel], selected = NULL, multiple = FALSE)
 })
 
@@ -294,6 +295,7 @@ output$ct_var2 <- reactiveUI(function() {
   isFct <- sapply(dat, is.factor)
  	vars <- vars[isFct]
   sel <- which(vars == input$ct_var1)
+  if(length(sel) == 0) return()
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars[-sel], selected = NULL, multiple = FALSE)
 })
 

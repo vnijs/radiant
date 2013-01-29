@@ -1,13 +1,16 @@
 shinyUI(
+  includeHTML("www/js/tools.js"),
+  includeHTML('www/js/lr.js'), # needed for livereload
 
   pageWithSidebar(
 
     headerPanel("Radyant - Financial analytics using Shiny"),
+
     
     sidebarPanel(
 
-      includeHTML("www/js/tools.js"),
-      includeHTML('www/js/lr.js'), # needed for livereload
+      # includeHTML("www/js/tools.js"),
+      # includeHTML('www/js/lr.js'), # needed for livereload
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
