@@ -57,6 +57,55 @@ conjointCreateProfiles <- function() { #{{{
 
 }
 
+conjointProfiles <- reactive(function() {
+	vars <- input$ca_var2
+	if(is.null(vars)) return("Please select one or more attributes")
+	if(!is.null(input$ca_intsel) && input$ca_interactions != 'none') vars <- c(vars,input$ca_intsel)
+
+	formula <- paste(input$ca_var1, "~", paste(vars, collapse = " + "))
+	dat <- getdata()
+
+	if(input$ca_rev) {
+		ca_dep <- dat[,input$ca_var1]
+		dat[,input$ca_var1] <- abs(ca_dep - max(ca_dep)) + 1
+	}
+	mod <- lm(formula, data = dat)
+	mod
+
+})
+
+# getdata <- function(dataset = input$datasets) {
+#   values[[dataset]]
+# }	
+
+ca_loadUserProfiles <- function(uFile) {
+
+	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
+	values[[objname]] <- read.csv(uFile)
+
+}
+
+ca_uploadProfiles <- reactive(function() {
+  if(input$ca_upload == 0) return("")
+  fpath <- try(file.choose())
+  if(is(fpath, 'try-error')) {
+  	return("")
+  } else {
+  	return(fpath)
+  }
+})
+
+output$ca_downloadProfiles <- downloadHandler(
+	filename = function() { paste(input$ca_profiles(),'.csv', sep='') },
+  content = function(file) {
+
+	  robj <- input$ca_profiles()
+	  assign(robj, getdata())
+
+		write.csv(get(robj), file)
+	}
+)
+
 output$ca_var1 <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
@@ -218,9 +267,6 @@ ca_theTable <- function(result) {
 	if(sum(isFct) < ncol(attr)) return(list("PW" = "Only factors can be used.", "IW" = "Only factors can be used."))
 	levs <- lapply(attr[,isFct, drop = FALSE],levels)
 	vars <- colnames(attr)[isFct]
-	# print(vars)
-	# print(levs)
-	# return()
 
 	nlevs <- sapply(levs,length)
 	PW.df <- data.frame(rep(vars,nlevs), unlist(levs))
@@ -262,48 +308,4 @@ ca_theTable <- function(result) {
 	IW[,'IW'] <- round(IW[,'IW'],3)
 
 	list('PW' = PW.df, 'IW' = IW)
-}
-
-
-old.conjoint <- function() {
-
-	plot.ylim <- c(rangePW[var,'Min'],ceiling(rangePW[maxRangeInd,'Range']))
-
-	plot.row <- 2
-	for(var in state$indep) {
-
-		graph.name <- paste("PW.plots.",var,".png",sep = "")
-		png(graph.name,width=600, height=600)
-		### graph.name <- paste("PW.plot.",var,".pdf",sep = "")
-		### pdf(graph.name,width=6, height=6)
-		op <- par(mar=c(5, 5, 5, 5))
-		plot.ylim <- c(rangePW[var,'Min'],ceiling(rangePW[maxRangeInd,'Range']))
-		plot.ylim[1] <- floor(plot.ylim[1])
-		nr.ticks.max <- min(8, ceiling(rangePW[maxRangeInd,'Range']))
-		plot.ylim[2] <- ceiling(plot.ylim[1] + plot.ylim[2])
-		nr.ticks <- round((plot.ylim[2] - plot.ylim[1]) / nr.ticks.max,0)
-		plot(round(PW.df[PW.df[,'Attribute'] == var,'PW'],3), main = paste("Part-Worths for ",var),type="l", pch = 20, lty = 1, lwd = 5, col = 'blue', xlab = "", ylab = "Part-Worth", ylim = plot.ylim, axes = F)
-		lev <- PW.df[PW.df$Attribute == var,'Levels']
-		axis(1, 1:length(lev),lev)
-		axis(2, round(seq(plot.ylim[1],plot.ylim[2],by = nr.ticks),1), las = 1) 
-		if (!(0 %in% round(plot.ylim,1)))
-			abline(0,0)
-		box("figure", lwd = 4)
-		dev.off()
-		par(op)
-
-		### ggsave(graph.name, ggplot(PW.df[PW.df[,'Attribute'] == var,'PW'], aes(lev,PW)) + (xlab = "") + (ylab = "Part-Worth"), width = 3.25, height = 3.25, dip = 1200)
-		### ggsave(graph.name, ggplot(PW.df[PW.df[,'Attribute'] == var,'PW'], aes(PW,Levels)) + (xlab = "") + (ylab = "Part-Worth"), width = 3.25, height = 3.25, dip = 1200)
-	}
-
-	graph.name <- paste("IW.plots.",state$data,".png",sep = "")
-	png(graph.name,width=600, height=600)
-	### graph.name <- paste("IW.plots.",state$data,".pdf",sep = "")
-	### pdf(graph.name,width=6, height=6)
-	op <- par(mar=c(5, 7, 5, 5))
-	IW <- IW[dim(IW)[1]:1,]		# reversing the rows in IW so the IW plot has the right order
-	barplot(IW[,'IW'], main = "Importance weights", horiz = TRUE, names.arg = IW[,'Attribute'], las = 1, col = 'blue')
-	box("figure", lwd = 4)
-	dev.off()
-	par(op)
 }
