@@ -93,7 +93,7 @@ plot.conjoint <- function(result) {
 	} else {
 
 		IW.df <- theTable[['IW']]
-		p <- ggplot(IW.df, aes(x=Attribute, y=IW, fill = Attribute)) + geom_bar(stat = 'identity', alpha = .5) + 
+		p <- ggplot(IW.df, aes(x=Attributes, y=IW, fill = Attributes)) + geom_bar(stat = 'identity', alpha = .5) + 
 			theme(legend.position = "none") + labs(list(title = "Importance weights"))
 		print(p)
 	}
@@ -209,13 +209,19 @@ conjoint <- reactive(function() {
 ca_theTable <- function(result) {
 	PW.df <- NULL
 
-	if(is.character(result)) return(list("PW", ""))
+	if(is.character(result)) return(list("PW" = "No attributes selected."))
 
 	dat <- getdata()
 	attr <- data.frame(dat[ ,input$ca_var2, drop = FALSE])
-	vars <- colnames(attr)
 
-	levs <- lapply(attr,levels)
+	isFct <- sapply(attr,is.factor)
+	if(sum(isFct) < ncol(attr)) return(list("PW" = "Only factors can be used.", "IW" = "Only factors can be used."))
+	levs <- lapply(attr[,isFct, drop = FALSE],levels)
+	vars <- colnames(attr)[isFct]
+	# print(vars)
+	# print(levs)
+	# return()
+
 	nlevs <- sapply(levs,length)
 	PW.df <- data.frame(rep(vars,nlevs), unlist(levs))
 	colnames(PW.df) <- c("Attributes","Levels")
@@ -230,10 +236,10 @@ ca_theTable <- function(result) {
 	BW.reg <- list("Attributes" = "Base utility", "Levels" = "", "PW" = coeff[1])
 	PW.df[names(coeff)[-1],'PW'] <- coeff[-1]
 
-	minPW <- PW.df[tapply(1:nrow(PW.df),PW.df$Attribute,function(i) i[which.min(PW.df$PW[i])]),]
-	maxPW <- PW.df[tapply(1:nrow(PW.df),PW.df$Attribute,function(i) i[which.max(PW.df$PW[i])]),]
-	rownames(minPW) <- minPW$Attribute
-	rownames(maxPW) <- maxPW$Attribute
+	minPW <- PW.df[tapply(1:nrow(PW.df),PW.df$Attributes,function(i) i[which.min(PW.df$PW[i])]),]
+	maxPW <- PW.df[tapply(1:nrow(PW.df),PW.df$Attributes,function(i) i[which.max(PW.df$PW[i])]),]
+	rownames(minPW) <- minPW$Attributes
+	rownames(maxPW) <- maxPW$Attributes
 
 	rangePW <- data.frame(cbind(maxPW[vars,'PW'],minPW[vars,'PW']))
 	rangePW$Range <- rangePW[,1] - rangePW[,2]
@@ -245,7 +251,7 @@ ca_theTable <- function(result) {
 
 	IW <- data.frame(vars)
 	IW$IW <- rangePW$Range / sum(rangePW$Range)
-	colnames(IW) <- c("Attribute","IW")
+	colnames(IW) <- c("Attributes","IW")
 
 	PW.df[,'Attributes'] <- as.character(PW.df[,'Attributes'])
 	PW.df[,'Levels'] <- as.character(PW.df[,'Levels'])
