@@ -1,4 +1,3 @@
-# UI-elements for EDAT.R
 output$sm_var <- reactiveUI(function() {
   vars <- varnames()
   if(is.null(vars)) return()
@@ -352,11 +351,73 @@ summary.crosstab <- function(result) {
 plot.crosstab <- function(result) {
 
 	dat <- getdata()[,c(input$ct_var1,input$ct_var2)]
-	p <- qplot(factor(dat[,1]), fill = factor(dat[,2])) + geom_bar(alpha = .5) + 
-		labs(list(title = paste("Crosstab of of ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
-							x = paste("Factor levels for ", input$ct_var1), y = "Count", fill = input$ct_var2))
+	plots <- list()
+	v1 <- input$ct_var1
+	v2 <- input$ct_var2
 
-	print(p)
+	meltTable <- function(tab) {
+		tab <- data.frame(tab)
+		lab <- data.frame(rownames(tab))
+		names(lab) <- "rnames"
+		melt(cbind(lab,tab))
+	}
+
+	plots[['observed']] <- qplot(factor(dat[,1]), fill = factor(dat[,2])) + geom_bar(alpha = .5) + 
+							labs(list(title = paste("Crosstab of ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
+							x = '', y = "Count", fill = input$ct_var2))
+
+	if(input$ct_expected) {
+
+		# tab <- meltTable(result$cst$expected)
+		# plots[['expected']] <- ggplot(tab, aes(rnames,value)) +
+  #       			geom_bar(aes(fill=variable), statistic="identity", position="fill") +
+  #       			labs(list(title = paste("Expected values for ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
+		# 					x = '', y = "Count", fill = input$ct_var2))
+
+
+		# ggplot(diamond.table, aes(color, Freq)) +
+  #       geom_bar(aes(fill=cut), statistic="identity", position="fill")
+	}
+	if(input$ct_contrib) {
+
+		# contrib <- (result$cst$observed - result$cst$expected)^2 / result$cst$expected
+		# tab <- meltTable(contrib)
+		# plots[['contrib']] <- ggplot(tab, aes(rnames,value)) +
+  #       			geom_bar(aes(fill=variable), statistic="identity", position="fill") +
+  #       			labs(list(title = paste("Contribution to Chi-square statistic ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
+		# 					x = '', y = "Count", fill = input$ct_var2))
+
+	}
+	if(input$ct_std_residuals) {
+		# print(result$cst$residuals, digits = 2) 	# these seem to be the correct std.residuals
+	}
+	if(input$ct_cellperc) {
+
+		# print(prop.table(result$table), digits = 2)  	# cell percentages
+	}
+	if(input$ct_rowperc) {
+
+		# tab <- meltTable(prop.table(result$table))
+		# print(result$cst$observed)
+		# print(prop.table(result$cst$observed))
+		# tab <- meltTable(prop.table(result$cst$observed))
+		# tab <- meltTable(prop.table(result$cst$expected))
+		# tab <- meltTable(prop.table(table(result$cst$observed)))
+		
+		# tab <- meltTable(prop.table(table(dat[,1],dat[,2])))
+		# plots[['rowperc']] <- ggplot(tab, aes(rnames,value)) +
+  #       			geom_bar(aes(fill=variable), statistic="identity", position="fill") +
+  #       			labs(list(title = paste("Row percentages ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
+		# 					# x = '', y = "Count", fill = input$ct_var2))
+		# 					x = '', fill = input$ct_var2))
+
+		# print(prop.table(result$table, 1), digits = 2) # row percentages 
+	}
+	if(input$ct_colperc) {
+		# print(prop.table(result$table, 2), digits = 2) # column percentages
+	}
+
+	print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 }
 
 crosstab <- reactive(function() {
@@ -364,8 +425,6 @@ crosstab <- reactive(function() {
 	var1 <- input$ct_var1
 	var2 <- input$ct_var2
 	dat <- getdata()[,c(var1,var2)]
-	lev1 <- levels(dat[,1])
-	lev2 <- levels(dat[,2])
 
 	dnn = c(paste("Group(",input$ct_var1,")",sep = ""), paste("Variable(",input$ct_var2,")",sep = ""))
 	tab <- table(dat[,input$ct_var1], dat[,input$ct_var2], dnn = dnn)

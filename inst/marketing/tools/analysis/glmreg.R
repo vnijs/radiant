@@ -100,7 +100,6 @@ output$glm_intsel <- reactiveUI(function() {
 
 ui_glmreg <- function() {
   wellPanel(
-  	tags$head(tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }")),
     radioButtons(inputId = "glm_linkfunc", label = "", c("Logit" = "logit", "Probit" = "probit"), selected = "Logit"),
     radioButtons(inputId = "glm_glmtype", label = "", c("GLM" = "glm", "Bayes GLM" = "bayesglm"), selected = "GLM"),
     uiOutput("glm_var1"),
@@ -114,7 +113,6 @@ ui_glmreg <- function() {
 	    uiOutput("glm_var3")
   	),
     conditionalPanel(condition = "input.analysistabs == 'Plots'",
-      # selectInput("glm_plots", "Plots:", choices = gplots, selected = "coef", multiple = FALSE)
       selectInput("glm_plots", "Plots:", choices = gplots, selected = "coef", multiple = FALSE)
     )
     # actionButton("saveglmres", "Save residuals")

@@ -102,7 +102,7 @@ plot.kmeansClustering <- function(result) {
 			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
 			plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) 
 		}
-		print(do.call(grid.arrange, c(plots, list(ncol = 2))))
+		print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 }
 
 extra.kmeansClustering <- function(result) {

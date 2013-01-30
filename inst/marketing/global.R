@@ -1,7 +1,7 @@
 # avoid breaks in R-output print and show JSON packets transferred
 # over websockets
-options(width = 150, shiny.trace=TRUE)
-# options(width = 150)
+# options(width = 150, shiny.trace=TRUE)
+options(width = 150)
 
 # options(repos = c("http://vnijs.rady.ucsd.edu/site_media/R_packages/", "http://cran.rstudio.com/"))
 options(repos = c("http://132.239.212.164/site_media/R_packages/", "http://cran.rstudio.com/"))

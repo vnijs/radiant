@@ -1,6 +1,7 @@
 # summary_panel <- function(tp = tabPanel("Summary", verbatimTextOutput("summary"))) {
 #   tp
 # }
+
 shinyUI(
 
   pageWithSidebar(
@@ -9,6 +10,19 @@ shinyUI(
     headerPanel(''),
 
     sidebarPanel(
+
+      tags$head(
+        tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
+        tags$style(type="text/css", "select { max-width: 200px; }"),
+        tags$style(type="text/css", "textarea { max-width: 185px; }"),
+        tags$style(type="text/css", ".jslider { max-width: 200px; }"),
+        tags$style(type='text/css', ".well { max-width: 310px; }"),
+        tags$style(type='text/css', ".span4 { max-width: 310px; }")
+        # tags$style(type='text/css', ".span8 { padding-left: 0%; }")
+        # tags$style(type='text/css', ".container-fluid { width: 100%; }"),
+        # tags$style(type="text/css", "html, body {width: 100%; height: 100%; overflow: hidden}"),
+        # tags$style(type='text/css', ".tab-pane { width: 100%; }")
+      ),
 
       includeHTML("www/navbar.html"),
       includeHTML("www/js/tools.js"),
@@ -26,7 +40,7 @@ shinyUI(
       conditionalPanel(condition = "input.tool == 'dataview'",
         conditionalPanel(condition = "input.datatabs == 'Data view'",
           wellPanel(
-            HTML("<label>Load user data: (.rda | .csv | .sav | .dta)</label>"),
+            HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
             actionButton("upload", "Choose a file"),
             # helpText("Loading user data disabled on Shiny-Server"),
             br(), br(),
@@ -36,6 +50,8 @@ shinyUI(
         conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != ''",
           wellPanel(
             uiOutput("nrRows"), 
+            # tags$style(type='text/css', "#nrRows { width: 220px;}"),
+
             uiOutput("columns"), 
             tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}")
           )
@@ -63,14 +79,14 @@ shinyUI(
               selectInput("saveAs", "", choices = c('rda','csv','dta'), selected = NULL, multiple = FALSE),
               tags$style(type='text/css', "#saveAs { width: 85px;}"),
               downloadButton('downloadData', 'Save data'),
-              tags$style(type='text/css', "#downloadData { vertical-align: top; width: 70px;}"),
-              # tags$style(type='text/css', "#downloadData { padding-bottom: 35px;}"),
+              tags$style(type='text/css', "#downloadData { vertical-align: top; height: 18.5px; width: 70px;}"),
               tableOutput("dataviewer")
             ),
-            tabPanel("Visualize", plotOutput("visualize", height = "1000px")),
+            tabPanel("Visualize", plotOutput("visualize", height = "100%")),
             tabPanel("Transform", 
               tableOutput("transform_data"), br(),
-              tableOutput("transform_summary")
+              # tableOutput("transform_summary")
+              verbatimTextOutput("transform_summary")
             ),
             tabPanel("About", includeMarkdown("about.md"))
           )

@@ -138,7 +138,7 @@ plot.conjoint <- function(result) {
 	  		  geom_point(colour="blue", size=4, shape=21, fill="white") +
 		  	  labs(list(title = paste("Part-worths for", var), x = ""))
 		}
-		print(do.call(grid.arrange, c(plots, list(ncol = 2))))
+		print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 	} else {
 
 		IW.df <- theTable[['IW']]

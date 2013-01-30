@@ -70,7 +70,7 @@ output$visualize <- reactivePlot(function() {
     
     print(p)
 
-}, width = 800, height = 800)
+}, width = 700, height = 700)
 
 # will be used in ui.R
 output$ui_visualize <- reactiveUI(function() {

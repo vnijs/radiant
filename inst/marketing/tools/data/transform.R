@@ -7,20 +7,44 @@ output$tr_columns <- reactiveUI(function() {
 output$tr_nrRows <- reactiveUI(function() {
 	if(is.null(input$datasets)) return()
 	dat <- getdata()
-
-	# number of observations to show in dataview
 	nr <- nrow(dat)
 	sliderInput("tr_nrRows", "Rows to show (max 50):", min = 1, max = nr, value = min(15,nr), step = 1)
 })
 
+
+revFactorOrder <- function(x) {
+	x <- as.factor(x)
+	x <- factor(x, levels=rev(levels(x)))
+	x
+}
+
+standardize_1sd <- function(x) {
+	if(is.factor(x)) return(rescale(x))
+	if(is.numeric(x)) return(scale(x))
+	return(x)
+}
+
+centerVar <- function(x) {
+	if(is.factor(x)) return(rescale(x))
+	if(is.numeric(x)) return(x - mean(x, na.rm = TRUE))
+	return(x)
+}
+
 sq <<- function(x) x^2
 inv <<- function(x) 1/x
-st <<- scale
-cent <<- function(x) x - mean(x, na.rm = TRUE)
+st1 <<- standardize_1sd
+st2 <<- rescale
+cent <<- centerVar 
+fct <<- as.factor
+rfct <<- revFactorOrder
+num <<- as.numeric
+ch <<- as.character
+d <<- as.Date
 
 # trans_options <- list("Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Sum" = "sum", "Mean" = "mean", "Standardize" = "", "Center" = "" )
-# trans_options <- list("None" = "", "Delete columns" = "NULL", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Standardize" = "stdize")
-trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Center" = "cent", "Standardize" = "st", "Invert" = "inv")
+trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Center" = "cent", "Standardize (1-sd)" = "st1", 
+	"Standardize (2-sd)" = "st2","Invert" = "inv", "As factor" = "fct", "Rev factor order" = "rfct", "As number" = "num", "As character" = "ch", 
+	"As date" = "d")
 
 output$ui_transform <- reactiveUI(function() {
 	ui_transform()
@@ -32,63 +56,69 @@ ui_transform <- function() {
   	uiOutput("tr_nrRows"), 
     uiOutput("tr_columns"),
     selectInput("tr_transfunction", "Transform columns", trans_options),
-    actionButton("addtrans", "Add transformed variables")
+    HTML("<label>Copy-and-paste data from Excel</label>"),
+    tags$textarea(id="tr_copyAndPaste", rows=3, cols=40, ""),
+    # tags$style(type='text/css', "#tr_copyAndPaste { onfocus=\"if(this.value != '') this.value='';\" onblur=\"if(this.value != '') this.value='';\""),
+    # actionButton("transfix", "Edit variables in place") # using the 'fix(mtcars)' to edit the data 'inplace'. Looks great from R-ui, not so great from Rstudio
+    actionButton("addtrans", "Save new variables")
   )
 }
 
 transform <- reactive(function() {
-	if(is.null(input$datasets) || is.null(input$tr_columns)) return()
+	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
 	if(input$datatabs != 'Transform') return()
 
-	# idea: use mutate to transformations on the data see links below
-	# If will probably be easiest to have this be a text-box input field
-	# that runs these. No need for an elaborate UI since it is basically
-	# what they would otherwise do in excel. Make sure to add
-	# some helptext with a bunch of examples of how the command would work.
-	# http://www.inside-r.org/packages/cran/plyr/docs/mutate
-	# https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/uZZT564y0i8
-	# https://gist.github.com/4515551 
-
 	dat <- getdata()
-	if(!all(input$tr_columns %in% colnames(dat))) return()
-	# dat <- lapply(dat[, input$tr_columns, drop = FALSE], as.numeric)
-	# dat <- data.frame(dat)
-	dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
-	if(input$tr_transfunction != '') {
-		cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
-		# dat <- data.frame(cbind(dat,colwise(input$tr_transfunction)(dat)))
-		dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
-		colnames(dat) <- cn
+	if(!is.null(input$tr_columns)) {
+
+		if(!all(input$tr_columns %in% colnames(dat))) return()
+		dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
+		if(input$tr_transfunction != '') {
+			cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
+			dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
+			colnames(dat) <- cn
+		}
+	}
+	if(input$tr_copyAndPaste != '') {
+		cpdat <- read.table(header=T, text=input$tr_copyAndPaste)
+		cpname <- names(cpdat)
+		if(cpname %in% colnames(dat)) names(cpdat) <- paste('cp',cpname,sep = '.')
+		if(is.null(input$tr_columns)) return(cpdat)
+		dat <- cbind(dat,cpdat)
 	}
 
 	dat
 })
 
 output$transform_data <- reactiveTable(function() {
-	# if(is.null(input$datasets)) return()
-	if(is.null(input$datasets) || is.null(input$tr_columns)) return()
+	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
 
 	nr <- input$tr_nrRows
-	dat <- data.frame(lapply(transform(), as.numeric))
+	# dat <- data.frame(lapply(transform(), as.numeric))
+	dat <- data.frame(transform())
 	dat[max(1,nr-50):nr,, drop = FALSE]
 })
 
-# output$transform_summary <- reactivePrint(function() {
-output$transform_summary <- reactiveTable(function() {
-	if(is.null(input$datasets)) return()
+# output$transform_summary <- reactiveTable(function() {
+output$transform_summary <- reactivePrint(function() {
+	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return(invisible())
 
 	dat <- transform()
-	if(is.null(dat)) return()
-	# if(input$tr_transfunction != '') {
-	# 	cn <- paste(input$tr_transfunction,input$tr_columns, sep=".")
-	# } else {
-	# 	cn <- colnames(dat)
-	# }
-	# isFct <- sapply(getdata(), is.factor)
-	# print(summary(dat[,cn]))
+	if(is.null(dat)) return(invisible()) 			# when might this happen?
 
-	describe(dat)
+	isFct <- sapply(dat, is.factor)
+	isNum <- sapply(dat, is.numeric)
+	# isDate <- sapply(getdata(), is.Date)
+	# isChar <- sapply(getdata(), is.character)
 
+	if(sum(isNum) > 0) {
+		cat("\nSummarize numeric variables:\n")
+		print(describe(dat[isNum]))
+	}
+	if(sum(isFct) > 0) {
+		cat("\nSummarize factors:\n")
+		summary(dat[isFct])
+	}
 })
 
 observe(function() {
