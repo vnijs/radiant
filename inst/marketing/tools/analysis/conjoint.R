@@ -149,6 +149,9 @@ plot.conjoint <- function(result) {
 }
 
 # create all the interaction terms
+
+# with expand.grid you would get all combinations, including the x^2 ones
+
 ca_int_vec <- function(ca_vars, nway) {
 	n <- length(ca_vars)
 	iway <- c()

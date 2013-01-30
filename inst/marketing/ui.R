@@ -15,6 +15,7 @@ shinyUI(
         tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
         tags$style(type="text/css", "select { max-width: 200px; }"),
         tags$style(type="text/css", "textarea { max-width: 185px; }"),
+        tags$style(type="text/css", "text { width: 15px; !important }"),
         tags$style(type="text/css", ".jslider { max-width: 200px; }"),
         tags$style(type='text/css', ".well { max-width: 310px; }"),
         tags$style(type='text/css', ".span4 { max-width: 310px; }")

@@ -35,15 +35,16 @@ inv <<- function(x) 1/x
 st1 <<- standardize_1sd
 st2 <<- rescale
 cent <<- centerVar 
+bin2 <<- function(x) cut(x,2)
+bin10 <<- function(x) cut(x,10)
 fct <<- as.factor
 rfct <<- revFactorOrder
 num <<- as.numeric
 ch <<- as.character
 d <<- as.Date
-
 # trans_options <- list("Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Sum" = "sum", "Mean" = "mean", "Standardize" = "", "Center" = "" )
 trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Center" = "cent", "Standardize (1-sd)" = "st1", 
-	"Standardize (2-sd)" = "st2","Invert" = "inv", "As factor" = "fct", "Rev factor order" = "rfct", "As number" = "num", "As character" = "ch", 
+	"Standardize (2-sd)" = "st2","Invert" = "inv", "Bin 2" = "bin2", "Bin10" = "bin10", "As factor" = "fct", "Rev factor order" = "rfct", "As number" = "num", "As character" = "ch", 
 	"As date" = "d")
 
 output$ui_transform <- reactiveUI(function() {
@@ -58,11 +59,23 @@ ui_transform <- function() {
     selectInput("tr_transfunction", "Transform columns", trans_options),
     HTML("<label>Copy-and-paste data from Excel</label>"),
     tags$textarea(id="tr_copyAndPaste", rows=3, cols=40, ""),
+    textInput("tr_rename", "Rename (separate by ',')", ''),
+   	tags$style(type='text/css', "#tr_rename { max-width: 185px; }"),
     # tags$style(type='text/css', "#tr_copyAndPaste { onfocus=\"if(this.value != '') this.value='';\" onblur=\"if(this.value != '') this.value='';\""),
     # actionButton("transfix", "Edit variables in place") # using the 'fix(mtcars)' to edit the data 'inplace'. Looks great from R-ui, not so great from Rstudio
     actionButton("addtrans", "Save new variables")
   )
 }
+
+
+rename_var <- reactive(function() {
+	if(is.null(input$datasets) || is.null(input$tr_columns) || input$tr_rename == '') return()
+	dat <- data.frame(getdata()[, input$tr_columns, drop = FALSE])
+	# rename(dat, c(input$tr_columns = input$tr_rename))
+	# rename(dat, c('mpg' = 'mympg'))
+	names(dat)[input$tr_columns] <-  'mympg'
+	dat
+})
 
 transform <- reactive(function() {
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
@@ -87,6 +100,21 @@ transform <- reactive(function() {
 		dat <- cbind(dat,cpdat)
 	}
 
+	if(input$tr_rename != '') {
+		# names(dat)[names(dat)==input$tr_columns] <- input$tr_rename
+		cvars <- input$tr_rename
+		# cvars <- "test, mine"
+		# rcom <- sprintf('c(\'%s\')', cvars)
+
+		rcom <- unlist(strsplit(gsub(" ","",cvars), ","))
+		names(dat)[names(dat)==input$tr_columns] <- rcom
+		# reval <- try(eval(parse(text = rcom)))
+		# if(!is(reval,'try-error')) {
+		# 	names(dat)[names(dat)==input$tr_columns] <- reval
+		# 	# rename(dat, reval)
+		# }
+	}
+
 	dat
 })
 
@@ -94,7 +122,6 @@ output$transform_data <- reactiveTable(function() {
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
 
 	nr <- input$tr_nrRows
-	# dat <- data.frame(lapply(transform(), as.numeric))
 	dat <- data.frame(transform())
 	dat[max(1,nr-50):nr,, drop = FALSE]
 })

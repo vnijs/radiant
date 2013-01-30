@@ -174,9 +174,9 @@ regression <- reactive(function() {
 
 observe(function() {
 	if(is.null(input$saveres) || input$saveres == 0) return()
-	isolate(
+	isolate({
 		changedata(regression()$residuals, "residuals")
-	)
+	})
 })
 
 # out <- function(outputId = "summary") {
