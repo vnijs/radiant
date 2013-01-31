@@ -57,25 +57,17 @@ ui_transform <- function() {
   	uiOutput("tr_nrRows"), 
     uiOutput("tr_columns"),
     selectInput("tr_transfunction", "Transform columns", trans_options),
-    HTML("<label>Copy-and-paste data from Excel</label>"),
-    tags$textarea(id="tr_copyAndPaste", rows=3, cols=40, ""),
+    textInput("tr_recode", "Recode variable (in development)", ''),
+   	tags$style(type='text/css', "#tr_recode { max-width: 185px; }"),
     textInput("tr_rename", "Rename (separate by ',')", ''),
    	tags$style(type='text/css', "#tr_rename { max-width: 185px; }"),
+   	HTML("<label>Copy-and-paste data from Excel</label>"),
+    tags$textarea(id="tr_copyAndPaste", rows=3, cols=40, ""),
     # tags$style(type='text/css', "#tr_copyAndPaste { onfocus=\"if(this.value != '') this.value='';\" onblur=\"if(this.value != '') this.value='';\""),
     # actionButton("transfix", "Edit variables in place") # using the 'fix(mtcars)' to edit the data 'inplace'. Looks great from R-ui, not so great from Rstudio
     actionButton("addtrans", "Save new variables")
   )
 }
-
-
-rename_var <- reactive(function() {
-	if(is.null(input$datasets) || is.null(input$tr_columns) || input$tr_rename == '') return()
-	dat <- data.frame(getdata()[, input$tr_columns, drop = FALSE])
-	# rename(dat, c(input$tr_columns = input$tr_rename))
-	# rename(dat, c('mpg' = 'mympg'))
-	names(dat)[input$tr_columns] <-  'mympg'
-	dat
-})
 
 transform <- reactive(function() {
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()

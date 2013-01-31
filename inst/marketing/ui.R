@@ -50,11 +50,11 @@ shinyUI(
         ),
         conditionalPanel(condition = "input.datatabs == 'Data view' && input.datasets != ''",
           wellPanel(
-            uiOutput("nrRows"), 
-            # tags$style(type='text/css', "#nrRows { width: 220px;}"),
-
             uiOutput("columns"), 
-            tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}")
+            tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}"),
+            textInput("dv_select", "Subset (mpg > 20 & vs == 1)", ''),
+            tags$style(type='text/css', "#dv_select { max-width: 185px; }"),
+            uiOutput("nrRows")
           )
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
@@ -84,6 +84,7 @@ shinyUI(
               tableOutput("dataviewer")
             ),
             tabPanel("Visualize", plotOutput("visualize", height = "100%")),
+            tabPanel("Describe", HTML('<h3>In progress. Check back soon.</h3>')),
             tabPanel("Transform", 
               tableOutput("transform_data"), br(),
               # tableOutput("transform_summary")

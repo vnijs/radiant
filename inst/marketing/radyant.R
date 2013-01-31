@@ -148,13 +148,25 @@ output$dataviewer <- reactiveTable(function() {
 	# selected
 	if(!all(input$columns %in% colnames(dat))) return()
 
-	# Show only the selected columns and no more than 50 rows
-	# at a time
-	nr <- input$nrRows
+	if(input$dv_select != '') {
+		selcom <- input$dv_select
+		selcom <- gsub(" ", "", selcom)
+		if(nchar(selcom) > 30) q()
+		if(length(grep("system",selcom)) > 0) q()
+		if(length(grep("rm\\(list",selcom)) > 0) q()
+			
+		# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
+
+		comstring <- paste("subset(dat,",selcom,")")
+		seldat <- suppressWarnings(try(eval(parse(text = comstring))))
+		if(is(dat, 'try-error')) return()
+		if(is.data.frame(seldat)) return(seldat[, input$columns, drop = FALSE])
+	}
+
+	# Show only the selected columns and no more than 50 rows at a time
+	nr <- min(input$nrRows,nrow(dat))
 	data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE])
 
-	# idea: Add download button so data can be saved
-	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
 })
 
 ################################################################
