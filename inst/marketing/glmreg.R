@@ -174,6 +174,7 @@ glmreg <- reactive(function() {
 observe(function() {
 	if(is.null(input$saveglmres) || input$saveglmres == 0) return()
 	isolate(
-		changedata(glmreg()$residuals, "residuals")
+		# changedata(glmreg()$residuals, "residuals")
+		changedata(residuals(glmreg()), "residuals")
 	)
 })

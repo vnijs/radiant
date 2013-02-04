@@ -79,7 +79,7 @@ loadPackData <- function(pFile) {
 
 uploadfunc <- reactive(function() {
   if(input$upload == 0) return("")
-  fpath <- try(file.choose())
+  fpath <- try(file.choose(), silent = TRUE)
   if(is(fpath, 'try-error')) {
     return("")
   } else {

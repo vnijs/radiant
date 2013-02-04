@@ -77,13 +77,14 @@ loadPackData <- function(pFile) {
 
 uploadfunc <- reactive(function() {
   if(input$upload == 0) return("")
-  fpath <- try(file.choose())
+  fpath <- try(file.choose(), silent = TRUE)
   if(is(fpath, 'try-error')) {
   	return("")
   } else {
   	return(fpath)
   }
 })
+
 
 output$downloadData <- downloadHandler(
 	filename = function() { paste(input$datasets[1],'.',input$saveAs, sep='') },
@@ -104,6 +105,7 @@ output$downloadData <- downloadHandler(
   }
 )
 
+
 output$datasets <- reactiveUI(function() {
 
 	fpath <- uploadfunc()
@@ -119,6 +121,10 @@ output$datasets <- reactiveUI(function() {
 	}
 	# Drop-down selection of data set
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
+})
+
+output$packData <- reactiveUI(function() {
+	selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
 })
 
 output$columns <- reactiveUI(function() {
@@ -158,9 +164,13 @@ output$dataviewer <- reactiveTable(function() {
 		# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
 
 		comstring <- paste("subset(dat,",selcom,")")
-		seldat <- suppressWarnings(try(eval(parse(text = comstring))))
-		if(is(dat, 'try-error')) return()
-		if(is.data.frame(seldat)) return(seldat[, input$columns, drop = FALSE])
+		seldat <- try(eval(parse(text = comstring)), silent = TRUE)
+		if(is(seldat, 'try-error')) {
+			nr <- min(input$nrRows,nrow(dat))
+			return(data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE]))
+		} else if(is.data.frame(seldat)) {
+			return(seldat[, input$columns, drop = FALSE])
+		}
 	}
 
 	# Show only the selected columns and no more than 50 rows at a time

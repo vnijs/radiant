@@ -87,7 +87,7 @@ ca_loadUserProfiles <- function(uFile) {
 
 ca_uploadProfiles <- reactive(function() {
   if(input$ca_upload == 0) return("")
-  fpath <- try(file.choose())
+  fpath <- try(file.choose(), silent = TRUE)
   if(is(fpath, 'try-error')) {
   	return("")
   } else {
