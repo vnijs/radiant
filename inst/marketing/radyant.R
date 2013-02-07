@@ -154,23 +154,26 @@ output$dataviewer <- reactiveTable(function() {
 	# selected
 	if(!all(input$columns %in% colnames(dat))) return()
 
-	if(input$dv_select != '') {
-		selcom <- input$dv_select
-		selcom <- gsub(" ", "", selcom)
-		if(nchar(selcom) > 30) q()
-		if(length(grep("system",selcom)) > 0) q()
-		if(length(grep("rm\\(list",selcom)) > 0) q()
-			
-		# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
-
-		comstring <- paste("subset(dat,",selcom,")")
-		seldat <- try(eval(parse(text = comstring)), silent = TRUE)
-		if(is(seldat, 'try-error')) {
-			nr <- min(input$nrRows,nrow(dat))
-			return(data.frame(dat[max(1,nr-50):nr, input$columns, drop = FALSE]))
-		} else if(is.data.frame(seldat)) {
-			return(seldat[, input$columns, drop = FALSE])
-		}
+	if(!is.null(input$sub_select) && !input$sub_select == 0) {
+		isolate({
+			if(input$dv_select != '') {
+				selcom <- input$dv_select
+				selcom <- gsub(" ", "", selcom)
+				if(nchar(selcom) > 30) q()
+				if(length(grep("system",selcom)) > 0) q()
+				if(length(grep("rm\\(list",selcom)) > 0) q()
+					
+				# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
+				# first checking if selcom is a valid expression
+				parse_selcom <- try(parse(text = selcom)[[1]], silent = TRUE)
+				if(!is(parse_selcom, 'try-error')) {
+					seldat <- try(eval(parse(text = paste("subset(dat,",selcom,")")[[1]])), silent = TRUE)
+					if(is.data.frame(seldat)) {
+						return(seldat[, input$columns, drop = FALSE])
+					}
+				} 
+			}
+		})
 	}
 
 	# Show only the selected columns and no more than 50 rows at a time
@@ -190,7 +193,35 @@ output$dataviewer <- reactiveTable(function() {
 # of tools (and tool-names) 
 ################################################################
 
+# example of using reactiveUI to control output
+output$summa <- reactiveUI(function() {
+
+	if(input$tool == 'singleMean') {
+  	# pre(id = "textreg", class = "shiny-text-output")
+		verbatimTextOutput("textreg")
+	} else if(input$tool == 'regression') {
+		tableOutput("tablereg")
+  	# div(id = "tablereg", class = "shiny-html-output")
+	}
+})
+
+output$textreg <- reactivePrint(function() {
+	x <- rnorm(100)
+	y <- 34 + 6*x + rnorm(100)
+
+	summary(lm(y ~ x))
+})
+
+output$tablereg <- reactiveTable(function() {
+	x <- rnorm(100)
+	y <- 34 + 6*x + rnorm(100)
+
+	summary(lm(y ~ x))
+})
+
+
 # Generate output for the summary tab
+# output$summary <- reactiveUI(function() {
 output$summary <- reactivePrint(function() {
 	if(is.null(input$datasets) || input$tool == 'dataview') return()
 

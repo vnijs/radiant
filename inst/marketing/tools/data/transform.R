@@ -57,8 +57,9 @@ ui_transform <- function() {
   	uiOutput("tr_nrRows"), 
     uiOutput("tr_columns"),
     selectInput("tr_transfunction", "Transform columns", trans_options),
-    textInput("tr_recode", "Recode variable (in development)", ''),
-   	tags$style(type='text/css', "#tr_recode { max-width: 185px; }"),
+    textInput("tr_recode", "Recode variable (e.g., ...))", ''), actionButton("tr_recode_sub", "Go"),
+   	tags$style(type='text/css', "#tr_recode { max-width: 135px; }"),
+    tags$style(type='text/css', "#tr_recode_sub { vertical-align: top; width: 45px; }"),
     textInput("tr_rename", "Rename (separate by ',')", ''),
    	tags$style(type='text/css', "#tr_rename { max-width: 185px; }"),
    	HTML("<label>Copy-and-paste data from Excel</label>"),
@@ -84,6 +85,40 @@ transform <- reactive(function() {
 			colnames(dat) <- cn
 		}
 	}
+
+
+	if(!is.null(input$tr_recode_sub) && !input$tr_recode_sub == 0) {
+		isolate({
+			if(input$tr_recode != '') {
+				recom <- input$tr_recode
+				recom <- gsub(" ", "", recom)
+				if(nchar(recom) > 50) q()
+				if(length(grep("system",recom)) > 0) q()
+				if(length(grep("rm\\(list",recom)) > 0) q()
+					
+				# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
+				# first checking if recom is a valid expression
+				parse_recom <- try(parse(text = recom)[[1]], silent = TRUE)
+				if(!is(parse_recom, 'try-error')) {
+
+					newvar <- try(eval(parse(text = paste("recode(",input$tr_columns[1],",",recom,")")[[1]])), silent = TRUE)
+					if(!is(newvar, 'try-error')) {
+
+						cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="."))
+						dat <- cbind(dat,newvar)
+						colnames(dat) <- cn
+
+						return(dat)
+					}
+
+
+				} 
+			}
+		})
+	}
+
+
+
 	if(input$tr_copyAndPaste != '') {
 		cpdat <- read.table(header=T, text=input$tr_copyAndPaste)
 		cpname <- names(cpdat)
@@ -93,18 +128,10 @@ transform <- reactive(function() {
 	}
 
 	if(input$tr_rename != '') {
-		# names(dat)[names(dat)==input$tr_columns] <- input$tr_rename
 		cvars <- input$tr_rename
-		# cvars <- "test, mine"
-		# rcom <- sprintf('c(\'%s\')', cvars)
 
 		rcom <- unlist(strsplit(gsub(" ","",cvars), ","))
 		names(dat)[names(dat)==input$tr_columns] <- rcom
-		# reval <- try(eval(parse(text = rcom)))
-		# if(!is(reval,'try-error')) {
-		# 	names(dat)[names(dat)==input$tr_columns] <- reval
-		# 	# rename(dat, reval)
-		# }
 	}
 
 	dat

@@ -1,3 +1,11 @@
+getTool <- function(inputId, selected = 'dataview') {
+  tagList(
+    singleton(tags$head(tags$script(src = "js/getTool.js"))),
+    tags$input(id = inputId, class = "tool", value = selected),
+    tags$style(type='text/css', "#tool { display:none; }")
+  )
+}
+
 shinyUI(
 
   pageWithSidebar(
@@ -7,11 +15,12 @@ shinyUI(
 
     sidebarPanel(
 
+      getTool(inputId="tool"),
+
       tags$head(
         tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
         tags$style(type="text/css", "select { max-width: 200px; }"),
         tags$style(type="text/css", "textarea { max-width: 185px; }"),
-        # tags$style(type="text/css", "text { width: 15px; !important }"),
         tags$style(type="text/css", ".jslider { max-width: 200px; }"),
         tags$style(type='text/css', ".well { max-width: 310px; }"),
         tags$style(type='text/css', ".span4 { max-width: 310px; }")
@@ -23,9 +32,9 @@ shinyUI(
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
-        conditionalPanel(condition = "input.datasets != ''",
-          includeHTML('www/tools.html')
-        ),
+        # conditionalPanel(condition = "input.datasets != ''",
+        #   includeHTML('www/tools.html')
+        # ),
         uiOutput("datasets")
       ),
 
@@ -36,17 +45,18 @@ shinyUI(
             HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
             actionButton("upload", "Choose a file"),
             br(), br(),
-            # uiOutput("packData") 
             selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
-            # selectInput(inputId = "glm_intsel", label = "Select interactions:", choices = expand.grid(c('a','b','c'),c('a','b','c')), selected = '', multiple = FALSE)
           )
         ),
         conditionalPanel(condition = "input.datatabs == 'View' && input.datasets != ''",
           wellPanel(
             uiOutput("columns"), 
             tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}"),
-            textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''),
-            tags$style(type='text/css', "#dv_select { max-width: 185px; }"),
+            # textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''), actionButton("sub", "Go"),
+            textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''), actionButton("sub_select", "Go"),
+            tags$style(type='text/css', "#dv_select { max-width: 135px; }"),
+            tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
+            # tags$style(type='text/css', "#dv_select { max-width: 185px; }"),
             uiOutput("nrRows")
           )
         ),
@@ -88,8 +98,7 @@ shinyUI(
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")),
-            # uiOutput("summary_panel"),
-            # summary_panel(),
+            # tabPanel("Summary", uiOutput("summary")),
             # Use Summarize / Vizualize labels here?
             tabPanel("Plots", plotOutput("plots", height = "100%")),
             tabPanel("Log", verbatimTextOutput('logwork'))
