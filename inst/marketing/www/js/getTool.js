@@ -1,38 +1,32 @@
-// return a parameter value from the current URL
-function getParam ( sname )
-{
-  var params = location.search.substr(location.search.indexOf("?")+1);
-  var sval = "";
-  params = params.split("&");
-    // split param and value into individual pieces
-    sval = 'dataview';
-    for (var i=0; i<params.length; i++)
-       {
-         temp = params[i].split("=");
-         if ( [temp[0]] == sname ) { sval = temp[1]; }
-       }
-  return sval;
-}
-
-var toolBinding = new Shiny.InputBinding();
-$.extend(toolBinding, {
+var navbarBinding = new Shiny.InputBinding();
+$.extend(navbarBinding, {
+  unique: 0,
   find: function(scope) {
-    return $(scope).find(".tool");
+    return $(scope).find(".navbar");
   },
   getValue: function(el) {
-    return $(el).val();
+    return $(el).data("navbarBinding-lastClick");
   },
   setValue: function(el, value) {
-    $(el).val(value);
+    $(el).text(value);
   },
   subscribe: function(el, callback) {
-  	$(el).val(getParam("tool"));
-  	$(el).trigger("change");
-  	callback();
+    var self = this;
+    // $(el).on("click.navbarBinding", "a[data-view]", function(e) {
+    $(el).on("click.navbarBinding", "a[data-value]", function(e) {
+      if (e.target.id) {
+        $(el).data("navbarBinding-lastClick", {
+          link: $(e.target).data("view"),
+          unique: self.unique++
+        });
+        e.preventDefault();
+        callback();
+      }
+    });
   },
   unsubscribe: function(el) {
-    $(el).off(".toolBinding");
+    $(el).off(".navbarBinding");
   }
 });
-
-Shiny.inputBindings.register(toolBinding);
+ 
+Shiny.inputBindings.register(navbarBinding, "navbarBinding");

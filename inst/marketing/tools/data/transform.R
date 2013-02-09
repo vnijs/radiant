@@ -11,7 +11,6 @@ output$tr_nrRows <- reactiveUI(function() {
 	sliderInput("tr_nrRows", "Rows to show (max 50):", min = 1, max = nr, value = min(15,nr), step = 1)
 })
 
-
 revFactorOrder <- function(x) {
 	x <- as.factor(x)
 	x <- factor(x, levels=rev(levels(x)))
@@ -57,7 +56,7 @@ ui_transform <- function() {
   	uiOutput("tr_nrRows"), 
     uiOutput("tr_columns"),
     selectInput("tr_transfunction", "Transform columns", trans_options),
-    textInput("tr_recode", "Recode variable (e.g., ...))", ''), actionButton("tr_recode_sub", "Go"),
+    textInput("tr_recode", "Recode (e.g., ...))", ''), actionButton("tr_recode_sub", "Go"),
    	tags$style(type='text/css', "#tr_recode { max-width: 135px; }"),
     tags$style(type='text/css', "#tr_recode_sub { vertical-align: top; width: 45px; }"),
     textInput("tr_rename", "Rename (separate by ',')", ''),
@@ -98,10 +97,19 @@ transform <- reactive(function() {
 					
 				# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
 				# first checking if recom is a valid expression
-				parse_recom <- try(parse(text = recom)[[1]], silent = TRUE)
+				# parse_recom <- try(parse(text = recom)[[1]], silent = TRUE)
+				parse_recom <- try(parse(text = recom)[[1]], silent = FALSE)
 				if(!is(parse_recom, 'try-error')) {
 
-					newvar <- try(eval(parse(text = paste("recode(",input$tr_columns[1],",",recom,")")[[1]])), silent = TRUE)
+					# newvar <- try(eval(parse(text = paste("recode(",input$tr_columns[1],",",recom,")"))), silent = TRUE)
+					print(parse(text = paste("recode(",input$tr_columns[1],",\"",recom,"\")")))
+
+					newvarcom <- parse(text = paste("recode(",input$tr_columns[1],",\"",recom,"\")"))
+					print(newvarcom)
+					# newvar <- try(eval(parse(text = paste("recode(",input$tr_columns[1],",\"",recom,"\")"))), silent = FALSE)
+					newvar <- eval(newvarcom)
+					print(newvar)
+					newvar <- try(eval(newvarcom), silent = FALSE)
 					if(!is(newvar, 'try-error')) {
 
 						cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="."))

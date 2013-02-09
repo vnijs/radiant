@@ -1,8 +1,15 @@
+getToolGet <- function(inputId, selected = 'dataview') {
+  tagList(
+    singleton(tags$head(tags$script(src = "js/getToolGet.js"))),
+    tags$input(id = inputId, class = "tool", value = selected),
+    tags$style(type='text/css', "#tool { display:none; }")
+  )
+}
+
 getTool <- function(inputId, selected = 'dataview') {
   tagList(
     singleton(tags$head(tags$script(src = "js/getTool.js"))),
-    tags$input(id = inputId, class = "tool", value = selected),
-    tags$style(type='text/css', "#tool { display:none; }")
+    tags$html(includeHTML('www/navbar.html'))
   )
 }
 
@@ -13,28 +20,29 @@ shinyUI(
     # Using a navbar rather than headerPanel to display app title
     headerPanel(''),
 
-    sidebarPanel(
 
-      getTool(inputId="tool"),
+    sidebarPanel(
 
       tags$head(
         tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
         tags$style(type="text/css", "select { max-width: 200px; }"),
         tags$style(type="text/css", "textarea { max-width: 185px; }"),
         tags$style(type="text/css", ".jslider { max-width: 200px; }"),
-        tags$style(type='text/css', ".well { max-width: 310px; }"),
-        tags$style(type='text/css', ".span4 { max-width: 310px; }")
+        tags$style(type='text/css', ".well { padding: 12px; margin-bottom: 5px; max-width: 280px; }"),
+        tags$style(type='text/css', ".span4 { max-width: 280px; }")
       ),
 
-      includeHTML("www/navbar.html"),
       includeHTML("www/js/tools.js"),
       includeHTML('www/js/lr.js'), 
+      getTool("tool"),
+      # includeHTML("www/navbarGet.html"),
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
         # conditionalPanel(condition = "input.datasets != ''",
         #   includeHTML('www/tools.html')
         # ),
+
         uiOutput("datasets")
       ),
 
