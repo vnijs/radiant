@@ -128,11 +128,17 @@ plot.conjoint <- function(result) {
 		plots <- list()
 		for(var in input$ca_var2) {
 			PW.var <- PW.df[PW.df[,'Attributes'] == var,]
+
+			# setting the levels in the same order as in theTable. Without this
+			# ggplot would change the ordering of the price levels
+			PW.var$Levels <- factor(PW.var$Levels,levels=PW.var$Levels,ordered=FALSE)
+
 			# plot.ylim <- c(rangePW[var,'Min'],ceiling(rangePW[maxRangeInd,'Range']))
 			# plot.ylim[1] <- floor(plot.ylim[1])
 			# nr.ticks.max <- min(8, ceiling(rangePW[maxRangeInd,'Range']))
 			# plot.ylim[2] <- ceiling(plot.ylim[1] + plot.ylim[2])
 			# plots[[var]] <- ggplot(PW.var, aes_string(x='Levels', y='PW', group = 1)) +
+			nPW <- nrow(PW.var)
 			plots[[var]] <- ggplot(PW.var, aes(x=Levels, y=PW, group = 1)) +
 				  geom_line(colour="blue", linetype = 'dotdash', size=.7) + 
 	  		  geom_point(colour="blue", size=4, shape=21, fill="white") +
@@ -152,31 +158,31 @@ plot.conjoint <- function(result) {
 
 # with expand.grid you would get all combinations, including the x^2 ones
 
-ca_int_vec <- function(ca_vars, nway) {
-	n <- length(ca_vars)
-	iway <- c()
-	for(i in 1:(n-1)) {
-		for(j in (i+1):n) {
-			iway <- c(iway, paste(ca_vars[i],ca_vars[j],sep=":"))
-		}
-	}
-	if(n >= 3 && nway == '3way') {
-		for(i in 1:(n-2)) {
-			for(j in (i+1):(n-1)) {
-				for(k in (j+1):n) {
-					iway <- c(iway, paste(ca_vars[i],ca_vars[j],ca_vars[k],sep=":"))
-				}
-			}
-		}
-	}
-	iway
-}
+# ca_int_vec <- function(ca_vars, nway) {
+# 	n <- length(ca_vars)
+# 	iway <- c()
+# 	for(i in 1:(n-1)) {
+# 		for(j in (i+1):n) {
+# 			iway <- c(iway, paste(ca_vars[i],ca_vars[j],sep=":"))
+# 		}
+# 	}
+# 	if(n >= 3 && nway == '3way') {
+# 		for(i in 1:(n-2)) {
+# 			for(j in (i+1):(n-1)) {
+# 				for(k in (j+1):n) {
+# 					iway <- c(iway, paste(ca_vars[i],ca_vars[j],ca_vars[k],sep=":"))
+# 				}
+# 			}
+# 		}
+# 	}
+# 	iway
+# }
 
-output$ca_intsel <- reactiveUI(function() {
-  vars <- input$ca_var2
-  if(is.null(vars) || length(vars) < 2) return()
-	selectInput("ca_intsel", label = "", choices = ca_int_vec(vars,input$ca_interactions), selected = NULL, multiple = TRUE)
-})
+# output$ca_intsel <- reactiveUI(function() {
+#   vars <- input$ca_var2
+#   if(is.null(vars) || length(vars) < 2) return()
+# 	selectInput("ca_intsel", label = "", choices = ca_int_vec(vars,input$ca_interactions), selected = NULL, multiple = TRUE)
+# })
 
 ca_plots <- list("Part-worths" = "pw", "Importance-weights" = "iw")
 
