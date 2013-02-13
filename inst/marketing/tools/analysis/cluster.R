@@ -34,10 +34,6 @@ plot.hclustering <- function(result) {
 	plot(nr_of_clusters,height, xlab = "Nr of clusters", ylab = "Height", type = 'b')
 }
 
-extra.hclustering <- function(result) {
-	data.frame('height' = rev(result$height[result$height > 0]))
-}
-
 hclustering <- reactive(function() {
 	if(is.null(input$hc_vars)) return("Please select one or more variables")
 
@@ -103,10 +99,6 @@ plot.kmeansClustering <- function(result) {
 			plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) 
 		}
 		print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
-}
-
-extra.kmeansClustering <- function(result) {
-	cat("Under development\n")
 }
 
 hinitclustering <- reactive(function() {

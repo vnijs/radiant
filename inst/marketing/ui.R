@@ -8,8 +8,9 @@ getToolGet <- function(inputId, selected = 'dataview') {
 
 getTool <- function(inputId, selected = 'dataview') {
   tagList(
-    singleton(tags$head(tags$script(src = "js/getTool.js"))),
-    tags$html(includeHTML('www/navbar.html'))
+    singleton(tags$head(tags$script(src = "js/navbarBinding.js"))),
+    # tags$navbar(id=inputId, type="navbar", class="navbar"),
+    tags$html(id=inputId, includeHTML('www/navbar.html'))
   )
 }
 
@@ -19,7 +20,6 @@ shinyUI(
 
     # Using a navbar rather than headerPanel to display app title
     headerPanel(''),
-
 
     sidebarPanel(
 
@@ -34,14 +34,15 @@ shinyUI(
 
       includeHTML("www/js/tools.js"),
       includeHTML('www/js/lr.js'), 
-      getTool("tool"),
       # includeHTML("www/navbarGet.html"),
+      # getToolGet("tool"),
+      # getTool("tool"),
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
-        # conditionalPanel(condition = "input.datasets != ''",
-        #   includeHTML('www/tools.html')
-        # ),
+        conditionalPanel(condition = "input.datasets != ''",
+          includeHTML('www/tools.html')
+        ),
 
         uiOutput("datasets")
       ),
