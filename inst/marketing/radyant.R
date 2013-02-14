@@ -214,7 +214,8 @@ output$dataviewer <- reactiveTable(function() {
  #  Tabs=do.call(tabsetPanel,paneltags)
  #  return(Tabs)
 
-# example of using reactiveUI to control output
+# example of using reactiveUI to control output - next 3 functions are not
+# used in the app
 output$summa <- reactiveUI(function() {
 
 	if(input$tool == 'singleMean') {
