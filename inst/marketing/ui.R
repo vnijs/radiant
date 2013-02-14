@@ -36,7 +36,7 @@ shinyUI(
       includeHTML('www/js/lr.js'), 
       # includeHTML("www/navbarGet.html"),
       # getToolGet("tool"),
-      # getTool("tool"),
+      getTool("tool"),
 
       wellPanel(
         # if there are no datasets available only show the UI to make data available
