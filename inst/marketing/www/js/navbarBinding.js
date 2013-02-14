@@ -12,16 +12,10 @@ $.extend(navbarBinding, {
   },
   subscribe: function(el, callback) {
     var self = this;
-    // $(el).on("click.navbarBinding", "a[data-view]", function(e) {
     $(el).on("click.navbarBinding", "a[data-value]", function(e) {
-      if (e.target.id) {
-        $(el).data("navbarBinding-lastClick", {
-          link: $(e.target).data("view"),
-          unique: self.unique++
-        });
-        e.preventDefault();
-        callback();
-      }
+      $(el).data("navbarBinding-lastClick", $(e.target).data("value"));
+      e.preventDefault();
+      callback();
     });
   },
   unsubscribe: function(el) {
