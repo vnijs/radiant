@@ -194,52 +194,6 @@ output$dataviewer <- reactiveTable(function() {
 ################################################################
 
 ### Creating dynamic tabsets - From Alex Brown
-# output$graphBlock <- reactiveUI(function() {
-
-  # Construct HTML for the tabs.  Note there's no body, since I use a common SVG for
-  # all bodies.  You probably want a body.
-  # plotSpec is a list of plots I want.  it's a named list of lists, each member has a 'name' 
-  # property which is the title to print.
-
-  # panels <- Map(
-  #       function(plotName)tagList(h4(plotSpec[[plotName]]$name),div()),
-  #       reactiveVals$validPlots)
-
- # construct the tabs as an argument list
- # paneltags <- lapply(names(panels),
- #                         function(plotName)tabPanel(plotName,panels[[plotName]]))
- # paneltags$id <- "tabSelected" 
-
- #  # now build the tabs.
- #  Tabs=do.call(tabsetPanel,paneltags)
- #  return(Tabs)
-
-# example of using reactiveUI to control output - next 3 functions are not
-# used in the app
-output$summa <- reactiveUI(function() {
-
-	if(input$tool == 'singleMean') {
-  	# pre(id = "textreg", class = "shiny-text-output")
-		verbatimTextOutput("textreg")
-	} else if(input$tool == 'regression') {
-		tableOutput("tablereg")
-  	# div(id = "tablereg", class = "shiny-html-output")
-	}
-})
-
-output$textreg <- reactivePrint(function() {
-	x <- rnorm(100)
-	y <- 34 + 6*x + rnorm(100)
-
-	summary(lm(y ~ x))
-})
-
-output$tablereg <- reactiveTable(function() {
-	x <- rnorm(100)
-	y <- 34 + 6*x + rnorm(100)
-
-	summary(lm(y ~ x))
-})
 
 # Generate output for the summary tab
 # output$summary <- reactiveUI(function() {

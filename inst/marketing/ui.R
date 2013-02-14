@@ -1,4 +1,4 @@
-getTool <- function(inputId, selected = 'dataview') {
+getTool <- function(inputId) {
   tagList(
     singleton(tags$head(tags$script(src = "js/navbar.js"))),
     tags$html(id=inputId, includeHTML('www/navbar.html'))
@@ -45,11 +45,9 @@ shinyUI(
           wellPanel(
             uiOutput("columns"), 
             tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}"),
-            # textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''), actionButton("sub", "Go"),
             textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''), actionButton("sub_select", "Go"),
             tags$style(type='text/css', "#dv_select { max-width: 135px; }"),
             tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
-            # tags$style(type='text/css', "#dv_select { max-width: 185px; }"),
             uiOutput("nrRows")
           )
         ),
@@ -61,10 +59,8 @@ shinyUI(
         )
       ),
       conditionalPanel(condition = "input.tool != 'dataview'",
-        # the appropriate analysis tool is called based on selection from
-        # tools dropdown
+        # the appropriate analysis tool is called based on the selected tool
         uiOutput("ui_analysis")
-        # submitButton("Test")
       )
     ),
     

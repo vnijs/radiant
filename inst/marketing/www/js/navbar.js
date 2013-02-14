@@ -7,13 +7,19 @@ $.extend(navbarBinding, {
     return $(el).data("navbarBinding-lastClick");
   },
   setValue: function(el, value) {
+    // var def = 'dataview';
+    // if(value) {
+    //   $(el).text(value);
+    // } else {
+    //   $(el).text(def);
+    // }
     $(el).text(value);
   },
   subscribe: function(el, callback) {
-    var self = this;
+    // var self = this;
     $(el).on("click.navbarBinding", "a[data-value]", function(e) {
       $(el).data("navbarBinding-lastClick", $(e.target).data("value"));
-      e.preventDefault();
+      // e.preventDefault();
       callback();
     });
   },
