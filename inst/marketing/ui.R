@@ -1,4 +1,4 @@
-getTool <- function(inputId, selected = 'dataview') {
+getTool <- function(inputId) {
   tagList(
     singleton(tags$head(tags$script(src = "js/navbar.js"))),
     tags$html(includeHTML('www/navbar.html'))
