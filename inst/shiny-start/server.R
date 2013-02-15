@@ -1,6 +1,6 @@
 shinyServer(function(input, output) {
 
-	output$summary <- reactivePrint(function() {
+	output$summary <- renderPrint({
 
 		print(as.list(input))
 

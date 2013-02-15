@@ -1,10 +1,10 @@
 # UI-elements for transform
-output$tr_columns <- reactiveUI(function() {
+output$tr_columns <- renderUI({
 	cols <- varnames()
 	selectInput("tr_columns", "Select column(s) to transform:", choices  = as.list(cols), selected = NULL, multiple = TRUE)
 })
 
-output$tr_nrRows <- reactiveUI(function() {
+output$tr_nrRows <- renderUI({
 	if(is.null(input$datasets)) return()
 	dat <- getdata()
 	nr <- nrow(dat)
@@ -46,7 +46,7 @@ trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root"
 	"Standardize (2-sd)" = "st2","Invert" = "inv", "Bin 2" = "bin2", "Bin10" = "bin10", "As factor" = "fct", "Rev factor order" = "rfct", "As number" = "num", "As character" = "ch", 
 	"As date" = "d")
 
-output$ui_transform <- reactiveUI(function() {
+output$ui_transform <- renderUI({
 	ui_transform()
 })
 
@@ -69,7 +69,7 @@ ui_transform <- function() {
   )
 }
 
-transform <- reactive(function() {
+transform <- reactive({
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
 	if(input$datatabs != 'Transform') return()
 
@@ -145,7 +145,7 @@ transform <- reactive(function() {
 	dat
 })
 
-output$transform_data <- reactiveTable(function() {
+output$transform_data <- renderTable({
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
 
 	nr <- input$tr_nrRows
@@ -153,8 +153,8 @@ output$transform_data <- reactiveTable(function() {
 	dat[max(1,nr-50):nr,, drop = FALSE]
 })
 
-# output$transform_summary <- reactiveTable(function() {
-output$transform_summary <- reactivePrint(function() {
+# output$transform_summary <- renderTable({
+output$transform_summary <- renderPrint({
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return(invisible())
 
 	dat <- transform()
@@ -175,7 +175,7 @@ output$transform_summary <- reactivePrint(function() {
 	}
 })
 
-observe(function() {
+observe({
 	if(is.null(input$addtrans) || input$addtrans == 0) return()
 	isolate({
 		dat <- transform()

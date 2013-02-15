@@ -1,4 +1,4 @@
-output$sm_var <- reactiveUI(function() {
+output$sm_var <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars, selected = NULL, multiple = FALSE)
@@ -35,20 +35,20 @@ plot.singleMean <- function(result) {
 	print(p)
 }
 
-singleMean <- reactive(function() {
+singleMean <- reactive({
 	if(is.null(input$sm_var)) return("Please select a variable")
 	var <- input$sm_var
 	dat <- getdata()[,var]
 	t.test(dat, mu = input$sm_compValue, alternative = input$sm_alternative, conf.level = input$sm_sigLevel)
 })
 
-output$cm_var1 <- reactiveUI(function() {
+output$cm_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$cm_var2 <- reactiveUI(function() {
+output$cm_var2 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   isFct <- sapply(getdata(), is.factor)
@@ -101,7 +101,7 @@ plot.compareMeans <- function(result) {
 	print(do.call(grid.arrange, c(plots, list(ncol = 1))))
 }
 
-compareMeans <- reactive(function() {
+compareMeans <- reactive({
 	if(is.null(input$cm_var2)) return("Please select a variable")
 	var1 <- input$cm_var1
 	var2 <- input$cm_var2
@@ -117,7 +117,7 @@ compareMeans <- reactive(function() {
 	list("model" = aov(formula, data = dat), "data" = data.frame(dat)) 
 })
 
-output$sp_var <- reactiveUI(function() {
+output$sp_var <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   isFct <- sapply(getdata(), is.factor)
@@ -151,7 +151,7 @@ plot.singleProp <- function(result) {
 
 }
 
-singleProp <- reactive(function() {
+singleProp <- reactive({
 	if(is.null(input$sp_var)) return("Please select a variable")
 	var <- input$sp_var
 	dat <- getdata()[,var]
@@ -166,7 +166,7 @@ singleProp <- reactive(function() {
 # Correlation
 ###############################
 
-output$cor_var <- reactiveUI(function() {
+output$cor_var <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   # isFct <- sapply(getdata(), is.factor)
@@ -209,7 +209,7 @@ plot.correlation <- function(dat) {
 	pairs(dat, lower.panel=rady.panel.smooth, upper.panel=rady.panel.plot)
 }
 
-correlation <- reactive(function() {
+correlation <- reactive({
 	vars <- input$cor_var
 	if(is.null(vars) || (length(vars) < 2)) return("Please select two or more variables")
 	dat <- getdata()[,vars]
@@ -217,7 +217,7 @@ correlation <- reactive(function() {
 })
 
 # compare proportions
-output$cp_var1 <- reactiveUI(function() {
+output$cp_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   isFct <- sapply(getdata(), is.factor)
@@ -225,7 +225,7 @@ output$cp_var1 <- reactiveUI(function() {
   selectInput(inputId = "cp_var1", label = "Select a grouping factor:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$cp_var2 <- reactiveUI(function() {
+output$cp_var2 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   dat <- getdata()
@@ -261,7 +261,7 @@ plot.compareProps <- function(result) {
 	print(p)
 }
 
-compareProps <- reactive(function() {
+compareProps <- reactive({
 	if(is.null(input$cp_var2)) return("Please select a factor")
 	var1 <- input$cp_var1
 	var2 <- input$cp_var2
@@ -279,7 +279,7 @@ compareProps <- reactive(function() {
 })
 
 # cross-tabs
-output$ct_var1 <- reactiveUI(function() {
+output$ct_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   isFct <- sapply(getdata(), is.factor)
@@ -287,7 +287,7 @@ output$ct_var1 <- reactiveUI(function() {
   selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$ct_var2 <- reactiveUI(function() {
+output$ct_var2 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   dat <- getdata()
@@ -420,7 +420,7 @@ plot.crosstab <- function(result) {
 	print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 }
 
-crosstab <- reactive(function() {
+crosstab <- reactive({
 	if(is.null(input$ct_var2)) return("Please select a factor")
 	var1 <- input$ct_var1
 	var2 <- input$ct_var2

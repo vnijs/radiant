@@ -1,5 +1,5 @@
 # variable selection - hclustering
-output$hc_vars <- reactiveUI(function() {
+output$hc_vars <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "hc_vars", label = "Variables:", choices = vars, selected = NULL, multiple = TRUE)
@@ -13,7 +13,6 @@ hc_dist_method <- c("sq.euclidian", "euclidean", "maximum", "manhattan", "canber
 ui_hclustering <- function() {
   wellPanel(
     uiOutput("hc_vars"), 
-    # tags$style(type='text/css', "#hc_vars { height: 250px; padding-bottom: 35px;}"),
     selectInput("hc_dist", label = "Distance measure:", choices = hc_dist_method, selected = hc_dist_method[1], multiple = FALSE),
     selectInput("hc_meth", label = "Method:", choices = hc_method, selected = hc_method[1], multiple = FALSE),
     selectInput("hc_nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE),
@@ -26,6 +25,7 @@ summary.hclustering <- function(result) {
 }
 
 plot.hclustering <- function(result) {
+
 	# use ggdendro when it gets back on cran
 	par(mfrow = c(2,1))
 	plot(result, main = "Dendrogram")
@@ -34,10 +34,9 @@ plot.hclustering <- function(result) {
 	plot(nr_of_clusters,height, xlab = "Nr of clusters", ylab = "Height", type = 'b')
 }
 
-hclustering <- reactive(function() {
+hclustering <- reactive({
 	if(is.null(input$hc_vars)) return("Please select one or more variables")
 
-	# dist.data <- as.dist(dist(getdata()[,input$hc_vars], method = "euclidean")^2)
 	dat <- getdata()[,input$hc_vars]
 	if(input$hc_dist == "sq.euclidian") {
 		dist.data <- dist(dat, method = "euclidean")^2
@@ -47,7 +46,7 @@ hclustering <- reactive(function() {
 	hclust(d = dist.data, method= input$hc_meth)
 })
 
-observe(function() {
+observe({
 	if(is.null(input$hc_saveclus) || input$hc_saveclus == 0) return()
 	isolate({
 		clusmem <- cutree(hclustering(), k = input$hc_nrClus)
@@ -55,7 +54,7 @@ observe(function() {
 	})
 })
 
-output$km_vars <- reactiveUI(function() {
+output$km_vars <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars, selected = NULL, multiple = TRUE)
@@ -64,9 +63,7 @@ output$km_vars <- reactiveUI(function() {
 ui_kmeansClustering <- function() {
   wellPanel(
     uiOutput("km_vars"), 
-    # tags$style(type='text/css', "#km_vars { height: 250px; padding-bottom: 35px;}"),
 	  checkboxInput(inputId = "km_hcinit", label = "Initial centers from HC", value = TRUE),
-  	# conditionalPanel(condition = "input.km_hcinit == 'TRUE'",
   	conditionalPanel(condition = "input.km_hcinit == true",
   		wellPanel(
 	  		selectInput("km_dist", label = "Distance measure:", choices = hc_dist_method, selected = hc_dist_method[1], multiple = FALSE),
@@ -101,7 +98,7 @@ plot.kmeansClustering <- function(result) {
 		print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 }
 
-hinitclustering <- reactive(function() {
+hinitclustering <- reactive({
 	if(is.null(input$km_vars)) return("Please select one or more variables")
 	dat <- getdata()[,input$km_vars]
 	if(input$km_dist == "sq.euclidian") {
@@ -112,7 +109,7 @@ hinitclustering <- reactive(function() {
 	hclust(d = dist.data, method= input$km_meth)
 })
 
-kmeansClustering <- reactive(function() {
+kmeansClustering <- reactive({
 	if(is.null(input$km_vars)) return("Please select one or more variables")
 	set.seed(input$km_seed)
 	dat <- getdata()[,input$km_vars]
@@ -126,7 +123,7 @@ kmeansClustering <- reactive(function() {
 	}
 })
 
-observe(function() {
+observe({
 	if(is.null(input$km_saveclus) || input$km_saveclus == 0) return()
 	isolate({
 		clusmem <- kmeansClustering()$cluster

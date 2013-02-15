@@ -28,7 +28,7 @@ shinyServer(function(input, output) {
 	sourceDirectory('tools_enabled/')
 
 	# the 'grand' ui-element caller
-	output$analysis_ui_controls <- reactiveUI(function() {
+	output$analysis_ui_controls <- renderUI({
   	if(input$tool == "dataview") return()
 	  get(paste('ui_',input$tool, sep=""))()
 	})

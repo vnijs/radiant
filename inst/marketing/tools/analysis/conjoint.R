@@ -57,7 +57,7 @@ conjointCreateProfiles <- function() { #{{{
 
 }
 
-conjointProfiles <- reactive(function() {
+conjointProfiles <- reactive({
 	vars <- input$ca_var2
 	if(is.null(vars)) return("Please select one or more attributes")
 	if(!is.null(input$ca_intsel) && input$ca_interactions != 'none') vars <- c(vars,input$ca_intsel)
@@ -85,7 +85,7 @@ ca_loadUserProfiles <- function(uFile) {
 
 }
 
-ca_uploadProfiles <- reactive(function() {
+ca_uploadProfiles <- reactive({
   if(input$ca_upload == 0) return("")
   fpath <- try(file.choose(), silent = TRUE)
   if(is(fpath, 'try-error')) {
@@ -106,13 +106,13 @@ output$ca_downloadProfiles <- downloadHandler(
 	}
 )
 
-output$ca_var1 <- reactiveUI(function() {
+output$ca_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "ca_var1", label = "Profile evaluations:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$ca_var2 <- reactiveUI(function() {
+output$ca_var2 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "ca_var2", label = "Attributes:", choices = vars[-which(vars == input$ca_var1)], selected = NULL, multiple = TRUE)
@@ -178,7 +178,7 @@ plot.conjoint <- function(result) {
 # 	iway
 # }
 
-# output$ca_intsel <- reactiveUI(function() {
+# output$ca_intsel <- renderUI({
 #   vars <- input$ca_var2
 #   if(is.null(vars) || length(vars) < 2) return()
 # 	selectInput("ca_intsel", label = "", choices = ca_int_vec(vars,input$ca_interactions), selected = NULL, multiple = TRUE)
@@ -247,7 +247,7 @@ vif.conjoint <- function(result) {
 	}
 }
 
-conjoint <- reactive(function() {
+conjoint <- reactive({
 	vars <- input$ca_var2
 	if(is.null(vars)) return("Please select one or more attributes")
 	if(!is.null(input$ca_intsel) && input$ca_interactions != 'none') vars <- c(vars,input$ca_intsel)

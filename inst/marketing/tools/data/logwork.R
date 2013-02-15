@@ -1,4 +1,4 @@
-output$logwork <- reactivePrint(function() {
+output$logwork <- renderPrint({
 	# if(input$datatabs != 'Log') return()
 	# idea: When a user presses a log-button the output on screen is saved to an rda file
 	# ala the sesson data (.Radata). It would be like taking a snap-shot of the app-input

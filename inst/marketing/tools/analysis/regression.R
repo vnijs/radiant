@@ -1,16 +1,16 @@
-output$reg_var1 <- reactiveUI(function() {
+output$reg_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$reg_var2 <- reactiveUI(function() {
+output$reg_var2 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars[-which(vars == input$reg_var1)], selected = NULL, multiple = TRUE)
 })
 
-output$reg_var3 <- reactiveUI(function() {
+output$reg_var3 <- renderUI({
   vars <- input$reg_var2
   if(is.null(vars)) return()
 	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
@@ -86,7 +86,7 @@ reg_int_vec <- function(reg_vars, nway) {
 	iway
 }
 
-output$reg_intsel <- reactiveUI(function() {
+output$reg_intsel <- renderUI({
   vars <- input$reg_var2
   if(is.null(vars) || length(vars) < 2) return()
 	selectInput("reg_intsel", label = "", choices = reg_int_vec(vars,input$reg_interactions), selected = NULL, multiple = TRUE)
@@ -156,7 +156,7 @@ summary.regression <- function(result) {
 	}
 }
 
-regression <- reactive(function() {
+regression <- reactive({
 	vars <- input$reg_var2
 	if(is.null(vars)) return("Please select one or more independent variables")
 	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
@@ -172,7 +172,7 @@ regression <- reactive(function() {
 	mod
 })
 
-observe(function() {
+observe({
 	if(is.null(input$saveres) || input$saveres == 0) return()
 	isolate({
 		changedata(regression()$residuals, "residuals")
@@ -187,7 +187,7 @@ observe(function() {
 #   }
 # }
 
-# output$plotswhich <- reactivePlot(function() {
+# output$plotswhich <- renderPlot({
 # 	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
 # 	# 'traditional' residual plots for lm
 # 	plot(regression(), which = as.integer(input$reg_plots))

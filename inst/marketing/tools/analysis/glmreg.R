@@ -1,5 +1,5 @@
 # variable selection - GLM
-output$glm_var1 <- reactiveUI(function() {
+output$glm_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   isFct <- sapply(getdata(), is.factor)
@@ -8,13 +8,13 @@ output$glm_var1 <- reactiveUI(function() {
   selectInput(inputId = "glm_var1", label = "Dependent variable:", choices = vars, selected = NULL, multiple = FALSE)
 })
 
-output$glm_var2 <- reactiveUI(function() {
+output$glm_var2 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "glm_var2", label = "Independent variables:", choices = vars[-which(vars == input$glm_var1)], selected = NULL, multiple = TRUE)
 })
 
-output$glm_var3 <- reactiveUI(function() {
+output$glm_var3 <- renderUI({
   vars <- input$glm_var2
   if(is.null(vars)) return()
 	if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
@@ -93,7 +93,7 @@ glm_int_vec <- function(glm_vars, nway) {
 	iway
 }
 
-output$glm_intsel <- reactiveUI(function() {
+output$glm_intsel <- renderUI({
   vars <- input$glm_var2
   if(is.null(vars) || length(vars) < 2) return()
 	selectInput("glm_intsel", label = "", choices = glm_int_vec(vars,input$glm_interactions), selected = NULL, multiple = TRUE)
@@ -152,7 +152,7 @@ summary.glmreg <- function(result) {
 	}
 }
 
-glmreg <- reactive(function() {
+glmreg <- reactive({
 
 	vars <- input$glm_var2
 	if(is.null(vars)) return("Please select one or more independent variables")
@@ -171,7 +171,7 @@ glmreg <- reactive(function() {
 	mod
 })
 
-observe(function() {
+observe({
 	if(is.null(input$saveglmres) || input$saveglmres == 0) return()
 	isolate(
 		changedata(residuals(glmreg()), "residuals")

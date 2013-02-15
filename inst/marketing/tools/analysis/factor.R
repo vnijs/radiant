@@ -46,7 +46,7 @@
 } #}}}
 
 # variable selection - hclustering
-output$prefac_vars <- reactiveUI(function() {
+output$prefac_vars <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
   selectInput(inputId = "prefac_vars", label = "Variables:", choices = vars, selected = NULL, multiple = TRUE)
@@ -61,31 +61,31 @@ ui_preFactor <- function() {
   )
 }
 
-summary.hclustering <- function(result) {
-	result
-}
+# summary.hclustering <- function(result) {
+# 	result
+# }
 
-plot.hclustering <- function(result) {
+# plot.hclustering <- function(result) {
 
-}
+# }
 
-hclustering <- reactive(function() {
-	if(is.null(input$hc_vars)) return("Please select one or more variables")
+# hclustering <- reactive({
+# 	if(is.null(input$hc_vars)) return("Please select one or more variables")
 
-	# dist.data <- as.dist(dist(getdata()[,input$hc_vars], method = "euclidean")^2)
-	dat <- getdata()[,input$hc_vars]
-	if(input$hc_dist == "sq.euclidian") {
-		dist.data <- dist(dat, method = "euclidean")^2
-	} else {
-		dist.data <- dist(dat, method = input$hc_dist)
-	}
-	hclust(d = dist.data, method= input$hc_meth)
-})
+# 	# dist.data <- as.dist(dist(getdata()[,input$hc_vars], method = "euclidean")^2)
+# 	dat <- getdata()[,input$hc_vars]
+# 	if(input$hc_dist == "sq.euclidian") {
+# 		dist.data <- dist(dat, method = "euclidean")^2
+# 	} else {
+# 		dist.data <- dist(dat, method = input$hc_dist)
+# 	}
+# 	hclust(d = dist.data, method= input$hc_meth)
+# })
 
-observe(function() {
-	if(is.null(input$hc_saveclus) || input$hc_saveclus == 0) return()
-	isolate({
-		clusmem <- cutree(hclustering(), k = input$hc_nrClus)
-		changedata(as.factor(clusmem), paste("hclus",input$hc_nrClus,sep=""))
-	})
-})
+# observe({
+# 	if(is.null(input$hc_saveclus) || input$hc_saveclus == 0) return()
+# 	isolate({
+# 		clusmem <- cutree(hclustering(), k = input$hc_nrClus)
+# 		changedata(as.factor(clusmem), paste("hclus",input$hc_nrClus,sep=""))
+# 	})
+# })

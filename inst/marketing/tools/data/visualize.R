@@ -1,6 +1,5 @@
 # variable selection in the datatabs views
-output$vizvars1 <- reactiveUI(function() {
-	# cols <- input$columns
+output$vizvars1 <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 
@@ -8,21 +7,20 @@ output$vizvars1 <- reactiveUI(function() {
 })
 
 # variable selection
-output$vizvars2 <- reactiveUI(function() {
-	# cols <- input$columns
+output$vizvars2 <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	# selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
 	selectInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "",as.list(cols[-which(cols == input$vizvars1)])), selected = "", multiple = FALSE)
 })
 
-output$viz_color <- reactiveUI(function() {
+output$viz_color <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	selectInput('viz_color', 'Color', c('None'="", as.list(cols)))
 })
 
-output$viz_facet_row <- reactiveUI(function() {
+output$viz_facet_row <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	# isFct <- sapply(getdata(), is.factor || is.integer)
@@ -31,7 +29,7 @@ output$viz_facet_row <- reactiveUI(function() {
 	selectInput('viz_facet_row', 'Facet row', c(None='.', as.list(cols)))
 })
 
-output$viz_facet_col <- reactiveUI(function() {
+output$viz_facet_col <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	# isFct <- sapply(getdata(), is.factor || is.integer)
@@ -40,7 +38,7 @@ output$viz_facet_col <- reactiveUI(function() {
 	selectInput('viz_facet_col', 'Facet col', c(None='.', as.list(cols)))
 })
 
-output$visualize <- reactivePlot(function() {
+output$visualize <- renderPlot({
 	if(is.null(input$datasets) || is.null(input$vizvars2)) return()
 	if(input$datatabs != 'Visualize') return()
 
@@ -73,7 +71,7 @@ output$visualize <- reactivePlot(function() {
 }, width = 700, height = 700)
 
 # will be used in ui.R
-output$ui_visualize <- reactiveUI(function() {
+output$ui_visualize <- renderUI({
 	ui_visualize()
 })
 

@@ -28,7 +28,7 @@ plot.garch <- function(result) {
    plot(result, which = as.integer(input$ga_plots))
 }
 
-garch <- reactive(function() {
+garch <- reactive({
 	if(is.null(input$ga_var)) return("Please select a variable for analysis")
 
   dat = getdata()[,input$ga_var]

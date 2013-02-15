@@ -67,7 +67,7 @@ loadYahooData <- function(symbol) {
 # reactive functions used in radyant
 #################################################
 
-uploadfunc <- reactive(function() {
+uploadfunc <- reactive({
   if(input$upload == 0) return("")
   fpath <- try(file.choose())
   if(is(fpath, 'try-error')) {
@@ -77,13 +77,13 @@ uploadfunc <- reactive(function() {
   }
 })
 
-output$columns <- reactiveUI(function() {
+output$columns <- renderUI({
 	cols <- varnames()
 
 	selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
 })
 
-output$datasets <- reactiveUI(function() {
+output$datasets <- renderUI({
 
 	fpath <- uploadfunc()
 
@@ -102,7 +102,7 @@ output$datasets <- reactiveUI(function() {
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
-output$nrRows <- reactiveUI(function() {
+output$nrRows <- renderUI({
 	if(is.null(input$datasets)) return()
 	dat <- getdata()
 
@@ -112,7 +112,7 @@ output$nrRows <- reactiveUI(function() {
 })
 
 # variable selection in the datatabs views
-output$vizvars1 <- reactiveUI(function() {
+output$vizvars1 <- renderUI({
 	# cols <- input$columns
 	cols <- varnames()
 	if(is.null(cols)) return()
@@ -121,7 +121,7 @@ output$vizvars1 <- reactiveUI(function() {
 })
 
 # variable selection
-output$vizvars2 <- reactiveUI(function() {
+output$vizvars2 <- renderUI({
 	# cols <- input$columns
 	cols <- varnames()
 	if(is.null(cols)) return()
@@ -129,7 +129,7 @@ output$vizvars2 <- reactiveUI(function() {
 	selectInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "",as.list(cols[-which(cols == input$vizvars1)])), selected = "", multiple = FALSE)
 })
 
-output$viz_color <- reactiveUI(function() {
+output$viz_color <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	# isFct <- sapply(getdata(), is.integer)
@@ -137,7 +137,7 @@ output$viz_color <- reactiveUI(function() {
 	selectInput('viz_color', 'Color', c('None'="", as.list(cols)))
 })
 
-output$viz_facet_row <- reactiveUI(function() {
+output$viz_facet_row <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	isFct <- sapply(getdata(), is.factor)
@@ -146,7 +146,7 @@ output$viz_facet_row <- reactiveUI(function() {
 	selectInput('viz_facet_row', 'Facet row', c(None='.', as.list(cols)))
 })
 
-output$viz_facet_col <- reactiveUI(function() {
+output$viz_facet_col <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
 	isFct <- sapply(getdata(), is.factor)
@@ -158,7 +158,7 @@ output$viz_facet_col <- reactiveUI(function() {
 ################################################################
 # Data reactives - view, plot, transform data, and log your work
 ################################################################
-output$dataviewer <- reactiveTable(function() {
+output$dataviewer <- renderTable({
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
 	dat <- getdata()
@@ -178,7 +178,7 @@ output$dataviewer <- reactiveTable(function() {
 	# example here https://github.com/smjenness/Shiny/blob/master/SIR/server.R
 })
 
-output$stockplot<- reactivePlot(function() {
+output$stockplot<- renderPlot(function() {
 	if(is.null(input$datasets)) return()
 	if(input$datatabs != 'Stock plot') return()
 
@@ -191,7 +191,7 @@ output$stockplot<- reactivePlot(function() {
 
 })
 
-output$visualize <- reactivePlot(function() {
+output$visualize <- renderPlot(function() {
 	if(is.null(input$datasets) || is.null(input$vizvars2)) return()
 	if(input$datatabs != 'Visualize') return()
 
@@ -222,8 +222,8 @@ output$visualize <- reactivePlot(function() {
     print(p)
 }, width = 800, height = 800)
 
-# output$transform <- reactiveTable(function() {
-output$transform <- reactivePrint(function() {
+# output$transform <- renderTable({
+output$transform <- renderPrint({
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 	if(input$datatabs != 'Transform') return()
 
@@ -240,7 +240,7 @@ output$transform <- reactivePrint(function() {
 
 })
 
-output$logwork <- reactivePrint(function() {
+output$logwork <- renderPrint(function() {
 	if(is.null(input$datasets) || is.null(input$columns)) return()
 
 	# if(input$datatabs != 'Log') return()
@@ -268,7 +268,7 @@ output$logwork <- reactivePrint(function() {
 ################################################################
 
 # Generate output for the summary tab
-output$summary <- reactivePrint(function() {
+output$summary <- renderPrint({
 	if(is.null(input$datasets) || input$tool == 'dataview') return()
 
 	# get the summary function for currenly selected tool and feed
@@ -285,7 +285,7 @@ output$summary <- reactivePrint(function() {
 })
 
 # Generate output for the plots tab
-output$plots <- reactivePlot(function() {
+output$plots <- renderPlot({
 
 	# plotting could be expensive so only done when tab is being viewed
 	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()

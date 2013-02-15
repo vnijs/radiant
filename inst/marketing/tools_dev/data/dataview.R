@@ -77,7 +77,7 @@ loadPackData <- function(pFile) {
 # reactive functions used in radyant
 #################################################
 
-uploadfunc <- reactive(function() {
+uploadfunc <- reactive({
   if(input$upload == 0) return("")
   fpath <- try(file.choose(), silent = TRUE)
   if(is(fpath, 'try-error')) {
@@ -106,7 +106,7 @@ output$downloadData <- downloadHandler(
   }
 )
 
-output$datasets <- reactiveUI(function() {
+output$datasets <- renderUI({
 
   fpath <- uploadfunc()
   # loading user data
@@ -123,12 +123,12 @@ output$datasets <- reactiveUI(function() {
   selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })
 
-output$columns <- reactiveUI(function() {
+output$columns <- renderUI({
   cols <- varnames()
   selectInput("columns", "Select columns to show:", choices  = as.list(cols), selected = names(cols), multiple = TRUE)
 })
 
-output$nrRows <- reactiveUI(function() {
+output$nrRows <- renderUI({
   if(is.null(input$datasets)) return()
   dat <- getdata()
 
@@ -140,7 +140,7 @@ output$nrRows <- reactiveUI(function() {
 ################################################################
 # Data reactives - view, plot, transform data, and log your work
 ################################################################
-output$dataviewer <- reactiveTable(function() {
+output$dataviewer <- renderTable({
   if(is.null(input$datasets) || is.null(input$columns)) return()
 
   dat <- getdata()
@@ -171,7 +171,7 @@ output$dataviewer <- reactiveTable(function() {
 ################################################################
 
 # Generate output for the summary tab
-output$summary <- reactivePrint(function() {
+output$summary <- renderPrint({
   if(is.null(input$datasets) || input$tool == 'dataview') return()
 
   # get the summary function for currenly selected tool and feed
@@ -188,7 +188,7 @@ output$summary <- reactivePrint(function() {
 })
 
 # Generate output for the plots tab
-output$plots <- reactivePlot(function() {
+output$plots <- renderPlot({
 
   # plotting could be expensive so only done when tab is being viewed
   if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
