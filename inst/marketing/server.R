@@ -5,7 +5,7 @@ shinyServer(function(input, output) {
 
 	# source enabled analysis tools
 	flist <- sourceDirectory('tools', recursive = TRUE)
-	print(flist)
+	# print(flist)
 
 	# the 'grand' analysis ui-element caller
 	output$ui_analysis <- renderUI({
