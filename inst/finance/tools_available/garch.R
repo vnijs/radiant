@@ -7,7 +7,6 @@ plots <- list("Standardized Residuals Plot" = 9, "ACF Plot of Standardized Resid
 
 ui_garch <- function() {
   wellPanel(
-    # uiOutput("var1"),
     selectInput("ga_var", "Time-series:", choices = varnames(), selected = NULL, multiple = FALSE),
     selectInput("ga_cond.dist", "Conditional distribution:", choices = cond.dist),
     numericInput("ga_order1", "Order 1:", 1, min = 1),
@@ -20,6 +19,7 @@ ui_garch <- function() {
   )
 }
 
+# analysis
 summary.garch <- function(result) {
 	summary(result)
 }
@@ -36,7 +36,6 @@ garch <- reactive({
 
   formula <- as.formula(paste("~ garch(",input$ga_order1,",",input$ga_order2,")"))
   title <- paste("GARCH(",input$ga_order1,",",input$ga_order2,") model for variable \"", input$ga_var,"\"",sep ="")
-  result <- garchFit(formula, title = title, data = dat, include.mean=input$ga_inclmean, cond.dist = input$ga_cond.dist, trace=FALSE)
-  result
+  garchFit(formula, title = title, data = dat, include.mean=input$ga_inclmean, cond.dist = input$ga_cond.dist, trace=FALSE)
+  
 })
-
