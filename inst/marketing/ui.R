@@ -62,6 +62,7 @@ shinyUI(
         # the appropriate analysis tool is called based on the selected tool
         uiOutput("ui_analysis")
       )
+      # HTML("<a class='btn' href='/'>Refresh</a>")
     ),
     
     mainPanel(

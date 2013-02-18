@@ -24,7 +24,7 @@ output$factor_vars <- renderUI({
   selectInput(inputId = "factor_vars", label = "Variables:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
-fac_method <- list('Principal components' = 'PCA')
+fac_method <- list('Principal components' = 'PCA', 'Maximum Likelihood' = "maxlik")
 fac_rotation <- list('Varimax' = 'varimax', 'None' = 'none')
 
 ui_factor <- function() {
@@ -85,21 +85,51 @@ preFactor <- reactive({
 summary.factor <- function(result) {
 
 	df <- as.data.frame(result$loadings[])
-	df$Communality <- result$communality
+	# df$Communality <- result$communality
+	df$Communality <- 1 - result$uniqueness
 	cat("\nFactor loadings matrix\n\n")
 	print(df, digits = 3)
 
 	cat("\nFactor scores\n\n")
 	scores <- as.data.frame(result$scores)
 	print(scores, digits = 3)
+	print(str(result))
 }
 
 plot.factor <- function(result) {
 
-	df <- as.data.frame(result$loadings[])
-	plot(df, main = paste("Factor loadings (Rotation - ",result$rotation,")",sep = ""))
-	# text(df, adj = c(.5,-.3), labels = rownames(df))
-	abline(v = 0, h = 0)
+	df <- round(as.data.frame(result$loadings[]),3)
+
+	if(result$factors > 1) {
+		plot(df[,1:2], main = paste("Loadings plot for factors 1 and 2 (Rotation - ",result$rotation,")",sep = ""))
+		text(df, adj = c(.5,-.3), labels = rownames(df))
+		abline(v = 0, h = 0)
+	}
+
+	if(result$factors > 1) {
+
+		x = 1:ncol(df)
+		y = 1:nrow(df)
+
+		image(x,y, matrix(0, length(x), length(y)),
+	  col='white', xaxt='n', yaxt='n',
+ 	 	ylim=c(max(y)+0.5, min(y)-0.5), xlab='', ylab='')
+
+		cols = rep('black', ncol(df)*nrow(df))
+		pvals <- unlist(df)
+		cols[pvals>0.3 & pvals<=0.7] = 'blue'
+		centers = expand.grid(y, x)
+		text(centers[,2], centers[,1], unlist(df), col=cols)
+		grid(length(x),length(y))
+
+		# x = 1:ncol(df)
+		# y = 1:nrow(df)
+		# image(x, y, t(as.matrix(df)), col = c('blue', 'white', 'red'),
+	 #      breaks = c(0, 0.3, 0.7, 1), xaxt='n', yaxt='n',
+	 #      ylim=c(max(y)+0.5, min(y)-0.5), xlab='', ylab='')
+		# centers = expand.grid(y, x)
+		# text(centers[,2], centers[,1], unlist(df))
+	}
 
 }
 
@@ -116,7 +146,15 @@ factor <- reactive({
 		nrFac <- ncol(dat)
 	}
 
-	principal(dat, nfactors=nrFac, rotate=input$fac_rotation, scores=TRUE, oblique.scores=FALSE)
+	if(input$fac_method == 'PCA') {
+		fres <- principal(dat, nfactors=nrFac, rotate=input$fac_rotation, scores=TRUE, oblique.scores=FALSE)
+	} else {
+		fres <- factanal(dat, nrFac, rotation=input$fac_rotation, scores='regression')
+		fres$rotation <- input$fac_rotation
+	}
+
+	return(fres)
+
 })
 
 
