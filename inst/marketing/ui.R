@@ -5,13 +5,6 @@ getTool <- function(inputId) {
   )
 }
 
-actionButton <- function(inputId, label) {
-  tagList(
-    singleton(tags$head(tags$script(src = 'js/actionbutton.js'))),
-    tags$button(id=inputId, type="button", class="btn action-button", label)
-  )
-}
-
 shinyUI(
 
   pageWithSidebar(
