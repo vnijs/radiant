@@ -92,10 +92,10 @@ uploadfunc <- reactive({
      	values$fpath <- ""
     }
 	} else {
-   	if (is.null(input$file1) || nrow(input$file1) == 0)
+   	if (is.null(input$serv_upload) || nrow(input$serv_upload) == 0)
      	values$fpath <- NULL
     else
- 	    values$fpath <- input$file1[1,'datapath']
+ 	    values$fpath <- input$serv_upload[1,'datapath']
 	}
 
   if(is(values$fpath, 'try-error')) {
@@ -110,7 +110,7 @@ output$upload_local_server <- renderUI({
 	if (interactive() == TRUE) {
 	  actionButton("upload", "Choose a file")
 	} else {
-	  fileInput('file1')
+	  fileInput('serv_upload','')
 	}
   # read.csv(input$file2server$data)
 	# fpath <- uploadfunc()
