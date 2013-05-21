@@ -95,6 +95,7 @@ uploadfunc <- reactive({
 	} else {
    	if (!is.null(input$serv_upload) && nrow(input$serv_upload) != 0) {
  	    values$fpath <- input$serv_upload[1,'datapath']
+ 	    values$fpath <- ""
  	  }
 	}
 
