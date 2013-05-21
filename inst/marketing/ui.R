@@ -39,7 +39,7 @@ shinyUI(
             HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
             # actionButton("upload", "Choose a file"),
             uiOutput("upload_local_server"), 
-            br(), br(),
+            br(), 
             selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
           )
         ),

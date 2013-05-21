@@ -85,24 +85,20 @@ uploadfunc <- reactive({
   # 	return(fpath)
   # }
 
+ 	values$fpath <- ""
+
 	if (interactive() == TRUE) {
    	if (input$upload != 0) {
-     	values$fpath <- try(file.choose(), silent=TRUE)
-    } else {
-     	values$fpath <- ""
+     	fpath <- try(file.choose(), silent=TRUE)
+     	if(is(fpath, 'try-error')) values$fpath <- ""
     }
 	} else {
-   	if (is.null(input$serv_upload) || nrow(input$serv_upload) == 0)
-     	values$fpath <- NULL
-    else
+   	if (!is.null(input$serv_upload) && nrow(input$serv_upload) != 0) {
  	    values$fpath <- input$serv_upload[1,'datapath']
+ 	  }
 	}
 
-  if(is(values$fpath, 'try-error')) {
-   	return("")
-  } else {
-   	return(values$fpath)
-  }
+  values$fpath
 })
 
 output$upload_local_server <- renderUI({
