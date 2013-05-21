@@ -20,7 +20,8 @@ shinyUI(
         tags$style(type="text/css", "textarea { max-width: 185px; }"),
         tags$style(type="text/css", ".jslider { max-width: 200px; }"),
         tags$style(type='text/css', ".well { padding: 12px; margin-bottom: 5px; max-width: 280px; }"),
-        tags$style(type='text/css', ".span4 { max-width: 280px; }")
+        tags$style(type='text/css', ".span4 { max-width: 280px; }"),
+        tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
       ),
 
       includeHTML("www/js/tools.js"),
@@ -36,7 +37,8 @@ shinyUI(
         conditionalPanel(condition = "input.datatabs == 'View'",
           wellPanel(
             HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
-            actionButton("upload", "Choose a file"),
+            # actionButton("upload", "Choose a file"),
+            uiOutput("upload_local_server"), 
             br(), br(),
             selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
           )
@@ -83,6 +85,7 @@ shinyUI(
             tabPanel("Summarize", HTML('<label>Summarize and explore your data using plyr, reshape, etc.<br>In progress. Check back soon.</label>')),
             tabPanel("Visualize", plotOutput("visualize", height = "100%")),
             tabPanel("About", includeMarkdown("about.md"))
+            # tabPanel("About", includeRmd("about_formulas.Rmd"))
           )
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",

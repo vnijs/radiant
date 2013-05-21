@@ -74,6 +74,18 @@ load('data/packDataSets.rda')
 
 lastLoaded <- "" 		
 
+includeRmd <- function(path){
+  if (!require(knitr))
+    stop("knitr package is not installed")
+  if (!require(markdown))
+    stop("Markdown package is not installed")
+  shiny:::dependsOnFile(path)
+  html <- knitr::knit2html(path, fragment.only = TRUE)
+  includeHTML(html)
+  # Encoding(html) <- 'UTF-8'
+  # HTML(html)
+}
+
 # Simulate a big data-file
 # n <- 200000
 # n.var <- 100
