@@ -75,11 +75,51 @@ loadPackData <- function(pFile) {
 #################################################
 uploadfunc <- reactive({
 
+<<<<<<< HEAD
   if(input$upload == 0) return("")
  	fpath <- try(file.choose(), silent = TRUE)
 
  	if(is(fpath, 'try-error')) fpath <- ""
   fpath
+=======
+  # if(input$upload == 0) return("")
+ 	# fpath <- try(file.choose(), silent = TRUE)
+ 	# if(is(fpath, 'try-error')) {
+  # 	return("")
+  # } else {
+  # 	return(fpath)
+  # }
+
+ 	values$fpath <- ""
+
+	if (interactive() == TRUE) {
+   	if (input$upload != 0) {
+     	fpath <- try(file.choose(), silent=TRUE)
+     	if(is(fpath, 'try-error')) values$fpath <- ""
+    }
+	} else {
+   	if (!is.null(input$serv_upload) && nrow(input$serv_upload) != 0) {
+ 	    values$fpath <- input$serv_upload[1,'datapath']
+ 	    values$fpath <- ""
+ 	  }
+	}
+
+  values$fpath
+})
+
+output$upload_local_server <- renderUI({
+
+	if (interactive() == TRUE) {
+	  actionButton("upload", "Choose a file")
+	} else {
+	  fileInput('serv_upload','')
+	}
+  # read.csv(input$file2server$data)
+	# fpath <- uploadfunc()
+ 	# fileInput('file2server', 'Choose a file')
+  # if (is.null(input$file2server)) return("")
+
+>>>>>>> e4f1db2d1da84f20624a14747975394c9321152d
 })
 
 output$downloadData <- downloadHandler(

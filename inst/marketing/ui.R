@@ -37,7 +37,13 @@ shinyUI(
         conditionalPanel(condition = "input.datatabs == 'View'",
           wellPanel(
             HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
+<<<<<<< HEAD
             actionButton("upload", "Choose a file"), br(), br(),
+=======
+            # actionButton("upload", "Choose a file"),
+            uiOutput("upload_local_server"), 
+            br(), 
+>>>>>>> e4f1db2d1da84f20624a14747975394c9321152d
             selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
           )
         ),
@@ -82,6 +88,7 @@ shinyUI(
             tabPanel("Summarize", HTML('<label>Summarize and explore your data using plyr, reshape, etc.<br>In progress. Check back soon.</label>')),
             tabPanel("Visualize", plotOutput("visualize", height = "100%")),
             tabPanel("About", includeMarkdown("about.md"))
+            # tabPanel("About", includeRmd("about_formulas.Rmd"))
           )
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",

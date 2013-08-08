@@ -74,17 +74,27 @@ load('data/packDataSets.rda')
 
 lastLoaded <- "" 		
 
+<<<<<<< HEAD
 # function to render .Rmd files into html on-the-fly
+=======
+>>>>>>> e4f1db2d1da84f20624a14747975394c9321152d
 includeRmd <- function(path){
   if (!require(knitr))
     stop("knitr package is not installed")
   if (!require(markdown))
     stop("Markdown package is not installed")
   shiny:::dependsOnFile(path)
+<<<<<<< HEAD
   contents <- paste(readLines(path, warn = FALSE), collapse = '\n')
   html <- knitr::knit2html(text = contents, fragment.only = TRUE)
   Encoding(html) <- 'UTF-8'
   HTML(html)
+=======
+  html <- knitr::knit2html(path, fragment.only = TRUE)
+  includeHTML(html)
+  # Encoding(html) <- 'UTF-8'
+  # HTML(html)
+>>>>>>> e4f1db2d1da84f20624a14747975394c9321152d
 }
 
 # Simulate a big data-file
