@@ -1,14 +1,3 @@
-library(shiny)
-library(shinyIncubator)
-library(car)
-library(tools)
-library(foreign)
-library(ggplot2)
-library(gridExtra)
-library(fGarch)
-library(quantmod)
-library(R.utils)
-
 # avoid breaks in R-output print and show JSON packets transferred
 # over websockets
 options(width = 150, shiny.trace=TRUE)

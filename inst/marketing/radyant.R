@@ -1,5 +1,5 @@
 ################################################################
-# functions used in radyant
+# non-reactive functions used in radyant
 ################################################################
 varnames <- function() {
 	if(is.null(input$datasets)) return()
@@ -13,7 +13,7 @@ varnames <- function() {
 changedata <- function(addCol = NULL, addColName = "") {
 	# function that changes data as needed
 	if(is.null(addCol) || addColName == "") return()
-  # We don't want to take a reactive dependency on anything
+  # isolate ensures that no reactive dependencies are used
   isolate({
   	values[[input$datasets]][,addColName] <- addCol
   })
@@ -58,7 +58,6 @@ loadPackData <- function(pFile) {
 	if(pFile != robjname) return("R-object not found. Please choose another dataset")
 
 	if(is.null(ncol(dat))) {
-		# values[[packDataSets]] <- packDataSets[-which(packDataSets == pFile)]
 		return()
 	}
 
@@ -74,17 +73,14 @@ loadPackData <- function(pFile) {
 #################################################
 # reactive functions used in radyant
 #################################################
-
 uploadfunc <- reactive({
-  if(input$upload == 0) return("")
-  fpath <- try(file.choose(), silent = TRUE)
-  if(is(fpath, 'try-error')) {
-  	return("")
-  } else {
-  	return(fpath)
-  }
-})
 
+  if(input$upload == 0) return("")
+ 	fpath <- try(file.choose(), silent = TRUE)
+
+ 	if(is(fpath, 'try-error')) fpath <- ""
+  fpath
+})
 
 output$downloadData <- downloadHandler(
 	filename = function() { paste(input$datasets[1],'.',input$saveAs, sep='') },
@@ -104,7 +100,6 @@ output$downloadData <- downloadHandler(
 		}
   }
 )
-
 
 output$datasets <- renderUI({
 
@@ -163,8 +158,7 @@ output$dataviewer <- renderTable({
 				if(length(grep("system",selcom)) > 0) q()
 				if(length(grep("rm\\(list",selcom)) > 0) q()
 					
-				# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
-				# first checking if selcom is a valid expression
+				# selcom is a valid expression to the subset command
 				parse_selcom <- try(parse(text = selcom)[[1]], silent = TRUE)
 				if(!is(parse_selcom, 'try-error')) {
 					seldat <- try(eval(parse(text = paste("subset(dat,",selcom,")")[[1]])), silent = TRUE)
@@ -183,32 +177,34 @@ output$dataviewer <- renderTable({
 })
 
 ################################################################
-# Output controls for the Summary, Plots, and Extra tabs
+# Output controls for the Summary and Plots tabs
 # The tabs are re-used for various tools. Depending on the tool
 # selected by the user the appropropriate analaysis function 
 # is called.
+#
 # Naming conventions: The reactive function to be put in the
 # code block above must be of the same name as the tool
 # in the tools drop-down. See global.R for the current list
 # of tools (and tool-names) 
 ################################################################
 
-### Creating dynamic tabsets - From Alex Brown
-
 # Generate output for the summary tab
-# output$summary <- renderUI(function() {
 output$summary <- renderPrint({
 	if(is.null(input$datasets) || input$tool == 'dataview') return()
 
-	# get the summary function for currenly selected tool and feed
-	# it the output from one of the analysis reactives above
-	# get-function structure is used because there may be a large
-	# set of tools that will have the same output structure
-	f <- get(paste("summary",input$tool,sep = '.'))
+	# get the summary function for currently selected tool and feed
+	# it the output from the related analysis reactives 
+	# get-function structure is used because there may be many
+	# sets of tools that will have the same output structure
+
+	# call analysis reactive
 	result <- get(input$tool)()
 	if(is.character(result)) {
+		# used when no analysis is conducted (e.g., no variables selected yet)
 		cat(result,"\n")
 	} else {
+		# pass analysis results to the summary function
+		f <- get(paste("summary",input$tool,sep = '.'))
 		f(result)
 	}
 })
@@ -219,11 +215,14 @@ output$plots <- renderPlot({
 	# plotting could be expensive so only done when tab is being viewed
 	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
 
-	f <- get(paste("plot",input$tool,sep = '.'))
+	# call analysis reactive
 	result <- get(input$tool)()
 	if(!is.character(result)) {
+		# pass analysis results to the plotting function
+		f <- get(paste("plot",input$tool,sep = '.'))
 		f(result)
 	} else {
+		# used when no analysis is conducted (e.g., no variables selected yet)
 		plot(x = 1, type = 'n', main="No variable selection made", axes = FALSE, xlab = "", ylab = "")
 	}
 }, width=700, height=700)

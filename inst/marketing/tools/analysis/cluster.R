@@ -1,4 +1,8 @@
-# variable selection - hclustering
+################################################################
+# Hierarchical clustering
+################################################################
+
+# ui
 output$hc_vars <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -20,6 +24,7 @@ ui_hclustering <- function() {
   )
 }
 
+# main functions called from radyant.R
 summary.hclustering <- function(result) {
 	result
 }
@@ -34,6 +39,7 @@ plot.hclustering <- function(result) {
 	plot(nr_of_clusters,height, xlab = "Nr of clusters", ylab = "Height", type = 'b')
 }
 
+# analysis reactive
 hclustering <- reactive({
 	if(is.null(input$hc_vars)) return("Please select one or more variables")
 
@@ -46,6 +52,7 @@ hclustering <- reactive({
 	hclust(d = dist.data, method= input$hc_meth)
 })
 
+
 observe({
 	if(is.null(input$hc_saveclus) || input$hc_saveclus == 0) return()
 	isolate({
@@ -53,6 +60,10 @@ observe({
 		changedata(as.factor(clusmem), paste("hclus",input$hc_nrClus,sep=""))
 	})
 })
+
+################################################################
+# Kmeans clustering
+################################################################
 
 output$km_vars <- renderUI({
   vars <- varnames()
@@ -86,29 +97,16 @@ summary.kmeansClustering <- function(result) {
 plot.kmeansClustering <- function(result) {
 	# several things to work on here to clean-up the plots
 	dat <- getdata()[,input$km_vars, drop = FALSE]
-	# gg.xlim <- quantile(as.vector(as.matrix(dat)),probs = c(.01,.99))
 	dat$clusvar <- as.factor(result$cluster)
 
 		plots <- list()
 		for(var in input$km_vars) {
-			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + xlim(gg.xlim[1],gg.xlim[2]) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
-			# plots[[var]] <- ggplot(dat, aes_string(x=var, colour='clusvar')) + geom_density(adjust = 2) + theme(axis.text.x = element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), axis.title.y=element_blank())
 			plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) 
 		}
 		print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 }
 
-hinitclustering <- reactive({
-	if(is.null(input$km_vars)) return("Please select one or more variables")
-	dat <- getdata()[,input$km_vars]
-	if(input$km_dist == "sq.euclidian") {
-		dist.data <- dist(dat, method = "euclidean")^2
-	} else {
-		dist.data <- dist(dat, method = input$km_dist)
-	}
-	hclust(d = dist.data, method= input$km_meth)
-})
-
+# analysis reactives
 kmeansClustering <- reactive({
 	if(is.null(input$km_vars)) return("Please select one or more variables")
 	set.seed(input$km_seed)
@@ -123,6 +121,18 @@ kmeansClustering <- reactive({
 	}
 })
 
+hinitclustering <- reactive({
+	if(is.null(input$km_vars)) return("Please select one or more variables")
+	dat <- getdata()[,input$km_vars]
+	if(input$km_dist == "sq.euclidian") {
+		dist.data <- dist(dat, method = "euclidean")^2
+	} else {
+		dist.data <- dist(dat, method = input$km_dist)
+	}
+	hclust(d = dist.data, method= input$km_meth)
+})
+
+# save cluster membership when action button is pressed
 observe({
 	if(is.null(input$km_saveclus) || input$km_saveclus == 0) return()
 	isolate({
