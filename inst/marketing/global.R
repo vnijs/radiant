@@ -4,8 +4,7 @@ options(width = 150, shiny.trace=TRUE)
 # options(width = 150)
 
 options(repos = c("http://cran.rstudio.com/"))
-libs <- c("shiny", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", 
-	"gridExtra", "reshape2", "plyr", "markdown", "R.utils", "psych", "rela", "arm", "xts")
+libs <- c("shiny", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", "gridExtra", "markdown", "R.utils", "psych", "rela", "arm", "xts", "plyr", "reshape")
 available <- suppressWarnings(suppressPackageStartupMessages(sapply(libs, require, character.only=TRUE)))
 inst.libs <- libs[available == FALSE]
 if(length(inst.libs) != 0) {
@@ -13,6 +12,7 @@ if(length(inst.libs) != 0) {
 	suppressWarnings(suppressPackageStartupMessages(sapply(inst.libs, require, character.only=TRUE)))
 }
 
+# including the action-button function. Check if included in latest version of Shiny
 actionButton <- function(inputId, label) {
   tagList(
     singleton(tags$head(tags$script(src = 'js/actionbutton.js'))),
@@ -74,16 +74,17 @@ load('data/packDataSets.rda')
 
 lastLoaded <- "" 		
 
+# function to render .Rmd files into html on-the-fly
 includeRmd <- function(path){
   if (!require(knitr))
     stop("knitr package is not installed")
   if (!require(markdown))
     stop("Markdown package is not installed")
   shiny:::dependsOnFile(path)
-  html <- knitr::knit2html(path, fragment.only = TRUE)
-  includeHTML(html)
-  # Encoding(html) <- 'UTF-8'
-  # HTML(html)
+  contents <- paste(readLines(path, warn = FALSE), collapse = '\n')
+  html <- knitr::knit2html(text = contents, fragment.only = TRUE)
+  Encoding(html) <- 'UTF-8'
+  HTML(html)
 }
 
 # Simulate a big data-file

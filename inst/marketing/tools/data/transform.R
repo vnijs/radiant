@@ -41,7 +41,6 @@ rfct <<- revFactorOrder
 num <<- as.numeric
 ch <<- as.character
 d <<- as.Date
-# trans_options <- list("Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Sum" = "sum", "Mean" = "mean", "Standardize" = "", "Center" = "" )
 trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", "Center" = "cent", "Standardize (1-sd)" = "st1", 
 	"Standardize (2-sd)" = "st2","Invert" = "inv", "Bin 2" = "bin2", "Bin10" = "bin10", "As factor" = "fct", "Rev factor order" = "rfct", "As number" = "num", "As character" = "ch", 
 	"As date" = "d")
@@ -85,7 +84,6 @@ transform <- reactive({
 		}
 	}
 
-
 	if(!is.null(input$tr_recode_sub) && !input$tr_recode_sub == 0) {
 		isolate({
 			if(input$tr_recode != '') {
@@ -95,20 +93,11 @@ transform <- reactive({
 				if(length(grep("system",recom)) > 0) q()
 				if(length(grep("rm\\(list",recom)) > 0) q()
 					
-				# use sendmail from the sendmailR package	-- sendmail('','vnijs@rady.ucsd.edu','test','test')
-				# first checking if recom is a valid expression
-				# parse_recom <- try(parse(text = recom)[[1]], silent = TRUE)
 				parse_recom <- try(parse(text = recom)[[1]], silent = FALSE)
 				if(!is(parse_recom, 'try-error')) {
 
-					# newvar <- try(eval(parse(text = paste("recode(",input$tr_columns[1],",",recom,")"))), silent = TRUE)
-					print(parse(text = paste("recode(",input$tr_columns[1],",\"",recom,"\")")))
-
 					newvarcom <- parse(text = paste("recode(",input$tr_columns[1],",\"",recom,"\")"))
-					print(newvarcom)
-					# newvar <- try(eval(parse(text = paste("recode(",input$tr_columns[1],",\"",recom,"\")"))), silent = FALSE)
 					newvar <- eval(newvarcom)
-					print(newvar)
 					newvar <- try(eval(newvarcom), silent = FALSE)
 					if(!is(newvar, 'try-error')) {
 
@@ -124,8 +113,6 @@ transform <- reactive({
 			}
 		})
 	}
-
-
 
 	if(input$tr_copyAndPaste != '') {
 		cpdat <- read.table(header=T, text=input$tr_copyAndPaste)
@@ -153,12 +140,11 @@ output$transform_data <- renderTable({
 	dat[max(1,nr-50):nr,, drop = FALSE]
 })
 
-# output$transform_summary <- renderTable({
 output$transform_summary <- renderPrint({
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return(invisible())
 
 	dat <- transform()
-	if(is.null(dat)) return(invisible()) 			# when might this happen?
+	if(is.null(dat)) return(invisible()) 			# ...
 
 	isFct <- sapply(dat, is.factor)
 	isNum <- sapply(dat, is.numeric)
@@ -181,7 +167,4 @@ observe({
 		dat <- transform()
 		changedata(dat, colnames(dat))
 	})
-
 })
-
-

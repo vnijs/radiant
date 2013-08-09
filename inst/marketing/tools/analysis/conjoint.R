@@ -120,7 +120,7 @@ output$ca_var2 <- renderUI({
 
 plot.conjoint <- function(result) {
 
-	theTable <- ca_theTable(conjoint())
+	theTable <- ca_theTable(result)
 
 	if(input$ca_plots == 'pw') {
 		PW.df <- theTable[['PW']]
@@ -131,7 +131,12 @@ plot.conjoint <- function(result) {
 
 			# setting the levels in the same order as in theTable. Without this
 			# ggplot would change the ordering of the price levels
-			PW.var$Levels <- factor(PW.var$Levels,levels=PW.var$Levels,ordered=FALSE)
+
+			# BROKEN!!! WTF!!! Try with MP3 data to see problem
+			# PW.var$Levels <- factor(PW.var$Levels,levels=PW.var$Levels,ordered=FALSE)
+			# from http://www.stat.berkeley.edu/classes/s133/factors.html
+
+			PW.var$Levels <- as.factor(PW.var$Levels)
 
 			# plot.ylim <- c(rangePW[var,'Min'],ceiling(rangePW[maxRangeInd,'Range']))
 			# plot.ylim[1] <- floor(plot.ylim[1])
@@ -153,36 +158,6 @@ plot.conjoint <- function(result) {
 		print(p)
 	}
 }
-
-# create all the interaction terms
-
-# with expand.grid you would get all combinations, including the x^2 ones
-
-# ca_int_vec <- function(ca_vars, nway) {
-# 	n <- length(ca_vars)
-# 	iway <- c()
-# 	for(i in 1:(n-1)) {
-# 		for(j in (i+1):n) {
-# 			iway <- c(iway, paste(ca_vars[i],ca_vars[j],sep=":"))
-# 		}
-# 	}
-# 	if(n >= 3 && nway == '3way') {
-# 		for(i in 1:(n-2)) {
-# 			for(j in (i+1):(n-1)) {
-# 				for(k in (j+1):n) {
-# 					iway <- c(iway, paste(ca_vars[i],ca_vars[j],ca_vars[k],sep=":"))
-# 				}
-# 			}
-# 		}
-# 	}
-# 	iway
-# }
-
-# output$ca_intsel <- renderUI({
-#   vars <- input$ca_var2
-#   if(is.null(vars) || length(vars) < 2) return()
-# 	selectInput("ca_intsel", label = "", choices = ca_int_vec(vars,input$ca_interactions), selected = NULL, multiple = TRUE)
-# })
 
 ca_plots <- list("Part-worths" = "pw", "Importance-weights" = "iw")
 
@@ -259,8 +234,8 @@ conjoint <- reactive({
 		ca_dep <- dat[,input$ca_var1]
 		dat[,input$ca_var1] <- abs(ca_dep - max(ca_dep)) + 1
 	}
-	mod <- lm(formula, data = dat)
-	mod
+	
+	lm(formula, data = dat)
 
 })
 

@@ -1,4 +1,8 @@
-# variable selection - GLM
+################################################################
+# OLS
+################################################################
+
+# ui
 output$glm_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -21,9 +25,49 @@ output$glm_var3 <- renderUI({
   selectInput(inputId = "glm_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
+output$glm_intsel <- renderUI({
+  vars <- input$glm_var2
+  if(is.null(vars) || length(vars) < 2) return()
+	selectInput("glm_intsel", label = "", choices = glm_int_vec(vars,input$glm_interactions), selected = NULL, multiple = TRUE)
+})
+
+ui_glmreg <- function() {
+  wellPanel(
+  	# includeHTML("www/js/tools.js"),
+    radioButtons(inputId = "glm_linkfunc", label = "", c("Logit" = "logit", "Probit" = "probit"), selected = "Logit"),
+    radioButtons(inputId = "glm_glmtype", label = "", c("GLM" = "glm", "Bayes GLM" = "bayesglm"), selected = "GLM"),
+    uiOutput("glm_var1"),
+    # HTML("<link href=\"js/select2/select2.css\" rel=\"stylesheet\"/> <script src=\"js/select2/select2.js\"></script> <script> $(document).ready(function() { $(\"#glm_var2\").select2({ minimumInputLength: 2, placeholder: \"Select interactions\", width: 'resolve' }); }); </script>"),
+    uiOutput("glm_var2"),
+ 	  checkboxInput(inputId = "glm_standardize", label = "Standardized coefficients", value = FALSE),
+    radioButtons(inputId = "glm_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
+  	# tags$head(tags$script(src = "www/js/tools.js")),
+    conditionalPanel(condition = "input.glm_interactions != 'none'",
+  		uiOutput("glm_intsel") 
+  	),
+    conditionalPanel(condition = "input.analysistabs == 'Summary'",
+	    uiOutput("glm_var3")
+  	),
+    conditionalPanel(condition = "input.analysistabs == 'Plots'",
+      selectInput("glm_plots", "Plots:", choices = gplots, selected = "coef", multiple = FALSE)
+    )
+    # actionButton("saveglmres", "Save residuals")
+  )
+}
+
+# main functions called from radyant.R
+summary.glmreg <- function(result) {
+	print(summary(result), digits = 2)
+	print(test.glmreg(result))
+
+	if(!is.null(input$glm_var3)) {
+		cat("\n")
+		test.glmreg(result, FALSE)
+	}
+}
+
 gplots <- list("Coefficient plot" = "coef", "Actual vs Fitted" = 0, "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
 	 "Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6)
-
 
 plot.glmreg <- function(result) {
 
@@ -71,87 +115,7 @@ plot.glmreg <- function(result) {
 	print(p)
 }
 
-# create all the interaction terms. might be better to use expand.grid (Blake's suggestion to include x1^2 and x2^2 as well)
-# do it if you can get select2 working for tools
-glm_int_vec <- function(glm_vars, nway) {
-	n <- length(glm_vars)
-	iway <- c()
-	for(i in 1:(n-1)) {
-		for(j in (i+1):n) {
-			iway <- c(iway, paste(glm_vars[i],glm_vars[j],sep=":"))
-		}
-	}
-	if(n >= 3 && nway == '3way') {
-		for(i in 1:(n-2)) {
-			for(j in (i+1):(n-1)) {
-				for(k in (j+1):n) {
-					iway <- c(iway, paste(glm_vars[i],glm_vars[j],glm_vars[k],sep=":"))
-				}
-			}
-		}
-	}
-	iway
-}
-
-output$glm_intsel <- renderUI({
-  vars <- input$glm_var2
-  if(is.null(vars) || length(vars) < 2) return()
-	selectInput("glm_intsel", label = "", choices = glm_int_vec(vars,input$glm_interactions), selected = NULL, multiple = TRUE)
-})
-
-ui_glmreg <- function() {
-  wellPanel(
-  	# includeHTML("www/js/tools.js"),
-    radioButtons(inputId = "glm_linkfunc", label = "", c("Logit" = "logit", "Probit" = "probit"), selected = "Logit"),
-    radioButtons(inputId = "glm_glmtype", label = "", c("GLM" = "glm", "Bayes GLM" = "bayesglm"), selected = "GLM"),
-    uiOutput("glm_var1"),
-    # HTML("<link href=\"js/select2/select2.css\" rel=\"stylesheet\"/> <script src=\"js/select2/select2.js\"></script> <script> $(document).ready(function() { $(\"#glm_var2\").select2({ minimumInputLength: 2, placeholder: \"Select interactions\", width: 'resolve' }); }); </script>"),
-    uiOutput("glm_var2"),
- 	  checkboxInput(inputId = "glm_standardize", label = "Standardized coefficients", value = FALSE),
-    radioButtons(inputId = "glm_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
-  	# tags$head(tags$script(src = "www/js/tools.js")),
-    conditionalPanel(condition = "input.glm_interactions != 'none'",
-  		uiOutput("glm_intsel") 
-  	),
-    conditionalPanel(condition = "input.analysistabs == 'Summary'",
-	    uiOutput("glm_var3")
-  	),
-    conditionalPanel(condition = "input.analysistabs == 'Plots'",
-      selectInput("glm_plots", "Plots:", choices = gplots, selected = "coef", multiple = FALSE)
-    )
-    # actionButton("saveglmres", "Save residuals")
-  )
-}
-
-test.glmreg <- function(result, modeleval = TRUE) {
-
-	dat <- getdata()
-	dv <- which(colnames(dat) == input$glm_var1)
-	if(input$glm_standardize) dat[,-dv] <- data.frame(lapply(dat[,-dv, drop = FALSE],rescale))
-
-	sub_formula <- ". ~ 1"
-	if(modeleval == FALSE) {
-		vars <- input$glm_var2
-		if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
-		not_selected <- setdiff(vars,input$glm_var3)
-		if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
-	}
-
-	glm_sub <- update(result, sub_formula)
-	anova(glm_sub, result, test='Chi')
-}
-
-# analysis functions
-summary.glmreg <- function(result) {
-	print(summary(result), digits = 2)
-	print(test.glmreg(result))
-
-	if(!is.null(input$glm_var3)) {
-		cat("\n")
-		test.glmreg(result, FALSE)
-	}
-}
-
+# analysis reactive
 glmreg <- reactive({
 
 	vars <- input$glm_var2
@@ -171,9 +135,52 @@ glmreg <- reactive({
 	mod
 })
 
+# save residuals
 observe({
 	if(is.null(input$saveglmres) || input$saveglmres == 0) return()
 	isolate(
 		changedata(residuals(glmreg()), "residuals")
  	)
 })
+
+# additional functions
+glm_int_vec <- function(glm_vars, nway) {
+	# create all the interaction terms. might be better to use expand.grid (Blake's suggestion to include x1^2 and x2^2 as well)
+	# do it if you can get select2 working for tools
+
+	n <- length(glm_vars)
+	iway <- c()
+	for(i in 1:(n-1)) {
+		for(j in (i+1):n) {
+			iway <- c(iway, paste(glm_vars[i],glm_vars[j],sep=":"))
+		}
+	}
+	if(n >= 3 && nway == '3way') {
+		for(i in 1:(n-2)) {
+			for(j in (i+1):(n-1)) {
+				for(k in (j+1):n) {
+					iway <- c(iway, paste(glm_vars[i],glm_vars[j],glm_vars[k],sep=":"))
+				}
+			}
+		}
+	}
+	iway
+}
+
+test.glmreg <- function(result, modeleval = TRUE) {
+
+	dat <- getdata()
+	dv <- which(colnames(dat) == input$glm_var1)
+	if(input$glm_standardize) dat[,-dv] <- data.frame(lapply(dat[,-dv, drop = FALSE],rescale))
+
+	sub_formula <- ". ~ 1"
+	if(modeleval == FALSE) {
+		vars <- input$glm_var2
+		if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
+		not_selected <- setdiff(vars,input$glm_var3)
+		if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
+	}
+
+	glm_sub <- update(result, sub_formula)
+	anova(glm_sub, result, test='Chi')
+}

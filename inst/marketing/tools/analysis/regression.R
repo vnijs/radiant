@@ -1,3 +1,8 @@
+################################################################
+# OLS
+################################################################
+
+# ui
 output$reg_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -18,9 +23,53 @@ output$reg_var3 <- renderUI({
   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, selected = NULL, multiple = TRUE)
 })
 
+output$reg_intsel <- renderUI({
+  vars <- input$reg_var2
+  if(is.null(vars) || length(vars) < 2) return()
+	selectInput("reg_intsel", label = "", choices = reg_int_vec(vars,input$reg_interactions), selected = NULL, multiple = TRUE)
+})
+
+ui_regression <- function() {
+  wellPanel(
+  	tags$head(tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }")),
+    uiOutput("reg_var1"),
+    uiOutput("reg_var2"),
+  	checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients", value = FALSE),
+    radioButtons(inputId = "reg_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
+    conditionalPanel(condition = "input.reg_interactions != 'none'",
+  		uiOutput("reg_intsel")
+  	),
+    conditionalPanel(condition = "input.analysistabs == 'Summary'",
+	    uiOutput("reg_var3"),
+	    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values", value = FALSE),
+  	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise", value = FALSE)
+  	),
+    conditionalPanel(condition = "input.analysistabs == 'Plots'",
+      selectInput("reg_plots", "Regression plots:", choices = r_plots, selected = 'coef', multiple = FALSE)
+    ),
+    actionButton("saveres", "Save residuals")
+  )
+}
+
+# main functions called from radyant.R
 r_plots <- list("Coefficient plot" = "coef", "Actual vs Fitted" = 0, "Residuals vs Fitted" = 1, "Normal Q-Q" = 2, "Scale-Location" = 3,
 	"Cook's distance" = 4, "Residuals vs Leverage" = 5, "Cook's distance vs Leverage" = 6
 )
+
+summary.regression <- function(result) {
+	print(summary(result), digits = 3)
+	if(input$reg_vif) {
+		print(vif.regression(result))
+		cat("\n")
+	} 
+	if(!is.null(input$reg_var3)) {
+		if(!input$reg_stepwise) {
+			test.regression(result)
+		} else {
+	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
+	  }
+	}
+}
 
 plot.regression <- function(result) {
 	mod <- fortify(result)
@@ -65,7 +114,34 @@ plot.regression <- function(result) {
 	print(p)
 }
 
-# create all the interaction terms
+# analysis reactive
+regression <- reactive({
+	vars <- input$reg_var2
+	if(is.null(vars)) return("Please select one or more independent variables")
+	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
+
+	formula <- paste(input$reg_var1, "~", paste(vars, collapse = " + "))
+	dat <- getdata()
+	if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
+	if(input$reg_stepwise) {
+		mod <- step(lm(as.formula(paste(input$reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
+	} else {
+		mod <- lm(formula, data = dat)
+	}
+	mod
+})
+
+# save residuals
+observe({
+	if(is.null(input$saveres) || input$saveres == 0) return()
+	isolate({
+		changedata(regression()$residuals, "residuals")
+	})
+})
+
+################################################################
+# Additional functions
+################################################################
 reg_int_vec <- function(reg_vars, nway) {
 	n <- length(reg_vars)
 	iway <- c()
@@ -84,34 +160,6 @@ reg_int_vec <- function(reg_vars, nway) {
 		}
 	}
 	iway
-}
-
-output$reg_intsel <- renderUI({
-  vars <- input$reg_var2
-  if(is.null(vars) || length(vars) < 2) return()
-	selectInput("reg_intsel", label = "", choices = reg_int_vec(vars,input$reg_interactions), selected = NULL, multiple = TRUE)
-})
-
-ui_regression <- function() {
-  wellPanel(
-  	tags$head(tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }")),
-    uiOutput("reg_var1"),
-    uiOutput("reg_var2"),
-  	checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients", value = FALSE),
-    radioButtons(inputId = "reg_interactions", label = "Interactions:", c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way"), selected = "None"),
-    conditionalPanel(condition = "input.reg_interactions != 'none'",
-  		uiOutput("reg_intsel")
-  	),
-    conditionalPanel(condition = "input.analysistabs == 'Summary'",
-	    uiOutput("reg_var3"),
-	    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values", value = FALSE),
-  	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise", value = FALSE)
-  	),
-    conditionalPanel(condition = "input.analysistabs == 'Plots'",
-      selectInput("reg_plots", "Regression plots:", choices = r_plots, selected = 'coef', multiple = FALSE)
-    ),
-    actionButton("saveres", "Save residuals")
-  )
 }
 
 vif.regression <- function(result) {
@@ -141,54 +189,3 @@ test.regression <- function(result) {
 	anova(reg_sub, result, test='F')
 }
 
-summary.regression <- function(result) {
-	print(summary(result), digits = 3)
-	if(input$reg_vif) {
-		print(vif.regression(result))
-		cat("\n")
-	} 
-	if(!is.null(input$reg_var3)) {
-		if(!input$reg_stepwise) {
-			test.regression(result)
-		} else {
-	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
-	  }
-	}
-}
-
-regression <- reactive({
-	vars <- input$reg_var2
-	if(is.null(vars)) return("Please select one or more independent variables")
-	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
-
-	formula <- paste(input$reg_var1, "~", paste(vars, collapse = " + "))
-	dat <- getdata()
-	if(input$reg_standardize) dat <- data.frame(lapply(dat,rescale))
-	if(input$reg_stepwise) {
-		mod <- step(lm(as.formula(paste(input$reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
-	} else {
-		mod <- lm(formula, data = dat)
-	}
-	mod
-})
-
-observe({
-	if(is.null(input$saveres) || input$saveres == 0) return()
-	isolate({
-		changedata(regression()$residuals, "residuals")
-	})
-})
-
-# out <- function(outputId = "summary") {
-#   if(class(output[[outputId]]) == 'xtable') {
-# 	  pre(id = outputId, class = "shiny-text-output")
-# 	 } else {
-# 	  div(id = outputId, class = "shiny-html-output")
-#   }
-# }
-
-# output$plotswhich <- renderPlot({
-# 	if(input$tool == 'dataview' || input$analysistabs != 'Plots') return()
-# 	# 'traditional' residual plots for lm
-# 	plot(regression(), which = as.integer(input$reg_plots))
-# }, width=800, height=800)

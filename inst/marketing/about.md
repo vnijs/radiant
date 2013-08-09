@@ -1,4 +1,4 @@
-## Radyant - Marketing analytics using Shiny
+# Radyant - Marketing analytics using Shiny
 
 Version 0.09 (2/17/2013)
 

@@ -1,6 +1,6 @@
 getTool <- function(inputId) {
   tagList(
-    singleton(tags$head(tags$script(src = "js/navbar.js"))),
+    tags$head(tags$script(src = "js/navbar.js")),
     tags$html(includeHTML('www/navbar.html'))
   )
 }
@@ -24,7 +24,7 @@ shinyUI(
         tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
       ),
 
-      includeHTML("www/js/tools.js"),
+      includeHTML("www/js/sel2.js"),
       includeHTML('www/js/lr.js'), 
       getTool("tool"),
 
@@ -37,9 +37,7 @@ shinyUI(
         conditionalPanel(condition = "input.datatabs == 'View'",
           wellPanel(
             HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
-            # actionButton("upload", "Choose a file"),
-            uiOutput("upload_local_server"), 
-            br(), 
+            actionButton("upload", "Choose a file"), br(), br(),
             selectInput(inputId = "packData", label = "Load package data:", choices = packDataSets, selected = '', multiple = FALSE)
           )
         ),
@@ -61,10 +59,9 @@ shinyUI(
         )
       ),
       conditionalPanel(condition = "input.tool != 'dataview'",
-        # the appropriate analysis tool is called based on the selected tool
+        # the appropriate analysis code called based on the selection from the navbar
         uiOutput("ui_analysis")
       )
-      # HTML("<a class='btn' href='/'>Refresh</a>")
     ),
     
     mainPanel(
@@ -85,15 +82,12 @@ shinyUI(
             tabPanel("Summarize", HTML('<label>Summarize and explore your data using plyr, reshape, etc.<br>In progress. Check back soon.</label>')),
             tabPanel("Visualize", plotOutput("visualize", height = "100%")),
             tabPanel("About", includeMarkdown("about.md"))
-            # tabPanel("About", includeRmd("about_formulas.Rmd"))
           )
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",
           tabsetPanel(id = "analysistabs",
             tabPanel("Summary", verbatimTextOutput("summary")),
-            # Use Summarize / Vizualize labels here?
             tabPanel("Plots", plotOutput("plots", height = "100%"))
-            # tabPanel("Log", verbatimTextOutput('logwork'))
           )
         )
       )

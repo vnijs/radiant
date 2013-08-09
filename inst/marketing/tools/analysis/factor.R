@@ -93,7 +93,7 @@ summary.factor <- function(result) {
 	cat("\nFactor scores\n\n")
 	scores <- as.data.frame(result$scores)
 	print(scores, digits = 3)
-	print(str(result))
+	# print(str(result))
 }
 
 plot.factor <- function(result) {
@@ -106,7 +106,9 @@ plot.factor <- function(result) {
 		abline(v = 0, h = 0)
 	}
 
-	if(result$factors > 1) {
+	# if(result$factors > 1) {
+	if(result$factors < 1) {
+	# plot not done so not use yet
 
 		x = 1:ncol(df)
 		y = 1:nrow(df)

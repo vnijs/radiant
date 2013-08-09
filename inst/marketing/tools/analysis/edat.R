@@ -143,8 +143,8 @@ summary.singleProp <- function(result) {
 plot.singleProp <- function(result) {
 
 	var <- input$sp_var
-	dat <- getdata()[,var]
-	p <- qplot(factor(dat), fill = factor(dat)) + geom_bar(alpha = .5) + theme(legend.position = "none") +
+	dat <- as.factor(getdata()[,var])
+	p <- qplot(dat, fill = dat) + geom_bar(alpha = .5) + theme(legend.position = "none") +
 	# p <- qplot(factor(dat)) + geom_bar(fill = 'red', alpha=.1) + theme(legend.position = "none") +
 		labs(list(title = paste("Single proportion -",var), x = "Factor levels", y = "Count"))
 	print(p)
@@ -254,7 +254,8 @@ summary.compareProps <- function(result) {
 plot.compareProps <- function(result) {
 
 	dat <- getdata()[,c(input$cp_var1,input$cp_var2)]
-	p <- qplot(factor(dat[,1]), color = 'black', fill = factor(dat[,2])) + geom_bar(alpha = .5) + 
+	# p <- qplot(as.factor(dat[,1]), color = 'black', fill = as.factor(dat[,2])) + geom_bar(alpha = .5) + 
+	p <- qplot(as.factor(dat[,1]), fill = as.factor(dat[,2])) + geom_bar(alpha = .5) + 
 		labs(list(title = paste("Comparing proportions of ",input$cp_var2,"$",levels(dat[,1])[1], " across levels of ",input$cp_var1, sep = ""), 
 							x = paste("Factor levels for ", input$cp_var1), y = "Count", fill = input$cp_var2))
 
@@ -362,7 +363,7 @@ plot.crosstab <- function(result) {
 		melt(cbind(lab,tab))
 	}
 
-	plots[['observed']] <- qplot(factor(dat[,1]), fill = factor(dat[,2])) + geom_bar(alpha = .5) + 
+	plots[['observed']] <- qplot(as.factor(dat[,1]), fill = as.factor(dat[,2])) + geom_bar(alpha = .5) + 
 							labs(list(title = paste("Crosstab of ",input$ct_var2," versus ",input$ct_var1, sep = ""), 
 							x = '', y = "Count", fill = input$ct_var2))
 

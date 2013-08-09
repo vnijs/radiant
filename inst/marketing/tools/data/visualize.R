@@ -10,7 +10,6 @@ output$vizvars1 <- renderUI({
 output$vizvars2 <- renderUI({
 	cols <- varnames()
 	if(is.null(cols)) return()
-	# selectInput(inputId = "vizvars2", label = "Y-variable", choices = as.list(cols[-which(cols == input$vizvars1)]), selected = NULL, multiple = TRUE)
 	selectInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "",as.list(cols[-which(cols == input$vizvars1)])), selected = "", multiple = FALSE)
 })
 
@@ -53,7 +52,6 @@ output$visualize <- renderPlot({
 		}
 
     if (input$viz_color != '') {
-    	# p <- p + aes_string(color=input$viz_color) + scale_colour_gradient(colors=rainbow(4))
     	p <- p + aes_string(color=input$viz_color) + scale_fill_brewer()
     }
 
@@ -61,16 +59,14 @@ output$visualize <- renderPlot({
     if (facets != '. ~ .')
       p <- p + facet_grid(facets)
     
-    if (input$viz_jitter)
-      p <- p + geom_jitter()
-    if (input$viz_smooth)
-      p <- p + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
+    if (input$viz_jitter) p <- p + geom_jitter()
+    if (input$viz_smooth) p <- p + geom_smooth(method = "lm", size = .75, linetype = "dotdash")
     
     print(p)
 
 }, width = 700, height = 700)
 
-# will be used in ui.R
+# used in ui.R. Structure relevant for (future) modularization
 output$ui_visualize <- renderUI({
 	ui_visualize()
 })
