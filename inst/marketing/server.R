@@ -3,8 +3,9 @@ shinyServer(function(input, output) {
 	# source base functions
 	source('radyant.R', local = TRUE)
 
-	# source analysis tools
-	flist <- sourceDirectory('tools', recursive = TRUE)
+	# source data & analysis tools
+	flist_analysis <- sourceDirectory('tools/analysis', recursive = TRUE)
+	flist_data <- sourceDirectory('tools/data', recursive = TRUE)
 
 	# analysis ui-element caller
 	output$ui_analysis <- renderUI({

@@ -80,11 +80,18 @@ includeRmd <- function(path){
     stop("knitr package is not installed")
   if (!require(markdown))
     stop("Markdown package is not installed")
-  shiny:::dependsOnFile(path)
+  # shiny:::dependsOnFile(path)
   contents <- paste(readLines(path, warn = FALSE), collapse = '\n')
   html <- knitr::knit2html(text = contents, fragment.only = TRUE)
   Encoding(html) <- 'UTF-8'
   HTML(html)
+}
+
+helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), trigger=c('click', 'hover', 'focus', 'manual')) {
+  tagList(
+    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
+    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content, `data-animation` = TRUE, `data-placement` = match.arg(placement, several.ok=TRUE)[1], `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
+  )
 }
 
 # Simulate a big data-file

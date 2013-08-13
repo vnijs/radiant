@@ -21,6 +21,7 @@ shinyUI(
         tags$style(type="text/css", ".jslider { max-width: 200px; }"),
         tags$style(type='text/css', ".well { padding: 12px; margin-bottom: 5px; max-width: 280px; }"),
         tags$style(type='text/css', ".span4 { max-width: 280px; }"),
+        tags$style(type='text/css', ".popover { width: 600px; }"),
         tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
       ),
 
@@ -49,19 +50,23 @@ shinyUI(
             tags$style(type='text/css', "#dv_select { max-width: 135px; }"),
             tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
             uiOutput("nrRows")
-          )
+          ),
+          helpPopup('View',includeRmd("help/view.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
-          uiOutput("ui_visualize")
+          uiOutput("ui_visualize"),
+          helpPopup('Visualize',includeRmd("help/view.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Transform'",
-          uiOutput("ui_transform")
+          uiOutput("ui_transform"),
+          helpPopup('Transform',includeRmd("help/view.Rmd"))
         )
       ),
       conditionalPanel(condition = "input.tool != 'dataview'",
         # the appropriate analysis code called based on the selection from the navbar
         uiOutput("ui_analysis")
       )
+
     ),
     
     mainPanel(
