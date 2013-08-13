@@ -21,7 +21,8 @@ shinyUI(
         tags$style(type="text/css", ".jslider { max-width: 200px; }"),
         tags$style(type='text/css', ".well { padding: 12px; margin-bottom: 5px; max-width: 280px; }"),
         tags$style(type='text/css', ".span4 { max-width: 280px; }"),
-        tags$style(type='text/css', ".popover { width: 600px; }"),
+        tags$style(type='text/css', ".popover { width: 600px; position: relative; top: -75px !important; left: 320px !important; }"),
+        # tags$style(type='text/css', ".modal { width: 800px; }"),
         tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
       ),
 
@@ -51,15 +52,16 @@ shinyUI(
             tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
             uiOutput("nrRows")
           ),
-          helpPopup('View',includeRmd("help/view.Rmd"))
+          helpPopup('View',includeRmd("tools/help/view.Rmd"))
+          # helpPopup('View',includeHTML("tools/help/view.html"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           uiOutput("ui_visualize"),
-          helpPopup('Visualize',includeRmd("help/view.Rmd"))
+          helpPopup('Visualize',includeRmd("tools/help/view.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Transform'",
           uiOutput("ui_transform"),
-          helpPopup('Transform',includeRmd("help/view.Rmd"))
+          helpPopup('Transform',includeRmd("tools/help/view.Rmd"))
         )
       ),
       conditionalPanel(condition = "input.tool != 'dataview'",
@@ -86,7 +88,8 @@ shinyUI(
             ),
             tabPanel("Summarize", HTML('<label>Summarize and explore your data using plyr, reshape, etc.<br>In progress. Check back soon.</label>')),
             tabPanel("Visualize", plotOutput("visualize", height = "100%")),
-            tabPanel("About", includeMarkdown("about.md"))
+            tabPanel("About", includeRmd("tools/help/view.Rmd"))
+            # tabPanel("About", includeMarkdown("about.md"))
           )
         ),
         conditionalPanel(condition = "input.tool != 'dataview'",

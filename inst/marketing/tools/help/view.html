@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Text basics</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+</head>
+
+<body>
+<h2>Text basics</h2>
+
+<p>this is <em>italic</em> and this is <strong>bold</strong> .  another <em>italic</em> and another <strong>bold</strong> and this is <code>important</code> text.</p>
+
+<h2>Indentation</h2>
+
+<blockquote>
+<p>Here is some indented text</p>
+
+<blockquote>
+<p>even more indented</p>
+</blockquote>
+</blockquote>
+
+<h2>Titles</h2>
+
+<h1>Big title (h1)</h1>
+
+<h2>Middle title (h2)</h2>
+
+<h3>Smaller title (h3)</h3>
+
+<h4>and so on (hX)</h4>
+
+<h5>and so on (hX)</h5>
+
+<h6>and so on (hX)</h6>
+
+<h2>Example lists (1)</h2>
+
+<ul>
+<li>bullets can be <code>-</code>, <code>+</code>, or <code>*</code></li>
+<li>bullet list 1</li>
+<li><p>bullet list 2</p>
+
+<ul>
+<li>sub item 1</li>
+<li><p>sub item 2</p>
+
+<p>with indented text inside</p></li>
+</ul></li>
+<li><p>bullet list 3</p></li>
+<li><p>bullet list 4</p></li>
+<li><p>bullet list 5</p></li>
+</ul>
+
+<h2>Links</h2>
+
+<p>This is an <a href="http://lmgtfy.com/">example inline link</a> and <a href="http://lmgtfy.com/" title="Hello, world">another one with a title</a>.</p>
+
+<p>Links can also be reference based : <a href="http://revolunet.com">reference 1</a> or <a href="http://revolunet.com" title="rich web apps">reference 2 with title</a>.</p>
+
+<p>References are usually placed at the bottom of the document</p>
+
+<h2>Images</h2>
+
+<p>A sample image :</p>
+
+<p><img src="http://www.revolunet.com/static/parisjs8/img/logo-revolunet-carre.jpg" alt="revolunet logo" title="revolunet logo"/></p>
+
+<p>As links, images can also use references instead of inline links :</p>
+
+<p><img src="http://www.revolunet.com/static/parisjs8/img/logo-revolunet-carre.jpg" alt="revolunet logo" title="revolunet logo"/></p>
+
+<h2>Code</h2>
+
+<p>It&#39;s quite easy to show code in markdown files.</p>
+
+<p>Backticks can be used to <code>highlight</code> some words.</p>
+
+<p>Also, any indented block is considered a code block.  </p>
+
+<h2>Math</h2>
+
+<p>Alternatively, math can be written on its own line:</p>
+
+<p>\[ y_t = \alpha + \beta X + \epsilon_t \]</p>
+
+<p>An inline version looks like this: \( y_t = \alpha + \beta X + \epsilon_t \)</p>
+
+<h3>Tables</h3>
+
+<table><thead>
+<tr>
+<th>Year</th>
+<th>Temperature (low)</th>
+<th>Temperature (high)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1900</td>
+<td>-10</td>
+<td>25</td>
+</tr>
+<tr>
+<td>1910</td>
+<td>-15</td>
+<td>30</td>
+</tr>
+<tr>
+<td>1920</td>
+<td>-10</td>
+<td>32</td>
+</tr>
+</tbody></table>
+
+<h2>About</h2>
+
+<p>This plugin and this sample file is proudly brought to you by the <a href="http://revolunet.com">revolunet team</a></p>
+
+</body>
+
+</html>
+
