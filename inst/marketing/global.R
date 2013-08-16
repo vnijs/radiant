@@ -12,26 +12,6 @@ if(length(inst.libs) != 0) {
 	suppressWarnings(suppressPackageStartupMessages(sapply(inst.libs, require, character.only=TRUE)))
 }
 
-# including the action-button function. Check if included in latest version of Shiny
-actionButton <- function(inputId, label) {
-  tagList(
-    singleton(tags$head(tags$script(src = 'js/actionbutton.js'))),
-    tags$button(id=inputId, type="button", class="btn action-button", label)
-  )
-}
-
-helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), 
-  trigger=c('click', 'hover', 'focus', 'manual')) {
-
-  tagList(
-    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
-    # singleton(tags$head(tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript'))),
-    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
-      `data-placement` = match.arg(placement, several.ok=TRUE)[1], 
-      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
-  )
-}
-
 # setting up a few standard datasets to play with 
 mtcars$vs <- as.factor(mtcars$vs)
 mtcars$am <- as.factor(mtcars$am)

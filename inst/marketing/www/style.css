@@ -1,0 +1,64 @@
+label.radio { 
+  display: inline-block; 
+}
+
+.radio input[type="radio"] { 
+  float: none; 
+}
+
+select { 
+  max-width: 200px; 
+}
+
+textarea { 
+  max-width: 185px; 
+}
+
+.jslider { 
+  max-width: 200px; 
+}
+
+.well { 
+  padding: 12px; 
+  margin-bottom: 5px; 
+  max-width: 280px; 
+}
+
+.span4 { 
+  max-width: 280px; 
+}
+
+.popover { 
+  template: '<div class="popover" style="width: 300px"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>';
+  width: 600px; 
+  position: relative; top: -75px !important; 
+  left: 320px !important; 
+}
+
+/*.chart_container {
+  position: relative;
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.rChart {
+  display: inline-block;
+  margin-left: 40px;
+}
+.yAxis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+}
+.legend {
+  position: absolute;
+  top: 0;
+  right: -160px;
+  vertical-align: top;
+}
+.slider {
+  margin-left: 40px;
+  margin-top: 12px;
+}
+*/
+

@@ -12,8 +12,8 @@ ui_singleMean <- function() {
     uiOutput("sm_var"),
     selectInput(inputId = "sm_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
     sliderInput('sm_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
-    numericInput("sm_compValue", "Comparison value:", 0),
-  	helpPopup('Single mean',includeRmd("tools/help/view.Rmd"))
+    numericInput("sm_compValue", "Comparison value:", 0)
+  	# helpPopup('Single mean',includeRmd("tools/help/view.Rmd"))
   )
   # make a list here if you want the help file to fall outside the well-panel
 }

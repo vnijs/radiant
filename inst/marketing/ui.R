@@ -5,6 +5,17 @@ getTool <- function(inputId) {
   )
 }
 
+helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), 
+  trigger=c('click', 'hover', 'focus', 'manual')) {
+
+  tagList(
+    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
+    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
+      `data-placement` = match.arg(placement, several.ok=TRUE)[1], 
+      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
+  )
+}
+
 shinyUI(
 
   pageWithSidebar(
@@ -15,13 +26,7 @@ shinyUI(
     sidebarPanel(
 
       tags$head(
-        tags$style(type="text/css", "label.radio { display: inline-block; }", ".radio input[type=\"radio\"] { float: none; }"),
-        tags$style(type="text/css", "select { max-width: 200px; }"),
-        tags$style(type="text/css", "textarea { max-width: 185px; }"),
-        tags$style(type="text/css", ".jslider { max-width: 200px; }"),
-        tags$style(type='text/css', ".well { padding: 12px; margin-bottom: 5px; max-width: 280px; }"),
-        tags$style(type='text/css', ".span4 { max-width: 280px; }"),
-        tags$style(type='text/css', ".popover { html: true; width: 600px; position: relative; top: -75px !important; left: 320px !important; }"),
+        tags$link(rel="stylesheet", type="text/css", href="style.css"),
         tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
       ),
 
@@ -37,11 +42,8 @@ shinyUI(
       conditionalPanel(condition = "input.tool == 'dataview'",
         conditionalPanel(condition = "input.datatabs == 'View'",
           wellPanel(
-            # HTML("<label>Load data: (.rda | .csv | .sav | .dta)</label>"),
-            # actionButton("upload", "Choose a file"), br(), br(),
 
             radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", ".xls" = "xls"), selected = ".rda"),
-
             conditionalPanel(condition = "input.dataType != 'xls'",
               conditionalPanel(condition = "input.dataType == 'csv'",
                 checkboxInput('header', 'Header', TRUE),
