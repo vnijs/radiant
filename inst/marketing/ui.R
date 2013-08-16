@@ -5,18 +5,6 @@ getTool <- function(inputId) {
   )
 }
 
-helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), 
-  trigger=c('click', 'hover', 'focus', 'manual')) {
-
-  tagList(
-    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
-    # singleton(tags$head(tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript'))),
-    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
-      `data-placement` = match.arg(placement, several.ok=TRUE)[1], 
-      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
-  )
-}
-
 shinyUI(
 
   pageWithSidebar(
