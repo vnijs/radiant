@@ -23,10 +23,10 @@ getdata <- function(dataset = input$datasets) {
   values[[dataset]]
 }	
 
-loadUserData <- function(uFile) {
+loadUserData <- function(filename, uFile, type) {
 
-	ext <- file_ext(uFile)
-	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
+	ext <- file_ext(filename)
+	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(filename))
 	ext <- tolower(ext)
 
 	if(ext == 'rda' || ext == 'rdata') {
@@ -42,11 +42,11 @@ loadUserData <- function(uFile) {
 	}
 
 	if(ext == 'sav') {
-		values[[objname]] <- read.sav(uFile)
+		values[[objname]] <- as.data.frame(as.data.set(spss.system.file(uFile)))
 	} else if(ext == 'dta') {
 		values[[objname]] <- read.dta(uFile)
 	} else if(ext == 'csv') {
-		values[[objname]] <- read.csv(uFile)
+		values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
 	}
 }
 
@@ -73,14 +73,6 @@ loadPackData <- function(pFile) {
 #################################################
 # reactive functions used in radyant
 #################################################
-uploadfunc <- reactive({
-
-  if(input$upload == 0) return("")
- 	fpath <- try(file.choose(), silent = TRUE)
-
- 	if(is(fpath, 'try-error')) fpath <- ""
-  fpath
-})
 
 output$downloadData <- downloadHandler(
 	filename = function() { paste(input$datasets[1],'.',input$saveAs, sep='') },
@@ -88,12 +80,13 @@ output$downloadData <- downloadHandler(
 
 	  ext <- input$saveAs
 	  robj <- input$datasets[1]
-	  assign(robj, getdata())
 
-		if(ext == 'rda' || ext == 'rdata') {
+	  # only save selected columns
+	  assign(robj, getdata()[,input$columns])
+
+		if(ext == 'rda') {
 	    save(list = robj, file = file)
-		} 
-		else if(ext == 'dta') {
+		} else if(ext == 'dta') {
 			write.dta(get(robj), file)
 		} else if(ext == 'csv') {
 			write.csv(get(robj), file)
@@ -103,17 +96,29 @@ output$downloadData <- downloadHandler(
 
 output$datasets <- renderUI({
 
-	fpath <- uploadfunc()
-	# loading user data
-	if(fpath != "") loadUserData(fpath)
+  inFile <- input$uploadfile
 
-	# loading package data
-	if(input$packData != "") {
-		if(input$packData != lastLoaded) {
-			loadPackData(input$packData)
-			lastLoaded <<- input$packData 
-		}
+  if(!is.null(inFile)) {
+		# print(str(inFile))
+		loadUserData(inFile$name, inFile$datapath, input$dataType)
+  }
+
+  # if(!is.null(input$xls_paste)) {
+  if(input$xls_paste != '') {
+		values[['xls-data']] <- read.table(header=T, text=input$xls_paste)
+
+		datasets <<- unique(c('xls-data',datasets))
+		# input[['xls_paste']] = ''
 	}
+
+	# # loading package data
+	# if(input$packData != "") {
+	# 	if(input$packData != lastLoaded) {
+	# 		loadPackData(input$packData)
+	# 		lastLoaded <<- input$packData 
+	# 	}
+	# }
+
 	# Drop-down selection of data set
 	selectInput(inputId = "datasets", label = "Datasets:", choices = datasets, selected = datasets[1], multiple = FALSE)
 })

@@ -1,3 +1,11 @@
+## Math
+
+Alternatively, math can be written on its own line:
+
+$$y_t = \alpha + \beta X + \epsilon_t$$
+
+An inline version looks like this: $y_t = \alpha + \beta X + \epsilon_t$
+
 ## Text basics
 this is *italic* and this is **bold** .  another _italic_ and another __bold__ and this is `important` text.
 
@@ -54,13 +62,7 @@ Backticks can be used to `highlight` some words.
 
 Also, any indented block is considered a code block.  
 
-## Math
 
-Alternatively, math can be written on its own line:
-
-$$y_t = \alpha + \beta X + \epsilon_t$$
-
-An inline version looks like this: $y_t = \alpha + \beta X + \epsilon_t$
 
 ### Tables
 

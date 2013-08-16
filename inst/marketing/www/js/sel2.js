@@ -3,4 +3,5 @@
 <script>
     $(document).ready(function() { $("#packData").select2({ width: 'resolve', placeholder: "Choose a file" }); });
     // $(document).ready(function() { $("#glm_intsel").select2({ width: 'resolve' }); });
+    // script to use select2 inputs in shiny
 </script>

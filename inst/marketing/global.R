@@ -1,7 +1,7 @@
 # avoid breaks in R-output print and show JSON packets transferred
 # over websockets
 options(width = 150, shiny.trace=TRUE)
-# options(width = 150)
+options(shiny.maxRequestSize=1000*1024^2)
 
 options(repos = c("http://cran.rstudio.com/"))
 libs <- c("shiny", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", "gridExtra", "markdown", "R.utils", "psych", "rela", "arm", "xts", "plyr", "reshape")
@@ -87,19 +87,6 @@ includeRmd <- function(path){
   HTML(html)
 }
 
-helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), 
-  trigger=c('click', 'hover', 'focus', 'manual')) {
-
-  tagList(
-    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
-    # singleton(tags$head(tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript'))),
-    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content, 
-      `data-html` = TRUE, 
-      `data-placement` = match.arg(placement, several.ok=TRUE)[1], 
-      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
-  )
-}
-
 helpPopupOld <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), trigger=c('click', 'hover', 'focus', 'manual')) {
   tagList(
 
@@ -109,15 +96,18 @@ helpPopupOld <- function(title, content, placement=c('right', 'top', 'left', 'bo
   )
 }
 
-# helpModal <- function(title, content, trigger=c('click', 'hover', 'focus', 'manual')) {
+# helpModal <- function(title, content) {
 #   tagList(
 #     singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='modal']\").modal(); })"))),
-#     tags$a(href = "#", `data-toggle` = "modal", title = title, `data-content` = content, `data-animation` = TRUE, `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
+#     tags$a(href = "#test", `data-toggle` = "modal", title = title, `data-target` = content, tags$i(class="icon-question-sign"))
 #   )
 # }
+
+
+
 
 # Simulate a big data-file
 # n <- 200000
 # n.var <- 100
 # bigsimdat <- data.frame(matrix(rnorm(n*n.var),nrow = n, ncol <- n.var))
-# save(simdat,file = "data/bigsimdat.rda")
+# save(bigsimdat,file = "data/bigsimdat.rda")
