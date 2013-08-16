@@ -18,14 +18,16 @@ ui_hclustering <- function() {
   wellPanel(
     uiOutput("hc_vars"), 
     selectInput("hc_dist", label = "Distance measure:", choices = hc_dist_method, selected = hc_dist_method[1], multiple = FALSE),
-    selectInput("hc_meth", label = "Method:", choices = hc_method, selected = hc_method[1], multiple = FALSE),
-    selectInput("hc_nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE),
-    actionButton("hc_saveclus", "Save cluster membership")
+    selectInput("hc_meth", label = "Method:", choices = hc_method, selected = hc_method[1], multiple = FALSE)
+    # Add nr of clusters backin it you do a cut-off
+    # selectInput("hc_nrClus", label = "Number of clusters", choices = 2:20, selected = NULL, multiple = FALSE),
+    # actionButton("hc_saveclus", "Save cluster membership")
   )
 }
 
 # main functions called from radyant.R
 summary.hclustering <- function(result) {
+	cat("Variables used:\n",input$hc_vars,"\n")
 	result
 }
 

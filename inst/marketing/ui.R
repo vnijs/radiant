@@ -22,7 +22,7 @@ shinyUI(
         tags$style(type='text/css', ".well { padding: 12px; margin-bottom: 5px; max-width: 280px; }"),
         tags$style(type='text/css', ".span4 { max-width: 280px; }"),
         tags$style(type='text/css', ".popover { html: true; width: 600px; position: relative; top: -75px !important; left: 320px !important; }"),
-        tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
+        tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript')
       ),
 
       includeHTML("www/js/sel2.js"),
