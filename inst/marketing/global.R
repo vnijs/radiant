@@ -1,7 +1,8 @@
 # avoid breaks in R-output print and show JSON packets transferred
 # over websockets
 options(width = 150, shiny.trace=TRUE)
-options(shiny.maxRequestSize=200*1024^2)
+
+if(Sys.getenv('SHINY_PORT') == "") options(shiny.maxRequestSize=10000*1024^2)
 
 options(repos = c("http://cran.rstudio.com/"))
 libs <- c("shiny", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", "gridExtra", "markdown", "R.utils", "psych", "rela", "arm", "xts", "plyr", "reshape")
@@ -94,9 +95,6 @@ helpPopupOld <- function(title, content, placement=c('right', 'top', 'left', 'bo
 #     tags$a(href = "#test", `data-toggle` = "modal", title = title, `data-target` = content, tags$i(class="icon-question-sign"))
 #   )
 # }
-
-
-
 
 # Simulate a big data-file
 # n <- 200000
