@@ -2,7 +2,7 @@
 # over websockets
 options(width = 150, shiny.trace=TRUE)
 
-if(Sys.getenv('SHINY_PORT') == "") options(shiny.maxRequestSize=100*1024^2)
+if(Sys.getenv('SHINY_PORT') == "") options(shiny.maxRequestSize=10000*1024^2)
 
 options(repos = c("http://cran.rstudio.com/"))
 libs <- c("shiny", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", "gridExtra", "markdown", "R.utils", "psych", "rela", "arm", "xts", "plyr", "reshape")

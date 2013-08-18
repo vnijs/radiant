@@ -159,8 +159,8 @@ output$transform_summary <- renderPrint({
 		cat("\nSummarize factors:\n")
 		summary(dat[isFct])
 	}
-	print(Sys.getenv('SHINY_PORT'))
-	print(Sys.getenv('SHINY_SERVER_VERSION'))
+	# print(Sys.getenv('SHINY_PORT'))
+	# print(Sys.getenv('SHINY_SERVER_VERSION'))
 })
 
 observe({
