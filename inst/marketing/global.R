@@ -2,7 +2,7 @@
 # over websockets
 options(width = 150, shiny.trace=TRUE)
 
-if(Sys.getenv('SHINY_PORT') == "") options(shiny.maxRequestSize=10000*1024^2)
+if(Sys.getenv('SHINY_PORT') == "") options(shiny.maxRequestSize=100*1024^2)
 
 options(repos = c("http://cran.rstudio.com/"))
 libs <- c("shiny", "car", "AER", "Ecdat", "foreign", "tools", "ggplot2", "gridExtra", "markdown", "R.utils", "psych", "rela", "arm", "xts", "plyr", "reshape")
@@ -99,13 +99,13 @@ helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'botto
 }
 
 helpModal <- function(title, content) {
-  html <- sprintf("<div id='modal' class='modal hide fade in' style='display: none; '>
+  html <- sprintf("<div id='%s' class='modal hide fade in' style='display: none; '>
                    <div class='modal-header'><a class='close' data-dismiss='modal'>×</a>
                    <h3>%s</h3>
                    </div>
                    <div class='modal-body'>%s</div>
                    </div>
-                   <a data-toggle='modal' href='#modal' class='icon-question-sign'></a>", title, content)
+                   <a data-toggle='modal' href='#%s' class='icon-question-sign'></a>", title, title, content, title)
   HTML(html)
 }
 
