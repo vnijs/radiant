@@ -67,6 +67,13 @@ load('data/packDataSets.rda')
 
 lastLoaded <- "" 		
 
+getTool <- function(inputId) {
+  tagList(
+    tags$head(tags$script(src = "js/navbar.js")),
+    tags$html(includeHTML('www/navbar.html'))
+  )
+}
+
 # function to render .Rmd files into html on-the-fly
 includeRmd <- function(path){
   if (!require(knitr))
@@ -80,21 +87,27 @@ includeRmd <- function(path){
   HTML(html)
 }
 
-helpPopupOld <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), trigger=c('click', 'hover', 'focus', 'manual')) {
-  tagList(
+helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), 
+  trigger=c('click', 'hover', 'focus', 'manual')) {
 
+  tagList(
     singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
-    # singleton(tags$head(tags$script(src = 'https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', type = 'text/javascript'))),
-    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content, `data-animation` = TRUE, `data-placement` = match.arg(placement, several.ok=TRUE)[1], `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
+    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
+      `data-placement` = match.arg(placement, several.ok=TRUE)[1], 
+      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
   )
 }
 
-# helpModal <- function(title, content) {
-#   tagList(
-#     singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='modal']\").modal(); })"))),
-#     tags$a(href = "#test", `data-toggle` = "modal", title = title, `data-target` = content, tags$i(class="icon-question-sign"))
-#   )
-# }
+helpModal <- function(title, content) {
+  html <- sprintf("<div id='modal' class='modal hide fade in' style='display: none; '>
+                   <div class='modal-header'><a class='close' data-dismiss='modal'>×</a>
+                   <h3>%s</h3>
+                   </div>
+                   <div class='modal-body'>%s</div>
+                   </div>
+                   <a data-toggle='modal' href='#modal' class='icon-question-sign'></a>", title, content)
+  HTML(html)
+}
 
 # Simulate a big data-file
 # n <- 200000

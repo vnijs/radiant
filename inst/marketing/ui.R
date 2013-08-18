@@ -1,21 +1,3 @@
-getTool <- function(inputId) {
-  tagList(
-    tags$head(tags$script(src = "js/navbar.js")),
-    tags$html(includeHTML('www/navbar.html'))
-  )
-}
-
-helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'), 
-  trigger=c('click', 'hover', 'focus', 'manual')) {
-
-  tagList(
-    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
-    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
-      `data-placement` = match.arg(placement, several.ok=TRUE)[1], 
-      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
-  )
-}
-
 shinyUI(
 
   pageWithSidebar(
@@ -67,16 +49,15 @@ shinyUI(
             tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
             uiOutput("nrRows")
           ),
-          # helpPopup('View',includeRmd("tools/help/view.Rmd"))
-          helpPopup('View',includeHTML("tools/help/view.html"))
+          helpModal('View',includeRmd("tools/help/example.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           uiOutput("ui_visualize"),
-          helpPopup('Visualize',includeRmd("tools/help/view.Rmd"))
+          helpModal('Visualize',includeRmd("tools/help/example.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Transform'",
           uiOutput("ui_transform"),
-          helpPopup('Transform',includeRmd("tools/help/view.Rmd"))
+          helpModal('Transform',includeRmd("tools/help/example.Rmd"))
         )
       ),
       conditionalPanel(condition = "input.tool != 'dataview'",

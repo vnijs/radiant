@@ -29,10 +29,13 @@ textarea {
 }
 
 .popover { 
-  template: '<div class="popover" style="width: 300px"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>';
   width: 600px; 
   position: relative; top: -75px !important; 
   left: 320px !important; 
+}
+
+.modal { 
+  width: 750px; 
 }
 
 /*.chart_container {
