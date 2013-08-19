@@ -1,3 +1,7 @@
+###############################
+# Single means
+###############################
+
 output$sm_var <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -43,6 +47,11 @@ singleMean <- reactive({
 	dat <- getdata()[,var]
 	t.test(dat, mu = input$sm_compValue, alternative = input$sm_alternative, conf.level = input$sm_sigLevel)
 })
+
+
+###############################
+# Compare means
+###############################
 
 output$cm_var1 <- renderUI({
   vars <- varnames()
@@ -120,6 +129,11 @@ compareMeans <- reactive({
 	list("model" = aov(formula, data = dat), "data" = data.frame(dat)) 
 })
 
+
+###############################
+# Single proportion
+###############################
+
 output$sp_var <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -135,7 +149,8 @@ ui_singleProp <- function() {
 	    selectInput(inputId = "sp_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
   	  sliderInput('sp_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01),
     	numericInput("sp_compValue", "Comparison value:", 0.5, min = 0.01, max = 0.99, step = 0.01)
-    )
+    ),
+	 	helpModal('Single proportion','singleProp',includeRmd("tools/help/singleProp.Rmd"))
   )
 }
 
@@ -166,60 +181,9 @@ singleProp <- reactive({
 })
 
 ###############################
-# Correlation
+# Compare proportions
 ###############################
 
-output$cor_var <- renderUI({
-  vars <- varnames()
-  if(is.null(vars)) return()
-  # isFct <- sapply(getdata(), is.factor)
- 	# vars <- vars[!isFct]
-  selectInput(inputId = "cor_var", label = "Select variables:", choices = vars, selected = NULL, multiple = TRUE)
-})
-
-ui_correlation <- function() {
-  wellPanel(
-    uiOutput("cor_var"),
-	  selectInput(inputId = "cor_type", label = "Method", choices = c("pearson", "kendall", "spearman"), selected = "pearson")
-  )
-}
-
-summary.correlation <- function(dat) {
-	cmat <- cor(dat, method = input$cor_type)
-	print(as.dist(cmat), digits = 1)
-}
-
-plot.correlation <- function(dat) {
-	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
-	rady.panel.plot <- function(x, y) {
-	    usr <- par("usr"); on.exit(par(usr))
-	    par(usr = c(0, 1, 0, 1))
-	    ct <- cor.test(x,y, method = input$cor_type)
-	    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
-	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-	                  symbols = c("***", "**", "*", ".", " "))
-	    r <- ct$estimate
-	    rt <- format(r, digits=2)[1]
-	    cex <- 0.5/strwidth(rt)
-	    
-	    text(.5, .5, rt, cex=cex * abs(r))
-	    text(.8, .8, sig, cex=cex, col='blue')
-	}
-	rady.panel.smooth <- function (x, y) {
-    points(x, y)
-    abline(lm(y~x), col="blue")
-	}
-	pairs(dat, lower.panel=rady.panel.smooth, upper.panel=rady.panel.plot)
-}
-
-correlation <- reactive({
-	vars <- input$cor_var
-	if(is.null(vars) || (length(vars) < 2)) return("Please select two or more variables")
-	dat <- getdata()[,vars]
-	data.frame(lapply(dat,as.numeric))
-})
-
-# compare proportions
 output$cp_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -246,7 +210,8 @@ ui_compareProps <- function() {
     conditionalPanel(condition = "input.analysistabs == 'Summary'",
       selectInput(inputId = "cp_alternative", label = "Alternative hypothesis", choices = alt, selected = "Two sided"),
       sliderInput('cp_sigLevel',"Significance level:", min = 0.85, max = 0.99, value = 0.95, step = 0.01)
-    )
+    ),
+	 	helpModal('Compare proportions','compareProps',includeRmd("tools/help/compareProps.Rmd"))
   )
 }
 summary.compareProps <- function(result) {
@@ -282,7 +247,10 @@ compareProps <- reactive({
 	# pt
 })
 
-# cross-tabs
+###############################
+# Cross-tabs
+###############################
+
 output$ct_var1 <- renderUI({
   vars <- varnames()
   if(is.null(vars)) return()
@@ -315,7 +283,8 @@ ui_crosstab <- function() {
 		  checkboxInput("ct_rowperc", label = "Row percentages", value = FALSE),
 		  checkboxInput("ct_colperc", label = "Column percentages", value = FALSE),
 		  checkboxInput("ct_cellperc", label = "Cell percentages", value = FALSE)
-		)
+		),
+	 	helpModal('Cross-tabs','crossTabs',includeRmd("tools/help/crossTabs.Rmd"))
   )
 }
 
@@ -437,3 +406,60 @@ crosstab <- reactive({
 	list('cst' = cst, 'table' = tab)
 
 })
+
+###############################
+# Correlation
+###############################
+
+output$cor_var <- renderUI({
+  vars <- varnames()
+  if(is.null(vars)) return()
+  # isFct <- sapply(getdata(), is.factor)
+ 	# vars <- vars[!isFct]
+  selectInput(inputId = "cor_var", label = "Select variables:", choices = vars, selected = NULL, multiple = TRUE)
+})
+
+ui_correlation <- function() {
+  wellPanel(
+    uiOutput("cor_var"),
+	  selectInput(inputId = "cor_type", label = "Method", choices = c("pearson", "kendall", "spearman"), selected = "pearson"),
+  	helpModal('Correlation','correlation',includeRmd("tools/help/correlation.Rmd"))
+  )
+}
+
+summary.correlation <- function(dat) {
+	cmat <- cor(dat, method = input$cor_type)
+	print(as.dist(cmat), digits = 1)
+}
+
+plot.correlation <- function(dat) {
+	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
+	panel.plot <- function(x, y) {
+	    usr <- par("usr"); on.exit(par(usr))
+	    par(usr = c(0, 1, 0, 1))
+	    ct <- cor.test(x,y, method = input$cor_type)
+	    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
+	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+	                  symbols = c("***", "**", "*", ".", " "))
+	    r <- ct$estimate
+	    rt <- format(r, digits=2)[1]
+	    cex <- 0.5/strwidth(rt)
+	    
+	    text(.5, .5, rt, cex=cex * abs(r))
+	    text(.8, .8, sig, cex=cex, col='blue')
+	}
+	panel.smooth <- function (x, y) {
+    points(x, y)
+    abline(lm(y~x), col="red")
+    lines(stats::lowess(y~x), col="blue")
+	}
+	pairs(dat, lower.panel=panel.smooth, upper.panel=panel.plot)
+}
+
+correlation <- reactive({
+	vars <- input$cor_var
+	if(is.null(vars) || (length(vars) < 2)) return("Please select two or more variables")
+	dat <- getdata()[,vars]
+	data.frame(lapply(dat,as.numeric))
+})
+
