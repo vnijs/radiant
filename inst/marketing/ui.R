@@ -49,15 +49,15 @@ shinyUI(
             tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
             uiOutput("nrRows")
           ),
-          helpModal('View',includeRmd("tools/help/example.Rmd"))
+          helpModal('View','view',includeRmd("tools/help/example.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           uiOutput("ui_visualize"),
-          helpModal('Visualize',includeRmd("tools/help/example.Rmd"))
+          helpModal('Visualize','visualize',includeRmd("tools/help/example.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Transform'",
           uiOutput("ui_transform"),
-          helpModal('Transform',includeRmd("tools/help/example.Rmd"))
+          helpModal('Transform','transform',includeRmd("tools/help/example.Rmd"))
         )
       ),
       conditionalPanel(condition = "input.tool != 'dataview'",

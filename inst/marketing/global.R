@@ -98,14 +98,14 @@ helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'botto
   )
 }
 
-helpModal <- function(title, content) {
+helpModal <- function(title, link, content) {
   html <- sprintf("<div id='%s' class='modal hide fade in' style='display: none; '>
                    <div class='modal-header'><a class='close' data-dismiss='modal'>×</a>
                    <h3>%s</h3>
                    </div>
                    <div class='modal-body'>%s</div>
                    </div>
-                   <a data-toggle='modal' href='#%s' class='icon-question-sign'></a>", title, title, content, title)
+                   <a data-toggle='modal' href='#%s' class='icon-question-sign'></a>", link, title, content, link)
   HTML(html)
 }
 
