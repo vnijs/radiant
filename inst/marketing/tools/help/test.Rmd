@@ -1,0 +1,5 @@
+## Math
+
+$$ y_t = \alpha + \beta X + \epsilon_t $$
+
+An inline version looks like this: $y_t = \alpha + \beta X + \epsilon_t$

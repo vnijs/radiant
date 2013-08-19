@@ -44,12 +44,12 @@ shinyUI(
           wellPanel(
             uiOutput("columns"), 
             tags$style(type='text/css', "#columns { height: 200px; padding-bottom: 35px;}"),
-            textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''), actionButton("sub_select", "Go"),
+            #textInput("dv_select", "Subset (e.g., mpg > 20 & vs == 1)", ''), actionButton("sub_select", "Go"),
             tags$style(type='text/css', "#dv_select { max-width: 135px; }"),
             tags$style(type='text/css', "#sub_select { vertical-align: top; width: 45px; }"),
             uiOutput("nrRows")
           ),
-          helpModal('View',includeRmd("tools/help/example.Rmd"))
+          helpModal('View',includeRmd("tools/help/test.Rmd"))
         ),
         conditionalPanel(condition = "input.datatabs == 'Visualize'",
           uiOutput("ui_visualize"),
