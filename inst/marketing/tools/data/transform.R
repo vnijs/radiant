@@ -68,6 +68,13 @@ ui_transform <- function() {
   )
 }
 
+# output$tab_transform <- renderUI({
+# 	tabPanel("Transform", 
+# 		tableOutput("transform_data"), br(),
+# 	  verbatimTextOutput("transform_summary")
+# 	)
+# }
+
 transform <- reactive({
 	if(is.null(input$datasets) || (is.null(input$tr_columns) && input$tr_copyAndPaste == '')) return()
 	if(input$datatabs != 'Transform') return()

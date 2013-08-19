@@ -78,6 +78,7 @@ shinyUI(
               tags$style(type='text/css', "#downloadData { vertical-align: top; height: 18.5px; width: 70px;}"),
               tableOutput("dataviewer")
             ),
+            # uiOutput("tab_transform"),
             tabPanel("Transform", 
               tableOutput("transform_data"), br(),
               verbatimTextOutput("transform_summary")
