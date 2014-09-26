@@ -1,2 +1,5 @@
 .Rproj.user
 testing.Rmd
+.gitignore
+.dropbox/
+.Rapp.history
