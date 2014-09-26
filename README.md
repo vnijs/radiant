@@ -6,6 +6,8 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 There are three (related) apps included in the inst directory. The first is base and offers data documenting, viewing, visualizing, merging, and transforming tools. The quant app sources the code from base and extends it. Finally, the marketing app sources the code from base and quant and, again, extends it with additional tools.
 
+test
+
 ### Install 
 
 - Required: [R](http://cran.rstudio.com/), version 3.1.1 
