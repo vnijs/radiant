@@ -13,15 +13,9 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 - Required: [R](http://cran.rstudio.com/), version 3.1.1 or later
 - Required: [Shiny](http://www.rstudio.com/shiny/), version 0.10.1 or later
-- Required: A modern browser (e.g., Chrome or Safari)
+- Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/ide/download/)
 
-<!-- To install and run the Marketing analytics app in Radiant:
-
-	install.packages('radiant',repos=c("http://vnijs.rady.ucsd.edu/site_media/R", CRAN = "http://cran.rstudio.com"), dependencies = TRUE) 
-	shiny::runApp(system.file('marketing', package='radiant'), port = 8100)
-
- -->
 To get the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. When you start the app for the first time a number of required packages will be installed. To start the app, copy and paste the command below into the R(studio) terminal (assuming you unzipped to your Desktop):
 
 	# on windows
