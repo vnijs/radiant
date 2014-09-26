@@ -23,6 +23,8 @@ To get the app click the 'Download ZIP' button and unzip the file to, for exampl
 
  	# on mac
 	shiny::runApp('~/Desktop/radiant-master/inst/marketing/')
+  
+Alternatively you can download Radiant from [Drobox](https://www.dropbox.com/sh/gyz4faxlw5fsx6u/AACNckIZ2vbvMYWwBt8V9Wiza?dl=0)
 
 ### License
 
