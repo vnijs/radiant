@@ -8,7 +8,7 @@ There are three (related) apps included in the inst directory. The first is base
 
 test
 
-### Install 
+### Install [BROKEN - 9/26/2014]
 
 - Required: [R](http://cran.rstudio.com/), version 3.1.1 
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
