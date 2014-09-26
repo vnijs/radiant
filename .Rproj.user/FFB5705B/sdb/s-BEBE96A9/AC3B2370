@@ -1,0 +1,16 @@
+{
+    "contents" : "shinyUI(navbarPage(\"Radiant - Base\", id = \"nav_radiant\", inverse = TRUE, collapsable = TRUE,\n\n  tabPanel(\"Data\", uiOutput('data_ui_and_tabs')),\n\n  navbarMenu(\"R\",\n    tabPanel(\"Report\", uiOutput(\"report\")),\n    tabPanel(\"Code\", uiOutput(\"rcode\"))\n  ),\n\n  tabPanel(\"State\", uiOutput(\"state\")),\n\n  tabPanel(\"About\", withMathJax(), HTML(inclRmd(\"../base/tools/app/about.Rmd\")))\n))\n",
+    "created" : 1411681653535.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "545750253",
+    "id" : "AC3B2370",
+    "lastKnownWriteTime" : 1411544510,
+    "path" : "~/Desktop/radiant/inst/base/ui.R",
+    "project_path" : "inst/base/ui.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
