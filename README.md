@@ -2,12 +2,9 @@
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http://www.rstudio.com/shiny/). Developed by [Vincent Nijs](http://rady.ucsd.edu/faculty/directory/nijs/) (vnijs@ucsd.edu). 
 
-### Todo:
+### Source code 
 
-- Use dplyr and tidyr to explore and summarize data
-- Code documentation
-- Automated testing using Rselenium
-- etc. etc.
+There are three (related) apps included in the inst directory. The first is base and offers data documenting, viewing, visualizing, merging, and transforming tools. The quant app sources the code from base and extends it. Finally, the marketing app sources the code from base and quant and, again, extends it with additional tools.
 
 ### Install 
 
@@ -18,9 +15,16 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 To download the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. To start the app use one of the launchers in the directory of the same name. For Windows use one of the .bat files and for Mac one of the .app files. For example, to start the quant app on Windows double-click the quant/radiant\_win\_quant.bat file. When the app starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN). 
 
+### Todo
+
+- Use dplyr and tidyr to explore and summarize data
+- Code documentation
+- Automated testing using Rselenium
+- etc. etc.
+
 ### License
 
-The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.
+The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
 
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
