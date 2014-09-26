@@ -11,20 +11,12 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 ### Install 
 
-- Required: [R](http://cran.rstudio.com/), version 3.1.1 or later
-- Required: [Shiny](http://www.rstudio.com/shiny/), version 0.10.1 or later
+- Required: [R](http://cran.rstudio.com/), version 3.1.1 
+- Required: [Shiny](http://www.rstudio.com/shiny/), version 0.10.1 (contained in a local repo)
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/ide/download/)
 
-To get the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. When you start the app for the first time a number of required packages will be installed. To start the app, copy and paste the command below into the R(studio) terminal (assuming you unzipped to your Desktop):
-
-	# on windows
-	shiny::runApp('~/../Desktop/radiant-master/inst/marketing/')
-
- 	# on mac
-	shiny::runApp('~/Desktop/radiant-master/inst/marketing/')
-  
-Alternatively you can download Radiant from [Dropbox](https://www.dropbox.com/sh/gyz4faxlw5fsx6u/AACNckIZ2vbvMYWwBt8V9Wiza?dl=0)
+To download the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. To start the app use one of the launchers in the directory of the same name. For Windows use one of the .bat files and for Mac one of the .app files. For example, to start the quant app on Windows double-click the quant/radiant\_win\_quant.bat file. When the app starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN). 
 
 ### License
 
