@@ -4,7 +4,7 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 ### Todo:
 
-- Use dplyr to explore and summarize data
+- Use dplyr and tidyr to explore and summarize data
 - Code documentation
 - Automated testing using Rselenium
 - etc. etc.
