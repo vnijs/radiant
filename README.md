@@ -6,7 +6,7 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 - Use dplyr to explore and summarize data
 - Code documentation
-- Testing
+- Automated testing using Rselenium
 - etc. etc.
 
 ### Install 
