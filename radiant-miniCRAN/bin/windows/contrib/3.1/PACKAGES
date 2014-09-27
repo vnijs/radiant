@@ -183,9 +183,10 @@ Imports: digest
 License: MIT + file LICENSE
 
 Package: mime
-Version: 0.1.2
+Version: 0.2
 Imports: tools
 License: GPL
+Archs: i386, x64
 
 Package: munsell
 Version: 0.4.2
