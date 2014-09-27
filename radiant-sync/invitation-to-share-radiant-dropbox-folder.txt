@@ -1,0 +1,17 @@
+Hi folks,
+
+I am sharing a (read-only) dropbox folder with you that contains the source code for an app that both Terry and I will use for class this fall. I am working on the install instructions but it should be pretty straightforward.
+
+Start by installing Dropbox if you don't have it already (https://www.dropbox.com/install). Accept the invitation to share the radiant folder and wait until it has synced to your computer. Then download and install R (version 3.1.1). Links to the required version of R are in Dropbox/radiant/launchers/Installing-R.html
+
+To start the app use one of the launchers in the directory of the same name (i.e., launchers/base, launchers/quant, or launchers/marketing). For Windows use one of the .bat files and for Mac one of the .app files. For example, to start the quant app on Windows double-click the quant/radiant_win_quant.bat file. When the app starts for the first time a number of required packages will be installed from a local miniCRAN (https://github.com/andrie/miniCRAN). This may take a few minutes.
+
+If you are on a mac you may see a pop-up that says "The actions 'Watch Me Do' encountered an error". This just means that you need to give the app permission to run. Go to System Preferences > Security & Privacy and select the Privacy tab. Click the checkbox next to the app file you tried to run and the message will no longer be shown when you run the app again.
+
+If you have been using Internet Explorer as your main browser I suggest you install Chrome for better performance.
+
+Feel free to play around with the app and see if you can 'break' it. If there are any problems please make a not of what happened and provide (detailed) information the error and where it occured.
+
+Thanks!
+
+Vincent
