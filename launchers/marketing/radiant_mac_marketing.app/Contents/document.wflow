@@ -51,7 +51,7 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>tell application "R"	activate	cmd "setwd('~/Dropbox/radiant/inst/marketing')"	cmd "source('../../radiant-miniCRAN/dependencies.R')"	cmd "Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')"	cmd "shiny::runApp('../marketing', port = 4475)"end tell</string>
+					<string>tell application "R"	activate	cmd "		if(file.exists('~/Dropbox')) {  pth &lt;- normalizePath('~/Dropbox')  cat(paste('Dropbox found in', pth,''))} else if(file.exists('~/../Dropbox')) {  pth &lt;- normalizePath('~/../Dropbox')  cat(paste('Dropbox found in', pth,''))} else {  cat('No dropbox location found. Did you install the Dropbox software from https://www.dropbox.com/downloading ?')  q('ask')}setwd(pth)if(file.exists('radiant')) {  pth &lt;- normalizePath('radiant')  cat(paste('radiant folder Dropbox found in', pth,''))} else {  cat('No radiant folder found in your Dropbox. Did you request access by sending an email to radiant@rady.ucsd.edu? Make sure to use the email address that is registered with Dropbox.')  q('ask')}setwd(pth)Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')source('radiant-miniCRAN/dependencies.R')shiny::runApp('inst/marketing', port = 4475, launch.browser=TRUE)	"end tell</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -105,7 +105,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.500000:619.000000</string>
+				<string>299.000000:1117.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -353,7 +353,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.500000:306.000000</string>
+				<string>299.000000:804.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Watch Me Do.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -363,7 +363,7 @@ end run</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>0284B819-A3BA-4329-AA2C-6E042C9D297E</key>
+		<key>8A29917C-49EC-40F7-80E4-C05F1714FC67</key>
 		<dict>
 			<key>from</key>
 			<string>CAF8156A-1BE4-41CC-9098-A37E2F3A33FF - CAF8156A-1BE4-41CC-9098-A37E2F3A33FF</string>

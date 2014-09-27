@@ -13,7 +13,7 @@ if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 # http://cran.r-project.org/web/packages/miniCRAN/vignettes/miniCRAN.html
 install.packages('miniCRAN', local_dir, dependencies = TRUE)
 
-pth <- "~/Desktop/radiant/radiant-miniCRAN"
+pth <- "~/Desktop/radiant_dev/radiant-miniCRAN"
 if(!file.exists(pth)) dir.create(pth)
 setwd(pth)
 install.packages('./miniCRAN_0.1-0.tgz', local_dir, repos = NULL) # installing local package that fixes makeRepo from miniCRAN
