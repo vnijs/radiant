@@ -10,7 +10,7 @@ If you are on a mac you may see a pop-up that says "The actions 'Watch Me Do' en
 
 If you have been using Internet Explorer as your main browser I suggest you install Chrome for better performance.
 
-Feel free to play around with the app and see if you can 'break' it. If there are any problems please make a not of what happened and provide (detailed) information the error and where it occured.
+Feel free to play around with the app and see if you can 'break' it. If there are any problems please make a not of what happened and provide (detailed) information the error and where it occurred.
 
 Thanks!
 
