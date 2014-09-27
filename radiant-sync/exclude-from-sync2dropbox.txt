@@ -14,5 +14,3 @@ radiant-sync/
 .gitignore
 
 radiant.Rproj
-useful-commands-and-links.sh
-
