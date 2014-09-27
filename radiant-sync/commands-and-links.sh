@@ -31,7 +31,7 @@ git pull
 https://help.github.com/articles/generating-ssh-keys
 
 # generating ssh keys for windows
-https://help.github.com/articles/generating-ssh-keys#platform-windows
+https://help.github.com/articles/generating-ssh-keys #platform-windows
 
 # getting started with Shiny
 http://shiny.rstudio.com/
