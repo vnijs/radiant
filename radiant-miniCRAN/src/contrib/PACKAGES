@@ -237,11 +237,11 @@ MD5sum: f6b9e93035d24246502a99d654380399
 NeedsCompilation: no
 
 Package: mime
-Version: 0.1.2
+Version: 0.2
 Imports: tools
 License: GPL
-MD5sum: 32e8417c7321d4b6cc2f273ebf3f27c3
-NeedsCompilation: no
+MD5sum: 4140300ebd4533d9b81bae45ea7d2261
+NeedsCompilation: yes
 
 Package: munsell
 Version: 0.4.2

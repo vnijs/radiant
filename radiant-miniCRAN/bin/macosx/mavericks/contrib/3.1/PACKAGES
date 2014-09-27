@@ -211,10 +211,11 @@ License: MIT + file LICENSE
 MD5sum: bcbf3eddbe17398ba0b3c3cad508a799
 
 Package: mime
-Version: 0.1.2
+Version: 0.2
 Imports: tools
 License: GPL
-MD5sum: 6b0415aa61a6718b3175cce51c96bd4b
+Archs: mime.so.dSYM
+MD5sum: f41a25b2e8973eef7b7eaa14857b72f4
 
 Package: munsell
 Version: 0.4.2
