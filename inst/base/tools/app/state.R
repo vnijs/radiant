@@ -39,6 +39,8 @@ output$state <- renderUI({
       wellPanel(
         HTML("<label>Reset to initial app state:</label>"),
         HTML("<a class='btn action-button shiny-bound-input' id='resetState' type='button' href='/'>Reset</a>")
+#         HTML("<button id='resetState' type='button' class='btn action-button shiny-bound-input' href='/'>Reset</button>")
+#         actionButton('resetState', 'Reset')
       ),
       wellPanel(
         HTML("<label>Quit app:</label>"),
@@ -69,6 +71,9 @@ output$refreshOnUpload <- renderUI({
     # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
     tags$script("window.location.reload();")
 
+    # Did the above used to work? Does it still? The below code is wha I saw online
+#     tags$script("document.location.reload();")
+
     #################################################################################
     # todo: return to the state page or the page used before going to State.
     # The below doesn't work ... yet
@@ -93,11 +98,12 @@ observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
   setInitValues()
 #   tags$script("window.location.reload();")
+#   tags$script("document.location.reload();")
 })
 
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
-  unlink(c("www/rmd/cache/","www/rmd/figure"), recursive = TRUE)
+  unlink(c("www/rmd/cache/", "www/rmd/figure"), recursive = TRUE)
   stopApp()   # stop Radiant
   q("no")     # quit R
 })
