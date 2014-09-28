@@ -40,8 +40,8 @@ if(length(inst.libs) != 0) {
 }
 
 } else {
-  options(repos = c(CRAN = c("http://cran.rstudio.com")))
+#   options(repos = c(CRAN = c("http://cran.rstudio.com")))
   source(paste0(mcran,"/pkgs.R"))
-  install.packages(pkgs)
+#   install.packages(pkgs)
   suppressWarnings(sapply(pkgs, require, character.only=TRUE))
 }
