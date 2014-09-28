@@ -18,16 +18,12 @@ vimKeyBinding <- FALSE
 #   vimKeyBinding <- TRUE
 # }
 
-# Attempt to build automated testing into Radiant. Not available yet
+# Attempt to build automated testing into Radiant
+# not implemented yet
 testingRadiant <- FALSE
 options(digits = 3)
 
-# pander for pretty printing of data and analysis output
-# panderOptions('digits',3)
-
-# detach("package:R.utils", unload=TRUE)
-
-# allowing anyfile size when run locally
+# allowing any file size when run locally
 if(Sys.getenv('SHINY_PORT') == "") {
   # no limit to filesize locally
   options(shiny.maxRequestSize=-1)
@@ -65,14 +61,13 @@ setInitValues()   # using a function here so it can also be called from state.R 
 # binding for a text input that updates when the return key is pressed
 returnTextInput <- function(inputId, label, value = "") {
   tagList(
-    # singleton(tags$head(tags$script(src = "js/returnTextInputBinding.js"))),
     includeScript("../base/www/js/returnTextInputBinding.js"),
     tags$label(label, `for` = inputId),
     tags$input(id = inputId, type = "text", value = value, class = "returnTextInput")
   )
 }
 
-# binding for a sortable list of variables or factor levels
+# create html for sortable list of variables or factor levels
 html_list <- function(vars, id) {
   hl <- paste0("<ul id=\'",id,"\' class='stab'>")
   for(i in vars) hl <- paste0(hl, "<li class='ui-state-default stab'><span class='label'>",i,"</span></li>")
