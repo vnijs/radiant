@@ -11,7 +11,8 @@ if(file.exists("~/Desktop/radiant_dev/")) {
 }
 
 # look locally first and then in the Rstudion CRAN
-options(repos = c(CRAN = c(mcran,"http://cran.rstudio.com")))
+# options(repos = c(CRAN = c(mcran,"http://cran.rstudio.com")))
+options(repos = c(CRAN = mcran))
 
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")

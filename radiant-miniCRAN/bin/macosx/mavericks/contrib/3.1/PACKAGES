@@ -25,8 +25,8 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>=
-            0.93.960), survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960),
+             survival, survey
 License: GPL (>= 2)
 MD5sum: 4bb985586c01aeeefe70dcf982f60cda
 
@@ -66,7 +66,7 @@ Depends: R (>= 3.0.2)
 Imports: assertthat, utils, methods, Rcpp, magrittr, Lahman, hflights
 LinkingTo: Rcpp (>= 0.11.1), BH (>= 1.51.0-2)
 Suggests: RSQLite, RSQLite.extfuns, RMySQL, MonetDB.R, RPostgreSQL, data.table, bigrquery, testthat, knitr,
-            microbenchmark, ggplot2, mgcv
+             microbenchmark, ggplot2, mgcv
 License: MIT + file LICENSE
 Archs: dplyr.so.dSYM
 MD5sum: a424494169acdfc4d699799779fdf6a5
@@ -93,6 +93,12 @@ Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, test
 Enhances: sp
 License: GPL-2
 MD5sum: f249165ce737882a804b3bdb3d7c504a
+
+Package: GPArotation
+Version: 2012.3-1
+Depends: R (>= 2.0.0)
+License: GPL (>= 2) | file LICENSE
+MD5sum: 8109cddd0275a3bdf16218086ce30a1b
 
 Package: gridExtra
 Version: 0.9.1
@@ -142,7 +148,7 @@ Package: knitr
 Version: 1.6
 Depends: R (>= 2.14.1)
 Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6),
-            tools
+             tools
 Suggests: testit, rgl, codetools, XML, RCurl
 License: GPL
 MD5sum: c218dc66d9fddf8a3032f31995e17e05

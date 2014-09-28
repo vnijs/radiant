@@ -21,8 +21,8 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>=
-            0.93.960), survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960),
+             survival, survey
 License: GPL (>= 2)
 
 Package: caTools
@@ -57,7 +57,7 @@ Depends: R (>= 3.0.2)
 Imports: assertthat, utils, methods, Rcpp, magrittr, Lahman, hflights
 LinkingTo: Rcpp (>= 0.11.1), BH (>= 1.51.0-2)
 Suggests: RSQLite, RSQLite.extfuns, RMySQL, MonetDB.R, RPostgreSQL, data.table, bigrquery, testthat, knitr,
-            microbenchmark, ggplot2, mgcv
+             microbenchmark, ggplot2, mgcv
 License: MIT + file LICENSE
 Archs: i386, x64
 
@@ -80,6 +80,11 @@ Imports: plyr (>= 1.7.1), digest, grid, gtable (>= 0.1.1), reshape2, scales (>= 
 Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, testthat, knitr, mgcv
 Enhances: sp
 License: GPL-2
+
+Package: GPArotation
+Version: 2012.3-1
+Depends: R (>= 2.0.0)
+License: GPL (>= 2) | file LICENSE
 
 Package: gridExtra
 Version: 0.9.1
@@ -123,7 +128,7 @@ Package: knitr
 Version: 1.6
 Depends: R (>= 2.14.1)
 Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6),
-            tools
+             tools
 Suggests: testit, rgl, codetools, XML, RCurl
 License: GPL
 
