@@ -24,10 +24,6 @@ options(repos = c(CRAN = mcran))
 if(Sys.getenv('SHINY_PORT') == "") {
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-} else {
-  local_dir <- "file:///home/vnijs/Desktop/R-library"
-  if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-}
 
 # loading the list of pkgs needed to run radiant
 # source("../../radiant-miniCRAN/pkgs.R")
@@ -36,10 +32,16 @@ source(paste0(mcran,"/pkgs.R"))
 # check if all packages in libs are installed locally
 available <- suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
 inst.libs <- pkgs[available == FALSE]
-inst.libs
 
 # install and require the packages that have not yet been installed
 if(length(inst.libs) != 0) {
   install.packages(inst.libs, local_dir)
   suppressWarnings(sapply(inst.libs, require, lib.loc = local_dir, character.only=TRUE))
+}
+
+} else {
+  options(repos = c(CRAN = c("http://cran.rstudio.com")))
+  source(paste0(mcran,"/pkgs.R"))
+  install.packages(pkgs)
+  suppressWarnings(sapply(pkgs, require, character.only=TRUE))
 }
