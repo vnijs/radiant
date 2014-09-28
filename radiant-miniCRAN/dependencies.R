@@ -1,13 +1,18 @@
 # install packages required to run radiant
-# mcran <- paste0("file://",normalizePath("../../radiant-miniCRAN"))
-if(file.exists("~/Desktop/radiant_dev/")) {
-  mcran <- paste0("file:///",normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/"))
-} else {
-  if(file.exists('~/Dropbox/radiant')) {
-    mcran <- paste0("file:///",normalizePath("~/Dropbox/radiant/radiant-miniCRAN", winslash = "/"))
+if(Sys.getenv('SHINY_PORT') == "") {
+
+  if(file.exists("~/Desktop/radiant_dev/")) {
+    mcran <- paste0("file:///",normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/"))
   } else {
-    mcran <- paste0("file:///",normalizePath("~/../Dropbox/radiant/radiant-miniCRAN", winslash = "/"))
+    if(file.exists('~/Dropbox/radiant')) {
+      mcran <- paste0("file:///",normalizePath("~/Dropbox/radiant/radiant-miniCRAN", winslash = "/"))
+    } else {
+      mcran <- paste0("file:///",normalizePath("~/../Dropbox/radiant/radiant-miniCRAN", winslash = "/"))
+    }
   }
+} else {
+  # if this is not being run locally ...
+  mcran <- paste0("file:///",normalizePath("~/Desktop/radiant/radiant-miniCRAN", winslash = "/"))
 }
 
 # look locally first and then in the Rstudion CRAN
