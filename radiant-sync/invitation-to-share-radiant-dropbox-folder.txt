@@ -1,3 +1,12 @@
+
+
+Sent to: terryaugust@hotmail.com, Neil.Aeschliman@rady.ucsd.edu, junghee.lee@rady.ucsd.edu, Lakshminarayana.Nittala@rady.ucsd.edu, Coby.Morvinski@rady.ucsd.edu, mwither@ucsd.edu, vincent.nijs@gmail.com
+
+
+****************** In case I un-invited you to the dropbox folder ******************
+****************** If you are interested, the development version is on github at https://github.com/mostly-harmless/radiant ******************
+
+
 Hi folks,
 
 I am sharing a (read-only) dropbox folder with you that contains the source code for an app that both Terry and I will use for class this fall. I am working on the install instructions but it should be pretty straightforward.
