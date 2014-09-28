@@ -21,8 +21,13 @@ if(Sys.getenv('SHINY_PORT') == "") {
 options(repos = c(CRAN = mcran))
 
 # install to user directory
-local_dir <- Sys.getenv("R_LIBS_USER")
-if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+if(Sys.getenv('SHINY_PORT') == "") {
+  local_dir <- Sys.getenv("R_LIBS_USER")
+  if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+} else {
+  local_dir <- "file:///home/vnijs/Desktop/R-library"
+  if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+}
 
 # loading the list of pkgs needed to run radiant
 # source("../../radiant-miniCRAN/pkgs.R")
