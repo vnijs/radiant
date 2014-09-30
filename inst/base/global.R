@@ -6,7 +6,10 @@ source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
 ############################################################
 
 # for debugging
-options(shiny.trace = TRUE)
+if(file.exists("~/Desktop/radiant_dev/")) {
+  options(shiny.trace = TRUE)
+}
+
 # options(warn=2)
 # options(shiny.error=recover)
 
