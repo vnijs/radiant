@@ -3,7 +3,7 @@
 if(Sys.getenv('SHINY_PORT') == "") {
 
   if(file.exists("~/Desktop/radiant_dev/")) {
-    mcran <- paste0("file:///",normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/"))
+    pth <- normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/")
   } else {
 
     if (.Platform$OS.type == 'windows') {
@@ -24,14 +24,15 @@ if(Sys.getenv('SHINY_PORT') == "") {
       cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')
       q('ask')
     }
+
+    # setting the location of the miniCRAN
+    pth <- normalizePath(paste0(pth,"/radiant-miniCRAN"), winslash = "/")
   }
 
   # install to user directory
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-  # setting the location of the miniCRAN
-  pth <- normalizePath(paste0(pth,"/radiant-miniCRAN"), winslash = "/")
 
   # loading the list of pkgs needed to run radiant
   source(paste0(pth,"/pkgs.R"))
