@@ -7,7 +7,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
   } else {
 
     if (.Platform$OS.type == 'windows') {
-      fpath <- Sys.getenv('APPDATA')
+      fpath <- paste0(Sys.getenv('APPDATA'),"/Dropbox/info.json")
     } else {
       fpath <- '~/.dropbox/info.json'
     }
@@ -16,7 +16,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
     json_string <- suppressWarnings(readLines(f, -1L));
     path_part <- sub('.*path\\\": \\\"','',json_string);
     pth <- paste0(sub('\\\",.*','',path_part), '/radiant');
-    setwd(normalizePath(pth, winslash='/'));
 
     if(file.exists(pth)) {
       cat(paste('radiant folder found in', pth,''))
@@ -25,6 +24,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
       cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')
       q('ask')
     }
+
+    mcran <- paste0("file:///",normalizePath("radiant-miniCRAN", winslash = "/"))
   }
 
   # look locally first and then in the Rstudion CRAN
