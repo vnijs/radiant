@@ -20,26 +20,23 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
     if(file.exists(pth)) {
       cat(paste('radiant folder found in', pth,''))
-#      setwd(pth)
-#       setwd(normalizePath(pth, winslash='/'));
     } else {
       cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')
       q('ask')
     }
   }
 
-
   # install to user directory
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
+  # setting the location of the miniCRAN
   pth <- normalizePath(paste0(pth,"/radiant-miniCRAN"), winslash = "/")
 
   # loading the list of pkgs needed to run radiant
   source(paste0(pth,"/pkgs.R"))
 
-#   mcran <- paste0("file:///",normalizePath("../../radiant-miniCRAN", winslash = "/"))
-#   mcran <- paste0("file:///",normalizePath(pth,"../../radiant-miniCRAN", winslash = "/"))
+  # setting the url for the miniCRAN
   mcran <- paste0("file:///",pth)
 
   # look locally first and then in the Rstudion CRAN
