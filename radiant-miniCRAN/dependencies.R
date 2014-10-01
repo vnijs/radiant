@@ -5,10 +5,25 @@ if(Sys.getenv('SHINY_PORT') == "") {
   if(file.exists("~/Desktop/radiant_dev/")) {
     mcran <- paste0("file:///",normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/"))
   } else {
-    if(file.exists('~/Dropbox/radiant')) {
-      mcran <- paste0("file:///",normalizePath("~/Dropbox/radiant/radiant-miniCRAN", winslash = "/"))
+
+    if (.Platform$OS.type == 'windows') {
+      fpath <- Sys.getenv('APPDATA')
     } else {
-      mcran <- paste0("file:///",normalizePath("~/../Dropbox/radiant/radiant-miniCRAN", winslash = "/"))
+      fpath <- '~/.dropbox/info.json'
+    }
+
+    f <- file(fpath,'r');
+    json_string <- suppressWarnings(readLines(f, -1L));
+    path_part <- sub('.*path\\\": \\\"','',json_string);
+    pth <- paste0(sub('\\\",.*','',path_part), '/radiant');
+    setwd(normalizePath(pth, winslash='/'));
+
+    if(file.exists(pth)) {
+      cat(paste('radiant folder found in', pth,''))
+      setwd(pth)
+    } else {
+      cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')
+      q('ask')
     }
   }
 
