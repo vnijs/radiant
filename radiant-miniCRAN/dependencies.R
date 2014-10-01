@@ -7,36 +7,44 @@ if(Sys.getenv('SHINY_PORT') == "") {
   } else {
 
     if (.Platform$OS.type == 'windows') {
-      fpath <- Sys.getenv('APPDATA')
+      fpath <- paste0(Sys.getenv('APPDATA'),"/Dropbox/info.json")
     } else {
       fpath <- '~/.dropbox/info.json'
     }
 
     f <- file(fpath,'r');
     json_string <- suppressWarnings(readLines(f, -1L));
+    close(f)
     path_part <- sub('.*path\\\": \\\"','',json_string);
     pth <- paste0(sub('\\\",.*','',path_part), '/radiant');
-    setwd(normalizePath(pth, winslash='/'));
 
     if(file.exists(pth)) {
       cat(paste('radiant folder found in', pth,''))
-      setwd(pth)
+#      setwd(pth)
+#       setwd(normalizePath(pth, winslash='/'));
     } else {
       cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')
       q('ask')
     }
   }
 
-  # look locally first and then in the Rstudion CRAN
-  # options(repos = c(CRAN = c(mcran,"http://cran.rstudio.com")))
-  options(repos = c(CRAN = mcran))
 
   # install to user directory
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
+  pth <- normalizePath(paste0(pth,"/radiant-miniCRAN"), winslash = "/")
+
   # loading the list of pkgs needed to run radiant
-  source(paste0(mcran,"/pkgs.R"))
+  source(paste0(pth,"/pkgs.R"))
+
+#   mcran <- paste0("file:///",normalizePath("../../radiant-miniCRAN", winslash = "/"))
+#   mcran <- paste0("file:///",normalizePath(pth,"../../radiant-miniCRAN", winslash = "/"))
+  mcran <- paste0("file:///",pth)
+
+  # look locally first and then in the Rstudion CRAN
+  # options(repos = c(CRAN = c(mcran,"http://cran.rstudio.com")))
+  options(repos = c(CRAN = mcran))
 
   # check if packages in pkgs are alraedy installed locally
   available <- suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))

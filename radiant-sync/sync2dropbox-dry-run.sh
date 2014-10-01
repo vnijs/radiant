@@ -1,4 +1,4 @@
 # check for folder differences without making any changes
 rsync -avruz --dry-run --delete --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/radiant_dev/ ~/Dropbox/radiant/
 
-# rsync -avruz --dry-run --delete ~/Desktop/radiant-new/ ~/Dropbox/radiant/
+# rsync -avruz --dry-run ~/Desktop/radiant_dev_win/launchers/ ~/Desktop/radiant_dev/launchers/
