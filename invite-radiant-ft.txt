@@ -1,0 +1,18 @@
+Hi folks,
+ 
+I am sharing a (read-only) dropbox folder with you that contains an application called Radiant that both Terry and I will use for class this fall. 
+ 
+Start by signing up for a dropbox account and installing dropbox if you don’t have this already (https://www.dropbox.com/install). Make sure you are logged into dropbox and then accept the invitation to share the radiant folder (see blue button below). Wait until it has synced to your computer and then download and install R (version 3.1.1). Links to the required version of R are in Dropbox/radiant/launchers/Installing-R.html
+ 
+To start the app use the launcher in the directory launchers/quant. For Windows use the .bat file and for Mac the .app file. For example, to start the app on Windows, double-click the quant/radiant_win_quant.bat file. When the app starts for the first time a number of required packages will be installed, and this may take a few minutes.
+ 
+When you start the app on a mac, you may see a pop-up that says "The actions 'Watch Me Do' encountered an error". This just means that you need to give the launcher permission to run. Go to System Preferences > Security & Privacy and select the Privacy tab. Click the checkbox next to the launchers file you tried to run and the message will no longer be shown when you run the app again.
+ 
+I suggest you install Chrome or Firefox for better performance. Safari is also fine. IE has security problems (Terry’s two cents).
+ 
+Chrome: https://www.google.com/chrome/browser/
+Firefox: https://www.mozilla.org/en-US/firefox/new/
+
+Thanks!
+ 
+Vincent & Terry
