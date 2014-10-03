@@ -1,0 +1,42 @@
+---
+title: "radiant invitation"
+author: "Vincent Nijs"
+date: "October 2, 2014"
+output: pdf_document
+---
+
+How to install Radiant
+ 
+Step 1: Install Dropbox on your computer (the desktop version of Dropbox)
+ 
+Download the software from https://www.dropbox.com/downloading and install it. If you already have Dropbox installed on your computer, this step will ensure that you are running the latest version. If you do not have a Dropbox account yet, you will be asked to create one. Once you have installed Dropbox, make sure that it is running. In Windows, the icon Untitled is typically on the bottom right of the screen (i.e., the system tray). In Mac OS, it is typically at the top of the screen in the menu bar. Once Dropbox is installed, make sure it is running and that have logged in with your username and password.
+ 
+Step 2: Accept the invitation to share the radiant folder (at the bottom of this e-mail)
+ 
+Accept the invitation in this email to share the radiant folder (see blue button at the bottom of this e-mail). Because you have logged into Dropbox already, Dropbox will recognize that fact and it doesn’t matter that this invitation was sent to your UCSD e-mail. What is important is that you simply log in with your Dropbox credentials and then accept the invitation. Now, you may need to wait until Radiant has fully synced to your computer. You may notice that the Dropbox icon changes from a green checkmark to a different form that indicates it is syncing your files. After it completes, move on to step 3.
+ 
+Step 3: Download and install R (version 3.1.1) for your operating system. 
+ 
+For Windows: http://cran.cnr.berkeley.edu/bin/windows/base/R-3.1.1-win.exe
+For Mac (10.9 aka Mavericks): http://cran.cnr.berkeley.edu/bin/macosx/R-3.1.1-mavericks.pkg
+R-3.1.1 for Mac (10.6 - 10.8): http://cran.cnr.berkeley.edu/bin/macosx/R-3.1.1-snowleopard.pkg
+ 
+Step 4: Use a modern browser
+ 
+We suggest that you install Chrome or Firefox for better performance. On a Mac, Safari is also fine. IE has security problems (Terry’s two cents). It will be easiest if you make Chrome, Firefox, or Safari your default browser.
+ 
+Chrome: https://www.google.com/chrome/browser/
+Firefox: https://www.mozilla.org/en-US/firefox/new/
+ 
+Step 5: Start the app
+ 
+We created ‘launchers’ that will make it easy to start Radiant. For the quant class (MGT 403), the launchers are in the directory Dropbox/radiant/launchers/quant. To get there, right-click on the Dropbox icon and then click on the folder option. In that view, you will see the “radiant” directory.
+ 
+For Windows, use the .bat file and for Mac the .app file. For example, to start the app on Windows, double-click the quant/radiant_win_quant.bat file. When the app starts for the first time a number of required packages will be installed, and this may take a few minutes. When you start the app on a mac, you may see a pop-up that says "The actions 'Watch Me Do' encountered an error". This just means that you need to give the launcher permission to run. Go to System Preferences > Security & Privacy and select the Privacy tab. Click the checkbox next to the launchers file you tried to run, and the message will no longer be shown when you run the app again.
+ 
+To make it easy to launch Radiant, you may choose to copy-and-paste the appropriate launcher that you will use to your desktop. For example, a Window’s user could right-click on “radiant_win_quant.bat” and make a shortcut on the desktop.
+ 
+ 
+Thanks!
+ 
+Vincent & Terry

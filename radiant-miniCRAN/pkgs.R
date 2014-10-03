@@ -7,3 +7,5 @@ pkgs <- c("mime","BH","GPArotation","R.methodsS3", "R.oo", "R.utils", "car",
 # Add rvest when it gets to CRAN
 # https://github.com/hadley/rvest
 
+# Updating shiny to get the withProgress option
+# pkgs <- c("shiny")
