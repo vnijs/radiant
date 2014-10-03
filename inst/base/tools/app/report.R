@@ -36,7 +36,7 @@ output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
     if(vimKeyBinding == TRUE) {
 #       aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-      aceEditor("rmd_report", mode="markdown", selectionId = "selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
+      aceEditor("rmd_report", mode="markdown", selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
     } else {
       aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example))
     },
@@ -60,10 +60,10 @@ output$rmd_knitDoc <- renderUI({
     if(!running_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
     } else if(input$rmd_report != "") {
-      if(input$selection == "") {
+      if(is.null(input$rmd_selection) || input$rmd_selection == "") {
         return(HTML(paste(knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
       } else {
-        return(HTML(paste(knit2html(text = input$selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
+        return(HTML(paste(knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
       }
     }
   })
@@ -74,10 +74,10 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if(running_local) {
       isolate({
-        if(input$selection == "") {
+        if(is.null(input$rmd_selection) || input$rmd_selection == "") {
           html <- knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
         } else {
-          html <- knit2html(text = input$selection, quiet = TRUE, options=c("mathjax", "base64_images"))
+          html <- knit2html(text = input$rmd_selection, quiet = TRUE, options=c("mathjax", "base64_images"))
         }
         cat(html,file=file,sep="\n")
       })
@@ -137,7 +137,8 @@ updateReportMerge <- function(inp, fun_name) {
 }
 
 updateReportFun <- function(cmd) {
- if(is.null(input$rmd_report)) {
+  # should be rmd_selection be added here as well?
+  if(is.null(input$rmd_report)) {
     if(is.null(state_list$rmd_report)) {
       state_list$rmd_report <<- cmd
     } else {
@@ -171,6 +172,9 @@ dat <- values[['diamonds']]
 # show the first observations
 head(dat)
 
+# plotting a figure
+plot(1:10)
+
 # run a regression
 reg <- lm(price ~ carat + clarity, data = dat)
 summary(reg)
@@ -178,6 +182,7 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row-fluid", div(class="span6",
+      aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example), vimKeyBinding=vimKeyBinding),
       actionButton("rEval", "Run"),
       downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
       fileInput('sourceCode', 'Source R-code', multiple=TRUE),
@@ -189,10 +194,20 @@ output$rcode <- renderUI({
 
 output$rCodeEval <- renderPrint({
   if(is.null(input$rEval) || input$rEval == 0) return(invisible())
-  if(running_local) {
-  } else {
-    return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
-  }
+  isolate({
+    if(running_local) {
+      if(is.null(input$r_code_selection) || input$r_code_selection == "") {
+         r_code <- input$r_code
+      } else {
+         r_code <- input$r_code_selection
+      }
+
+      r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
+      return(HTML(paste(knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
+    } else {
+      return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
+    }
+  })
 })
 
 output$saveCode <- downloadHandler(
