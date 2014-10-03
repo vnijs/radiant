@@ -1,11 +1,5 @@
 Modify type, change, create, add, reorder, and remove variables in the data.
 
-Insert Math in-line: $\alpha^2$
-
-Insert Math as a centered equation:
-
-$$y = \alpha + \beta \times x$$
-
 #### Type
 
 When you select Type from the 'Transformation type' drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, to change a variable of type factor or character to a variable of type date. Click the 'Save changes' button to change variable(s) in the data set. A description of the type transformations included in Radiant is provided below.

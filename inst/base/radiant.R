@@ -88,9 +88,7 @@ statPanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
   return(tabsetPanel(
     id = paste0("tabs_",fun_label),
     tabPanel("Summary", verbatimTextOutput(sum_name)),
-#     tabPanel("Plots", conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
-#     tabPanel("Plots", plotOutput(plot_name, height = "100%"))
-    tabPanel("Plots", withProgress(message = 'Making plot', value = 0, {plotOutput(plot_name, height = "100%")}) )
+    tabPanel("Plots", plotOutput(plot_name, height = "100%"))
   ))
 }
 
@@ -98,11 +96,6 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label, widthFun = 
 	isolate({
 	  sidebarLayout(
 	    sidebarPanel(
-	      # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
-# 	    	div(class = "busy",
-# 	        p("Calculation in progress ..."),
-# 	        img(src="imgs/ajaxloaderq.gif")
-# 	      ),
 	      wellPanel(
 	        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
 	        HTML(paste("<label><strong>Tool:",isolate(input$nav_radiant),"</strong></label>")),
