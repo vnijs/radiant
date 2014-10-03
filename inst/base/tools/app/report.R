@@ -35,10 +35,11 @@ opts_knit$set(progress = FALSE)
 output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
     if(vimKeyBinding == TRUE) {
-      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding),
+#       aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
+      aceEditor("rmd_report", mode="markdown", selectionId = "selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
     } else {
-      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example)),
-    }
+      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example))
+    },
     actionButton("evalRmd", "Update"),
     downloadButton('saveHTML', 'Save HTML'),
     downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),
@@ -55,12 +56,17 @@ output$report <- renderUI({
 
 output$rmd_knitDoc <- renderUI({
   if(is.null(input$evalRmd) || input$evalRmd == 0) return()
-    isolate({
-      if(running_local && input$rmd_report != "")
+  isolate({
+    if(!running_local) {
+      return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
+    } else if(input$rmd_report != "") {
+      if(input$selection == "") {
         return(HTML(paste(knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-      if(!running_local)
-        return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
-    })
+      } else {
+        return(HTML(paste(knit2html(text = input$selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
+      }
+    }
+  })
 })
 
 output$saveHTML <- downloadHandler(
@@ -68,7 +74,11 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if(running_local) {
       isolate({
-        html <- knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
+        if(input$selection == "") {
+          html <- knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
+        } else {
+          html <- knit2html(text = input$selection, quiet = TRUE, options=c("mathjax", "base64_images"))
+        }
         cat(html,file=file,sep="\n")
       })
     }
@@ -168,8 +178,6 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row-fluid", div(class="span6",
-      aceEditor("r_code", mode="r", value=state_init("r_code",r_example)),
-        # vimKeyBinding=vimKeyBinding),
       actionButton("rEval", "Run"),
       downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
       fileInput('sourceCode', 'Source R-code', multiple=TRUE),
@@ -182,8 +190,6 @@ output$rcode <- renderUI({
 output$rCodeEval <- renderPrint({
   if(is.null(input$rEval) || input$rEval == 0) return(invisible())
   if(running_local) {
-    return(isolate(HTML(knit2html(text = paste0("```{r cache=FALSE}\n",input$r_code,"\n```"),
-      fragment.only = TRUE, quiet = TRUE))))
   } else {
     return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
   }
