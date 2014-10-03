@@ -34,10 +34,10 @@ output$data_ui_and_tabs <- renderUI({
         )
       ),
       mainPanel(id = "datatabs",
-        div(class = "busy",
-          p("Calculation in progress ..."),
-           img(src="imgs/ajaxloaderq.gif")
-        ),
+#         div(class = "busy",
+#           p("Calculation in progress ..."),
+#            img(src="imgs/ajaxloaderq.gif")
+#         ),
         uiOutput("tabs_data")
       )
     )
@@ -63,15 +63,17 @@ output$tabs_data <- renderUI({
     ),
     tabPanel("View", dataTableOutput("dataviewer")),
     tabPanel("Visualize",
-      conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
-        plotOutput("visualize", width = "100%", height = "100%")
-      )
+#       conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
+        withProgress (message = 'Making plot', value = 0, {
+          plotOutput("visualize", width = "100%", height = "100%")
+        })
     ),
     tabPanel("Explore",
-      conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
-        verbatimTextOutput("expl_summary"),
-        plotOutput("expl_plots", width = "100%", height = "100%")
-      )
+#       conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
+        withProgress(message = 'Calculating', value = 0, {
+            verbatimTextOutput("expl_summary") }),
+            plotOutput("expl_plots", width = "100%", height = "100%")
+#         })
     ),
     tabPanel("Merge", htmlOutput("mergePossible"), htmlOutput("mergeData1"), htmlOutput("mergeData2")),
     tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary"))
