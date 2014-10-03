@@ -6,7 +6,7 @@ source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
 ############################################################
 
 # for debugging
-if(file.exists("~/Desktop/radiant_dev/")) {
+if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
   options(shiny.trace = TRUE)
 }
 
@@ -35,7 +35,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
   running_local <<- FALSE
 }
 
-setInitValues <- function() {
+setInitValues <<- function() {
   # initialize state list and reactive values
 #   if(testingRadiant) {
 #     # Load previous state for testing purposes. Not yet implemented
@@ -113,7 +113,8 @@ helpModal <- function(title, link, content) {
                    </div>
                    <a title='Help' data-toggle='modal' href='#%s' class='icon-question-sign'></a>", link, title, content, link)
   Encoding(html) <- 'UTF-8'
-  withMathJax(HTML(html))
+#   withMathJax(HTML(html))
+  HTML(html)
 }
 
 helpAndReport <- function(title, link, content) {
@@ -129,13 +130,15 @@ helpAndReport <- function(title, link, content) {
                    </div>
                    <div style='clear: both;'></div>
                    ", link, title, content, link, link, link)
-  withMathJax(HTML(html))
+#   withMathJax(HTML(html))
+  HTML(html)
 }
 
-inclMD <- function(file)
+inclMD <- function(file) {
   return(
     markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css")
   )
+}
 
 inclRmd <- function(path) {
   # function to render .Rmd files to html on-the-fly
