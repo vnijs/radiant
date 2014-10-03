@@ -5,21 +5,16 @@ source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
 # Start of main code
 ############################################################
 
-# for debugging
-if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
-  options(shiny.trace = TRUE)
-}
-
-# options(warn=2)
-# options(shiny.error=recover)
+vimKeyBinding <- FALSE
 
 # only write if running on developer computer
-vimKeyBinding <- FALSE
-# if(file.exists("/Users/vnijs/Dropbox/radiant")) {
-#   # shiny.trace shows JSON packets transferred over websockets
-#   options(shiny.trace = TRUE)
-#   vimKeyBinding <- TRUE
-# }
+if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
+  # for debugging
+  options(shiny.trace = TRUE)
+  # options(warn=2)
+  # options(shiny.error=recover)
+  vimKeyBinding <- TRUE
+}
 
 # Attempt to build automated testing into Radiant
 # not implemented yet
@@ -113,8 +108,8 @@ helpModal <- function(title, link, content) {
                    </div>
                    <a title='Help' data-toggle='modal' href='#%s' class='icon-question-sign'></a>", link, title, content, link)
   Encoding(html) <- 'UTF-8'
-#   withMathJax(HTML(html))
-  HTML(html)
+  withMathJax(HTML(html))
+#   HTML(html)
 }
 
 helpAndReport <- function(title, link, content) {
@@ -130,8 +125,8 @@ helpAndReport <- function(title, link, content) {
                    </div>
                    <div style='clear: both;'></div>
                    ", link, title, content, link, link, link)
-#   withMathJax(HTML(html))
-  HTML(html)
+  withMathJax(HTML(html))
+#   HTML(html)
 }
 
 inclMD <- function(file) {

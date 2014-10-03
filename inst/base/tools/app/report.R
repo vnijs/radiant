@@ -34,20 +34,17 @@ opts_knit$set(progress = FALSE)
 
 output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
-    aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example)),
-      # vimKeyBinding=vimKeyBinding),
+    if(vimKeyBinding == TRUE) {
+      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding),
+    } else {
+      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example)),
+    }
     actionButton("evalRmd", "Update"),
     downloadButton('saveHTML', 'Save HTML'),
     downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),
     fileInput('loadRmd', 'Load Rmd', multiple=TRUE)),
     # HTML("<a 'class='link action-button shiny-bound-input' id='gotoData'>Test</a>"),
-    div(class="span6",
-      htmlOutput("rmd_knitDoc")
-#       div(class = "busy",
-#         p("Calculation in progress ..."),
-#         img(src="imgs/ajaxloaderq.gif")
-#       )
-    )
+    div(class="span6", htmlOutput("rmd_knitDoc"))
   )
 })
 
