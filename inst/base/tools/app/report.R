@@ -34,51 +34,44 @@ opts_knit$set(progress = FALSE)
 
 output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
-    if(vimKeyBinding == TRUE) {
-#       aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-      aceEditor("rmd_report", mode="markdown", selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-    } else {
-      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example))
-    },
+    aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example)),
+      # vimKeyBinding=vimKeyBinding),
     actionButton("evalRmd", "Update"),
-    downloadButton('saveHTML', 'Save HTML'),
+    downloadButton('saveHTML', 'Save HTML'), 
     downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),
     fileInput('loadRmd', 'Load Rmd', multiple=TRUE)),
     # HTML("<a 'class='link action-button shiny-bound-input' id='gotoData'>Test</a>"),
-    div(class="span6", htmlOutput("rmd_knitDoc"))
+    div(class="span6", 
+      htmlOutput("rmd_knitDoc"),
+      div(class = "busy",
+        p("Calculation in progress ..."),
+        img(src="imgs/ajaxloaderq.gif")
+      )
+    )
   )
 })
 
 # observe({
 #   if(is.null(input$renameButton) || input$renameButton == 0) return()
-#   updateTabsetPanel(session, "nav_radiant", selected = "Report")
+#   updateTabsetPanel(session, "nav_radiant", selected = "Report") 
 # })
 
 output$rmd_knitDoc <- renderUI({
-  if(is.null(input$evalRmd) || input$evalRmd == 0) return()
-  isolate({
-    if(!running_local) {
-      return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
-    } else if(input$rmd_report != "") {
-      if(is.null(input$rmd_selection) || input$rmd_selection == "") {
+  if(is.null(input$evalRmd) || input$evalRmd == 0) return() 
+    isolate({
+      if(running_local && input$rmd_report != "")
         return(HTML(paste(knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-      } else {
-        return(HTML(paste(knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-      }
-    }
-  })
-})
+      if(!running_local)
+        return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
+    })
+})  
 
 output$saveHTML <- downloadHandler(
   filename = function() {"report.html"},
   content = function(file) {
     if(running_local) {
       isolate({
-        if(is.null(input$rmd_selection) || input$rmd_selection == "") {
-          html <- knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
-        } else {
-          html <- knit2html(text = input$rmd_selection, quiet = TRUE, options=c("mathjax", "base64_images"))
-        }
+        html <- knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
         cat(html,file=file,sep="\n")
       })
     }
@@ -97,7 +90,7 @@ output$saveRmd <- downloadHandler(
 observe({
 
   # Useful to jump to reporting tab on refresh when testing
-  # updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  # updateTabsetPanel(session, "nav_radiant", selected = "Report") 
 
   # loading r-code from disk
   inFile <- input$loadRmd
@@ -137,8 +130,7 @@ updateReportMerge <- function(inp, fun_name) {
 }
 
 updateReportFun <- function(cmd) {
-  # should be rmd_selection be added here as well?
-  if(is.null(input$rmd_report)) {
+ if(is.null(input$rmd_report)) {
     if(is.null(state_list$rmd_report)) {
       state_list$rmd_report <<- cmd
     } else {
@@ -149,7 +141,7 @@ updateReportFun <- function(cmd) {
   }
 
   # move to the report panel
-  updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  updateTabsetPanel(session, "nav_radiant", selected = "Report") 
 }
 
 
@@ -157,23 +149,20 @@ updateReportFun <- function(cmd) {
 # Run R-code within Radiant using the shinyAce editor
 ################################################################
 r_example <- "# to get the currently active data
-dat <- getdata()
+dat <- getdata()  
 
 # show the first observations
 head(dat)
 
 # to access a specific dataset by name
-dat <- values[['diamonds']]
+dat <- values[['diamonds']] 
 
 # add a variable to the data used by Radiant
 values[['diamonds']]$log.price <- log(dat$price)
-dat <- values[['diamonds']]
+dat <- values[['diamonds']] 
 
 # show the first observations
 head(dat)
-
-# plotting a figure
-plot(1:10)
 
 # run a regression
 reg <- lm(price ~ carat + clarity, data = dat)
@@ -182,7 +171,8 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row-fluid", div(class="span6",
-      aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example), vimKeyBinding=vimKeyBinding),
+      aceEditor("r_code", mode="r", value=state_init("r_code",r_example)),
+        # vimKeyBinding=vimKeyBinding),
       actionButton("rEval", "Run"),
       downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
       fileInput('sourceCode', 'Source R-code', multiple=TRUE),
@@ -193,22 +183,14 @@ output$rcode <- renderUI({
 })
 
 output$rCodeEval <- renderPrint({
-  if(is.null(input$rEval) || input$rEval == 0) return(invisible())
-  isolate({
-    if(running_local) {
-      if(is.null(input$r_code_selection) || input$r_code_selection == "") {
-         r_code <- input$r_code
-      } else {
-         r_code <- input$r_code_selection
-      }
-
-      r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
-      return(HTML(paste(knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-    } else {
-      return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
-    }
-  })
-})
+  if(is.null(input$rEval) || input$rEval == 0) return(invisible()) 
+  if(running_local) {
+    return(isolate(HTML(knit2html(text = paste0("```{r cache=FALSE}\n",input$r_code,"\n```"),
+      fragment.only = TRUE, quiet = TRUE))))
+  } else {
+    return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
+  }
+})  
 
 output$saveCode <- downloadHandler(
   filename = function() {"rcode.R"},
