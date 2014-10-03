@@ -27,8 +27,8 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival,
-              survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960),
+             survival, survey
 License: GPL (>= 2)
 MD5sum: e2069e153c61f1aa9c8d4f8a17e7681a
 NeedsCompilation: no
@@ -78,8 +78,8 @@ Version: 0.2
 Depends: R (>= 3.0.2)
 Imports: assertthat, utils, methods, Rcpp, magrittr, Lahman, hflights
 LinkingTo: Rcpp (>= 0.11.1), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, MonetDB.R, RPostgreSQL, data.table, bigrquery, testthat, knitr, microbenchmark,
-              ggplot2, mgcv
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, MonetDB.R, RPostgreSQL, data.table, bigrquery, testthat, knitr,
+             microbenchmark, ggplot2, mgcv
 License: MIT + file LICENSE
 MD5sum: ba474c0d13e1aa458754ed9ba908e80b
 NeedsCompilation: yes
@@ -169,7 +169,8 @@ NeedsCompilation: yes
 Package: knitr
 Version: 1.6
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6), tools
+Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6),
+             tools
 Suggests: testit, rgl, codetools, XML, RCurl
 License: GPL
 MD5sum: 5bf544dcd40c015b9b18694eae1bdebf
@@ -325,14 +326,6 @@ License: LGPL (>= 2.1)
 MD5sum: c75fbf2dc59bb8fdcbf9005cb8b142ac
 NeedsCompilation: no
 
-Package: R6
-Version: 2.0
-Depends: R (>= 3.0)
-Suggests: knitr, pryr, testthat,
-License: MIT + file LICENSE
-MD5sum: 1953a0564bf83e5916b1d7f371f7cf8c
-NeedsCompilation: no
-
 Package: RColorBrewer
 Version: 1.0-5
 Depends: R (>= 2.0.0)
@@ -341,12 +334,12 @@ MD5sum: da52d639e105254e33346d5a39fa44d4
 NeedsCompilation: no
 
 Package: Rcpp
-Version: 0.11.3
+Version: 0.11.2
 Depends: R (>= 3.0.0)
 Imports: methods
-Suggests: RUnit, inline, rbenchmark, highlight, pkgKitten (>= 0.1.2)
+Suggests: RUnit, inline, rbenchmark, highlight
 License: GPL (>= 2)
-MD5sum: 51d4c0ea441cdcc67d5180233d5d9679
+MD5sum: fe81512bc060242871e87a12cc00d41b
 NeedsCompilation: yes
 
 Package: reshape2
@@ -375,12 +368,12 @@ MD5sum: 957a5f6533c2baf0d1f030439d6ebc0b
 NeedsCompilation: no
 
 Package: shiny
-Version: 0.10.2.1
-Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
+Version: 0.10.1
+Depends: R (>= 2.14.1), methods
+Imports: tools, utils, httpuv (>= 1.2.0), caTools, RJSONIO, xtable, digest, htmltools (>= 0.2.4)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
-MD5sum: cca79ef355ebfa99e068eeaead7d802d
+MD5sum: 005fa3fa8ad3a52d79e8cf168dcf0c4d
 NeedsCompilation: no
 
 Package: shinyAce

@@ -9,7 +9,7 @@ output$uiTr_reorder_levs <- renderUI({
 	isFct <- "factor" == getdata_class()[input$tr_columns[1]]
   if(!isFct) return()
   dat <- getdata()
-  returnOrder("tr_reorder_levs", levels(dat[,input$tr_columns[1]]))
+  returnOrder("tr_reorder_levs", levels(dat[,input$tr_columns[1]]))	
 })
 
 standardize_1sd <- function(x) {
@@ -53,7 +53,7 @@ shift <- function(x,shift_by){
 sq <<- function(x) x^2
 inv <<- function(x) 1/x
 st <<- standardize_1sd
-cent <<- centerVar
+cent <<- centerVar 
 msp <<- medianSplit
 dec <<- decileSplit
 # lagx <<- shift
@@ -62,14 +62,14 @@ d_mdy <<- function(x) as.Date(mdy(as.character(x)))
 d_dmy <<- function(x) as.Date(dmy(as.character(x)))
 d_ymd <<- function(x) as.Date(ymd(as.character(x)))
 
-trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt",
+trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt", 
 	"Center" = "cent", "Standardize" = "st", "Invert" = "inv", "Median split" = "msp", "Deciles" = "dec")
 
 type_options <- list("None" = "", "As factor" = "as.factor",  "As number" = "as.numeric", "As integer" = "as.integer",
 	"As character" = "as.character", "As date (mdy)" = "d_mdy", "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd")
 
-trans_types <- list("None" = "", "Type" = "type", "Change" = "change", "Create" = "create", "Clipboard" = "clip",
-	"Recode" = "recode", "Rename" = "rename", "Reorder columns" = "reorder_cols", "Reorder levels" = "reorder_levs",
+trans_types <- list("None" = "", "Type" = "type", "Change" = "change", "Create" = "create", "Clipboard" = "clip", 
+	"Recode" = "recode", "Rename" = "rename", "Reorder columns" = "reorder_cols", "Reorder levels" = "reorder_levs", 
 	"Remove columns" = "remove", "Remove missing" = "na.remove", "Subset" = "sub_filter")
 
 output$ui_Transform <- renderUI({
@@ -113,10 +113,11 @@ output$ui_Transform <- renderUI({
     	HTML("<label>Reorder (drag-and-drop):</label>"),
 	    uiOutput("uiTr_reorder_levs")
     )
-  	),
+  	), 
+		# helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
 		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
 
-		# Reporting option not yet available for transform
+		# No reporting using Transform ... yet
  		# helpAndReport('Explore','explore',inclRmd("tools/help/explore.Rmd"))
 	)
 })
@@ -169,7 +170,7 @@ transform_main <- reactive({
     	}
   	}
   }
-
+  
 	# if(input$tr_changeType == "") {
 	# if(!is.null(input$tr_columns)) {
 	if(!is.null(input$tr_columns)) {
@@ -246,7 +247,7 @@ transform_main <- reactive({
 			fullDat <- getdata()
 			newvar <- try(do.call(within, list(fullDat,parse(text = recom))), silent = TRUE)
 
-			if(!is(newvar, 'try-error')) {
+			if(!is(newvar, 'try-error')) { 
 				nfull <- ncol(fullDat)
 				nnew <- ncol(newvar)
 
@@ -286,7 +287,7 @@ output$transform_data <- reactive({
 	dat <- data.frame(date2character_dat(dat))
 
 	html <- print(xtable::xtable(dat), type='html', print.results = FALSE)
-  html <- paste(html, '<label>5 rows shown. See View-tab for details.</label>')
+  html <- paste(html, '<label>5 rows shown. See View-tab for details.</label>') 
   html <- sub("<table border=1>","<table class='table table-condensed table-hover'>", html)
   # html <- sub("<table border=\"1\">","<table class='table table-condensed table-hover'>", html)
   Encoding(html) <- 'UTF-8'

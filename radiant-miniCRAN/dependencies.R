@@ -2,7 +2,7 @@
 # next line checks if Radiant is being run locally or not
 if(Sys.getenv('SHINY_PORT') == "") {
 
- if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
+  if(file.exists("~/Desktop/radiant_dev/")) {
     pth <- normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/")
   } else {
 

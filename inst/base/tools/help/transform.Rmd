@@ -1,12 +1,10 @@
 Modify type, change, create, add, reorder, and remove variables in the data.
 
-<!-- 
 Insert Math in-line: $\alpha^2$
 
 Insert Math as a centered equation:
 
 $$y = \alpha + \beta \times x$$
--->
 
 #### Type
 
