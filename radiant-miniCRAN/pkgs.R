@@ -1,9 +1,8 @@
 # Specify list of packages needed
-pkgs <- c("mime","BH","GPArotation","R.methodsS3", "R.oo", "R.utils", "car",
+pkgs_cran <- c("mime","BH","GPArotation","R.methodsS3", "R.oo", "R.utils", "car",
 	"gridExtra", "psych", "vegan", "lubridate", "RColorBrewer",
-	"wordcloud", "AlgDesign", "markdown", "knitr", "plyr", "tidyr",
-	"dplyr", "ggplot2", "shiny", "shinyAce")
+	"wordcloud", "AlgDesign", "markdown", "rmarkdown", "knitr", "plyr", "ggplot2")
 
-# Add rvest when it gets to CRAN
-# https://github.com/hadley/rvest
+pkgs_gh <- c("shiny","shinyAce","rvest","tidyr","dplyr")
 
+pkgs <- c(pkgs_cran,pkgs_gh)

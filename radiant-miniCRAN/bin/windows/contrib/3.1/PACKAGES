@@ -21,8 +21,7 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960),
-             survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival, survey
 License: GPL (>= 2)
 
 Package: caTools
@@ -40,6 +39,12 @@ Suggests: KernSmooth, MASS, kernlab, mvtnorm, vcd, tcltk, dichromat
 License: BSD_3_clause + file LICENSE
 Archs: i386, x64
 
+Package: DBI
+Version: 0.3.1
+Depends: R (>= 2.15.0), methods
+Suggests: testthat, RSQLite
+License: LGPL (>= 2)
+
 Package: dichromat
 Version: 2.0-0
 Depends: R (>= 2.10), stats
@@ -52,14 +57,14 @@ License: GPL-2
 Archs: i386, x64
 
 Package: dplyr
-Version: 0.2
+Version: 0.3
 Depends: R (>= 3.0.2)
-Imports: assertthat, utils, methods, Rcpp, magrittr, Lahman, hflights
-LinkingTo: Rcpp (>= 0.11.1), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, MonetDB.R, RPostgreSQL, data.table, bigrquery, testthat, knitr,
-             microbenchmark, ggplot2, mgcv
+Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
+LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13,
+                 methods
 License: MIT + file LICENSE
-Archs: i386, x64
+Archs: x64
 
 Package: evaluate
 Version: 0.5.5
@@ -98,11 +103,6 @@ Depends: R (>= 2.14), grid
 Suggests: testthat, plyr
 License: GPL-2
 
-Package: hflights
-Version: 0.1
-Depends: R (>= 2.10)
-License: CC0
-
 Package: highr
 Version: 0.3
 Suggests: knitr, testit
@@ -124,23 +124,31 @@ LinkingTo: Rcpp
 License: GPL-3 | file LICENSE
 Archs: i386, x64
 
+Package: httr
+Version: 0.5
+Depends: R (>= 3.0.0)
+Imports: RCurl (>= 1.95-0), stringr (>= 0.6.1), digest, tools, methods, jsonlite
+Suggests: XML, testthat (>= 0.8.0), png, jpeg, httpuv, knitr
+License: MIT + file LICENSE
+Archs: i386, x64
+
+Package: jsonlite
+Version: 0.9.12
+Depends: methods
+Suggests: testthat, knitr, reshape2, httr (>= 0.4), rjson, plyr
+License: Apache License 2.0
+Archs: i386, x64
+
 Package: knitr
 Version: 1.6
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6),
-             tools
+Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6), tools
 Suggests: testit, rgl, codetools, XML, RCurl
 License: GPL
 
 Package: labeling
 Version: 0.3
 License: MIT + file LICENSE | Unlimited
-
-Package: Lahman
-Version: 3.0-1
-Depends: R (>= 2.10)
-Suggests: lattice, ggplot2, googleVis, data.table, vcd, plyr, reshape2, zipcode
-License: GPL
 
 Package: lattice
 Version: 0.20-29
@@ -151,6 +159,13 @@ Suggests: KernSmooth, MASS
 Enhances: chron
 License: GPL (>= 2)
 Archs: i386, x64
+
+Package: lazyeval
+Version: 0.1.9
+Depends: R (>= 3.1.0)
+Suggests: knitr, rmarkdown (>= 0.2.65), microbenchmark
+License: GPL-3
+Archs: x64
 
 Package: lubridate
 Version: 1.3.3
@@ -175,7 +190,7 @@ License: GPL-2
 Archs: i386, x64
 
 Package: MASS
-Version: 7.3-34
+Version: 7.3-35
 Priority: recommended
 Depends: R (>= 3.0.0), grDevices, graphics, stats, utils
 Suggests: lattice, nlme, nnet, survival
@@ -253,17 +268,31 @@ Imports: utils, methods, R.methodsS3 (>= 1.6.1)
 Suggests: digest (>= 0.6.4)
 License: LGPL (>= 2.1)
 
+Package: R6
+Version: 2.0
+Depends: R (>= 3.0)
+Suggests: knitr, pryr, testthat,
+License: MIT + file LICENSE
+
 Package: RColorBrewer
 Version: 1.0-5
 Depends: R (>= 2.0.0)
 License: Apache License 2.0
 
 Package: Rcpp
-Version: 0.11.2
+Version: 0.11.3
 Depends: R (>= 3.0.0)
 Imports: methods
-Suggests: RUnit, inline, rbenchmark, highlight
+Suggests: RUnit, inline, rbenchmark, highlight, pkgKitten (>= 0.1.2)
 License: GPL (>= 2)
+Archs: i386, x64
+
+Package: RCurl
+Version: 1.95-4.3
+Depends: R (>= 2.7.0), methods, bitops
+Imports: methods
+Suggests: Rcompression, XML
+License: BSD
 Archs: i386, x64
 
 Package: reshape2
@@ -280,6 +309,20 @@ Imports: methods
 License: BSD_3_clause + file LICENSE
 Archs: i386, x64
 
+Package: rmarkdown
+Version: 0.3.3
+Depends: R (>= 3.0)
+Imports: tools, utils, knitr (>= 1.6), yaml (>= 2.1.5), htmltools (>= 0.2.4), caTools
+Suggests: shiny (>= 0.10.1), testthat, digest
+License: GPL-3
+
+Package: rvest
+Version: 0.1
+Depends: R (>= 3.0.1)
+Imports: httr (>= 0.5), XML, selectr, magrittr
+Suggests: testthat, knitr, png
+License: GPL-3
+
 Package: scales
 Version: 0.2.4
 Depends: R (>= 2.13)
@@ -287,10 +330,17 @@ Imports: RColorBrewer, dichromat, munsell (>= 0.2), plyr (>= 1.2), labeling, met
 Suggests: testthat (>= 0.8)
 License: MIT + file LICENSE
 
+Package: selectr
+Version: 0.2-2
+Depends: R (>= 2.15.2)
+Imports: methods, XML, stringr
+Suggests: testthat
+License: BSD_3_clause + file LICENCE
+
 Package: shiny
-Version: 0.10.1
-Depends: R (>= 2.14.1), methods
-Imports: tools, utils, httpuv (>= 1.2.0), caTools, RJSONIO, xtable, digest, htmltools (>= 0.2.4)
+Version: 0.10.2.1
+Depends: R (>= 3.0.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 
@@ -299,7 +349,7 @@ Version: 0.1.0
 Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
 Suggests: testthat
-License: MIT + file LICENSE
+License: MIT
 
 Package: slam
 Version: 0.1-32
@@ -309,6 +359,13 @@ Enhances: Matrix, SparseM, spam
 License: GPL-2
 Archs: i386, x64
 
+Package: stringi
+Version: 0.2-5
+Depends: R (>= 2.15.0)
+License: file LICENSE
+License_is_FOSS: yes
+Archs: i386, x64
+
 Package: stringr
 Version: 0.6.2
 Depends: R (>= 2.14)
@@ -316,9 +373,9 @@ Suggests: testthat (>= 0.3)
 License: GPL-2
 
 Package: tidyr
-Version: 0.1
+Version: 0.1.0.9000
 Depends: R (>= 3.1.0)
-Imports: reshape2, dplyr (>= 0.2)
+Imports: reshape2, dplyr (>= 0.2), stringi
 Suggests: knitr, testthat
 License: MIT + file LICENSE
 
@@ -338,8 +395,22 @@ Suggests: tm (>= 0.6)
 License: LGPL-2.1
 Archs: i386, x64
 
+Package: XML
+Version: 3.98-1.1
+Depends: R (>= 1.2.0), methods, utils
+Imports: methods
+Suggests: bitops, RCurl
+License: BSD
+Archs: i386, x64
+
 Package: xtable
 Version: 1.7-4
 Depends: R (>= 2.10.0)
 License: GPL (>= 2)
+
+Package: yaml
+Version: 2.1.13
+Suggests: testthat
+License: BSD_3_clause + file LICENSE
+Archs: i386, x64
 
