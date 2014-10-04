@@ -34,18 +34,17 @@ opts_knit$set(progress = FALSE)
 
 output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
-                             if(vimKeyBinding == TRUE) {
-                               #       aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-                               aceEditor("rmd_report", mode="markdown", selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-                             } else {
-                               aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example))
-                             },
-                             actionButton("evalRmd", "Update"),
-                             downloadButton('saveHTML', 'Save HTML'),
-                             downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),
-                             fileInput('loadRmd', 'Load Rmd', multiple=TRUE)),
-      # HTML("<a 'class='link action-button shiny-bound-input' id='gotoData'>Test</a>"),
-      div(class="span6", htmlOutput("rmd_knitDoc"))
+    if(vimKeyBinding == TRUE) {
+      aceEditor("rmd_report", mode="markdown", selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
+    } else {
+      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example))
+    },
+    actionButton("evalRmd", "Update"),
+    downloadButton('saveHTML', 'Save HTML'),
+    downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),
+    fileInput('loadRmd', 'Load Rmd', multiple=TRUE)),
+    # HTML("<a 'class='link action-button shiny-bound-input' id='gotoData'>Test</a>"),
+    div(class="span6", htmlOutput("rmd_knitDoc"))
   )
 })
 
@@ -182,11 +181,11 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row-fluid", div(class="span6",
-                             aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example), vimKeyBinding=vimKeyBinding),
-                             actionButton("rEval", "Run"),
-                             downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
-                             fileInput('sourceCode', 'Source R-code', multiple=TRUE),
-                             fileInput('loadCode', 'Load R-code', multiple=FALSE)
+    aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example), vimKeyBinding=vimKeyBinding),
+    actionButton("rEval", "Run"),
+    downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
+    fileInput('sourceCode', 'Source R-code', multiple=TRUE),
+    fileInput('loadCode', 'Load R-code', multiple=FALSE)
   ),
   div(class="span6", htmlOutput("rCodeEval"))
   )
