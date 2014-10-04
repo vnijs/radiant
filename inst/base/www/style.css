@@ -1,32 +1,32 @@
-label.radio { 
+label.radio {
   padding-left: 18px;
   padding-right: 0px;
   margin-left: 3px;
-  display: inline-block; 
+  display: inline-block;
 }
 
 .radio input[type="radio"] {
-  float: none; 
+  float: none;
 }
 
-label.checkbox  { 
-  display: inline-block; 
+label.checkbox  {
+  display: inline-block;
 }
 
-.checkbox input[type="checkbox"] { 
-  float: none; 
+.checkbox input[type="checkbox"] {
+  float: none;
 }
 
-.recalculating { 
-  opacity: 1.0; 
+.recalculating {
+  opacity: 1.0;
 }
 
-select { 
-  max-width: 200px; 
+select {
+  max-width: 200px;
 }
 
-.selectize-input { 
-  max-width: 200px; 
+.selectize-input {
+  max-width: 200px;
 }
 
 pre {
@@ -35,52 +35,52 @@ pre {
   white-space: pre;
 }
 
-textarea { 
-  width: 650px; 
+textarea {
+  width: 650px;
   /*max-height: 200px;*/
   /*overflow: auto;*/
   /*height: auto;*/
-  
+
   /*http://plugins.jquery.com/autosize/*/
 }
 
 #tr_copyAndPaste {
-  max-width: 185px; 
+  max-width: 185px;
 }
 
 input[type="number"] {
-  max-width: 185px; 
+  max-width: 185px;
 }
 
-.jslider { 
-  max-width: 200px; 
+.jslider {
+  max-width: 200px;
 }
 
-.well { 
-  padding: 12px; 
-  margin-bottom: 5px; 
-  max-width: 280px; 
+.well {
+  padding: 12px;
+  margin-bottom: 5px;
+  max-width: 280px;
 }
 
-.span4 { 
+.span4 {
   /*width: 280px; */
-  max-width: 280px; 
+  max-width: 280px;
 }
 
 /*.span8 {
-  max-width: 1000px; 
+  max-width: 1000px;
 }*/
 
-.popover { 
-  width: 600px; 
-  position: relative; top: -75px !important; 
-  left: 320px !important; 
+.popover {
+  width: 600px;
+  position: relative; top: -75px !important;
+  left: 320px !important;
 }
 
-.modal { 
+.modal {
   /*width: 1000px; */
-  width: 800px; 
-  left: 600px; 
+  width: 800px;
+  left: 600px;
 }
 
 .modal-body {
@@ -88,46 +88,46 @@ input[type="number"] {
   max-height:500px;
 }
 
-#view_vars, #preFactor_vars, #factor_vars, #pmap_attr, #cor_var, #reg_var2 { 
-  height: 180px; 
+#view_vars, #preFactor_vars, #factor_vars, #pmap_attr, #cor_var, #reg_var2 {
+  height: 180px;
   /*height: 200px; */
   /*margin-bottom: 35px;*/
   margin-bottom: 15px;
 }
 
-#view_select, #expl_select, #viz_select, #tr_subset, #tr_rename, #tr_recode, #tr_transform, #data_rename { 
-  max-width: 185px; 
+#view_select, #expl_select, #viz_select, #tr_subset, #tr_rename, #tr_recode, #tr_transform, #data_rename {
+  max-width: 185px;
 }
 
-#view_order { 
-  max-width: 135px; 
+#view_order {
+  max-width: 135px;
   display: inline;
 }
 
-#view_order_desc { 
-  vertical-align: top; 
+#view_order_desc {
+  vertical-align: top;
 }
 
-#downloadData { 
-  vertical-align: top; 
-  height: 18.5px; 
+#downloadData {
+  vertical-align: top;
+  height: 18.5px;
   width: 70px;
 }
 
-#viz_plot_width, #viz_plot_height, #pmap_scaling, #pmap_fontsz { 
-  max-width: 60px; 
+#viz_plot_width, #viz_plot_height, #pmap_scaling, #pmap_fontsz {
+  max-width: 60px;
 }
 
-#x1, #x2, #x3,#x4 { 
-  max-width: 25px; 
+#x1, #x2, #x3,#x4 {
+  max-width: 25px;
 }
 
-#fac_cutoff { 
-  max-width: 60px; 
+#fac_cutoff {
+  max-width: 60px;
 }
 
-#fac_condFormat { 
-  vertical-align: middle; 
+#fac_condFormat {
+  vertical-align: middle;
 }
 
 .alignleft {
@@ -135,20 +135,4 @@ input[type="number"] {
 }
 .alignright {
   float: right;
-}
-
-div.busy {
-  position:absolute;
-  top: 40%;
-  left: 50%;
-  margin-top: -100px;
-  margin-left: -50px;
-  display:none;
-  background: rgba(230, 230, 230, .8);
-  text-align: center;
-  padding-top: 20px;
-  padding-left: 30px;
-  padding-bottom: 40px;
-  padding-right: 30px;
-  border-radius: 5px;
 }

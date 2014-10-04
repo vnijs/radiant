@@ -1,6 +1,6 @@
 ### Radiant - Business analytics using R and Shiny
 
-Version 0.505 (9/24/2014)
+Version 0.510 (10/4/2014)
 
 By: <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="_blank">Vincent Nijs</a> (vnijs@ucsd.edu)
 Built using <a href="http://www.rstudio.com/shiny/" target="_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="_blank">Rstudio</a>
