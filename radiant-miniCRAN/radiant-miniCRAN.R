@@ -57,5 +57,5 @@ pkgList <- pkgDep(pkgs, repos=repos, type="mac.binary.mavericks", suggests = FAL
 .makeRepo(pkgs_gh, path=pth, type="mac.binary.mavericks", localdir=localdir)    # needed to copy locally compiled files to the final folders because makeRepo doesn't do this
 .makeRepo(pkgList, path=pth, type="mac.binary.mavericks")                       # needed to avoid crash on mac.binary.mavericks
 
-# unlink(pth_gh, recursive=TRUE)
+unlink(pth_gh, recursive=TRUE)
 
