@@ -58,6 +58,10 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # when run on Shiny-server make sure you have install the packages already
   # using sudo su
   mcran <- "file:///home/vnijs/Desktop/radiant/radiant-miniCRAN"
+  options(repos = c(CRAN = mcran))
   source(paste0(mcran,"/pkgs.R"))
+  sapply(pkgs, install.packages, character.only=TRUE)
   sapply(pkgs, require, character.only=TRUE)
+
+  # may still have to install several things using install_github
 }
