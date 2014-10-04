@@ -8,7 +8,7 @@ output$uiSm_var <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars, 
+  selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars,
   	selected = state_singlevar("sm_var",vars), multiple = FALSE)
 })
 
@@ -16,9 +16,9 @@ output$ui_singleMean <- renderUI({
   list(
   	wellPanel(
  	   	uiOutput("uiSm_var"),
-  	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:", 
+  	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = base_alt, selected = state_init_list("sm_alternative","two.sided", base_alt), multiple = FALSE),
-    	sliderInput('sm_sigLevel',"Significance level:", min = 0.85, max = 0.99, 
+    	sliderInput('sm_sigLevel',"Significance level:", min = 0.85, max = 0.99,
     		value = state_init('sm_sigLevel',.95), step = 0.01),
     	numericInput("sm_compValue", "Comparison value:", state_init('sm_compValue',0.0))
   	),
@@ -43,17 +43,17 @@ output$singleMean <- renderUI({
 observe({
   if(is.null(input$singleMeanReport) || input$singleMeanReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$sm_var, input$sm_compValue, 
+		inp <- list(input$datasets, input$sm_var, input$sm_compValue,
 			input$sm_alternative, input$sm_sigLevel)
 		updateReport(inp,"singleMean")
   })
 })
 
-singleMean <- function(datasets, sm_var, sm_compValue = 0, sm_alternative = 'two.sided', 
+singleMean <- function(datasets, sm_var, sm_compValue = 0, sm_alternative = 'two.sided',
 	sm_sigLevel = .95) {
 
 	dat <- values[[datasets]][,sm_var]
-	result <- t.test(dat, mu = sm_compValue, alternative = sm_alternative, 
+	result <- t.test(dat, mu = sm_compValue, alternative = sm_alternative,
 		conf.level = sm_sigLevel)
 	result$data <- data.frame(dat)
 	names(result$data) <- sm_var
@@ -70,7 +70,7 @@ plots_singleMean <- function(result = .singleMean()) {
 	dat <- result$data
 	bw <- diff(range(dat, na.rm = TRUE)) / 12
 
-	p <- ggplot(dat, aes_string(x=result$data.name)) + 
+	p <- ggplot(dat, aes_string(x=result$data.name)) +
 		geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 		geom_vline(xintercept = c(result$null.value), color = 'red', linetype = 'longdash', size = 1) +
 		geom_vline(xintercept = result$estimate, color = 'black', linetype = 'solid', size = 1) +
@@ -86,7 +86,7 @@ output$uiCm_var1 <- renderUI({
 	isNumOrFct <- "numeric" == getdata_class() | "integer" == getdata_class() | "factor" == getdata_class()
   vars <- varnames()[isNumOrFct]
   if(length(vars) == 0) return()
-  selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars, 
+  selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars,
   	selected = state_singlevar("cm_var1",vars), multiple = FALSE)
 })
 
@@ -100,11 +100,11 @@ output$uiCm_var2 <- renderUI({
  		# when cm_var1 is numeric comparison for multiple variables are possible
 	 	vars <- vars[-which(vars == input$cm_var1)]
 	  if(length(vars) == 0) return()
-	  selectInput(inputId = "cm_var2", label = "Variables (select one or more):", choices = vars, 
+	  selectInput(inputId = "cm_var2", label = "Variables (select one or more):", choices = vars,
 	  	selected = state_multvar("cm_var2",vars), multiple = TRUE, selectize = FALSE)
 	} else {
  		# when cm_var1 is not numeric then comparisons are across levels/groups
-	  selectInput(inputId = "cm_var2", label = "Variables (select one):", choices = vars, 
+	  selectInput(inputId = "cm_var2", label = "Variables (select one):", choices = vars,
 	  	selected = state_singlevar("cm_var2",vars), multiple = FALSE)
 	}
 })
@@ -115,7 +115,7 @@ output$ui_compareMeans <- renderUI({
 	    uiOutput("uiCm_var1"),
 	    uiOutput("uiCm_var2"),
 	    conditionalPanel(condition = "input.tabs_compareMeans == 'Summary'",
-	      selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:", choices = base_alt, 
+	      selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:", choices = base_alt,
 	      	selected = state_init_list("cm_alternative","two.sided", base_alt))
 	    ),
 	    conditionalPanel(condition = "input.tabs_compareMeans == 'Plots'",
@@ -157,6 +157,7 @@ compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter) {
 	if(!is.factor(dat[,var1])) {
 		cm_paired <- TRUE
 		dat <- melt(dat)
+# 		dat <- gather(dat)
 		var1 <- colnames(dat)[1]
 		var2 <- colnames(dat)[2]
 	} else {
@@ -165,10 +166,10 @@ compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter) {
 	}
 
 	if(cm_paired) {
-		pwcomp <- with(dat,pairwise.t.test(get(var2), get('variable'), pool.sd = FALSE, 
+		pwcomp <- with(dat,pairwise.t.test(get(var2), get('variable'), pool.sd = FALSE,
 			p.adj = "bonf", paired = TRUE, alternative = cm_alternative))
 	} else {
-		pwcomp <- with(dat,pairwise.t.test(get(var2), get('variable'), pool.sd = FALSE, 
+		pwcomp <- with(dat,pairwise.t.test(get(var2), get('variable'), pool.sd = FALSE,
 			p.adj = "bonf", paired = FALSE, alternative = cm_alternative))
 	}
 
@@ -191,17 +192,17 @@ summary_compareMeans <- function(result = .compareMeans()) {
 	print(means_tab, row.names = FALSE, right = FALSE)
 
 	if(result$pwcomp$cm_alternative == "two.sided") {
-		h.sym <- "not equal to" 
+		h.sym <- "not equal to"
 	} else if(result$pwcomp$cm_alternative == "less") {
-		h.sym <- "<" 
+		h.sym <- "<"
 	} else {
-		h.sym <- ">" 
+		h.sym <- ">"
 	}
 
 	mod <- result[['pwcomp']]$p.value
 	dvar <- dimnames(mod)
-	var1 <- dvar[[1]] 
-	var2 <- dvar[[2]] 
+	var1 <- dvar[[1]]
+	var2 <- dvar[[2]]
 
 	res <- data.frame(matrix(ncol = 3, nrow = length(var1)*length(var1)/2))
 	colnames(res) <- c("Alternative hyp.", "Null hyp.", "p-value")
@@ -210,9 +211,9 @@ summary_compareMeans <- function(result = .compareMeans()) {
 	for(i in var1) {
 		for(j in var2) {
 			if(is.na(mod[i,j])) next
-			res[rnr, 'Alternative hyp.'] <- paste(i, h.sym, j,"     ") 
-			res[rnr, 'Null hyp.'] <- paste(i, "=", j, "     ") 
-			if(mod[i,j] < .001) { 
+			res[rnr, 'Alternative hyp.'] <- paste(i, h.sym, j,"     ")
+			res[rnr, 'Null hyp.'] <- paste(i, "=", j, "     ")
+			if(mod[i,j] < .001) {
 				pval = "< 0.001"
 			} else {
 				pval <- sprintf("%.3f", mod[i,j])
@@ -221,7 +222,7 @@ summary_compareMeans <- function(result = .compareMeans()) {
 			rnr <- rnr + 1
 		}
 	}
-	cat("\n")	
+	cat("\n")
 	print(res, row.names = FALSE, right = FALSE)
 }
 
@@ -233,9 +234,9 @@ plots_compareMeans <- function(result = .compareMeans()) {
 	var2 <- colnames(dat)[-1]
 
 	plots <- list()
-	# p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3, legend = FALSE) 
-	p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3) 
-	if(result$pwcomp$cm_jitter)	p <- p + geom_jitter() 
+	# p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3, legend = FALSE)
+	p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3)
+	if(result$pwcomp$cm_jitter)	p <- p + geom_jitter()
 	plots[["Boxplot"]] <- p
 	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.3)
 
@@ -249,7 +250,7 @@ output$uiCt_var1 <- renderUI({
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
   if(length(vars) == 0) return()
-  selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars, 
+  selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
   	# selected = names(vars[vars == values$ct_var1]), multiple = FALSE)
   	selected = state_singlevar("ct_var1",vars), multiple = FALSE)
 })
@@ -262,7 +263,7 @@ output$uiCt_var2 <- renderUI({
 	# if(is.null(inChecker(input$ct_var1))) return()
 	vars <- vars[-which(vars == input$ct_var1)]
   if(length(vars) == 0) return()
-  selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars, 
+  selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
   	# selected = names(vars[vars == values$ct_var2]), multiple = FALSE)
   	selected = state_singlevar("ct_var2",vars), multiple = FALSE)
 })
@@ -272,14 +273,14 @@ output$ui_crosstab <- renderUI({
   	wellPanel(
 	    uiOutput("uiCt_var1"),
 	    uiOutput("uiCt_var2"),
-		  checkboxInput("ct_std_residuals", label = "Deviation (standarized)", 
+		  checkboxInput("ct_std_residuals", label = "Deviation (standarized)",
 	     	value = state_init('ct_std_residuals',FALSE)),
-		  checkboxInput("ct_deviation", label = "Deviation (percentage)", 
+		  checkboxInput("ct_deviation", label = "Deviation (percentage)",
 	     	value = state_init('ct_deviation',FALSE)),
-		  checkboxInput("ct_expected", label = "Expected values", 
+		  checkboxInput("ct_expected", label = "Expected values",
 	     	value = state_init('ct_expected',FALSE)),
 	    conditionalPanel(condition = "input.tabs_crosstab == 'Summary'",
-			  checkboxInput("ct_contrib", label = "Contribution to chisquare value", 
+			  checkboxInput("ct_contrib", label = "Contribution to chisquare value",
 	     	value = state_init('ct_contrib',FALSE)))
 		),
 	 	helpAndReport('Cross-tabs','crosstab',inclMD("../quant/tools/help/crossTabs.md"))
@@ -305,16 +306,16 @@ output$crosstab <- renderUI({
 	ret_text <- "This analysis requires variables of type factor.\nPlease select another dataset."
  	if(is.null(input$ct_var1) || is.null(input$ct_var2)) return(ret_text)
 	# if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
-	crosstab(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation, 
-		input$ct_std_residuals, input$ct_contrib) 
+	crosstab(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
+		input$ct_std_residuals, input$ct_contrib)
 })
 
 observe({
   if(is.null(input$crosstabReport) || input$crosstabReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation, 
-			input$ct_std_residuals, input$ct_contrib) 
+		inp <- list(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
+			input$ct_std_residuals, input$ct_contrib)
 
 		updateReport(inp,"crosstab", round(7 * ct_plotWidth()/650,2), round(7 * ct_plotHeight()/650,2))
   })
@@ -377,7 +378,7 @@ summary_crosstab <- function(result = .crosstab()) {
 	# }
 	# if(cinp$ct_rowperc) {
 	# 	cat("\nRow percentages:\n")
-	# 	print(prop.table(result$table, 1), digits = 2) # row percentages 
+	# 	print(prop.table(result$table, 1), digits = 2) # row percentages
 	# }
 	# if(cinp$ct_colperc) {
 	# 	cat("\nColumn percentages:\n")
@@ -397,11 +398,15 @@ plots_crosstab <- function(result = .crosstab()) {
 	# dat <- na.omit( getdata()[,c(cinp$ct_var1,cinp$ct_var2)] )
 	plots <- list()
 
+  ##### Should probably change the name of this function
+  ##### if you are switching to tidyr
 	meltTable <- function(tab) {
 		tab <- data.frame(tab)
 		lab <- data.frame(rownames(tab))
 		names(lab) <- "rnames"
 		melt(cbind(lab,tab))
+    # gather seems to be the equivalent function to melt in tidyr
+# 		gather(cbind(lab,tab))
 	}
 
 	if(cinp$ct_std_residuals) {
@@ -433,16 +438,16 @@ plots_crosstab <- function(result = .crosstab()) {
 		plots[['expected']] <- ggplot(tab, aes_string(x = 'rnames', y = "value", fill = "variable")) +
          			# geom_bar(stat="identity", position = "dodge", alpha = .3) +
          			geom_bar(position = "fill", alpha = .3) +
-         			labs(list(title = paste("Expected values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""), 
+         			labs(list(title = paste("Expected values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 							x = "", y = "", fill = cinp$ct_var2))
 	}
 
 	plots[['stacked']] <- ggplot(dat, aes_string(x = cinp$ct_var1, fill = cinp$ct_var2)) + geom_bar(position = "fill", alpha=.3) +
-		labs(list(title = paste("Observed values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""), 
+		labs(list(title = paste("Observed values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 				x = "", y = "", fill = cinp$ct_var2))
 
 	# plots[['observed']] <- ggplot(dat, aes_string(x = cinp$ct_var1, fill = cinp$ct_var2)) + geom_histogram(position = "dodge", alpha=.3) +
-	# 	labs(list(title = paste("Crosstab of ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""), 
+	# 	labs(list(title = paste("Crosstab of ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 	# 			x = '', y = "Count", fill = cinp$ct_var2))
 
 	do.call(grid.arrange, c(plots, list(ncol = 1)))
