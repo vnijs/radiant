@@ -1,12 +1,12 @@
 .Rproj.user/
 .git/
 
-launchers/launchers-code/
 launchers/finding_radiant_app.R
-launchers/radiant_mac.workflow/
+launchers/.launchers-code
 
-radiant-miniCRAN/miniCRAN_0.1-0.tgz
 radiant-miniCRAN/radiant-miniCRAN.R
+radiant-miniCRAN/build_from_github.R
+radiant-miniCRAN/makeRepo.R
 
 radiant-sync/
 
