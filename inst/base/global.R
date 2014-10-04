@@ -5,21 +5,21 @@ source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
 # Start of main code
 ############################################################
 
-# for debugging
-if(file.exists("~/Desktop/radiant_dev/")) {
-  options(shiny.trace = TRUE)
-}
-
-# options(warn=2)
-# options(shiny.error=recover)
+vimKeyBinding <- FALSE
 
 # only write if running on developer computer
-vimKeyBinding <- FALSE
-# if(file.exists("/Users/vnijs/Dropbox/radiant")) {
-#   # shiny.trace shows JSON packets transferred over websockets
-#   options(shiny.trace = TRUE)
-#   vimKeyBinding <- TRUE
-# }
+if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
+  # for debugging
+  options(shiny.trace = TRUE)
+  # options(warn=2)
+  # options(shiny.error=recover)
+  vimKeyBinding <- TRUE
+}
+
+# Attempt to build automated testing into Radiant
+# not implemented yet
+testingRadiant <- FALSE
+options(digits = 3)
 
 # Attempt to build automated testing into Radiant
 # not implemented yet
@@ -133,9 +133,7 @@ helpAndReport <- function(title, link, content) {
 }
 
 inclMD <- function(file)
-  return(
-    markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css")
-  )
+  return(markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css"))
 
 inclRmd <- function(path) {
   # function to render .Rmd files to html on-the-fly

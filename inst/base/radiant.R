@@ -49,12 +49,12 @@ date2character_dat <- function(dat) {
 # functions used to create Shiny in and outputs
 ################################################################
 plotWidth <- function() {
-	ifelse(is.null(input$viz_plot_width), return(values$plotWidth), 
+	ifelse(is.null(input$viz_plot_width), return(values$plotWidth),
 		return(input$viz_plot_width))
 }
 
 plotHeight <- function() {
-	ifelse(is.null(input$viz_plot_height), return(values$plotHeight), 
+	ifelse(is.null(input$viz_plot_height), return(values$plotHeight),
 		return(input$viz_plot_height))
 }
 
@@ -88,20 +88,14 @@ statPanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
   return(tabsetPanel(
     id = paste0("tabs_",fun_label),
     tabPanel("Summary", verbatimTextOutput(sum_name)),
-    tabPanel("Plots", conditionalPanel(condition="!$('html').hasClass('shiny-busy')",
-	   	plotOutput(plot_name, height = "100%")))
+    tabPanel("Plots", plotOutput(plot_name, height = "100%"))
   ))
 }
 
 statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label, widthFun = "plotWidth", heightFun = "plotHeight") {
-	isolate({ 
+	isolate({
 	  sidebarLayout(
 	    sidebarPanel(
-	      # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
-	    	div(class = "busy",
-	        p("Calculation in progress ..."),
-	        img(src="imgs/ajaxloaderq.gif")
-	      ),
 	      wellPanel(
 	        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
 	        HTML(paste("<label><strong>Tool:",isolate(input$nav_radiant),"</strong></label>")),
@@ -113,5 +107,5 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label, widthFun = 
 				statPanel(fun_name, rfun_label, fun_label, widthFun, heightFun)
 	    )
 	  )
-  })	
+  })
 }
