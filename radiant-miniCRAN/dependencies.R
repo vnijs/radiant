@@ -2,8 +2,8 @@
 # next line checks if Radiant is being run locally or not
 if(Sys.getenv('SHINY_PORT') == "") {
 
-  if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
-    pth <- normalizePath("~/Desktop/radiant_dev/radiant-miniCRAN", winslash = "/")
+  if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
+    pth <- normalizePath("~/Desktop/GitHub/radiant_dev/radiant-miniCRAN", winslash = "/")
   } else {
 
     if (.Platform$OS.type == 'windows') {
@@ -33,7 +33,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-
   # loading the list of pkgs needed to run radiant
   source(paste0(pth,"/pkgs.R"))
 
@@ -44,15 +43,15 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # options(repos = c(CRAN = c(mcran,"http://cran.rstudio.com")))
   options(repos = c(CRAN = mcran))
 
-  # check if packages in pkgs are alraedy installed locally
-  available <- suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
-  inst.libs <- pkgs[available == FALSE]
+  # udpate old-packages
+  update.packages(lib.loc = local_dir, ask = FALSE)
 
-  # install and require the packages that have not yet been installed
-  if(length(inst.libs) != 0) {
-    install.packages(inst.libs, local_dir)
-    suppressWarnings(sapply(inst.libs, require, lib.loc = local_dir, character.only=TRUE))
-  }
+  # install packages that are available but were not installed before
+  to_inp <- new.packages(lib.loc = local_dir)
+  if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
+
+  # load/attach packages
+  suppressWarnings(sapply(rownames(installed.packages()), require, lib.loc = local_dir, character.only=TRUE))
 
 } else {
   # when run on Shiny-server make sure you have install the packages already

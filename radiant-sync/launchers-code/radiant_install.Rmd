@@ -1,0 +1,8 @@
+---
+title: "Radiant install instructions"
+author: "Vincent Nijs"
+date: "September 25, 2014"
+output: html_document
+---
+
+Alternatively you can download Radiant from [Dropbox](https://www.dropbox.com/sh/gyz4faxlw5fsx6u/AACNckIZ2vbvMYWwBt8V9Wiza?dl=0). If you would like to __share__ the dropbox folder with Radiant's code please send an email to radiant@rady.ucsd.edu with 'share dropbox' as the subject.

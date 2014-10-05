@@ -17,6 +17,14 @@ Version: 1.0-6
 License: GPL (>= 2)
 Archs: i386, x64
 
+Package: Cairo
+Version: 1.5-6
+Depends: R (>= 2.4.0)
+Suggests: png
+Enhances: FastRWeb
+License: GPL-2
+Archs: i386, x64
+
 Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
@@ -61,8 +69,8 @@ Version: 0.3
 Depends: R (>= 3.0.2)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13,
-                 methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>=
+              3.0-1), nycflights13, methods
 License: MIT + file LICENSE
 Archs: x64
 
@@ -86,6 +94,13 @@ Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, test
 Enhances: sp
 License: GPL-2
 
+Package: ggvis
+Version: 0.4
+Depends: R (>= 3.0)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
+Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
+License: GPL-2
+
 Package: GPArotation
 Version: 2012.3-1
 Depends: R (>= 2.0.0)
@@ -102,6 +117,11 @@ Version: 0.1.2
 Depends: R (>= 2.14), grid
 Suggests: testthat, plyr
 License: GPL-2
+
+Package: hflights
+Version: 0.1
+Depends: R (>= 2.10)
+License: CC0
 
 Package: highr
 Version: 0.3
@@ -149,6 +169,12 @@ License: GPL
 Package: labeling
 Version: 0.3
 License: MIT + file LICENSE | Unlimited
+
+Package: Lahman
+Version: 3.0-1
+Depends: R (>= 2.10)
+Suggests: lattice, ggplot2, googleVis, data.table, vcd, plyr, reshape2, zipcode
+License: GPL
 
 Package: lattice
 Version: 0.20-29
@@ -345,7 +371,7 @@ Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 
 Package: shinyAce
-Version: 0.1.0
+Version: 0.1.01
 Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
 Suggests: testthat

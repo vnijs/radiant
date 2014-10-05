@@ -3,7 +3,7 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
   navbarMenu("Random",
-    tabPanel("Sampling and assignment", uiOutput("random")),
+#     tabPanel("Sampling and assignment", uiOutput("random")),
     tabPanel("Sample size", uiOutput("sampleSize"))
   ),
 
