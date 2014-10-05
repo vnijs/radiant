@@ -90,7 +90,7 @@ explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_sele
     dat <- dat[,expl_columns, drop = FALSE]
     isNum <- sapply(dat, is.numeric)
     if(sum(isNum) > 0) {
-      res <- data.frame(describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
+      res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
       res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
       return(res)
     }

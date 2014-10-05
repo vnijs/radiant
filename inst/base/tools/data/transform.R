@@ -310,8 +310,8 @@ output$transform_summary <- renderPrint({
 
 	if(sum(isNum) > 0) {
 		cat("Summarize numeric variables:\n")
-		# print(describe(dat[,isNum])[,c("n","mean","median","min","max","range","sd","se","skew","kurtosis")])
-		res <- data.frame(describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
+		# print(psych::describe(dat[,isNum])[,c("n","mean","median","min","max","range","sd","se","skew","kurtosis")])
+		res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
 		res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
 		print(res)
 		cat("\n")
