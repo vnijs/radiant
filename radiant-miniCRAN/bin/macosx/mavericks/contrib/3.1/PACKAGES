@@ -21,6 +21,11 @@ License: GPL (>= 2)
 Archs: bitops.so.dSYM
 MD5sum: 2a0ceda39e9739ab22b903844256ea15
 
+Package: brew
+Version: 1.0-6
+License: GPL-2
+MD5sum: e5e85372f78b687153d6944257b84b92
+
 Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics

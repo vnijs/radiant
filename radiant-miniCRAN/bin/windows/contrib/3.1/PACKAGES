@@ -17,6 +17,10 @@ Version: 1.0-6
 License: GPL (>= 2)
 Archs: i386, x64
 
+Package: brew
+Version: 1.0-6
+License: GPL-2
+
 Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
