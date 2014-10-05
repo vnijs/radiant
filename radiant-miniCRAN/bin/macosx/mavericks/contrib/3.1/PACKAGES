@@ -30,8 +30,7 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960),
-             survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival, survey
 License: GPL (>= 2)
 MD5sum: 4bb985586c01aeeefe70dcf982f60cda
 
@@ -77,8 +76,8 @@ Version: 0.3
 Depends: R (>= 3.0.2)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv,
-             Lahman (>= 3.0-1), nycflights13, methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13,
+                 methods
 License: MIT + file LICENSE
 MD5sum: cfae5ebab6b18307198a9de3b884bb3b
 
@@ -104,14 +103,6 @@ Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, test
 Enhances: sp
 License: GPL-2
 MD5sum: f249165ce737882a804b3bdb3d7c504a
-
-Package: ggvis
-Version: 0.3.0.1
-Depends: R (>= 3.0)
-Imports: assertthat, RJSONIO, shiny (>= 0.10), magrittr, dplyr (>= 0.2), htmltools (>= 0.2.4)
-Suggests: MASS, mgcv, testthat (>= 0.8.1), knitr (>= 1.6)
-License: GPL-2
-MD5sum: cf365aeda4fd4e3a8bdcd55f9d452e70
 
 Package: GPArotation
 Version: 2012.3-1
@@ -183,8 +174,7 @@ MD5sum: bc2dc6c5647f76c084c1de5b15448a31
 Package: knitr
 Version: 1.6
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6),
-             tools
+Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6), tools
 Suggests: testit, rgl, codetools, XML, RCurl
 License: GPL
 MD5sum: c218dc66d9fddf8a3032f31995e17e05
@@ -417,8 +407,7 @@ MD5sum: 19f9bc12f20c8b5af5de5dbca3c37c32
 Package: shiny
 Version: 0.10.2.1
 Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>=
-             2.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 MD5sum: d719109fcc1b6a0eaae443586e007e28

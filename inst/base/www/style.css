@@ -35,9 +35,12 @@ pre {
   white-space: pre;
 }
 
-/*.selectize-dropdown {*/
-.selectize-dropdown {
+/* .selectize-dropdown {
   dropdownParent: "body";
+} */
+
+.tab-content {
+  overflow: visible;
 }
 
 textarea {
