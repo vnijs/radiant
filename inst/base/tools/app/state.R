@@ -104,7 +104,8 @@ observe({
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
 #   unlink(c("www/rmd/cache/", "www/rmd/figure"), recursive = TRUE)
-  unlink(c("www/rmd/figure"), recursive = TRUE)
+  unlink(c("~/radiant_temp/rmd/figure"), recursive = TRUE)
+
   stopApp()   # stop Radiant
   q("no")     # quit R
 })

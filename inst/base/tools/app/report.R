@@ -23,10 +23,12 @@ hist(rnorm(100))
 "
 # opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
 opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
+               fig.path = "~/radiant_temp/rmd/figure/")
+
                # opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE,
 #                fig.path = "www/rmd/figure/", cache.path = "www/rmd/cache/")
-               fig.path = "www/rmd/figure/")
-opts_knit$set(progress = FALSE)
+#                fig.path = "www/rmd/figure/")
+opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
