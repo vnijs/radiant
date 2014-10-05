@@ -53,6 +53,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # load/attach packages
   suppressWarnings(sapply(rownames(installed.packages()), require, lib.loc = local_dir, character.only=TRUE))
 
+  if (.Platform$OS.type == 'windows') remove.packages('Cairo')
+
 } else {
   # when run on Shiny-server make sure you have install the packages already
   # using sudo su
