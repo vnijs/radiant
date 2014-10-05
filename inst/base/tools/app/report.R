@@ -21,15 +21,11 @@ LaTeX math:  $f(\\\\alpha, \\\\beta) \\\\propto x^{\\\\alpha-1}(1-x)^{\\\\beta-1
 hist(rnorm(100))
 ```
 "
-
-# To include html or markdown created by R use results='asis'
-# ```{r results='asis'}
-# cat('_Markdown_,', 'oh yeah, **Markdown**')
-# ```
-
-opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
+# opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
+opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                # opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE,
-               fig.path = "www/rmd/figure/", cache.path = "www/rmd/cache/")
+#                fig.path = "www/rmd/figure/", cache.path = "www/rmd/cache/")
+               fig.path = "www/rmd/figure/")
 opts_knit$set(progress = FALSE)
 
 output$report <- renderUI({
