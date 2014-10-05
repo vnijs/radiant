@@ -8,7 +8,7 @@ source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
 vimKeyBinding <- FALSE
 
 # only write if running on developer computer
-if(file.exists("~/Desktop/radiant_dev/") || file.exists("~/../Desktop/radiant_dev/")) {
+if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
   # for debugging
   options(shiny.trace = TRUE)
   # options(warn=2)

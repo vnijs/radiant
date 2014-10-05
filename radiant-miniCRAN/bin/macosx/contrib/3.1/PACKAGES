@@ -21,6 +21,15 @@ License: GPL (>= 2)
 Archs: bitops.so.dSYM
 MD5sum: 5f5e1a3bc27aed1a0dc993fe839d5b83
 
+Package: Cairo
+Version: 1.5-5
+Depends: R (>= 2.4.0)
+Suggests: png
+Enhances: FastRWeb
+License: GPL-2
+Archs: Cairo.so.dSYM
+MD5sum: 69695c3b53a31f2d5425263b5c7b746d
+
 Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
@@ -71,8 +80,8 @@ Version: 0.3
 Depends: R (>= 3.0.2)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13,
-                 methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>=
+              3.0-1), nycflights13, methods
 License: MIT + file LICENSE
 MD5sum: cfae5ebab6b18307198a9de3b884bb3b
 
@@ -98,6 +107,14 @@ Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, test
 Enhances: sp
 License: GPL-2
 MD5sum: 2aebe45bac4065dd82f4596ce4b99f81
+
+Package: ggvis
+Version: 0.4
+Depends: R (>= 3.0)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
+Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
+License: GPL-2
+MD5sum: a66101e1277be2a4f750362d446b173a
 
 Package: GPArotation
 Version: 2012.3-1
