@@ -1,6 +1,10 @@
 .Rproj.user/
 .git/
 
+inst/base/www/rmd
+inst/marketing/www/rmd
+inst/quant/www/rmd
+
 launchers/finding_radiant_app.R
 launchers/launchers-code
 
