@@ -1,8 +1,11 @@
 # Specify list of packages needed
-pkgs_cran <- c("mime","BH","GPArotation","R.methodsS3", "R.oo", "R.utils",
-  "Cairo","car", "gridExtra", "psych", "vegan", "lubridate", "RColorBrewer",
-	"wordcloud", "AlgDesign", "markdown", "rmarkdown", "knitr", "reshape2",
-  "plyr", "ggplot2")
+#   "Cairo","car", "gridExtra", "psych", "vegan", "lubridate", "RColorBrewer",
+# 	"wordcloud", "AlgDesign", "reshape2", "plyr", "markdown", "rmarkdown", "knitr",
+# pkgs_cran <- c("mime","BH","GPArotation","R.methodsS3", "R.oo", "R.utils",
+
+pkgs_cran <- c("R.utils", "car", "gridExtra", "GPArotation", "psych", "vegan",  "RColorBrewer",
+	"wordcloud", "AlgDesign", "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
+  "lubridate", "plyr", "ggplot2")
 
 pkgs_gh <- c("shiny","shinyAce","rvest","tidyr","dplyr","ggvis")
 

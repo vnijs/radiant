@@ -6,13 +6,12 @@
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-
 # miniCRAN vignette
 # http://cran.r-project.org/web/packages/miniCRAN/vignettes/miniCRAN.html
 # path to non-local install directory
-# inst_to <- .libPaths()[2]
-# options(repos = c(CRAN = "http://cran.rstudio.com"))
-# install.packages('miniCRAN', inst_to, dependencies = TRUE, type='source')
+inst_to <- .libPaths()[2]
+options(repos = c(CRAN = "http://cran.rstudio.com"))
+install.packages('miniCRAN', inst_to, dependencies = TRUE, type='source')
 
 pth <- "~/Desktop/GitHub/radiant_dev/radiant-miniCRAN"
 if(!file.exists(pth)) dir.create(pth)
