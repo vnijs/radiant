@@ -30,9 +30,14 @@ select {
 }
 
 pre {
-  overflow: auto;
+  /* overflow: auto; */
   word-wrap: normal;
   white-space: pre;
+}
+
+/*.selectize-dropdown {*/
+.selectize-dropdown {
+  dropdownParent: "body";
 }
 
 textarea {

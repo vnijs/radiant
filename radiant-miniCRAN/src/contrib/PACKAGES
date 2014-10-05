@@ -23,6 +23,12 @@ License: GPL (>= 2)
 MD5sum: fba16485a51b1ccd354abde5816b6bdd
 NeedsCompilation: yes
 
+Package: brew
+Version: 1.0-6
+License: GPL-2
+MD5sum: 4aaca5e6ec145e0fc0fe6375ce1f3806
+NeedsCompilation: no
+
 Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
