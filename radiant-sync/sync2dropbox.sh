@@ -1,5 +1,5 @@
 ### Copying over the main code files
-#  rsync --dry-run -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
+# rsync --dry-run -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
 # rsync -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
 
 ### Cleaning out stuff that is no longer needed
@@ -13,4 +13,4 @@
 
 # only copy the files that do not exist to dropbox
 # rsync --dry-run -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
-rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
