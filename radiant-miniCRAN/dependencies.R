@@ -51,6 +51,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
 
   # add function to remove packages that are not used by Radiant?
+  # might mess up someones stuff. maybe better to do this like packRat does it
+  # i.e., install into a non-standard directory
 
   # load/attach packages
 #   suppressWarnings(sapply(rownames(installed.packages()), require, lib.loc = local_dir, character.only=TRUE))
