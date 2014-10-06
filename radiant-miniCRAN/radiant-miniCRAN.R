@@ -6,6 +6,7 @@
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
+
 # miniCRAN vignette
 # http://cran.r-project.org/web/packages/miniCRAN/vignettes/miniCRAN.html
 # path to non-local install directory
