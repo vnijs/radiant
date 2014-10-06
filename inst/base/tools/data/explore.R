@@ -4,24 +4,29 @@ output$uiExpl_columns <- renderUI({
   # vars <- varnames()[!isFct]
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
-  selectInput("expl_columns", "Select column(s):", choices  = as.list(vars),
-              selected = state_multvar("expl_columns",vars), multiple = TRUE, selectize = FALSE)
+#   if(length(vars) == 0) return()
+  validate(
+    need(length(vars) > 0, message = FALSE)
+  )
+
+  selectizeInput("expl_columns", label = "Select columns(s):", choices = as.list(vars),
+    selected = state_multvar("expl_columns",vars), multiple = TRUE,
+    options = list(placeholder = 'Select column(s)', plugins = list('remove_button', 'drag_drop'))
+  )
 })
 
 output$uiExpl_byvar <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
-  if(length(vars) == 0) return()
-  selectInput(inputId = "expl_byvar", label = "Group by:", choices = vars,
-              selected = state_multvar("expl_byvar",vars), multiple = TRUE, selectize = FALSE)
+#   if(length(vars) == 0) return()
+  validate(
+    need(length(vars) > 0, message = FALSE)
+  )
+  selectizeInput("expl_byvar", label = "Group by:", choices = vars,
+    selected = state_multvar("expl_byvar",vars), multiple = TRUE,
+    options = list(maxItems = 2, placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
+  )
 })
-
-# needs to be in global env for plyr to find it
-# calcMode <<- function(x) {
-# 	temp <- table(as.vector(x))
-# 	names(temp)[temp==max(temp)][1]
-# }
 
 nmissing <<- function(x) sum(is.na(x))
 
@@ -30,14 +35,19 @@ p25 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 p75 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 serr <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
 
-expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "%75" = "p75",
+expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "75%" = "p75",
                         "Max" = "max", "Min" = "min", "Std. dev" = "sd", "Std. err" = "serr", "Skew" = "skew",
                         "Kurtosis" = "kurtosi", "# missing" = "nmissing")
 
 output$uiExpl_function <- renderUI({
-  if(is.null(input$expl_byvar)) return()
-  selectInput(inputId = "expl_function", label = "Apply function(s):", choices = expl_functions,
-              selected = state_init_list("expl_function","mean", expl_functions), multiple = TRUE, selectize = FALSE)
+#   if(is.null(input$expl_byvar)) return()
+  validate(
+    need(!is.null(input$expl_byvar), message = FALSE)
+  )
+  selectizeInput("expl_function", label = "Apply function(s):", choices = expl_functions,
+    selected = state_init_list("expl_function",c("length","mean"), expl_functions), multiple = TRUE,
+      options = list(placeholder = 'Select functions', plugins = list('remove_button', 'drag_drop'))
+    )
 })
 
 output$uiExpl_show_viz <- renderUI({
@@ -108,6 +118,7 @@ explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_sele
       # number of missing values
       res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
 
+      # when you move to dplyr have the stats selected here be determined by the set of selected functions
       # return desired stats in order
       return(res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")])
     }
