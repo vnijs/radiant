@@ -8,7 +8,8 @@ pkgs_cran <- c("R.utils", "car", "gridExtra", "GPArotation", "psych", "vegan",  
 	"wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
   "plyr", "lubridate", "ggplot2")
 
-pkgs_gh <- c("shiny","shinyAce","rvest","tidyr","dplyr")
+pkgs_gh <- c("shiny","shinyAce")
+# pkgs_gh <- c("shiny","shinyAce","rvest","tidyr","dplyr")
 # pkgs_gh <- c("shiny","shinyAce","rvest","tidyr","dplyr","ggvis")
 
 pkgs <- c(pkgs_cran,pkgs_gh)
