@@ -25,7 +25,14 @@ output$uiExpl_byvar <- renderUI({
 
 nmissing <<- function(x) sum(is.na(x))
 
-expl_functions <- list("Mean" = "mean", "Std. dev" = "sd", "N" = "length", "# missing" = "nmissing", "Max" = "max", "Min" = "min", "Median" = "median")
+# adding Q1 and Q3, na.rm set to true in colwise function call below
+p25 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
+p75 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
+serr <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
+
+expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "%75" = "p75",
+                        "Max" = "max", "Min" = "min", "Std. dev" = "sd", "Std. err" = "serr", "Skew" = "skew",
+                        "Kurtosis" = "kurtosi", "# missing" = "nmissing")
 
 output$uiExpl_function <- renderUI({
   if(is.null(input$expl_byvar)) return()
@@ -91,8 +98,18 @@ explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_sele
     isNum <- sapply(dat, is.numeric)
     if(sum(isNum) > 0) {
       res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
+
+      # adding Q1 and Q3
+      perc <- function(x) quantile(x,c(.25,.75))
+      percres <- colwise(perc)(dat[,isNum, drop = FALSE])
+      rownames(percres) <- c("25%","75%")
+      res <- cbind(res,t(percres))
+
+      # number of missing values
       res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
-      return(res)
+
+      # return desired stats in order
+      return(res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")])
     }
   } else {
     dat <- dat[,c(expl_byvar,expl_columns)]

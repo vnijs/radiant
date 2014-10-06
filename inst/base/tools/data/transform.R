@@ -312,8 +312,18 @@ output$transform_summary <- renderPrint({
 		cat("Summarize numeric variables:\n")
 		# print(psych::describe(dat[,isNum])[,c("n","mean","median","min","max","range","sd","se","skew","kurtosis")])
 		res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
+
+		# adding Q1 and Q3
+		perc <- function(x) quantile(x,c(.25,.75))
+		percres <- colwise(perc)(dat[,isNum, drop = FALSE])
+		rownames(percres) <- c("25%","75%")
+		res <- cbind(res,t(percres))
+
+		# number of missing values
 		res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
-		print(res)
+
+		# print desired stats in order
+		print(res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")])
 		cat("\n")
 	}
 	if(sum(isFct) > 0) {
