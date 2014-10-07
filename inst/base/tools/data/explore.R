@@ -32,7 +32,7 @@ nmissing <<- function(x) sum(is.na(x))
 
 # adding Q1 and Q3, na.rm set to true in colwise function call below
 p25 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
-p75 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
+p75 <<- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
 serr <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
 
 expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "75%" = "p75",
