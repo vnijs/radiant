@@ -255,12 +255,16 @@ output$ui_ctl <- renderUI({
     wellPanel(
       selectInput(inputId = "ctl_dist", label = "Distribution (select one):", choices = ctl_dist,
         selected = state_singlevar("ctl_dist", ctl_dist), multiple = FALSE),
-      sliderInput("ctl_n", "Sample size:",  value = 500, min = 2, max = 1000),
-      sliderInput("ctl_m", "# of samples:",  value = 500, min = 2, max = 1000)
+#       sliderInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500),
+#       sliderInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500)
+      numericInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500, step = 1),
+      numericInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500, step = 1)
 		),
 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
  	)
 })
+
+?numericInput
 
 output$ctl <- renderUI({
 	# for input-output
@@ -269,6 +273,8 @@ output$ctl <- renderUI({
 
 .ctl<- reactive({
   validate(
+    need(!is.null(input$ctl_n), message = "Please choose a sample size larger than 2."),
+    need(!is.null(input$ctl_m), message = "Please choose two or more samples."),
     need(!is.null(input$ctl_dist), message = FALSE)
   )
 	ctl(input$ctl_dist, input$ctl_n, input$ctl_m)
