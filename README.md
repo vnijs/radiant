@@ -1,6 +1,6 @@
 ## Radiant: Business analytics using R and Shiny
 
-Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http://www.rstudio.com/shiny/). Developed by [Vincent Nijs](http://rady.ucsd.edu/faculty/directory/nijs/) (vnijs@ucsd.edu). 
+Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Developed by [Vincent Nijs]("http://rady.ucsd.edu/faculty/directory/nijs/") and [Terence August]("http://rady.ucsd.edu/faculty/directory/august/") (radiant@rady.ucsd.edu)
 
 ### Source code 
 
@@ -23,7 +23,7 @@ To download the app click the 'Download ZIP' button and unzip the file to, for e
 
 ### License
 
-The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
+The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
 
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
