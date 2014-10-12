@@ -48,7 +48,9 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
   # install packages that are available but were not installed before
   to_inp <- new.packages(lib.loc = local_dir)
-  if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
+  to_inp
+#   if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
+  if(length(to_inp) != 0) install.packages(to_inp, local_dir)
 
   # add function to remove packages that are not used by Radiant?
   # might mess up someones stuff. maybe better to do this like packRat does it
