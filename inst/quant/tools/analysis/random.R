@@ -249,6 +249,7 @@ plots_sampleSize <- function(result = .sampleSize()) {
 
 ctl_dist <- c("Uniform" = "runif", "Bi-nomial" = 'binom', "Normal" = "rnorm")
 ctl_stat <- c("Sum" = "sum", "Mean" = "mean")
+ctl_byrow <- c("By row" = "byrow", "By column" = "bycol")
 
 output$ui_ctl <- renderUI({
   list(
@@ -258,13 +259,12 @@ output$ui_ctl <- renderUI({
 #       sliderInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500),
 #       sliderInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500)
       numericInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500, step = 1),
-      numericInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500, step = 1)
+      numericInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500, step = 1),
+      radioButtons("ctl_byrow", label = "", choices = ctl_byrow, selected = "byrow")
 		),
 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
  	)
 })
-
-?numericInput
 
 output$ctl <- renderUI({
 	# for input-output
@@ -309,14 +309,26 @@ summary_ctl <- function(result = .ctl()) {
 
 plots_ctl <- function(result = .ctl()) {
 
-  stat <- data.frame("Sum" = colSums(result))
+#   stat <- data.frame("Sum" = colSums(result))
+  if(input$ctl_byrow == "byrow") {
+    stat <- data.frame("Sum" = rowSums(result))
+  } else {
+    stat <- data.frame("Sum" = colSums(result))
+  }
   data1 <- data.frame("Sample_1" = result[,1])
   data2 <- data.frame("Sample_2" = result[,2])
+  bin_width <- range(stat)/10
+  bin_width_data <- range(data1)/10
+
+  bw <- diff(range(stat, na.rm = TRUE)) / 10
+  bwd1 <- diff(range(data1, na.rm = TRUE)) / 10
+  bwd2 <- diff(range(data2, na.rm = TRUE)) / 10
 
   plots <- list()
-  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram()
-  plots[[2]] <- ggplot(data2, aes_string(x="Sample_2")) + geom_histogram()
-  plots[[3]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram()
-  plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(aes(y=..density..)) + geom_density(fill=NA, colour="blue")
+  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
+  plots[[2]] <- ggplot(data2, aes_string(x="Sample_2")) + geom_histogram(binwidth = bwd2)
+  plots[[3]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bw)
+#   plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bin_width, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
+  plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bw, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
   do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
 }
