@@ -248,7 +248,7 @@ plots_sampleSize <- function(result = .sampleSize()) {
 # ))
 
 ctl_dist <- c("Uniform" = "runif", "Bi-nomial" = 'binom', "Normal" = "rnorm")
-ctl_stat <- c("Sum" = "sum", "Mean" = "mean")
+ctl_stat <- c("Sum" = "Sum", "Mean" = "Mean")
 ctl_byrow <- c("By row" = "byrow", "By column" = "bycol")
 
 output$ui_ctl <- renderUI({
@@ -260,6 +260,7 @@ output$ui_ctl <- renderUI({
 #       sliderInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500)
       numericInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500, step = 1),
       numericInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500, step = 1),
+      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean"),
       radioButtons("ctl_byrow", label = "", choices = ctl_byrow, selected = "byrow")
 		),
 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
@@ -277,18 +278,18 @@ output$ctl <- renderUI({
     need(!is.null(input$ctl_m), message = "Please choose two or more samples."),
     need(!is.null(input$ctl_dist), message = FALSE)
   )
-	ctl(input$ctl_dist, input$ctl_n, input$ctl_m)
+	ctl(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 })
 
  observe({
   if(is.null(input$ctlReport) || input$ctlReport == 0) return()
   isolate({
-		inp <- list(input$ctl_dist, input$ctl_n, input$ctl_m)
+		inp <- list(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 		updateReport(inp,"ctl")
   })
 })
 
-ctl <- function(ctl_dist, ctl_n, ctl_m) {
+ctl <- function(ctl_dist, ctl_n, ctl_m, ctl_stat) {
 
   n <- ctl_n; m <- ctl_m; dist <- ctl_dist
   if(ctl_dist == "runif") {
@@ -309,12 +310,24 @@ summary_ctl <- function(result = .ctl()) {
 
 plots_ctl <- function(result = .ctl()) {
 
+  ctl_stat <- input$ctl_stat
+  ctl_byrow <- input$ctl_byrow
+
 #   stat <- data.frame("Sum" = colSums(result))
-  if(input$ctl_byrow == "byrow") {
-    stat <- data.frame("Sum" = rowSums(result))
+  if(ctl_stat == "Sum") {
+    if(ctl_byrow == "byrow") {
+      stat <- data.frame("Sum" = rowSums(result))
+    } else {
+      stat <- data.frame("Sum" = colSums(result))
+    }
   } else {
-    stat <- data.frame("Sum" = colSums(result))
+    if(ctl_byrow == "byrow") {
+      stat <- data.frame("Mean" = rowMeans(result))
+    } else {
+      stat <- data.frame("Mean" = colMeans(result))
+    }
   }
+
   data1 <- data.frame("Sample_1" = result[,1])
   data2 <- data.frame("Sample_2" = result[,2])
   bin_width <- range(stat)/10
@@ -327,8 +340,8 @@ plots_ctl <- function(result = .ctl()) {
   plots <- list()
   plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
   plots[[2]] <- ggplot(data2, aes_string(x="Sample_2")) + geom_histogram(binwidth = bwd2)
-  plots[[3]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bw)
+  plots[[3]] <- ggplot(stat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw)
 #   plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bin_width, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
-  plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bw, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
+  plots[[4]] <- ggplot(stat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
   do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
 }
