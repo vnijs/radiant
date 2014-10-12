@@ -6,7 +6,7 @@ output$uiRnd_var <- renderUI({
 	isChar <- "character" == getdata_class()
  	vars <- vars[isChar]
   if(length(vars) == 0) return()
-  selectInput(inputId = "rnd_var", label = "Variable (select one):", choices = vars, 
+  selectInput(inputId = "rnd_var", label = "Variable (select one):", choices = vars,
   	selected = state_singlevar("rnd_var",vars), multiple = FALSE)
 })
 
@@ -16,7 +16,7 @@ output$uiRnd_block <- renderUI({
  	vars <- vars[isFct]
   if(length(vars) == 0) return()
   vars <- c("None",vars)
-  selectInput(inputId = "rnd_block", label = "Block variable (select one):", choices = vars, 
+  selectInput(inputId = "rnd_block", label = "Block variable (select one):", choices = vars,
   	selected = state_singlevar("rnd_block",vars), multiple = FALSE)
 })
 
@@ -26,14 +26,14 @@ output$ui_random <- renderUI({
   list(
   	wellPanel(
 	 	 	uiOutput("uiRnd_var"),
-		  radioButtons(inputId = "rnd_sample", label = "", rnd_sample, 
+		  radioButtons(inputId = "rnd_sample", label = "", rnd_sample,
 	  	  selected = state_init_list("rnd_sample","sample", rnd_sample)),
 		  conditionalPanel(condition = "input.rnd_sample == 'sample'",
-		  	numericInput("rnd_sample_size", "Sample size:", min = 1, 
+		  	numericInput("rnd_sample_size", "Sample size:", min = 1,
 		  		value = state_init("rnd_sample_size",1))
 	  	),
 		  conditionalPanel(condition = "input.rnd_sample != 'sample'",
-		  	numericInput("rnd_nrCond", "Number of conditions:", min = 2, 
+		  	numericInput("rnd_nrCond", "Number of conditions:", min = 2,
 		  		value = state_init("rnd_nrCond",2)),
 		 	 	uiOutput("uiRnd_block"),
 		    actionButton("rnd_save_treatment", "Save treatment")
@@ -68,7 +68,7 @@ output$random <- renderUI({
 observe({
   if(is.null(input$randomReport) || input$randomReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$rnd_var, input$rnd_sample, input$rnd_sample_size, 
+		inp <- list(input$datasets, input$rnd_var, input$rnd_sample, input$rnd_sample_size,
 			input$rnd_nrCond, input$rnd_block)
 
 		xcmd <- paste0("saveTreatmentAssign(result)")
@@ -91,8 +91,8 @@ random <- function(datasets, rnd_var, rnd_sample, rnd_sample_size, rnd_nrCond, r
 		nrCond <<- rnd_nrCond 	# <<- needed else ddply doesn't know where to 'look'
 		if(!is.null(rnd_block) && rnd_block != "None") {
 			# adapted from http://stackoverflow.com/questions/5399773/how-to-generate-a-random-treatment-variable-by-factor
-		 	dat <- ddply(dat, c(rnd_block), transform, 
-				treatment = replace(treatment, sample(seq_along(treatment)), 
+		 	dat <- ddply(dat, c(rnd_block), transform,
+				treatment = replace(treatment, sample(seq_along(treatment)),
 					rep(sample(1:nrCond), ceiling(length(treatment)/nrCond))[1:length(treatment)]))
 		} else {
 			dat$treatment <- replace(dat$treatment, sample(seq_along(dat$treatment)), 1:nrCond)
@@ -134,7 +134,7 @@ saveTreatmentAssign <- function(result = .random()) {
 observe({
 	if(is.null(input$rnd_save_treatment) || input$rnd_save_treatment == 0) return()
 	isolate({
-		result <- .random() 
+		result <- .random()
 		if(is.character(result)) return()
 		saveTreatmentAssign(result)
 	})
@@ -149,30 +149,30 @@ rnd_pop_correction <- c("Yes" = "yes", "No" = "no")
 output$ui_sampleSize <- renderUI({
   list(
   	wellPanel(
-		  radioButtons(inputId = "rnd_mean", label = "", rnd_mean, 
+		  radioButtons(inputId = "rnd_mean", label = "", rnd_mean,
 	  	  selected = state_init_list("rnd_mean","mean", rnd_mean)),
 		  conditionalPanel(condition = "input.rnd_mean == 'mean'",
-		    numericInput("rnd_mean_err", "Acceptable Error (units, e.g., $10):", min = 0, 
+		    numericInput("rnd_mean_err", "Acceptable Error (units, e.g., $10):", min = 0,
 		  		value = state_init("rnd_mean_err",.2), step = .1),
-		    numericInput("rnd_mean_s", "Sample std. deviation:", min = 0, 
+		    numericInput("rnd_mean_s", "Sample std. deviation:", min = 0,
 		  		value = state_init("rnd_mean_s",3), step = .1)
 	  	),
 		  conditionalPanel(condition = "input.rnd_mean != 'mean'",
-		  	numericInput("rnd_prop_err", "Acceptable Error (e.g., .03):", min = 0, max = 1, 
+		  	numericInput("rnd_prop_err", "Acceptable Error (e.g., .03):", min = 0, max = 1,
 		  		value = state_init("rnd_prop_err",.1), step = .01),
 		    numericInput("rnd_prop_p", "Sample proportion:", min = 0, max = 1,
 		  		value = state_init("rnd_prop_p",.5), step = .05)
 	  	),
-	    numericInput("rnd_z", "Confidence level (z-value):", min = 0, 
+	    numericInput("rnd_z", "Confidence level (z-value):", min = 0,
 	  		value = state_init("rnd_z",1.96), step = .1),
 	    numericInput("rnd_incidence", "Incidence rate:", min = 0, max = 1,
 	  		value = state_init("rnd_incidence",1), step = .05),
 	    numericInput("rnd_response", "Response rate:", min = 0, max = 1,
 	  		value = state_init("rnd_response",1), step = .05),
-		  radioButtons(inputId = "rnd_pop_correction", label = "Correct for population size:", 
+		  radioButtons(inputId = "rnd_pop_correction", label = "Correct for population size:",
 		  	rnd_pop_correction, selected = state_init_list("rnd_pop_correction","no", rnd_pop_correction)),
 		  conditionalPanel(condition = "input.rnd_pop_correction == 'yes'",
-		    numericInput("rnd_pop_size", "Population size:", min = 1, 
+		    numericInput("rnd_pop_size", "Population size:", min = 1,
 		  		value = state_init("rnd_pop_size",10^6), step = 1000))
 		),
 	 	helpAndReport('Sample size','sampleSize',inclMD("../quant/tools/help/sampleSize.md"))
@@ -236,4 +236,81 @@ summary_sampleSize <- function(result = .sampleSize()) {
 plots_sampleSize <- function(result = .sampleSize()) {
 	result <- "Relevant output is in the Summary tab."
 	return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
+}
+
+###############################
+# Central Limit Theorem
+###############################
+
+# out <- render('report.Rmd', switch(
+#   input$format,
+#   PDF = pdf_document(), HTML = html_document(), Word = word_document()
+# ))
+
+ctl_dist <- c("Uniform" = "runif", "Bi-nomial" = 'binom', "Normal" = "rnorm")
+ctl_stat <- c("Sum" = "sum", "Mean" = "mean")
+
+output$ui_ctl <- renderUI({
+  list(
+    wellPanel(
+      selectInput(inputId = "ctl_dist", label = "Distribution (select one):", choices = ctl_dist,
+        selected = state_singlevar("ctl_dist", ctl_dist), multiple = FALSE),
+      sliderInput("ctl_n", "Sample size:",  value = 500, min = 2, max = 1000),
+      sliderInput("ctl_m", "# of samples:",  value = 500, min = 2, max = 1000)
+		),
+	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
+ 	)
+})
+
+output$ctl <- renderUI({
+	# for input-output
+  statTabPanel("Random", "Central Limit Theorem", ".ctl", "ctl")
+})
+
+.ctl<- reactive({
+  validate(
+    need(!is.null(input$ctl_dist), message = FALSE)
+  )
+	ctl(input$ctl_dist, input$ctl_n, input$ctl_m)
+})
+
+ observe({
+  if(is.null(input$ctlReport) || input$ctlReport == 0) return()
+  isolate({
+		inp <- list(input$ctl_dist, input$ctl_n, input$ctl_m)
+		updateReport(inp,"ctl")
+  })
+})
+
+ctl <- function(ctl_dist, ctl_n, ctl_m) {
+
+  n <- ctl_n; m <- ctl_m; dist <- ctl_dist
+  if(ctl_dist == "runif") {
+    data <- matrix(runif(n*m, min=0, max=1), n, m)
+  } else if (ctl_dist == "rnorm") {
+    data <- matrix(rnorm(n*m, mean = 0, sd = 1), n, m)
+  } else {
+    data <- matrix(rbinom(n*m, size=8, prob=0.15), n, m)
+  }
+
+  data
+}
+
+summary_ctl <- function(result = .ctl()) {
+
+  cat("Relevant output in Plots tab")
+}
+
+plots_ctl <- function(result = .ctl()) {
+
+  stat <- data.frame("Sum" = colSums(result))
+  data1 <- data.frame("Sample_1" = result[,1])
+  data2 <- data.frame("Sample_2" = result[,2])
+
+  plots <- list()
+  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram()
+  plots[[2]] <- ggplot(data2, aes_string(x="Sample_2")) + geom_histogram()
+  plots[[3]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram()
+  plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(aes(y=..density..)) + geom_density(fill=NA, colour="blue")
+  do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
 }
