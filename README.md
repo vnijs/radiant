@@ -4,7 +4,7 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 ### Source code 
 
-There are three (related) apps included in the inst directory. The first is base and offers data documenting, viewing, visualizing, merging, and transforming tools. The quant app sources the code from base and extends it. Finally, the marketing app sources the code from base and quant and, again, extends it with additional tools.
+There are three (related) apps included in the inst directory. The, base, offers data documenting, viewing, visualizing, merging, and transforming tools. The quant app sources the code from base and extends it. Finally, the marketing app sources the code from base and quant and, again, extends it with additional tools.
 
 ### Install
 
@@ -12,7 +12,7 @@ There are three (related) apps included in the inst directory. The first is base
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-To download the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. To start the app use one of the launchers in the directory of the same name. For Windows use one of the .bat files and for Mac one of the .app files. For example, to start the quant app on Windows double-click the quant/radiant\_win\_quant.bat file. When the app starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN). 
+To download the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. To start, for example, the base app use `setwd()` to move to the radiant directory in R(studio). Install Shiny using `install.packages('shiny')`. Then use `shiny::runApp('inst/base')` to run the base app. When Radiant starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN). 
 
 ### Todo
 
