@@ -32,11 +32,12 @@ opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
   div(class="row-fluid", div(class="span6",
-    if(vimKeyBinding == TRUE) {
-      aceEditor("rmd_report", mode="markdown", selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-    } else {
-      aceEditor("rmd_report", mode="markdown", value=state_init("rmd_report",rmd_example))
-    },
+    aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding),
+#     if(vimKeyBinding == TRUE) {
+#       aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
+#     } else {
+#       aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, value=state_init("rmd_report",rmd_example))
+#     },
     actionButton("evalRmd", "Update"),
     downloadButton('saveHTML', 'Save HTML'),
     downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),

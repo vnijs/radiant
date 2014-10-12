@@ -6,7 +6,7 @@ output$uiExpl_columns <- renderUI({
   vars <- varnames()[isNum]
 #   if(length(vars) == 0) return()
   validate(
-    need(length(vars) > 0, message = FALSE)
+    need(!is.null(vars) && length(vars) > 0, message = FALSE)
   )
 
   selectizeInput("expl_columns", label = "Select columns(s):", choices = as.list(vars),
@@ -161,13 +161,10 @@ summary_explore <- function(result = .explore()) {
       print(result[[func]])
       cat("\n")
     }
-    if(length(result$expl_byvar) > 2) cat("Plots will use only the first two 'Group by' variables")
   }
 }
 
 output$expl_summary <- renderPrint({
-
-  # if(isolate(input$datatabs) != 'Explore') return(invisible())
 
   if(!is.null(input$expl_show_tab) && !input$expl_show_tab) return(invisible())
   .summary_explore()

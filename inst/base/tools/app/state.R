@@ -36,12 +36,13 @@ output$state <- renderUI({
         downloadButton('downloadState', 'Save')
 
       ),
-      wellPanel(
-        HTML("<label>Reset to initial app state:</label>"),
-        HTML("<a class='btn action-button shiny-bound-input' id='resetState' type='button' href='/'>Reset</a>")
+#       wellPanel(
+#         HTML("<label>Reset to initial app state:</label>"),
+#         HTML("<a class='btn action-button shiny-bound-input' id='resetState-sss' href='/'>Reset</a>"),
+#         HTML("<a class='btn action-button shiny-bound-input' id='resetState' type='button' href='/'>Reset</a>")
 #         HTML("<button id='resetState' type='button' class='btn action-button shiny-bound-input' href='/'>Reset</button>")
 #         actionButton('resetState', 'Reset')
-      ),
+#       ),
       wellPanel(
         HTML("<label>Quit app:</label>"),
         actionButton('quitApp', 'Quit')
@@ -96,18 +97,23 @@ output$downloadState <- downloadHandler(
 
 observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
-  setInitValues()
-#   tags$script("window.location.reload();")
-#   tags$script("document.location.reload();")
+
+  isolate({
+    setInitValues()
+    tags$script("window.location.reload();")
+  })
+
 })
+
+
 
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
 #   unlink(c("www/rmd/cache/", "www/rmd/figure"), recursive = TRUE)
-  unlink(c("~/radiant_temp/rmd/figure"), recursive = TRUE)
-
-  stopApp()   # stop Radiant
-  q("no")     # quit R
+   unlink(c("~/radiant_temp/rmd/figure"), recursive = TRUE)
+#
+   stopApp()   # stop Radiant
+   q("no")     # quit R
 })
 
 output$showInput <- renderPrint({
