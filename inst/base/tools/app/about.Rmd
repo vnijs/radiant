@@ -2,7 +2,8 @@
 
 Version 0.510 (10/4/2014)
 
-By: <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="_blank">Vincent Nijs</a> (vnijs@ucsd.edu)
+By: <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/" target="_blank">Terrence August</a> (radiant@rady.ucsd.edu)
+
 Built using <a href="http://www.rstudio.com/shiny/" target="_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="_blank">Rstudio</a>
 
 Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
