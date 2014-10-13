@@ -247,21 +247,17 @@ plots_sampleSize <- function(result = .sampleSize()) {
 #   PDF = pdf_document(), HTML = html_document(), Word = word_document()
 # ))
 
-ctl_dist <- c("Uniform" = "runif", "Bi-nomial" = 'binom', "Normal" = "rnorm")
+ctl_dist <- c("Uniform" = "runif", "Binomial" = 'binom', "Normal" = "rnorm", "Exponential" = "expo")
 ctl_stat <- c("Sum" = "Sum", "Mean" = "Mean")
-ctl_byrow <- c("By row" = "byrow", "By column" = "bycol")
 
 output$ui_ctl <- renderUI({
   list(
     wellPanel(
       selectInput(inputId = "ctl_dist", label = "Distribution (select one):", choices = ctl_dist,
         selected = state_singlevar("ctl_dist", ctl_dist), multiple = FALSE),
-#       sliderInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500),
-#       sliderInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500)
-      numericInput("ctl_n", "Sample size:",  value = 100, min = 2, max = 500, step = 1),
-      numericInput("ctl_m", "# of samples:",  value = 300, min = 2, max = 500, step = 1),
-      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean"),
-      radioButtons("ctl_byrow", label = "", choices = ctl_byrow, selected = "byrow")
+      numericInput("ctl_n", "Sample size:",  value = 50, min = 2, max = 500, step = 1),
+      numericInput("ctl_m", "# of samples:",  value = 100, min = 2, max = 500, step = 1),
+      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean")
 		),
 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
  	)
@@ -296,52 +292,73 @@ ctl <- function(ctl_dist, ctl_n, ctl_m, ctl_stat) {
     data <- matrix(runif(n*m, min=0, max=1), n, m)
   } else if (ctl_dist == "rnorm") {
     data <- matrix(rnorm(n*m, mean = 0, sd = 1), n, m)
-  } else {
+  } else if (ctl_dist == "exp") {
+    data <- matrix(rexp(n*m, rate = 1), n, m)
+  } else if (ctl_dist == "binom") {
     data <- matrix(rbinom(n*m, size=8, prob=0.15), n, m)
   }
-
   data
 }
 
-summary_ctl <- function(result = .ctl()) {
-
-  cat("Relevant output in Plots tab")
-}
+#   n <- 100
+#   m <- 100
+#   matrix(rexp(n*m, rate = 1), n, m)
+#
+#   data
+# }
+#
+# j
+# qunif(100)
+# ?qunif
+#
+# summary_ctl <- function(result = .ctl()) {
+#
+#   cat("Relevant output in Plots tab")
+# }
+#
+# x <- seq(0,1,length=100)
+# db <- dbeta(x, 1, 1)
+# qplot(x, db, geom="line")
+# ggplot() + geom_line(aes(x,db))
+# db
+#
+# ?dbeta
+#
+# ?dnorm(0:1)
+#
+# u <- runif(100)
+#
+# plot(dunif(u))
+#
 
 plots_ctl <- function(result = .ctl()) {
 
   ctl_stat <- input$ctl_stat
-  ctl_byrow <- input$ctl_byrow
-
-#   stat <- data.frame("Sum" = colSums(result))
   if(ctl_stat == "Sum") {
-    if(ctl_byrow == "byrow") {
-      stat <- data.frame("Sum" = rowSums(result))
-    } else {
-      stat <- data.frame("Sum" = colSums(result))
-    }
+    sstat <- data.frame("Sum" = colSums(result))
   } else {
-    if(ctl_byrow == "byrow") {
-      stat <- data.frame("Mean" = rowMeans(result))
-    } else {
-      stat <- data.frame("Mean" = colMeans(result))
-    }
+    sstat <- data.frame("Mean" = colMeans(result))
   }
 
-  data1 <- data.frame("Sample_1" = result[,1])
-  data2 <- data.frame("Sample_2" = result[,2])
-  bin_width <- range(stat)/10
-  bin_width_data <- range(data1)/10
+  data <- data.frame("Sample" = result[,1])
+  bin_width <- range(sstat)/10
+  bin_width_data <- range(data)/10
 
-  bw <- diff(range(stat, na.rm = TRUE)) / 10
-  bwd1 <- diff(range(data1, na.rm = TRUE)) / 10
-  bwd2 <- diff(range(data2, na.rm = TRUE)) / 10
+  bw <- diff(range(sstat, na.rm = TRUE)) / 10
+  bwd <- diff(range(data, na.rm = TRUE)) / 10
+
+#   x <- stat_function(fun = dnorm, args = list(mean = 3, sd = .5, color = "blue"))
+#   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") + x
 
   plots <- list()
-  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
-  plots[[2]] <- ggplot(data2, aes_string(x="Sample_2")) + geom_histogram(binwidth = bwd2)
-  plots[[3]] <- ggplot(stat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw)
-#   plots[[4]] <- ggplot(stat, aes_string(x="Sum")) + geom_histogram(binwidth = bin_width, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
-  plots[[4]] <- ggplot(stat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw, aes(y=..density..)) + geom_density(fill=NA, colour="blue")
+  plots[[1]] <- ggplot(data, aes_string(x="Sample")) + geom_histogram(binwidth = bwd)
+  plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") +
+    stat_function(fun = dnorm, args = list(mean = mean(data[,1]), sd = sd(data[,1])), color = "blue") +
+    labs(y = "") + theme(axis.text.y = element_blank())
+  plots[[3]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw)
+  plots[[4]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_density(alpha=.3, fill = "green") +
+      stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]), sd = sd(sstat[,1])), color = "blue") +
+      labs(y = "") + theme(axis.text.y = element_blank())
+
   do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
 }
