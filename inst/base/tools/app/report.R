@@ -58,14 +58,22 @@ output$rmd_knitDoc <- renderUI({
     if(!running_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
     } else if(input$rmd_report != "") {
-      if(is.null(input$rmd_selection) || input$rmd_selection == "") {
-        return(HTML(paste(knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-      } else {
-        return(HTML(paste(knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-      }
+
+      withProgress(message = 'Knitting report', value = 0, {
+
+        if(is.null(input$rmd_selection) || input$rmd_selection == "") {
+          html <- HTML(paste(knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
+        } else {
+          html <- HTML(paste(knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
+        }
+      })
+      html
     }
   })
 })
+
+
+
 
 output$saveHTML <- downloadHandler(
   filename = function() {"report.html"},

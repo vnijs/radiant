@@ -8,6 +8,7 @@ output: html_document
 - Organize the code as suggested by Joe in https://github.com/jcheng5/shiny-partials
 - Move regular functions to separate files so they can be sourced from Rstudio and used 
 in the creation of Rmarkdown documents (e.g., answer keys)
-- How to best name the functions? Avoid putting in default terms?
+- How to best name the functions? Avoid putting in default terms when sent to report?
 - Logging data transformations. Do a check if the original data is equal to the final data after the listed set of transformations.
 - Can choose the type of plot for single varible (e.g., box plot or time-series or histogram)
+- Switch X- and Y-variable in Visualize
