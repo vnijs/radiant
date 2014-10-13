@@ -24,26 +24,23 @@ hist(rnorm(100))
 # opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
 opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                fig.path = "~/radiant_temp/rmd/figure/")
-
-               # opts_chunk$set(echo=FALSE, comment=NA, message=FALSE, warning=FALSE,
-#                fig.path = "www/rmd/figure/", cache.path = "www/rmd/cache/")
-#                fig.path = "www/rmd/figure/")
 opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
-  div(class="row-fluid", div(class="span6",
-    aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding),
-#     if(vimKeyBinding == TRUE) {
-#       aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example), vimKeyBinding=vimKeyBinding)
-#     } else {
-#       aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, value=state_init("rmd_report",rmd_example))
-#     },
+
+  list(
     actionButton("evalRmd", "Update"),
     downloadButton('saveHTML', 'Save HTML'),
-    downloadButton('saveRmd', 'Save Rmd'), tags$br(), tags$br(),
-    fileInput('loadRmd', 'Load Rmd', multiple=TRUE)),
-    # HTML("<a 'class='link action-button shiny-bound-input' id='gotoData'>Test</a>"),
-    div(class="span6", htmlOutput("rmd_knitDoc"))
+    downloadButton('saveRmd', 'Save Rmd'),
+    fileInput('loadRmd', '', multiple=TRUE),
+
+    div(class="row-fluid",
+      div(class="span6",
+        aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, height = "600px", debounce=10000,
+                  selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
+                  vimKeyBinding=vimKeyBinding)),
+      div(class="span6", htmlOutput("rmd_knitDoc"))
+    )
   )
 })
 
@@ -71,9 +68,6 @@ output$rmd_knitDoc <- renderUI({
     }
   })
 })
-
-
-
 
 output$saveHTML <- downloadHandler(
   filename = function() {"report.html"},

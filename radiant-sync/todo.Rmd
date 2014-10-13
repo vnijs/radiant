@@ -11,4 +11,32 @@ in the creation of Rmarkdown documents (e.g., answer keys)
 - How to best name the functions? Avoid putting in default terms when sent to report?
 - Logging data transformations. Do a check if the original data is equal to the final data after the listed set of transformations.
 - Can choose the type of plot for single varible (e.g., box plot or time-series or histogram)
-- Switch X- and Y-variable in Visualize
+- Button to Switch X- and Y-variable in Visualize
+- Auto height for Shiny ace (https://github.com/trestletech/shinyAce/issues/18).
+- Use radio buttons to specify the desired output format from rmarkdown. Would need to have Rstudio installed
+to get Pandoc. Also have them install miktex or something?
+- Download data from randerDataViewer into a new rda file! Ask Xie how you get to the index created by DataTables
+
+- Use new rmarkdown syntax to render Rmd files
+
+- Can you add a report (or reports per tool) as an attribute to a data file? Seems like that should be possible right? Much like the data description file. There could be a dropdown or button on the manage page when you open a data-file that would show you reports and/or take you to edit report. 
+- I guess the parameters of the state could also just be added as an attribute right? Sounds nice doesn't it. So if you are handing in an assignment you just post your data and tell the id of the attribute with your report and we can check everything from results, comments, to analysis. 
+- What about if a student does several analyses and/or creates different output from one tool (e.g., multiple regressions). I guess you could save multiple 'states' that you could flip back through using a dropdown menu. This is starting to sound better and better :)
+
+- Using state files and Rmd to get students easy access and switching between report and analysis. See also below:
+
+
+From: <Nijs>, Vincent Nijs <vnijs@ucsd.edu>
+Date: Monday, October 13, 2014 at 12:24 AM
+To: "August, Terrence" <taugust@ucsd.edu>
+Subject: Re: data exercise
+
+Based on the conversation we just had I got some (potentially) awesome ideas :)
+
+I agree with your view that out regular MBA students won’t be coding and/or trying to figure-out what is in the code blocks in the Rmd files. If you could basically click on one of those code blocks and it would show you the UI that was used to create the relevant output (including the setting, variables, etc.) that would be awesome. The developers of Shiny (Rstudio) have come up with the concept of dynamic documents. These are basically Rmd files with mini shiny apps embedded in them (see link below). Where I was suggesting replacing the code blocks with a set of parameters that, when a button is clicked, would open up the UI for the tool you were using this puts the fully UI in the document itself. I am not sure if that is a better idea because it could make for pretty bloated documents.
+
+These idea remind me of Mathematica and ipython notebooks … just much more awesomer :)
+
+http://rmarkdown.rstudio.com/authoring_shiny.html#embedded-applications
+
+I am not sure yet what the implications would be for Radiant in its current form. I think it would mean transforming the app into a set of widgets that could be embedded into documents. Instead of having normal code in the document it just pops up the ui you need if you want to change something.
