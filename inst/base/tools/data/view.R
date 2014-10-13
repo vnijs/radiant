@@ -44,7 +44,10 @@ output$dataviewer <- renderDataTable({
   as.data.frame(dat[, input$view_vars, drop = FALSE])
 
 }, options = list(bSortClasses = TRUE, bCaseInsensitive = TRUE,
-  aLengthMenu = c(10, 20, 30, 50), iDisplayLength = 10, search = list(regex = TRUE)))
+  lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
+  pageLength = 10, search = list(regex = TRUE)))
+
+#   aLengthMenu = c(10, 20, 30, 50, -1), iDisplayLength = 10, search = list(regex = TRUE)))
 
 
 # server = function(input, output) {
