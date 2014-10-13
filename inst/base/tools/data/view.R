@@ -3,14 +3,14 @@
 #############################################
 output$uiView_vars <- renderUI({
   vars <- varnames()
-  selectInput("view_vars", "Select variables to show:", choices  = vars, 
+  selectInput("view_vars", "Select variables to show:", choices  = vars,
     selected = state_init_multvar("view_vars",vars, vars), multiple = TRUE, selectize = FALSE)
 })
 
 output$ui_View <- renderUI({
   list(
     wellPanel(
-      uiOutput("uiView_vars"), 
+      uiOutput("uiView_vars"),
       returnTextInput("view_select", "Subset (e.g., price > 5000)", state_init("view_select"))
     ),
     helpModal('View','viewHelp',inclMD("../base/tools/help/view.md"))
@@ -21,7 +21,7 @@ output$dataviewer <- renderDataTable({
 
   # if(isolate(input$datatabs) != 'View') return(invisible())
   # if(is.null(input$datasets) || is.null(input$view_vars)) return()
-  
+
   if(is.null(input$view_vars)) return()
   # dat <- date2character()
   dat <- getdata()
@@ -43,5 +43,15 @@ output$dataviewer <- renderDataTable({
 
   as.data.frame(dat[, input$view_vars, drop = FALSE])
 
-}, options = list(bSortClasses = TRUE, bCaseInsensitive = TRUE, 
-  aLengthMenu = c(10, 20, 30, 50), iDisplayLength = 10))
+}, options = list(bSortClasses = TRUE, bCaseInsensitive = TRUE,
+  aLengthMenu = c(10, 20, 30, 50), iDisplayLength = 10, regex = TRUE, search = list(regex = TRUE)))
+
+
+# server = function(input, output) {
+#   output$mytable = renderDataTable(
+#     iris[sample(nrow(iris)), ],
+#     options = list(search = list(regex = TRUE))
+#   )
+# }
+
+
