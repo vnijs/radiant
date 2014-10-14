@@ -72,7 +72,7 @@ output$refreshOnUpload <- renderUI({
     # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
     tags$script("window.location.reload();")
 
-    # Did the above used to work? Does it still? The below code is wha I saw online
+    # Did the above used to work? Does it still? The below code is what I saw online
 #     tags$script("document.location.reload();")
 
     #################################################################################

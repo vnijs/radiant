@@ -247,7 +247,7 @@ plots_sampleSize <- function(result = .sampleSize()) {
 #   PDF = pdf_document(), HTML = html_document(), Word = word_document()
 # ))
 
-ctl_dist <- c("Uniform" = "runif", "Binomial" = 'binom', "Normal" = "rnorm", "Exponential" = "expo")
+ctl_dist <- c("Uniform" = "runif", "Normal" = "rnorm", "Exponential" = "expo","Binomial" = 'binom')
 ctl_stat <- c("Sum" = "Sum", "Mean" = "Mean")
 
 output$ui_ctl <- renderUI({
@@ -255,11 +255,54 @@ output$ui_ctl <- renderUI({
     wellPanel(
       selectInput(inputId = "ctl_dist", label = "Distribution (select one):", choices = ctl_dist,
         selected = state_singlevar("ctl_dist", ctl_dist), multiple = FALSE),
-      numericInput("ctl_n", "Sample size:",  value = 50, min = 2, max = 500, step = 1),
-      numericInput("ctl_m", "# of samples:",  value = 100, min = 2, max = 500, step = 1),
-      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean")
+
+      conditionalPanel(condition = "input.ctl_dist == 'runif'",
+        div(class="row-fluid",
+          div(class="span6",
+            numericInput("ctl_unif_min", "Min:", value = 0, min = -10, max = 0, step = 1)
+          ),
+          div(class="span6",
+            numericInput("ctl_unif_max", "Max:", value = 1, min = 1, max = 10, step = 1)
+          )
+        )
+      ),
+      conditionalPanel(condition = "input.ctl_dist == 'rnorm'",
+        div(class="row-fluid",
+          div(class="span6",
+            numericInput("ctl_norm_mean", "Mean:", value = 0)
+          ),
+          div(class="span6",
+            numericInput("ctl_norm_sd", "SD:", value = 1)
+          )
+        )
+      ),
+      conditionalPanel(condition = "input.ctl_dist == 'expo'",
+        numericInput("ctl_expo_rate", "Rate:", value = 1, min = 1, step = 1)
+      ),
+      conditionalPanel(condition = "input.ctl_dist == 'binom'",
+        div(class="row-fluid",
+          div(class="span6",
+            numericInput("ctl_binom_size", "Size:", value = 1, min = 1, max = 100, step = 1)
+          ),
+          div(class="span6",
+            numericInput("ctl_binom_prob", "Prob:", value = 0.15, min = 0.01, max = 1, step = .05)
+          )
+        )
+      ),
+
+      div(class="row-fluid",
+          div(class="span6",
+            numericInput("ctl_n", "Sample size:",  value = 50, min = 2, max = 500, step = 1)
+          ),
+          div(class="span6",
+            numericInput("ctl_m", "# of samples:",  value = 100, min = 2, max = 500, step = 1)
+          )
+      ),
+      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean"),
+		  actionButton("ctl_resample", "Resample")
 		),
-	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
+# 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
+		helpModal('Central Limit Theorm','ctlHelp',inclRmd("../quant/tools/help/ctl.Rmd"))
  	)
 })
 
@@ -274,6 +317,9 @@ output$ctl <- renderUI({
     need(!is.null(input$ctl_m), message = "Please choose two or more samples."),
     need(!is.null(input$ctl_dist), message = FALSE)
   )
+
+  # creating a dependency to a new set of draw is generated every time the button is pressed
+  input$ctl_resample
 	ctl(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 })
 
@@ -289,47 +335,24 @@ ctl <- function(ctl_dist, ctl_n, ctl_m, ctl_stat) {
 
   n <- ctl_n; m <- ctl_m; dist <- ctl_dist
   if(ctl_dist == "runif") {
-    data <- matrix(runif(n*m, min=0, max=1), n, m)
+    data <- matrix(runif(n*m, min=input$ctl_unif_min, max=input$ctl_unif_max), n, m)
   } else if (ctl_dist == "rnorm") {
-    data <- matrix(rnorm(n*m, mean = 0, sd = 1), n, m)
-  } else if (ctl_dist == "exp") {
-    data <- matrix(rexp(n*m, rate = 1), n, m)
+    data <- matrix(rnorm(n*m, mean = input$ctl_norm_mean, sd = input$ctl_norm_sd), n, m)
+  } else if (ctl_dist == "expo") {
+    data <- matrix(rexp(n*m, rate = input$ctl_expo_rate), n, m)
   } else if (ctl_dist == "binom") {
-    data <- matrix(rbinom(n*m, size=8, prob=0.15), n, m)
+    data <- matrix(rbinom(n*m, size = input$ctl_binom_size, prob=input$ctl_binom_prob), n, m)
   }
   data
 }
 
-#   n <- 100
-#   m <- 100
-#   matrix(rexp(n*m, rate = 1), n, m)
-#
-#   data
-# }
-#
-# j
-# qunif(100)
-# ?qunif
-#
-# summary_ctl <- function(result = .ctl()) {
-#
-#   cat("Relevant output in Plots tab")
-# }
-#
-# x <- seq(0,1,length=100)
-# db <- dbeta(x, 1, 1)
-# qplot(x, db, geom="line")
-# ggplot() + geom_line(aes(x,db))
-# db
-#
-# ?dbeta
-#
-# ?dnorm(0:1)
-#
-# u <- runif(100)
-#
-# plot(dunif(u))
-#
+summary_ctl <- function(result = .ctl()) {
+    cat("Relevant output in Plots tab")
+#    withMathJax("Testing math $\alpha$")
+}
+
+# getting back to the page in progress when developing
+# observe( updateTabsetPanel(session, "nav_radiant", selected = "Central Limit Theorem") )
 
 plots_ctl <- function(result = .ctl()) {
 
@@ -340,21 +363,22 @@ plots_ctl <- function(result = .ctl()) {
     sstat <- data.frame("Mean" = colMeans(result))
   }
 
-  data <- data.frame("Sample" = result[,1])
-  bin_width <- range(sstat)/10
-  bin_width_data <- range(data)/10
+  data1 <- data.frame("Sample_1" = result[,1])
+  datam <- data.frame("Sample_m" = result[,dim(result)[2]])
 
   bw <- diff(range(sstat, na.rm = TRUE)) / 10
-  bwd <- diff(range(data, na.rm = TRUE)) / 10
+  bwd1 <- diff(range(data1, na.rm = TRUE)) / 10
+  bwdm <- diff(range(datam, na.rm = TRUE)) / 10
 
 #   x <- stat_function(fun = dnorm, args = list(mean = 3, sd = .5, color = "blue"))
 #   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") + x
 
   plots <- list()
-  plots[[1]] <- ggplot(data, aes_string(x="Sample")) + geom_histogram(binwidth = bwd)
-  plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") +
-    stat_function(fun = dnorm, args = list(mean = mean(data[,1]), sd = sd(data[,1])), color = "blue") +
-    labs(y = "") + theme(axis.text.y = element_blank())
+  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
+  plots[[2]] <- ggplot(datam, aes_string(x="Sample_m")) + geom_histogram(binwidth = bwdm)
+#   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") +
+#     stat_function(fun = dnorm, args = list(mean = mean(data[,1]), sd = sd(data[,1])), color = "blue") +
+#     labs(y = "") + theme(axis.text.y = element_blank())
   plots[[3]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw)
   plots[[4]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_density(alpha=.3, fill = "green") +
       stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]), sd = sd(sstat[,1])), color = "blue") +

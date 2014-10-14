@@ -18,7 +18,7 @@ output$data_ui_and_tabs <- renderUI({
         conditionalPanel(condition = "input.datatabs == 'Transform'", uiOutput("ui_Transform"))
       ),
       mainPanel(id = "datatabs",
-                uiOutput("tabs_data")
+        uiOutput("tabs_data")
       )
     )
   )

@@ -72,14 +72,14 @@ Archs: digest.so.dSYM
 MD5sum: dbf6f03fa4c37907663e89871886e3b1
 
 Package: dplyr
-Version: 0.3
-Depends: R (>= 3.0.2)
+Version: 0.3.0.2
+Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13,
-                 methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
 License: MIT + file LICENSE
-MD5sum: cfae5ebab6b18307198a9de3b884bb3b
+Archs: dplyr.so.dSYM
+MD5sum: 8dce16ee9500df06fa6c0ed50d4ea65e
 
 Package: evaluate
 Version: 0.5.5
@@ -202,7 +202,8 @@ Version: 0.1.9
 Depends: R (>= 3.1.0)
 Suggests: knitr, rmarkdown (>= 0.2.65), microbenchmark
 License: GPL-3
-MD5sum: 0de3b60fcb2119eaadd93691d9593a17
+Archs: lazyeval.so.dSYM
+MD5sum: 3293f618f92edaed89d123ea741dfb34
 
 Package: lubridate
 Version: 1.3.3
@@ -313,12 +314,12 @@ License: LGPL (>= 2.1)
 MD5sum: 80ba2ab5fa0c3e385b2b0a00cc7de9f5
 
 Package: R.utils
-Version: 1.33.0
+Version: 1.34.0
 Depends: R (>= 2.5.0), R.oo (>= 1.18.0)
 Imports: utils, methods, R.methodsS3 (>= 1.6.1)
 Suggests: digest (>= 0.6.4)
 License: LGPL (>= 2.1)
-MD5sum: 70fe8c3618500a19b9a8466cba2f18a2
+MD5sum: c647517047a5fd2af1bcb1a0645d5a73
 
 Package: R6
 Version: 2.0
@@ -405,7 +406,7 @@ Depends: R (>= 3.0.0)
 Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
-MD5sum: d719109fcc1b6a0eaae443586e007e28
+MD5sum: c6889c5d3d990258af425ea95a5c7271
 
 Package: shinyAce
 Version: 0.1.01

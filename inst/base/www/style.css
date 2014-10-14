@@ -122,7 +122,9 @@ input[type="number"] {
   width: 70px;
 }
 
-#viz_plot_width, #viz_plot_height, #pmap_scaling, #pmap_fontsz {
+#viz_plot_width, #viz_plot_height, #pmap_scaling, #pmap_fontsz,
+#ctl_m, #ctl_n, #ctl_unif_min, #ctl_unif_max, #ctl_norm_mean, #ctl_norm_sd,
+#ctl_expo_rate, #ctl_binom_size, #ctl_binom_prob {
   max-width: 60px;
 }
 
