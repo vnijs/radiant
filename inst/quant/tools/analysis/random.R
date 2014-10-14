@@ -314,7 +314,7 @@ output$ctl <- renderUI({
 .ctl<- reactive({
   validate(
     need(!is.null(input$ctl_n), message = "Please choose a sample size larger than 2."),
-    need(!is.null(input$ctl_m), message = "Please choose two or more samples."),
+    need(!is.null(input$ctl_m), message = "Please choose 2 or more samples."),
     need(!is.null(input$ctl_dist), message = FALSE)
   )
 
@@ -347,7 +347,7 @@ ctl <- function(ctl_dist, ctl_n, ctl_m, ctl_stat) {
 }
 
 summary_ctl <- function(result = .ctl()) {
-    cat("Relevant output in Plots tab")
+    cat("See the Plots tab for output")
 #    withMathJax("Testing math $\alpha$")
 }
 
