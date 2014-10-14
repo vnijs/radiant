@@ -72,14 +72,14 @@ Archs: digest.so.dSYM
 MD5sum: 142673fcb20f256ff9248a8858898d10
 
 Package: dplyr
-Version: 0.3
-Depends: R (>= 3.0.2)
+Version: 0.3.0.2
+Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13,
-                 methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
 License: MIT + file LICENSE
-MD5sum: cfae5ebab6b18307198a9de3b884bb3b
+Archs: dplyr.so.dSYM
+MD5sum: 5c7a2444aa1acd091ec194de9a553149
 
 Package: evaluate
 Version: 0.5.5
@@ -110,7 +110,7 @@ Depends: R (>= 3.0)
 Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
 Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
 License: GPL-2
-MD5sum: a66101e1277be2a4f750362d446b173a
+MD5sum: 9de2ff1bd57f563591cb1bd823891f73
 
 Package: GPArotation
 Version: 2012.3-1
@@ -215,7 +215,8 @@ Version: 0.1.9
 Depends: R (>= 3.1.0)
 Suggests: knitr, rmarkdown (>= 0.2.65), microbenchmark
 License: GPL-3
-MD5sum: 0de3b60fcb2119eaadd93691d9593a17
+Archs: lazyeval.so.dSYM
+MD5sum: 1a026dee9601f267d28d70327d97927f
 
 Package: lubridate
 Version: 1.3.3
@@ -326,12 +327,12 @@ License: LGPL (>= 2.1)
 MD5sum: ca92f5b30d97a12d0ca93780ee31a9e8
 
 Package: R.utils
-Version: 1.33.0
+Version: 1.34.0
 Depends: R (>= 2.5.0), R.oo (>= 1.18.0)
 Imports: utils, methods, R.methodsS3 (>= 1.6.1)
 Suggests: digest (>= 0.6.4)
 License: LGPL (>= 2.1)
-MD5sum: 5a0fa59bf778573cf75c48d23d366f80
+MD5sum: dd98bbe18539a8363523e6b927e7874e
 
 Package: R6
 Version: 2.0
@@ -418,7 +419,7 @@ Depends: R (>= 3.0.0)
 Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
-MD5sum: d719109fcc1b6a0eaae443586e007e28
+MD5sum: 3b8f96c75f2eaad0c49c244ea31b6dfb
 
 Package: shinyAce
 Version: 0.1.01

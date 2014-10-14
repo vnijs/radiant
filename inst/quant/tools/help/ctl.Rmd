@@ -1,6 +1,4 @@
-Using sampling to demonstrate the Central Limit Theorem
-
-#### Example
+Using sampling to illustrate the Central Limit Theorem
 
 ...
 

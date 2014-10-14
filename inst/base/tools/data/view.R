@@ -43,6 +43,10 @@ output$dataviewer <- renderDataTable({
 
   as.data.frame(dat[, input$view_vars, drop = FALSE])
 
-}, options = list(bSortClasses = TRUE, bCaseInsensitive = TRUE,
+}, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
   pageLength = 10, search = list(regex = TRUE)))
+
+# }, options = list(bSortClasses = TRUE, bCaseInsensitive = TRUE,
+#   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
+#   pageLength = 10, search = list(regex = TRUE)))
