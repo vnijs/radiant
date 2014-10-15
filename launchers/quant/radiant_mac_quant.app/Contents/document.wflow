@@ -51,7 +51,8 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>tell application "R"	activate	cmd "fpath &lt;- '~/.dropbox/info.json'if(!file.exists(fpath)) {  cat('No dropbox location found. Did you install the Dropbox software from https://www.dropbox.com/downloading ?')  q('ask')}f &lt;- file(fpath,'r');json_string &lt;- suppressWarnings(readLines(f, -1L));close(f);path_part &lt;- sub('.*path\\\": \\\"','',json_string);auto_pth &lt;- paste0(sub('\\\",.*','',path_part), '/radiant');if(file.exists(auto_pth)) {  cat(paste('radiant folder Dropbox found in', auto_pth,''))} else {  cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')  q('ask')}Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')source(paste0(auto_pth,'/radiant-miniCRAN/dependencies.R'))shiny::runApp(paste0(auto_pth,'/inst/quant'), port = 4403, launch.browser=TRUE)"	end tell</string>
+					<string>tell application "R"	activate	cmd "fpath &lt;- '~/.dropbox/info.json'if(!file.exists(fpath)) {  cat('No dropbox location found. Did you install the Dropbox software from https://www.dropbox.com/downloading ?')  q('ask')}f &lt;- file(fpath,'r');json_string &lt;- suppressWarnings(readLines(f, -1L));
+close(f);path_part &lt;- sub('.*path\\\": \\\"','',json_string);auto_pth &lt;- paste0(sub('\\\",.*','',path_part), '/radiant');if(file.exists(auto_pth)) {  cat(paste('radiant folder Dropbox found in', auto_pth,''))} else {  cat('No radiant folder found in your Dropbox. Did you accept the invitation to share the radiant folder?')  q('ask')}Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')source(paste0(auto_pth,'/radiant-miniCRAN/dependencies.R'))shiny::runApp(paste0(auto_pth,'/inst/quant'), port = 4403, launch.browser=TRUE)"	end tell</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -105,7 +106,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>291.500000:556.000000</string>
+				<string>292.500000:556.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -353,7 +354,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>291.500000:243.000000</string>
+				<string>292.500000:243.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Watch Me Do.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -363,7 +364,7 @@ end run</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>43752CCC-4AC5-42DF-ABAE-124BC31DD07E</key>
+		<key>B4A9AAFD-C405-42B0-8D32-B32F7A027C4B</key>
 		<dict>
 			<key>from</key>
 			<string>CAF8156A-1BE4-41CC-9098-A37E2F3A33FF - CAF8156A-1BE4-41CC-9098-A37E2F3A33FF</string>
