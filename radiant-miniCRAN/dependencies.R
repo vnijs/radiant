@@ -4,7 +4,10 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
   if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
     pth <- normalizePath("~/Desktop/GitHub/radiant_dev/radiant-miniCRAN", winslash = "/")
-  } else {
+  }
+
+
+  else {
 
     if (.Platform$OS.type == 'windows') {
       fpath <- paste0(Sys.getenv('APPDATA'),"/Dropbox/info.json")
@@ -48,7 +51,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
   # install packages that are available but were not installed before
   to_inp <- new.packages(lib.loc = local_dir)
-  to_inp
+
 #   if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
   if(length(to_inp) != 0) install.packages(to_inp, local_dir)
 
@@ -65,11 +68,43 @@ if(Sys.getenv('SHINY_PORT') == "") {
 } else {
   # when run on Shiny-server make sure you have install the packages already
   # using sudo su
-  mcran <- "file:///home/vnijs/Desktop/radiant/radiant-miniCRAN"
-  options(repos = c(CRAN = mcran))
-  source(paste0(mcran,"/pkgs.R"))
-  sapply(pkgs, install.packages, character.only=TRUE)
-  sapply(pkgs, require, character.only=TRUE)
+#   mcran <- "file:///home/vnijs/Desktop/radiant/radiant-miniCRAN"
+#   options(repos = c(CRAN = mcran))
+#
+#   update.packages(lib.loc = local_dir, ask = FALSE)
+#   to_inp <- new.packages(lib.loc = local_dir)
+#   if(length(to_inp) != 0) install.packages(to_inp, local_dir)
+    # install to user directory
+  local_dir <- Sys.getenv("R_LIBS_USER")
+  if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-  # may still have to install several things using install_github
+  # loading the list of pkgs needed to run radiant
+  source(paste0(pth,"/pkgs.R"))
+
+  # setting the url for the miniCRAN
+  mcran <- paste0("file:///",pth)
+
+  # look locally first and then in the Rstudion CRAN
+  # options(repos = c(CRAN = c(mcran,"http://cran.rstudio.com")))
+  options(repos = c(CRAN = mcran))
+
+  # udpate old-packages
+  update.packages(lib.loc = local_dir, ask = FALSE)
+
+  # install packages that are available but were not installed before
+  to_inp <- new.packages(lib.loc = local_dir)
+
+#   if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
+  if(length(to_inp) != 0) install.packages(to_inp, local_dir)
+
+  # add function to remove packages that are not used by Radiant?
+  # might mess up someones stuff. maybe better to do this like packRat does it
+  # i.e., install into a non-standard directory
+
+  # load/attach packages
+#   suppressWarnings(sapply(rownames(installed.packages()), require, lib.loc = local_dir, character.only=TRUE))
+#   if (.Platform$OS.type == 'windows') remove.packages('Cairo')
+
+  suppressWarnings(sapply(pkgs[pkgs != "R.utils"], require, lib.loc = local_dir, character.only=TRUE))
+
 }
