@@ -4,7 +4,7 @@
 # pkgs_cran <- c("mime","BH","GPArotation","R.methodsS3", "R.oo", "R.utils",
 # 	"wordcloud", "AlgDesign", "Cairo", "igraph", "brew", "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
 
-pkgs_cran <- c("R.utils", "car", "gridExtra", "GPArotation", "psych", "vegan",  "RColorBrewer",
+pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "vegan",  "RColorBrewer",
 	"wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
   "plyr", "lubridate", "ggplot2", "shiny","tidyr","dplyr","ggvis")
 
