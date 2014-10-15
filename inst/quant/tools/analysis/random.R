@@ -385,5 +385,8 @@ plots_ctl <- function(result = .ctl()) {
       stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]), sd = sd(sstat[,1])), color = "blue") +
       labs(y = "") + theme(axis.text.y = element_blank())
 
-  do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
+  withProgress(message = 'Making plots', value = 0, {
+    do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
+  })
+
 }

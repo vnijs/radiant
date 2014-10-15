@@ -36,7 +36,7 @@ output$report <- renderUI({
 
     div(class="row-fluid",
       div(class="span6",
-        aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, height = "600px", debounce=10000,
+        aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, height = "600px",
                   selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
                   vimKeyBinding=vimKeyBinding)),
       div(class="span6", htmlOutput("rmd_knitDoc"))
