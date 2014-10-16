@@ -43,10 +43,10 @@ output$state <- renderUI({
 #         HTML("<button id='resetState' type='button' class='btn action-button shiny-bound-input' href='/'>Reset</button>")
 #         actionButton('resetState', 'Reset')
 #       ),
-      wellPanel(
-        HTML("<label>Quit app:</label>"),
-        actionButton('quitApp', 'Quit')
-      ),
+#       wellPanel(
+#         HTML("<label>Quit app:</label>"),
+#         actionButton('quitApp', 'Quit')
+#       ),
       helpModal('State','stateHelp',inclMD("../base/tools/help/state.md"))
     ),
     mainPanel(
