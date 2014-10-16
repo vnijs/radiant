@@ -84,7 +84,7 @@ output$refreshOnUpload <- renderUI({
 })
 
 output$downloadState <- downloadHandler(
-  filename = function() { paste0("RadiantState-",Sys.Date(),".rda") },
+  filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
   content = function(file) {
 
     isolate({

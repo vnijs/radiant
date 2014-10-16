@@ -10,7 +10,7 @@ vimKeyBinding <- FALSE
 # only write if running on developer computer
 if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
   # for debugging
-  options(shiny.trace = TRUE)
+#   options(shiny.trace = TRUE)
 #   options(warn=2)
 #   options(shiny.error=recover)
   vimKeyBinding <- TRUE
@@ -37,9 +37,13 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
 setInitValues <- function() {
   # initialize state list and reactive values
-#   if(testingRadiant) {
-#     # Load previous state for testing purposes. Not yet implemented
-#   } else {
+  pth <- "~/radiant_temp/state/"
+  filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
+  if(file.exists(filename)) {
+    load(filename)
+    if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
+    if(exists("RadiantInputs")) state_list <<- RadiantInputs
+  } else {
 
     state_list <<- list()
     values <<- reactiveValues()
@@ -56,7 +60,7 @@ setInitValues <- function() {
     values[["diamonds"]] <- df
     values[["diamonds_descr"]] <- attr(df,'description')
     values$datasetlist <- c("diamonds")
-#   }
+  }
 }
 
 setInitValues()   # using a function here so it can also be called from state.R to reset the app
