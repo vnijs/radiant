@@ -28,7 +28,7 @@ output$state <- renderUI({
     sidebarPanel(
       wellPanel(
         HTML("<label>Load previous app state:</label>"),
-        fileInput('uploadState', ''),
+        fileInput('uploadState', '',  accept = ".rsf"),
         uiOutput("refreshOnUpload")
       ),
       wellPanel(
@@ -106,14 +106,18 @@ observe({
 })
 
 
-
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
-#   unlink(c("www/rmd/cache/", "www/rmd/figure"), recursive = TRUE)
-   unlink(c("~/radiant_temp/rmd/figure"), recursive = TRUE)
-#
-   stopApp()   # stop Radiant
-   q("no")     # quit R
+
+  unlink(c("~/radiant_temp/rmd/figure"), recursive = TRUE)
+#   unlink(c("~/radiant_temp/"), recursive = TRUE)
+
+  pth <- "~/radiant_temp/state/"
+  rsf_file <- (paste0(pth,"RadiantState-",Sys.Date(),".rsf"))
+  if(file.exists(rsf_file)) file.remove(c(rsf_file))
+
+  stopApp()   # stop Radiant
+  q("no")     # quit R
 })
 
 output$showInput <- renderPrint({
