@@ -20,4 +20,4 @@ set fpath=%fpath:\=/%
 :: Uglyfied
 "%R%" -e "Sys.setlocale(category = 'LC_ALL','English_United States.1252'); f <- file('%fpath%','r'); json_string <- suppressWarnings(readLines(f, -1L)); close(f); path_part <- sub('.*path\\\": \\\"','',json_string); path <- paste0(sub('\\\",.*','',path_part), '\\\\radiant'); setwd(normalizePath(path, winslash='/')); source('radiant-miniCRAN/dependencies.R');  shiny::runApp('inst/base', port = 4000, launch.browser=TRUE)"
 
-pause
+:: pause
