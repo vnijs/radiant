@@ -3,14 +3,14 @@
 #######################################
 output$ui_Manage <- renderUI({
   list(wellPanel(
-      radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), 
+      radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"),
         selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
           radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',')
         ),
-        fileInput('uploadfile', '', multiple=TRUE)
+        fileInput('uploadfile', '', multiple=TRUE, accept = c(".csv",".txt",".rda",".Rda",".RDA",".rdata",".Rdata",".RData",mime::mimemap["csv"]))
       ),
       conditionalPanel(condition = "input.dataType == 'clipboard'",
         actionButton('loadClipData', 'Paste data')
@@ -20,7 +20,7 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      radioButtons(inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"), 
+      radioButtons(inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"),
         selected = "rda"),
       checkboxInput("man_add_descr","Add/edit data description", FALSE),
       conditionalPanel(condition = "input.man_add_descr == true",
@@ -34,7 +34,6 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      # returnTextInput("data_rename", "Rename dataset:", input$datasets),
       textInput("data_rename", "", input$datasets),
       actionButton('renameButton', 'Rename dataset')
      ),
@@ -60,7 +59,6 @@ observe({
   if(is.null(input$renameButton) || input$renameButton == 0) return()
 
   isolate({
-    # names(values)[names(values)==input$datasets] <- input$data_rename 
     values[[input$data_rename]] <- getdata()
     values[[input$datasets]] <- NULL
     values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$datasets,"_descr")]]
@@ -81,7 +79,7 @@ dataDescriptionOutput <- function(ret = 'html') {
     return("")  # if there is no data description
   } else {
     # if there is a data description and the 'add/edit' box has been checked
-    ifelse(ret == 'md',return(descr), 
+    ifelse(ret == 'md',return(descr),
       return(suppressWarnings(markdownToHTML(text = descr, stylesheet="../base/www/empty.css"))))
   }
 }
@@ -89,7 +87,7 @@ dataDescriptionOutput <- function(ret = 'html') {
 # removing datasets
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
-  selectInput(inputId = "removeDataset", label = "Remove data from memory:", 
+  selectInput(inputId = "removeDataset", label = "Remove data from memory:",
     choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE)
 })
 
@@ -100,7 +98,7 @@ observe({
 
     datasets <- values[['datasetlist']]
     if(length(datasets) > 1) {         # don't remove the last dataset
-      removeDataset <- input$removeDataset  
+      removeDataset <- input$removeDataset
       if(length(datasets) == length(removeDataset)) {
         # datasets <- ""
         removeDataset <- removeDataset[-1]
@@ -122,7 +120,7 @@ observe({
     os_type <- .Platform$OS.type
     if (os_type == 'windows') {
       write.table(getdata(), "clipboard", sep="\t", row.names=FALSE)
-    } else { 
+    } else {
       write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
     }
     updateRadioButtons(session = session, inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"), selected = ".rda")
@@ -196,10 +194,10 @@ observe({
   isolate({
     os_type <- .Platform$OS.type
     if (os_type == 'windows') {
-      
+
       dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
       if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
-    } else { 
+    } else {
 
       dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
       if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
@@ -213,13 +211,13 @@ observe({
 
 loadUserData <- function(filename, uFile, ext) {
 
-  # ext <- file_ext(filename)
-  # filename <- "test.rda"
-  # ext <- 'rda'
   objname <- sub(paste(".",ext,sep = ""),"",basename(filename))
-  # ext <- tolower(ext)
 
-  # if(ext == 'rda' || ext == 'rdata') {
+#   ext <- tolower(tools::file_ext(filename))
+#   validate(
+#     need(ext %in% c('rda','rds','rdata','csv'), message = "Based on the filename extension this does not seems to be a filetype that Radiant can load. Radiant currently supports R-data files with extension .rda, .rds, and .rdata.\n Files exported from Excel in .csv format can also be loaded. Excel files in .xls or .xlsx format must either (1) be  converted to csv format or (2) copy-and-pasted into Radiant using the clipboard option. See the helpfile for additional details.")
+#   )
+
   if(ext == 'rda') {
     # objname will hold the name of the object(s) inside the R datafile
     robjname <- load(uFile)
@@ -240,18 +238,22 @@ loadUserData <- function(filename, uFile, ext) {
     values[['datasetlist']] <- unique(c(objname,values[['datasetlist']]))
   }
 
-  if(ext == 'sav') {
-    values[[objname]] <- as.data.frame(as.data.set(spss.system.file(uFile)))
-  } else if(ext == 'dta') {
-    values[[objname]] <- read.dta(uFile)
-  } else if(ext == 'csv') {
+  if(ext == 'csv') {
     values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
   }
+
+#   if(ext == 'sav') {
+#     values[[objname]] <- as.data.frame(as.data.set(spss.system.file(uFile)))
+#   } else if(ext == 'dta') {
+#     values[[objname]] <- read.dta(uFile)
+#   } else
+
+
 }
 
 output$uiDatasets <- renderUI({
   # Drop-down selection of data set
-  selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist, 
+  selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist,
     selected = state_init("datasets"), multiple = FALSE)
 })
 
