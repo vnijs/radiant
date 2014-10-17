@@ -90,7 +90,7 @@ observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
 
   setInitValues()
-  tags$script("window.location.reload();")
+#   tags$script("window.location.reload();")
 })
 
 output$showInput <- renderPrint({
