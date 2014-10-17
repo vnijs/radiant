@@ -3,11 +3,10 @@
 if(Sys.getenv('SHINY_PORT') == "") {
 
   if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
+
     pth <- normalizePath("~/Desktop/GitHub/radiant_dev/radiant-miniCRAN", winslash = "/")
-  }
 
-
-  else {
+  } else {
 
     if (.Platform$OS.type == 'windows') {
       fpath <- paste0(Sys.getenv('APPDATA'),"/Dropbox/info.json")
