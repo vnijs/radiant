@@ -8,9 +8,13 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
-          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',')
+          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ','),
+          fileInput('uploadfile', '', multiple=TRUE, accept = c('text/csv', 'text/comma-separated-values',
+                                                                'text/tab-separated-values', 'text/plain', '.csv', '.tsv'))
         ),
-        fileInput('uploadfile', '', multiple=TRUE, accept = c(".csv",".txt",".rda",".Rda",".RDA",".rdata",".Rdata",".RData",mime::mimemap["csv"]))
+        conditionalPanel(condition = "input.dataType == 'rda'",
+          fileInput('uploadfile', '', multiple=TRUE, accept = c(".rda",".rds"))
+        )
       ),
       conditionalPanel(condition = "input.dataType == 'clipboard'",
         actionButton('loadClipData', 'Paste data')
@@ -241,14 +245,6 @@ loadUserData <- function(filename, uFile, ext) {
   if(ext == 'csv') {
     values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
   }
-
-#   if(ext == 'sav') {
-#     values[[objname]] <- as.data.frame(as.data.set(spss.system.file(uFile)))
-#   } else if(ext == 'dta') {
-#     values[[objname]] <- read.dta(uFile)
-#   } else
-
-
 }
 
 output$uiDatasets <- renderUI({
@@ -260,7 +256,6 @@ output$uiDatasets <- renderUI({
 output$htmlDataExample <- renderText({
 
   # if(isolate(input$datatabs) != 'Manage') return(invisible())
-
   dat <- getdata()
   if(is.null(dat)) return()
 
@@ -270,7 +265,6 @@ output$htmlDataExample <- renderText({
   dat <- date2character_dat(dat) # dealing with dates
   html <- print(xtable::xtable(dat), type='html', print.results = FALSE)
   html <- sub("<table border=1>","<table class='table table-condensed table-hover'>", html)
-  # html <- sub("<table border=\"1\">","<table class='table table-condensed table-hover'>", html)
   Encoding(html) <- 'UTF-8'
   html
 })

@@ -36,17 +36,11 @@ output$state <- renderUI({
         downloadButton('downloadState', 'Save')
 
       ),
-#       wellPanel(
-#         HTML("<label>Reset to initial app state:</label>"),
-#         HTML("<a class='btn action-button shiny-bound-input' id='resetState-sss' href='/'>Reset</a>"),
-#         HTML("<a class='btn action-button shiny-bound-input' id='resetState' type='button' href='/'>Reset</a>")
-#         HTML("<button id='resetState' type='button' class='btn action-button shiny-bound-input' href='/'>Reset</button>")
+      wellPanel(
+        HTML("<label>Reset to initial app state:</label>"),
+        HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button>")
 #         actionButton('resetState', 'Reset')
-#       ),
-#       wellPanel(
-#         HTML("<label>Quit app:</label>"),
-#         actionButton('quitApp', 'Quit')
-#       ),
+      ),
       helpModal('State','stateHelp',inclMD("../base/tools/help/state.md"))
     ),
     mainPanel(
@@ -72,11 +66,8 @@ output$refreshOnUpload <- renderUI({
     # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
     tags$script("window.location.reload();")
 
-    # Did the above used to work? Does it still? The below code is what I saw online
-#     tags$script("document.location.reload();")
-
     #################################################################################
-    # todo: return to the state page or the page used before going to State.
+    # todo: return to the page used before going to State.
     # The below doesn't work ... yet
     #################################################################################
     # updateTabsetPanel(session, "nav_radiant", selected = "State")
@@ -98,26 +89,8 @@ output$downloadState <- downloadHandler(
 observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
 
-  isolate({
-    setInitValues()
-    tags$script("window.location.reload();")
-  })
-
-})
-
-
-observe({
-  if(is.null(input$quitApp) || input$quitApp == 0) return()
-
-  unlink(c("~/radiant_temp/rmd/figure"), recursive = TRUE)
-#   unlink(c("~/radiant_temp/"), recursive = TRUE)
-
-  pth <- "~/radiant_temp/state/"
-  rsf_file <- (paste0(pth,"RadiantState-",Sys.Date(),".rsf"))
-  if(file.exists(rsf_file)) file.remove(c(rsf_file))
-
-  stopApp()   # stop Radiant
-  q("no")     # quit R
+  setInitValues()
+  tags$script("window.location.reload();")
 })
 
 output$showInput <- renderPrint({
