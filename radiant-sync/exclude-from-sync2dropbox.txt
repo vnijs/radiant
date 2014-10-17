@@ -17,3 +17,5 @@ radiant-sync/
 .gitignore
 
 radiant.Rproj
+
+inst/base/www/MathJax/
