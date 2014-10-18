@@ -1,0 +1,14 @@
+# commands to run Radiant
+args <- commandArgs(trailingOnly = TRUE)
+apppth <- "radiant/inst/quant"
+com_string <- paste0("cd ",args,"\n",Sys.which('R'), " -e ",
+	"\"shiny::runApp('",apppth,"',port = 4403, launch.browser=TRUE)\"\npause")
+
+pth <- shQuote(normalizePath("~/radiant_tmp"))
+if(!file.exists(pth) dir.create(pth), recursive = TRUE)
+filename <- shQuote(normalizePath("~/radiant_tmp/radiant_quant.bat"))
+cat(com_string,file=filename,sep="\n")
+edit(file = filename)
+
+# keeps the editor open for a little while
+Sys.sleep(30)

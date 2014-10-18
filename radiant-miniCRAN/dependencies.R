@@ -1,3 +1,9 @@
+if (.Platform$OS.type == 'windows') {
+  Sys.setlocale(category = 'LC_ALL','English_United States.1252')
+} else {
+  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
+}
+
 # install packages required to run radiant
 # next line checks if Radiant is being run locally
 if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
@@ -6,12 +12,6 @@ if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/Git
   pth <- normalizePath("~/Desktop/GitHub/radiant_dev/radiant-miniCRAN", winslash = "/")
 
 } else {
-
-  if (.Platform$OS.type == 'windows') {
-    Sys.setlocale(category = 'LC_ALL','English_United States.1252')
-  } else {
-    Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
-  }
 
     # setting the location of the miniCRAN
 #     pth <- normalizePath(paste0("."), winslash = "/")
