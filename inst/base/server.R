@@ -16,8 +16,6 @@ shinyServer(function(input, output, session) {
       RadiantInputs <- isolate(reactiveValuesToList(input))
       RadiantValues <- isolate(reactiveValuesToList(values))
       save(RadiantInputs, RadiantValues , file = filename)
-#       Sys.sleep(5)
-#       if(session$isClosed()) q("ask")
     })
   })
 })
