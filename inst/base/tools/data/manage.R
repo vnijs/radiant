@@ -1,6 +1,19 @@
 #######################################
 # Manage datasets in/out of Radiant
 #######################################
+
+output$ui_fileUpload <- renderUI({
+
+  if(is.null(input$dataType)) return()
+
+  if(input$dataType == "csv") {
+    fileInput('uploadfile', '', multiple=TRUE,
+              accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv'))
+  } else if(input$dataType == "rda") {
+    fileInput('uploadfile', '', multiple=TRUE, accept = c(".rda",".rds"))
+  }
+})
+
 output$ui_Manage <- renderUI({
   list(wellPanel(
       radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"),
@@ -8,13 +21,9 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
-          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ','),
-          fileInput('uploadfile', '', multiple=TRUE, accept = c('text/csv', 'text/comma-separated-values',
-                                                                'text/tab-separated-values', 'text/plain', '.csv', '.tsv'))
+          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',')
         ),
-        conditionalPanel(condition = "input.dataType == 'rda'",
-          fileInput('uploadfile', '', multiple=TRUE, accept = c(".rda",".rds"))
-        )
+        uiOutput("ui_fileUpload")
       ),
       conditionalPanel(condition = "input.dataType == 'clipboard'",
         actionButton('loadClipData', 'Paste data')
@@ -100,6 +109,11 @@ observe({
   if(is.null(input$removeDataButton) || input$removeDataButton == 0) return()
   isolate({
 
+    # only remove datasets if 1 or more were selected
+    # without this line all files would be removed when
+    # the removeDataButton is pressed
+    if(is.null(input$removeDataset)) return()
+
     datasets <- values[['datasetlist']]
     if(length(datasets) > 1) {         # don't remove the last dataset
       removeDataset <- input$removeDataset
@@ -161,7 +175,6 @@ output$downloadData <- downloadHandler(
 observe({
   # loading files from disk
   inFile <- input$uploadfile
-  # if(!is.null(inFile) && length(inFile) > 0) {
   if(!is.null(inFile) && !is.na(inFile)) {
     isolate({
       # iterating through the files to upload

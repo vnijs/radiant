@@ -1,22 +1,10 @@
 # install packages required to run radiant
-# next line checks if Radiant is being run locally
-if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
+# next line checks if Radiant is being run locally or not
 
-  # for running Radiant from the dev directory
-  pth <- normalizePath("~/Desktop/GitHub/radiant_dev/radiant-miniCRAN", winslash = "/")
+## Not sure how to use this for server
 
-} else {
-
-  if (.Platform$OS.type == 'windows') {
-    Sys.setlocale(category = 'LC_ALL','English_United States.1252')
-  } else {
-    Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
-  }
-
-    # setting the location of the miniCRAN
-#     pth <- normalizePath(paste0("."), winslash = "/")
-    pth <- normalizePath(paste0("../../"), winslash = "/")
-}
+# setting the location of the miniCRAN
+pth <- normalizePath(paste0("."))
 
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
