@@ -1,5 +1,12 @@
-# load required packages
-source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
+# install and load required packages
+if(Sys.getenv('SHINY_PORT') == "") {
+  source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
+} else {
+  # load/attach packages, use dependencies-server.R to install relevant packages before
+  # running shiny-server
+  local_dir <- Sys.getenv("R_LIBS_USER")
+  suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
+}
 
 ############################################################
 # Start of main code
@@ -32,6 +39,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize=-1)
   running_local <<- TRUE
 } else {
+  # limit upload filesize on server (5MB)
+  options(shiny.maxRequestSize=5*1024^2)
   running_local <<- FALSE
 }
 
