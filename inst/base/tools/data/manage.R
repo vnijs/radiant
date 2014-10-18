@@ -112,13 +112,16 @@ observe({
     # only remove datasets if 1 or more were selected
     # without this line all files would be removed when
     # the removeDataButton is pressed
-    if(is.null(input$removeDataset)) return()
-
+    # if(is.null(input$removeDataset)) return()
     datasets <- values[['datasetlist']]
+    validate(
+      need(!is.null(input$removeDataset),"Please select one or more datasets to remove from memory"),
+      need(length(input$removeDataset) < length(datasets),"Cannot remove all datasets from memory")
+    )
+
     if(length(datasets) > 1) {         # don't remove the last dataset
       removeDataset <- input$removeDataset
       if(length(datasets) == length(removeDataset)) {
-        # datasets <- ""
         removeDataset <- removeDataset[-1]
       }
       for(rem in removeDataset) {
