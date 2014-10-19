@@ -7,13 +7,15 @@ if(Sys.getenv('SHINY_PORT') == "") {
   local_dir <- Sys.getenv("R_LIBS_USER")
   pkgs <- installed.packages()[,'Package']
 #   suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
-  sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
+#   sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
+  sapply(pkgs, require, character.only=TRUE)
 
   # not sure why the following is needed but ..
   library(knitr)
   library(markdown)
   library(plyr)
   library(lubridate)
+  library(ggplot2)
 }
 
 ############################################################
