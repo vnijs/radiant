@@ -1,0 +1,16 @@
+Unless otherwise stated, the source code of the permute package is
+copyright (C) Gavin L. Simpson 2010 - 2013.
+
+One exception is the code for the `update.how` and `update.Plots` S3
+methods in files
+
+PKG_BASE/R/update.how.R
+PKG_BASE/R/update.Plots.R
+
+These functions are based upon code from the `update.default` method of
+base R. These are Copyright (C) 1995-2012 The R Core Team. These codes
+are released under the GPL version 2 or, at your discretion, any later
+version.
+
+The full copyright and licence statements for these codes are retained
+in the header of the respective .R files listed above.
