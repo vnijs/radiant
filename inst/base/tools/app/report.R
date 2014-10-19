@@ -59,9 +59,9 @@ output$rmd_knitDoc <- renderUI({
       withProgress(message = 'Knitting report', value = 0, {
 
         if(is.null(input$rmd_selection) || input$rmd_selection == "") {
-          html <- HTML(paste(knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
+          html <- HTML(paste(knitr::knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
         } else {
-          html <- HTML(paste(knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
+          html <- HTML(paste(knitr::knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
         }
       })
       html
@@ -75,9 +75,9 @@ output$saveHTML <- downloadHandler(
     if(running_local) {
       isolate({
         if(is.null(input$rmd_selection) || input$rmd_selection == "") {
-          html <- knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
+          html <- knitr::knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
         } else {
-          html <- knit2html(text = input$rmd_selection, quiet = TRUE, options=c("mathjax", "base64_images"))
+          html <- knitr::knit2html(text = input$rmd_selection, quiet = TRUE, options=c("mathjax", "base64_images"))
         }
         cat(html,file=file,sep="\n")
       })
@@ -203,7 +203,7 @@ output$rCodeEval <- renderPrint({
       }
 
       r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
-      return(HTML(paste(knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
+      return(HTML(paste(knitr::knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
     } else {
       return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
     }

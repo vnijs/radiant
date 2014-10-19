@@ -1,0 +1,23 @@
+                        Deprecated functions in package permute
+allFree                 Utility functions for complete enumeration of
+                        all possible permutations
+allPerms                Complete enumeration of all possible
+                        permutations
+check                   Utility functions for permutation schemes
+get-methods             Extractor functions to access components of a
+                        permutation design
+how                     How to define a permutation design?
+jackal                  Mandible lengths of male and female golden
+                        jackals
+nobs-methods            Number of observations in a given object
+numPerms                Number of possible permutations for a given
+                        object
+permCheck-deprecated    Utility functions for permutation schemes
+permControl             How to define a permutation design?
+set-methods             Replacement functions to set components of a
+                        permutation design
+shuffle                 Unrestricted and restricted permutations
+shuffle-utils           Utility functions for unrestricted and
+                        restricted permutations
+shuffleSet              Generate a set of permutations from the
+                        specified design.

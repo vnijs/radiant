@@ -153,6 +153,6 @@ inclRmd <- function(path) {
   # function to render .Rmd files to html on-the-fly
   contents <- paste(readLines(path, warn = FALSE), collapse = '\n')
   # do not embed image or add css
-  html <- knit2html(text = contents, fragment.only = TRUE, options = "", stylesheet = "www/empty.css")
+  html <- knitr::knit2html(text = contents, fragment.only = TRUE, options = "", stylesheet = "www/empty.css")
   html
 }
