@@ -14,10 +14,10 @@ if(!'shiny' %in% installed.packages()[,'Package']) {
 }
 
 com_string <- paste0("cd ",script_dir,"\n",Sys.which('R'), " -e ",
-  "\"shiny::runApp('../../inst/", class_app[1],"', port = ", class_app[2]," launch.browser=TRUE)\"\npause")
+  "\"shiny::runApp('../../inst/", class_app[1],"', port = ", class_app[2],", launch.browser=TRUE)\"\npause")
 com_string
 
-filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant_",class_app[1],".command")
+filename <- paste0(Sys.getenv("USERPROFILE"),"/Desktop/radiant_",class_app[1],".bat")
 cat(com_string,file=filename,sep="\n")
 
 # keeps the file open for a little while
