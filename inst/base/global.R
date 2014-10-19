@@ -12,6 +12,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # not sure why the following is needed but ..
   library(knitr)
   library(markdown)
+  library(plyr)
   library(lubridate)
 }
 
