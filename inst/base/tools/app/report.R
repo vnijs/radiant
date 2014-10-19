@@ -22,7 +22,6 @@ hist(rnorm(100))
 ```
 "
 # opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
-library(knitr)
 opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                fig.path = "~/radiant_temp/rmd/figure/")
 opts_knit$set(progress = TRUE)
