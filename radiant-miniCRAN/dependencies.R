@@ -15,7 +15,7 @@ if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/Git
 
     # setting the location of the miniCRAN
 #     pth <- normalizePath(paste0("."), winslash = "/")
-    pth <- normalizePath(paste0("../../"), winslash = "/")
+    pth <- normalizePath(paste0("../../radiant-miniCRAN"), winslash = "/")
 }
 
 # install to user directory
