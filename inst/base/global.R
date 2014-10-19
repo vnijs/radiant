@@ -5,6 +5,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # load/attach packages, use dependencies-server.R to install relevant packages before
   # running shiny-server
   local_dir <- Sys.getenv("R_LIBS_USER")
+  pkgs <- installed.packages()[,'Package']
   suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
 }
 

@@ -34,6 +34,7 @@ options(repos = c(CRAN = mcran))
 
 # udpate old-packages
 update.packages(lib.loc = local_dir, ask = FALSE)
+# pkgs <- installed.packages()[,'Package']
 
 # install packages that are available but were not installed before
 to_inp <- new.packages(lib.loc = local_dir)
