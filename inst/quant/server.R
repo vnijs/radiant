@@ -13,8 +13,8 @@ shinyServer(function(input, output, session) {
 
 	session$onSessionEnded(function() {
 	  observe({
-	    pth <- "~/radiant_temp/state/"
-	    if(!file.exists(pth)) dir.create(pth)
+	    pth <- "~/radiant_temp/state"
+	    if(!file.exists(pth)) dir.create(pth, recursive = TRUE)
 	    filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
 	    RadiantInputs <- isolate(reactiveValuesToList(input))
 	    RadiantValues <- isolate(reactiveValuesToList(values))
