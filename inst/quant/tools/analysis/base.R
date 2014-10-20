@@ -267,7 +267,7 @@ output$ui_singleProp <- renderUI({
 	      	selected = state_init_list("sp_alternative","two.sided", base_alt)),
         sliderInput('sp_sigLevel',"Significance level:", min = 0.85, max = 0.99,
       		value = state_init('sp_sigLevel',.95), step = 0.01),
-    	  numericInput("sp_compValue", "Comparison value:", state_init('sp_compValue', 0.0), min = 0.01, max = 0.99, step = 0.01)
+    	  numericInput("sp_compValue", "Comparison value:", state_init('sp_compValue', 0.5), min = 0.01, max = 0.99, step = 0.01)
       )
     ),
 	 	helpAndReport('Single proportion','singleProp',inclMD("../quant/tools/help/singleProp.md"))
@@ -296,14 +296,13 @@ observe({
   })
 })
 
-singleProp <- function(datasets, sp_var, sp_compValue = 0, sp_alternative = 'two.sided',
+singleProp <- function(datasets, sp_var, sp_compValue = 0.5, sp_alternative = 'two.sided',
                        sp_sigLevel = .95) {
 
   dat <- values[[datasets]][,sp_var]
 	lev <- levels(dat)
 	if(length(lev) >2) return("The selected variable has more than two levels.\nTry another variable or a cross-tab.")
 	prop <- sum(dat == rev(lev)[1])
-  print(prop)
 	result <- prop.test(prop, n = length(dat), p = sp_compValue, alternative = sp_alternative,
             conf.level = sp_sigLevel, correct = FALSE)
   result$data <- data.frame(dat)
@@ -318,11 +317,11 @@ summary_singleProp <- function(result = .singleProp()) {
 
 plots_singleProp <- function(result = .singleProp()) {
 
-	var <- result$sp_var
-# 	dat <- na.omit( getdata()[,var, drop = FALSE] )
-  dat <- result$data
-	p <- ggplot(dat, aes_string(x = var, fill = var)) + geom_histogram(alpha=.3) +
- 			ggtitle(paste("Single proportion:", var))
+	var <- result$data.name
+  dat <- na.omit(result$data)
+
+ 	p <- ggplot(dat, aes_string(x = var, fill = var)) + geom_histogram(alpha=.3) +
+    ggtitle(paste("Single proportion:", var))
 	print(p)
 }
 

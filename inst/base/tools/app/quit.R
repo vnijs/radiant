@@ -5,7 +5,11 @@ output$quit <- renderUI({
   pth <- "~/radiant_temp/rmd/figure/"
   if(file.exists(pth)) unlink(pth, recursive = TRUE)
   pth <- "~/radiant_temp/state/"
-  if(file.exists(pth)) unlink(pth, recursive = TRUE)
+# if(file.exists(pth)) unlink(pth, recursive = TRUE)
+  filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
+  if(file.exists(filename)) file.remove(filename)
+  # Note: state file is created when using Rstudio because
+  # onSessionEnded is called
   stopApp("Stop Radiant")   # stop Radiant
   # quit R, unless you are running Rstudio
   if(Sys.getenv("RSTUDIO") != "1") q("no")
