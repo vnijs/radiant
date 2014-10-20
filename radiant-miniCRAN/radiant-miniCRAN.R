@@ -21,7 +21,7 @@ require(miniCRAN)
 
 # Specify list of packages to download
 source('pkgs.R')
-pkgs <- c("knitr")
+pkgs <- c("psych")
 
 # setting the default location to get R-packages
 # look locally first and then in the Rstudio CRAN
