@@ -180,12 +180,12 @@ Archs: jsonlite.so.dSYM
 MD5sum: bc2dc6c5647f76c084c1de5b15448a31
 
 Package: knitr
-Version: 1.6
+Version: 1.7
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6), tools
-Suggests: testit, rgl, codetools, XML, RCurl
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr (>= 0.6), tools
+Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
-MD5sum: c218dc66d9fddf8a3032f31995e17e05
+MD5sum: f5e3e9bc8a4a6ee16cc83ef9d0e7b1af
 
 Package: labeling
 Version: 0.3

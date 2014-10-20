@@ -14,8 +14,13 @@ if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/Git
 } else {
 
     # setting the location of the miniCRAN
-#     pth <- normalizePath(paste0("."), winslash = "/")
-    pth <- normalizePath(paste0("../../radiant-miniCRAN"), winslash = "/")
+    if(file.exists("./radiant-miniCRAN/")) {
+      # This line is only here to deal with the old launchers on windows
+      # Remove after Fall 2014
+      pth <- normalizePath(paste0("."), winslash = "/")
+    } else {
+      pth <- normalizePath(paste0("../../radiant-miniCRAN"), winslash = "/")
+    }
 }
 
 # install to user directory
