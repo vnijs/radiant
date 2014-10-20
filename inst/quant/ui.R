@@ -10,7 +10,9 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
 
   navbarMenu("Base",
     tabPanel("Single mean", uiOutput("singleMean")),
-    tabPanel("Compare means", uiOutput("compareMeans"))
+    tabPanel("Compare means", uiOutput("compareMeans")),
+#     tabPanel("Single proportion", uiOutput("singleProp")),
+    tabPanel("Cross-tabs", uiOutput("crosstab"))
   ),
 
   navbarMenu("Regression",
@@ -25,5 +27,9 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
 
   tabPanel("State", uiOutput("state")),
   tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd"))),
-  tabPanel("Quit", uiOutput("quit"))
+
+  navbarMenu("Quit",
+    tabPanel("Save", uiOutput("quitsave")),
+    tabPanel("Quit", uiOutput("quit"))
+  )
 ))

@@ -1,8 +1,8 @@
 Package: AlgDesign
-Version: 1.1-7.2
+Version: 1.1-7.3
 License: GPL (>= 2)
 Archs: AlgDesign.so.dSYM
-MD5sum: 5940581e53bc7397507e86efcb9bd839
+MD5sum: 42efc10d13670867169072c2ca6761e9
 
 Package: assertthat
 Version: 0.1
@@ -428,6 +428,12 @@ Imports: shiny (>= 0.7.0)
 Suggests: testthat
 License: MIT
 MD5sum: 4d383c431044929e84c847a9fb90782f
+
+Package: shinyFiles
+Version: 0.4.0
+Imports: tools, shiny (>= 0.10.1), htmltools
+License: GPL (>= 2)
+MD5sum: 305b9716b664b75ad57abe6411126684
 
 Package: slam
 Version: 0.1-32

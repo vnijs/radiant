@@ -1,7 +1,7 @@
 Package: AlgDesign
-Version: 1.1-7.2
+Version: 1.1-7.3
 License: GPL (>= 2)
-MD5sum: 0aec34d81c68bbdde10ab10a12427d76
+MD5sum: 2f0b3a6b4cb7883c38ed52b47736e902
 NeedsCompilation: yes
 
 Package: assertthat
@@ -448,6 +448,13 @@ Imports: shiny (>= 0.7.0)
 Suggests: testthat
 License: MIT
 MD5sum: 54575c216ec961350eda8f2d2219ead2
+NeedsCompilation: no
+
+Package: shinyFiles
+Version: 0.4.0
+Imports: tools, shiny (>= 0.10.1), htmltools
+License: GPL (>= 2)
+MD5sum: 6d41ff08560adc318f055b3bab91f34f
 NeedsCompilation: no
 
 Package: slam
