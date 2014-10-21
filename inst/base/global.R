@@ -10,10 +10,11 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
   # not sure why the following is needed but ..
   library(knitr)
-#   library(markdown)
-#   library(plyr)
-#   library(lubridate)
-#   library(ggplot2)
+  library(markdown)
+  library(rmarkdown)
+  library(plyr)
+  library(lubridate)
+  library(ggplot2)
 }
 
 ############################################################
@@ -25,7 +26,7 @@ vimKeyBinding <- FALSE
 # only write if running on developer computer
 if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
   # for debugging
-#   options(shiny.trace = TRUE)
+   options(shiny.trace = TRUE)
 #   options(warn=2)
 #   options(shiny.error=recover)
   vimKeyBinding <- TRUE

@@ -9,5 +9,10 @@ shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE, collaps
 
   tabPanel("State", uiOutput("state")),
   tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd"))),
-  tabPanel("Quit", uiOutput("quit"))
+
+  navbarMenu("Quit",
+    tabPanel("Save", uiOutput("quitsave")),
+#     tabPanel("Save", downloadLink("quitsave", label = "sss", class = NULL)),
+    tabPanel("Quit", uiOutput("quit"))
+  )
 ))

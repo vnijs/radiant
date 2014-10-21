@@ -1,5 +1,5 @@
 Package: AlgDesign
-Version: 1.1-7.2
+Version: 1.1-7.3
 License: GPL (>= 2)
 Archs: i386, x64
 
@@ -371,6 +371,11 @@ Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
 Suggests: testthat
 License: MIT
+
+Package: shinyFiles
+Version: 0.4.0
+Imports: tools, shiny (>= 0.10.1), htmltools
+License: GPL (>= 2)
 
 Package: slam
 Version: 0.1-32
