@@ -244,6 +244,88 @@ plots_compareMeans <- function(result = .compareMeans()) {
 }
 
 ###############################
+# Single proportion
+###############################
+
+# getting back to the page in progress when developing
+# observe( updateTabsetPanel(session, "nav_radiant", selected = "Single proportion") )
+
+output$uiSp_var <- renderUI({
+  isFct <- "factor" == getdata_class()
+  vars <- varnames()[isFct]
+  if(length(vars) == 0) return()
+  selectInput(inputId = "sp_var", label = "Variable (select one):", choices = vars,
+  	selected = state_singlevar("sp_var",vars), multiple = FALSE)
+})
+
+output$ui_singleProp <- renderUI({
+  list(
+    wellPanel(
+      uiOutput("uiSp_var"),
+      conditionalPanel(condition = "input.tabs_singleProp == 'Summary'",
+	      selectInput(inputId = "sp_alternative", label = "Alternative hypothesis", choices = base_alt,
+	      	selected = state_init_list("sp_alternative","two.sided", base_alt)),
+        sliderInput('sp_sigLevel',"Significance level:", min = 0.85, max = 0.99,
+      		value = state_init('sp_sigLevel',.95), step = 0.01),
+    	  numericInput("sp_compValue", "Comparison value:", state_init('sp_compValue', 0.5), min = 0.01, max = 0.99, step = 0.01)
+      )
+    ),
+	 	helpAndReport('Single proportion','singleProp',inclMD("../quant/tools/help/singleProp.md"))
+  )
+})
+
+output$singleProp <- renderUI({
+  # create inputs and outputs - function in radiant.R
+  statTabPanel("Base","Single proportion",".singleProp","singleProp")
+})
+
+.singleProp <- reactive({
+
+  ret_text <- "This analysis requires a variable of type factor with two levels.\nPlease select another dataset."
+  if(is.null(input$sp_var)) return(ret_text)
+
+  singleProp(input$datasets, input$sp_var, input$sp_compValue, input$sp_alternative, input$sp_sigLevel)
+})
+
+observe({
+  if(is.null(input$singlePropReport) || input$singlePropReport == 0) return()
+  isolate({
+    inp <- list(input$datasets, input$sp_var, input$sp_compValue,
+                input$sp_alternative, input$sp_sigLevel)
+    updateReport(inp,"singleProp")
+  })
+})
+
+singleProp <- function(datasets, sp_var, sp_compValue = 0.5, sp_alternative = 'two.sided',
+                       sp_sigLevel = .95) {
+
+  dat <- values[[datasets]][,sp_var]
+	lev <- levels(dat)
+	if(length(lev) >2) return("The selected variable has more than two levels.\nTry another variable or a cross-tab.")
+	prop <- sum(dat == rev(lev)[1])
+	result <- prop.test(prop, n = length(dat), p = sp_compValue, alternative = sp_alternative,
+            conf.level = sp_sigLevel, correct = FALSE)
+  result$data <- data.frame(dat)
+  names(result$data) <- sp_var
+  result$data.name <- sp_var
+  result
+}
+
+summary_singleProp <- function(result = .singleProp()) {
+  result
+}
+
+plots_singleProp <- function(result = .singleProp()) {
+
+	var <- result$data.name
+  dat <- na.omit(result$data)
+
+ 	p <- ggplot(dat, aes_string(x = var, fill = var)) + geom_histogram(alpha=.3) +
+    ggtitle(paste("Single proportion:", var))
+	print(p)
+}
+
+###############################
 # Cross-tabs
 ###############################
 output$uiCt_var1 <- renderUI({

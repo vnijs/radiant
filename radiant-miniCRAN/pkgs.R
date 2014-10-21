@@ -6,12 +6,11 @@
 
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "vegan",  "RColorBrewer",
 	"wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
-  "lubridate", "ggplot2", "shiny","tidyr","dplyr","ggvis")
+  "lubridate", "ggplot2", "shinyFiles", "shiny", "tidyr", "dplyr", "ggvis")
 
-pkgs_gh <- c("shinyAce","rvest")
+pkgs_gh <- c("shinyAce", "rvest")
 
 pkgs <- c(pkgs_cran,pkgs_gh)
 # pkgs[order(pkgs)]
-
 
 # remove reshape2 and plyr when possible

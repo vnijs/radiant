@@ -20,6 +20,7 @@ state_init_multvar <- function(inputvar, pre_inputvar, vals) {
     return(state_multvar(inputvar, vals)))
 }
 
+
 #######################################
 # Load, Save, Reset app state
 #######################################
@@ -27,19 +28,21 @@ output$state <- renderUI({
   sidebarLayout(
     sidebarPanel(
       wellPanel(
+        HTML("<label>Save current app state:</label>"),
+        downloadButton('downloadState', 'Save')
+      ),
+#       wellPanel(
+#         HTML("<label>Quit app:</label>"),
+#         actionButton('quitApp', 'Quit')
+#       ),
+      wellPanel(
         HTML("<label>Load previous app state:</label>"),
         fileInput('uploadState', '',  accept = ".rsf"),
         uiOutput("refreshOnUpload")
       ),
       wellPanel(
-        HTML("<label>Save current app state:</label>"),
-        downloadButton('downloadState', 'Save')
-
-      ),
-      wellPanel(
         HTML("<label>Reset to initial app state:</label>"),
         HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button>")
-#         actionButton('resetState', 'Reset')
       ),
       helpModal('State','stateHelp',inclMD("../base/tools/help/state.md"))
     ),
@@ -49,6 +52,36 @@ output$state <- renderUI({
   )
 })
 
+#######################################
+# Quit app
+#######################################
+# output$quit <- renderUI({
+#   pth <- "~/radiant_temp/rmd/figure/"
+#   if(file.exists(pth)) unlink(pth, recursive = TRUE)
+#   pth <- "~/radiant_temp/state/"
+#   if(file.exists(pth)) unlink(pth, recursive = TRUE)
+#   stopApp("Stop Radiant")   # stop Radiant
+#   q("no")     # quit R
+# })
+
+#######################################
+# Save state
+#######################################
+output$downloadState <- downloadHandler(
+  filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
+  content = function(file) {
+
+    isolate({
+      RadiantInputs <- isolate(reactiveValuesToList(input))
+      RadiantValues <- isolate(reactiveValuesToList(values))
+      save(RadiantInputs, RadiantValues , file = file)
+    })
+  }
+)
+
+#######################################
+# Load previous state
+#######################################
 observe({
   inFile <- input$uploadState
   if(!is.null(inFile)) {
@@ -74,17 +107,6 @@ output$refreshOnUpload <- renderUI({
   }
 })
 
-output$downloadState <- downloadHandler(
-  filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
-  content = function(file) {
-
-    isolate({
-      RadiantInputs <- isolate(reactiveValuesToList(input))
-      RadiantValues <- isolate(reactiveValuesToList(values))
-      save(RadiantInputs, RadiantValues , file = file)
-    })
-  }
-)
 
 observe({
   if(is.null(input$resetState) || input$resetState == 0) return()

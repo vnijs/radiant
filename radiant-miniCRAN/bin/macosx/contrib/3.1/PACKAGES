@@ -1,8 +1,8 @@
 Package: AlgDesign
-Version: 1.1-7.2
+Version: 1.1-7.3
 License: GPL (>= 2)
 Archs: AlgDesign.so.dSYM
-MD5sum: 8413bca178d296e90bd46ad0fb83a00f
+MD5sum: 74cf3bc4a888c3dd091881cf578cfdb0
 
 Package: assertthat
 Version: 0.1
@@ -174,12 +174,12 @@ Archs: jsonlite.so.dSYM
 MD5sum: 611cbd5ff2a2eec74a01831ed5e3a5bb
 
 Package: knitr
-Version: 1.6
+Version: 1.7
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.3), digest, formatR (>= 0.10), highr (>= 0.3), markdown (>= 0.6.5), stringr (>= 0.6), tools
-Suggests: testit, rgl, codetools, XML, RCurl
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr (>= 0.6), tools
+Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
-MD5sum: 067c827a2f50a1a67d569ececd3560cb
+MD5sum: 28cdeba5f516c4a3372d46e8ec14420d
 
 Package: labeling
 Version: 0.3
@@ -415,6 +415,12 @@ Imports: shiny (>= 0.7.0)
 Suggests: testthat
 License: MIT
 MD5sum: 4d383c431044929e84c847a9fb90782f
+
+Package: shinyFiles
+Version: 0.4.0
+Imports: tools, shiny (>= 0.10.1), htmltools
+License: GPL (>= 2)
+MD5sum: 74294b08c6acefd41d58a5dd3335f857
 
 Package: slam
 Version: 0.1-32
