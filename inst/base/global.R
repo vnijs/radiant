@@ -40,7 +40,6 @@ options(digits = 3)
 # Attempt to build automated testing into Radiant
 # not implemented yet
 testingRadiant <- FALSE
-options(digits = 3)
 
 # allowing any file size when run locally
 if(Sys.getenv('SHINY_PORT') == "") {
@@ -155,12 +154,13 @@ helpAndReport <- function(title, link, content) {
 }
 
 inclMD <- function(file)
-  return(markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css"))
+  return(markdown::markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css"))
+
 
 inclRmd <- function(path) {
   # function to render .Rmd files to html on-the-fly
   contents <- paste(readLines(path, warn = FALSE), collapse = '\n')
   # do not embed image or add css
-  html <- knitr::knit2html(text = contents, fragment.only = TRUE, options = "", stylesheet = "www/empty.css")
+  html <- knitr::knit2html(text = contents, fragment.only = TRUE, options = "", stylesheet = "../base/www/empty.css")
   html
 }
