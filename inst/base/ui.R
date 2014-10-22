@@ -1,4 +1,4 @@
-shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE, collapsable = TRUE,
+shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", selected = 'Data', inverse = TRUE, collapsable = TRUE,
 
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
@@ -7,12 +7,6 @@ shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE, collaps
     tabPanel("Code", uiOutput("rcode"))
   ),
 
-  tabPanel("State", uiOutput("state")),
-  tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd"))),
-
-  navbarMenu("Quit",
-    tabPanel("Save", uiOutput("quitsave")),
-#     tabPanel("Save", downloadLink("quitsave", label = "sss", class = NULL)),
-    tabPanel("Quit", uiOutput("quit"))
-  )
+  tabPanel("Quit", uiOutput("savequit")),
+  tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd")))
 ))

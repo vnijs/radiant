@@ -44,11 +44,7 @@ shinyUI(navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse =
     tabPanel("Code", uiOutput("rcode"))
   ),
 
-  tabPanel("State", uiOutput("state")),
-  tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd"))),
+  tabPanel("Quit", uiOutput("savequit")),
+  tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd")))
 
-  navbarMenu("Quit",
-    tabPanel("Save", uiOutput("quitsave")),
-    tabPanel("Quit", uiOutput("quit"))
-  )
 ))

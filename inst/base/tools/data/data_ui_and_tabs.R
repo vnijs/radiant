@@ -9,7 +9,7 @@ output$data_ui_and_tabs <- renderUI({
     sidebarLayout(
       sidebarPanel(
         # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
-        wellPanel(uiOutput("uiDatasets")),
+        uiOutput("uiDatasets"),
         conditionalPanel(condition = "input.datatabs == 'Manage'", uiOutput("ui_Manage")),
         conditionalPanel(condition = "input.datatabs == 'View'", uiOutput("ui_View")),
         conditionalPanel(condition = "input.datatabs == 'Visualize'", uiOutput("ui_Visualize")),

@@ -1,3 +1,40 @@
+################################################################################
+# functions to set initial values and take information from state_list
+# when available
+################################################################################
+
+state_singlevar <- function(inputvar, vars) vars[vars == state_list[[inputvar]]]
+state_multvar <- function(inputvar, vars) vars[vars %in% state_list[[inputvar]]]
+
+state_init <- function(inputvar, init = "") {
+  ifelse(is.null(state_list[[inputvar]]), return(init), return(state_list[[inputvar]]))
+}
+
+state_init_list <- function(inputvar, init = "", vals) {
+  ifelse(is.null(state_list[[inputvar]]), return(init), return(state_singlevar(inputvar, vals)))
+}
+
+state_init_multvar <- function(inputvar, pre_inputvar, vals) {
+  # for factor and cluster use variable selection from the pre-analysis
+  ifelse(is.null(state_list[[inputvar]]), return(vals[vals %in% pre_inputvar]),
+    return(state_multvar(inputvar, vals)))
+}
+
+################################################################################
+# function to save app state on refresh or crash
+################################################################################
+saveStateOnCrash <- function(session = session)
+  session$onSessionEnded(function() {
+    observe({
+      pth <- "~/radiant_temp/state/"
+      if(!file.exists(pth)) dir.create(pth)
+      filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
+      RadiantInputs <- isolate(reactiveValuesToList(input))
+      RadiantValues <- isolate(reactiveValuesToList(values))
+      save(RadiantInputs, RadiantValues , file = filename)
+   })
+})
+
 ################################################################
 # functions used across tools in radiant
 ################################################################
