@@ -5,7 +5,6 @@
 output$ui_fileUpload <- renderUI({
 
   if(is.null(input$dataType)) return()
-
   if(input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv'))
@@ -15,8 +14,10 @@ output$ui_fileUpload <- renderUI({
 })
 
 output$ui_Manage <- renderUI({
-  list(wellPanel(
-      radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"),
+  list(
+
+    wellPanel(
+      radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"),
         selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
@@ -30,26 +31,29 @@ output$ui_Manage <- renderUI({
       ),
       conditionalPanel(condition = "input.dataType == 'examples'",
         actionButton('loadExampleData', 'Load examples')
+      ),
+      conditionalPanel(condition = "input.dataType == 'state'",
+        HTML("<label>Load previous app state:</label>"),
+        fileInput('uploadState', '',  accept = ".rsf"),
+        uiOutput("refreshOnUpload")
       )
     ),
     wellPanel(
-      radioButtons(inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"),
+      radioButtons(inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "state" = "state"),
         selected = "rda"),
-      checkboxInput("man_add_descr","Add/edit data description", FALSE),
-      conditionalPanel(condition = "input.man_add_descr == true",
-        actionButton('updateDescr', 'Update description')
-      ),
+
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         actionButton('saveClipData', 'Copy data')
       ),
-      conditionalPanel(condition = "input.saveAs != 'clipboard' && input.man_add_descr == false",
+      conditionalPanel(condition = "input.saveAs != 'clipboard' && input.man_add_descr == false && input.saveAs != 'state'",
         downloadButton('downloadData', 'Save')
+      ),
+      conditionalPanel(condition = "input.saveAs == 'state'",
+        HTML("<label>Save current app state:</label>"),
+        downloadButton('downloadState', 'Save')
       )
     ),
-    wellPanel(
-      textInput("data_rename", "", input$datasets),
-      actionButton('renameButton', 'Rename dataset')
-     ),
+
     wellPanel(
       uiOutput("uiRemoveDataset"),
       actionButton('removeDataButton', 'Remove data')
@@ -233,11 +237,6 @@ loadUserData <- function(filename, uFile, ext) {
 
   objname <- sub(paste(".",ext,sep = ""),"",basename(filename))
 
-#   ext <- tolower(tools::file_ext(filename))
-#   validate(
-#     need(ext %in% c('rda','rds','rdata','csv'), message = "Based on the filename extension this does not seems to be a filetype that Radiant can load. Radiant currently supports R-data files with extension .rda, .rds, and .rdata.\n Files exported from Excel in .csv format can also be loaded. Excel files in .xls or .xlsx format must either (1) be  converted to csv format or (2) copy-and-pasted into Radiant using the clipboard option. See the helpfile for additional details.")
-#   )
-
   if(ext == 'rda') {
     # objname will hold the name of the object(s) inside the R datafile
     robjname <- load(uFile)
@@ -263,10 +262,63 @@ loadUserData <- function(filename, uFile, ext) {
   }
 }
 
+#######################################
+# Load previous state
+#######################################
+observe({
+  inFile <- input$uploadState
+  if(!is.null(inFile)) {
+    isolate({
+      load(inFile$datapath)
+      if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
+      if(exists("RadiantInputs")) state_list <<- RadiantInputs
+    })
+  }
+})
+
+output$refreshOnUpload <- renderUI({
+  inFile <- input$uploadState
+  if(!is.null(inFile)) {
+    # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
+    tags$script("window.location.reload();")
+  }
+})
+
+#######################################
+# Save state
+#######################################
+output$downloadState <- downloadHandler(
+  filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
+  content = function(file) {
+
+    isolate({
+      RadiantInputs <- isolate(reactiveValuesToList(input))
+      RadiantValues <- isolate(reactiveValuesToList(values))
+      save(RadiantInputs, RadiantValues , file = file)
+    })
+  }
+)
+
+#######################################
+# Loading data into memory
+#######################################
 output$uiDatasets <- renderUI({
   # Drop-down selection of data set
-  selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist,
-    selected = state_init("datasets"), multiple = FALSE)
+  list(wellPanel(
+    selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist,
+      selected = state_init("datasets"), multiple = FALSE),
+
+    conditionalPanel(condition = "input.datatabs == 'Manage'",
+      checkboxInput("man_add_descr","Add/edit data description", FALSE),
+      conditionalPanel(condition = "input.man_add_descr == true",
+        actionButton('updateDescr', 'Update description')
+      ),
+      textInput("data_rename", "", input$datasets),
+      conditionalPanel(condition = "input.data_rename != input.datasets",
+        actionButton('renameButton', 'Rename')
+      )
+    )
+  ))
 })
 
 output$htmlDataExample <- renderText({
