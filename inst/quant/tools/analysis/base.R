@@ -32,7 +32,6 @@ output$singleMean <- renderUI({
 })
 
 # validate(need(!is.null(input$dataset), message = FALSE))
-# validate(need(!is.null(input$dataset), message = FALSE))
 # validate(
 #   need(input$xvar, "No X variable selected"),
 #   need(input$yvar, "No Y variable selected")
@@ -48,21 +47,6 @@ output$singleMean <- renderUI({
   rtext <- "This analysis requires a variable of type numeric or interval.\nPlease select another database"
  	if(is.null(input$sm_var)) return(rtext)
 	if(is.null(inChecker(c(input$sm_var)))) return(rtext)
-# 	validate(
-# 	  need(!is.null(input$sm_var), "This analysis requires a variable of type numeric or interval.\nPlease
-#          select another datase"),
-# #     need(input.sm_var %in% )
-#     need(input.sm_var %in% )
-# 	)
-# 	validate(
-# 	  need(all(c(input$xvar, input$yvar) %in% names(dataset())),
-# 	       "Invalid column(s) selected"
-# 	  )
-# 	)
-#
-# 	if(is.null(input$sm_var)) return(ret_text)
-	# if(is.null(inChecker(c(input$sm_var)))) return(ret_text)
-
 	singleMean(input$datasets, input$sm_var, input$sm_compValue, input$sm_alternative, input$sm_sigLevel)
 })
 
@@ -86,14 +70,10 @@ singleMean <- function(datasets, sm_var, sm_compValue = 0, sm_alternative = 'two
 	result$data.name <- sm_var
 	result
 
-
 	## http://stackoverflow.com/questions/3978266/number-format-writing-1e-5-instead-of-0-00001
   ## Check out the format command and look at the digits option as well
   ## Get this to look nice!
   ## Download to pdf?
-
-
-
 }
 
 summary_singleMean <- function(result = .singleMean()) {
