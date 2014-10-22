@@ -116,6 +116,7 @@ output$uiCm_var2 <- renderUI({
 	  selectInput(inputId = "cm_var2", label = "Variables (select one):", choices = vars,
 	  	selected = state_singlevar("cm_var2",vars), multiple = FALSE)
 	}
+
 })
 
 output$ui_compareMeans <- renderUI({
@@ -129,7 +130,8 @@ output$ui_compareMeans <- renderUI({
 	    ),
 	    conditionalPanel(condition = "input.tabs_compareMeans == 'Plots'",
 			  checkboxInput('cm_jitter', 'Jitter', value = state_init("cm_jitter",FALSE))
-			)
+			),
+      returnTextInput("cm_select", "Subset (e.g., price > 5000)", state_init("cm_select"))
 		),
   	helpAndReport('Compare means','compareMeans',inclMD("../quant/tools/help/compareMeans.md"))
   )
@@ -146,27 +148,38 @@ output$compareMeans <- renderUI({
 	if(is.null(input$cm_var2)) return("Please select a numeric or interval variable")
 	# if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
 
-	compareMeans(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter)
+	compareMeans(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
 })
 
 observe({
   if(is.null(input$compareMeansReport) || input$compareMeansReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter)
+		inp <- list(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
 		updateReport(inp,"compareMeans")
   })
 })
 
-compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter) {
+compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter, cm_select) {
+
+	dat <- na.omit(values[[datasets]])
+
+	if(cm_select != '') {
+	  selcom <- gsub(" ", "", cm_select)
+ 	  seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
+	  if(!is(seldat, 'try-error')) {
+	    if(is.data.frame(seldat)) {
+	      dat <- seldat
+	      seldat <- NULL
+	    }
+	  }
+	}
 
 	vars <- c(var1,var2)
-	dat <- values[[datasets]][,vars]
-	dat <- na.omit(dat)
+	dat <- dat[,vars]
 
 	if(!is.factor(dat[,var1])) {
 		cm_paired <- TRUE
 		dat <- melt(dat)
-# 		dat <- gather(dat)
 		var1 <- colnames(dat)[1]
 		var2 <- colnames(dat)[2]
 	} else {
@@ -197,8 +210,14 @@ summary_compareMeans <- function(result = .compareMeans()) {
 	cat(paste0("Variables: ",result$pwcomp$vars,"\n\n"))
 	# cat("\nMeans table:\n")
 	means_tab <- ddply(result$data, c("variable"), colwise(mean))
-	colnames(means_tab) <- c("","mean")
-	print(means_tab, row.names = FALSE, right = FALSE)
+	n_tab <- ddply(result$data, c("variable"), colwise(length))
+	sd_tab <- ddply(result$data, c("variable"), colwise(sd))
+# 	colnames(means_tab) <- c("","mean")
+# 	print(means_tab, row.names = FALSE, right = FALSE)
+
+  tabs <- cbind(means_tab, n_tab[,2], sd_tab[,2])
+	colnames(tabs) <- c("","mean", "n", "sd")
+	print(tabs, row.names = FALSE, right = FALSE)
 
 	if(result$pwcomp$cm_alternative == "two.sided") {
 		h.sym <- "not equal to"
