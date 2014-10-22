@@ -19,6 +19,3 @@ com_string
 
 filename <- paste0(Sys.getenv("USERPROFILE"),"/Desktop/radiant_",class_app[1],".bat")
 cat(com_string,file=filename,sep="\n")
-
-# keeps the file open for a little while
-# Sys.sleep(30)

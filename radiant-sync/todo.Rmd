@@ -6,10 +6,12 @@ output: html_document
 ---
 
 
-- Dump On session ended stuff into Rgui and Rstudio when you hit quit. Add a function to save the 'statefile' into a location Radiant will look next time you start it up. Or add a parameter to Radiant will find it? 
-
-
+## Joe's input
+- On quit Input and Values are dumped into Rstudio (in list rret). Add a function to save the 'statefile' from Rstudio into a location Radiant will look next time you start it up
 - Organize the code as suggested by Joe in https://github.com/jcheng5/shiny-partials
+- Setup a local Mathjax as Joe suggested https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/y_Plegpdlos. Or ... https://github.com/rstudio/shiny/issues/619 rely on mathjax bundeled with Rstudio
+
+### Ideas for Yuhui
 - Move regular functions to separate files so they can be sourced from Rstudio and used 
 in the creation of Rmarkdown documents (e.g., answer keys)
 - How to best name the functions? Avoid putting in default terms when sent to report?
@@ -19,7 +21,7 @@ in the creation of Rmarkdown documents (e.g., answer keys)
 - Auto height for Shiny ace (https://github.com/trestletech/shinyAce/issues/18).
 - Use radio buttons to specify the desired output format from rmarkdown. Would need to have Rstudio installed
 to get Pandoc. Also have them install miktex or something?
-- Download data from randerDataViewer into a new rda file! Ask Xie how you get to the index created by DataTables
+- Download data from renderDataViewer into a new rda file! Ask Xie how you get to the index created by DataTables
 
 - Use new rmarkdown syntax to render Rmd files
 
