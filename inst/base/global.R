@@ -26,8 +26,8 @@ vimKeyBinding <- FALSE
 # only write if running on developer computer
 if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
   # for debugging
-   options(shiny.trace = TRUE)
-#   options(warn=2)
+#   options(shiny.trace = TRUE)
+#    options(warn=2)
 #   options(shiny.error=recover)
   vimKeyBinding <- TRUE
 }

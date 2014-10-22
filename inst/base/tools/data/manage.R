@@ -53,7 +53,6 @@ output$ui_Manage <- renderUI({
         downloadButton('downloadState', 'Save')
       )
     ),
-
     wellPanel(
       uiOutput("uiRemoveDataset"),
       actionButton('removeDataButton', 'Remove data')
@@ -68,24 +67,6 @@ observe({
   isolate({
     values[[paste0(input$datasets,"_descr")]] <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr","Add/edit data description", FALSE)
-  })
-})
-
-observe({
-  if(is.null(input$data_rename)) return()
-  if(is.null(input$renameButton) || input$renameButton == 0) return()
-
-  isolate({
-    values[[input$data_rename]] <- getdata()
-    values[[input$datasets]] <- NULL
-    values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$datasets,"_descr")]]
-    values[[paste0(input$datasets,"_descr")]] <- NULL
-
-    ind <- which(input$datasets == values[['datasetlist']])
-    values[['datasetlist']][ind] <- input$data_rename
-
-    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
-      selected = input$data_rename)
   })
 })
 
@@ -137,9 +118,8 @@ observe({
   })
 })
 
-# saving data
+# 'saving' data to clipboard
 observe({
-  # 'saving' data to clipboard
   if(is.null(input$saveClipData) || input$saveClipData == 0) return()
   isolate({
     os_type <- .Platform$OS.type
@@ -302,6 +282,24 @@ output$downloadState <- downloadHandler(
 #######################################
 # Loading data into memory
 #######################################
+observe({
+  if(is.null(input$data_rename)) return()
+  if(is.null(input$renameButton) || input$renameButton == 0) return()
+
+  isolate({
+    values[[input$data_rename]] <- getdata()
+    values[[input$datasets]] <- NULL
+    values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$datasets,"_descr")]]
+    values[[paste0(input$datasets,"_descr")]] <- NULL
+
+    ind <- which(input$datasets == values[['datasetlist']])
+    values[['datasetlist']][ind] <- input$data_rename
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = input$data_rename)
+  })
+})
+
 output$uiDatasets <- renderUI({
   # Drop-down selection of data set
   list(wellPanel(
@@ -313,17 +311,20 @@ output$uiDatasets <- renderUI({
       conditionalPanel(condition = "input.man_add_descr == true",
         actionButton('updateDescr', 'Update description')
       ),
-      textInput("data_rename", "", input$datasets),
-      conditionalPanel(condition = "input.data_rename != input.datasets",
-        actionButton('renameButton', 'Rename')
-      )
+      uiOutput("uiRename")
     )
   ))
 })
 
+output$uiRename <- renderUI({
+  list(
+    textInput("data_rename", "", input$datasets),
+    actionButton('renameButton', 'Rename')
+  )
+})
+
 output$htmlDataExample <- renderText({
 
-  # if(isolate(input$datatabs) != 'Manage') return(invisible())
   dat <- getdata()
   if(is.null(dat)) return()
 

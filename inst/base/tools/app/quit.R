@@ -44,8 +44,6 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
-#   input$datatabs
-#   input$nav_radiant
   isolate({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
@@ -55,7 +53,6 @@ output$showInput <- renderPrint({
 
 output$showState <- renderPrint({
   cat("State list:\n")
-#   print(state_list[sort(names(state_list))])
   str(state_list[sort(names(state_list))])
 })
 
