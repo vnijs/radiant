@@ -59,6 +59,15 @@ singleMean <- function(datasets, sm_var, sm_compValue = 0, sm_alternative = 'two
 	names(result$data) <- sm_var
 	result$data.name <- sm_var
 	result
+
+
+	## http://stackoverflow.com/questions/3978266/number-format-writing-1e-5-instead-of-0-00001
+  ## Check out the format command and look at the digits option as well
+  ## Get this to look nice!
+  ## Download to pdf?
+
+
+
 }
 
 summary_singleMean <- function(result = .singleMean()) {

@@ -5,6 +5,10 @@ date: "October 11, 2014"
 output: html_document
 ---
 
+
+- Dump On session ended stuff into Rgui and Rstudio when you hit quit. Add a function to save the 'statefile' into a location Radiant will look next time you start it up. Or add a parameter to Radiant will find it? 
+
+
 - Organize the code as suggested by Joe in https://github.com/jcheng5/shiny-partials
 - Move regular functions to separate files so they can be sourced from Rstudio and used 
 in the creation of Rmarkdown documents (e.g., answer keys)
