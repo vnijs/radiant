@@ -1,4 +1,4 @@
-shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", selected = 'Data', inverse = TRUE, collapsable = TRUE,
+shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE, collapsable = TRUE,
 
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
