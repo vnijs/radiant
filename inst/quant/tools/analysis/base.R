@@ -31,10 +31,36 @@ output$singleMean <- renderUI({
   statTabPanel("Base","Single mean",".singleMean","singleMean")
 })
 
+# validate(need(!is.null(input$dataset), message = FALSE))
+# validate(need(!is.null(input$dataset), message = FALSE))
+# validate(
+#   need(input$xvar, "No X variable selected"),
+#   need(input$yvar, "No Y variable selected")
+# )
+# validate(
+#   need(all(c(input$xvar, input$yvar) %in% names(dataset())),
+#        "Invalid column(s) selected"
+#   )
+# )
+
 .singleMean <- reactive({
 
-	ret_text <- "This analysis requires a variable of type numeric or interval.\nPlease select another dataset."
-	if(is.null(input$sm_var)) return(ret_text)
+  rtext <- "This analysis requires a variable of type numeric or interval.\nPlease select another database"
+ 	if(is.null(input$sm_var)) return(rtext)
+	if(is.null(inChecker(c(input$sm_var)))) return(rtext)
+# 	validate(
+# 	  need(!is.null(input$sm_var), "This analysis requires a variable of type numeric or interval.\nPlease
+#          select another datase"),
+# #     need(input.sm_var %in% )
+#     need(input.sm_var %in% )
+# 	)
+# 	validate(
+# 	  need(all(c(input$xvar, input$yvar) %in% names(dataset())),
+# 	       "Invalid column(s) selected"
+# 	  )
+# 	)
+#
+# 	if(is.null(input$sm_var)) return(ret_text)
 	# if(is.null(inChecker(c(input$sm_var)))) return(ret_text)
 
 	singleMean(input$datasets, input$sm_var, input$sm_compValue, input$sm_alternative, input$sm_sigLevel)
