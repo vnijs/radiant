@@ -17,7 +17,7 @@ output$ui_Manage <- renderUI({
   list(
 
     wellPanel(
-      radioButtons(inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"),
+      radioButtons(inputId = "dataType", label = "Load data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"),
         selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
@@ -39,7 +39,7 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      radioButtons(inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "state" = "state"),
+      radioButtons(inputId = "saveAs", label = "Save data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "state" = "state"),
         selected = "rda"),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
@@ -209,7 +209,7 @@ observe({
 
     values[['xls_data']] <- as.data.frame(dat)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
-    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = ".rda")
+    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
   })
 })
 
