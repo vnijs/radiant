@@ -59,10 +59,61 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 
 
+<div id="joes-input" class="section level2">
+<h2>Joe’s input</h2>
 <ul>
+<li>On quit Input and Values are dumped into Rstudio (in list rret). Add a function to save the ‘statefile’ from Rstudio into a location Radiant will look next time you start it up. Or it could just look in the global environment for radiantRet and read from there.</li>
 <li>Organize the code as suggested by Joe in <a href="https://github.com/jcheng5/shiny-partials">https://github.com/jcheng5/shiny-partials</a></li>
-<li>Move regular functions to separate files so they can be sourced from Rstudio and used in the creation of Rmarkdown documents (e.g., answer keys)</li>
+<li>Setup a local Mathjax as Joe suggested <a href="https://groups.google.com/forum/?fromgroups">https://groups.google.com/forum/?fromgroups</a>=#!topic/shiny-discuss/y_Plegpdlos. Or … <a href="https://github.com/rstudio/shiny/issues/619">https://github.com/rstudio/shiny/issues/619</a> rely on mathjax bundeled with Rstudio</li>
 </ul>
+<div id="ideas-for-yuhui" class="section level3">
+<h3>Ideas for Yuhui</h3>
+<div id="interact-with-a-shiny-app-from-rstudio" class="section level4">
+<h4>Interact with a Shiny app from Rstudio</h4>
+<ul>
+<li>What I want …</li>
+<li>What I do now. Save and Load state, using functions in radiant.R. State will be dumped into Rstudio on quit.</li>
+<li>Both have access to the same environment?</li>
+</ul>
+</div>
+<div id="rmarkdown-with-a-shiny-app" class="section level4">
+<h4>Rmarkdown with a Shiny app</h4>
+<ul>
+<li>Move regular functions to separate files so they can be sourced from Rstudio and used in the creation of Rmarkdown documents (e.g., answer keys)</li>
+<li>Embed component from app into the Rmd document instead of the actual code. Click on the output to activate the UI component.</li>
+</ul>
+<p><a href="http://rmarkdown.rstudio.com/authoring_shiny.html#embedded-applications">http://rmarkdown.rstudio.com/authoring_shiny.html#embedded-applications</a></p>
+<p>I think it would mean transforming the app into a set of widgets that could be embedded into documents. Instead of having normal code in the document it just pops up the ui you need if you want to change something.</p>
+<p>For me: - How to best name the functions? Avoid putting in default (e.g., line = TRUE) terms when sent to report?</p>
+</div>
+<div id="save-filters-and-apply-as-selected" class="section level4">
+<h4>Save filters and apply as selected</h4>
+<ul>
+<li>Access filters from renderDataTable?</li>
+<li><p>Create filter from dplyr and select from dropdown</p></li>
+<li>Can you add a report (or reports per tool) as an attribute to a data file? Seems like that should be possible right? Much like the data description file. There could be a dropdown or button on the manage page when you open a data-file that would show you reports and/or take you to edit report.</li>
+<li>I guess the parameters of the state could also just be added as an attribute right? Sounds nice doesn’t it. So if you are handing in an assignment you just post your data and tell the id of the attribute with your report and we can check everything from results, comments, to analysis.</li>
+<li><p>What about if a student does several analyses and/or creates different output from one tool (e.g., multiple regressions). I guess you could save multiple ‘states’ that you could flip back through using a dropdown menu. This is starting to sound better and better :)</p></li>
+<li><p>Using state files and Rmd to get students easy access and switching between report and analysis. See also below:</p></li>
+</ul>
+<p>From: <Nijs>, Vincent Nijs <a href="mailto:vnijs@ucsd.edu">vnijs@ucsd.edu</a> Date: Monday, October 13, 2014 at 12:24 AM To: “August, Terrence” <a href="mailto:taugust@ucsd.edu">taugust@ucsd.edu</a> Subject: Re: data exercise</p>
+<p>Based on the conversation we just had I got some (potentially) awesome ideas :)</p>
+<p>I agree with your view that out regular MBA students won’t be coding and/or trying to figure-out what is in the code blocks in the Rmd files. If you could basically click on one of those code blocks and it would show you the UI that was used to create the relevant output (including the setting, variables, etc.) that would be awesome. The developers of Shiny (Rstudio) have come up with the concept of dynamic documents. These are basically Rmd files with mini shiny apps embedded in them (see link below). Where I was suggesting replacing the code blocks with a set of parameters that, when a button is clicked, would open up the UI for the tool you were using this puts the fully UI in the document itself. I am not sure if that is a better idea because it could make for pretty bloated documents.</p>
+<p>These idea remind me of Mathematica and ipython notebooks … just much more awesomer :)</p>
+<p><a href="http://rmarkdown.rstudio.com/authoring_shiny.html#embedded-applications">http://rmarkdown.rstudio.com/authoring_shiny.html#embedded-applications</a></p>
+<p>I am not sure yet what the implications would be for Radiant in its current form. I think it would mean transforming the app into a set of widgets that could be embedded into documents. Instead of having normal code in the document it just pops up the ui you need if you want to change something.</p>
+<ul>
+<li><p>Logging data transformations. Do a check if the original data is equal to the final data after the listed set of transformations.</p></li>
+<li>Use new rmarkdown syntax to render Rmd files</li>
+<li>Can choose the type of plot for single varible (e.g., box plot or time-series or histogram)</li>
+<li>Button to Switch X- and Y-variable in Visualize</li>
+<li>Auto height for Shiny ace (<a href="https://github.com/trestletech/shinyAce/issues/18">https://github.com/trestletech/shinyAce/issues/18</a>).</li>
+<li>Use radio buttons to specify the desired output format from rmarkdown. Would need to have Rstudio installed to get Pandoc. Also have them install miktex or something?</li>
+<li><p>Download data from renderDataViewer into a new rda file! Ask Xie how you get to the index created by DataTables</p></li>
+</ul>
+</div>
+</div>
+</div>
 
 
 </div>

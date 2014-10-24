@@ -7,11 +7,11 @@ output$ui_correlation <- renderUI({
   list(
   	wellPanel(
 	    uiOutput("uiCor_var"),
-		  selectInput(inputId = "cor_var", label = "Select variables:", choices = varnames(), 
+		  selectInput(inputId = "cor_var", label = "Select variables:", choices = varnames(),
   	  	selected = state_multvar("cor_var",varnames()), multiple = TRUE, selectize = FALSE),
-		  selectInput(inputId = "cor_type", label = "Method", choices = cor_type, 
+		  selectInput(inputId = "cor_type", label = "Method", choices = cor_type,
   	  	selected = state_init_list("cor_type","pearson", cor_type), multiple = FALSE),
-     	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1, 
+     	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
     		value = state_init('cor_cutoff',0), step = 0.05)
 	  ),
 	 	helpAndReport('Correlation','correlation',inclMD("../quant/tools/help/correlation.md"))
@@ -55,12 +55,12 @@ correlation <- function(datasets, cor_var, cor_type, cor_cutoff) {
 	dat <- data.frame(lapply(dat,as.numeric))
 
 	nc <- ncol(dat)
-	list('dat' = dat, 'cor_type' = cor_type, 'cor_cutoff' = cor_cutoff, 
+	list('dat' = dat, 'cor_type' = cor_type, 'cor_cutoff' = cor_cutoff,
 		'plotHeight' = 150 * nc,  'plotWidth' = 150 * nc)
 }
 
 summary_correlation <- function(result = .correlation()) {
-	
+
 	dat <- result$dat
 
 	# calculate the correlation matrix with p-values using the psych package
@@ -96,14 +96,14 @@ plots_correlation <- function(result = .correlation()) {
 	    r <- ct$estimate
 	    rt <- format(r, digits=2)[1]
 	    cex <- 0.5/strwidth(rt)
-	    
+
 	    text(.5, .5, rt, cex=cex * abs(r))
 	    text(.8, .8, sig, cex=cex, col='blue')
 	}
 	panel.smooth <- function (x, y) {
     points(x, y)
-    abline(lm(y~x), col="red")
-    lines(stats::lowess(y~x), col="blue")
+#     abline(lm(y~x), col="red")
+#     lines(stats::lowess(y~x), col="blue")
 	}
 	pairs(dat, lower.panel=panel.smooth, upper.panel=panel.plot)
 }
@@ -115,7 +115,7 @@ output$uiReg_var1 <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars, 
+  selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars,
   	selected = state_singlevar("reg_var1",vars), multiple = FALSE)
 })
 
@@ -125,7 +125,7 @@ output$uiReg_var2 <- renderUI({
   vars <- varnames()[notChar]
  	vars <- vars[-which(vars == input$reg_var1)]
   if(length(vars) == 0) return()
-  selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars, 
+  selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars,
   	selected = state_multvar("reg_var2", vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -134,10 +134,10 @@ output$uiReg_var3 <- renderUI({
   vars <- varnames()
  	vars <- vars[which(vars %in% input$reg_var2)]
 
-  # adding interaction terms as needed 
+  # adding interaction terms as needed
 	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
 
-  selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars, 
+  selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
   	selected = state_multvar("reg_var3", vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -150,7 +150,7 @@ output$uiReg_intsel <- renderUI({
  	# if(!is.null(inChecker(c(input$reg_var2)))) choices <- reg_int_vec(vars,input$reg_interactions)
  	choices <- reg_int_vec(vars,input$reg_interactions)
 
-	selectInput("reg_intsel", label = "", choices = choices, 
+	selectInput("reg_intsel", label = "", choices = choices,
   	selected = state_multvar("reg_intsel", vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -163,9 +163,9 @@ output$ui_regression <- renderUI({
 	    uiOutput("uiReg_var2"),
 
 	    # conditionalPanel(condition = "input.reg_var2 != null",
-		  	checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients", 
+		  	checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
 	    		value = state_init('reg_standardize',FALSE)),
-		    radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions, 
+		    radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
 	  	  	selected = state_init_list("reg_interactions","none", reg_interactions)),
 		    conditionalPanel(condition = "input.reg_interactions != 'none'",
 		  		uiOutput("uiReg_intsel")
@@ -173,14 +173,17 @@ output$ui_regression <- renderUI({
 		    conditionalPanel(condition = "input.tabs_regression == 'Summary'",
 			    uiOutput("uiReg_var3"),
 			    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
-			    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values", 
+			    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values",
 	  	  		value = state_init('reg_vif',FALSE)),
-		  	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise", 
+		  	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
 		    		value = state_init('reg_stepwise',FALSE))
 		  	),
 		    conditionalPanel(condition = "input.tabs_regression == 'Plots'",
-		      selectInput("reg_plots", "Regression plots:", choices = r_plots, 
-		  	  	selected = state_init_list("reg_plots","", r_plots))
+		      selectInput("reg_plots", "Regression plots:", choices = r_plots,
+		  	  	selected = state_init_list("reg_plots","", r_plots)),
+		      checkboxInput('reg_line', 'Line', value = state_init("reg_line", FALSE)),
+		      checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE)),
+		      checkboxInput('reg_jitter', 'Jitter', value = state_init("reg_jitter", FALSE))
 		    ),
 		    actionButton("saveres", "Save residuals")
 	    # )
@@ -210,8 +213,9 @@ output$regression <- renderUI({
 	if(is.null(input$reg_var1)) return(ret_text)
 	if(is.null(input$reg_var2)) return("Please select one or more independent variables.")
 
-	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel, 
-		input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots)
+	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
+		input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots,
+    input$reg_line, input$reg_loess, input$reg_jitter)
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -230,20 +234,21 @@ output$regression <- renderUI({
 		result$plotHeight <- 325 * ceiling((nrVars-1) / 2)
 	}
 
-	result	
+	result
 })
 
 observe({
   if(is.null(input$regressionReport) || input$regressionReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots)
+			input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots,
+      input$reg_line, input$reg_loess, input$reg_jitter)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
-regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions, reg_standardize, 
-	reg_vif, reg_stepwise, reg_plots) {
+regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions, reg_standardize,
+	reg_vif, reg_stepwise, reg_plots, reg_line, reg_loess, reg_jitter) {
 
 	vars <- reg_var2
 
@@ -272,6 +277,9 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	mod$reg_interactions <- reg_interactions
 	mod$reg_intsel <- reg_intsel
 	mod$reg_standardize <- reg_standardize
+	mod$reg_line <- reg_line
+	mod$reg_loess <- reg_loess
+	mod$reg_jitter <- reg_jitter
 	mod$datasets <- datasets
 
 	return(mod)
@@ -291,7 +299,7 @@ summary_regression <- function(result = .regression()) {
 
 	if(result$reg_vif) {
 		print(vif_regression(result), digits = 3)
-	} 
+	}
 
 	if(!is.null(result$reg_var3)) {
 		if(!result$reg_stepwise) {
@@ -319,7 +327,7 @@ plots_regression <- function(result = .regression()) {
 
 	dat <- mod[,vars, drop = FALSE]
 
-	if(result$reg_plots == "") 
+	if(result$reg_plots == "")
 		return(plot(x = 1, type = 'n', main="Please select a plot from the Regression plots dropdown menu.", axes = FALSE, xlab = "", ylab = ""))
 
 	if(result$reg_plots == "histlist") {
@@ -338,13 +346,20 @@ plots_regression <- function(result = .regression()) {
 		plots <- list()
 		df <- data.frame(cbind(mod$.fitted,mod[1]))
 		colnames(df) <- c("x","y")
-		plots[[1]] <- ggplot(df, aes(x=x, y=y)) + geom_point() + geom_abline(linetype = 'dotdash') +
-			geom_smooth(size = .75, linetype = "dotdash") + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
+# 		plots[[1]] <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
+		p <- ggplot(df, aes(x=x, y=y)) + geom_point()
+#   labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
+    if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash') +
+    if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    plots[[1]] <- p
+#     if(result$reg_line) plots[[1]] <- plots[[1]] + geom_abline(linetype = 'dotdash') +
+#     if(result$reg_loess) plots[[1]] <- plots[[1]] + geom_smooth(size = .75, linetype = "dotdash")
 
-		plots[[2]] <- qplot(.fitted, .resid, data = mod) + geom_smooth(size = .75, linetype = "dotdash") +
-			labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
+		plots[[2]] <- qplot(.fitted, .resid, data = mod) + labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
+    if(result$reg_line) plots[[2]] <- plots[[1]] + geom_abline(linetype = 'dotdash') +
+#     if(result$reg_loess) plots[[2]] <- plots[[1]] + geom_smooth(size = .75, linetype = "dotdash")
 
-		plots[[3]] <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() + 
+		plots[[3]] <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
 			geom_smooth(size = .75, linetype = "dotdash") + labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
 
 		plots[[4]] <- qplot(sample =.stdresid, data = mod, stat = "qq") + geom_abline(linetype = 'dotdash') +
@@ -353,7 +368,7 @@ plots_regression <- function(result = .regression()) {
 
 	if(result$reg_plots == "scatterlist") {
 		plots <- list()
-		for(i in reg_var2) { 
+		for(i in reg_var2) {
 			# if(getdata_class()[i] == 'factor') {
 			if('factor' %in% class(dat[,i])) {
 				plots[[i]] <- ggplot(dat, aes_string(x=i, y=reg_var1, fill=i)) + geom_boxplot(alpha = .3)
@@ -386,7 +401,7 @@ plots_regression <- function(result = .regression()) {
 	# coefficient plots require the arm package (Gelman)
 	# if(result$reg_plots == "coef") {
 	# 	return(coefplot(result, xlab="", ylab="", main="Coefficient plot", col.pts="blue", CI=2))
-	# } 
+	# }
 
 	if(exists("plots"))
 		suppressWarnings(suppressMessages(do.call(grid.arrange, c(plots, list(ncol = 2)))))
