@@ -33,7 +33,8 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl
+           (>= 0.93.960), survival, survey
 License: GPL (>= 2)
 MD5sum: e2069e153c61f1aa9c8d4f8a17e7681a
 NeedsCompilation: no
@@ -82,7 +83,8 @@ Version: 0.3.0.2
 Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr,
+           microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
 License: MIT + file LICENSE
 MD5sum: 2edabf29b4c1c9b71c07955294143067
 NeedsCompilation: yes
@@ -116,7 +118,8 @@ NeedsCompilation: no
 Package: ggvis
 Version: 0.4
 Depends: R (>= 3.0)
-Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval,
+           htmltools (>= 0.2.4)
 Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
 License: GPL-2
 MD5sum: 1a004ec86fc4841e25d18fb8ea2cd642
@@ -146,10 +149,10 @@ MD5sum: be491aa5220f0059a0e1cb04679b6563
 NeedsCompilation: no
 
 Package: highr
-Version: 0.3
+Version: 0.4
 Suggests: knitr, testit
 License: GPL
-MD5sum: bf3da0155ce9991f4a1b38295d563ece
+MD5sum: b71b4d28ffa0a94ae372ad11c021b62f
 NeedsCompilation: no
 
 Package: htmltools
@@ -163,12 +166,12 @@ MD5sum: b94ed94243e256f3b82862c66bad0715
 NeedsCompilation: no
 
 Package: httpuv
-Version: 1.3.0
+Version: 1.3.2
 Depends: R (>= 2.15.1), methods
 Imports: Rcpp (>= 0.11.0)
 LinkingTo: Rcpp
 License: GPL-3 | file LICENSE
-MD5sum: 1ab0e8f8e9f162afc14ab790387b5010
+MD5sum: ed7a9373115ac2a0497d90db5ef7f1e7
 NeedsCompilation: yes
 
 Package: httr
@@ -181,17 +184,18 @@ MD5sum: 366793d2f056a5ab9eebc275576ae21d
 NeedsCompilation: yes
 
 Package: jsonlite
-Version: 0.9.12
+Version: 0.9.13
 Depends: methods
 Suggests: testthat, knitr, reshape2, httr (>= 0.4), rjson, plyr
 License: Apache License 2.0
-MD5sum: aecdf1b8378d270c6de3c440fc9977fc
+MD5sum: 3a99b5355bb1ab67985c6fc96032edb8
 NeedsCompilation: yes
 
 Package: knitr
 Version: 1.7
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr (>= 0.6), tools
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr
+           (>= 0.6), tools
 Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
 MD5sum: 740b3448e2b1ca4f4717482a7182779d
@@ -435,7 +439,8 @@ NeedsCompilation: no
 Package: shiny
 Version: 0.10.2.1
 Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>=
+           0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 MD5sum: cca79ef355ebfa99e068eeaead7d802d

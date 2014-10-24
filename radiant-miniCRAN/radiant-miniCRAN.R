@@ -21,7 +21,6 @@ require(miniCRAN)
 
 # Specify list of packages to download
 source('pkgs.R')
-pkgs <- c("psych")
 
 # setting the default location to get R-packages
 # look locally first and then in the Rstudio CRAN
@@ -65,4 +64,3 @@ pkgList <- pkgDep(pkgs, repos=repos, type="mac.binary.mavericks", suggests = FAL
 
 # when you are all done you could delete the extra dir
 # unlink(pth_gh, recursive=TRUE)
-

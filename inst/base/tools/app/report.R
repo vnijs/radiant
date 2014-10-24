@@ -36,9 +36,15 @@ output$report <- renderUI({
 
     div(class="row-fluid",
       div(class="span6",
-        aceEditor("rmd_report", mode="markdown", wordWrap = TRUE, height = "600px",
+        aceEditor("rmd_report", mode="markdown", wordWrap = TRUE,
+                  height = "600px",
                   selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
-                  vimKeyBinding=vimKeyBinding)),
+                  vimKeyBinding=vimKeyBinding,
+                  hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+                  )),
+
+#       aceEditor("ace", value="Here's some text in the editor.", cursorId = "cursor", hotkeys=list(helpKey="F1", runKey=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER")
+
       div(class="span6", htmlOutput("rmd_knitDoc"))
     )
   )
@@ -49,8 +55,16 @@ output$report <- renderUI({
 #   updateTabsetPanel(session, "nav_radiant", selected = "Report")
 # })
 
+valsRmd <- reactiveValues(knit = 0)
+
+observe({
+  input$runKeyRmd
+  if(!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
+})
+
 output$rmd_knitDoc <- renderUI({
-  if(is.null(input$evalRmd) || input$evalRmd == 0) return()
+  if(valsRmd$knit == 1) return()
+
   isolate({
     if(!running_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
@@ -182,7 +196,10 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row-fluid", div(class="span6",
-    aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example), vimKeyBinding=vimKeyBinding),
+    aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example),
+              vimKeyBinding=vimKeyBinding,
+              hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+              ),
     actionButton("rEval", "Run"),
     downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
     fileInput('sourceCode', 'Source R-code', multiple=TRUE),
@@ -192,8 +209,16 @@ output$rcode <- renderUI({
   )
 })
 
+
+valsCode <- reactiveValues(code = 0)
+
+observe({
+  input$runKeyCode
+  if(!is.null(input$rEval)) isolate(valsCode$code <- valsCode$code + 1)
+})
+
 output$rCodeEval <- renderPrint({
-  if(is.null(input$rEval) || input$rEval == 0) return(invisible())
+  if(valsCode$code == 1) return()
   isolate({
     if(running_local) {
       if(is.null(input$r_code_selection) || input$r_code_selection == "") {
