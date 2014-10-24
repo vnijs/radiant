@@ -37,7 +37,7 @@ output$correlation <- renderUI({
 	vars <- input$cor_var
 	ret_text <- "Please select two or more variables"
 	if(is.null(vars) || length(vars) < 2) return(ret_text)
-	# if(is.null(inChecker(c(input$cor_var)))) return(ret_text)
+	if(is.null(inChecker(c(input$cor_var)))) return(ret_text)
 	correlation(input$datasets, input$cor_var, input$cor_type, input$cor_cutoff)
 })
 
@@ -147,7 +147,7 @@ output$uiReg_intsel <- renderUI({
   if(is.null(vars) || length(vars) < 2) return()
 
   # choices <- ""
- 	# if(!is.null(inChecker(c(input$reg_var2)))) choices <- reg_int_vec(vars,input$reg_interactions)
+#  	if(!is.null(inChecker(c(input$reg_var2)))) choices <- reg_int_vec(vars,input$reg_interactions)
  	choices <- reg_int_vec(vars,input$reg_interactions)
 
 	selectInput("reg_intsel", label = "", choices = choices,
@@ -182,8 +182,8 @@ output$ui_regression <- renderUI({
 		      selectInput("reg_plots", "Regression plots:", choices = r_plots,
 		  	  	selected = state_init_list("reg_plots","", r_plots)),
 		      checkboxInput('reg_line', 'Line', value = state_init("reg_line", FALSE)),
-		      checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE)),
-		      checkboxInput('reg_jitter', 'Jitter', value = state_init("reg_jitter", FALSE))
+		      checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE))
+# 		      checkboxInput('reg_jitter', 'Jitter', value = state_init("reg_jitter", FALSE))
 		    ),
 		    actionButton("saveres", "Save residuals")
 	    # )
@@ -209,13 +209,16 @@ output$regression <- renderUI({
 
 .regression <- reactive({
 	if(is.null(input$reg_standardize)) return("")
+
 	ret_text <- "This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nPlease select another dataset."
 	if(is.null(input$reg_var1)) return(ret_text)
 	if(is.null(input$reg_var2)) return("Please select one or more independent variables.")
 
+  if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
+
 	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
 		input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots,
-    input$reg_line, input$reg_loess, input$reg_jitter)
+    input$reg_line, input$reg_loess)
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -242,13 +245,13 @@ observe({
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
 			input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots,
-      input$reg_line, input$reg_loess, input$reg_jitter)
+      input$reg_line, input$reg_loess)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
-regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions, reg_standardize,
-	reg_vif, reg_stepwise, reg_plots, reg_line, reg_loess, reg_jitter) {
+regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
+                       reg_standardize, reg_vif, reg_stepwise, reg_plots, reg_line, reg_loess) {
 
 	vars <- reg_var2
 
@@ -279,7 +282,7 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	mod$reg_standardize <- reg_standardize
 	mod$reg_line <- reg_line
 	mod$reg_loess <- reg_loess
-	mod$reg_jitter <- reg_jitter
+# 	mod$reg_jitter <- reg_jitter
 	mod$datasets <- datasets
 
 	return(mod)
@@ -347,23 +350,27 @@ plots_regression <- function(result = .regression()) {
 		df <- data.frame(cbind(mod$.fitted,mod[1]))
 		colnames(df) <- c("x","y")
 # 		plots[[1]] <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
-		p <- ggplot(df, aes(x=x, y=y)) + geom_point()
-#   labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
-    if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash') +
-    if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+		p <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
+#     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[1]] <- p
-#     if(result$reg_line) plots[[1]] <- plots[[1]] + geom_abline(linetype = 'dotdash') +
-#     if(result$reg_loess) plots[[1]] <- plots[[1]] + geom_smooth(size = .75, linetype = "dotdash")
 
-		plots[[2]] <- qplot(.fitted, .resid, data = mod) + labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
-    if(result$reg_line) plots[[2]] <- plots[[1]] + geom_abline(linetype = 'dotdash') +
-#     if(result$reg_loess) plots[[2]] <- plots[[1]] + geom_smooth(size = .75, linetype = "dotdash")
+		p <- qplot(.fitted, .resid, data = mod) + labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
+#     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    plots[[2]] <- p
 
-		plots[[3]] <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
-			geom_smooth(size = .75, linetype = "dotdash") + labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
+		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
+			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
+#     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    plots[[3]] <- p
 
-		plots[[4]] <- qplot(sample =.stdresid, data = mod, stat = "qq") + geom_abline(linetype = 'dotdash') +
+		p <- qplot(sample =.stdresid, data = mod, stat = "qq") +
 			labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
+#     if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
+#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    plots[[4]] <- p
 	}
 
 	if(result$reg_plots == "scatterlist") {
@@ -373,7 +380,11 @@ plots_regression <- function(result = .regression()) {
 			if('factor' %in% class(dat[,i])) {
 				plots[[i]] <- ggplot(dat, aes_string(x=i, y=reg_var1, fill=i)) + geom_boxplot(alpha = .3)
 			} else {
-				plots[[i]] <- ggplot(dat, aes_string(x=i, y=reg_var1)) + geom_point() + geom_smooth(size = .75, linetype = "dotdash")
+				p <- ggplot(dat, aes_string(x=i, y=reg_var1)) + geom_point()
+        if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
+				            linetype = "dashed", colour = 'black')
+        if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+        plots[[i]] <- p
 			}
 		}
 	}
@@ -389,7 +400,11 @@ plots_regression <- function(result = .regression()) {
 			if('factor' %in% class(dat[,i])) {
 				plots[[i]] <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_boxplot(fill = 'blue', alpha = .3)
 			} else {
-				plots[[i]] <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_point() + geom_smooth(size = .75, linetype = "dotdash")
+				p <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_point()
+#         if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
+#                                                  linetype = "dashed", colour = 'black')
+#         if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+        plots[[i]] <- p
 			}
 		}
 	}

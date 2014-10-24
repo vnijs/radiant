@@ -6,7 +6,7 @@ output$uiPmap_brand <- renderUI({
 	isChar <- "character" == getdata_class()
   vars <- varnames()[isChar]
   if(length(vars) == 0) return()
- 	selectInput(inputId = "pmap_brand", label = "Brand:", choices = vars, 
+ 	selectInput(inputId = "pmap_brand", label = "Brand:", choices = vars,
    	selected = state_singlevar("pmap_brand",vars), multiple = FALSE)
 })
 
@@ -17,20 +17,20 @@ output$uiPmap_attr <- renderUI({
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "pmap_attr", label = "Attributes:", choices = vars, 
+  selectInput(inputId = "pmap_attr", label = "Attributes:", choices = vars,
    	selected = state_multvar("pmap_attr",vars), multiple = TRUE, selectize = FALSE)
 })
 
 output$uiPmap_pref <- renderUI({
   if(is.null(input$pmap_attr)) return()
-  # if(is.null(inChecker(c(input$pmap_pref)))) return()
+  if(is.null(inChecker(c(input$pmap_pref)))) return()
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
  	vars <- vars[-which(vars %in% input$pmap_attr)]
   if(length(vars) == 0) return()
 
-  selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars, 
+  selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,
    	selected = state_multvar("pmap_pref",vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -56,10 +56,10 @@ output$ui_pmap <- renderUI({
 		      div(class="span6", numericInput("pmap_fontsz", "Font size:", state_init("pmap_fontsz",1.3), .5, 4, .1))
 		    )
 	    ),
-		  radioButtons(inputId = "pmap_dim_number", label = "", pmap_dim_number, 
+		  radioButtons(inputId = "pmap_dim_number", label = "", pmap_dim_number,
 		   	selected = state_init_list("pmap_dim_number",2, pmap_dim_number)),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Summary'",
-	    	numericInput("pmap_cutoff", label = "Loadings cutoff:", min = 0, max = 1, 
+	    	numericInput("pmap_cutoff", label = "Loadings cutoff:", min = 0, max = 1,
 	    		state_init("pmap_cutoff",0), step = .05),
 		    actionButton("pmap_savescores", "Save scores")
 		  )
@@ -80,23 +80,23 @@ pmap_plotHeight <- function() {
 
 output$pmap <- renderUI({
   statTabPanel("Maps","Attributes",".pmap", "pmap", "pmap_plotWidth", "pmap_plotHeight")
-}) 
+})
 
 .pmap <- reactive({
 
 	ret_text <- "This analysis requires a brand variable of type character\nand multiple attribute variables of type numeric or integer.\nPlease select another dataset."
 	if(is.null(input$pmap_brand)) return(ret_text)
-	# if(is.null(inChecker(c(input$pmap_brand, input$pmap_attr)))) return(ret_text)
+	if(is.null(inChecker(c(input$pmap_brand, input$pmap_attr)))) return(ret_text)
 	if(length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
 
-	pmap(input$datasets, input$pmap_brand, input$pmap_attr, input$pmap_pref, input$pmap_dim_number, 
+	pmap(input$datasets, input$pmap_brand, input$pmap_attr, input$pmap_pref, input$pmap_dim_number,
 		input$pmap_scaling, input$pmap_fontsz, input$pmap_cutoff, input$pmap_plot)
 })
 
 observe({
   if(is.null(input$pmapReport) || input$pmapReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$pmap_brand, input$pmap_attr, input$pmap_pref, 
+		inp <- list(input$datasets, input$pmap_brand, input$pmap_attr, input$pmap_pref,
 			input$pmap_dim_number, input$pmap_scaling, input$pmap_fontsz, input$pmap_cutoff, input$pmap_plot)
 
 		# extra command to save factor scores
@@ -105,7 +105,7 @@ observe({
   })
 })
 
-pmap <- function(datasets, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pmap_scaling, 
+pmap <- function(datasets, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pmap_scaling,
 	pmap_fontsz, pmap_cutoff, pmap_plot) {
 
 	dat <- values[[datasets]]
@@ -137,7 +137,7 @@ pmap <- function(datasets, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pm
 	out$nr.dim <- nr.dim
 	out$scores <- scores
 	out$loadings <- m
-	out$pref_cor <- pc 
+	out$pref_cor <- pc
 	out$brand_names <- brands
 	out$pmap_attr <- pmap_attr
 	out$pmap_pref <- pmap_pref
@@ -164,7 +164,7 @@ summary_pmap <- function(result = .pmap()) {
 
 	cat("\nAttribute - Factor loadings:\n")
 	print(f.res$loadings, cutoff = out$pmap_cutoff, digits = 2)
-	
+
 	if(!is.null(out$pmap_pref)) {
 		cat("\nPreference correlations:\n")
 		print(round(out$pref_cor,2), digits = 2)
@@ -209,7 +209,7 @@ plots_pmap <- function(result = .pmap()) {
 				if("attr" %in% out$pmap_plot) {
 					textplot(std_m[,i]*lab_buf, std_m[,j]*lab_buf, out$pmap_attr, cex = out$pmap_fontsz, col = "darkblue", new = FALSE)
 					# add arrows
-					for (k in out$pmap_attr) 
+					for (k in out$pmap_attr)
 						arrows(0,0, x1=std_m[k,i], y1=std_m[k,j], lty='dashed', length=.05)
 
 					# ideas

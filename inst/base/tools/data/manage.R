@@ -272,8 +272,8 @@ output$downloadState <- downloadHandler(
   content = function(file) {
 
     isolate({
-      RadiantInputs <- isolate(reactiveValuesToList(input))
-      RadiantValues <- isolate(reactiveValuesToList(values))
+      RadiantInputs <- reactiveValuesToList(input)
+      RadiantValues <- reactiveValuesToList(values)
       save(RadiantInputs, RadiantValues , file = file)
     })
   }

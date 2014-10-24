@@ -152,7 +152,7 @@ output$compareMeans <- renderUI({
 	ret_text <- "This analysis requires variables of type factor, numeric or interval.\nPlease select another dataset."
 	if(is.null(input$cm_var1)) return(ret_text)
 	if(is.null(input$cm_var2)) return("Please select a numeric or interval variable")
-	# if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
+	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
 
 	compareMeans(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
 })
@@ -376,7 +376,7 @@ output$uiCt_var2 <- renderUI({
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
 	# if(!input$ct_var1 %in% vars) return()
-	# if(is.null(inChecker(input$ct_var1))) return()
+	if(is.null(inChecker(input$ct_var1))) return()
 	vars <- vars[-which(vars == input$ct_var1)]
   if(length(vars) == 0) return()
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
@@ -421,7 +421,7 @@ output$crosstab <- renderUI({
 .crosstab <- reactive({
 	ret_text <- "This analysis requires variables of type factor.\nPlease select another dataset."
  	if(is.null(input$ct_var1) || is.null(input$ct_var2)) return(ret_text)
-	# if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
+	if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
 	crosstab(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
 		input$ct_std_residuals, input$ct_contrib)
 })
