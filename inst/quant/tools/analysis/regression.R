@@ -173,6 +173,10 @@ output$ui_regression <- renderUI({
 		    conditionalPanel(condition = "input.tabs_regression == 'Summary'",
 			    uiOutput("uiReg_var3"),
 			    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
+    	    checkboxInput(inputId = "reg_confint", label = "Show confidence intervals",
+	  	  		value = state_init('reg_rmse',FALSE)),
+  		    checkboxInput(inputId = "reg_rmse", label = "Calculate RMSE",
+	  	  		value = state_init('reg_rmse',FALSE)),
 			    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values",
 	  	  		value = state_init('reg_vif',FALSE)),
 		  	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
@@ -217,8 +221,8 @@ output$regression <- renderUI({
   if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
 
 	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots,
-    input$reg_line, input$reg_loess)
+		input$reg_interactions, input$reg_standardize, input$reg_confint, input$reg_rmse, input$reg_vif,
+    input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -244,14 +248,15 @@ observe({
   if(is.null(input$regressionReport) || input$regressionReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_standardize, input$reg_vif, input$reg_stepwise, input$reg_plots,
-      input$reg_line, input$reg_loess)
+			input$reg_interactions, input$reg_standardize, input$reg_confint, input$reg_rmse, input$reg_vif,
+      input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
 regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
-                       reg_standardize, reg_vif, reg_stepwise, reg_plots, reg_line, reg_loess) {
+                       reg_standardize, reg_confint, reg_rmse, reg_vif, reg_stepwise, reg_plots,
+                       reg_line, reg_loess) {
 
 	vars <- reg_var2
 
@@ -272,6 +277,8 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 		mod <- lm(formula, data = dat)
 	}
 
+	mod$reg_confint <- reg_confint
+	mod$reg_rmse <- reg_rmse
 	mod$reg_vif <- reg_vif
 	mod$reg_var2 <- reg_var2
 	mod$reg_var3 <- reg_var3
@@ -296,7 +303,18 @@ summary_regression <- function(result = .regression()) {
 	# rounding to avoid scientific notation for the coefficients
 	res <- summary(result)
 	res$coefficients <- round(res$coefficients,3)
-	print(res)
+	print(res, digits = 3)
+
+	if(result$reg_confint) {
+  	print(confint(result))
+	}
+
+	if(result$reg_rmse) {
+  	rmse <- sqrt(mean(res$residual^2,na.rm=TRUE))
+    rmse_df <- data.frame("RMSE" = rmse, "RMSE (95%)" = rmse *2, check.names = FALSE)
+    cat("Prediction error\n")
+    print(rmse_df, row.names = FALSE)
+	}
 
 	# if(reg_outlier) print(outlierTest(result), digits = 3)
 
@@ -351,24 +369,24 @@ plots_regression <- function(result = .regression()) {
 		colnames(df) <- c("x","y")
 # 		plots[[1]] <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
 		p <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
-#     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
-#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
+    if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[1]] <- p
 
 		p <- qplot(.fitted, .resid, data = mod) + labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
-#     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
-#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+    if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[2]] <- p
 
 		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
 			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
-#     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
-#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+    if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+    if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[3]] <- p
 
 		p <- qplot(sample =.stdresid, data = mod, stat = "qq") +
 			labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
-#     if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
+    if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
 #     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[4]] <- p
 	}
@@ -376,7 +394,6 @@ plots_regression <- function(result = .regression()) {
 	if(result$reg_plots == "scatterlist") {
 		plots <- list()
 		for(i in reg_var2) {
-			# if(getdata_class()[i] == 'factor') {
 			if('factor' %in% class(dat[,i])) {
 				plots[[i]] <- ggplot(dat, aes_string(x=i, y=reg_var1, fill=i)) + geom_boxplot(alpha = .3)
 			} else {
@@ -396,14 +413,13 @@ plots_regression <- function(result = .regression()) {
 		rdat <- data.frame(rdat)
 		colnames(rdat) <- c('residuals',reg_var2)
 		for(i in reg_var2) {
-			# if(getdata_class()[i] == 'factor') {
 			if('factor' %in% class(dat[,i])) {
 				plots[[i]] <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_boxplot(fill = 'blue', alpha = .3)
 			} else {
 				p <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_point()
-#         if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
-#                                                  linetype = "dashed", colour = 'black')
-#         if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+        if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
+                                                 linetype = "dashed", colour = 'black')
+        if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
         plots[[i]] <- p
 			}
 		}
