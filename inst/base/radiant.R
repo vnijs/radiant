@@ -23,17 +23,29 @@ state_init_multvar <- function(inputvar, pre_inputvar, vals) {
 ################################################################################
 # function to save app state on refresh or crash
 ################################################################################
+saveState <- function(filename) {
+  isolate({
+    RadiantInputs <- state_list
+    LiveInputs <- reactiveValuesToList(input)
+    RadiantInputs[names(LiveInputs)] <- LiveInputs
+    RadiantValues <- reactiveValuesToList(values)
+    save(RadiantInputs, RadiantValues , file = filename)
+  })
+}
+
 saveStateOnCrash <- function(session = session)
   session$onSessionEnded(function() {
     observe({
       pth <- "~/radiant_temp/state/"
       if(!file.exists(pth)) dir.create(pth)
-      filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
-      RadiantInputs <- isolate(reactiveValuesToList(input))
-      RadiantValues <- isolate(reactiveValuesToList(values))
-      save(RadiantInputs, RadiantValues , file = filename)
+#       file <- paste0(pth,"RadiantState-",Sys.Date(),".rsf")
+#       RadiantInputs <- isolate(reactiveValuesToList(input))
+#       RadiantValues <- isolate(reactiveValuesToList(values))
+#       save(RadiantInputs, RadiantValues , file = file)
+      saveState(file)
    })
 })
+
 
 ################################################################
 # functions used across tools in radiant

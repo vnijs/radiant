@@ -35,17 +35,19 @@ output$downloadStateQuit <- downloadHandler(
   filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
   content = function(file) {
 
-    isolate({
-      RadiantInputs <- state_list
-      LiveInputs <- reactiveValuesToList(input)
-      RadiantInputs[names(LiveInputs)] <- LiveInputs
-      RadiantValues <- reactiveValuesToList(values)
-      save(RadiantInputs, RadiantValues , file = file)
+#     isolate({
+#       RadiantInputs <- state_list
+#       LiveInputs <- reactiveValuesToList(input)
+#       RadiantInputs[names(LiveInputs)] <- LiveInputs
+#       RadiantValues <- reactiveValuesToList(values)
+#       save(RadiantInputs, RadiantValues , file = file)
+
+      saveState(file)
 
 #       RadiantInputs <- isolate(reactiveValuesToList(input))
 #       RadiantValues <- isolate(reactiveValuesToList(values))
 #       save(RadiantInputs, RadiantValues , file = file)
-    })
+#     })
   }
 )
 
