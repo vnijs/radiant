@@ -6,7 +6,7 @@ output$uiPreFactor_vars <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "preFactor_vars", label = "Variables:", choices = vars, 
+  selectInput(inputId = "preFactor_vars", label = "Variables:", choices = vars,
   	selected = state_multvar("preFactor_vars",vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -81,11 +81,11 @@ summary_preFactor <- function(result = .preFactor()) {
   print(round(result$pre_r2, 2), digits = 2)
 
 	cat("\n")
-	ev <- result$pre_eigen 
+	ev <- result$pre_eigen
 	ev.var <- ev/sum(ev)
 	ev.cvar <- cumsum(ev.var)
 	df <- data.frame(1:length(ev),round(ev,2),round(ev.var,2),round(ev.cvar,2))
-	colnames(df) <- c("Factor","Eigen Values","% of variance","Cumulative %") 
+	colnames(df) <- c("Factor","Eigen Values","% of variance","Cumulative %")
   print(df, row.names = FALSE, digits = 2)
 }
 
@@ -95,10 +95,10 @@ plots_preFactor <- function(result = .preFactor()){
 	ev <- result$pre_eigen
 
 	p <- ggplot(data.frame(ev), aes(x=1:length(ev), y=ev, group = 1)) +
-			  geom_line(colour="blue", linetype = 'dotdash', size=.7) + 
+			  geom_line(colour="blue", linetype = 'dotdash', size=.7) +
   		  geom_point(colour="blue", size=4, shape=21, fill="white") +
 	  		geom_hline(yintercept = 1, color = 'black', linetype = 'solid', size = 1) +
-	  	  labs(list(title = "Screeplot of Eigenvalues", x = "# of factors", y = "Eigenvalues")) 
+	  	  labs(list(title = "Screeplot of Eigenvalues", x = "# of factors", y = "Eigenvalues"))
 	print(p)
 }
 
@@ -110,7 +110,7 @@ output$uiFactor_vars <- renderUI({
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "factor_vars", label = "Variables:", choices = vars, 
+  selectInput(inputId = "factor_vars", label = "Variables:", choices = vars,
   	selected = state_init_multvar("factor_vars",input$preFactor_vars, vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -121,21 +121,21 @@ output$ui_fullFactor <- renderUI({
 	# for ui
 	list(
     wellPanel(
-      uiOutput("uiFactor_vars"), 
-      selectInput("fac_method", label = "Method:", choices = fac_method, 
+      uiOutput("uiFactor_vars"),
+      selectInput("fac_method", label = "Method:", choices = fac_method,
       	selected = state_init_list("fac_method","PCA", fac_method)),
-      numericInput("fac_number", label = "Number of factors:", min = 1, 
+      numericInput("fac_number", label = "Number of factors:", min = 1,
       	value = state_init('fac_number',1)),
       conditionalPanel(condition = "input.tabs_fullFactor != 'Plots'",
   	    HTML("<label>Format loadings:</label>"),
   			div(class="row-fluid",
-  	    	div(class="span6", numericInput("fac_cutoff", label = "", min = 0, max = 1, 
+  	    	div(class="span6", numericInput("fac_cutoff", label = "", min = 0, max = 1,
             value = state_init('fac_cutoff',0), step = .05) ),
-          div(class="span6", checkboxInput("fac_sort", "Sort", 
+          div(class="span6", checkboxInput("fac_sort", "Sort",
           	value = state_init('fac_sort',FALSE)))
   	    )
   	  ),
-      radioButtons("fac_rotation", label = "Rotation:", fac_rotation, 
+      radioButtons("fac_rotation", label = "Rotation:", fac_rotation,
       	selected = state_init_list("fac_rotation","varimax", fac_rotation)),
       actionButton("fac_savescores", "Save scores")
   	),
@@ -164,9 +164,9 @@ output$fullFactor <- renderUI({
 	if(is.null(input$fac_number)) return("Number of factors should be > 1.")
 
 	ret_text <- "This analysis requires a multiple variables of type\nnumeric or integer.\nPlease select another dataset."
-	# if(is.null(inChecker(c(input$factor_vars)))) return(ret_text)
+	if(is.null(inChecker(c(input$factor_vars)))) return(ret_text)
 
-	fullFactor(input$datasets, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff, 
+	fullFactor(input$datasets, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
 		input$fac_sort, input$fac_rotation)
 })
 
@@ -174,7 +174,7 @@ observe({
   if(is.null(input$fullFactorReport) || input$fullFactorReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff, 
+		inp <- list(input$datasets, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
 			input$fac_sort, input$fac_rotation)
 
 		# extra command to save factor scores

@@ -54,7 +54,7 @@ output$random <- renderUI({
 
 	ret_text <- "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nPlease select another dataset."
 	if(is.null(input$rnd_var)) return(ret_text)
-	# if(is.null(inChecker(c(input$rnd_var)))) return(ret_text)
+	if(is.null(inChecker(c(input$rnd_var)))) return(ret_text)
 
 	rvar <- getdata()$rnd_var
 	if(length(unique(rvar)) != length(rvar)) return(ret_text)

@@ -19,7 +19,7 @@ output$conjointProfiles <- renderUI({
 .conjointProfiles <- reactive({
 	ret_text <- "Please load a file with attribute information."
 	if(is.null(input$uploadAttr)) return(ret_text)
-  if(is.null(values[['ca_attr']])) return(ret_text) 
+  if(is.null(values[['ca_attr']])) return(ret_text)
 
 	conjointProfiles(values[['ca_attr']])
 })
@@ -117,8 +117,8 @@ conjointFFD <-function(dat,trial) { #{{{
 		if(trial < 20) {
 			return()
 		} else {
-			cat(paste("The number of profiles required to generate an orthogonal design 
-				is greater than the recommended maximum of 24. Consider reducing the number 
+			cat(paste("The number of profiles required to generate an orthogonal design
+				is greater than the recommended maximum of 24. Consider reducing the number
 				of attributes and/or levels.\n"))
 		}
 	}
@@ -151,7 +151,7 @@ output$uiCa_var1 <- renderUI({
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
 
-  selectInput(inputId = "ca_var1", label = "Profile evaluations:", choices = vars, 
+  selectInput(inputId = "ca_var1", label = "Profile evaluations:", choices = vars,
    	selected = state_singlevar("ca_var1",vars), multiple = FALSE)
 })
 
@@ -161,7 +161,7 @@ output$uiCa_var2 <- renderUI({
 	isFct <- "factor" == getdata_class()
  	vars <- varnames()[isFct]
   if(length(vars) == 0) return()
-  selectInput(inputId = "ca_var2", label = "Attributes:", choices = vars, 
+  selectInput(inputId = "ca_var2", label = "Attributes:", choices = vars,
   	selected = state_multvar("ca_var2", vars), multiple = TRUE, selectize = FALSE)
 })
 
@@ -172,17 +172,17 @@ output$ui_conjoint <- renderUI({
   	wellPanel(
 	    uiOutput("uiCa_var1"),
 	    uiOutput("uiCa_var2"),
-		  checkboxInput("ca_rev", label = "Reverse evaluation scores", 
+		  checkboxInput("ca_rev", label = "Reverse evaluation scores",
 		  	value = state_init('ca_rev',FALSE)),
 	    conditionalPanel(condition = "input.tabs_conjoint == 'Summary'",
-		    checkboxInput(inputId = "ca_vif", label = "Calculate VIF-values", 
+		    checkboxInput(inputId = "ca_vif", label = "Calculate VIF-values",
 			  	value = state_init('ca_vif',FALSE)),
 		  	downloadButton('downloadPWs', 'Save PWs')
 	  	),
 	    conditionalPanel(condition = "input.tabs_conjoint == 'Plots'",
-		    checkboxInput(inputId = "ca_scale_plot", label = "Scale PW plots", 
+		    checkboxInput(inputId = "ca_scale_plot", label = "Scale PW plots",
 			  	value = state_init('ca_scale_plot',FALSE)),
-	      selectInput("ca_plots", "Conjoint plots:", choices = ca_plots, 
+	      selectInput("ca_plots", "Conjoint plots:", choices = ca_plots,
 	  	  	selected = state_init_list("ca_plots","pw", ca_plots)))
 	  ),
 		helpAndReport('Conjoint analysis','conjoint',inclMD("tools/help/conjoint.md"))
@@ -212,9 +212,9 @@ output$conjoint <- renderUI({
  	vars <- varnames()[isFct]
   if(length(vars) == 0) return(ret_text)
 	if(is.null(input$ca_var2)) return("Please select one or more independent variables of type factor.")
-	# if(is.null(inChecker(c(input$ca_var1, input$ca_var2)))) return(ret_text)
+	if(is.null(inChecker(c(input$ca_var1, input$ca_var2)))) return(ret_text)
 
-	mod <- conjoint(input$datasets, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif, 
+	mod <- conjoint(input$datasets, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
 		input$ca_plots, input$ca_scale_plot)
 
 	if(class(mod) != 'lm') return(mod)
@@ -237,7 +237,7 @@ observe({
   if(is.null(input$conjointReport) || input$conjointReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif, 
+		inp <- list(input$datasets, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
 			input$ca_plots, input$ca_scale_plot)
 		updateReport(inp,"conjoint", round(7 * ca_plotWidth()/650,2), round(7 * ca_plotHeight()/650,2))
   })
@@ -252,7 +252,7 @@ conjoint <- function(datasets, ca_var1, ca_var2, ca_rev, ca_vif, ca_plots, ca_sc
 		ca_dep <- dat[,ca_var1]
 		dat[,ca_var1] <- abs(ca_dep - max(ca_dep)) + 1
 	}
-	
+
 	mod <- lm(formula, data = dat)
 
 	mod$datasets <- datasets
@@ -261,7 +261,7 @@ conjoint <- function(datasets, ca_var1, ca_var2, ca_rev, ca_vif, ca_plots, ca_sc
 	mod$ca_vif <- ca_vif
 	mod$ca_plots <- ca_plots
 	mod$ca_scale_plot <- ca_scale_plot
-	
+
 	return(mod)
 }
 
@@ -301,9 +301,9 @@ plots_conjoint <- function(result = .conjoint()) {
 			PW.var$Levels <- factor(PW.var$Levels,levels=PW.var$Levels,ordered=FALSE)
 
 			p <- ggplot(PW.var, aes(x=Levels, y=PW, group = 1)) +
-				  geom_line(colour="blue", linetype = 'dotdash', size=.7) + 
+				  geom_line(colour="blue", linetype = 'dotdash', size=.7) +
 	  		  geom_point(colour="blue", size=4, shape=21, fill="white") +
-		  	  labs(list(title = paste("Part-worths for", var), x = "")) 
+		  	  labs(list(title = paste("Part-worths for", var), x = ""))
 		  	  # theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 		  if(result$ca_scale_plot) p <- p + ylim(plot_ylim[var,'Min'],plot_ylim[var,'Max'])
@@ -313,7 +313,7 @@ plots_conjoint <- function(result = .conjoint()) {
 	} else {
 
 		IW.df <- theTable[['IW']]
-		p <- ggplot(IW.df, aes(x=Attributes, y=IW, fill = Attributes)) + geom_bar(stat = 'identity', alpha = .5) + 
+		p <- ggplot(IW.df, aes(x=Attributes, y=IW, fill = Attributes)) + geom_bar(stat = 'identity', alpha = .5) +
 			theme(legend.position = "none") + labs(list(title = "Importance weights"))
 		print(p)
 	}

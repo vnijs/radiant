@@ -5,7 +5,7 @@ output$uiMds_id1 <- renderUI({
 	isChar <- "character" == getdata_class()
   vars <- varnames()[isChar]
   if(length(vars) == 0) return(HTML('<label>This dataset has no variables of type character.</label>'))
-  selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars, 
+  selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars,
   	# selected = names(vars[vars == values$mds_id1]), multiple = FALSE)
    	selected = state_singlevar("mds_id1",vars), multiple = FALSE)
 })
@@ -18,7 +18,7 @@ output$uiMds_id2 <- renderUI({
   vars <- varnames()[isChar]
 	vars <- vars[-which(vars == input$mds_id1)]
   if(length(vars) == 0) return(HTML('<label>This dataset has only one variable of type character.</label>'))
-  selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars, 
+  selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
   	# selected = names(vars[vars == values$mds_id2]), multiple = FALSE)
    	selected = state_singlevar("mds_id2",vars), multiple = FALSE)
 })
@@ -29,7 +29,7 @@ output$uiMds_dis <- renderUI({
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars, 
+  selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
   	# selected = names(vars[vars == values$mds_dis]), multiple = FALSE)
    	selected = state_singlevar("mds_dis",vars), multiple = FALSE)
 })
@@ -37,7 +37,7 @@ output$uiMds_dis <- renderUI({
 output$uiMds_rev_dim <- renderUI({
 	rev_list <- list()
 	rev_list[paste("Dimension",1:input$mds_dim_number)] <- 1:input$mds_dim_number
-	checkboxGroupInput("mds_rev_dim", "Reverse:", rev_list, 
+	checkboxGroupInput("mds_rev_dim", "Reverse:", rev_list,
 		# selected = names(rev_list[rev_list == values$mds_rev_dim]))
    	selected = state_init_list("mds_rev_dim","", rev_list))
 })
@@ -50,7 +50,7 @@ output$ui_mds <- renderUI({
 	  	uiOutput("uiMds_id1"),
 	  	uiOutput("uiMds_id2"),
 	  	uiOutput("uiMds_dis"),
-		  radioButtons(inputId = "mds_dim_number", label = "", mds_dim_number, 
+		  radioButtons(inputId = "mds_dim_number", label = "", mds_dim_number,
 		  	# selected = values$mds_dim_number),
 		   	selected = state_init_list("mds_dim_number",2, mds_dim_number)),
 	 	 	conditionalPanel(condition = "input.tabs_mds == 'Plots'",
@@ -74,13 +74,13 @@ mds_plotHeight <- function() {
 
 output$mds <- renderUI({
   statTabPanel("Maps","(Dis)similarity",".mds", "mds", "mds_plotWidth", "mds_plotHeight")
-}) 
+})
 
 .mds <- reactive({
 
 	ret_text <- "This analysis requires two id-variables of type character\nand a measure of dissimilarity of type numeric or interval.\nPlease select another dataset."
 	if(is.null(input$mds_id2) || is.null(input$mds_dis)) return(ret_text)
-	# if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
+	if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
 
 	mds(input$datasets, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
 			input$mds_dim_number, input$mds_fontsz)
@@ -112,11 +112,11 @@ mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim, mds_dim_number
 	nr.obs <- length(dis)
 
 	co.dist <- diag(length(lab))
-	if(lower == nr.obs) { 
-		co.dist[lower.tri(co.dist, diag = FALSE)] <- dis 
-	} else if((lower + nr.lev) == nr.obs) { 
-		co.dist[lower.tri(co.dist, diag = TRUE)] <- dis 
-	} else { 
+	if(lower == nr.obs) {
+		co.dist[lower.tri(co.dist, diag = FALSE)] <- dis
+	} else if((lower + nr.lev) == nr.obs) {
+		co.dist[lower.tri(co.dist, diag = TRUE)] <- dis
+	} else {
 		return("Number of observations and unique id's does not match.")
 	}
 
@@ -187,7 +187,7 @@ plots_mds <- function(result = .mds()) {
 			points(out$points[,i], out$points[,j], pch = 16, cex = .6)
 
 			# text(out$points[,i], out$points[,j], out$labels, col=rainbow(out$nr.lev,start=.6,end=.1), adj = c(0.4,-.4))
-			textplot(out$points[,i], out$points[,j]+(.04*out$lim), out$labels, col=rainbow(out$nr.lev,start=.6,end=.1), 
+			textplot(out$points[,i], out$points[,j]+(.04*out$lim), out$labels, col=rainbow(out$nr.lev,start=.6,end=.1),
 				cex = out$mds_fontsz, new = FALSE)
 			abline(v=0, h=0)
 		}
@@ -202,14 +202,14 @@ plots_mds <- function(result = .mds()) {
 
 	# plots <- list()
 	# for(var in input$km_vars) {
-	# 	plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) 
+	# 	plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3)
 	# }
 
 	# dat <- data.frame(out$points)
 	# colnames(dat) <- paste0('Dimension',1:out$nr.dim)
 	# dim1 <- 'Dimension1'
 	# dim2 <- 'Dimension2'
-	# p <- ggplot(dat, aes_string(x=dim1, y=dim2)) + geom_point(shape = 1) + 
+	# p <- ggplot(dat, aes_string(x=dim1, y=dim2)) + geom_point(shape = 1) +
 	# 			theme(axis.text.x = element_blank(), axis.text.y = element_blank())
 	# print(p)
 
