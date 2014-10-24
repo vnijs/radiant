@@ -21,7 +21,7 @@ if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/Git
 #   options(shiny.trace = TRUE)
 #    options(warn=2)
 #   options(shiny.error=recover)
-  vimKeyBinding <- TRUE
+#   vimKeyBinding <- TRUE
 }
 
 # Attempt to build automated testing into Radiant
