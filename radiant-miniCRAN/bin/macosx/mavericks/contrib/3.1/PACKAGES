@@ -10,11 +10,6 @@ Suggests: testthat
 License: GPL-3
 MD5sum: 6d1c3617bd66fe5cd2b9f2317c679784
 
-Package: BH
-Version: 1.54.0-4
-License: BSL-1.0
-MD5sum: 5306043cc20080e561bcfbf68bef9ee5
-
 Package: bitops
 Version: 1.0-6
 License: GPL (>= 2)
@@ -30,8 +25,7 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl
-           (>= 0.93.960), survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival, survey
 License: GPL (>= 2)
 MD5sum: 4bb985586c01aeeefe70dcf982f60cda
 
@@ -77,8 +71,8 @@ Version: 0.3.0.2
 Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr,
-           microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1),
+               nycflights13, methods
 License: MIT + file LICENSE
 Archs: dplyr.so.dSYM
 MD5sum: 5c7a2444aa1acd091ec194de9a553149
@@ -109,8 +103,7 @@ MD5sum: f249165ce737882a804b3bdb3d7c504a
 Package: ggvis
 Version: 0.4
 Depends: R (>= 3.0)
-Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval,
-           htmltools (>= 0.2.4)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
 Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
 License: GPL-2
 MD5sum: 9de2ff1bd57f563591cb1bd823891f73
@@ -135,17 +128,11 @@ Suggests: testthat, plyr
 License: GPL-2
 MD5sum: f2074d0552259a5310c882d3ebad3b02
 
-Package: hflights
-Version: 0.1
-Depends: R (>= 2.10)
-License: CC0
-MD5sum: 8006ef155379b59e148835a5e430768c
-
 Package: highr
-Version: 0.3
+Version: 0.4
 Suggests: knitr, testit
 License: GPL
-MD5sum: efb48610abc215c6e4097ffc9aa3ef6f
+MD5sum: 3404c6017e99c2ab8086f13eb6961066
 
 Package: htmltools
 Version: 0.2.6
@@ -157,13 +144,13 @@ License: GPL (>= 2)
 MD5sum: 3cb40e2a63480b765e9b53cddadd9a3e
 
 Package: httpuv
-Version: 1.3.0
+Version: 1.3.2
 Depends: R (>= 2.15.1), methods
 Imports: Rcpp (>= 0.11.0)
 LinkingTo: Rcpp
 License: GPL-3 | file LICENSE
 Archs: httpuv.so.dSYM
-MD5sum: 93316a36c3bb8f5b7c7d3a515e81e964
+MD5sum: 7bb6dbc1f691dad99cf6405b5e6fbad4
 
 Package: httr
 Version: 0.5
@@ -185,8 +172,7 @@ MD5sum: 3ea6c83b6581fafccc4cad4c41f193e2
 Package: knitr
 Version: 1.7
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr
-           (>= 0.6), tools
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr (>= 0.6), tools
 Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
 MD5sum: f5e3e9bc8a4a6ee16cc83ef9d0e7b1af
@@ -195,13 +181,6 @@ Package: labeling
 Version: 0.3
 License: MIT + file LICENSE | Unlimited
 MD5sum: 8215b1411c6944b93e518229076a3367
-
-Package: Lahman
-Version: 3.0-1
-Depends: R (>= 2.10)
-Suggests: lattice, ggplot2, googleVis, data.table, vcd, plyr, reshape2, zipcode
-License: GPL
-MD5sum: 8d95535d271f730be70dc6018b5cb366
 
 Package: lattice
 Version: 0.20-29
@@ -315,29 +294,6 @@ Suggests: MASS, parallel, GPArotation, mvtnorm, sem, lavaan, Rcsdp, graph, Rgrap
 License: GPL (>= 2)
 MD5sum: a5eea470ca6e96dcbdad6e4ab0b07e38
 
-Package: R.methodsS3
-Version: 1.6.1
-Depends: R (>= 2.2.0)
-Imports: utils
-License: LGPL (>= 2.1)
-MD5sum: a687d1323b3ca6d83478aa5cf7aba866
-
-Package: R.oo
-Version: 1.18.0
-Depends: R (>= 2.4.0), R.methodsS3 (>= 1.6.1)
-Imports: methods, utils
-Suggests: tools
-License: LGPL (>= 2.1)
-MD5sum: ca92f5b30d97a12d0ca93780ee31a9e8
-
-Package: R.utils
-Version: 1.34.0
-Depends: R (>= 2.5.0), R.oo (>= 1.18.0)
-Imports: utils, methods, R.methodsS3 (>= 1.6.1)
-Suggests: digest (>= 0.6.4)
-License: LGPL (>= 2.1)
-MD5sum: dd98bbe18539a8363523e6b927e7874e
-
 Package: R6
 Version: 2.0
 Depends: R (>= 3.0)
@@ -420,19 +376,18 @@ MD5sum: 19f9bc12f20c8b5af5de5dbca3c37c32
 Package: shiny
 Version: 0.10.2.1
 Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>=
-           0.2.6), R6 (>= 2.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 MD5sum: 3b8f96c75f2eaad0c49c244ea31b6dfb
 
 Package: shinyAce
-Version: 0.1.01
+Version: 0.1.1
 Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
 Suggests: testthat
 License: MIT
-MD5sum: 4d383c431044929e84c847a9fb90782f
+MD5sum: 941edfd9fa712eb20f8fa6cbf791f84d
 
 Package: shinyFiles
 Version: 0.4.0
@@ -449,13 +404,6 @@ License: GPL-2
 Archs: slam.so.dSYM
 MD5sum: 3dcfcd99b99d2162e1fb0bec2e4e3264
 
-Package: stringi
-Version: 0.2-5
-Depends: R (>= 2.15.0)
-License: file LICENSE
-License_is_FOSS: yes
-MD5sum: 02dff3d8534ada05a1d0e97f6960efeb
-
 Package: stringr
 Version: 0.6.2
 Depends: R (>= 2.14)
@@ -464,12 +412,12 @@ License: GPL-2
 MD5sum: 744721c108757753b6d9eb06341b2f0c
 
 Package: tidyr
-Version: 0.1.0.9000
+Version: 0.1
 Depends: R (>= 3.1.0)
-Imports: reshape2, dplyr (>= 0.2), stringi
+Imports: reshape2, dplyr (>= 0.2)
 Suggests: knitr, testthat
 License: MIT + file LICENSE
-MD5sum: a89d3bf5562375d9612d79a2cca4df25
+MD5sum: 448324f8a9c31fb00d88b86ad8ab382e
 
 Package: vegan
 Version: 2.0-10
