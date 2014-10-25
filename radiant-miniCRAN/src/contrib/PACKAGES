@@ -449,6 +449,15 @@ License: GPL-2
 MD5sum: 452628504e0910c1d0b1756370716f87
 NeedsCompilation: no
 
+Package: testthat
+Version: 0.9.1
+Depends: R (>= 3.1.0), methods
+Imports: digest
+Suggests: devtools
+License: MIT + file LICENSE
+MD5sum: a5439f78185658a063b228e0e7b3d170
+NeedsCompilation: yes
+
 Package: tidyr
 Version: 0.1
 Depends: R (>= 3.1.0)

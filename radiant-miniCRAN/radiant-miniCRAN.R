@@ -22,13 +22,14 @@ require(miniCRAN)
 
 # Specify list of packages to download
 source('pkgs.R')
+pkgs <- 'testthat'
 
 # setting the default location to get R-packages
 # look locally first and then in the Rstudio CRAN
 pth_gh <- "~/Desktop/GitHub/build_clones/githubMC"
 if(!file.exists(pth_gh)) dir.create(pth_gh)
 mcran_gh <- paste0("file:///",normalizePath(pth_gh))
-# repos <- c(mcran_gh,"http://cran.rstudio.com")
+repos <- c(mcran_gh,"http://cran.rstudio.com")
 options(repos = c(CRAN = c(mcran_gh,"http://cran.rstudio.com")))
 
 # slightly adapted from from Andrei's source code
