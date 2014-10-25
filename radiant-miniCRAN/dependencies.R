@@ -50,7 +50,7 @@ update.packages(lib.loc = local_dir, ask = FALSE)
 to_inp <- new.packages(lib.loc = local_dir)
 
 #   if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
-if(length(to_inp) != 0) install.packages(to_inp, local_dir)
+if(length(to_inp) != 0) install.packages(to_inp, local_dir, dependencies = TRUE)
 
 # add function to remove packages that are not used by Radiant?
 # might mess up someones stuff. maybe better to do this like packRat does it
