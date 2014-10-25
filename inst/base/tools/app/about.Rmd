@@ -1,6 +1,6 @@
 ### Radiant - Business analytics using R and Shiny
 
-Version 0.515 (10/17/2014)
+Version 0.520 (10/24/2014)
 
 Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. You can reach us at radiant@rady.ucsd.edu
 
