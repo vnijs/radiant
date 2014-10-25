@@ -25,8 +25,11 @@ if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/Git
 
 # remove shinyAce if old
 l_inst <- installed.packages()
-if('shinyAce' %in% rownames(l_inst) && l_inst['shinyAce', 'Version'] < "0.1.1")
-  remove.packages('shinyAce')
+if('shinyAce' %in% rownames(l_inst)) {
+  if(l_inst['shinyAce', 'Version'] < "0.1.1") {
+    remove.packages('shinyAce')
+  }
+} 
 
 # if(!'httpuv' %in% rownames(l_inst))
 #   install.packages('httpuv')
