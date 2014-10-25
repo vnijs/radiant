@@ -10,7 +10,7 @@ if(!'shiny' %in% installed.packages()[,'Package']) {
   pth <- normalizePath(paste0(script_dir,'/../../radiant-miniCRAN'),winslash='/')
   mcran <- paste0("file:///",pth)
   options(repos = c(CRAN = mcran))
-  install.packages('shiny', local_dir)
+  install.packages('shiny', local_dir, dependencies = TRUE)
 }
 
 com_string <- paste0("cd ",script_dir,"\n",Sys.which('R'), " -e ",
