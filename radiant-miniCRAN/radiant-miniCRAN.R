@@ -12,7 +12,8 @@ if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 # path to non-local install directory
 inst_to <- .libPaths()[2]
 options(repos = c(CRAN = "http://cran.rstudio.com"))
-install.packages('miniCRAN', inst_to, dependencies = TRUE, type='source')
+# install.packages('miniCRAN', inst_to, dependencies = TRUE, type='source')
+install.packages('miniCRAN')
 
 pth <- "~/Desktop/GitHub/radiant_dev/radiant-miniCRAN"
 if(!file.exists(pth)) dir.create(pth)
@@ -27,7 +28,7 @@ source('pkgs.R')
 pth_gh <- "~/Desktop/GitHub/build_clones/githubMC"
 if(!file.exists(pth_gh)) dir.create(pth_gh)
 mcran_gh <- paste0("file:///",normalizePath(pth_gh))
-repos <- c(mcran_gh,"http://cran.rstudio.com")
+# repos <- c(mcran_gh,"http://cran.rstudio.com")
 options(repos = c(CRAN = c(mcran_gh,"http://cran.rstudio.com")))
 
 # slightly adapted from from Andrei's source code

@@ -33,8 +33,7 @@ Package: car
 Version: 2.0-21
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl
-           (>= 0.93.960), survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich, mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival, survey
 License: GPL (>= 2)
 MD5sum: e2069e153c61f1aa9c8d4f8a17e7681a
 NeedsCompilation: no
@@ -83,8 +82,8 @@ Version: 0.3.0.2
 Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr,
-           microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1),
+               nycflights13, methods
 License: MIT + file LICENSE
 MD5sum: 2edabf29b4c1c9b71c07955294143067
 NeedsCompilation: yes
@@ -118,8 +117,7 @@ NeedsCompilation: no
 Package: ggvis
 Version: 0.4
 Depends: R (>= 3.0)
-Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval,
-           htmltools (>= 0.2.4)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
 Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
 License: GPL-2
 MD5sum: 1a004ec86fc4841e25d18fb8ea2cd642
@@ -194,8 +192,7 @@ NeedsCompilation: yes
 Package: knitr
 Version: 1.7
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr
-           (>= 0.6), tools
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.3), markdown (>= 0.7.4), stringr (>= 0.6), tools
 Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
 MD5sum: 740b3448e2b1ca4f4717482a7182779d
@@ -325,32 +322,6 @@ License: GPL (>= 2)
 MD5sum: e6b33493dc9677a985243a45cee862d4
 NeedsCompilation: no
 
-Package: R.methodsS3
-Version: 1.6.1
-Depends: R (>= 2.2.0)
-Imports: utils
-License: LGPL (>= 2.1)
-MD5sum: 86f04b5215896630d5dba2737b6aa17d
-NeedsCompilation: no
-
-Package: R.oo
-Version: 1.18.0
-Depends: R (>= 2.4.0), R.methodsS3 (>= 1.6.1)
-Imports: methods, utils
-Suggests: tools
-License: LGPL (>= 2.1)
-MD5sum: 1d1020ebb3962242b4fc713dbb4f9252
-NeedsCompilation: no
-
-Package: R.utils
-Version: 1.34.0
-Depends: R (>= 2.5.0), R.oo (>= 1.18.0)
-Imports: utils, methods, R.methodsS3 (>= 1.6.1)
-Suggests: digest (>= 0.6.4)
-License: LGPL (>= 2.1)
-MD5sum: 318fc6349512cac664bb211cbdfca031
-NeedsCompilation: no
-
 Package: R6
 Version: 2.0
 Depends: R (>= 3.0)
@@ -439,20 +410,19 @@ NeedsCompilation: no
 Package: shiny
 Version: 0.10.2.1
 Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>=
-           0.2.6), R6 (>= 2.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 MD5sum: cca79ef355ebfa99e068eeaead7d802d
 NeedsCompilation: no
 
 Package: shinyAce
-Version: 0.1.01
+Version: 0.1.1
 Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
 Suggests: testthat
 License: MIT
-MD5sum: 54575c216ec961350eda8f2d2219ead2
+MD5sum: c949624c45d048588c54dbb5ff41a202
 NeedsCompilation: no
 
 Package: shinyFiles
@@ -471,14 +441,6 @@ License: GPL-2
 MD5sum: 5bf9ca9cf208350809a3cb8310e8d420
 NeedsCompilation: yes
 
-Package: stringi
-Version: 0.2-5
-Depends: R (>= 2.15.0)
-License: file LICENSE
-License_is_FOSS: yes
-MD5sum: 037eba4fa11a919cda009bc2f9a809dc
-NeedsCompilation: yes
-
 Package: stringr
 Version: 0.6.2
 Depends: R (>= 2.14)
@@ -488,12 +450,12 @@ MD5sum: 452628504e0910c1d0b1756370716f87
 NeedsCompilation: no
 
 Package: tidyr
-Version: 0.1.0.9000
+Version: 0.1
 Depends: R (>= 3.1.0)
-Imports: reshape2, dplyr (>= 0.2), stringi
+Imports: reshape2, dplyr (>= 0.2)
 Suggests: knitr, testthat
 License: MIT + file LICENSE
-MD5sum: 2be41ff8c70741e4925776252e035541
+MD5sum: a0e667c3a515a5537e1e59e6e49ee482
 NeedsCompilation: no
 
 Package: vegan

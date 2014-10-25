@@ -23,6 +23,11 @@ if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/Git
     }
 }
 
+# remove shinyAce if old
+l_inst <- installed.packages()
+if('shinyAce' %in% rownames(l_inst) && l_inst['shinyAce', 'Version'] < "0.1.1")
+  remove.packages('shinyAce')
+
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
