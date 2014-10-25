@@ -3,7 +3,8 @@ args <- commandArgs(trailingOnly = TRUE)
 script_dir <- args[1]
 class_app <- args[2:3]
 
-if(!'shiny' %in% installed.packages()[,'Package']) {
+instpack <- installed.packages()[,'Package']
+if(!'shiny' %in% instpack || !'httpuv' %in% instpack) {
   # setting the url for the miniCRAN
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
@@ -11,6 +12,7 @@ if(!'shiny' %in% installed.packages()[,'Package']) {
   mcran <- paste0("file:///",pth)
   options(repos = c(CRAN = mcran))
   install.packages('shiny', local_dir, dependencies = TRUE)
+  # install.packages('shiny', local_dir, dependencies = TRUE)
 }
 
 com_string <- paste0("cd ",script_dir,"\n",Sys.which('R'), " -e ",

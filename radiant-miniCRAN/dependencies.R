@@ -28,8 +28,8 @@ l_inst <- installed.packages()
 if('shinyAce' %in% rownames(l_inst) && l_inst['shinyAce', 'Version'] < "0.1.1")
   remove.packages('shinyAce')
 
-if(!'httpuv' %in% rownames(l_inst))
-  install.packages('httpuv')
+# if(!'httpuv' %in% rownames(l_inst))
+#   install.packages('httpuv')
 
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
