@@ -9,14 +9,16 @@ if(R_loc == "") {
   cat("R was found in ",R_loc,"\n")
   script_dir <- getwd()
 
-  if(!'shiny' %in% installed.packages()[,'Package']) {
+  instpack <- installed.packages()[,'Package']
+  if(!'shiny' %in% instpack || !'httpuv' %in% instpack) {
     # setting the url for the miniCRAN
     local_dir <- Sys.getenv("R_LIBS_USER")
     if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-    pth <- normalizePath("../../radiant-miniCRAN")
+    pth <- normalizePath(paste0(script_dir,'/../../radiant-miniCRAN'),winslash='/')
     mcran <- paste0("file:///",pth)
     options(repos = c(CRAN = mcran))
-    install.packages('shiny', local_dir)
+    install.packages('shiny', local_dir, dependencies = TRUE)
+    # install.packages('shiny', local_dir, dependencies = TRUE)
   }
 
   app_dir <- normalizePath(paste0(script_dir,"/../../inst/",class_app[1],"/"))
