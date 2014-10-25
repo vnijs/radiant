@@ -76,7 +76,7 @@ observe({
 
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
-  pth <- "~/radiant_temp/rmd/figure/"
+  pth <- "~/radiant_temp/rmd/figure"
   if(file.exists(pth)) unlink(pth, recursive = TRUE)
   pth <- "~/radiant_temp/state/"
   filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
