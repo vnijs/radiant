@@ -46,8 +46,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
 setInitValues <- function() {
   # initialize state list and reactive values
-  pth <- "~/radiant_temp/state/"
-  filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
+  pth <- "~/radiant_temp/state"
+  filename = paste0(pth,"/RadiantState-",Sys.Date(),".rsf")
   if(file.exists(filename)) {
     load(filename)
     if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
