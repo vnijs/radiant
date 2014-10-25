@@ -307,13 +307,15 @@ summary_regression <- function(result = .regression()) {
 
 	if(result$reg_confint) {
   	print(confint(result))
+    cat("\n")
 	}
 
 	if(result$reg_rmse) {
   	rmse <- sqrt(mean(res$residual^2,na.rm=TRUE))
-    rmse_df <- data.frame("RMSE" = rmse, "RMSE (95%)" = rmse *2, check.names = FALSE)
-    cat("Prediction error\n")
-    print(rmse_df, row.names = FALSE)
+#     rmse_df <- data.frame("RMSE" = rmse, "RMSE (95%)" = rmse *2, check.names = FALSE)
+    cat("Prediction error (RMSE): ", rmse, "\n\n")
+#     print(rmse_df, row.names = FALSE)
+#     cat("\n")
 	}
 
 	# if(reg_outlier) print(outlierTest(result), digits = 3)

@@ -17,5 +17,5 @@
 #   rsync -avruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/bin/ ~/Dropbox/radiant/radiant-miniCRAN/bin/
 
 # only copy the files that do not exist to dropbox
-#   rsync --dry-run -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+#    rsync --dry-run -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
 # rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/

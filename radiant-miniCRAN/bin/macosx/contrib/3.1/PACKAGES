@@ -411,6 +411,15 @@ Suggests: testthat (>= 0.3)
 License: GPL-2
 MD5sum: 933b1304d1ff92520877477a2a67196f
 
+Package: testthat
+Version: 0.9.1
+Depends: R (>= 3.1.0), methods
+Imports: digest
+Suggests: devtools
+License: MIT + file LICENSE
+Archs: testthat.so.dSYM
+MD5sum: 225a8b57074429428d0f7e8e59e118ed
+
 Package: tidyr
 Version: 0.1
 Depends: R (>= 3.1.0)
