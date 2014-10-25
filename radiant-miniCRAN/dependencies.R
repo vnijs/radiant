@@ -6,7 +6,7 @@ if (.Platform$OS.type == 'windows') {
 
 # install packages required to run radiant
 # next line checks if Radiant is being run locally
-if(file.exists("~/Desktop/GitHub/radiant_dev/") || file.exists("~/../Desktop/GitHub/radiant_dev/")) {
+if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitHub/radiant_dev")) {
 
   # for running Radiant from the dev directory
   pth <- normalizePath("~/Desktop/GitHub/radiant_dev/radiant-miniCRAN", winslash = "/")
@@ -29,7 +29,7 @@ if('shinyAce' %in% rownames(l_inst)) {
   if(l_inst['shinyAce', 'Version'] < "0.1.1") {
     remove.packages('shinyAce')
   }
-} 
+}
 
 # if(!'httpuv' %in% rownames(l_inst))
 #   install.packages('httpuv')
