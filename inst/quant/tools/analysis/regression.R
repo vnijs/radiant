@@ -306,9 +306,8 @@ summary_regression <- function(result = .regression()) {
 	# rounding to avoid scientific notation for the coefficients
 	res <- summary(result)
 	res$coefficients <- round(res$coefficients,3)
-#   res$nrobs < paste0("Nr obs:",dim(res$model)[1])
-	print(res, digits = 3)
-	cat("Nr obs:",dim(result$model)[1])
+	.print.summary.lm(res, digits = 3)
+# 	print(res, digits = 3)
 
   if(result$reg_sumsquares) {
 # 	  print(anova(result))
@@ -357,6 +356,42 @@ summary_regression <- function(result = .regression()) {
 	  }
 	}
 }
+
+
+.print.summary.lm <- function (x, digits = max(3L, getOption("digits") - 3L), symbolic.cor = x$symbolic.cor,
+                               signif.stars = getOption("show.signif.stars"), ...) {
+
+  cat("Coefficients:\n")
+  coefs <- x$coefficients
+  if (!is.null(aliased <- x$aliased) && any(aliased)) {
+    cn <- names(aliased)
+    coefs <- matrix(NA, length(aliased), 4, dimnames = list(cn,
+                                                            colnames(coefs)))
+    coefs[!aliased, ] <- x$coefficients
+  }
+  printCoefmat(coefs, digits = digits, signif.stars = signif.stars,
+               na.print = "NA", ...)
+
+  cat("\n")
+  if (nzchar(mess <- naprint(x$na.action)))
+    cat("  (", mess, ")\n", sep = "")
+  if (!is.null(x$fstatistic)) {
+    #     cat("Multiple R-squared: ", formatC(x$r.squared, digits = digits))
+    cat("R-squared: ", formatC(x$r.squared, digits = digits))
+    cat(", Adjusted R-squared: ", formatC(x$adj.r.squared,
+                                          digits = digits),
+        "\nF-statistic:", formatC(x$fstatistic[1L], digits = digits), "on", x$fstatistic[2L], "and",
+        x$fstatistic[3L], "DF,  p-value:", format.pval(pf(x$fstatistic[1L],
+                                                          x$fstatistic[2L], x$fstatistic[3L], lower.tail = FALSE),
+                                                       digits = digits)
+    )
+    #     cat(paste0("\nNr obs:",dim(x$model)[1]))
+    cat(paste0("\nNr obs: ",length(x$residuals)))
+    cat("\n\n")
+  }
+}
+
+
 
 # main functions called from radiant.R
 r_plots <- list("None" = "", "Histograms" = "histlist", "Correlations" = "correlations", "Scatter" = "scatterlist", "Dashboard" = "dashboard",
