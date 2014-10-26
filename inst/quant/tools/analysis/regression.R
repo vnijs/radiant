@@ -173,6 +173,8 @@ output$ui_regression <- renderUI({
 		    conditionalPanel(condition = "input.tabs_regression == 'Summary'",
 			    uiOutput("uiReg_var3"),
 			    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
+    	    checkboxInput(inputId = "reg_anova", label = "Show anova",
+	  	  		value = state_init('reg_anova',FALSE)),
     	    checkboxInput(inputId = "reg_confint", label = "Show confidence intervals",
 	  	  		value = state_init('reg_rmse',FALSE)),
   		    checkboxInput(inputId = "reg_rmse", label = "Calculate RMSE",
@@ -221,8 +223,8 @@ output$regression <- renderUI({
   if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
 
 	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_standardize, input$reg_confint, input$reg_rmse, input$reg_vif,
-    input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
+		input$reg_interactions, input$reg_standardize, input$reg_anova, input$reg_confint, input$reg_rmse,
+    input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -248,14 +250,14 @@ observe({
   if(is.null(input$regressionReport) || input$regressionReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_standardize, input$reg_confint, input$reg_rmse, input$reg_vif,
-      input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
+			input$reg_interactions, input$reg_standardize, input$reg_anova, input$reg_confint, input$reg_rmse,
+      input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
 regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
-                       reg_standardize, reg_confint, reg_rmse, reg_vif, reg_stepwise, reg_plots,
+                       reg_standardize, reg_anova, reg_confint, reg_rmse, reg_vif, reg_stepwise, reg_plots,
                        reg_line, reg_loess) {
 
 	vars <- reg_var2
@@ -277,6 +279,7 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 		mod <- lm(formula, data = dat)
 	}
 
+	mod$reg_anova <- reg_anova
 	mod$reg_confint <- reg_confint
 	mod$reg_rmse <- reg_rmse
 	mod$reg_vif <- reg_vif
@@ -304,6 +307,11 @@ summary_regression <- function(result = .regression()) {
 	res <- summary(result)
 	res$coefficients <- round(res$coefficients,3)
 	print(res, digits = 3)
+
+  if(result$reg_anova) {
+	  print(anova(result))
+    cat("\n")
+  }
 
 	if(result$reg_confint) {
   	print(confint(result))
