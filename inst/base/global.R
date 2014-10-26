@@ -27,6 +27,7 @@ if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitH
 # Attempt to build automated testing into Radiant
 # not implemented yet
 testingRadiant <- FALSE
+# options(scipen = 100)
 options(digits = 3)
 
 # Attempt to build automated testing into Radiant
