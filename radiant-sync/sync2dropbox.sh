@@ -1,5 +1,5 @@
 ### Copying over the main code files
-#   rsync --dry-run -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
+#  rsync --dry-run -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
 #  rsync -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
 
 ### Cleaning out stuff that is no longer needed
