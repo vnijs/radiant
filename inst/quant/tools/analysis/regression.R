@@ -306,7 +306,9 @@ summary_regression <- function(result = .regression()) {
 	# rounding to avoid scientific notation for the coefficients
 	res <- summary(result)
 	res$coefficients <- round(res$coefficients,3)
+#   res$nrobs < paste0("Nr obs:",dim(res$model)[1])
 	print(res, digits = 3)
+	cat("Nr obs:",dim(result$model)[1])
 
   if(result$reg_sumsquares) {
 # 	  print(anova(result))
