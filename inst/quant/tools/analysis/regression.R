@@ -109,7 +109,7 @@ plots_correlation <- function(result = .correlation()) {
 }
 
 ################################################################
-# OLS
+# Regression
 ################################################################
 output$uiReg_var1 <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
@@ -140,7 +140,7 @@ output$uiReg_var3 <- renderUI({
 #   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
   selectizeInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
   	selected = state_multvar("reg_var3", vars), multiple = TRUE,
-    options = list(maxItems = 2, placeholder = 'None', plugins = list('remove_button'))
+    options = list(placeholder = 'None', plugins = list('remove_button'))
   )
 })
 
@@ -170,11 +170,9 @@ output$ui_regression <- renderUI({
 		  conditionalPanel(condition = "input.reg_interactions != 'none'",
 				uiOutput("uiReg_intsel")
 			),
-
-	    returnTextInput("reg_predict", "Predict (e.g., price = 5000, cut = 'Ideal')",
-	    		value = state_init('reg_predict','')),
-
 		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
+        returnTextInput("reg_predict", "Predict (e.g., carat = seq(.5,1,.05))",
+	    		value = state_init('reg_predict','')),
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
         checkboxInput(inputId = "reg_sumsquares", label = "Show sum of squares",
@@ -237,6 +235,8 @@ output$regression <- renderUI({
 	result$plotWidth <- 650
 
 	if(input$reg_plots == 'histlist') result$plotHeight <- 325 * ceiling(nrVars / 2)
+
+	if(input$reg_plots == 'dashboard') result$plotHeight <- 630 + 375
 
 	if(input$reg_plots == 'correlations') {
 		result$plotHeight <- 150 * nrVars
@@ -316,6 +316,8 @@ summary_regression <- function(result = .regression()) {
 
   if(result$reg_predict != '') {
 
+    # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
+    # as starting point
  		reg_predict <- gsub("\"","\'", result$reg_predict)
     nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
 
@@ -323,11 +325,11 @@ summary_regression <- function(result = .regression()) {
       cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
     } else {
 
-      mod <- ggplot2::fortify(result)
+      dat <- ggplot2::fortify(result)
       vars <- as.character(attr(result$terms,'variables'))[-1]
       reg_var1 <- vars[1]
       reg_var2 <- vars[-1]
-      dat <- mod[,reg_var2, drop = FALSE]
+      dat <- dat[,reg_var2, drop = FALSE]
 
       isFct <- sapply(dat, is.factor)
       isNum <- sapply(dat, is.numeric)
@@ -349,7 +351,8 @@ summary_regression <- function(result = .regression()) {
           pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
           if(!is(pred, 'try-error')) {
             cat("Predicted values for:\n")
-            print(data.frame(nnd,pred), row.names = FALSE)
+            colnames(pred) <- c("Prediction", "2.5%","97.5%")
+            print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
             cat("\n")
           } else {
             cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
@@ -381,7 +384,11 @@ summary_regression <- function(result = .regression()) {
   }
 
 	if(result$reg_confint) {
-  	print(confint(result))
+    conf <- confint(result)
+    conf <- data.frame(result$coefficients,conf)
+    conf <- round(conf,3)
+    colnames(conf) <- c("Estimate","2.5%","97.5%")
+    print(conf)
     cat("\n")
 	}
 
@@ -482,7 +489,7 @@ plots_regression <- function(result = .regression()) {
     plots[[2]] <- p
 
 # 		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
-		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_line() +
+		p <- qplot(y=.resid, x=seq_along(.resid), data = mod, geom="line") +
 			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
@@ -493,6 +500,14 @@ plots_regression <- function(result = .regression()) {
     if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
 #     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[4]] <- p
+
+	plots[[5]] <- ggplot(mod, aes(x = .resid)) + geom_histogram() +
+			labs(list(title = "Histogram of residuals", x = "Residuals"))
+
+  plots[[6]] <- ggplot(mod, aes(x=.resid)) + geom_density(alpha=.3, fill = "green") +
+      stat_function(fun = dnorm, args = list(mean = mean(mod[,'.resid']), sd = sd(mod[,'.resid'])), color = "blue") +
+			labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
+
 	}
 
 	if(result$reg_plots == "scatterlist") {

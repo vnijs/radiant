@@ -85,8 +85,13 @@ dataDescriptionOutput <- function(ret = 'html') {
 # removing datasets
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
-  selectInput(inputId = "removeDataset", label = "Remove data from memory:",
-    choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE)
+#   selectizeInput(inputId = "removeDataset", label = "Remove data from memory:",
+#     choices = values$datasetlist, selected = NULL, multiple = TRUE
+#     )
+
+  selectizeInput("removeDataset", "Remove data from memory:", choices = values$datasetlist,
+    multiple = TRUE, options = list(placeholder = 'None', plugins = list('remove_button'))
+  )
 })
 
 observe({
