@@ -364,8 +364,11 @@ plots_ctl <- function(result = .ctl()) {
     sstat <- data.frame("Mean" = colMeans(result))
   }
 
+  m <- dim(result)[2]
+  sample_m <-paste0("Sample_",m)
   data1 <- data.frame("Sample_1" = result[,1])
-  datam <- data.frame("Sample_m" = result[,dim(result)[2]])
+  datam <- data.frame(sample_m = result[,m])
+  colnames(datam) <- sample_m
 
   bw <- diff(range(sstat, na.rm = TRUE)) / 10
   bwd1 <- diff(range(data1, na.rm = TRUE)) / 10
@@ -376,7 +379,7 @@ plots_ctl <- function(result = .ctl()) {
 
   plots <- list()
   plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
-  plots[[2]] <- ggplot(datam, aes_string(x="Sample_m")) + geom_histogram(binwidth = bwdm)
+  plots[[2]] <- ggplot(datam, aes_string(x=sample_m)) + geom_histogram(binwidth = bwdm)
 #   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") +
 #     stat_function(fun = dnorm, args = list(mean = mean(data[,1]), sd = sd(data[,1])), color = "blue") +
 #     labs(y = "") + theme(axis.text.y = element_blank())

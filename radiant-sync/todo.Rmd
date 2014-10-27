@@ -5,6 +5,13 @@ date: "October 11, 2014"
 output: html_document
 ---
 
+## Todo soon
+
+- Stargazer for HTML output (e.g., regression): http://www.jakeruss.com/a-stargazer-cheatsheet.html
+- Lags (with dplyr), time-series, plots of predictions with confidence bounds etc. (http://f.briatte.org/teaching/ida/091_lags.html)
+- Good plots for comparing means (http://www.r-bloggers.com/statistics-doesnt-have-to-be-so-hard-simulate/)
+- Figure out a good way to do contrasts for comparing means and proportions (http://stat.ethz.ch/R-manual/R-patched/library/stats/html/contrast.html)
+- Dplyr throughout (including lags) - http://cran.r-project.org/web/packages/dplyr/vignettes/nse.html
 
 ## Joe's input
 - On quit Input and Values are dumped into Rstudio (in list rret). Add a function to save the 'statefile' from Rstudio into a location Radiant will look next time you start it up. Or it could just look in the global environment for radiantRet and read from there.

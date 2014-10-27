@@ -1,49 +1,45 @@
-# install and load required packages
 if(Sys.getenv('SHINY_PORT') == "") {
+  # install and load required packages
   source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
+
+  # no limit to filesize locally
+  options(shiny.maxRequestSize=-1)
+  running_local <<- TRUE
 } else {
   # load/attach packages, use dependencies-server.R to install relevant packages before
   # running shiny-server
   local_dir <- Sys.getenv("R_LIBS_USER")
   pkgs <- installed.packages()[,'Package']
   suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
+
+  # limit upload filesize on server (5MB)
+  options(shiny.maxRequestSize=5*1024^2)
+  running_local <<- FALSE
 }
 
 ############################################################
 # Start of main code
 ############################################################
 
-vimKeyBinding <- FALSE
 
 # only write if running on developer computer
 if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitHub/radiant_dev")) {
   # for debugging
 #   options(shiny.trace = TRUE)
-#    options(warn=2)
+#   options(warn=2)
 #   options(shiny.error=recover)
 #   vimKeyBinding <- TRUE
 }
 
+vimKeyBinding <- FALSE
+
 # Attempt to build automated testing into Radiant
 # not implemented yet
 testingRadiant <- FALSE
+
+# Notation
 # options(scipen = 100)
 options(digits = 3)
-
-# Attempt to build automated testing into Radiant
-# not implemented yet
-testingRadiant <- FALSE
-
-# allowing any file size when run locally
-if(Sys.getenv('SHINY_PORT') == "") {
-  # no limit to filesize locally
-  options(shiny.maxRequestSize=-1)
-  running_local <<- TRUE
-} else {
-  # limit upload filesize on server (5MB)
-  options(shiny.maxRequestSize=5*1024^2)
-  running_local <<- FALSE
-}
 
 setInitValues <- function() {
   # initialize state list and reactive values
@@ -148,7 +144,6 @@ helpAndReport <- function(title, link, content) {
 
 inclMD <- function(file)
   return(markdown::markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css"))
-
 
 inclRmd <- function(path) {
   # function to render .Rmd files to html on-the-fly
