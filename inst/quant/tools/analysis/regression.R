@@ -481,7 +481,8 @@ plots_regression <- function(result = .regression()) {
     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[2]] <- p
 
-		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
+# 		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
+		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_line() +
 			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
