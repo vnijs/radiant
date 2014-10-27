@@ -137,8 +137,11 @@ output$uiReg_var3 <- renderUI({
   # adding interaction terms as needed
 	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
 
-  selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
-  	selected = state_multvar("reg_var3", vars), multiple = TRUE, selectize = FALSE)
+#   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
+  selectizeInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
+  	selected = state_multvar("reg_var3", vars), multiple = TRUE,
+    options = list(maxItems = 2, placeholder = 'None', plugins = list('remove_button'))
+  )
 })
 
 output$uiReg_intsel <- renderUI({
@@ -162,37 +165,38 @@ output$ui_regression <- renderUI({
 	    uiOutput("uiReg_var1"),
 	    uiOutput("uiReg_var2"),
 
-	    # conditionalPanel(condition = "input.reg_var2 != null",
-		  	checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
-	    		value = state_init('reg_standardize',FALSE)),
-		    radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
-	  	  	selected = state_init_list("reg_interactions","none", reg_interactions)),
-		    conditionalPanel(condition = "input.reg_interactions != 'none'",
-		  		uiOutput("uiReg_intsel")
-		  	),
-		    conditionalPanel(condition = "input.tabs_regression == 'Summary'",
-			    uiOutput("uiReg_var3"),
-			    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
-    	    checkboxInput(inputId = "reg_sumsquares", label = "Show sum of squares",
-	  	  		value = state_init('reg_sumsquares',FALSE)),
-    	    checkboxInput(inputId = "reg_confint", label = "Show confidence intervals",
-	  	  		value = state_init('reg_rmse',FALSE)),
-  		    checkboxInput(inputId = "reg_rmse", label = "Calculate RMSE",
-	  	  		value = state_init('reg_rmse',FALSE)),
-			    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values",
-	  	  		value = state_init('reg_vif',FALSE)),
-		  	  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
-		    		value = state_init('reg_stepwise',FALSE))
-		  	),
-		    conditionalPanel(condition = "input.tabs_regression == 'Plots'",
-		      selectInput("reg_plots", "Regression plots:", choices = r_plots,
-		  	  	selected = state_init_list("reg_plots","", r_plots)),
-		      checkboxInput('reg_line', 'Line', value = state_init("reg_line", FALSE)),
-		      checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE))
-# 		      checkboxInput('reg_jitter', 'Jitter', value = state_init("reg_jitter", FALSE))
-		    ),
-		    actionButton("saveres", "Save residuals")
-	    # )
+		  radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
+	    	selected = state_init_list("reg_interactions","none", reg_interactions)),
+		  conditionalPanel(condition = "input.reg_interactions != 'none'",
+				uiOutput("uiReg_intsel")
+			),
+
+	    returnTextInput("reg_predict", "Predict (e.g., price = 5000, cut = 'Ideal')",
+	    		value = state_init('reg_predict','')),
+
+		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
+		    uiOutput("uiReg_var3"),
+		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
+        checkboxInput(inputId = "reg_sumsquares", label = "Show sum of squares",
+	    		value = state_init('reg_sumsquares',FALSE)),
+        checkboxInput(inputId = "reg_confint", label = "Show confidence intervals",
+	    		value = state_init('reg_rmse',FALSE)),
+  	    checkboxInput(inputId = "reg_rmse", label = "Calculate RMSE",
+	    		value = state_init('reg_rmse',FALSE)),
+        checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
+	   		  value = state_init('reg_standardize',FALSE)),
+		    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values",
+	    		value = state_init('reg_vif',FALSE)),
+			  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
+		  		value = state_init('reg_stepwise',FALSE))
+			),
+		  conditionalPanel(condition = "input.tabs_regression == 'Plots'",
+		    selectInput("reg_plots", "Regression plots:", choices = r_plots,
+			  	selected = state_init_list("reg_plots","", r_plots)),
+		    checkboxInput('reg_line', 'Line', value = state_init("reg_line", FALSE)),
+		    checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE))
+		  ),
+		  actionButton("saveres", "Save residuals")
 	  ),
 		helpAndReport('Regression','regression', inclMD("../quant/tools/help/regression.md"))
 	)
@@ -223,7 +227,7 @@ output$regression <- renderUI({
   if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
 
 	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_rmse,
+		input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_rmse,
     input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
 
 	# specifying plot heights
@@ -250,14 +254,14 @@ observe({
   if(is.null(input$regressionReport) || input$regressionReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_rmse,
+			input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_rmse,
       input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
 regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
-                       reg_standardize, reg_sumsquares, reg_confint, reg_rmse, reg_vif, reg_stepwise, reg_plots,
+                       reg_predict, reg_standardize, reg_sumsquares, reg_confint, reg_rmse, reg_vif, reg_stepwise, reg_plots,
                        reg_line, reg_loess) {
 
 	vars <- reg_var2
@@ -279,6 +283,7 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 		mod <- lm(formula, data = dat)
 	}
 
+	mod$reg_predict <- reg_predict
 	mod$reg_sumsquares <- reg_sumsquares
 	mod$reg_confint <- reg_confint
 	mod$reg_rmse <- reg_rmse
@@ -308,6 +313,51 @@ summary_regression <- function(result = .regression()) {
 	res$coefficients <- round(res$coefficients,3)
 	.print.summary.lm(res, digits = 3)
 # 	print(res, digits = 3)
+
+  if(result$reg_predict != '') {
+
+ 		reg_predict <- gsub("\"","\'", result$reg_predict)
+    nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
+
+    if(is(nval, 'try-error')) {
+      cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+    } else {
+
+      mod <- ggplot2::fortify(result)
+      vars <- as.character(attr(result$terms,'variables'))[-1]
+      reg_var1 <- vars[1]
+      reg_var2 <- vars[-1]
+      dat <- mod[,reg_var2, drop = FALSE]
+
+      isFct <- sapply(dat, is.factor)
+      isNum <- sapply(dat, is.numeric)
+
+      if(sum(isNum) + sum(isFct) < dim(dat)[2]) {
+        cat("The model includes data-types that cannot be used for\nprediction at this point\n")
+      } else {
+
+        newdat <- ""
+        if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+        # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+        if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+
+        if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+          cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n")
+        } else {
+          newdat[names(nval)] <- list(NULL)
+          nnd <- data.frame(newdat[-1],nval)
+          pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
+          if(!is(pred, 'try-error')) {
+            cat("Predicted values for:\n")
+            print(data.frame(nnd,pred), row.names = FALSE)
+            cat("\n")
+          } else {
+            cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+          }
+        }
+      }
+    }
+  }
 
   if(result$reg_sumsquares) {
 # 	  print(anova(result))
