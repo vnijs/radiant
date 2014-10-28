@@ -51,6 +51,7 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.saveAs == 'state'",
         HTML("<label>Save current app state:</label>"),
         downloadButton('downloadState', 'Save')
+#         accept = ".rsf"
       )
     ),
     wellPanel(
@@ -286,6 +287,8 @@ output$downloadState <- downloadHandler(
 
 #     })
   }
+#   contentType = function() { ".rsf" }
+#   contentType = ".rsf"
 )
 
 #######################################

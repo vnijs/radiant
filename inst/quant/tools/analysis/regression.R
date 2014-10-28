@@ -351,7 +351,8 @@ summary_regression <- function(result = .regression()) {
           pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
           if(!is(pred, 'try-error')) {
             cat("Predicted values for:\n")
-            colnames(pred) <- c("Prediction", "2.5%","97.5%")
+            pred <- data.frame(pred,pred[,3]-pred[,1])
+            colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
             print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
             cat("\n")
           } else {
@@ -386,8 +387,10 @@ summary_regression <- function(result = .regression()) {
 	if(result$reg_confint) {
     conf <- confint(result)
     conf <- data.frame(result$coefficients,conf)
+    conf <- data.frame(conf,conf[,3]-conf[,1])
     conf <- round(conf,3)
-    colnames(conf) <- c("Estimate","2.5%","97.5%")
+    colnames(conf) <- c("Estimate","2.5%","97.5%", "+/-")
+    cat("Coefficient confidence intervals:\n")
     print(conf)
     cat("\n")
 	}
