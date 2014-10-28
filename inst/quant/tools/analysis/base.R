@@ -517,7 +517,7 @@ plots_crosstab <- function(result = .crosstab()) {
   ##### Should probably change the name of this function
   ##### if you are switching to tidyr
 	meltTable <- function(tab) {
-		tab <- data.frame(tab)
+		tab <- data.frame(tab, check.names = FALSE)
 		lab <- data.frame(rownames(tab))
 		names(lab) <- "rnames"
 		melt(cbind(lab,tab))
@@ -548,12 +548,15 @@ plots_crosstab <- function(result = .crosstab()) {
 
 	if(cinp$ct_expected) {
 
-		tab <- meltTable(result$cst$expected)
+  	tab <- meltTable(result$cst$expected)
 		tab$rnames <- factor(tab$rnames,levels=levels(dat[,1]))
+		tab$variable <- factor(tab$variable,levels=levels(dat[,2]))
 
+# 		plots[['expected']] <- ggplot(tab, aes_string(x = 'rnames', y = "value", fill = "variable")) +
 		plots[['expected']] <- ggplot(tab, aes_string(x = 'rnames', y = "value", fill = "variable")) +
-         			# geom_bar(stat="identity", position = "dodge", alpha = .3) +
-         			geom_bar(position = "fill", alpha = .3) +
+#          			geom_bar(stat="identity", position = "dodge", alpha = .3) +
+         			geom_bar(stat="identity", position = "fill", alpha = .3) +
+#          			geom_bar(position = "fill", alpha = .3) +
          			labs(list(title = paste("Expected values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 							x = "", y = "", fill = cinp$ct_var2))
 	}
