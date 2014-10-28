@@ -195,7 +195,9 @@ observe({
 
     # sorting files alphabetically
     values[['datasetlist']] <- sort(values[['datasetlist']])
-    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist, selected = values$datasetlist[1])
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = values$datasetlist[1])
   })
 })
 
@@ -219,7 +221,8 @@ observe({
     updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
                        c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
 
-    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist, selected = "xls_data")
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = 'xls_data')
   })
 })
 
@@ -250,6 +253,9 @@ loadUserData <- function(filename, uFile, ext) {
   if(ext == 'csv') {
     values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
   }
+
+  updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                    selected = values$datasetlist[1])
 }
 
 #######################################
