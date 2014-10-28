@@ -5,6 +5,10 @@ date: "October 11, 2014"
 output: html_document
 ---
 
+## Note
+
+For debugging having the state be dumped at a break point is really easy!!! Did that 'manually' to fix the expected values plot for cross-tabs.
+
 ## Todo soon
 
 - Stargazer for HTML output (e.g., regression): http://www.jakeruss.com/a-stargazer-cheatsheet.html
