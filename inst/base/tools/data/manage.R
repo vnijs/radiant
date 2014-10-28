@@ -195,6 +195,7 @@ observe({
 
     # sorting files alphabetically
     values[['datasetlist']] <- sort(values[['datasetlist']])
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist, selected = values$datasetlist[1])
   })
 })
 
@@ -215,7 +216,10 @@ observe({
 
     values[['xls_data']] <- as.data.frame(dat)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
-    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist, selected = "xls_data")
   })
 })
 
