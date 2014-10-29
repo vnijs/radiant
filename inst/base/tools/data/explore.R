@@ -5,6 +5,10 @@ output$uiExpl_columns <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
   if(length(vars) == 0) return()
+#   validate(
+#     need(!is.null(vars) && length(vars) > 0, message = FALSE)
+#   )
+
   selectizeInput("expl_columns", label = "Select columns(s):", choices = as.list(vars),
     selected = state_multvar("expl_columns",vars), multiple = TRUE,
     options = list(placeholder = 'Select column(s)', plugins = list('remove_button', 'drag_drop'))
@@ -15,6 +19,9 @@ output$uiExpl_byvar <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
   if(length(vars) == 0) return()
+#   validate(
+#     need(length(vars) > 0, message = FALSE)
+#   )
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multvar("expl_byvar",vars), multiple = TRUE,
     options = list(maxItems = 2, placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
@@ -34,6 +41,9 @@ expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25
 
 output$uiExpl_function <- renderUI({
   if(is.null(input$expl_byvar)) return()
+#   validate(
+#     need(!is.null(input$expl_byvar), message = FALSE)
+#   )
   selectizeInput("expl_function", label = "Apply function(s):", choices = expl_functions,
     selected = state_init_list("expl_function",c("length","mean"), expl_functions), multiple = TRUE,
       options = list(placeholder = 'Select functions', plugins = list('remove_button', 'drag_drop'))
@@ -65,7 +75,8 @@ output$ui_Explore <- renderUI({
 observe({
   if(is.null(input$exploreReport) || input$exploreReport == 0) return()
   isolate({
-    inp <- list(input$datasets, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select)
+    inp <- list(input$datasets, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select,
+                input$expl_show_tab, input$expl_show_viz)
     updateReport(inp,"explore", round(7 * expl_plot_width()/650,2), round(7 * expl_plot_height()/650,2))
   })
 })
@@ -75,11 +86,11 @@ observe({
   if(is.null(inChecker(input$expl_columns))) return()
 
   withProgress(message = 'Calculating', value = 0, {
-    explore(input$datasets, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select)
+    explore(input$datasets, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select, input$expl_show_tab, input$expl_show_viz)
   })
 })
 
-explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_select) {
+explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_select, expl_show_tab, expl_show_viz) {
 
   dat <- values[[datasets]]
   if(expl_select != '') {
@@ -127,6 +138,7 @@ explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_sele
     plyres$expl_columns <- expl_columns
     plyres$expl_function <- expl_function
     plyres$expl_byvar <- expl_byvar
+    plyres$expl_show_viz <- expl_show_viz
 
     return(plyres)
   }
@@ -172,6 +184,8 @@ output$expl_summary <- renderPrint({
 
 plots_explore <- function(result = .explore()) {
 
+  if(is.null(result$expl_show_viz) || result$expl_show_viz == FALSE) return(invisible())
+
   by_var <- fill_var <- result$expl_byvar[1]
   if(length(result$expl_byvar) > 1) fill_var <- result$expl_byvar[2]
 
@@ -179,7 +193,8 @@ plots_explore <- function(result = .explore()) {
   for(func in result$expl_function) {
     for(var in result$expl_columns) {
       plots[[paste0(var,"_",func)]] <- ggplot(data = result[[func]], aes_string(x = by_var, y = var, fill = fill_var)) +
-        geom_bar(stat="identity", position = "dodge", alpha=.3) + ggtitle(paste("Function used:", names(which(expl_functions == func))))
+        geom_bar(stat="identity", position = "dodge", alpha=.3) +
+        ggtitle(paste("Function used:", names(which(expl_functions == func))))
     }
   }
 
