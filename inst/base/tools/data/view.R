@@ -100,10 +100,14 @@ output$dataviewer <- renderDataTable({
 
 # This works as an alternative
 #   filter_(mtcars, "mpg > 24 & disp > 75")
+# the do.call option works but for something like:
+# (price > 4000 , carat > 1) |  clarity == "VS1"
+# you run into trouble again
 
   selcom <- gsub("\\s", "", selcom)
   if(selcom != "") {
      seldat <- try(filter_(dat, selcom), silent = TRUE)
+#      seldat <- try(do.call(filter_, c(list(dat),unlist(strsplit(selcom, ",")))))
 #     seldat <- try(filter_(mtcars,unlist(strsplit("mpg > 24, disp > 75", ","))), silent = TRUE)
 #     seldat <- try(filter_(dat,unlist(strsplit(selcom,","))), silent = TRUE)
     if(!is(seldat, 'try-error')) {
