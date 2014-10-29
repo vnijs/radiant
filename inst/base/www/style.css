@@ -54,11 +54,11 @@ textarea {
 
 #tr_copyAndPaste, #view_subsbig_area {
   max-width: 185px;
-  padding-left:0; !important;
+  /*padding-left:0; !important;
   padding-top:0; !important;
   text-align: left; !important;
   vertical-align: top; !important;
-  padding: 0px; !important;
+  padding: 0px; !important; */
 }
 
 .myClass {
