@@ -51,6 +51,7 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.saveAs == 'state'",
         HTML("<label>Save current app state:</label>"),
         downloadButton('downloadState', 'Save')
+#         accept = ".rsf"
       )
     ),
     wellPanel(
@@ -85,8 +86,13 @@ dataDescriptionOutput <- function(ret = 'html') {
 # removing datasets
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
-  selectInput(inputId = "removeDataset", label = "Remove data from memory:",
-    choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE)
+#   selectizeInput(inputId = "removeDataset", label = "Remove data from memory:",
+#     choices = values$datasetlist, selected = NULL, multiple = TRUE
+#     )
+
+  selectizeInput("removeDataset", "Remove data from memory:", choices = values$datasetlist,
+    multiple = TRUE, options = list(placeholder = 'None', plugins = list('remove_button'))
+  )
 })
 
 observe({
@@ -189,6 +195,9 @@ observe({
 
     # sorting files alphabetically
     values[['datasetlist']] <- sort(values[['datasetlist']])
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = values$datasetlist[1])
   })
 })
 
@@ -209,7 +218,11 @@ observe({
 
     values[['xls_data']] <- as.data.frame(dat)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
-    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = 'xls_data')
   })
 })
 
@@ -240,6 +253,9 @@ loadUserData <- function(filename, uFile, ext) {
   if(ext == 'csv') {
     values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
   }
+
+  updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                    selected = values$datasetlist[1])
 }
 
 #######################################
@@ -281,6 +297,8 @@ output$downloadState <- downloadHandler(
 
 #     })
   }
+#   contentType = function() { ".rsf" }
+#   contentType = ".rsf"
 )
 
 #######################################
