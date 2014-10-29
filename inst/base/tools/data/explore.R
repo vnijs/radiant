@@ -4,11 +4,7 @@ output$uiExpl_columns <- renderUI({
   # vars <- varnames()[!isFct]
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-#   if(length(vars) == 0) return()
-  validate(
-    need(!is.null(vars) && length(vars) > 0, message = FALSE)
-  )
-
+  if(length(vars) == 0) return()
   selectizeInput("expl_columns", label = "Select columns(s):", choices = as.list(vars),
     selected = state_multvar("expl_columns",vars), multiple = TRUE,
     options = list(placeholder = 'Select column(s)', plugins = list('remove_button', 'drag_drop'))
@@ -18,10 +14,7 @@ output$uiExpl_columns <- renderUI({
 output$uiExpl_byvar <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
-#   if(length(vars) == 0) return()
-  validate(
-    need(length(vars) > 0, message = FALSE)
-  )
+  if(length(vars) == 0) return()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multvar("expl_byvar",vars), multiple = TRUE,
     options = list(maxItems = 2, placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
@@ -40,10 +33,7 @@ expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25
                         "Kurtosis" = "kurtosi", "# missing" = "nmissing")
 
 output$uiExpl_function <- renderUI({
-#   if(is.null(input$expl_byvar)) return()
-  validate(
-    need(!is.null(input$expl_byvar), message = FALSE)
-  )
+  if(is.null(input$expl_byvar)) return()
   selectizeInput("expl_function", label = "Apply function(s):", choices = expl_functions,
     selected = state_init_list("expl_function",c("length","mean"), expl_functions), multiple = TRUE,
       options = list(placeholder = 'Select functions', plugins = list('remove_button', 'drag_drop'))

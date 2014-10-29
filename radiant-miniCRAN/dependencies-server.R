@@ -34,4 +34,4 @@ if(length(to_inp) != 0) install.packages(to_inp, local_dir)
 # i.e., install into a non-standard directory
 
 # load/attach packages
-suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
+#suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
