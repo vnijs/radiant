@@ -5,6 +5,8 @@ date: "October 11, 2014"
 output: html_document
 ---
 
+* Add applet for ols
+
 ## Note
 
 For debugging having the state be dumped at a break point is really easy!!! Did that 'manually' to fix the expected values plot for cross-tabs.
