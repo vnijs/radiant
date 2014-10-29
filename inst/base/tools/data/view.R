@@ -75,9 +75,37 @@ output$dataviewer <- renderDataTable({
     updateTextInput(session = session, "view_subsbig_area", "", input$view_select)
   }
 
+# This works:
+#   filter_(mtcars, "mpg > 24")
+# and this:
+#   filter_(mtcars, "mpg > 24", "disp > 75")
+# Is there a way to make this work as well?
+#   filter_(mtcars, "mpg > 24, disp > 75")
+# filter_(mtcars,unlist(strsplit("mpg > 24, disp > 75", ",")))
+# filter_(mtcars,unlist(strsplit("mpg > 24 | disp > 75", ",")))
+# filter_(mtcars,"mpg > 24 | disp > 75")
+# filter_(mtcars,c("mpg > 24", "disp > 75"))
+# filter_(mtcars,"mpg > 24", "disp > 75")
+# filter_(mtcars,c("mpg > 24", "disp > 1000075"))
+#
+#
+#       mpg cyl  disp  hp drat   wt qsec vs am gear carb
+#       1 24.4   4 146.7  62 3.69 3.19 20.0  1  0    4    2
+#       2 32.4   4  78.7  66 4.08 2.20 19.5  1  1    4    1
+#       3 30.4   4  75.7  52 4.93 1.61 18.5  1  1    4    2
+#       4 33.9   4  71.1  65 4.22 1.83 19.9  1  1    4    1
+#       5 27.3   4  79.0  66 4.08 1.94 18.9  1  1    4    1
+#       6 26.0   4 120.3  91 4.43 2.14 16.7  0  1    5    2
+#       7 30.4   4  95.1 113 3.77 1.51 16.9  1  1    5    2
+
+# This works as an alternative
+#   filter_(mtcars, "mpg > 24 & disp > 75")
+
   selcom <- gsub("\\s", "", selcom)
   if(selcom != "") {
-    seldat <- try(filter_(dat, selcom), silent = TRUE)
+     seldat <- try(filter_(dat, selcom), silent = TRUE)
+#     seldat <- try(filter_(mtcars,unlist(strsplit("mpg > 24, disp > 75", ","))), silent = TRUE)
+#     seldat <- try(filter_(dat,unlist(strsplit(selcom,","))), silent = TRUE)
     if(!is(seldat, 'try-error')) {
       values$error <- ""
       if(is.data.frame(seldat)) {
