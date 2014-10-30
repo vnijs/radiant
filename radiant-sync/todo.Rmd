@@ -11,7 +11,15 @@ output: html_document
 
 For debugging having the state be dumped at a break point is really easy!!! Did that 'manually' to fix the expected values plot for cross-tabs.
 
+## Now
+
+- remove validate
+- no state-auto-save on server
+- 'return' to activate textarea
+- filter page to create filter drop-down
+
 ## Todo soon
+
 
 
 MEANS!!!
