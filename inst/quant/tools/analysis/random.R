@@ -313,14 +313,19 @@ output$ctl <- renderUI({
 
 .ctl<- reactive({
 
+  print(input$ctl_n)
+  print(input$ctl_m)
+
   if(is.null(input$ctl_dist)) return()
-  validate(
-    need(try(input$ctl_n > 1), message = "Please choose a sample size larger than 2."),
-    need(try(input$ctl_m > 1), message = "Please choose 2 or more samples.")
-  )
+
+#   validate(
+#     need(try(input$ctl_n > 1), message = "Please choose a sample size larger than 2."),
+#     need(try(input$ctl_m > 1), message = "Please choose 2 or more samples.")
+#   )
 
   # creating a dependency to a new set of draw is generated every time the button is pressed
   input$ctl_resample
+
 	ctl(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 })
 
