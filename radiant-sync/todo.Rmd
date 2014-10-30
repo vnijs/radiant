@@ -13,6 +13,15 @@ For debugging having the state be dumped at a break point is really easy!!! Did 
 
 ## Todo soon
 
+
+MEANS!!!
+
+- http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+
+Also, mosaic plot :  "this_base <- "fig05-08_monterey-bay-aquarium-data-mosaic-plot-preliminaries"
+
+
+
 - Stargazer for HTML output (e.g., regression): http://www.jakeruss.com/a-stargazer-cheatsheet.html
 - Lags (with dplyr), time-series, plots of predictions with confidence bounds etc. (http://f.briatte.org/teaching/ida/091_lags.html)
 - Good plots for comparing means (http://www.r-bloggers.com/statistics-doesnt-have-to-be-so-hard-simulate/)
