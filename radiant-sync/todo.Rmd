@@ -5,7 +5,9 @@ date: "October 11, 2014"
 output: html_document
 ---
 
-* Add applet for ols
+* Update applet to include the $\beta$ parameters and the _b_ paramters. You can also show the population and sample line in the plot.
+
+# Checkout Blake's slides and the menu in stata to see what they do on comparing means and proportions
 
 ## Note
 
@@ -13,14 +15,11 @@ For debugging having the state be dumped at a break point is really easy!!! Did 
 
 ## Now
 
-- remove validate
-- no state-auto-save on server
 - 'return' to activate textarea
 - filter page to create filter drop-down
 
+
 ## Todo soon
-
-
 
 MEANS!!!
 
