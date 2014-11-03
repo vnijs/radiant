@@ -10,7 +10,7 @@ if(R_loc == "") {
   script_dir <- getwd()
 
   instpack <- installed.packages()[,'Package']
-  if(!'shiny' %in% instpack || !'httpuv' %in% instpack || !'shinyAce' %in% instpack) {
+  if(!'shiny' %in% instpack || !'httpuv' %in% instpack) {
     # setting the url for the miniCRAN
     local_dir <- Sys.getenv("R_LIBS_USER")
     if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
@@ -18,12 +18,12 @@ if(R_loc == "") {
     mcran <- paste0("file:///",pth)
     options(repos = c(CRAN = mcran))
     install.packages('shiny', local_dir, dependencies = TRUE)
-    install.packages('shinyAce', local_dir, dependencies = TRUE)
+    # install.packages('shiny', local_dir, dependencies = TRUE)
   }
 
-  app_dir <- normalizePath(paste0(script_dir,"/../../inst/",class_app[1],"/"))
+  app_dir <- normalizePath(paste0(script_dir,"/../../dev/",class_app[1],"/"))
   com_string <- paste0("#!/usr/bin/env Rscript\nshiny::runApp('",app_dir,"', port = ",class_app[2],", launch.browser=TRUE)")
-  filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant_",class_app[1],"_alt.command")
+  filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant_",class_app[1],".command")
   cat(com_string,file=filename,sep="\n")
   Sys.chmod(filename, mode = "0755")
 }
