@@ -34,9 +34,10 @@ nmissing <<- function(x) sum(is.na(x))
 p25 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 p75 <<- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
 serr <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
+cv <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
 
 expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "75%" = "p75",
-                        "Max" = "max", "Min" = "min", "Std. dev" = "sd", "Std. err" = "serr", "Skew" = "skew",
+                        "Max" = "max", "Min" = "min", "Std. dev" = "sd", "Std. err" = "serr", "cv" = "cv", "Skew" = "skew",
                         "Kurtosis" = "kurtosi", "# missing" = "nmissing")
 
 output$uiExpl_function <- renderUI({
@@ -110,6 +111,10 @@ explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_sele
     if(sum(isNum) > 0) {
       res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
 
+      # adding Coefficient of Variation
+      cv <- res$sd/res$mean
+      res <- cbind(res,cv)
+
       # adding Q1 and Q3
       perc <- function(x) quantile(x,c(.25,.75))
       percres <- colwise(perc)(dat[,isNum, drop = FALSE])
@@ -121,7 +126,7 @@ explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_sele
 
       # when you move to dplyr have the stats selected here be determined by the set of selected functions
       # return desired stats in order
-      return(res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")])
+      return(res[,c("n","mean","median","25%","75%","min","max","sd","se","cv","skew","kurtosis","missing")])
     }
   } else {
     dat <- dat[,c(expl_byvar,expl_columns)]
