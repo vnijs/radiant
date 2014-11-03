@@ -12,7 +12,8 @@ output$savequit <- renderUI({
         HTML("<label>Reset app state:</label>"),
         HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button></br>"),
         checkboxInput('showInput', 'Show input', FALSE), br(),
-        checkboxInput('showState', 'Show state', FALSE)
+        checkboxInput('showState', 'Show state', FALSE), br(),
+        checkboxInput('showSession', 'Show session', FALSE)
       ),
       wellPanel(
         HTML("<label>Quit:</label>"),
@@ -26,6 +27,9 @@ output$savequit <- renderUI({
       ),
       conditionalPanel(condition = "input.showState == true",
         verbatimTextOutput("showState")
+      ),
+      conditionalPanel(condition = "input.showSession == true",
+        verbatimTextOutput("showSession")
       )
     )
   )
@@ -62,6 +66,23 @@ output$showInput <- renderPrint({
 output$showState <- renderPrint({
   cat("State list:\n")
   str(state_list[sort(names(state_list))])
+})
+
+output$showSession <- renderPrint({
+  cat("Session list:\n")
+#   murl <- session$registerDataObj(
+#     name = "MyTest",
+#     data = getdata(),
+#     filter = function(data, req) {
+#       shiny:::dataTablesJSON(data, req)
+#       query <- parseQueryString(req$QUERY_STRING)
+#       params <- URLdecode(rawToChar(req$rook.input$read()))
+#       q <- parseQueryString(params, nested = TRUE)
+#     }
+#   )
+  print(murl)
+  session$clientData
+
 })
 
 observe({
