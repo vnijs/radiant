@@ -132,7 +132,7 @@ mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim, mds_dim_number
 	# co.mds <- suppressWarnings(metaMDS(co.dist.mat, k = nr.dim, trymax = 500))
 	# if(co.mds$converged == FALSE) return("The MDS algorithm did not converge. Please try again.")
 
-	co.mds <- MASS::isoMDS(co.dist.mat, k = nr.dim, trace = FALSE)
+	co.mds <- isoMDS(co.dist.mat, k = nr.dim, trace = FALSE)
 
 	out <- list()
 	out$nr.dim <- nr.dim

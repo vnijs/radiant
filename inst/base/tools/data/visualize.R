@@ -2,38 +2,46 @@
 # Vizualize data
 #######################################
 output$uiVizvars1 <- renderUI({
+  # vars <- c("None" = "", varnames())
+  # selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
+  #  	selected = state_multvar("vizvars1",vars), multiple = input$viz_multiple == 'multiple')
   vars <- varnames()
+  if(input$viz_multiple == 'single') vars <- c("None" = "", vars)
   selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
-    selected = state_multvar("vizvars1",vars), multiple = input$viz_multiple == 'multiple',
-    selectize = input$viz_multiple == 'single')
+  # selected = state_multvar("vizvars1",vars), multiple = input$viz_multiple == 'multiple', selectize = FALSE)
+  selected = state_multvar("vizvars1",vars), multiple = input$viz_multiple == 'multiple',
+  selectize = input$viz_multiple == 'single')
 })
 
 output$uiVizvars2 <- renderUI({
+  # if(is.null(input$vizvars1)) return() 	# can't have an XY plot without an X
+  # if(is.null(inChecker(input$vizvars1))) return()
   vars <- varnames()
-  selectizeInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "None", vars),
-#                  selected = state_singlevar("vizvars2",vars), multiple = FALSE)
-              selected = state_init_list("viz_color","None", vars), multiple = FALSE)
+  selectInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "", vars),
+              selected = state_singlevar("vizvars2",vars), multiple = FALSE)
 })
 
 output$uiViz_color <- renderUI({
   if(is.null(input$vizvars2)) return() 	# can't have an XY plot without an X
-  vars <- c("None" = "None", varnames())
-  selectizeInput("viz_color", "Color", vars,
-              selected = state_init_list("viz_color","None", vars), multiple = FALSE)
+  # if(length(input$vizvars2) > 1) return()
+  vars <- c("None" = "", varnames())
+  selectInput("viz_color", "Color", vars,
+              selected = state_init_list("viz_color","", vars), multiple = FALSE)
 })
 
 output$uiViz_facet_row <- renderUI({
+  # if(length(input$vizvars2) > 1) return()
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
-  selectizeInput("viz_facet_row", "Facet row", vars,
+  selectInput("viz_facet_row", "Facet row", vars,
               selected = state_init_list("viz_facet_row", ".", vars), multiple = FALSE)
 })
 
 output$uiViz_facet_col <- renderUI({
-#   if(length(input$vizvars2) > 1) return()
+  # if(length(input$vizvars2) > 1) return()
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
-  selectizeInput("viz_facet_col", 'Facet col', vars,
+  selectInput("viz_facet_col", 'Facet col', vars,
               selected = state_init_list("viz_facet_col", ".", vars), multiple = FALSE)
 })
 
@@ -48,7 +56,7 @@ output$ui_Visualize <- renderUI({
                      uiOutput("uiViz_facet_row"),
                      uiOutput("uiViz_facet_col")
     ),
-    conditionalPanel(condition = "input.vizvars2 != 'None'",
+    conditionalPanel(condition = "input.vizvars2 != ''",
                      uiOutput("uiViz_color"),
                      checkboxInput('viz_line', 'Line', value = state_init("viz_line", FALSE)),
                      checkboxInput('viz_loess', 'Loess', value = state_init("viz_loess", FALSE)),
@@ -94,7 +102,8 @@ output$visualize <- renderPlot({
   # if(isolate(input$datatabs) != 'Visualize') return(invisible())
 
   if(is.null(input$viz_facet_col)) return()
-  if(is.null(input$vizvars1) || input$vizvars1 == "None")
+  # if(input$vizvars1 == "")
+  if(is.null(input$vizvars1) || input$vizvars1 == "")
     return(plot(x = 1, type = 'n', main="Please select variables from the dropdown menus to create a plot.", axes = FALSE, xlab = "", ylab = ""))
 
   withProgress(message = 'Making plot', value = 0, {
@@ -141,7 +150,7 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
   }
 
   plots <- list()
-  if(vizvars2 == "None") {
+  if(vizvars2 == "") {
 
     for(i in vizvars1) {
       plots[[i]] <- ggplot(dat, aes_string(x=i)) + geom_histogram()
@@ -181,9 +190,9 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
         }
 
         if(!is.factor(dat[,i]) & !is.factor(dat[,j])) {
-          if (viz_color != 'None') plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
-          if (viz_line) plots[[i]] <- plots[[i]] +
-            geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+          if (viz_color != '') plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
+          if (viz_line) plots[[i]] <- plots[[i]] + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
+                                                               linetype = "dashed", colour = 'black')
           if (viz_loess) plots[[i]] <- plots[[i]] + geom_smooth(span = 1, size = .75, linetype = "dotdash")
           if (viz_jitter) plots[[i]] <- plots[[i]] + geom_jitter()
         }

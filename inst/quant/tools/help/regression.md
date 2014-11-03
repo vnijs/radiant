@@ -1,16 +1,6 @@
 All example files can be loaded from Data > Manage. Click the 'examples' radio button and press 'Load examples'.
 
-### Functionality
-
-The `Predict` box allows you calculate predicted values from a regression model. You must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., `carat` must one of the selected independent variables to predict the `price` of a 2-carat diamond)
-
-* To predict the price of a 1-carat diamond type `carat = 1` and press enter
-* To predict the price of diamonds ranging from .5 to 1 carat at steps of size .05 type `carat = seq(.5.1,.05)` and press enter
-* To predict the price of 1,2, or 3 carat diamonds with an ideal cut type `carat = 1:3, cut = "Ideal"` and press enter
-
-### Regression examples
-
-#### Example 1: Catalog sales
+#### Example 1:  Catalog sales
 
 We have access to data from a company selling men’s and women’s apparel through mail-order catalogs (dataset 'catalog'). The company maintains a database on past and current customers’ value and characteristics. Value is determine as the total$ sales to the customer in the last year. The data are a random sample of 200 customers from the company’s database. The r-data contains a data frame with 200 observations on 4 variables
 
