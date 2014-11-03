@@ -7,6 +7,5 @@ shinyServer(function(input, output, session) {
   for(file in list.files(c("tools/app","tools/data"), pattern="\\.(r|R)$", full.names = TRUE))
     source(file, local = TRUE)
 
-#   if(Sys.getenv("RSTUDIO") != "1") saveStateOnCrash(session)
-	if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnCrash(session)
+  if(Sys.getenv("RSTUDIO") != "1") saveStateOnCrash(session)
 })
