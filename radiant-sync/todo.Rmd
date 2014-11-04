@@ -5,7 +5,32 @@ date: "October 11, 2014"
 output: html_document
 ---
 
+* add this! https://github.com/RCura/ScattRplot way cool. Great way to select data!
+
+library(dplyr)
+
+    input <- list()
+    input$top3 <- "mpg"
+    
+    mtcars %>%
+      arrange_(paste0("desc(",input$top3,")"))  %>%
+      head(n=3)
+      
+    mtcars %>%
+      arrange_(input$top3)  %>%
+      tail(n=3)
+ 
+    mtcars %>%
+      arrange(desc_(input$top3)) %>%
+      head(n=3)
+
 * Update applet to include the $\beta$ parameters and the _b_ paramters. You can also show the population and sample line in the plot.
+
+## Blog/site for Business Analytics
+r 
+- https://github.com/jekyll/jekyll-help/issues/44
+- http://magnusmetz.github.io/
+- http://magnusmetz.github.io/about.html
 
 # Checkout Blake's slides and the menu in stata to see what they do on comparing means and proportions
 
