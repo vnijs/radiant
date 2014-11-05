@@ -19,3 +19,9 @@
 # only copy the files that do not exist to dropbox
 # rsync --dry-run -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
 # rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+
+# rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
+# rsync -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
+
+# rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/quant/ ~/Dropbox/radiant/dev/quant/
+# rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/marketing/ ~/Dropbox/radiant/dev/marketing/
