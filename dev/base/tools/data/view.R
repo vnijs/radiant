@@ -14,10 +14,10 @@ output$uiView_subsbig <- renderUI({
   )
 })
 
-values$error = ""
+# values$error = ""
 
 output$uiView_err <- renderUI({
-  if(values$error == "") return()
+  if(is.null(values$error) || values$error == "") return()
   helpText(values$error)
 })
 
@@ -103,15 +103,16 @@ output$dataviewer <- renderDataTable({
 # the do.call option works but for something like:
 # (price > 4000 , carat > 1) |  clarity == "VS1"
 # you run into trouble again
+#      seldat <- try(do.call(filter_, c(list(dat),unlist(strsplit(selcom, ",")))))
+#     seldat <- try(filter_(mtcars,unlist(strsplit("mpg > 24, disp > 75", ","))), silent = TRUE)
+#     seldat <- try(filter_(dat,unlist(strsplit(selcom,","))), silent = TRUE)
 
   selcom <- gsub("\\s", "", selcom)
   if(selcom != "") {
      seldat <- try(filter_(dat, selcom), silent = TRUE)
-#      seldat <- try(do.call(filter_, c(list(dat),unlist(strsplit(selcom, ",")))))
-#     seldat <- try(filter_(mtcars,unlist(strsplit("mpg > 24, disp > 75", ","))), silent = TRUE)
-#     seldat <- try(filter_(dat,unlist(strsplit(selcom,","))), silent = TRUE)
+
     if(!is(seldat, 'try-error')) {
-      values$error <- ""
+      isolate(values$error <- "")
       if(is.data.frame(seldat)) {
         dat <- seldat
         seldat <- NULL
@@ -120,6 +121,7 @@ output$dataviewer <- renderDataTable({
       isolate(values$error <- attr(seldat,"condition")$message)
     }
   } else {
+#     values$error <- ""
     isolate(values$error <- "")
   }
 
@@ -128,3 +130,4 @@ output$dataviewer <- renderDataTable({
 }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
   pageLength = 10, search = list(regex = TRUE)))
+

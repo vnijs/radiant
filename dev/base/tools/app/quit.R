@@ -27,10 +27,11 @@ output$savequit <- renderUI({
       ),
       conditionalPanel(condition = "input.showState == true",
         verbatimTextOutput("showState")
-      ),
-      conditionalPanel(condition = "input.showSession == true",
-        verbatimTextOutput("showSession")
       )
+#       ,
+#       conditionalPanel(condition = "input.showSession == true",
+#         verbatimTextOutput("showSession")
+#       )
     )
   )
 })
@@ -68,8 +69,8 @@ output$showState <- renderPrint({
   str(state_list[sort(names(state_list))])
 })
 
-output$showSession <- renderPrint({
-  cat("Session list:\n")
+# output$showSession <- renderPrint({
+#   cat("Session list:\n")
 #   murl <- session$registerDataObj(
 #     name = "MyTest",
 #     data = getdata(),
@@ -80,10 +81,9 @@ output$showSession <- renderPrint({
 #       q <- parseQueryString(params, nested = TRUE)
 #     }
 #   )
-  print(murl)
-  session$clientData
-
-})
+#   print(murl)
+#   session$clientData
+# })
 
 observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
