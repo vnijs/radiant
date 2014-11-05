@@ -62,7 +62,7 @@ d_mdy <<- function(x) as.Date(mdy(as.character(x)))
 d_dmy <<- function(x) as.Date(dmy(as.character(x)))
 d_ymd <<- function(x) as.Date(ymd(as.character(x)))
 
-trans_options <- list("None" = "", "Log" = "log", "Square" = "sq", "Square-root" = "sqrt",
+trans_options <- list("None" = "", "Log" = "log", "Exp" = "exp", "Square" = "sq", "Square-root" = "sqrt",
 	"Center" = "cent", "Standardize" = "st", "Invert" = "inv", "Median split" = "msp", "Deciles" = "dec")
 
 type_options <- list("None" = "", "As factor" = "as.factor",  "As number" = "as.numeric", "As integer" = "as.integer",
