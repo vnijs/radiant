@@ -272,7 +272,13 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	}
 
 	dat <- values[[datasets]]
-	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
+# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
+# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
+# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize_fun))
+# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize_fun))
+	if(reg_standardize) dat <- mutate_each(dat,funs(reg_standardize_fun))
+
+# 	if(reg_standardize) dat <- dat
 
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
@@ -578,9 +584,9 @@ observe({
 ################################################################
 # Additional functions for regression
 ################################################################
-reg_standardize <- function(x) {
-	if(is.factor(x)) return(x)
+reg_standardize_fun <- function(x) {
 	if(is.numeric(x)) return(scale(x))
+  x
 }
 
 reg_int_vec <- function(reg_vars, nway) {
