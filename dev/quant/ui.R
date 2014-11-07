@@ -4,7 +4,6 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
 
   navbarMenu("Random",
     tabPanel("Central Limit Theorem", uiOutput("ctl")),
-#     tabPanel("Sampling and assignment", uiOutput("random")),
     tabPanel("Sampling", uiOutput("random")),
     tabPanel("Sample size", uiOutput("sampleSize"))
   ),
