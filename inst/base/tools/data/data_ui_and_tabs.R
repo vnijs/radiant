@@ -37,6 +37,7 @@ output$tabs_data <- renderUI({
                        )
               ),
               tabPanel("View", dataTableOutput("dataviewer")),
+#               , verbatimTextOutput("showSession")
               tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
               tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
               tabPanel("Merge", htmlOutput("mergePossible"), htmlOutput("mergeData1"), htmlOutput("mergeData2")),

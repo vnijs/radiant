@@ -51,6 +51,7 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.saveAs == 'state'",
         HTML("<label>Save current app state:</label>"),
         downloadButton('downloadState', 'Save')
+#         accept = ".rsf"
       )
     ),
     wellPanel(
@@ -86,7 +87,12 @@ dataDescriptionOutput <- function(ret = 'html') {
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
   selectInput(inputId = "removeDataset", label = "Remove data from memory:",
-    choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE)
+    choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE
+  )
+
+#   selectizeInput("removeDataset", "Remove data from memory:", choices = values$datasetlist,
+#     multiple = TRUE, options = list(placeholder = 'None', plugins = list('remove_button'))
+#   )
 })
 
 observe({
@@ -97,23 +103,20 @@ observe({
     # only remove datasets if 1 or more were selected
     # without this line all files would be removed when
     # the removeDataButton is pressed
-    # if(is.null(input$removeDataset)) return()
+    if(is.null(input$removeDataset)) return()
     datasets <- values[['datasetlist']]
-    validate(
-      need(!is.null(input$removeDataset),"Please select one or more datasets to remove from memory"),
-      need(length(input$removeDataset) < length(datasets),"Cannot remove all datasets from memory")
-    )
-
-    if(length(datasets) > 1) {         # don't remove the last dataset
-      removeDataset <- input$removeDataset
-      if(length(datasets) == length(removeDataset)) {
-        removeDataset <- removeDataset[-1]
-      }
+#     if(length(input$removeDataset) == length(datasets)) return("Cannot remove all datasets from memory")
+    if(length(datasets) > 1) {  # have to leave at least one dataset
+#       removeDataset <- input$removeDataset
+#       if(length(datasets) == length(removeDataset)) removeDataset <- removeDataset[-1]
+      ifelse(length(datasets) == length(input$removeDataset), removeDataset <- input$removeDataset[-1],
+             removeDataset <- input$removeDataset[-1])
+      # Must use single string to index into reactivevalues
       for(rem in removeDataset) {
         values[[rem]] <- NULL
+        values[[paste0(rem,"_descr")]] <- NULL
       }
-      datasets <- datasets[-which(datasets %in% removeDataset)]
-      values[['datasetlist']] <- datasets
+      values[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
     }
   })
 })
@@ -189,6 +192,9 @@ observe({
 
     # sorting files alphabetically
     values[['datasetlist']] <- sort(values[['datasetlist']])
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = values$datasetlist[1])
   })
 })
 
@@ -199,17 +205,21 @@ observe({
     os_type <- .Platform$OS.type
     if (os_type == 'windows') {
 
-      dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
+      dat <- try(read.table("clipboard", header = TRUE, sep = ''), silent = TRUE)
       if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
     } else {
 
-      dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
+      dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = ''), silent = TRUE)
       if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
     }
 
     values[['xls_data']] <- as.data.frame(dat)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
-    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+
+    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                      selected = 'xls_data')
   })
 })
 
@@ -240,6 +250,9 @@ loadUserData <- function(filename, uFile, ext) {
   if(ext == 'csv') {
     values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
   }
+
+  updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+                    selected = values$datasetlist[1])
 }
 
 #######################################
@@ -281,6 +294,8 @@ output$downloadState <- downloadHandler(
 
 #     })
   }
+#   contentType = function() { ".rsf" }
+#   contentType = ".rsf"
 )
 
 #######################################

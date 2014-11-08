@@ -52,8 +52,8 @@ textarea {
   /*http://plugins.jquery.com/autosize/*/
 }
 
-#tr_copyAndPaste {
-  max-width: 185px;
+#tr_copyAndPaste, #view_subsbig_area {
+  max-width: 200px;
 }
 
 input[type="number"] {
@@ -103,8 +103,11 @@ input[type="number"] {
   margin-bottom: 15px;
 }
 
-#view_select, #expl_select, #viz_select, #tr_subset, #tr_rename, #tr_recode, #tr_transform, #data_rename {
+#view_select, #expl_select, #viz_select, #tr_subset, #tr_rename, #tr_recode,
+#tr_transform, #data_rename {
   max-width: 185px;
+  /* from http://stackoverflow.com/questions/6262472/multiple-lines-of-input-in-input-type-text */
+  word-break: break-word;
 }
 
 #view_order {

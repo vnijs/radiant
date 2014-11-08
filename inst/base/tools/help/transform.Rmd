@@ -57,6 +57,16 @@ Choose Create from the 'Transformation type' drop-down. This is the most flexibl
 
 	z = shift(x,3)
 
+6. Create a categorical variable with two levels
+
+  z = ifelse(x < y, "x < y", "x < y")
+  
+7. Create a categorical variable with three levels
+
+  z = ifelse(x < 60, "x < 60", ifelse(x > 65, "x > 65", "60-65"))
+  
+Note: For 6 and 7 you should convert the new variable to a factor for analysis (see Type above)
+
 #### Clipboard
 
 It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel format use the 'clipboard' feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard from Excel (i.e, CTRL-C on Windows and CMD-C on Mac). Select 'Clipboard' from the 'Transformation type' dropdown and paste your new data into the 'Paste from Excel' box shown. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be  shown on screen. To add the variable to the data click 'Save changes'.
