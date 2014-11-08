@@ -311,7 +311,7 @@ summary_regression <- function(result = .regression()) {
 	# rounding to avoid scientific notation for the coefficients
   #	res <- summary(format(result, scientific = FALSE))
   #	res$coefficients <- format(res$coefficients, scientific = FALSE)
-	res <- summary(result))
+	res <- summary(result)
  	res$coefficients <- round(res$coefficients,3)
 	.print.summary.lm(res, digits = 3)
   # print(res, digits = 3)
