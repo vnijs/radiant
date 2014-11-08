@@ -34,20 +34,7 @@ output$savequit <- renderUI({
 output$downloadStateQuit <- downloadHandler(
   filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
   content = function(file) {
-
-#     isolate({
-#       RadiantInputs <- state_list
-#       LiveInputs <- reactiveValuesToList(input)
-#       RadiantInputs[names(LiveInputs)] <- LiveInputs
-#       RadiantValues <- reactiveValuesToList(values)
-#       save(RadiantInputs, RadiantValues , file = file)
-
-      saveState(file)
-
-#       RadiantInputs <- isolate(reactiveValuesToList(input))
-#       RadiantValues <- isolate(reactiveValuesToList(values))
-#       save(RadiantInputs, RadiantValues , file = file)
-#     })
+    saveState(file)
   }
 )
 
@@ -61,6 +48,8 @@ output$showInput <- renderPrint({
 
 output$showState <- renderPrint({
   cat("State list:\n")
+  if(is.null(state_list)) return()
+  if(length(state_list) == 0) return("[empty]")
   str(state_list[sort(names(state_list))])
 })
 
@@ -73,6 +62,17 @@ observe({
   if(file.exists(filename)) file.remove(filename)
   setInitValues()
 })
+
+# observe({
+#   if(running_local) {
+#     print("Here again")
+#     invalidateLater(20000, NULL)
+#     tags$script("window.location.reload();")
+#     setInitValues()
+#     if(length(values[["datasetlist"]]) > 1) updateTabsetPanel(session, "nav_radiant", selected = "About")
+      # `r if(running_local) sprintf("### App resets every hour")`
+#   }
+# })
 
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
@@ -88,9 +88,11 @@ observe({
     q("no")
   } else {
     # flush input and values into Rstudio
-    rret <<- list()
-    rret$input <<- isolate(reactiveValuesToList(input))
-    rret$values <<- isolate(reactiveValuesToList(values))
-    stopApp("Stopping Radiant. Input and Values returned in list rret") # stop Radiant
+    isolate({
+      radiant <<- list()
+      radiant$input <<- isolate(reactiveValuesToList(input))
+      radiant$values <<- isolate(reactiveValuesToList(values))
+      stopApp("Stopping Radiant. Input and Values returned in list radiant") # stop Radiant
+    })
   }
 })

@@ -1,5 +1,5 @@
 ###############################
-# Sampling and assignment
+# Sampling
 ###############################
 output$uiRnd_var <- renderUI({
   vars <- varnames()
@@ -10,42 +10,20 @@ output$uiRnd_var <- renderUI({
   	selected = state_singlevar("rnd_var",vars), multiple = FALSE)
 })
 
-output$uiRnd_block <- renderUI({
-  vars <- varnames()
-	isFct <- "factor" == getdata_class()
- 	vars <- vars[isFct]
-  if(length(vars) == 0) return()
-  vars <- c("None",vars)
-  selectInput(inputId = "rnd_block", label = "Block variable (select one):", choices = vars,
-  	selected = state_singlevar("rnd_block",vars), multiple = FALSE)
-})
-
-rnd_sample <- c("Sample" = "sample", "Assign" = "assign")
-
 output$ui_random <- renderUI({
   list(
   	wellPanel(
 	 	 	uiOutput("uiRnd_var"),
-		  radioButtons(inputId = "rnd_sample", label = "", rnd_sample,
-	  	  selected = state_init_list("rnd_sample","sample", rnd_sample)),
-		  conditionalPanel(condition = "input.rnd_sample == 'sample'",
-		  	numericInput("rnd_sample_size", "Sample size:", min = 1,
-		  		value = state_init("rnd_sample_size",1))
-	  	),
-		  conditionalPanel(condition = "input.rnd_sample != 'sample'",
-		  	numericInput("rnd_nrCond", "Number of conditions:", min = 2,
-		  		value = state_init("rnd_nrCond",2)),
-		 	 	uiOutput("uiRnd_block"),
-		    actionButton("rnd_save_treatment", "Save treatment")
-	  	)
-  	),
+	  	numericInput("rnd_sample_size", "Sample size:", min = 1,
+	  		value = state_init("rnd_sample_size",1))
+	  ),
 	 	helpAndReport('Random','random',inclMD("../quant/tools/help/random.md"))
  	)
 })
 
 output$random <- renderUI({
 	# for input-output
-  statTabPanel("Random", "Random", ".random", "random")
+  statTabPanel("Random", "Sampling", ".random", "random")
 })
 
 .random <- reactive({
@@ -61,84 +39,36 @@ output$random <- renderUI({
 
 	if(is.na(input$rnd_sample_size)) return("Please select a sample size of 1 or greater.")
 
-	random(input$datasets, input$rnd_var, input$rnd_sample, input$rnd_sample_size,
-			input$rnd_nrCond, input$rnd_block)
+	random(input$datasets, input$rnd_var, input$rnd_sample_size)
 })
 
 observe({
   if(is.null(input$randomReport) || input$randomReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$rnd_var, input$rnd_sample, input$rnd_sample_size,
-			input$rnd_nrCond, input$rnd_block)
-
-		xcmd <- paste0("saveTreatmentAssign(result)")
-		updateReport(inp,"random", xcmd = xcmd)
+		inp <- list(input$datasets, input$rnd_var, input$rnd_sample_size)
+		updateReport(inp,"random")
   })
 })
 
-random <- function(datasets, rnd_var, rnd_sample, rnd_sample_size, rnd_nrCond, rnd_block) {
+random <- function(datasets, rnd_var, rnd_sample_size) {
 
 	# example list of names obtained from http://listofrandomnames.com
 	dat <- values[[datasets]]
-
-	if(rnd_sample == 'sample') {
-
-		selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
-		return(list(sample = selDat, dat = dat))
-	} else {
-
-		dat$treatment <- 0
-		nrCond <<- rnd_nrCond 	# <<- needed else ddply doesn't know where to 'look'
-		if(!is.null(rnd_block) && rnd_block != "None") {
-			# adapted from http://stackoverflow.com/questions/5399773/how-to-generate-a-random-treatment-variable-by-factor
-		 	dat <- ddply(dat, c(rnd_block), transform,
-				treatment = replace(treatment, sample(seq_along(treatment)),
-					rep(sample(1:nrCond), ceiling(length(treatment)/nrCond))[1:length(treatment)]))
-		} else {
-			dat$treatment <- replace(dat$treatment, sample(seq_along(dat$treatment)), 1:nrCond)
-		}
-		nrCond <<- NULL
-		return(list(dat = dat))
-	}
+	selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
+	return(list(sample = selDat, dat = dat))
 }
 
 summary_random <- function(result = .random()) {
-	if(!is.null(result$sample)) {
-		cat("Selected units:\n")
-		print(result$sample)
-		cat("\nAll units:\n")
-		print(result$dat)
-	} else {
-		cat("Assigned:\n")
-		print(result$dat)
-	}
+  cat("Selected units:\n")
+	print(result$sample)
+	cat("\nAll units:\n")
+	print(result$dat)
 }
 
 plots_random <- function(result = .random()) {
-
-	if(!is.null(result$sample)) {
-		result <- "Relevant output is in the Summary tab."
-		return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
-	} else {
-		result$dat$treatment <- as.factor(result$dat$treatment)
-		p <- ggplot(result$dat, aes_string(x='treatment', fill='treatment')) + geom_bar(alpha=.3) +
-			theme(legend.position = "none")
-		print(p)
-	}
+	result <- "Relevant output is in the Summary tab."
+	return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
 }
-
-saveTreatmentAssign <- function(result = .random()) {
-	changedata(data.frame(as.factor(result$dat$treatment)), "treatment")
-}
-
-observe({
-	if(is.null(input$rnd_save_treatment) || input$rnd_save_treatment == 0) return()
-	isolate({
-		result <- .random()
-		if(is.character(result)) return()
-		saveTreatmentAssign(result)
-	})
-})
 
 ###############################
 # Sample size
@@ -272,7 +202,7 @@ output$ui_ctl <- renderUI({
             numericInput("ctl_norm_mean", "Mean:", value = 0)
           ),
           div(class="span6",
-            numericInput("ctl_norm_sd", "SD:", value = 1)
+            numericInput("ctl_norm_sd", "SD:", value = 1, min = 0.001)
           )
         )
       ),
@@ -314,13 +244,20 @@ output$ctl <- renderUI({
 .ctl<- reactive({
 
   if(is.null(input$ctl_dist)) return()
-  validate(
-    need(try(input$ctl_n > 1), message = "Please choose a sample size larger than 2."),
-    need(try(input$ctl_m > 1), message = "Please choose 2 or more samples.")
-  )
+  if(is.na(input$ctl_n) | input$ctl_n < 2) return("Please choose a sample size larger than 2.")
+  if(is.na(input$ctl_m) | input$ctl_m < 2) return("Please choose 2 or more samples.")
+
+  if(is.na(input$ctl_unif_min)) return("Please choose a minimum value for the uniform distribution.")
+  if(is.na(input$ctl_unif_max)) return("Please choose a maximum value for the uniform distribution.")
+  if(is.na(input$ctl_norm_mean)) return("Please choose a mean value for the normal distribution.")
+  if(is.na(input$ctl_norm_sd) | input$ctl_norm_sd < .001) return("Please choose a non-zero standard deviation for the normal distribution.")
+  if(is.na(input$ctl_expo_rate) | input$ctl_expo_rate < 1) return("Please choose a rate larger than 1 for the exponential distribution.")
+  if(is.na(input$ctl_binom_size) | input$ctl_binom_size < 1) return("Please choose a size parameter larger than 1 for the binomial distribution.")
+  if(is.na(input$ctl_binom_prob) | input$ctl_binom_prob < 0.01) return("Please choose a probability between 0 and 1 for the binomial distribution.")
 
   # creating a dependency to a new set of draw is generated every time the button is pressed
   input$ctl_resample
+
 	ctl(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 })
 
@@ -364,8 +301,11 @@ plots_ctl <- function(result = .ctl()) {
     sstat <- data.frame("Mean" = colMeans(result))
   }
 
+  m <- dim(result)[2]
+  sample_m <-paste0("Sample_",m)
   data1 <- data.frame("Sample_1" = result[,1])
-  datam <- data.frame("Sample_m" = result[,dim(result)[2]])
+  datam <- data.frame(sample_m = result[,m])
+  colnames(datam) <- sample_m
 
   bw <- diff(range(sstat, na.rm = TRUE)) / 10
   bwd1 <- diff(range(data1, na.rm = TRUE)) / 10
@@ -376,7 +316,7 @@ plots_ctl <- function(result = .ctl()) {
 
   plots <- list()
   plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
-  plots[[2]] <- ggplot(datam, aes_string(x="Sample_m")) + geom_histogram(binwidth = bwdm)
+  plots[[2]] <- ggplot(datam, aes_string(x=sample_m)) + geom_histogram(binwidth = bwdm)
 #   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") +
 #     stat_function(fun = dnorm, args = list(mean = mean(data[,1]), sd = sd(data[,1])), color = "blue") +
 #     labs(y = "") + theme(axis.text.y = element_blank())
