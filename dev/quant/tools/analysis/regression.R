@@ -272,13 +272,7 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	}
 
 	dat <- values[[datasets]]
-# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
-# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
-# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize_fun))
-# 	if(reg_standardize) dat <- data.frame(lapply(dat,reg_standardize_fun))
 	if(reg_standardize) dat <- mutate_each(dat,funs(reg_standardize_fun))
-
-# 	if(reg_standardize) dat <- dat
 
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
@@ -315,10 +309,12 @@ summary_regression <- function(result = .regression()) {
 	if(class(result) != 'lm') return(result)
 
 	# rounding to avoid scientific notation for the coefficients
-	res <- summary(result)
-	res$coefficients <- round(res$coefficients,3)
+  #	res <- summary(format(result, scientific = FALSE))
+  #	res$coefficients <- format(res$coefficients, scientific = FALSE)
+	res <- summary(result))
+ 	res$coefficients <- round(res$coefficients,3)
 	.print.summary.lm(res, digits = 3)
-# 	print(res, digits = 3)
+  # print(res, digits = 3)
 
   if(result$reg_predict != '') {
 
