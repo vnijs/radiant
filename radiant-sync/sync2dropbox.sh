@@ -6,7 +6,6 @@
 # rsync --dry-run -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
 # rsync -avruz --exclude-from 'radiant-sync/exclude-from-sync2dropbox.txt' ~/Desktop/GitHub/radiant_dev/ ~/Dropbox/radiant/
 
-
 ### Cleaning out stuff that is no longer needed
 # rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
 # rsync -avruz --delete ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
@@ -40,7 +39,10 @@
 
 # diff -x ".DS_Store" -Naur ~/Dropbox/radiant/inst/ ~/Desktop/GitHub/radiant_dev/inst/
 # diff -x ".DS_Store" -Naur ~/Dropbox/radiant/inst/ ~/Desktop/GitHub/radiant_dev/dev/
+# diff -x ".DS_Store" -x "*.rda" -Naur ~/Dropbox/radiant/inst/base/ ~/Desktop/GitHub/radiant_dev/dev/base/
 
-diff -x ".DS_Store" -x "*.rda" -Naur ~/Dropbox/radiant/inst/base/ ~/Desktop/GitHub/radiant_dev/dev/base/
-
+### If I push and commit this change and then sync with dropbox, if I need to revert the commit then
+### I can just revert and resync
+rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
