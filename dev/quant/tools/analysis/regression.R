@@ -382,7 +382,7 @@ summary_regression <- function(result = .regression()) {
 	  ssTable$df <- c(df_reg,df_err,df_tot)
 	  ssTable$SS <- c(ss_reg,ss_err,ss_tot)
     cat("Sum of squares:\n")
-    print(ssTable)
+    print(format(ssTable, scientific = FALSE))
     cat("\n")
   }
 
@@ -412,7 +412,9 @@ summary_regression <- function(result = .regression()) {
 
 	if(!is.null(result$reg_var3)) {
 		if(!result$reg_stepwise) {
-			test_regression(result)
+      test_regression(result)
+      # NA's shown
+      # print(format(test_regression(result), scientific = FALSE))
 		} else {
 	  	cat("Model comparisons not conducted when Stepwise has been selected.\n")
 	  }
@@ -431,6 +433,7 @@ summary_regression <- function(result = .regression()) {
     coefs[!aliased, ] <- x$coefficients
   }
   printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", ...)
+#   printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", scientific = FALSE, ...)
 
   cat("\n")
   if (nzchar(mess <- naprint(x$na.action)))
