@@ -21,7 +21,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
 # Start of main code
 ############################################################
 
-
 # only write if running on developer computer
 if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitHub/radiant_dev")) {
   # for debugging
