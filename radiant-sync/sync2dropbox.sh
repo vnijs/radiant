@@ -44,5 +44,6 @@
 ### If I push and commit this change and then sync with dropbox, if I need to revert the commit then
 ### I can just revert and resync
 rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
 rsync -av --delete ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
