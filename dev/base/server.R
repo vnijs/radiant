@@ -1,5 +1,7 @@
 shinyServer(function(input, output, session) {
 
+#   setInitValues()   # using a function here so it can also be called from state.R to reset the app
+
 	# source shared functions
 	source('radiant.R', local = TRUE)
 

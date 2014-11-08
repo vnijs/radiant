@@ -176,17 +176,22 @@ transform_main <- reactive({
 	if(!is.null(input$tr_columns)) {
 
 		if(!all(input$tr_columns %in% colnames(dat))) return()
-		dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
+    #	dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
+		dat <- select_(dat, input$tr_columns)
+
 		if(input$tr_transfunction != '') {
-			cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
+      # cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
+      #	dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
+      # dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
+      vars <- colnames(dat)
 
-			# This might work
-			# lapply(dat,function(x) x - mean(x))
-			# cbind(dat,z)
+      newvar <- try(do.call(car::recode, list(dat[,input$tr_columns[1]],recom)), silent = TRUE)
 
-			dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
-
-			colnames(dat) <- cn
+      dat_tr <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+      if(is(dat_tr, 'try-error')) dat_tr <- dat; dat_tr[] <- NA
+      dat <- cbind(dat, dat_tr)
+			colnames(dat) <- c(vars, paste(input$tr_transfunction,vars, sep="."))
+#       print("transformation worked")
 		}
 		if(input$tr_typefunction != '') {
 			# dat <- cbind(dat,colwise(input$tr_typefunction)(dat))
@@ -378,6 +383,6 @@ observe({
 	 	updateTextInput(session = session, inputId = "tr_recode", label = "Recode (e.g., lo:20 = 1):", '')
 	 	updateTextInput(session = session, inputId = "tr_rename", label = "Rename (separate by ','):", value = '')
 	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", label = "", '')
-		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options, selected = "None")
+		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options, selected = "")
 	})
 })
