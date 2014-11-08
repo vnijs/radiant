@@ -12,6 +12,7 @@ radiant-miniCRAN/bin
 radiant-miniCRAN/src
 
 radiant-sync/
+testing/
 
 .Rhistory
 .gitignore
