@@ -269,10 +269,10 @@ plots_compareMeans <- function(result = .compareMeans()) {
 
 	plots <- list()
 	# p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3, legend = FALSE)
-	p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3)
+	p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.7)
 	if(result$pwcomp$cm_jitter)	p <- p + geom_jitter()
 	plots[["Boxplot"]] <- p
-	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.3)
+	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.7)
 
 	do.call(grid.arrange, c(plots, list(ncol = 1)))
 }
@@ -354,7 +354,7 @@ plots_singleProp <- function(result = .singleProp()) {
 	var <- result$data.name
   dat <- na.omit(result$data)
 
- 	p <- ggplot(dat, aes_string(x = var, fill = var)) + geom_histogram(alpha=.3) +
+ 	p <- ggplot(dat, aes_string(x = var, fill = var)) + geom_histogram(alpha=.7) +
     ggtitle(paste("Single proportion:", var))
 	print(p)
 }
@@ -530,7 +530,7 @@ plots_crosstab <- function(result = .crosstab()) {
 		tab <- meltTable(result$cst$residuals)
 		colnames(tab)[c(2,3)] <- c(cinp$ct_var1, cinp$ct_var2)
 		plots[['residuals']] <- ggplot(tab, aes_string(x = cinp$ct_var1, y = "value", fill = cinp$ct_var2)) +
-         			geom_bar(stat="identity", position = "dodge", alpha = .3) +
+         			geom_bar(stat="identity", position = "dodge", alpha = .7) +
      					geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
      					geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
      					geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
@@ -542,7 +542,7 @@ plots_crosstab <- function(result = .crosstab()) {
 		tab <- meltTable(result$cst$deviation)
 		colnames(tab)[c(2,3)] <- c(cinp$ct_var1, cinp$ct_var2)
 		plots[['deviation']] <- ggplot(tab, aes_string(x = cinp$ct_var1, y = "value", fill = cinp$ct_var2)) +
-         			geom_bar(stat="identity", position = "dodge", alpha = .3) + ylim(-1,1) +
+         			geom_bar(stat="identity", position = "dodge", alpha = .7) + ylim(-1,1) +
          			labs(list(title = paste("Deviation (percentage) for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""), x = cinp$ct_var1))
 	}
 
@@ -555,13 +555,13 @@ plots_crosstab <- function(result = .crosstab()) {
 # 		plots[['expected']] <- ggplot(tab, aes_string(x = 'rnames', y = "value", fill = "variable")) +
 		plots[['expected']] <- ggplot(tab, aes_string(x = 'rnames', y = "value", fill = "variable")) +
 #          			geom_bar(stat="identity", position = "dodge", alpha = .3) +
-         			geom_bar(stat="identity", position = "fill", alpha = .3) +
+         			geom_bar(stat="identity", position = "fill", alpha = .7) +
 #          			geom_bar(position = "fill", alpha = .3) +
          			labs(list(title = paste("Expected values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 							x = "", y = "", fill = cinp$ct_var2))
 	}
 
-	plots[['stacked']] <- ggplot(dat, aes_string(x = cinp$ct_var1, fill = cinp$ct_var2)) + geom_bar(position = "fill", alpha=.3) +
+	plots[['stacked']] <- ggplot(dat, aes_string(x = cinp$ct_var1, fill = cinp$ct_var2)) + geom_bar(position = "fill", alpha=.7) +
 		labs(list(title = paste("Observed values for ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 				x = "", y = "", fill = cinp$ct_var2))
 
