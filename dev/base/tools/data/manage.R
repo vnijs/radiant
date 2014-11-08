@@ -107,10 +107,9 @@ observe({
     datasets <- values[['datasetlist']]
 #     if(length(input$removeDataset) == length(datasets)) return("Cannot remove all datasets from memory")
     if(length(datasets) > 1) {  # have to leave at least one dataset
-#       removeDataset <- input$removeDataset
-#       if(length(datasets) == length(removeDataset)) removeDataset <- removeDataset[-1]
-      ifelse(length(datasets) == length(input$removeDataset), removeDataset <- input$removeDataset[-1],
-             removeDataset <- input$removeDataset[-1])
+      removeDataset <- input$removeDataset
+      if(length(datasets) == length(removeDataset)) removeDataset <- removeDataset[-1]
+
       # Must use single string to index into reactivevalues
       for(rem in removeDataset) {
         values[[rem]] <- NULL
