@@ -347,11 +347,22 @@ output$htmlDataExample <- renderText({
   if(is.null(dat)) return()
 
   # Show only the first 10 rows
-  nr <- min(10,nrow(dat))
-  dat <- data.frame(dat[1:nr,, drop = FALSE])
-  dat <- date2character_dat(dat) # dealing with dates
-  html <- print(xtable::xtable(dat), type='html', print.results = FALSE)
-  html <- sub("<table border=1>","<table class='table table-condensed table-hover'>", html)
-  Encoding(html) <- 'UTF-8'
-  html
+  ifelse(isolate(values[[paste0(input$datasets,"_descr")]]) == "",
+         nshow <- 30, nshow <- 10)
+
+  dat %>%
+    slice(1:min(nshow,nrow(.))) %>%
+    date2character_dat(.) %>%
+    xtable::xtable(.) %>%
+    print(type='html',  print.results = FALSE) %>%
+    sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
+    paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
+    enc2utf8
+
+#   dat <- data.frame(dat[1:nr,, drop = FALSE])
+#   dat <- date2character_dat(dat) # dealing with dates
+#   html <- print(xtable::xtable(dat), type='html', print.results = FALSE)
+#   html <- sub("<table border=1>","<table class='table table-condensed table-hover'>", html)
+#   Encoding(html) <- 'UTF-8'
+#   html
 })

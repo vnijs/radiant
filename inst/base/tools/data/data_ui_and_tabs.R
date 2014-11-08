@@ -29,7 +29,6 @@ output$tabs_data <- renderUI({
   tabsetPanel(id = "datatabs",
               tabPanel("Manage",
                        htmlOutput("htmlDataExample"),
-                       HTML('<label>10 (max) rows shown. See View-tab for details.</label>'),
                        conditionalPanel(condition = "input.man_add_descr == false", HTML(dataDescriptionOutput('html'))),
                        conditionalPanel(condition = "input.man_add_descr == true",
                                         HTML("<label>Add data description:</label>"),

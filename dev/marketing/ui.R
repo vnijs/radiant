@@ -3,7 +3,7 @@ shinyUI(navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse =
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
   navbarMenu("Random",
-#     tabPanel("Central Limit Theorem", uiOutput("ctl")),
+    tabPanel("Central Limit Theorem", uiOutput("ctl")),
     tabPanel("Sampling", uiOutput("random")),
     tabPanel("Sample size", uiOutput("sampleSize"))
   ),
