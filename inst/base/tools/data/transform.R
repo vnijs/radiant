@@ -177,7 +177,7 @@ transform_main <- reactive({
 
 		if(!all(input$tr_columns %in% colnames(dat))) return()
     #	dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
-		dat <- select_(dat, input$tr_columns)
+		dat <- select_(dat, .dots = input$tr_columns)
 
 		if(input$tr_transfunction != '') {
       # cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
