@@ -16,7 +16,7 @@ if(!'shiny' %in% instpack || !'httpuv' %in% instpack) {
 }
 
 com_string <- paste0("cd ",script_dir,"\n",Sys.which('R'), " -e ",
-  "\"shiny::runApp('../../inst/", class_app[1],"', port = ", class_app[2],", launch.browser=TRUE)\"\npause")
+  "\"shiny::runApp('../../inst/", class_app[1],"', port = ", class_app[2],", launch.browser=TRUE)\"")
 com_string
 
 filename <- paste0(Sys.getenv("USERPROFILE"),"/Desktop/radiant_",class_app[1],".bat")
