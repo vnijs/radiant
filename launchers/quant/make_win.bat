@@ -1,6 +1,8 @@
 set R="-"
 IF exist "C:\Program Files\R\R-3.1.1\bin\Rscript.exe" (set R="C:\Program Files\R\R-3.1.1\bin\Rscript.exe")
 IF exist "C:\Program Files\R\R-3.1.1\bin\x64\Rscript.exe" (set R="C:\Program Files\R\R-3.1.1\bin\x64\Rscript.exe")
+IF exist "C:\Program Files\R\R-3.1.2\bin\Rscript.exe" (set R="C:\Program Files\R\R-3.1.2\bin\Rscript.exe")
+IF exist "C:\Program Files\R\R-3.1.2\bin\x64\Rscript.exe" (set R="C:\Program Files\R\R-3.1.2\bin\x64\Rscript.exe")
 
 if %R% == "-" goto R_not_found else goto R_found
 
