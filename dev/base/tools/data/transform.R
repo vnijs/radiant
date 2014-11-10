@@ -304,7 +304,7 @@ output$transform_data <- reactive({
 	  xtable::xtable(.) %>%
 	  print(type='html',  print.results = FALSE) %>%
 	  sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
-	  paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
+	  paste0(.,'<label>5 (max) rows shown. See View-tab for details.</label>') %>%
 	  enc2utf8
 
 })
