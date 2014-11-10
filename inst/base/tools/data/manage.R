@@ -7,18 +7,19 @@ output$ui_fileUpload <- renderUI({
   if(is.null(input$dataType)) return()
   if(input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
-              accept = c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 'text/plain', '.csv', '.tsv'))
+              accept = c('text/csv','text/comma-separated-values','text/tab-separated-values',
+                         'text/plain','.csv','.tsv'))
   } else if(input$dataType == "rda") {
-    fileInput('uploadfile', '', multiple=TRUE, accept = c(".rda",".rds"))
+    fileInput('uploadfile', '', multiple=TRUE, accept = c(".rda",".rds",".rdata"))
   }
 })
 
 output$ui_Manage <- renderUI({
   list(
-
     wellPanel(
-      radioButtons(inputId = "dataType", label = "Load data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"),
-        selected = "rda"),
+      radioButtons(inputId = "dataType", label = "Load data:",
+                   c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard", "examples" = "examples", "state" = "state"),
+                   selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
@@ -33,14 +34,13 @@ output$ui_Manage <- renderUI({
         actionButton('loadExampleData', 'Load examples')
       ),
       conditionalPanel(condition = "input.dataType == 'state'",
-        HTML("<label>Load previous app state:</label>"),
-        fileInput('uploadState', '',  accept = ".rsf"),
+        fileInput('uploadState', 'Load previous app state:',  accept = ".rsf"),
         uiOutput("refreshOnUpload")
       )
     ),
     wellPanel(
-      radioButtons(inputId = "saveAs", label = "Save data:", c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "state" = "state"),
-        selected = "rda"),
+      radioButtons(inputId = "saveAs", label = "Save data:",
+                   c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",  "state" = "state"), selected = "rda"),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         actionButton('saveClipData', 'Copy data')
@@ -51,7 +51,6 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.saveAs == 'state'",
         HTML("<label>Save current app state:</label>"),
         downloadButton('downloadState', 'Save')
-#         accept = ".rsf"
       )
     ),
     wellPanel(
@@ -89,10 +88,6 @@ output$uiRemoveDataset <- renderUI({
   selectInput(inputId = "removeDataset", label = "Remove data from memory:",
     choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE
   )
-
-#   selectizeInput("removeDataset", "Remove data from memory:", choices = values$datasetlist,
-#     multiple = TRUE, options = list(placeholder = 'None', plugins = list('remove_button'))
-#   )
 })
 
 observe({
@@ -101,16 +96,14 @@ observe({
   isolate({
 
     # only remove datasets if 1 or more were selected
-    # without this line all files would be removed when
-    # the removeDataButton is pressed
+    # without this line all files would be removed when the removeDataButton is pressed
     if(is.null(input$removeDataset)) return()
     datasets <- values[['datasetlist']]
-#     if(length(input$removeDataset) == length(datasets)) return("Cannot remove all datasets from memory")
     if(length(datasets) > 1) {  # have to leave at least one dataset
       removeDataset <- input$removeDataset
       if(length(datasets) == length(removeDataset)) removeDataset <- removeDataset[-1]
 
-      # Must use single string to index into reactivevalues
+      # Must use single string to index into reactivevalues so loop is necessary
       for(rem in removeDataset) {
         values[[rem]] <- NULL
         values[[paste0(rem,"_descr")]] <- NULL
@@ -130,7 +123,8 @@ observe({
     } else {
       write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
     }
-    updateRadioButtons(session = session, inputId = "saveAs", label = "Save data:", c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"), selected = ".rda")
+    updateRadioButtons(session = session, inputId = "saveAs", label = "Save data:",
+                       c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"), selected = ".rda")
   })
 })
 
@@ -282,19 +276,8 @@ output$refreshOnUpload <- renderUI({
 output$downloadState <- downloadHandler(
   filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
   content = function(file) {
-
-#     isolate({
-#       RadiantInputs <- state_list
-#       LiveInputs <- reactiveValuesToList(input)
-#       RadiantInputs[names(LiveInputs)] <- LiveInputs
-#       RadiantValues <- reactiveValuesToList(values)
-#       save(RadiantInputs, RadiantValues , file = file)
-      saveState(file)
-
-#     })
+    saveState(file)
   }
-#   contentType = function() { ".rsf" }
-#   contentType = ".rsf"
 )
 
 #######################################
@@ -346,23 +329,22 @@ output$htmlDataExample <- renderText({
   dat <- getdata()
   if(is.null(dat)) return()
 
-  # Show only the first 10 rows
-  ifelse(isolate(values[[paste0(input$datasets,"_descr")]]) == "",
-         nshow <- 30, nshow <- 10)
+  # Show only the first 10 (or 30) rows
+#   isolate({
+    descr <- values[[paste0(input$datasets,"_descr")]]
+    ifelse(is.null(descr) || descr == "", nshow <- 30, nshow <- 10)
+#   })
+
+  # convert dates if needed
+#   d2c <- function(x) ifelse(is.Date(x),return(as.character(x)),return(x))
 
   dat %>%
     slice(1:min(nshow,nrow(.))) %>%
-    date2character_dat(.) %>%
+    mutate_each(funs(d2c)) %>%
+    # date2character_dat(.) %>%
     xtable::xtable(.) %>%
     print(type='html',  print.results = FALSE) %>%
     sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
     paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
     enc2utf8
-
-#   dat <- data.frame(dat[1:nr,, drop = FALSE])
-#   dat <- date2character_dat(dat) # dealing with dates
-#   html <- print(xtable::xtable(dat), type='html', print.results = FALSE)
-#   html <- sub("<table border=1>","<table class='table table-condensed table-hover'>", html)
-#   Encoding(html) <- 'UTF-8'
-#   html
 })
