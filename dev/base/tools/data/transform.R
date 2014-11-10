@@ -299,7 +299,7 @@ output$transform_data <- reactive({
 # 	d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
 
 	dat %>%
-	  slice(1:min(10,nrow(.))) %>%
+	  slice(1:min(5,nrow(.))) %>%
 	  mutate_each(funs(d2c)) %>%
 	  xtable::xtable(.) %>%
 	  print(type='html',  print.results = FALSE) %>%
