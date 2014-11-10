@@ -330,10 +330,10 @@ output$htmlDataExample <- renderText({
   if(is.null(dat)) return()
 
   # Show only the first 10 (or 30) rows
-#   isolate({
-    descr <- values[[paste0(input$datasets,"_descr")]]
-    ifelse(is.null(descr) || descr == "", nshow <- 30, nshow <- 10)
-#   })
+  nshow <- 10
+  descr <- values[[paste0(input$datasets,"_descr")]]
+  nshow <- 10
+  if(is.null(descr) || descr == "") nshow <- 30
 
   # convert dates if needed
 #   d2c <- function(x) ifelse(is.Date(x),return(as.character(x)),return(x))
