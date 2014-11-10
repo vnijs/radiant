@@ -53,9 +53,21 @@ observe({
 random <- function(datasets, rnd_var, rnd_sample_size) {
 
 	# example list of names obtained from http://listofrandomnames.com
-	dat <- values[[datasets]]
-	selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
-	return(list(sample = selDat, dat = dat))
+# 	dat <- values[[datasets]]
+# 	selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
+# 	return(list(sample = selDat, dat = dat))
+
+  dat <- values[[datasets]]
+
+#   dat <- mtcars
+#   rnd_sample_size <- 10
+
+  dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
+  dat %>%
+    arrange(desc(rnd_number)) %>%
+    slice(1:rnd_sample_size) -> seldat
+
+	return(list(sample = seldat, dat = dat))
 }
 
 summary_random <- function(result = .random()) {
