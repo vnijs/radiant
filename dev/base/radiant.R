@@ -70,8 +70,10 @@ getdata <- reactive({
 
 getdata_class <- reactive({
 	# don't use isolate here or values won't change when the dataset is changed
-	cls <- sapply(getdata(), function(x) class(x)[1])
-	gsub("ordered","factor", cls)
+	sapply(getdata(), function(x) class(x)[1]) %>%
+	  gsub("ordered","factor", .) %>%
+	  gsub("POSIXct","date", .) %>%
+	  gsub("POSIXt","date", .)
 })
 
 varnames <- reactive({
@@ -91,6 +93,9 @@ date2character_dat <- function(dat) {
 	dat[,isDate] <- sapply(dat[,isDate], as.character)
 	dat
 }
+
+isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
+d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
 
 ################################################################
 # functions used to create Shiny in and outputs
