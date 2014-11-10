@@ -58,15 +58,10 @@ random <- function(datasets, rnd_var, rnd_sample_size) {
 # 	return(list(sample = selDat, dat = dat))
 
   dat <- values[[datasets]]
-
-#   dat <- mtcars
-#   rnd_sample_size <- 10
-
   dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
   dat %>%
     arrange(desc(rnd_number)) %>%
     slice(1:rnd_sample_size) -> seldat
-
 	return(list(sample = seldat, dat = dat))
 }
 
