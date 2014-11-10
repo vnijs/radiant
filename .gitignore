@@ -4,9 +4,14 @@ radiant-install.Rmd
 .Rhistory
 .dropbox
 .Rproj.user
-launchers/launchers-code
 inst/base/www/MathJax
 
-radiant-sync/test-student-account.Rmd
-radiant-sync/sync2dropbox.sh
-radiant-sync/exclude-from-sync2dropbox.txt
+radiant-sync/
+radiant-sync/
+radiant-sync/
+
+inst/quant/data/data_rady/
+dev/quant/data/data_rady/
+
+inst/marketing/data/data_rady/
+dev/marketing/data/data_rady/
