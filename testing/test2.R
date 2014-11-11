@@ -74,3 +74,22 @@ points(out$points[,i], out$points[,j], pch = 16, cex = .6)
     })
   }, width = 700, height = 500)
 })
+
+
+library(ggplot2)
+# install.packages('ggvis')
+library(ggvis)
+dia %>% ggvis(prop("x", as.name("carat")), prop("y", as.name("price")))
+
+
+
+a <- c(2,3,4)
+a <- as.factor(a)
+a
+a <- as.character(a)
+a
+a <- as.integer(a)
+a
+
+
+
