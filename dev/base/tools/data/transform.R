@@ -64,13 +64,15 @@ d_dmy <<- function(x) as.Date(dmy(as.character(x)))
 d_ymd <<- function(x) as.Date(ymd(as.character(x)))
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
 d_ymd_hms <<- function(x) ymd_hms(as.character(x))
+as.int <<- function(x) as.integer(as.character(x))
+as.num <<- function(x) as.numeric(as.character(x))
 
 trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp", "Square" = "sq",
                       "Square-root" = "sqrt", "Center" = "cent", "Standardize" = "st",
                       "Invert" = "inv", "Median split" = "msp", "Deciles" = "dec")
 
-type_options <- list("None" = "none", "As factor" = "as.factor",  "As number" = "as.numeric",
-                     "As integer" = "as.integer", "As character" = "as.character",
+type_options <- list("None" = "none", "As factor" = "as.factor",  "As number" = "as.num",
+                     "As integer" = "as.int", "As character" = "as.character",
                      "As date (mdy)" = "d_mdy", "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd",
                      "As date/time (ymd_hms)" = "d_ymd_hms")
 
