@@ -5,7 +5,91 @@ date: "October 11, 2014"
 output: html_document
 ---
 
-* add this! https://github.com/RCura/ScattRplot way cool. Great way to select data!
+Inspiration:
+- David McCandless - information is beautiful - 18 minutes
+- Hans Rosling - the best stats you've ever seen - 20 minutes
+- http://www.r-bloggers.com/sbs-documentary-the-age-of-big-data/
+
+0.6
+
+Filter on:
+- Create separate filter tab
+- https://github.com/RCura/ScattRplot using an interactive graph to filter data
+- Dygraph: http://rstudio.github.io/dygraphs/index.html
+- data.tables or ...
+- if not data.tables maybe (1) select variables (in order) you want to filter/sort on
+and (2) create dropdown, radio-buttons, sliders, etc.. Commands can be processed with 
+dplyr commands
+- ...
+- List of filters that can be applied to data in a dropdown. Store as data.frame attribute
+
+Viz:
+- Facets can use integer, character, etc.
+- Options: Cross-sectional or Time-series (and then both)
+- Convert to ggvis: 
+  - http://ggvis.rstudio.com/ggvis-basics.html#more-details
+  - 
+  
+- Dygraph for timeseries: http://rstudio.github.io/dygraphs/index.html
+
+- Leaflet: https://github.com/jcheng5/leaflet-shiny
+- Leaflet: http://www.showmeshiny.com/fracking-growth/
+- Bikeshare: http://glimmer.rstudio.com/ramnathv/BikeShare/ 
+
+
+Time-series:
+- VARX: http://artax.karlin.mff.cuni.cz/r-help/library/fastVAR/html/fastVAR-package.html
+- IRFs 
+- Forecasting
+- Dygraph for timeseries: http://rstudio.github.io/dygraphs/index.html
+
+Explore:
+- Can use integer, character, etc.
+- Can you use all variable types for summary stats (checking required)
+- Sorting or results, top/bottom 10, etc.
+- Basic coding using dplyr verbs?
+
+Output:
+- regression etc. use html for model output 
+  - stargazer
+  - knitr's kable(rndmat, format = "markdown")
+  - ...
+  
+Base:
+- http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2064100/figure/fig5/
+- http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2064100/figure/fig6/
+
+Dependencies:
+- remove plyr (reshape2?)
+- remove car?
+- add mosaic
+
+Rmarkdown:
+- source functions from standalone Rmd
+- store reports as data.frame attribute
+- embedding data into Rmd file (http://bayesfactor.blogspot.com/2014/09/embedding-rdata-files-in-rmarkdown.html)
+- cheatsheet link: http://rmarkdown.rstudio.com/RMarkdownCheatSheet.pdf
+
+
+Coding:
+- shinyAce code-completion: https://saurfang.shinyapps.io/shinyAceCodeInput/
+- shinyAce vim-mode: 
+
+
+Mosaic:
+- Include dependency
+- Resampling: http://cran.r-project.org/web/packages/mosaic/vignettes/V5Resample.pdf
+- Graphics: http://cran.r-project.org/web/packages/mosaic/vignettes/GraphicsWithMosaic.html
+- Calculus: http://cran.r-project.org/web/packages/mosaic/vignettes/V6Calculus.pdf
+- Modeling: http://cran.r-project.org/web/packages/mosaic/vignettes/V4Modeling.pdf
+- Website: http://mosaic-web.org/
+- GitHub site: https://github.com/rpruim/mosaic
+
+Coding style:
+- Use chaining (http://timelyportfolio.github.io/rCharts_factor_analytics/factors_with_new_R.html
+- dplyr: http://seananderson.ca/2014/09/13/dplyr-intro.html
+- magitter: ..
+
 
 library(dplyr)
 

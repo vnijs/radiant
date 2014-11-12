@@ -59,13 +59,27 @@ dec <<- decileSplit
 # lagx <<- shift
 
 # as character needed here in case x is a factor
-d_mdy <<- function(x) as.Date(mdy(as.character(x)))
-d_dmy <<- function(x) as.Date(dmy(as.character(x)))
-d_ymd <<- function(x) as.Date(ymd(as.character(x)))
+d_mdy <<- function(x) as.character(x) %>% mdy %>% as.Date
+d_dmy <<- function(x) as.character(x) %>% dmy %>% as.Date
+d_ymd <<- function(x) as.character(x) %>% ymd %>% as.Date
+# d_dmy <<- function(x) as.Date(dmy(as.character(x)))
+# d_mdy <<- function(x) as.Date(mdy(as.character(x)))
+# d_ymd <<- function(x) as.Date(ymd(as.character(x)))
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
-d_ymd_hms <<- function(x) ymd_hms(as.character(x))
-as.int <<- function(x) as.integer(as.character(x))
-as.num <<- function(x) as.numeric(as.character(x))
+# d_ymd_hms <<- function(x) ymd_hms(as.character(x))
+d_ymd_hms <<- function(x) as.character(x) %>% ymd_hms
+
+# http://stackoverflow.com/questions/4798343/convert-factor-to-integer
+# a <- c(2,3,4,2)
+# a <- as.factor(a)
+# as.int(a)
+
+as.int <<- function(x) ifelse(is.factor(x),
+                              return(as.integer(levels(x))[x]),
+                              return(as.integer(x)))
+as.num <<- function(x) ifelse(is.factor(x),
+                              return(as.numeric(levels(x))[x]),
+                              return(as.numeric(x)))
 
 trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp", "Square" = "sq",
                       "Square-root" = "sqrt", "Center" = "cent", "Standardize" = "st",
@@ -294,37 +308,15 @@ output$transform_data <- reactive({
 	dat <- transform_main()
 	if(is.null(dat)) return(invisible())
 	if(is.character(dat)) return(dat)
-
-
-	# convert dates if needed
-#   isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
-# 	d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
-
-	dat %>%
-	  slice(1:min(5,nrow(.))) %>%
-	  mutate_each(funs(d2c)) %>%
-	  xtable::xtable(.) %>%
-	  print(type='html',  print.results = FALSE) %>%
-	  sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
-	  paste0(.,'<label>5 (max) rows shown. See View-tab for details.</label>') %>%
-	  enc2utf8
-
+  show_data_snippet(dat)
 })
 
 output$transform_summary <- renderPrint({
 
-	# if(isolate(input$datatabs) != 'Transform') return(invisible())
-
 	dat <- transform_main()
 	if(is.null(dat)) return(invisible()) 			# ...
 
-# 	isFct <- sapply(dat, is.factor)
-# 	isNum <- sapply(dat, is.numeric)
-# 	isDate <- sapply(dat, is.Date)
-# 	isChar <- sapply(dat, is.character)
-# 	isLogic <- sapply(dat, is.logical)
-
-  gd_class <- getdata_class()[input$tr_columns]
+  gd_class <- get_class(dat)
 	isFct <- "factor" == gd_class
 	isNum <- "numeric" == gd_class | "integer" == gd_class
 	isDate <- "date" == gd_class
@@ -333,28 +325,17 @@ output$transform_summary <- renderPrint({
 
 	if(sum(isNum) > 0) {
 		cat("Summarize numeric variables:\n")
-		# print(psych::describe(dat[,isNum])[,c("n","mean","median","min","max","range","sd","se","skew","kurtosis")])
-		res <- data.frame(psych::describe(dat[isNum], na.rm = TRUE)[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
+		res <- data.frame(psych::describe(dat[isNum], na.rm = TRUE)[,c("n","mean","median","min","max","sd",
+                                                                   "se","skew","kurtosis")])
 
 		# adding Q1 and Q3
 		perc25 <- function(x) quantile(x,.25, na.rm = TRUE)
 		perc75 <- function(x) quantile(x,.75, na.rm = TRUE)
-# 		percres <- colwise(perc)(dat[,isNum, drop = FALSE])
 
-#     dat <- mtcars
-#  	  isNum <- sapply(dat, is.numeric)
-
-    vars <- colnames(dat)[isNum]
-    dat <- select_(dat,.dots = vars)
-    res$`25%` <- summarise_each(dat,funs(perc25)) %>% t
-    res$`75%` <- summarise_each(dat,funs(perc25)) %>% t
-		res$missing <- summarise_each(dat,funs(nmissing)) %>% t  # nmissing function is in explore
-# 		percres <- colwise(perc)(dat[,isNum, drop = FALSE])
-# 		rownames(percres) <- c("25%","75%")
-# 		res <- cbind(res,t(percres))
-
-		# number of missing values
-# 		res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
+    res$`25%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
+    res$`75%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
+    # nmissing function is in explore.R
+    res$missing <- select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
 
 		# print desired stats in order
 		print(res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")])
@@ -362,26 +343,24 @@ output$transform_summary <- renderPrint({
 	}
 	if(sum(isFct) > 0) {
 		cat("Summarize factors:\n")
-		print(summary(dat[,isFct]))
+    select(dat, which(isFct)) %>% summary %>% print
 		cat("\n")
 	}
 	if(sum(isDate) > 0) {
 		cat("Earliest dates:\n")
-
-    vars <- colnames(dat)[isDate]
-		select_(dat,.dots = vars) %>% summarise_each(funs(min)) %>% print
+    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
 		cat("\nFinal dates:\n")
-		select_(dat,.dots = vars) %>% summarise_each(funs(max)) %>% print
+    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
 		cat("\n")
 	}
 	if(sum(isChar) > 0) {
 		cat("Summarize character variables:\n")
-		print(table(dat[,isChar]))
+    select(dat, which(isChar)) %>% table %>% print
 		cat("\n")
 	}
 	if(sum(isLogic) > 0) {
 		cat("Summarize logical variables:\n")
-		print(table(dat[,isLogic]))
+    select(dat, which(isLogic)) %>% table %>% print
 		cat("\n")
 	}
 })
@@ -414,6 +393,7 @@ observe({
 	 	updateTextInput(session = session, inputId = "tr_recode", label = "Recode (e.g., lo:20 = 1):", '')
 	 	updateTextInput(session = session, inputId = "tr_rename", label = "Rename (separate by ','):", value = '')
 	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", label = "", '')
-		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options, selected = "none")
+		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options,
+                      selected = "none")
 	})
 })

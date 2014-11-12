@@ -63,17 +63,6 @@ observe({
   setInitValues()
 })
 
-# observe({
-#   if(running_local) {
-#     print("Here again")
-#     invalidateLater(20000, NULL)
-#     tags$script("window.location.reload();")
-#     setInitValues()
-#     if(length(values[["datasetlist"]]) > 1) updateTabsetPanel(session, "nav_radiant", selected = "About")
-      # `r if(running_local) sprintf("### App resets every hour")`
-#   }
-# })
-
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
   pth <- "~/radiant_temp/rmd/figure"
