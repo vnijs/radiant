@@ -8,5 +8,11 @@ shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE, collaps
   ),
 
   tabPanel("Quit", uiOutput("savequit")),
-  tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd")))
+
+  navbarMenu("Help",
+    tabPanel("Radiant help", uiOutput("help_quant")),
+    tabPanel("About", HTML(inclRmd("../base/tools/app/about.Rmd")))
+  )
+
+  # tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd")))
 ))
