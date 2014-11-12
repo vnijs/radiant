@@ -90,14 +90,16 @@ varnames <- reactive({
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
 
-show_data_snippet <- function(dat = input$datasets, nshow = 5) {
+show_data_snippet <- function(dat = input$datasets, nshow = 5, title = "") {
 
+  if(title != "") p
   if(is.character(dat) && length(dat) == 1) dat <- values[[dat]]
   dat %>%
     slice(1:min(nshow,nrow(.))) %>%
     mutate_each(funs(d2c)) %>%
     xtable::xtable(.) %>%
     print(type='html',  print.results = FALSE) %>%
+    paste0(title, .) %>%
     sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
     paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
     enc2utf8

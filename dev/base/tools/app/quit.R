@@ -57,7 +57,6 @@ observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
   # cleaning out the state file temp
   pth <- "~/radiant_temp/state/"
-  # if(file.exists(pth)) unlink(pth, recursive = TRUE)
   filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
   if(file.exists(filename)) file.remove(filename)
   setInitValues()

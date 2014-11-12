@@ -28,7 +28,7 @@ Viz:
 - Options: Cross-sectional or Time-series (and then both)
 - Convert to ggvis: 
   - http://ggvis.rstudio.com/ggvis-basics.html#more-details
-  - 
+  - https://github.com/jimhester/ggplot2ToGgvis
   
 - Dygraph for timeseries: http://rstudio.github.io/dygraphs/index.html
 
@@ -62,19 +62,7 @@ Base:
 Dependencies:
 - remove plyr (reshape2?)
 - remove car?
-- add mosaic
-
-Rmarkdown:
-- source functions from standalone Rmd
-- store reports as data.frame attribute
-- embedding data into Rmd file (http://bayesfactor.blogspot.com/2014/09/embedding-rdata-files-in-rmarkdown.html)
-- cheatsheet link: http://rmarkdown.rstudio.com/RMarkdownCheatSheet.pdf
-
-
-Coding:
-- shinyAce code-completion: https://saurfang.shinyapps.io/shinyAceCodeInput/
-- shinyAce vim-mode: 
-
+- add mosaic (see below)
 
 Mosaic:
 - Include dependency
@@ -85,10 +73,31 @@ Mosaic:
 - Website: http://mosaic-web.org/
 - GitHub site: https://github.com/rpruim/mosaic
 
+Rmarkdown:
+- source functions from standalone Rmd
+- store reports as data.frame attribute
+- embedding data into Rmd file (http://bayesfactor.blogspot.com/2014/09/embedding-rdata-files-in-rmarkdown.html)
+- cheatsheet link: http://rmarkdown.rstudio.com/RMarkdownCheatSheet.pdf
+
+Coding:
+- shinyAce code-completion: https://saurfang.shinyapps.io/shinyAceCodeInput/
+- shinyAce vim-mode: 
+- TextArea with enter to activate: https://groups.google.com/forum/#!msg/shiny-discuss/BFUgjICEQlc/fCn4sYePDhwJ
+
 Coding style:
 - Use chaining (http://timelyportfolio.github.io/rCharts_factor_analytics/factors_with_new_R.html
-- dplyr: http://seananderson.ca/2014/09/13/dplyr-intro.html
+- dplyr:
+  - http://seananderson.ca/2014/09/13/dplyr-intro.html
+  - http://jimhester.github.io/plyrToDplyr/
 - magitter: ..
+- lintr (https://github.com/jimhester/lintr)
+
+Merge:
+- Add dropdowns so you can choose different variables from each dataset to merge on
+- Add example dataset so students can see how the merges work ()
+
+
+
 
 
 library(dplyr)
