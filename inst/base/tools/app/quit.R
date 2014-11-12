@@ -57,22 +57,10 @@ observe({
   if(is.null(input$resetState) || input$resetState == 0) return()
   # cleaning out the state file temp
   pth <- "~/radiant_temp/state/"
-  # if(file.exists(pth)) unlink(pth, recursive = TRUE)
   filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
   if(file.exists(filename)) file.remove(filename)
   setInitValues()
 })
-
-# observe({
-#   if(running_local) {
-#     print("Here again")
-#     invalidateLater(20000, NULL)
-#     tags$script("window.location.reload();")
-#     setInitValues()
-#     if(length(values[["datasetlist"]]) > 1) updateTabsetPanel(session, "nav_radiant", selected = "About")
-      # `r if(running_local) sprintf("### App resets every hour")`
-#   }
-# })
 
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
