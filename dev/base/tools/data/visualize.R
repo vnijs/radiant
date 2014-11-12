@@ -33,7 +33,7 @@ output$uiViz_facet_col <- renderUI({
 #   if(length(input$vizvars2) > 1) return()
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
-  selectizeInput("viz_facet_col", 'Facet col', vars,
+  selectizeInput("viz_facet_col", 'Facet column', vars,
               selected = state_init_list("viz_facet_col", ".", vars), multiple = FALSE)
 })
 

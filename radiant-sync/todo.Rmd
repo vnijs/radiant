@@ -12,6 +12,21 @@ Inspiration:
 
 0.6
 
+Transform:
+- Recode completely
+- Add option to send commands to Report
+
+Explore:
+- Recode almost completely for dplyr
+- Help file
+
+Testing:
+- Test using the Report feature to start 
+- Test using Rselenium
+- Test the (regular) function with testthat
+  - There may be a way to source them without the 'no reactive context' error
+  - Otherwise split them off into separate file
+
 Filter on:
 - Create separate filter tab
 - https://github.com/RCura/ScattRplot using an interactive graph to filter data
