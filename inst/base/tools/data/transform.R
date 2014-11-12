@@ -62,9 +62,17 @@ dec <<- decileSplit
 d_mdy <<- function(x) as.character(x) %>% mdy %>% as.Date
 d_dmy <<- function(x) as.character(x) %>% dmy %>% as.Date
 d_ymd <<- function(x) as.character(x) %>% ymd %>% as.Date
-
+# d_dmy <<- function(x) as.Date(dmy(as.character(x)))
+# d_mdy <<- function(x) as.Date(mdy(as.character(x)))
+# d_ymd <<- function(x) as.Date(ymd(as.character(x)))
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
+# d_ymd_hms <<- function(x) ymd_hms(as.character(x))
 d_ymd_hms <<- function(x) as.character(x) %>% ymd_hms
+
+# http://stackoverflow.com/questions/4798343/convert-factor-to-integer
+# a <- c(2,3,4,2)
+# a <- as.factor(a)
+# as.int(a)
 
 as.int <<- function(x) ifelse(is.factor(x),
                               return(as.integer(levels(x))[x]),
@@ -129,9 +137,10 @@ output$ui_Transform <- renderUI({
 	    uiOutput("uiTr_reorder_levs")
     )
   	),
-		helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
-    # helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
-##### Reporting option not yet available for transform
+		# helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
+		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
+
+		# Reporting option not yet available for transform
  		# helpAndReport('Explore','explore',inclRmd("tools/help/explore.Rmd"))
 	)
 })

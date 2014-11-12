@@ -1,6 +1,4 @@
-**Merge two data file loaded in the Radiant app.** 
-
-There are four merge options in Radiant at this time:
+Merge data available in the Radiant app. 
 
 * inner_join return all rows from x where there are matching values in y, and all columns from
 x and y. If there are multiple matches between x and y, all combination of the matches are
