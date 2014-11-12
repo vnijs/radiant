@@ -70,11 +70,15 @@ getdata <- reactive({
 
 getdata_class <- reactive({
 	# don't use isolate here or values won't change when the dataset is changed
-	sapply(getdata(), function(x) class(x)[1]) %>%
+  getdata() %>% get_class()
+})
+
+get_class <- function(dat) {
+  sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%
 	  gsub("POSIXt","date", .)
-})
+}
 
 varnames <- reactive({
 	dat <- getdata_class()
@@ -83,19 +87,21 @@ varnames <- reactive({
 	vars
 })
 
-date2character <- reactive({
-	date2character_dat(getdata())
-})
-
-date2character_dat <- function(dat) {
-	# xtable doesn't like dates
-  isDate <- c(sapply(dat, is.Date))
-	dat[,isDate] <- sapply(dat[,isDate], as.character)
-	dat
-}
-
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
+
+show_data_snippet <- function(dat = input$datasets, nshow = 5) {
+
+  if(is.character(dat) && length(dat) == 1) dat <- values[[dat]]
+  dat %>%
+    slice(1:min(nshow,nrow(.))) %>%
+    mutate_each(funs(d2c)) %>%
+    xtable::xtable(.) %>%
+    print(type='html',  print.results = FALSE) %>%
+    sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
+    paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
+    enc2utf8
+}
 
 ################################################################
 # functions used to create Shiny in and outputs

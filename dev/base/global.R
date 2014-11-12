@@ -26,6 +26,7 @@ if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitH
   # for debugging
 # options(shiny.trace = TRUE)
 # options(warn=2)
+# options(warn=0)
 # options(shiny.error=recover)
 # vimKeyBinding <- TRUE
 }
