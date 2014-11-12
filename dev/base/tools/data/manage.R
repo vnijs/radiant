@@ -306,7 +306,6 @@ output$uiDatasets <- renderUI({
   list(wellPanel(
     selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist,
       selected = state_init("datasets"), multiple = FALSE),
-
     conditionalPanel(condition = "input.datatabs == 'Manage'",
       checkboxInput("man_add_descr","Add/edit data description", FALSE),
       conditionalPanel(condition = "input.man_add_descr == true",
@@ -333,15 +332,5 @@ output$htmlDataExample <- renderText({
   descr <- values[[paste0(input$datasets,"_descr")]]
   nshow <- 10
   if(is.null(descr) || descr == "") nshow <- 30
-
   show_data_snippet(nshow = nshow)
-#
-#   dat %>%
-#     slice(1:min(nshow,nrow(.))) %>%
-#     mutate_each(funs(d2c)) %>%
-#     xtable::xtable(.) %>%
-#     print(type='html',  print.results = FALSE) %>%
-#     sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
-#     paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
-#     enc2utf8
 })

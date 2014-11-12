@@ -21,10 +21,13 @@ LaTeX math:  $f(\\\\alpha, \\\\beta) \\\\propto x^{\\\\alpha-1}(1-x)^{\\\\beta-1
 hist(rnorm(100))
 ```
 "
+
 # opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
 opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                fig.path = "~/radiant_temp/rmd/figure/")
 opts_knit$set(progress = TRUE)
+# options(markdown.HTML.stylesheet = "https://github.com/rstudio/markdown/blob/master/inst/resources/markdown.css")
+
 
 output$report <- renderUI({
 
@@ -42,20 +45,17 @@ output$report <- renderUI({
                   vimKeyBinding=vimKeyBinding,
                   hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
                   )),
-
-#       aceEditor("ace", value="Here's some text in the editor.", cursorId = "cursor", hotkeys=list(helpKey="F1", runKey=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER")
-
       div(class="span6", htmlOutput("rmd_knitDoc"))
     )
   )
 })
 
-# observe({
-#   if(is.null(input$renameButton) || input$renameButton == 0) return()
-#   updateTabsetPanel(session, "nav_radiant", selected = "Report")
-# })
-
 valsRmd <- reactiveValues(knit = 0)
+knitIt <- function(text) knitr::knit2html(text = text, quiet = TRUE, options=c("mathjax", "base64_images"),
+                                          stylesheet = "../base/www/rmarkdown.css") %>% HTML
+#                                           stylesheet = "../base/www/bootstrap.min.css") %>% HTML
+knitIt2 <- function(text) paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
+                                '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n') %>% HTML
 
 observe({
   input$runKeyRmd
@@ -68,17 +68,12 @@ output$rmd_knitDoc <- renderUI({
   isolate({
     if(!running_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
-    } else if(input$rmd_report != "") {
-
+    }
+    if(input$rmd_report != "") {
       withProgress(message = 'Knitting report', value = 0, {
-
-        if(is.null(input$rmd_selection) || input$rmd_selection == "") {
-          html <- HTML(paste(knitr::knit2html(text = input$rmd_report, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
-        } else {
-          html <- HTML(paste(knitr::knit2html(text = input$rmd_selection, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n'))
-        }
+        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "", return(knitIt2(input$rmd_report)),
+          return(knitIt2(input$rmd_selection)))
       })
-      html
     }
   })
 })
@@ -88,12 +83,8 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if(running_local) {
       isolate({
-        if(is.null(input$rmd_selection) || input$rmd_selection == "") {
-          html <- knitr::knit2html(text = input$rmd_report, quiet = TRUE, options=c("mathjax", "base64_images"))
-        } else {
-          html <- knitr::knit2html(text = input$rmd_selection, quiet = TRUE, options=c("mathjax", "base64_images"))
-        }
-        cat(html,file=file,sep="\n")
+        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",  text <- input$rmd_report, text <- input$rmd_selection)
+        knitIt(text) %>% cat(.,file=file,sep="\n")
       })
     }
   }
@@ -103,7 +94,7 @@ output$saveRmd <- downloadHandler(
   filename = function() {"report.Rmd"},
   content = function(file) {
     isolate({
-      cat(input$rmd_report,file=file,sep="\n")
+      input$rmd_report %>% cat(.,file=file,sep="\n")
     })
   }
 )
@@ -113,7 +104,7 @@ observe({
   # Useful to jump to reporting tab on refresh when testing
   # updateTabsetPanel(session, "nav_radiant", selected = "Report")
 
-  # loading r-code from disk
+  # loading rmd report from disk
   inFile <- input$loadRmd
   if(!is.null(inFile) && !is.na(inFile)) {
     isolate({

@@ -16,13 +16,12 @@ output$uiMerge_vars <- renderUI({
   vars2 <- colnames(values[[input$mergeDataset]])
   vars <- intersect(vars1, vars2)
   if(length(vars) == 0) return()
-  vars <- vars1[vars %in% vars1]  # need variable labels from varnames()
+  vars <- vars1[vars1 %in% vars]  # need variable labels from varnames()
   selectInput("merge_vars", "Select merge-by variables:", choices  = vars,
-    selected = state_init_multvar("merge_vars",vars, vars), multiple = TRUE, selectize = FALSE)
+    selected = state_multvar("merge_vars",vars), multiple = TRUE, selectize = FALSE)
 })
 
-# merge_type <- c('left','right','inner','full')
-merge_type <- c('inner','left','semi','anti')
+merge_type <- c('inner_join','left_join','semi_join','anti_join')
 
 output$uiMerge_type <- renderUI({
   selectInput("merge_type", "Merge type:", choices  = merge_type,
@@ -57,28 +56,10 @@ observe({
 })
 
 mergeData <- function(datasets, mergeDataset, merge_vars, merge_type, merge_name) {
-  mdata <- join(values[[datasets]], values[[mergeDataset]], by = merge_vars,
-    type = merge_type)
 
-#   join <- get(merge_type)
-#
-# ------------------
-#   library(dplyr)
-#   merge_type <- 'inner_join'
-#   datasets <- "mtcars1"
-#   mergeDataset <- "mtcars2"
-#   merge_vars <- "mpg"
-#   join <- get(merge_type)
-#   values <- list()
-#   values[[datasets]] <- mtcars
-#   values[[mergeDataset]] <- mtcars
-#
-#   join(values[[datasets]], values[[mergeDataset]], by = merge_vars)
-#
-# -----------------
-
-
-  values[[merge_name]] <- mdata
+  # gettin the join-type from the string
+  tmpjoin <- get(merge_type)
+  values[[merge_name]] <- tmpjoin(values[[datasets]], values[[mergeDataset]], by = merge_vars)
   values[['datasetlist']] <- unique(c(merge_name,values[['datasetlist']]))
 }
 
@@ -86,27 +67,23 @@ observe({
   if(is.null(input$mergeReport) || input$mergeReport == 0) return()
   isolate({
     inp <- list(input$datasets, input$mergeDataset, input$merge_vars, input$merge_type, input$merge_name)
-
     updateReportMerge(inp,"mergeData")
   })
 })
 
 output$mergePossible <- renderText({
-
   if(is.null(input$merge_vars))
-    return("<h4>No matching variables found</h4><br>")
-  if(sum(input$merge_vars %in% colnames(values[[input$mergeDataset]])) == 0)
-    return("<h4>No matching variables found</h4><br>")
+    return("<h4>No matching variables selected</h4>")
   return("")
 })
 
 
 output$mergeData1 <- renderText({
   if(is.null(input$mergeDataset)) return()
-  show_data_snippet()
+  show_data_snippet(title = paste("<h3>Data:",input$datasets,"</h3>"))
 })
 
 output$mergeData2 <- renderText({
   if(is.null(input$mergeDataset)) return()
-  show_data_snippet(input$mergeDataset)
+  show_data_snippet(input$mergeDataset, title = paste("<h3>Data:",input$mergeDataset,"</h3>"))
 })
