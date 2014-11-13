@@ -1,13 +1,5 @@
 Modify type, change, create, add, reorder, and remove variables in the data.
 
-<!--
-Insert Math in-line: $\alpha^2$
-
-Insert Math as a centered equation:
-
-$$y = \alpha + \beta \times x$$
--->
-
 #### Type
 
 When you select Type from the 'Transformation type' drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, to change a variable of type factor or character to a variable of type date. Click the 'Save changes' button to change variable(s) in the data set. A description of the type transformations included in Radiant is provided below.
@@ -19,6 +11,8 @@ When you select Type from the 'Transformation type' drop-down another drop-down 
 5. As date (mdy): R will, by default, read dates as factors. Use this function if the dates are ordered as month-day-year
 6. As date (dmy): R will, by default, read dates as factors. Use this function if the dates are ordered as day-month-year
 7. As date (ymd): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day
+7. As date/time (ymd_hms): R will, by default, read dates as factors. Use this function if the dates/time is ordered as 
+year-month-day hour-minute-second
 
 #### Change
 
@@ -83,7 +77,7 @@ To use the recode feature select the variable you want to change and choose 'Rec
 
 	1:12 = 'A'; 13:24 = 'B'; else = 'C'
 
-3.	The transformation commands used for the Tulsa-Age cross-tab:
+3.	To reduce the number of levels for a factor variable (e.g., an age variable) you might use a command similar to the one below. Note that < 25 and 25-34 are now assigned to the category <35, 35-44 and 45-54 are assigned to the new category 35-54, and 55-64 and >64 are assigned to the category >54:
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
@@ -94,6 +88,14 @@ To use the recode feature select the variable you want to change and choose 'Rec
 #### Rename
 
 Choose 'Rename' from the 'Transformation type' dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a ','. Press return to see the variables with their new names on screen and  press 'Save changes' to alter the variable names in the original data.
+
+#### Reorder columns
+
+If you would like to change the order of the columns in the data set choose 'Reorder columns'. Buttons will appear for each variable in the active data set. Simply drag-and-drop these in your preferred order and when you are done press Save changes.
+
+#### Reorder levels
+
+Factor variable in R can be very convenient for analysis. However, by default the levels of a factor are sorted alphabetically. If that is not what you want you can reorder the levels much as you would reorder the variables in a dataset (see the section above). To change the ordering of the levels for a factor variable select that variable and choose 'Reorder columns'. Buttons will appear for each level of the factor you selected. Simply drag-and-drop these in your preferred order and when you are done press Save changes.
 
 #### Remove columns
 
