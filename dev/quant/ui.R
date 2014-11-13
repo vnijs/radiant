@@ -29,7 +29,7 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
 
   navbarMenu("Help",
     tabPanel("Radiant help", uiOutput("help_quant")),
-    tabPanel("About", HTML(inclRmd("../base/tools/app/about.Rmd")))
+    # do NOT remove withMathJax(), load-files breaks!
+    tabPanel("About", withMathJax(), "../base/tools/app/about.Rmd" %>% inclRmd %>% HTML)
   )
-#   tabPanel("About", withMathJax(), HTML(inclRmd("../base/tools/app/about.Rmd")))
 ))
