@@ -1,4 +1,4 @@
-**Manage the data available in the Radiant app. Load data into memory, Save data to disk, or Remove a dataset from memory.**
+> Manage the data available in the Radiant app. Load data into memory, Save data to disk, or Remove a dataset from memory
 
 #### Load data
 
@@ -14,7 +14,8 @@ To access all data files bundled with the Radiant app choose the examples radio 
 
 As mentioned above, the best way to get data in and out of Radiant (and R) is to use the R-data format (rda). Choose the rda radio button and click the Save data button to store the data on your computer. 
 
-It is good practice to add a description of the data to each file you use. For the files that are part of Radiant you will see a brief overview of the variables etc. below the table of the first 10 rows of the data. If you would like to add such a description for your own data check the 'Add/edit data description' check-box. A window will open below that data table where you can add text in <a href="http://support.iawriter.com/help/kb/general-questions/markdown-syntax-reference-guide" target="_blank">Markdown</a> format. The descriptions of the data included with Radiant should serve as a good starting point. When you save the data as an rda file the description you created (or edited) will automatically a added to the file. 
+It is good practice to add a description of the data to each file you use. For the files that are part of Radiant you will see a brief overview of the variables etc. below the table of the first 10 rows of the data. If you would like to add such a description for your own data check the 'Add/edit data description' check-box. A window will open below that data table where you can add text in 
+<a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The descriptions of the data included with Radiant should serve as a good starting point. When you save the data as an rda file the description you created (or edited) will automatically a added to the file. 
 
 Saving data from Radiant for use in Excel can again be achieved in two ways. First, you can save data to a csv format and load it into Excel (i.e., choose the csv radio button and click 'Save data'). Alternatively, you can copy the data from Radiant into the clipboard by choosing the clipboard radio button and clicking the 'Copy data' button. In Excel you can then paste the data from Radiant into a worksheet using CTRL-V (or CMD-V on mac). 
 
