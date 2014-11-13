@@ -1,4 +1,4 @@
-**Show the data available in the Radiant app in table form**
+> Show the data available in the Radiant app in table form
 
 #### Datasets
 

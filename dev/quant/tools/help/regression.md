@@ -1,12 +1,26 @@
-All example files can be loaded from Data > Manage. Click the 'examples' radio button and press 'Load examples'.
+> (Linear) Regression: The workhorse of empirical research in the social sciences
+
+All example files discussed below can be loaded from Data > Manage. Click the 'examples' radio button and press 'Load examples'.
 
 ### Functionality
+
+Start by selecting a dependent variable and one or more independents variables. If two or more Independent variables are included in the model we may want to investigate if any interactions are present. An interaction exists when the effect of an independent variable on the dependent variable is determined, at least partially, by the level of another independent variable. For example, the increase in price for a 1 versus a 2 carrot diamond may depend on the clarity level of the diamond.
 
 The `Predict` box allows you calculate predicted values from a regression model. You must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., `carat` must one of the selected independent variables to predict the `price` of a 2-carat diamond)
 
 * To predict the price of a 1-carat diamond type `carat = 1` and press enter
 * To predict the price of diamonds ranging from .5 to 1 carat at steps of size .05 type `carat = seq(.5.1,.05)` and press enter
 * To predict the price of 1,2, or 3 carat diamonds with an ideal cut type `carat = 1:3, cut = "Ideal"` and press enter
+
+We can test if two or more variables together add significantly to the fit of a model. This function can be very useful to test if the overall influence of a variable of type `factor` is significant.
+
+Various additional outputs and options can be selected:
+* RMSE: Root Mean Squared Error (Prediction error)
+* Sum of Squares: The total variance in the dependent variable split into the variance explained by the model and the remainder
+* VIF: Variance Inflation Factors and Rsq. These are measures of multi-collinearity for the independent variables
+* Standardized coefficients: Coefficients may be hard to compare of the independent variables are measured on different scales. By standardizing the data before estimation we can see which variables move-the-needle most
+* Step-wise: A data-mining approach to select the best fitting model 
+
 
 ### Regression examples
 
