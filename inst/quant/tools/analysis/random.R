@@ -239,7 +239,7 @@ output$ui_ctl <- renderUI({
 		  actionButton("ctl_resample", "Resample")
 		),
 # 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
-		helpModal('Central Limit Theorm','ctlHelp',inclRmd("../quant/tools/help/ctl.Rmd"))
+		helpModal('Central Limit Theorem','ctlHelp',inclMD("../quant/tools/help/ctl.md"))
  	)
 })
 
