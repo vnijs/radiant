@@ -1,4 +1,4 @@
-**Visualize data**
+> Visualize data
 
 #### Number of plots
 

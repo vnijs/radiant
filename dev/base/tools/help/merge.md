@@ -1,4 +1,4 @@
-**Merge two data file loaded in the Radiant app.** 
+> Merge two data file loaded in the Radiant app
 
 There are four merge options in Radiant at this time:
 
