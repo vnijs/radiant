@@ -1,10 +1,10 @@
-Calculate the required sample size when the researcher is interested in calculating either a mean or a proportion from sample data.
+> Determine the required sample size to test a mean or proportion calculated from sample data
 
 #### Example 1
 
 We would like to start an ISP and need to estimate the average Internet usage of households in one week for our business plan and model. How many households must we randomly select to be 95 percent sure that the sample mean is within 1 minute of the population mean . Assume that a previous survey of household usage has shown  = 6.95 minutes.
 
-Answer:
+**Answer:**
 
 Since we are interested in estimating the mean internet usage in the population of interest we select sample size calculation for a  Mean. In the screen shot below we entered 1 (minute) as the Acceptable error and 6.95 as the initial estimate of the Sample standard deviation. The Confidence level is 95% so we choose a z-value of 1.96.
 
@@ -28,17 +28,17 @@ Population Value = 5000
 Expected proportion = 10%
 Acceptable error = 4%
 
-Answer:
+**Answer:**
 
-Since we are interested in estimating the prevalence of HIV antibody in the population of interest we select sample size calculation for a Proportion. In the screen shot below we entered 4% as the Acceptable error and 10% as the initial estimate of the proportion (p). The Confidence level is 95% so we choose a z-value of 1.96.
+Because we want to estimate the prevalence of HIV antibodies in the population of interest we select sample size calculation for a Proportion. In the screen shot below we entered 4% as the Acceptable error and 10% as the initial estimate of the proportion (p). The Confidence level is 95% so we choose a z-value of 1.96.
 
-![Example 1b](figures_quant/sampleSize_ex2a.png)
+![Example 2a](figures_quant/sampleSize_ex2a.png)
 
-As you can see the required sample size is equal to 217, i.e., we need 217 valid responses from our target population to make an inference of the population average with the required Acceptable Error, Confidence level, and Sample standard deviation. This number again assumes a Incidence and Response rate of 100%. The example suggests the population of interest has only 5000 people so it may be of interest to apply a correction for population size.
+As you can see the required sample size is equal to 217, i.e., we need 217 valid responses from our target population to make an inference of the population average with the required Acceptable Error and Confidence level. This number again assumes an Incidence and Response rate of 100%. The example suggests the population of interest has only 5000 people so it may be worthwhile to apply a correction for population size.
 
-![Example 1a](figures_quant/sampleSize_ex2b.png)
+![Example 2b](figures_quant/sampleSize_ex2b.png)
 
-In the screen shot above we clicked 'Yes' to apply the population correction and then entered 5000 as the population size. The required number of valid responses drops from 217 to 208.
+In the screen shot above we clicked 'Yes' to apply the population correction and then entered 5000 as the population size. The required number of valid responses drops only slightly from 217 to 208.
 
 <a href="http://bphc.hrsa.gov/policiesregulations/performancemeasures/patientsurvey/calculating.html" target="_blank">Source</a>
 

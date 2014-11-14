@@ -43,14 +43,23 @@
 
 ### If I push and commit this change and then sync with dropbox, if I need to revert the commit then
 ### I can just revert and resync
-# rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
-# after this one you can see all the changes nicely in the commit screen!
 
+# after this one you can see all the changes nicely in the commit screen!
+# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
+# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 # rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
 
-# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+# rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/base/tools/help/ ~/Desktop/GitHub/radiant_dev/inst/base/tools/help/
+# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/base/tools/ ~/Desktop/GitHub/radiant_dev/inst/base/tools/
 
-# rsync -av --delete ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
+rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+
+# rsync --dry-run -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+# rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+
 # rsync -av --delete ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
-
 # diff -x ".DS_Store" -Naur ~/Desktop/GitHub/radiant_dev/inst/ ~/Desktop/GitHub/radiant_dev/dev/

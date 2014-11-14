@@ -306,7 +306,6 @@ output$uiDatasets <- renderUI({
   list(wellPanel(
     selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist,
       selected = state_init("datasets"), multiple = FALSE),
-
     conditionalPanel(condition = "input.datatabs == 'Manage'",
       checkboxInput("man_add_descr","Add/edit data description", FALSE),
       conditionalPanel(condition = "input.man_add_descr == true",
@@ -330,21 +329,8 @@ output$htmlDataExample <- renderText({
   if(is.null(dat)) return()
 
   # Show only the first 10 (or 30) rows
-  nshow <- 10
   descr <- values[[paste0(input$datasets,"_descr")]]
   nshow <- 10
   if(is.null(descr) || descr == "") nshow <- 30
-
-  # convert dates if needed
-#   d2c <- function(x) ifelse(is.Date(x),return(as.character(x)),return(x))
-
-  dat %>%
-    slice(1:min(nshow,nrow(.))) %>%
-    mutate_each(funs(d2c)) %>%
-    # date2character_dat(.) %>%
-    xtable::xtable(.) %>%
-    print(type='html',  print.results = FALSE) %>%
-    sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
-    paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
-    enc2utf8
+  show_data_snippet(nshow = nshow)
 })
