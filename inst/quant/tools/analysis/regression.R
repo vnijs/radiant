@@ -175,18 +175,18 @@ output$ui_regression <- renderUI({
 	    		value = state_init('reg_predict','')),
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
-        checkboxInput(inputId = "reg_sumsquares", label = "Show sum of squares",
-	    		value = state_init('reg_sumsquares',FALSE)),
-        checkboxInput(inputId = "reg_confint", label = "Show confidence intervals",
+        checkboxInput(inputId = "reg_rmse", label = "RMSE",
 	    		value = state_init('reg_rmse',FALSE)),
-  	    checkboxInput(inputId = "reg_rmse", label = "Calculate RMSE",
-	    		value = state_init('reg_rmse',FALSE)),
-        checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
-	   		  value = state_init('reg_standardize',FALSE)),
-		    checkboxInput(inputId = "reg_vif", label = "Calculate VIF-values",
+        checkboxInput(inputId = "reg_sumsquares", label = "Sum of squares",
+	    		value = state_init('reg_sumsquares',FALSE)), br(),
+  	    checkboxInput(inputId = "reg_vif", label = "VIF",
 	    		value = state_init('reg_vif',FALSE)),
-			  checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
-		  		value = state_init('reg_stepwise',FALSE))
+        checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
+      		value = state_init('reg_rmse',FALSE)),
+        checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
+     		  value = state_init('reg_standardize',FALSE)),
+        checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
+      		value = state_init('reg_stepwise',FALSE))
 			),
 		  conditionalPanel(condition = "input.tabs_regression == 'Plots'",
 		    selectInput("reg_plots", "Regression plots:", choices = r_plots,
@@ -316,6 +316,8 @@ summary_regression <- function(result = .regression()) {
 	.print.summary.lm(res, digits = 3)
   # print(res, digits = 3)
 
+	# if(reg_outlier) print(outlierTest(result), digits = 3)
+
   if(result$reg_predict != '') {
 
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
@@ -365,8 +367,13 @@ summary_regression <- function(result = .regression()) {
     }
   }
 
+  if(result$reg_rmse) {
+    rmse <- sqrt(mean(res$residual^2,na.rm=TRUE))
+    # rmse_df <- data.frame("RMSE" = rmse, "RMSE (95%)" = rmse *2, check.names = FALSE)
+    cat("Prediction error (RMSE): ", rmse, "\n\n")
+	}
+
   if(result$reg_sumsquares) {
-# 	  print(anova(result))
 	  atab <- anova(result)
 	  nr_rows <- dim(atab)[1]
 	  df_reg <- sum(atab$Df[-nr_rows])
@@ -386,6 +393,11 @@ summary_regression <- function(result = .regression()) {
     cat("\n")
   }
 
+  if(result$reg_vif) {
+		print(vif_regression(result), digits = 3)
+    cat("\n")
+	}
+
 	if(result$reg_confint) {
     conf <- confint(result)
     conf <- data.frame(result$coefficients,conf)
@@ -394,19 +406,6 @@ summary_regression <- function(result = .regression()) {
     colnames(conf) <- c("Estimate","2.5%","97.5%", "+/-")
     cat("Coefficient confidence intervals:\n")
     print(conf)
-    cat("\n")
-	}
-
-	if(result$reg_rmse) {
-  	rmse <- sqrt(mean(res$residual^2,na.rm=TRUE))
-    # rmse_df <- data.frame("RMSE" = rmse, "RMSE (95%)" = rmse *2, check.names = FALSE)
-    cat("Prediction error (RMSE): ", rmse, "\n\n")
-	}
-
-	# if(reg_outlier) print(outlierTest(result), digits = 3)
-
-	if(result$reg_vif) {
-		print(vif_regression(result), digits = 3)
     cat("\n")
 	}
 
@@ -611,13 +610,17 @@ reg_int_vec <- function(reg_vars, nway) {
 vif_regression <- function(result = .regression()) {
 	if(result$reg_vif) {
 		if(length(result$reg_var2) > 1) {
-	  	cat("Variance Inflation Factors\n")
 
-	  	VIF <- vif(result)
-	  	if(!is.null(dim(VIF))) VIF <- VIF[,'GVIF'] # needed when factors are included
-	  	VIF <- sort(VIF, decreasing = TRUE)
-
-	  	ifelse(length(VIF) < 8, return(VIF), return(data.frame(VIF)))
+  	 	VIF <- try(vif(result))
+      if(is(VIF, 'try-error')) {
+        cat("Insufficient number of independent variables selected to calculate VIF scores\n")
+      } else {
+	  	  cat("Variance Inflation Factors\n")
+      	if(!is.null(dim(VIF))) VIF <- VIF[,'GVIF'] # needed when factors are included
+        VIF <- data.frame("VIF" = VIF, "Rsq" = 1 - 1/VIF)
+	  	  VIF <- VIF[order(VIF$VIF, decreasing=T),]
+	  	  ifelse(nrow(VIF) < 8, return(VIF %>% t), return(VIF))
+      }
 		} else {
 	  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
 		}

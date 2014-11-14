@@ -1,4 +1,4 @@
-Cross-tab (or contingency table) analysis is used to evaluate if two nominally scaled variables are associated. 
+> Cross-tab analysis is used to evaluate if two nominally scaled variables are associated. This tool is also known as chi-square or contingency table analysis
 
 #### Example 1
 

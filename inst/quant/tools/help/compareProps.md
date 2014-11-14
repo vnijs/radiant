@@ -1,3 +1,5 @@
+> Compare proportions for two or more groups in the data
+
 The compare proportions X-squared-test is used to compare the proportion of a variable for one sample in our data to the proportion of the same variable in one, or more, other samples. 
 
 This is important since we seldom have access to data for an entire population. The hypothesized value in the population is specified in the 'Comparsion value' box. 
