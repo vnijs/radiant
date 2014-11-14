@@ -51,9 +51,20 @@ output$report <- renderUI({
 })
 
 valsRmd <- reactiveValues(knit = 0)
+
+tmp_file <- function(text){
+  tmp <- tempfile(tmpdir="/")
+  write(text, tmp)
+  tmp
+}
+
 knitIt <- function(text) knitr::knit2html(text = text, quiet = TRUE, options=c("mathjax", "base64_images"),
                                           stylesheet = "../base/www/rmarkdown.css") %>% HTML
 #                                           stylesheet = "../base/www/bootstrap.min.css") %>% HTML
+
+# requires pandoc install
+# knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
+
 knitIt2 <- function(text) paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
                                 '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n') %>% HTML
 
