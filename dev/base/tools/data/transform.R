@@ -114,8 +114,8 @@ output$ui_Transform <- renderUI({
 	    uiOutput("uiTr_reorder_levs")
     )
   	),
-		# helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
-		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
+		helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
+# 		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
 
 		# Reporting option not yet available for transform
  		# helpAndReport('Explore','explore',inclRmd("tools/help/explore.Rmd"))
