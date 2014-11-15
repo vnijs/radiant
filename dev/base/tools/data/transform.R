@@ -201,10 +201,19 @@ transform_main <- reactive({
 
 #       newvar <- try(do.call(car::recode, list(dat[,input$tr_columns[1]],recom)), silent = TRUE)
 
-      dat_tr <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+#       dat_tr <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+
+#       dat_tr <- dat %>% mutate_each_(input$tr_transfunction, vars)
+
+#       dat_tr <- dat %>% mutate_each_("log", vars)
+
+      print(head(dat))
+
       if(is(dat_tr, 'try-error')) dat_tr <- dat; dat_tr[] <- NA
       dat <- cbind(dat, dat_tr)
 			colnames(dat) <- c(vars, paste(input$tr_transfunction,vars, sep="."))
+
+      print(head(dat))
 #       print("transformation worked")
 		}
 		if(input$tr_typefunction != 'none') {
@@ -307,7 +316,15 @@ output$transform_summary <- renderPrint({
 	dat <- transform_main()
 	if(is.null(dat)) return(invisible()) 			# ...
 
+
+  head(get_data())
+  head(dat)
+
   gd_class <- get_class(dat)
+
+  print(gd_class)
+
+
 	isFct <- "factor" == gd_class
 	isNum <- "numeric" == gd_class | "integer" == gd_class
 	isDate <- "date" == gd_class
