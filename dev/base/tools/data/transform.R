@@ -58,28 +58,43 @@ msp <<- medianSplit
 dec <<- decileSplit
 # lagx <<- shift
 
-d_mdy <<- function(x) as.Date(mdy(as.character(x)))
-d_dmy <<- function(x) as.Date(dmy(as.character(x)))
-d_ymd <<- function(x) as.Date(ymd(as.character(x)))
+# as character needed here in case x is a factor
+d_mdy <<- function(x) as.character(x) %>% mdy %>% as.Date
+d_dmy <<- function(x) as.character(x) %>% dmy %>% as.Date
+d_ymd <<- function(x) as.character(x) %>% ymd %>% as.Date
 
-trans_options <- list("None" = "", "Log" = "log", "Exp" = "exp", "Square" = "sq", "Square-root" = "sqrt",
-	"Center" = "cent", "Standardize" = "st", "Invert" = "inv", "Median split" = "msp", "Deciles" = "dec")
+# http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
+d_ymd_hms <<- function(x) as.character(x) %>% ymd_hms
 
-type_options <- list("None" = "", "As factor" = "as.factor",  "As number" = "as.numeric", "As integer" = "as.integer",
-	"As character" = "as.character", "As date (mdy)" = "d_mdy", "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd")
+as.int <<- function(x) ifelse(is.factor(x),
+                              return(as.integer(levels(x))[x]),
+                              return(as.integer(x)))
+as.num <<- function(x) ifelse(is.factor(x),
+                              return(as.numeric(levels(x))[x]),
+                              return(as.numeric(x)))
 
-trans_types <- list("None" = "", "Type" = "type", "Change" = "change", "Create" = "create", "Clipboard" = "clip",
-	"Recode" = "recode", "Rename" = "rename", "Reorder columns" = "reorder_cols", "Reorder levels" = "reorder_levs",
-	"Remove columns" = "remove", "Remove missing" = "na.remove", "Subset" = "sub_filter")
+trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp", "Square" = "sq",
+                      "Square-root" = "sqrt", "Center" = "cent", "Standardize" = "st",
+                      "Invert" = "inv", "Median split" = "msp", "Deciles" = "dec")
+
+type_options <- list("None" = "none", "As factor" = "as.factor",  "As number" = "as.num",
+                     "As integer" = "as.int", "As character" = "as.character",
+                     "As date (mdy)" = "d_mdy", "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd",
+                     "As date/time (ymd_hms)" = "d_ymd_hms")
+
+trans_types <- list("None" = "none", "Type" = "type", "Change" = "change", "Create" = "create",
+                    "Clipboard" = "clip", "Recode" = "recode", "Rename" = "rename",
+                    "Reorder columns" = "reorder_cols", "Reorder levels" = "reorder_levs",
+                    "Remove columns" = "remove", "Remove missing" = "na.remove", "Subset" = "sub_filter")
 
 output$ui_Transform <- renderUI({
 
 	# Inspired by Ian Fellow's transform ui in JGR/Deducer
   list(wellPanel(
     uiOutput("uiTr_columns"),
-    selectInput("tr_changeType", "Transformation type:", trans_types, selected = ""),
+    selectInput("tr_changeType", "Transformation type:", trans_types, selected = "none"),
     conditionalPanel(condition = "input.tr_changeType == 'type'",
-	    selectInput("tr_typefunction", "Change variable type:", type_options, selected = "")
+	    selectInput("tr_typefunction", "Change variable type:", type_options, selected = "none")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'change'",
 	    selectInput("tr_transfunction", "Apply function:", trans_options)
@@ -115,9 +130,8 @@ output$ui_Transform <- renderUI({
     )
   	),
 		helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
-# 		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
-
-		# Reporting option not yet available for transform
+    # helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
+##### Reporting option not yet available for transform
  		# helpAndReport('Explore','explore',inclRmd("tools/help/explore.Rmd"))
 	)
 })
@@ -131,7 +145,7 @@ transform_main <- reactive({
 
 	dat <- getdata()
 
-	if(input$tr_changeType == "") {
+	if(input$tr_changeType == "none") {
 		if(!is.null(input$tr_columns)) {
 			# if(!all(input$tr_columns %in% colnames(dat))) return()
 			dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
@@ -176,19 +190,33 @@ transform_main <- reactive({
 	if(!is.null(input$tr_columns)) {
 
 		if(!all(input$tr_columns %in% colnames(dat))) return()
-		dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
-		if(input$tr_transfunction != '') {
-			cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
+    #	dat <- data.frame(dat[, input$tr_columns, drop = FALSE])
+		dat <- select_(dat, .dots = input$tr_columns)
 
-			# This might work
-			# lapply(dat,function(x) x - mean(x))
-			# cbind(dat,z)
+		if(input$tr_transfunction != 'none') {
+      # cn <- c(colnames(dat),paste(input$tr_transfunction,colnames(dat), sep="."))
+      #	dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
+      # dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
+      vars <- colnames(dat)
 
-			dat <- cbind(dat,colwise(input$tr_transfunction)(dat))
+#       newvar <- try(do.call(car::recode, list(dat[,input$tr_columns[1]],recom)), silent = TRUE)
 
-			colnames(dat) <- cn
+#       dat_tr <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+
+#       dat_tr <- dat %>% mutate_each_(input$tr_transfunction, vars)
+
+#       dat_tr <- dat %>% mutate_each_("log", vars)
+
+      print(head(dat))
+
+      if(is(dat_tr, 'try-error')) dat_tr <- dat; dat_tr[] <- NA
+      dat <- cbind(dat, dat_tr)
+			colnames(dat) <- c(vars, paste(input$tr_transfunction,vars, sep="."))
+
+      print(head(dat))
+#       print("transformation worked")
 		}
-		if(input$tr_typefunction != '') {
+		if(input$tr_typefunction != 'none') {
 			# dat <- cbind(dat,colwise(input$tr_typefunction)(dat))
 			dat <- colwise(input$tr_typefunction)(dat)
 		}
@@ -280,47 +308,42 @@ output$transform_data <- reactive({
 	dat <- transform_main()
 	if(is.null(dat)) return(invisible())
 	if(is.character(dat)) return(dat)
-
-	nr <- min(nrow(dat),5)
-	dat <- dat[1:nr,, drop = FALSE]
-
-	dat <- data.frame(date2character_dat(dat))
-
-	html <- print(xtable::xtable(dat), type='html', print.results = FALSE)
-  html <- paste(html, '<label>5 rows shown. See View-tab for details.</label>')
-  html <- sub("<table border=1>","<table class='table table-condensed table-hover'>", html)
-  # html <- sub("<table border=\"1\">","<table class='table table-condensed table-hover'>", html)
-  Encoding(html) <- 'UTF-8'
-  html
-
+  show_data_snippet(dat)
 })
 
 output$transform_summary <- renderPrint({
 
-	# if(isolate(input$datatabs) != 'Transform') return(invisible())
-
 	dat <- transform_main()
 	if(is.null(dat)) return(invisible()) 			# ...
 
-	isFct <- sapply(dat, is.factor)
-	isNum <- sapply(dat, is.numeric)
-	isDate <- sapply(dat, is.Date)
-	isChar <- sapply(dat, is.character)
-	isLogic <- sapply(dat, is.logical)
+
+  head(get_data())
+  head(dat)
+
+  gd_class <- get_class(dat)
+
+  print(gd_class)
+
+
+	isFct <- "factor" == gd_class
+	isNum <- "numeric" == gd_class | "integer" == gd_class
+	isDate <- "date" == gd_class
+	isChar <- "character" == gd_class
+	isLogic <- "logical" == gd_class
 
 	if(sum(isNum) > 0) {
 		cat("Summarize numeric variables:\n")
-		# print(psych::describe(dat[,isNum])[,c("n","mean","median","min","max","range","sd","se","skew","kurtosis")])
-		res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
+		res <- data.frame(psych::describe(dat[isNum], na.rm = TRUE)[,c("n","mean","median","min","max","sd",
+                                                                   "se","skew","kurtosis")])
 
 		# adding Q1 and Q3
-		perc <- function(x) quantile(x,c(.25,.75))
-		percres <- colwise(perc)(dat[,isNum, drop = FALSE])
-		rownames(percres) <- c("25%","75%")
-		res <- cbind(res,t(percres))
+		perc25 <- function(x) quantile(x,.25, na.rm = TRUE)
+		perc75 <- function(x) quantile(x,.75, na.rm = TRUE)
 
-		# number of missing values
-		res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
+    res$`25%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
+    res$`75%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
+    # nmissing function is in explore.R
+    res$missing <- select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
 
 		# print desired stats in order
 		print(res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")])
@@ -328,24 +351,24 @@ output$transform_summary <- renderPrint({
 	}
 	if(sum(isFct) > 0) {
 		cat("Summarize factors:\n")
-		print(summary(dat[,isFct]))
+    select(dat, which(isFct)) %>% summary %>% print
 		cat("\n")
 	}
 	if(sum(isDate) > 0) {
 		cat("Earliest dates:\n")
-		print(colwise(min)(dat[,isDate]))
+    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
 		cat("\nFinal dates:\n")
-		print(colwise(max)(dat[,isDate]))
+    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
 		cat("\n")
 	}
 	if(sum(isChar) > 0) {
 		cat("Summarize character variables:\n")
-		print(table(dat[,isChar]))
+    select(dat, which(isChar)) %>% table %>% print
 		cat("\n")
 	}
 	if(sum(isLogic) > 0) {
 		cat("Summarize logical variables:\n")
-		print(table(dat[,isLogic]))
+    select(dat, which(isLogic)) %>% table %>% print
 		cat("\n")
 	}
 })
@@ -378,6 +401,7 @@ observe({
 	 	updateTextInput(session = session, inputId = "tr_recode", label = "Recode (e.g., lo:20 = 1):", '')
 	 	updateTextInput(session = session, inputId = "tr_rename", label = "Rename (separate by ','):", value = '')
 	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", label = "", '')
-		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options, selected = "None")
+		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options,
+                      selected = "none")
 	})
 })
