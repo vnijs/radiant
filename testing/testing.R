@@ -1,5 +1,43 @@
+require(dplyr)
+
 mtcars$vs <- as.factor(mtcars$vs)
 mtcars$am <- as.factor(mtcars$am)
+
+input <- list()
+input$tr_columns <- c("cyl","vs")
+input$tr_transfunction <- "log"
+
+getdata <- function(dat = mtcars) {
+  dat
+}
+
+dat <- dat * NA
+dat
+
+
+dat <- getdata()[,input$tr_columns]
+
+vars <- colnames(dat)
+dat %>% mutate_each_(input$tr_transfunction, vars)
+
+ret <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+
+is(ret, 'try-error')
+
+attr(ret,"condition")$message
+
+
+
+# select_ needs .dots for a vector or strings!!!
+select_(getdata(),input$tr_columns)
+select_(getdata(),.dots = input$tr_columns)
+
+
+# dplyr levels error
+# levels(getdata()[,input$tr_columns[1]])
+# getdata() %>% select_(input$tr_columns[1]) %>% .[1] %>% class
+# getdata() %>% .[,input$tr_columns[1]] %>% levels
+# getdata() %>% select_(input$tr_columns[1]) %>% levels -> levs
 
 result <- lm(mpg ~ cyl + carb + vs + am, data = mtcars)
 summary(result)
