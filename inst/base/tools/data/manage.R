@@ -124,7 +124,7 @@ observe({
       write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
     }
     updateRadioButtons(session = session, inputId = "saveAs", label = "Save data:",
-                       c(".rda" = "rda", ".csv" = "csv", "clipboard" = "clipboard"), selected = ".rda")
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard","state" = "state"), selected = "rda")
   })
 })
 
@@ -209,7 +209,7 @@ observe({
     values[['xls_data']] <- as.data.frame(dat)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
     updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
-                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples"), selected = "rda")
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"), selected = "rda")
 
     updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
                       selected = 'xls_data')

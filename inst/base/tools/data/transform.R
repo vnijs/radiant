@@ -19,42 +19,45 @@ output$uiTr_reorder_levs <- renderUI({
   returnOrder("tr_reorder_levs", levs)
 })
 
-standardize_1sd <- function(x) {
+# standardize variable
+st <- function(x) {
 	if(is.factor(x)) return(rescale(x))
 	if(is.numeric(x)) return(as.numeric(scale(x)))
 	# if(is.numeric(x)) return(scale(x))
 }
 
-centerVar <- function(x) {
+# center variable
+cent <- function(x) {
 	if(is.factor(x)) return(rescale(x))
 	if(is.numeric(x)) return(x - mean(x, na.rm = TRUE))
 	x
 }
 
-medianSplit <- function(x) cut(x, breaks=quantile(x,c(0,.5,1)), include.lowest=TRUE, labels=c("Below","Above"))
-decileSplit <- function(x) cut(x, breaks=quantile(x,seq(0,1,.1)), include.lowest=TRUE, labels=seq(1,10,1))
+# median split
+msp <- function(x) cut(x, breaks=quantile(x,c(0,.5,1)), include.lowest=TRUE, labels=c("Below","Above"))
+# decile split
+dec <- function(x) cut(x, breaks=quantile(x,seq(0,1,.1)), include.lowest=TRUE, labels=seq(1,10,1))
 
-sq <<- function(x) x^2
-inv <<- function(x) 1/x
-normalize <<- function(x,y) x/y
-st <<- standardize_1sd
-cent <<- centerVar
-msp <<- medianSplit
-dec <<- decileSplit
-
+sq <- function(x) x^2
+inv <- function(x) 1/x
+normalize <- function(x,y) x/y
+# st <- standardize_1sd
+# cent <- centerVar
+# msp <- medianSplit
+# dec <- decileSplit
 
 # as character needed here in case x is a factor
-d_mdy <<- function(x) as.character(x) %>% mdy %>% as.Date
-d_dmy <<- function(x) as.character(x) %>% dmy %>% as.Date
-d_ymd <<- function(x) as.character(x) %>% ymd %>% as.Date
+d_mdy <- function(x) as.character(x) %>% mdy %>% as.Date
+d_dmy <- function(x) as.character(x) %>% dmy %>% as.Date
+d_ymd <- function(x) as.character(x) %>% ymd %>% as.Date
 
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
-d_ymd_hms <<- function(x) as.character(x) %>% ymd_hms
+d_ymd_hms <- function(x) as.character(x) %>% ymd_hms
 
-as.int <<- function(x) ifelse(is.factor(x),
+as.int <- function(x) ifelse(is.factor(x),
                               return(as.integer(levels(x))[x]),
                               return(as.integer(x)))
-as.num <<- function(x) ifelse(is.factor(x),
+as.num <- function(x) ifelse(is.factor(x),
                               return(as.numeric(levels(x))[x]),
                               return(as.numeric(x)))
 
@@ -131,8 +134,6 @@ transform_main <- reactive({
 	if(is.null(input$tr_changeType)) return()
 
 	dat <- getdata()
-#   vars <- colnames(dat)
-
 
   ##### Fix - show data snippet if changeType == 'none' and no columns select #####
 	if(input$tr_changeType == "none") {
@@ -181,18 +182,22 @@ transform_main <- reactive({
     vars <- colnames(dat)
 
 		if(input$tr_transfunction != 'none') {
-      dat_tr <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+#       dat_tr <- try(dat %>% mutate_each_(funs(input$tr_transfunction), vars), silent = TRUE)
       # if(is(dat_tr, 'try-error')) dat_tr <- dat * NA
+#       if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
 
-      if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
+      fun <- get(input$tr_transfunction)
+      dat_tr <- dat %>% mutate_each_(funs(fun), vars)
+#       dat_tr <- dat %>% mutate_each_(input$tr_transfunction, vars)
 
   		cn <- c(vars,paste(input$tr_transfunction,vars, sep="_"))
 			dat <- cbind(dat,dat_tr)
 			colnames(dat) <- cn
 		}
 		if(input$tr_typefunction != 'none') {
-      #	dat <- colwise(input$tr_typefunction)(dat)
-      dat <- mutate_each_(dat,input$tr_typefunction, vars)
+      fun <- get(input$tr_typefunction)
+#       dat <- mutate_each_(dat,input$tr_typefunction, vars)
+      dat <- mutate_each_(dat,funs(fun), vars)
 		}
     if(!is.null(input$tr_normalizer) && input$tr_normalizer != 'none') {
 
