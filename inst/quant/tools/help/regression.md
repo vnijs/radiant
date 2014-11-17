@@ -98,7 +98,7 @@ Increases in x1 and x3 are associated with increases in y whereas increases in x
 
 In marketing both linear and log-log regressions are very common. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.
 
-The data 'diamonds' contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable 'price' as the dependent variable and 'carat' and 'clarity' as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seems skewed to the left. 
+The data 'diamonds' contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable 'price' as the dependent variable and 'carat' and 'clarity' as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the _tail_ is.
 
 ![Regression 3 - histograms](figures_quant/regression_diamonds_hist.png)
 

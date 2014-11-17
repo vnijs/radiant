@@ -22,8 +22,8 @@ output$uiPmap_attr <- renderUI({
 })
 
 output$uiPmap_pref <- renderUI({
-  if(is.null(input$pmap_attr)) return()
-  if(is.null(inChecker(c(input$pmap_pref)))) return()
+#   if(is.null(input$pmap_attr)) return()
+#   if(is.null(inChecker(c(input$pmap_pref)))) return()
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]

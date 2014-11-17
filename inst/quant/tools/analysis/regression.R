@@ -348,7 +348,7 @@ summary_regression <- function(result = .regression()) {
         if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
 
         if(sum(names(nval) %in% names(newdat)) < length(nval)) {
-          cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n")
+          cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
         } else {
           newdat[names(nval)] <- list(NULL)
           nnd <- data.frame(newdat[-1],nval)
