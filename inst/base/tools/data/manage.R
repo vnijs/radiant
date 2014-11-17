@@ -45,7 +45,7 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         actionButton('saveClipData', 'Copy data')
       ),
-      conditionalPanel(condition = "input.saveAs != 'clipboard' && input.man_add_descr == false && input.saveAs != 'state'",
+      conditionalPanel(condition = "input.saveAs != 'clipboard' && input.saveAs != 'state'",
         downloadButton('downloadData', 'Save')
       ),
       conditionalPanel(condition = "input.saveAs == 'state'",
@@ -311,7 +311,10 @@ output$uiDatasets <- renderUI({
       conditionalPanel(condition = "input.man_add_descr == true",
         actionButton('updateDescr', 'Update description')
       ),
-      uiOutput("uiRename")
+      checkboxInput("man_rename_data","Rename data", FALSE),
+      conditionalPanel(condition = "input.man_rename_data == true",
+        uiOutput("uiRename")
+      )
     )
   ))
 })
