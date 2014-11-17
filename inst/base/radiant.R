@@ -28,6 +28,7 @@ saveState <- function(filename) {
     RadiantInputs <- state_list
     LiveInputs <- reactiveValuesToList(input)
     RadiantInputs[names(LiveInputs)] <- LiveInputs
+#     RadiantInputs <- reactiveValuesToList(input)
     RadiantValues <- reactiveValuesToList(values)
     save(RadiantInputs, RadiantValues , file = filename)
   })
