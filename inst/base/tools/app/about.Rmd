@@ -1,12 +1,14 @@
-### Radiant - Business analytics using R and Shiny
+## Radiant - Business analytics using R and Shiny
 
-Version 0.525 (11/14/2014)
+Radiant is a tool disigned to facilitate decision making using data and models. It is currently used in the Quantitive Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/">Rady School of Management</>
 
 Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. You can reach us at radiant@rady.ucsd.edu
 
-Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="_blank">Rstudio</a>
+### Introduction
 
-Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+### Radiant code
+
+Version 0.526 (11/17/2014)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 `r sprintf("Dependencies for local use: %s", paste0(pkgs, collapse = ", "))`
 
