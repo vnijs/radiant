@@ -420,11 +420,16 @@ summary_regression <- function(result = .regression()) {
 	}
 }
 
-
 .print.summary.lm <- function (x, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
 
   # adapted from getAnywhere(print.summary.lm)
-  cat("Coefficients:\n")
+  cat(paste("Dependent variable:",input$reg_var1,"\n"))
+
+  if(input$reg_standardize == TRUE) {
+    cat("Standardized coefficients:\n")
+  } else {
+    cat("Coefficients:\n")
+  }
   coefs <- x$coefficients
   if (!is.null(aliased <- x$aliased) && any(aliased)) {
     cn <- names(aliased)
