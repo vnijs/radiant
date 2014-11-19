@@ -1,5 +1,113 @@
+# qq - plot
+x1 <- sort(rnorm(1000))
+x2 <- sort(rnorm(1000))
+plot(x1,x2)
+
+
+library(dplyr)
+
+Nash_N <- 1503
+Nash_mean <- 1105
+Nash_std_dev <- 221
+
+Precision_N <- 509
+Precision_mean <- 3016
+Precision_std_dev <- 4100
+
+sim_int <- function(sampN, sampMean, sampSd, sampMeanTol = .5, sampSdTol = .5) {
+
+  mean_tol <- sampMeanTol + 100
+  std_tol <-  sampSdTol + 100
+  itt <- 1
+
+  while(mean_tol > sampMeanTol | std_tol > sampSdTol) {
+
+    sampInt <- rnorm(sampN, mean = sampMean, sd = sampSd)
+    sampInt <- ((sampInt - mean(sampInt)) / sd(sampInt))
+    sampInt <- ((sampInt - mean(sampInt)) / sd(sampInt)) * sampSd + sampMean
+    sampInt <- round(sampInt,0)
+
+    (mean(sampInt) - sampMean) %>% abs -> mean_tol
+    (sd(sampInt) - sampSd) %>% abs -> std_tol
+    itt <- itt + 1
+
+    # if(min(sampInt) < 0) {
+    #   mean_tol <- sampMeanTol + 100
+    #   std_tol <-  sampSdTol + 100
+    # }
+
+    c(itt,mean(sampInt),sd(sampInt),mean_tol,std_tol) %>% round(2) %>% print
+  }
+
+  return(sampInt)
+}
+
+Nash_data <- sim_int(1503, 1105, 221)
+Precision_data <- sim_int(509, 3016, 4100)
+
+Total <- c(Nash_data,Precision_data)
+mean(Total)
+sd(Total)
+
+Precision_data <- s_prec
+
+while(tol_mean > .5 | tol_std > .5) {
+
+  s_prec <- round(rnorm(Nash_N, mean = Nash_mean, sd = Nash_std_dev),0)
+  (mean(s_prec) - Precision_mean) %>% abs -> tol_mean
+  (sd(s_prec) - Precision_std_dev) %>% abs -> tol_std
+  itt <- itt + 1
+
+  print(round(c(itt,mean(s_prec),sd(s_prec),tol_mean,tol_std),2))
+}
+
+
+
+
+
+
+
+
+require(dplyr)
+
 mtcars$vs <- as.factor(mtcars$vs)
 mtcars$am <- as.factor(mtcars$am)
+
+input <- list()
+input$tr_columns <- c("cyl","vs")
+input$tr_transfunction <- "log"
+
+getdata <- function(dat = mtcars) {
+  dat
+}
+
+dat <- dat * NA
+dat
+
+
+dat <- getdata()[,input$tr_columns]
+
+vars <- colnames(dat)
+dat %>% mutate_each_(input$tr_transfunction, vars)
+
+ret <- try(dat %>% mutate_each_(input$tr_transfunction, vars), silent = TRUE)
+
+is(ret, 'try-error')
+
+attr(ret,"condition")$message
+
+
+
+# select_ needs .dots for a vector or strings!!!
+select_(getdata(),input$tr_columns)
+select_(getdata(),.dots = input$tr_columns)
+
+
+# dplyr levels error
+# levels(getdata()[,input$tr_columns[1]])
+# getdata() %>% select_(input$tr_columns[1]) %>% .[1] %>% class
+# getdata() %>% .[,input$tr_columns[1]] %>% levels
+# getdata() %>% select_(input$tr_columns[1]) %>% levels -> levs
 
 result <- lm(mpg ~ cyl + carb + vs + am, data = mtcars)
 summary(result)

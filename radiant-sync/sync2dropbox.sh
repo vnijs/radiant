@@ -45,7 +45,7 @@
 ### I can just revert and resync
 
 # after this one you can see all the changes nicely in the commit screen!
-rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+# rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
 # rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
 # rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 # rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
@@ -57,6 +57,10 @@ rsync --dry-run -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/
 # rsync -av --delete ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
 # rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+
+rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
+rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
 # rsync --dry-run -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 # rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/

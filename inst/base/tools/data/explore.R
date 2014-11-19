@@ -38,12 +38,10 @@ expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25
 
 output$uiExpl_function <- renderUI({
   if(is.null(input$expl_byvar)) return()
-#   validate(
-#     need(!is.null(input$expl_byvar), message = FALSE)
-#   )
   selectizeInput("expl_function", label = "Apply function(s):", choices = expl_functions,
-    selected = state_init_list("expl_function",c("length","mean"), expl_functions), multiple = TRUE,
-      options = list(placeholder = 'Select functions', plugins = list('remove_button', 'drag_drop'))
+                 selected = state_init_multvar("expl_function",c("length","mean"), expl_functions),
+                 multiple = TRUE, options = list(placeholder = 'Select functions',
+                                                 plugins = list('remove_button', 'drag_drop'))
     )
 })
 

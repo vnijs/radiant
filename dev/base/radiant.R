@@ -36,8 +36,8 @@ saveState <- function(filename) {
 saveStateOnCrash <- function(session = session)
   session$onSessionEnded(function() {
     observe({
-      pth <- "~/radiant_temp/state"
-      cdir <- ""
+      pth <- normalizePath("~/radiant_temp/state",winslash="/")
+#       cdir <- ""
       if(!file.exists(pth))
         cdir <- try(dir.create(pth), silent = TRUE)
       if(!is(cdir, 'try-error')) try(saveState(paste0(pth,"/RadiantState-",Sys.Date(),".rsf")), silent = TRUE)
@@ -70,10 +70,10 @@ getdata <- reactive({
 
 getdata_class <- reactive({
 	# don't use isolate here or values won't change when the dataset is changed
-  getdata() %>% get_class()
+  getdata() %>% getdata_class_fun
 })
 
-get_class <- function(dat) {
+getdata_class_fun <- function(dat = getdata()) {
   sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%
