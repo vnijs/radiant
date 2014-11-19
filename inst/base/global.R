@@ -114,7 +114,7 @@ helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'botto
 
 # adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", "../base/tools/help/figures/")
-# addResourcePath("imgs", "../base/www/imgs/")
+addResourcePath("imgs", "../base/www/imgs/")
 
 # binding to a bootstrap modal
 helpModal <- function(title, link, content) {
