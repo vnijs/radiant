@@ -183,6 +183,11 @@ output$ui_regression <- renderUI({
 	    		value = state_init('reg_vif',FALSE)),
         checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
       		value = state_init('reg_rmse',FALSE)),
+		    conditionalPanel(condition = "input.reg_confint == true",
+#            sliderInput('reg_conf_level',"Confidence interval:", min = 0.80, max = 0.99,
+           sliderInput('reg_conf_level',"", min = 0.80, max = 0.99,
+                       value = state_init('reg_conf_level',.95), step = 0.01)
+		    ),
         checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
      		  value = state_init('reg_standardize',FALSE)),
         checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
@@ -225,8 +230,9 @@ output$regression <- renderUI({
   if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
 
 	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_rmse,
-    input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
+		input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint,
+    input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
+    input$reg_loess)
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -254,15 +260,16 @@ observe({
   if(is.null(input$regressionReport) || input$regressionReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_rmse,
-      input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line, input$reg_loess)
+			input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint,
+      input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
+      input$reg_loess)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
 regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
-                       reg_predict, reg_standardize, reg_sumsquares, reg_confint, reg_rmse, reg_vif, reg_stepwise, reg_plots,
-                       reg_line, reg_loess) {
+                       reg_predict, reg_standardize, reg_sumsquares, reg_confint, reg_conf_level, reg_rmse, reg_vif,
+                       reg_stepwise, reg_plots, reg_line, reg_loess) {
 
 	vars <- reg_var2
 
@@ -286,6 +293,7 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	mod$reg_predict <- reg_predict
 	mod$reg_sumsquares <- reg_sumsquares
 	mod$reg_confint <- reg_confint
+	mod$reg_conf_level <- reg_conf_level
 	mod$reg_rmse <- reg_rmse
 	mod$reg_vif <- reg_vif
 	mod$reg_var1 <- reg_var1
@@ -400,13 +408,21 @@ summary_regression <- function(result = .regression()) {
 	}
 
 	if(result$reg_confint) {
-    conf <- confint(result)
-    conf <- data.frame(result$coefficients,conf)
-    conf <- data.frame(conf,conf[,3]-conf[,1])
-    conf <- round(conf,3)
-    colnames(conf) <- c("Estimate","2.5%","97.5%", "+/-")
+
+    cl_split <- function(x) 100*(1-x)/2
+    cl_split(result$reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
+    (100 - cl_split(result$reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
+
     cat("Coefficient confidence intervals:\n")
-    print(conf)
+    confint(result, level = result$reg_conf_level) %>%
+      data.frame %>%
+      set_colnames(c("Low","High")) %>%
+      cbind(Estimate = result$coefficients,.) -> dat
+
+    dat$`+/-` <- dat$High - dat$Estimate
+    dat %>%
+      set_colnames(c("Estimate",cl_low,cl_high, "+/-")) %>%
+      print
     cat("\n")
 	}
 
