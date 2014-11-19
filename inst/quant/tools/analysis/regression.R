@@ -158,7 +158,7 @@ output$uiReg_intsel <- renderUI({
 })
 
 reg_interactions <- c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way")
-
+reg_pred_buttons <- c("CMD" = "cmd","Data" = "dataframe")
 output$ui_regression <- renderUI({
   list(
   	wellPanel(
@@ -171,8 +171,19 @@ output$ui_regression <- renderUI({
 				uiOutput("uiReg_intsel")
 			),
 		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
-        returnTextInput("reg_predict", "Predict (e.g., carat = seq(.5,1,.05))",
-	    		value = state_init('reg_predict','')),
+   	    radioButtons(inputId = "reg_predict_buttons", label = "Prediction:", reg_pred_buttons,
+	      	selected = state_init_list("reg_predict_buttons","cmd",reg_pred_buttons)),
+
+        conditionalPanel(condition = "input.reg_predict_buttons == 'cmd'",
+          returnTextInput("reg_predict", "Predict (e.g., carat = seq(.5,1,.05))",
+	    		  value = state_init('reg_predict',''))
+        ),
+        conditionalPanel(condition = "input.reg_predict_buttons == 'dataframe'",
+          selectInput(inputId = "reg_predict_data", label = "Predict from data:", choices = c("None" = "none",values$datasetlist),
+            selected = state_init("reg_predict_data"), multiple = FALSE)
+        ),
+
+
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
         checkboxInput(inputId = "reg_rmse", label = "RMSE",
@@ -230,9 +241,11 @@ output$regression <- renderUI({
   if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
 
 	result <- regression(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint,
-    input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
-    input$reg_loess)
+		input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data, input$reg_standardize,
+    input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
+    input$reg_plots, input$reg_line, input$reg_loess)
+
+
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -260,16 +273,18 @@ observe({
   if(is.null(input$regressionReport) || input$regressionReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_predict, input$reg_standardize, input$reg_sumsquares, input$reg_confint,
-      input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
+			input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data,
+      input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse,
+      input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
       input$reg_loess)
 		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
 })
 
 regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
-                       reg_predict, reg_standardize, reg_sumsquares, reg_confint, reg_conf_level, reg_rmse, reg_vif,
-                       reg_stepwise, reg_plots, reg_line, reg_loess) {
+                       reg_predict_buttons, reg_predict, reg_predict_data, reg_standardize, reg_sumsquares,
+                       reg_confint, reg_conf_level, reg_rmse, reg_vif, reg_stepwise, reg_plots, reg_line,
+                       reg_loess) {
 
 	vars <- reg_var2
 
@@ -284,13 +299,16 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
 	if(reg_stepwise) {
-		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
+# 		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
+		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'both')
 		# mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), k = log(nrow(dat)), scope = list(upper = formula), direction = 'both')
 	} else {
 		mod <- lm(formula, data = dat)
 	}
 
+	mod$reg_predict_buttons <- reg_predict_buttons
 	mod$reg_predict <- reg_predict
+	mod$reg_predict_data <- reg_predict_data
 	mod$reg_sumsquares <- reg_sumsquares
 	mod$reg_confint <- reg_confint
 	mod$reg_conf_level <- reg_conf_level
@@ -322,17 +340,25 @@ summary_regression <- function(result = .regression()) {
   #	res$coefficients <- format(res$coefficients, scientific = FALSE)
 	res <- summary(result)
  	res$coefficients <- round(res$coefficients,3)
-	.print.summary.lm(res, dv = result$reg_var1, std_c = result$reg_standardize, digits = 3)
+	.print.summary.lm(res, dataset = result$datasets, dv = result$reg_var1, std_c = result$reg_standardize, digits = 3)
   # print(res, digits = 3)
 
 	# if(reg_outlier) print(outlierTest(result), digits = 3)
 
-  if(result$reg_predict != '') {
+  if(result$reg_predict != '' || result$reg_predict_data != "none") {
 
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
     # as starting point
- 		reg_predict <- gsub("\"","\'", result$reg_predict)
-    nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
+
+
+    if(result$reg_predict_data == "none") {
+   		reg_predict <- gsub("\"","\'", result$reg_predict)
+      nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
+    } else {
+      nval <- values[[result$reg_predict_data]]
+      vars <- as.character(attr(result$terms,'variables'))[-1]
+      nval <- select_(nval, .dots = vars[-1])
+    }
 
     if(is(nval, 'try-error')) {
       cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
@@ -356,7 +382,11 @@ summary_regression <- function(result = .regression()) {
         # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
         if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
 
-        if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+#         if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+        if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
+          print(names(nval))
+          print(names(newdat))
+          print(names(nval) %in% names(newdat))
           cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
         } else {
           newdat[names(nval)] <- list(NULL)
@@ -437,10 +467,11 @@ summary_regression <- function(result = .regression()) {
 	}
 }
 
-.print.summary.lm <- function (x, dv = "", std_c = FALSE, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
+.print.summary.lm <- function (x, dataset = "", dv = "", std_c = FALSE, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
 
   # adapted from getAnywhere(print.summary.lm)
 #   cat(paste("Dependent variable:",input$reg_var1,"\n"))
+  cat(paste("Data set:",dataset,"\n"))
   cat(paste("Dependent variable:",dv,"\n"))
 
   if(std_c == TRUE) {

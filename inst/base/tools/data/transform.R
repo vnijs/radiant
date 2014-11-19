@@ -370,7 +370,13 @@ observe({
 		} else if(input$tr_changeType == 'na.remove') {
 	  	values[[input$datasets]] <- dat
 		} else if(input$tr_changeType == 'sub_filter') {
-	  	values[[input$datasets]] <- dat
+# 	  	values[[input$datasets]] <- dat
+      print("got here!!")
+	  	values[['datasetlist']] %>%  c(paste0(input$datasets,"_filter"),.) -> newdatasetlist
+	  	values[[newdatasetlist[1]]] <- dat
+	  	values[['datasetlist']] <- newdatasetlist
+	    values[[paste0(newdatasetlist[1],"_descr")]] <- paste0(values[[paste0(input$datasets,"_descr")]],
+                                                             "\n\n### Subset\n\nCommand used: ", input$tr_subset)
 		} else if(input$tr_changeType == 'rename') {
 			changedata_names(input$tr_columns, colnames(dat))
 		} else if(input$tr_changeType == 'reorder_cols') {
