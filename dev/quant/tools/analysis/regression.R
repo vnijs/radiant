@@ -416,7 +416,7 @@ summary_regression <- function(result = .regression()) {
     cat("Coefficient confidence intervals:\n")
     confint(result, level = result$reg_conf_level) %>%
       data.frame %>%
-      set_colnames(c("Low","High")) %>%
+      magrittr::set_colnames(c("Low","High")) %>%
       cbind(Estimate = result$coefficients,.) -> dat
 
     dat$`+/-` <- dat$High - dat$Estimate
