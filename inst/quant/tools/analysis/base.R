@@ -31,17 +31,6 @@ output$singleMean <- renderUI({
   statTabPanel("Base","Single mean",".singleMean","singleMean")
 })
 
-# validate(need(!is.null(input$dataset), message = FALSE))
-# validate(
-#   need(input$xvar, "No X variable selected"),
-#   need(input$yvar, "No Y variable selected")
-# )
-# validate(
-#   need(all(c(input$xvar, input$yvar) %in% names(dataset())),
-#        "Invalid column(s) selected"
-#   )
-# )
-
 .singleMean <- reactive({
 
   rtext <- "This analysis requires a variable of type numeric or interval.\nPlease select another database"

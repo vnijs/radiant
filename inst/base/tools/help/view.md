@@ -18,7 +18,30 @@ Click on a column header in the table to sort the data by the values of that var
 
 #### Subset
 
-There are several ways to select a subset of the data to view. The Subset box on the left can be used with > and < signs and you can also combine subset commands. For example, x > 3 & y == 2 would show only those rows for which the variable x has values larger than 3 __and__ for which y has values equal to 2. Type your statement in the Subset box and press enter to see the result on screen.
+There are several ways to select a subset of the data to view. The Subset box on the left can be used with > and < signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable x has values larger than 3 **and** for which y has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In constrast `!=` is used to determine if variable is _not equal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where Salary is larger than $100,000 or smaller than $20,000 you could use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of operators you can use. Type your statement in the Subset box and press enter to see the result on screen.
+
+-----------------------------------
+Operator Description
+-------- --------------------------
+<	       less than
+
+<=	     less than or equal to
+
+>	       greater than
+
+>=	     greater than or equal to
+
+==	     exactly equal to
+
+!=	     not equal to
+
+x | y	   x OR y
+
+x & y	   x AND y
+-----------------------------------
+
+
+### Search
 
 For variables that have a limited number of different values (e.g., a factor) you can type a value in the text box below the column for one, or more, variables. For example, to filter on rows with Ideal cut, type `ideal` in the box below that column. Matching in the filter fields is case-insensitive. In fact, just typing `eal` would produce the same result because the search will match any part of a string.
 
