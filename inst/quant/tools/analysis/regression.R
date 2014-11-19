@@ -421,7 +421,7 @@ summary_regression <- function(result = .regression()) {
 
     dat$`+/-` <- dat$High - dat$Estimate
     dat %>%
-      set_colnames(c("Estimate",cl_low,cl_high, "+/-")) %>%
+      magrittr::set_colnames(c("Estimate",cl_low,cl_high, "+/-")) %>%
       print
     cat("\n")
 	}
