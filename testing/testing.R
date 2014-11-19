@@ -1,3 +1,9 @@
+# qq - plot
+x1 <- sort(rnorm(1000))
+x2 <- sort(rnorm(1000))
+plot(x1,x2)
+
+
 library(dplyr)
 
 Nash_N <- 1503
