@@ -1,3 +1,14 @@
+library(dplyr)
+result <- lm(mpg ~ cyl + vs, data = mtcars)
+
+nval <- mtcars
+vars <- as.character(attr(result$terms,'variables'))[-1]
+vars
+select_(nval, .dots = vars[-1])
+
+
+
+
 # qq - plot
 x1 <- sort(rnorm(1000))
 x2 <- sort(rnorm(1000))
