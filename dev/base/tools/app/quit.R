@@ -62,14 +62,8 @@ observe({
 
 observe({
   if(is.null(input$quitApp) || input$quitApp == 0) return()
-#   pth <- "~/radiant_temp/rmd/figure"
-#   if(file.exists(pth))
-
   unlink("~/radiant_temp/rmd/figure/*", recursive = TRUE)
-#   pth <- "~/radiant_temp/state/"
-#   filename = paste0(pth,"RadiantState-",Sys.Date(),".rsf")
   unlink("~/radiant_temp/state/RadiantState*.rsf")
-#   if(file.exists(filename)) file.remove(filename)
 
   # quit R, unless you are running Rstudio or Rgui
   if(Sys.getenv("RSTUDIO") != "1") {
