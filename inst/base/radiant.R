@@ -28,6 +28,7 @@ saveState <- function(filename) {
     RadiantInputs <- state_list
     LiveInputs <- reactiveValuesToList(input)
     RadiantInputs[names(LiveInputs)] <- LiveInputs
+#     RadiantInputs <- reactiveValuesToList(input)
     RadiantValues <- reactiveValuesToList(values)
     save(RadiantInputs, RadiantValues , file = filename)
   })
@@ -70,10 +71,10 @@ getdata <- reactive({
 
 getdata_class <- reactive({
 	# don't use isolate here or values won't change when the dataset is changed
-  getdata() %>% get_class()
+  getdata() %>% getdata_class_fun
 })
 
-get_class <- function(dat) {
+getdata_class_fun <- function(dat = getdata()) {
   sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%

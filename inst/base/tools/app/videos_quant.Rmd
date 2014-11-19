@@ -2,16 +2,27 @@
 
 Radiant is a tool disigned to facilitate decision making using data and models. It is currently used in the Quantitive Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. You can reach us at radiant@rady.ucsd.edu.
 
-<!--
-### Introduction
-### Big picture video ###
--->
+### Starting and stopping Radiant
 
-### Radiant code
+<iframe width="640" height="375" src="//www.youtube.com/embed/D71alRsGmBk" frameborder="0" allowfullscreen></iframe>
 
-Version 0.526 (11/17/2014)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+### Getting help
 
-`r sprintf("Dependencies for local use: %s", paste0(pkgs, collapse = ", "))`
+<iframe width="640" height="375" src="//www.youtube.com/embed/LFlCwapzAF0" frameborder="0" allowfullscreen></iframe>
+
+### Getting data in and out of Radiant
+
+<iframe width="640" height="375" src="//www.youtube.com/embed/6AE1Wa74cJI" frameborder="0" allowfullscreen></iframe>
+
+### Selecting multiple variable
+
+### View data in table form
+
+### Visualize data
+
+### Explore data
+
+### Transform data
 
 ### License
 

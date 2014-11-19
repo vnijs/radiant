@@ -288,6 +288,7 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	mod$reg_confint <- reg_confint
 	mod$reg_rmse <- reg_rmse
 	mod$reg_vif <- reg_vif
+	mod$reg_var1 <- reg_var1
 	mod$reg_var2 <- reg_var2
 	mod$reg_var3 <- reg_var3
 	mod$reg_stepwise <- reg_stepwise
@@ -313,7 +314,7 @@ summary_regression <- function(result = .regression()) {
   #	res$coefficients <- format(res$coefficients, scientific = FALSE)
 	res <- summary(result)
  	res$coefficients <- round(res$coefficients,3)
-	.print.summary.lm(res, digits = 3)
+	.print.summary.lm(res, dv = result$reg_var1, std_c = result$reg_standardize, digits = 3)
   # print(res, digits = 3)
 
 	# if(reg_outlier) print(outlierTest(result), digits = 3)
@@ -348,7 +349,7 @@ summary_regression <- function(result = .regression()) {
         if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
 
         if(sum(names(nval) %in% names(newdat)) < length(nval)) {
-          cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n")
+          cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
         } else {
           newdat[names(nval)] <- list(NULL)
           nnd <- data.frame(newdat[-1],nval)
@@ -420,11 +421,17 @@ summary_regression <- function(result = .regression()) {
 	}
 }
 
-
-.print.summary.lm <- function (x, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
+.print.summary.lm <- function (x, dv = "", std_c = FALSE, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
 
   # adapted from getAnywhere(print.summary.lm)
-  cat("Coefficients:\n")
+#   cat(paste("Dependent variable:",input$reg_var1,"\n"))
+  cat(paste("Dependent variable:",dv,"\n"))
+
+  if(std_c == TRUE) {
+    cat("Standardized coefficients:\n")
+  } else {
+    cat("Coefficients:\n")
+  }
   coefs <- x$coefficients
   if (!is.null(aliased <- x$aliased) && any(aliased)) {
     cn <- names(aliased)

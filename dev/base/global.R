@@ -41,6 +41,8 @@ testingRadiant <- FALSE
 # options(scipen = 100)
 options(digits = 3)
 
+backup_loaded <<- FALSE
+
 setInitValues <- function() {
   # initialize state list and reactive values
   pth <- "~/radiant_temp/state"
@@ -49,6 +51,7 @@ setInitValues <- function() {
     load(filename)
     if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
     if(exists("RadiantInputs")) state_list <<- RadiantInputs
+    backup_loaded <<- TRUE
   } else {
 
     state_list <<- list()

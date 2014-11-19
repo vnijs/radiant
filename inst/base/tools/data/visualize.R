@@ -12,14 +12,14 @@ output$uiVizvars2 <- renderUI({
   vars <- varnames()
   selectizeInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "None", vars),
 #                  selected = state_singlevar("vizvars2",vars), multiple = FALSE)
-              selected = state_init_list("viz_color","None", vars), multiple = FALSE)
+              selected = state_init_list("vizvars2","None", vars), multiple = FALSE)
 })
 
 output$uiViz_color <- renderUI({
   if(is.null(input$vizvars2)) return() 	# can't have an XY plot without an X
   vars <- c("None" = "None", varnames())
   selectizeInput("viz_color", "Color", vars,
-              selected = state_init_list("viz_color","None", vars), multiple = FALSE)
+                 selected = state_init_list("viz_color","None", vars), multiple = FALSE)
 })
 
 output$uiViz_facet_row <- renderUI({
@@ -108,21 +108,24 @@ output$visualize <- renderPlot({
 .visualize <- reactive({
   # need dependency on ..
   input$viz_plot_height; input$viz_plot_width
-  visualize(input$datasets, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple, input$viz_facet_row,
-            input$viz_facet_col, input$viz_color, input$viz_line, input$viz_loess, input$viz_jitter)
+  visualize(input$datasets, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple,
+            input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_line, input$viz_loess,
+            input$viz_jitter)
 })
 
 observe({
   if(is.null(input$visualizeReport) || input$visualizeReport == 0) return()
   isolate({
-    inp <- list(input$datasets, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple, input$viz_facet_row,
-                input$viz_facet_col, input$viz_color, input$viz_line, input$viz_loess, input$viz_jitter)
-    updateReportViz(inp,"visualize", round(7 * viz_plot_width()/650,2), round(7 * viz_plot_height()/650,2))
+    inp <- list(input$datasets, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple,
+                input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_line,
+                input$viz_loess, input$viz_jitter)
+    updateReportViz(inp,"visualize", round(7 * viz_plot_width()/650,2),
+                    round(7 * viz_plot_height()/650,2))
   })
 })
 
-visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, viz_facet_row, viz_facet_col,
-                      viz_color, viz_line, viz_loess, viz_jitter) {
+visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, viz_facet_row,
+                      viz_facet_col, viz_color, viz_line, viz_loess, viz_jitter) {
 
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   dat <- values[[datasets]]
@@ -181,7 +184,7 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
         }
 
         if(!is.factor(dat[,i]) & !is.factor(dat[,j])) {
-          if (viz_color != 'None') plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
+          if (!is.null(viz_color) && viz_color != 'None') plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
           if (viz_line) plots[[i]] <- plots[[i]] +
             geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
           if (viz_loess) plots[[i]] <- plots[[i]] + geom_smooth(span = 1, size = .75, linetype = "dotdash")

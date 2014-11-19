@@ -18,7 +18,8 @@ year-month-day hour-minute-second
 
 When you select Change from the 'Transformation type' drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose Log from the 'Apply function' menu. A new variable is created with the prefix 'log.'. Click the 'Save changes' button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
-1. Log: create a log-transformed version of the selected variable (i.e., log(x))
+1. Log: create a log-transformed version of the selected variable (i.e., log(x)). Note: in R exp(log(x)) = x
+1. Exp: create an exponentiated version of the selected variable (i.e., exp(x)). Note: in R log(exp(x)) = x
 2. Square: multiply a variable by itself (i.e. x^2) 
 3. Square-root: take the square-root of a variable (i.e., x^.5)
 4. Center: create a new variable with a mean equal to zero (i.e., x - mean(x))
@@ -26,6 +27,10 @@ When you select Change from the 'Transformation type' drop-down another drop-dow
 6. Invert: 1/x
 7. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
 8. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
+
+#### Normalize
+
+Choose one variable to normalize one, or more, other variables. For example, to create a new variable that measure the price per carat of a diamond select `price` in the Select column(s) box, choose Normalize as the Transformation type and, select `carat` as the Normalizing variable.
 
 #### Create
 

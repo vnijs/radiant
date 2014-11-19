@@ -1,6 +1,6 @@
 > (Linear) Regression: The workhorse of empirical research in the social sciences
 
-All example files discussed below can be loaded from Data > Manage. Click the 'examples' radio button and press 'Load examples'.
+All example files discussed below can be loaded from the Data > Manage page. Click the 'examples' radio button and press 'Load examples'.
 
 ### Functionality
 
@@ -26,7 +26,7 @@ Various additional outputs and options can be selected:
 
 #### Example 1: Catalog sales
 
-We have access to data from a company selling men’s and women’s apparel through mail-order catalogs (dataset 'catalog'). The company maintains a database on past and current customers’ value and characteristics. Value is determine as the total$ sales to the customer in the last year. The data are a random sample of 200 customers from the company’s database. The r-data contains a data frame with 200 observations on 4 variables
+We have access to data from a company selling men's and women's apparel through mail-order catalogs (dataset 'catalog'). The company maintains a database on past and current customers' value and characteristics. Value is determined as the total$ sales to the customer in the last year. The data are a random sample of 200 customers from the company's database. The r-data contains a data frame with 200 observations on 4 variables
 
 - Sales =  Total sales (in $) to a household in the past year
 - Income = Household income ($1000) 
@@ -98,7 +98,7 @@ Increases in x1 and x3 are associated with increases in y whereas increases in x
 
 In marketing both linear and log-log regressions are very common. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.
 
-The data 'diamonds' contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable 'price' as the dependent variable and 'carat' and 'clarity' as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seems skewed to the left. 
+The data 'diamonds' contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable 'price' as the dependent variable and 'carat' and 'clarity' as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the _tail_ is.
 
 ![Regression 3 - histograms](figures_quant/regression_diamonds_hist.png)
 
