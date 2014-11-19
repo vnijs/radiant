@@ -1,6 +1,6 @@
 > (Linear) Regression: The workhorse of empirical research in the social sciences
 
-All example files discussed below can be loaded from Data > Manage. Click the 'examples' radio button and press 'Load examples'.
+All example files discussed below can be loaded from the Data > Manage page. Click the 'examples' radio button and press 'Load examples'.
 
 ### Functionality
 
@@ -26,16 +26,16 @@ Various additional outputs and options can be selected:
 
 #### Example 1: Catalog sales
 
-We have access to data from a company selling men’s and women’s apparel through mail-order catalogs (dataset 'catalog'). The company maintains a database on past and current customers’ value and characteristics. Value is determine as the total$ sales to the customer in the last year. The data are a random sample of 200 customers from the company’s database. The r-data contains a data frame with 200 observations on 4 variables
+We have access to data from a company selling men's and women's apparel through mail-order catalogs (dataset 'catalog'). The company maintains a database on past and current customers' value and characteristics. Value is determined as the total$ sales to the customer in the last year. The data are a random sample of 200 customers from the company's database. The r-data contains a data frame with 200 observations on 4 variables
 
 - Sales =  Total sales (in $) to a household in the past year
 - Income = Household income ($1000) 
 - HH.size = Size of the household (# of people) 
 - Age = Age of the head of the household
 
-The catalog company is interested in redesigning their Customer Relationship Management (CRM) strategies. We will proceed in two steps: 
+The catalog company is interested in redesigning their Customer Relationship Management (CRM) strategy. We will proceed in two steps: 
 
-1. Estimate a regression model using last year’s sales total. Dependent variable: sales total for each of the 200 households; explanatory variables: household income (measured in thousands of dollars), size of household, and age of the household head. The data-set is given in the ‘catalog’ data file. Interpret each of your estimated coefficients. Also provide a statistical evaluation of the model as a whole.
+1. Estimate a regression model using last year's sales total. Dependent variable: sales total for each of the 200 households; explanatory variables: household income (measured in thousands of dollars), size of household, and age of the household head. The data-set is given in the `catalog` data file. Interpret each of your estimated coefficients. Also provide a statistical evaluation of the model as a whole.
  
 2. Which explanatory variables are significant predictors of customer value (use a 95% confidence level)? 
 

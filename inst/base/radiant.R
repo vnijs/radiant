@@ -28,7 +28,6 @@ saveState <- function(filename) {
     RadiantInputs <- state_list
     LiveInputs <- reactiveValuesToList(input)
     RadiantInputs[names(LiveInputs)] <- LiveInputs
-#     RadiantInputs <- reactiveValuesToList(input)
     RadiantValues <- reactiveValuesToList(values)
     save(RadiantInputs, RadiantValues , file = filename)
   })
@@ -37,8 +36,8 @@ saveState <- function(filename) {
 saveStateOnCrash <- function(session = session)
   session$onSessionEnded(function() {
     observe({
-      pth <- "~/radiant_temp/state"
-      cdir <- ""
+      pth <- normalizePath("~/radiant_temp/state",winslash="/")
+#       cdir <- ""
       if(!file.exists(pth))
         cdir <- try(dir.create(pth), silent = TRUE)
       if(!is(cdir, 'try-error')) try(saveState(paste0(pth,"/RadiantState-",Sys.Date(),".rsf")), silent = TRUE)

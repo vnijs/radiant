@@ -33,9 +33,9 @@ We have access to data from a company selling men's and women's apparel through 
 - HH.size = Size of the household (# of people) 
 - Age = Age of the head of the household
 
-The catalog company is interested in redesigning their Customer Relationship Management (CRM) strategies. We will proceed in two steps: 
+The catalog company is interested in redesigning their Customer Relationship Management (CRM) strategy. We will proceed in two steps: 
 
-1. Estimate a regression model using last year’s sales total. Dependent variable: sales total for each of the 200 households; explanatory variables: household income (measured in thousands of dollars), size of household, and age of the household head. The data-set is given in the ‘catalog’ data file. Interpret each of your estimated coefficients. Also provide a statistical evaluation of the model as a whole.
+1. Estimate a regression model using last year's sales total. Dependent variable: sales total for each of the 200 households; explanatory variables: household income (measured in thousands of dollars), size of household, and age of the household head. The data-set is given in the `catalog` data file. Interpret each of your estimated coefficients. Also provide a statistical evaluation of the model as a whole.
  
 2. Which explanatory variables are significant predictors of customer value (use a 95% confidence level)? 
 
