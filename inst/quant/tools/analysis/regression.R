@@ -348,62 +348,79 @@ summary_regression <- function(result = .regression()) {
 
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
     # as starting point
-
-
-#     if(result$reg_predict_data == "none") {
-    if(result$reg_predict_buttons == "cmd") {
-   		reg_predict <- gsub("\"","\'", result$reg_predict)
-      nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
-    } else {
-      nval <- values[[result$reg_predict_data]]
-      vars <- as.character(attr(result$terms,'variables'))[-1]
-      nval <- select_(nval, .dots = vars[-1])
-    }
-
-    if(is(nval, 'try-error')) {
-      cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+    if(result$reg_standardize) {
+      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again.")
     } else {
 
-      dat <- ggplot2::fortify(result)
-      vars <- as.character(attr(result$terms,'variables'))[-1]
-      reg_var1 <- vars[1]
-      reg_var2 <- vars[-1]
-      dat <- dat[,reg_var2, drop = FALSE]
+      if(result$reg_predict_buttons == "cmd") {
+     		reg_predict <- gsub("\"","\'", result$reg_predict)
+        nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
+      } else {
+        nval <- values[[result$reg_predict_data]]
+        vars <- as.character(attr(result$terms,'variables'))[-1]
+        nval <- select_(nval, .dots = vars[-1])
+      }
 
-      isFct <- sapply(dat, is.factor)
-      isNum <- sapply(dat, is.numeric)
-
-      if(sum(isNum) + sum(isFct) < dim(dat)[2]) {
-        cat("The model includes data-types that cannot be used for\nprediction at this point\n")
+      if(is(nval, 'try-error')) {
+        cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
       } else {
 
-        newdat <- ""
-        if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
-        # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
-        if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+        dat <- ggplot2::fortify(result)
+        vars <- as.character(attr(result$terms,'variables'))[-1]
+        reg_var1 <- vars[1]
+        reg_var2 <- vars[-1]
+        dat <- dat[,reg_var2, drop = FALSE]
 
-#         if(sum(names(nval) %in% names(newdat)) < length(nval)) {
-        if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
-          print(names(nval))
-          print(names(newdat))
-          print(names(nval) %in% names(newdat))
-          cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
+        isFct <- sapply(dat, is.factor)
+        isNum <- sapply(dat, is.numeric)
+
+        if(sum(isNum) + sum(isFct) < dim(dat)[2]) {
+          cat("The model includes data-types that cannot be used for\nprediction at this point\n")
         } else {
-          newdat[names(nval)] <- list(NULL)
-          nnd <- data.frame(newdat[-1],nval)
-          pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
-          if(!is(pred, 'try-error')) {
-          	if(result$reg_predict_buttons == "dataframe") {
-            	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
-            } else {
-            	cat("Predicted values for:\n")
-            }
-            pred <- data.frame(pred,pred[,3]-pred[,1])
-            colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
-            print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
-            cat("\n")
+
+          newdat <- ""
+          if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+          # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+          if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+
+          # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+          if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
+  #           print(names(nval))
+  #           print(names(newdat))
+  #           print(names(nval) %in% names(newdat))
+            cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
           } else {
-            cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+            newdat[names(nval)] <- list(NULL)
+            nnd <- data.frame(newdat[-1],nval)
+            pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
+            if(!is(pred, 'try-error')) {
+            	if(result$reg_predict_buttons == "dataframe") {
+              	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
+              } else {
+              	cat("Predicted values for:\n")
+              }
+
+            	pred <- data.frame(pred,pred[,3]-pred[,1])
+            	colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
+  #           	print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
+
+            	nnd <- data.frame(nnd, pred, check.names = FALSE)
+
+            	# putting the predictions into the clipboard
+            	os_type <- .Platform$OS.type
+            	if (os_type == 'windows') {
+            	  write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+            	} else {
+            	  write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+            	}
+
+            	# print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
+            	nnd %>% print(., row.names = FALSE)
+
+              cat("\n")
+            } else {
+              cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+            }
           }
         }
       }
