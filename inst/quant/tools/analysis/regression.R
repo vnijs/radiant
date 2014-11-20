@@ -179,10 +179,9 @@ output$ui_regression <- renderUI({
 	    		  value = state_init('reg_predict',''))
         ),
         conditionalPanel(condition = "input.reg_predict_buttons == 'dataframe'",
-          selectInput(inputId = "reg_predict_data", label = "Predict from data:", choices = c("None" = "none",values$datasetlist),
+          selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",values$datasetlist),
             selected = state_init("reg_predict_data"), multiple = FALSE)
         ),
-
 
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
@@ -351,7 +350,8 @@ summary_regression <- function(result = .regression()) {
     # as starting point
 
 
-    if(result$reg_predict_data == "none") {
+#     if(result$reg_predict_data == "none") {
+    if(result$reg_predict_buttons == "cmd") {
    		reg_predict <- gsub("\"","\'", result$reg_predict)
       nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
     } else {
@@ -393,7 +393,11 @@ summary_regression <- function(result = .regression()) {
           nnd <- data.frame(newdat[-1],nval)
           pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
           if(!is(pred, 'try-error')) {
-            cat("Predicted values for:\n")
+          	if(result$reg_predict_buttons == "dataframe") {
+            	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
+            } else {
+            	cat("Predicted values for:\n")
+            }
             pred <- data.frame(pred,pred[,3]-pred[,1])
             colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
             print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
