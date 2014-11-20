@@ -158,7 +158,8 @@ output$uiReg_intsel <- renderUI({
 })
 
 reg_interactions <- c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way")
-reg_pred_buttons <- c("CMD" = "cmd","Data" = "dataframe")
+# reg_pred_buttons <- c("CMD" = "cmd","Data" = "dataframe")
+reg_pred_buttons <- c("Data" = "dataframe","CMD" = "cmd")
 output$ui_regression <- renderUI({
   list(
   	wellPanel(
@@ -172,7 +173,7 @@ output$ui_regression <- renderUI({
 			),
 		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
    	    radioButtons(inputId = "reg_predict_buttons", label = "Prediction:", reg_pred_buttons,
-	      	selected = state_init_list("reg_predict_buttons","cmd",reg_pred_buttons)),
+	      	selected = state_init_list("reg_predict_buttons","dataframe",reg_pred_buttons)),
 
         conditionalPanel(condition = "input.reg_predict_buttons == 'cmd'",
           returnTextInput("reg_predict", "Predict (e.g., carat = seq(.5,1,.05))",
@@ -193,7 +194,7 @@ output$ui_regression <- renderUI({
 	    		value = state_init('reg_vif',FALSE)),
         checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
       		value = state_init('reg_rmse',FALSE)),
-		    conditionalPanel(condition = "input.reg_confint == true",
+		    conditionalPanel(condition = "input.reg_confint == true | input.reg_predict_data != 'none' | input.reg_predict != ''",
 #            sliderInput('reg_conf_level',"Confidence interval:", min = 0.80, max = 0.99,
            sliderInput('reg_conf_level',"", min = 0.80, max = 0.99,
                        value = state_init('reg_conf_level',.95), step = 0.01)
@@ -390,9 +391,15 @@ summary_regression <- function(result = .regression()) {
   #           print(names(nval) %in% names(newdat))
             cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
           } else {
-            newdat[names(nval)] <- list(NULL)
-            nnd <- data.frame(newdat[-1],nval)
-            pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
+            if(result$reg_predict_buttons == "cmd" & result$reg_predict == "") {
+              pred <- try(log("a"), silent=TRUE)
+            } else {
+              newdat[names(nval)] <- list(NULL)
+              nnd <- data.frame(newdat[-1],nval)
+              pred <- try(predict(result, nnd,interval = 'prediction', level = result$reg_conf_level), silent = TRUE)
+#               pred <- try(predict(result, nnd,interval = 'prediction', level = as.numeric(reg_conf_level)), silent = TRUE)
+            }
+
             if(!is(pred, 'try-error')) {
             	if(result$reg_predict_buttons == "dataframe") {
               	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
@@ -401,8 +408,11 @@ summary_regression <- function(result = .regression()) {
               }
 
             	pred <- data.frame(pred,pred[,3]-pred[,1])
-            	colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
-  #           	print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
+              cl_split <- function(x) 100*(1-x)/2
+            	cl_split(result$reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
+            	(100 - cl_split(result$reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
+#             	colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
+            	colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
 
             	nnd <- data.frame(nnd, pred, check.names = FALSE)
 

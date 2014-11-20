@@ -153,6 +153,17 @@ updateReportMerge <- function(inp, fun_name) {
 }
 
 updateReportFun <- function(cmd) {
+
+  os_type <- .Platform$OS.type
+  if (os_type == 'windows') {
+#     write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+    cat(cmd, file = "clipboard")
+  } else {
+#     write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+    cat(cmd, file = pipe("pbcopy"))
+  }
+
+
   # should be rmd_selection be added here as well?
   if(is.null(input$rmd_report)) {
     if(is.null(state_list$rmd_report)) {
