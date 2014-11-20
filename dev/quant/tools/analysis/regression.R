@@ -179,10 +179,9 @@ output$ui_regression <- renderUI({
 	    		  value = state_init('reg_predict',''))
         ),
         conditionalPanel(condition = "input.reg_predict_buttons == 'dataframe'",
-          selectInput(inputId = "reg_predict_data", label = "Predict from data:", choices = c("None" = "none",values$datasetlist),
+          selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",values$datasetlist),
             selected = state_init("reg_predict_data"), multiple = FALSE)
         ),
-
 
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
@@ -351,7 +350,8 @@ summary_regression <- function(result = .regression()) {
     # as starting point
 
 
-    if(result$reg_predict_data == "none") {
+#     if(result$reg_predict_data == "none") {
+    if(result$reg_predict_buttons == "cmd") {
    		reg_predict <- gsub("\"","\'", result$reg_predict)
       nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
     } else {
@@ -382,30 +382,25 @@ summary_regression <- function(result = .regression()) {
         # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
         if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
 
-        # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+#         if(sum(names(nval) %in% names(newdat)) < length(nval)) {
         if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
+          print(names(nval))
+          print(names(newdat))
+          print(names(nval) %in% names(newdat))
           cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
         } else {
           newdat[names(nval)] <- list(NULL)
           nnd <- data.frame(newdat[-1],nval)
           pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
           if(!is(pred, 'try-error')) {
-            cat("Predicted values for:\n")
+          	if(result$reg_predict_buttons == "dataframe") {
+            	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
+            } else {
+            	cat("Predicted values for:\n")
+            }
             pred <- data.frame(pred,pred[,3]-pred[,1])
             colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
-
-            nnd <- data.frame(nnd, pred, check.names = FALSE)
-
-            # putting the predictions into the clipboard
-            os_type <- .Platform$OS.type
-            if (os_type == 'windows') {
-              write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
-            } else {
-              write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-            }
-
-            # print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
-            nnd %>% print(., row.names = FALSE)
+            print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
             cat("\n")
           } else {
             cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
