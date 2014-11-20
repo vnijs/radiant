@@ -371,7 +371,6 @@ observe({
 	  	values[[input$datasets]] <- dat
 		} else if(input$tr_changeType == 'sub_filter') {
 # 	  	values[[input$datasets]] <- dat
-      print("got here!!")
 	  	values[['datasetlist']] %>%  c(paste0(input$datasets,"_filter"),.) -> newdatasetlist
 	  	values[[newdatasetlist[1]]] <- dat
 	  	values[['datasetlist']] <- newdatasetlist
