@@ -24,14 +24,15 @@ if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitH
 }
 
 # remove shinyAce if old
-l_inst <- installed.packages()
-if('shinyAce' %in% rownames(l_inst)) {
-  if(l_inst['shinyAce', 'Version'] != "0.1.1") {
-    try(remove.packages('shinyAce'), silent = TRUE)
-  }
-}
+# l_inst <- installed.packages()
+# if('shinyAce' %in% rownames(l_inst)) {
+#   if(l_inst['shinyAce', 'Version'] != "0.1.1") {
+#     try(remove.packages('shinyAce'), silent = TRUE)
+#   }
+# }
 
-# if(!'httpuv' %in% rownames(l_inst))
+# te <- try(require('lazyeval'), silent = TRUE)
+# if(!'lazyevalhttpuv' %in% rownames(l_inst))
 #   install.packages('httpuv')
 
 # install to user directory
