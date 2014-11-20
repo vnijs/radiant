@@ -382,11 +382,8 @@ summary_regression <- function(result = .regression()) {
         # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
         if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
 
-#         if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+        # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
         if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
-          print(names(nval))
-          print(names(newdat))
-          print(names(nval) %in% names(newdat))
           cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
         } else {
           newdat[names(nval)] <- list(NULL)
@@ -396,7 +393,19 @@ summary_regression <- function(result = .regression()) {
             cat("Predicted values for:\n")
             pred <- data.frame(pred,pred[,3]-pred[,1])
             colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
-            print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
+
+            nnd <- data.frame(nnd, pred, check.names = FALSE)
+
+            # putting the predictions into the clipboard
+            os_type <- .Platform$OS.type
+            if (os_type == 'windows') {
+              write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+            } else {
+              write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+            }
+
+            # print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
+            nnd %>% print(., row.names = FALSE)
             cat("\n")
           } else {
             cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
