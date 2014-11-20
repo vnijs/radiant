@@ -96,7 +96,7 @@ input[type="number"] {
   max-height:500px;
 }
 
-#view_vars, #preFactor_vars, #factor_vars, #pmap_attr, #cor_var, #reg_var2 {
+#view_vars, #tr_columns, #preFactor_vars, #factor_vars, #pmap_attr, #cor_var, #reg_var2 {
   height: 180px;
   /*height: 200px; */
   /*margin-bottom: 35px;*/
