@@ -206,12 +206,7 @@ observe({
       if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
     }
 
-
-#     ?as.data.frame
-
-
-#     values[['xls_data']] <- as.data.frame(dat)
-    values[['xls_data']] <- data.frame(dat, check.names = FALSE)
+    values[['xls_data']] <- as.data.frame(dat)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
     updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
                        c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"), selected = "rda")
