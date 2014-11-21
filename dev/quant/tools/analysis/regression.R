@@ -350,7 +350,8 @@ summary_regression <- function(result = .regression()) {
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
     # as starting point
     if(result$reg_standardize) {
-      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again.")
+      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the
+          standardized coefficients box and try again.")
     } else {
 
       if(result$reg_predict_buttons == "cmd") {
