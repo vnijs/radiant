@@ -180,10 +180,9 @@ output$ui_regression <- renderUI({
 	    		  value = state_init('reg_predict',''))
         ),
         conditionalPanel(condition = "input.reg_predict_buttons == 'dataframe'",
-          selectInput(inputId = "reg_predict_data", label = "Predict from data:", choices = c("None" = "none",values$datasetlist),
+          selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",values$datasetlist),
             selected = state_init("reg_predict_data"), multiple = FALSE)
         ),
-
 
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
@@ -350,16 +349,8 @@ summary_regression <- function(result = .regression()) {
 
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
     # as starting point
-<<<<<<< HEAD
-
-
-    if(result$reg_predict_data == "none") {
-   		reg_predict <- gsub("\"","\'", result$reg_predict)
-      nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
-=======
     if(result$reg_standardize) {
       cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again.")
->>>>>>> eda76e5a586f3a665c13e6ff7c94ce3c9428cb34
     } else {
 
       if(result$reg_predict_buttons == "cmd") {
@@ -387,19 +378,6 @@ summary_regression <- function(result = .regression()) {
         if(sum(isNum) + sum(isFct) < dim(dat)[2]) {
           cat("The model includes data-types that cannot be used for\nprediction at this point\n")
         } else {
-<<<<<<< HEAD
-          newdat[names(nval)] <- list(NULL)
-          nnd <- data.frame(newdat[-1],nval)
-          pred <- try(predict(result, nnd,interval = 'prediction'), silent = TRUE)
-          if(!is(pred, 'try-error')) {
-            cat("Predicted values for:\n")
-            pred <- data.frame(pred,pred[,3]-pred[,1])
-            colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
-            print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
-            cat("\n")
-          } else {
-            cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
-=======
 
           newdat <- ""
           if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
@@ -453,7 +431,6 @@ summary_regression <- function(result = .regression()) {
             } else {
               cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
             }
->>>>>>> eda76e5a586f3a665c13e6ff7c94ce3c9428cb34
           }
         }
       }
