@@ -163,7 +163,6 @@ updateReportFun <- function(cmd) {
     cat(cmd, file = pipe("pbcopy"))
   }
 
-
   # should be rmd_selection be added here as well?
   if(is.null(input$rmd_report)) {
     if(is.null(state_list$rmd_report)) {
