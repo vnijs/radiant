@@ -105,12 +105,14 @@ output$ui_Transform <- renderUI({
     conditionalPanel(condition = "input.tr_changeType == 'rename'",
 	   	returnTextInput("tr_rename", "Rename (separate by ','):", '')
     ),
-    conditionalPanel(condition = "input.tr_changeType == 'sub_filter'",
-      returnTextInput("tr_subset", "Subset (e.g., price > 5000)", '')
-    ),
-    conditionalPanel(condition = "input.tr_changeType != ''",
-	    actionButton("tr_save_changes", "Save changes")
-	  ),
+#     conditionalPanel(condition = "input.tr_changeType == 'sub_filter'",
+#       returnTextInput("tr_subset", "Subset (e.g., price > 5000)", '')
+#     ),
+#     conditionalPanel(condition = "input.tr_changeType != ''",
+      returnTextInput("tr_subset", "Subset (e.g., price > 5000)", ''),
+	    actionButton("tr_show_changes", "Show"),
+	    actionButton("tr_save_changes", "Save changes"),
+# 	  ),
     conditionalPanel(condition = "input.tr_changeType == 'reorder_cols'",
     	br(),
     	HTML("<label>Reorder (drag-and-drop):</label>"),
@@ -134,6 +136,17 @@ transform_main <- reactive({
 	if(is.null(input$tr_changeType)) return()
 
 	dat <- getdata()
+
+	if(input$tr_subset != '') {
+	  selcom <- input$tr_subset
+	  seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
+
+	  if(!is(seldat, 'try-error')) {
+	    if(is.data.frame(seldat)) {
+	      return(seldat)
+	    }
+	  }
+	}
 
   ##### Fix - show data snippet if changeType == 'none' and no columns select #####
 	if(input$tr_changeType == "none") {
@@ -163,18 +176,18 @@ transform_main <- reactive({
 		}
   }
 
-	if(input$tr_changeType == 'sub_filter') {
-	  if(input$tr_subset != '') {
-	    selcom <- input$tr_subset
-    	seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
-
-    	if(!is(seldat, 'try-error')) {
-      	if(is.data.frame(seldat)) {
-        	return(seldat)
-      	}
-    	}
-  	}
-  }
+# 	if(input$tr_changeType == 'sub_filter') {
+# 	  if(input$tr_subset != '') {
+# 	    selcom <- input$tr_subset
+#     	seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
+#
+#     	if(!is(seldat, 'try-error')) {
+#       	if(is.data.frame(seldat)) {
+#         	return(seldat)
+#       	}
+#     	}
+#   	}
+#   }
 
 	if(!is.null(input$tr_columns)) {
 		if(!all(input$tr_columns %in% colnames(dat))) return()
@@ -375,7 +388,7 @@ observe({
 	  	values[[newdatasetlist[1]]] <- dat
 	  	values[['datasetlist']] <- newdatasetlist
 	    values[[paste0(newdatasetlist[1],"_descr")]] <- paste0(values[[paste0(input$datasets,"_descr")]],
-                                                             "\n\n### Subset\n\nCommand used: ", input$tr_subset)
+                                                             "\n\n### Subset\n\nCommand used: `", input$tr_subset, "` to filter from dataset: ", input$datasets)
 		} else if(input$tr_changeType == 'rename') {
 			changedata_names(input$tr_columns, colnames(dat))
 		} else if(input$tr_changeType == 'reorder_cols') {
