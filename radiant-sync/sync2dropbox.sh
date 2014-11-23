@@ -58,9 +58,9 @@
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
 # rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
-# rsync --dry-run -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
-# rsync --dry-run -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
-# rsync --dry-run -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+ rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+ rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
+ rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
@@ -68,7 +68,7 @@
 
 # rsync -av ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/*.R ~/Dropbox/radiant/radiant-miniCRAN/
 # rsync -av ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
-rsync -av ~/Desktop/GitHub/radiant_dev/example_data/ ~/Dropbox/radiant/example_data/
+# rsync -av ~/Desktop/GitHub/radiant_dev/example_data/ ~/Dropbox/radiant/example_data/
 
 # rsync --dry-run -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 # rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/

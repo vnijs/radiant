@@ -159,7 +159,7 @@ output$uiReg_intsel <- renderUI({
 
 reg_interactions <- c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way")
 # reg_pred_buttons <- c("CMD" = "cmd","Data" = "dataframe")
-reg_pred_buttons <- c("Data" = "dataframe","CMD" = "cmd")
+reg_pred_buttons <- c("Data" = "dataframe","Command" = "cmd")
 output$ui_regression <- renderUI({
   list(
   	wellPanel(
@@ -350,7 +350,8 @@ summary_regression <- function(result = .regression()) {
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
     # as starting point
     if(result$reg_standardize) {
-      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again.")
+      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the
+          standardized coefficients box and try again.")
     } else {
 
       if(result$reg_predict_buttons == "cmd") {
@@ -359,11 +360,15 @@ summary_regression <- function(result = .regression()) {
       } else {
         nval <- values[[result$reg_predict_data]]
         vars <- as.character(attr(result$terms,'variables'))[-1]
-        nval <- select_(nval, .dots = vars[-1])
+        nval <- try(select_(nval, .dots = vars[-1]), silent = TRUE)
       }
 
       if(is(nval, 'try-error')) {
-        cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+        if(result$reg_predict_buttons == "cmd") {
+          cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+        } else {
+          cat("The profiles to predict do not contain all variables that are in the model.\nAdd variables to the profiles data as needed.\n\n")
+        }
       } else {
 
         dat <- ggplot2::fortify(result)
