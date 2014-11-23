@@ -367,7 +367,12 @@ summary_regression <- function(result = .regression()) {
         if(result$reg_predict_buttons == "cmd") {
           cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
         } else {
-          cat("The profiles to predict do not contain all variables that are in the model.\nAdd variables to the profiles data as needed.\n\n")
+          cat("The profiles to predict do not contain all variables that are in the model.\n
+              Add variables to the profiles data as needed.\n\n")
+          cat("Model variables:\n")
+          print(vars)
+          cat("Profile variables to be added:\n")
+          print(!vars %in% colnames(nval))
         }
       } else {
 
