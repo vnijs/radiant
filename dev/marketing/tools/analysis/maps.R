@@ -195,25 +195,8 @@ plots_mds <- function(result = .mds()) {
 
 	par(op)
 
-
-	###############################################
-	# move this over to ggplot when you have time
-	###############################################
-
-	# plots <- list()
-	# for(var in input$km_vars) {
-	# 	plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3)
-	# }
-
-	# dat <- data.frame(out$points)
-	# colnames(dat) <- paste0('Dimension',1:out$nr.dim)
-	# dim1 <- 'Dimension1'
-	# dim2 <- 'Dimension2'
-	# p <- ggplot(dat, aes_string(x=dim1, y=dim2)) + geom_point(shape = 1) +
-	# 			theme(axis.text.x = element_blank(), axis.text.y = element_blank())
-	# print(p)
-
-  # p <- ggplot(dat, aes_string(x=input$vizvars1, y=input$vizvars2)) + geom_point()
- 	# p <- p + aes_string(color=input$viz_color) + scale_fill_brewer()
-	# print(do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))))
 }
+
+###############################################
+# move this over to an interactive viz lib
+###############################################
