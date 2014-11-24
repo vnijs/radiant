@@ -257,6 +257,7 @@ transform_main <- reactive({
 			rcom <- unlist(strsplit(gsub(" ","",input$tr_rename), ","))
 			rcom <- rcom[1:min(length(rcom),length(input$tr_columns))]
 			names(dat)[1:length(rcom)] <- rcom
+      # rename_(dat, .dots = setNames(l2,l1))   # dplyr alternative has the same dplyr::changes result
 		}
 	}
 
