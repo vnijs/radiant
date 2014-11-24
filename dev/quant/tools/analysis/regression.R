@@ -365,14 +365,17 @@ summary_regression <- function(result = .regression()) {
 
       if(is(nval, 'try-error')) {
         if(result$reg_predict_buttons == "cmd") {
-          cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+          cat("The expression entered does not seem to be correct. Please try again.\n")
+          cat("Examples are shown in the helpfile.\n")
         } else {
-          cat("The profiles to predict do not contain all variables that are in the model.\n
-              Add variables to the profiles data as needed.\n\n")
-          cat("Model variables:\n")
-          print(vars)
-          cat("Profile variables to be added:\n")
-          print(!vars %in% colnames(nval))
+          cat("The profiles to predict do not contain all variables that are in the model.\n")
+          cat("Add variables to the profiles data as needed.\n\n")
+          ivars <- vars[-1]
+          cat("Model variables: ")
+          cat(ivars,"\n")
+          cat("Profile variables to be added: ")
+          nval_names <- names(values[[result$reg_predict_data]])
+          cat(ivars[!ivars %in% nval_names])
         }
       } else {
 

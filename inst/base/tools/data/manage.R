@@ -206,10 +206,6 @@ observe({
       if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
     }
 
-
-#     ?as.data.frame
-
-
 #     values[['xls_data']] <- as.data.frame(dat)
     values[['xls_data']] <- data.frame(dat, check.names = FALSE)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
@@ -291,9 +287,11 @@ output$downloadState <- downloadHandler(
 observe({
   if(is.null(input$data_rename)) return()
   if(is.null(input$renameButton) || input$renameButton == 0) return()
-
+#   if(!input$man_rename_data) return()
+#   if(input$data_rename == input$datasets) return()
   isolate({
-    values[[input$data_rename]] <- getdata()
+#     values[[input$data_rename]] <- getdata()
+    values[[input$data_rename]] <- values[[input$datasets]]
     values[[input$datasets]] <- NULL
     values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$datasets,"_descr")]]
     values[[paste0(input$datasets,"_descr")]] <- NULL
@@ -303,6 +301,9 @@ observe({
 
     updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
                       selected = input$data_rename)
+
+#     updateTextInput(session, "data_rename", "", input$datasets)
+#     updateCheckboxInput("man_rename_data","Rename data", FALSE)
   })
 })
 
@@ -326,6 +327,7 @@ output$uiDatasets <- renderUI({
 
 output$uiRename <- renderUI({
   list(
+#     returnTextInput("data_rename", "", isolate(input$datasets)),
     textInput("data_rename", "", input$datasets),
     actionButton('renameButton', 'Rename')
   )
