@@ -126,7 +126,8 @@ output$uiReg_var2 <- renderUI({
  	vars <- vars[-which(vars == input$reg_var1)]
   if(length(vars) == 0) return()
   selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars,
-  	selected = state_multvar("reg_var2", vars), multiple = TRUE, selectize = FALSE)
+#   	selected = state_multvar("reg_var2", vars), multiple = TRUE, selectize = FALSE)
+  	selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars), multiple = TRUE, selectize = FALSE)
 })
 
 output$uiReg_var3 <- renderUI({
@@ -196,7 +197,7 @@ output$ui_regression <- renderUI({
       		value = state_init('reg_rmse',FALSE)),
 		    conditionalPanel(condition = "input.reg_confint == true | input.reg_predict_data != 'none' | input.reg_predict != ''",
 #            sliderInput('reg_conf_level',"Confidence interval:", min = 0.80, max = 0.99,
-           sliderInput('reg_conf_level',"", min = 0.80, max = 0.99,
+           sliderInput('reg_conf_level',"", min = 0.70, max = 0.99,
                        value = state_init('reg_conf_level',.95), step = 0.01)
 		    ),
         checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
