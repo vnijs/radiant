@@ -1,3 +1,29 @@
+# grid graphics
+install_github('pmur002/gridGraphics')
+
+install.packages('gridGraphics')
+
+library(gridGraphics)
+library(gridSVG)
+plot(mpg ~ disp, mtcars, pch=16)
+grid.echo()
+grid.garnish("graphics-plot-1-points-1", group=FALSE, title=rownames(mtcars))
+# grid.garnish("graphics_plot", group=FALSE, title=rownames(mtcars))
+grid.export("murrell-echo.svg")
+
+
+library(gridGraphics)
+library(gridSVG)
+plot(mpg ~ disp, mtcars, pch=16)
+grid.echo()
+grid.garnish("graphics-plot-1-points-1", group=FALSE,
+             title=rownames(mtcars))
+grid.export("murrell-echo.svg")
+
+
+
+
+
 library(dplyr)
 result <- lm(mpg ~ cyl + vs, data = mtcars)
 
@@ -5,6 +31,7 @@ nval <- mtcars
 vars <- as.character(attr(result$terms,'variables'))[-1]
 vars
 select_(nval, .dots = vars[-1])
+
 
 
 
