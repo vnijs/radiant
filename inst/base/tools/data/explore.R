@@ -192,7 +192,7 @@ plots_explore <- function(result = .explore()) {
   for(func in result$expl_function) {
     for(var in result$expl_columns) {
       plots[[paste0(var,"_",func)]] <- ggplot(data = result[[func]], aes_string(x = by_var, y = var, fill = fill_var)) +
-        geom_bar(stat="identity", position = "dodge", alpha=.3) +
+        geom_bar(stat="identity", position = "dodge", alpha=.7) +
         ggtitle(paste("Function used:", names(which(expl_functions == func))))
     }
   }
