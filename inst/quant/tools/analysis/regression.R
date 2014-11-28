@@ -1,4 +1,38 @@
 ###############################
+###############################
+###############################
+###############################
+# Add come coeficient plots
+#
+# customer.stats <- data.frame(b = lm1.c$coefficient[weekday.par.names],
+#                              ci.lower=confint(lm1.c,weekday.par.names)[,1],
+#                              ci.upper=confint(lm1.c,weekday.par.names)[,2],
+#                              weekday=factor(weekday.names,levels=weekday.names),
+#                              usertype=rep('Customer',length(weekday.names)))
+#
+# sub.stats <- data.frame(b = lm1.s$coefficient[weekday.par.names],
+#                         ci.lower=confint(lm1.s,weekday.par.names)[,1],
+#                         ci.upper=confint(lm1.s,weekday.par.names)[,2],
+#                         weekday=factor(weekday.names,levels=weekday.names),
+#                         usertype=rep('Subscriber',length(weekday.names)))
+#
+# reg.stats <- rbind(customer.stats,sub.stats)
+#
+# weekday.effects.plot <- ggplot(data=reg.stats) +
+#   geom_pointrange(aes(x=weekday,y=b,ymin=ci.lower,ymax=ci.upper,color=usertype)) +
+#   geom_line(aes(x=weekday,y=b,color=usertype,group=usertype),linetype='dotted') +
+#   geom_hline(aes(yintercept=0))+
+#   facet_wrap(~usertype,scales='free_y')
+###############################
+###############################
+###############################
+###############################
+
+
+
+
+
+###############################
 # Correlation
 ###############################
 cor_type <- c("Pearson" = "pearson", "Spearman" = "spearman", "Kendall" = "kendall")
