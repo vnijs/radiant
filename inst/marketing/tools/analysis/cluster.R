@@ -3,8 +3,8 @@
 ###############################################################
 output$uiHc_vars <- renderUI({
 
- 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
- 	vars <- varnames()[isNum]
+	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
 
   selectInput(inputId = "hc_vars", label = "Variables:", choices = vars,
@@ -267,7 +267,8 @@ plots_kmeansCluster <- function(result = .kmeansCluster()) {
 
 	plots <- list()
 	for(var in result$km_vars) {
-		plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) +
+		# plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) +
+		plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=2.5, alpha=.3) +
 				labs(y = "") + theme(axis.text.y = element_blank())
 	}
 	do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2))))
