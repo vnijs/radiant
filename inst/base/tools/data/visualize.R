@@ -161,13 +161,13 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
       for(j in vizvars2) {
         if(is.factor(dat[,i])) {
           if(is.factor(dat[,j])) {
-            plots[[i]] <- ggplot(dat, aes_string(x=i, fill=j)) + geom_bar(position = "fill", alpha=.3) +
+            plots[[i]] <- ggplot(dat, aes_string(x=i, fill=j)) + geom_bar(position = "fill", alpha=.7) +
               labs(list(y = ""))
           } else {
-            plots[[i]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) + geom_boxplot(alpha = .3)
+            plots[[i]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) + geom_boxplot(alpha = .7)
           }
         } else if(is.factor(dat[,j])) {
-          plots[[i]] <- ggplot(dat, aes_string(x=j, y=i, fill=j)) + geom_boxplot(alpha = .3) +
+          plots[[i]] <- ggplot(dat, aes_string(x=j, y=i, fill=j)) + geom_boxplot(alpha = .7) +
             coord_flip()
         } else {
           plots[[i]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_point()
