@@ -1,4 +1,4 @@
-> Modify type, change, create, add, reorder, and remove variables in the data.
+> Modify type, change, create, add, reorder, and remove variables in the data
 
 #### Type
 
@@ -11,7 +11,7 @@ When you select Type from the 'Transformation type' drop-down another drop-down 
 5. As date (mdy): R will, by default, read dates as factors. Use this function if the dates are ordered as month-day-year
 6. As date (dmy): R will, by default, read dates as factors. Use this function if the dates are ordered as day-month-year
 7. As date (ymd): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day
-7. As date/time (ymd_hms): R will, by default, read dates as factors. Use this function if the dates/time is ordered as 
+7. As date/time (ymd_hms): R will, by default, read dates as factors. Use this function if the dates/time is ordered as
 year-month-day hour-minute-second
 
 #### Change
@@ -20,7 +20,7 @@ When you select Change from the 'Transformation type' drop-down another drop-dow
 
 1. Log: create a log-transformed version of the selected variable (i.e., log(x)). Note: in R exp(log(x)) = x
 1. Exp: create an exponentiated version of the selected variable (i.e., exp(x)). Note: in R log(exp(x)) = x
-2. Square: multiply a variable by itself (i.e. x^2) 
+2. Square: multiply a variable by itself (i.e. x^2)
 3. Square-root: take the square-root of a variable (i.e., x^.5)
 4. Center: create a new variable with a mean equal to zero (i.e., x - mean(x))
 5. Standardize: create a new variable with a mean equal to zero and standard deviation equal to 1 (i.e., (x - mean(x)/sd(x)))
@@ -59,11 +59,11 @@ Choose Create from the 'Transformation type' drop-down. This is the most flexibl
 6. Create a categorical variable with two levels
 
   z = ifelse(x < y, "x < y", "x < y")
-  
+
 7. Create a categorical variable with three levels
 
   z = ifelse(x < 60, "x < 60", ifelse(x > 65, "x > 65", "60-65"))
-  
+
 Note: For 6 and 7 you should convert the new variable to a factor for analysis (see Type above)
 
 #### Clipboard
@@ -86,7 +86,7 @@ To use the recode feature select the variable you want to change and choose 'Rec
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
-4. To exclude a particular value (e.g., an outlier in the data) from subsequent analyses we can recode it to a missing value. If we want to remove the maximum value from a variable called __sales__ that is equal to 400 we would (1) select the variable __sales__ in the 'Select column(s)' box and enter the command below in the 'Recode box'. Press return and 'Save changes' to add the recoded variable to the data. 
+4. To exclude a particular value (e.g., an outlier in the data) from subsequent analyses we can recode it to a missing value. If we want to remove the maximum value from a variable called __sales__ that is equal to 400 we would (1) select the variable __sales__ in the 'Select column(s)' box and enter the command below in the 'Recode box'. Press return and 'Save changes' to add the recoded variable to the data.
 
 	400 = NA
 
@@ -106,7 +106,7 @@ Factor variable in R can be very convenient for analysis. However, by default th
 
 Choose 'Remove columns' from the 'Transformation type' dropdown and select one or more variables to remove. Press 'Save changes' to remove the variables from the original data. Note that this action cannot be undone. If you want to the original variables back you will have to reload the data through the Data > Manage page.
 
-#### Remove missing
+#### Remove missing values
 
 Choose 'Remove missing' from the 'Transformation type' dropdown to remove missing values. Press 'Save changes' to remove all rows with missing values from the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of n changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
 

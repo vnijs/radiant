@@ -1,4 +1,31 @@
-# grid graphics
+library(devtools); install_github("hadley/rvest")
+library(magrittr)
+library(rvest)
+demo('rvest')
+
+united <- html_session("http://www.united.com/")
+account <- united %>% follow_link("Account")
+account <- NULL
+
+search <- html_form(html("http://127.0.0.1:4475/"))
+
+html("http://127.0.0.1:4475/")
+
+rad <- html_session("http://127.0.0.1:4475/")
+
+rad %>%
+  set_values("Datasets","Diamonds") %>%
+  html_nodes("datasets") ->  xxx
+
+str(xxx)
+
+%>%
+  extract2(1)
+
+
+
+
+grid graphics
 install_github('pmur002/gridGraphics')
 
 install.packages('gridGraphics')
