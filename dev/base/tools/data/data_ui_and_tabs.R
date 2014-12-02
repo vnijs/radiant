@@ -40,8 +40,8 @@ output$tabs_data <- renderUI({
               tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
               tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
               tabPanel("Merge", htmlOutput("mergePossible"), htmlOutput("mergeData1"), htmlOutput("mergeData2")),
-              tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
-              tabPanel("Filter", ggvisOutput("filter_scatter"))
+              tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary"))
+#               tabPanel("Filter", ggvisOutput("filter_scatter"))
               # tabPanel("Filter", ggvisOutput("filter_scatter"), verbatimTextOutput("filter_dataviewer"))
   )
 })

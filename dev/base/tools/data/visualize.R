@@ -198,7 +198,9 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
   }
 
   # suppressWarnings(suppressMessages(do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))))
-  do.call(grid.arrange, c(plots, list(ncol = length(plots) %>% min(2)))) %>%
-    suppressWarnings %>%
-    suppressMessages
+  suppressWarnings(
+    suppressMessages(
+      do.call(grid.arrange, c(plots, list(ncol = length(plots) %>% min(2))))
+    )
+  )
 }
