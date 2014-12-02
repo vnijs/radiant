@@ -147,7 +147,10 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
   if(vizvars2 == "None") {
 
     for(i in vizvars1) {
+      # bw <- select_(dat,i) %>% range %>% diff(.)/20
+      # plots[[i]] <- ggplot(dat, aes_string(x=i)) + geom_histogram(binwidth = bw)
       plots[[i]] <- ggplot(dat, aes_string(x=i)) + geom_histogram()
+      # plots[[i]] <- ggplot(dat, aes_string(x=i)) + geom_density(fill="green", alpha = .3)
       if(viz_multiple == "single") {
         # if(is.null(viz_facet_col) || is.null(viz_facet_row)) return()
         facets <- paste(viz_facet_row, '~', viz_facet_col)
@@ -194,5 +197,8 @@ visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, vi
     }
   }
 
-  suppressWarnings(suppressMessages(do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))))
+  # suppressWarnings(suppressMessages(do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))))
+  do.call(grid.arrange, c(plots, list(ncol = length(plots) %>% min(2)))) %>%
+    suppressWarnings %>%
+    suppressMessages
 }

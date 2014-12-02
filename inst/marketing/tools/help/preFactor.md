@@ -9,7 +9,7 @@ Data that show a limited amount of correlation between the variables of interest
 
 The KMO and Bartlett’ test evaluate all available data together. A KMO value over 0.6 and a significance level for the Bartlett’s test below .05 indicate there is a reasonable amount of correlation in the data. Variable collinearity indicates how strongly a single variable is correlated with all the other variables combined. Values above .4 are considered appropriate.
 
-As can be seen in the output in the Summary tab from Factor > Pre-factor analysis, Bartlett’s test statistic is large and significant (p-value very close to 0) as desired. The Kaiser-Meyer-Olkin (KMO) > 0.6 and thus acceptable. The variable collinearity values are all above 0.4 so all variables can be used in the analysis.
+As can be seen in the output in the Summary tab from Factor > Pre-factor, Bartlett’s test statistic is large and significant (p-value very close to 0) as desired. The Kaiser-Meyer-Olkin (KMO) > 0.6 and thus acceptable. The variable collinearity values are all above 0.4 so all variables can be used in the analysis.
 
 ![prefac toothpaste - summary](figures_marketing/prefac_toothpaste_summary.png)
 

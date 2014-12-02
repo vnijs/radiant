@@ -16,13 +16,13 @@ output$ui_preFactor <- renderUI({
   	wellPanel(
 	  	uiOutput("uiPreFactor_vars")
 	  ),
- 		helpAndReport('Pre-factor analysis','preFactor',inclMD("tools/help/preFactor.md"))
+ 		helpAndReport('Pre-factor','preFactor',inclMD("tools/help/preFactor.md"))
  	)
 })
 
 output$preFactor <- renderUI({
 	# for input-output
-  statTabPanel("Factor","Pre-factor analysis",".preFactor", "preFactor")
+  statTabPanel("Factor","Pre-factor",".preFactor", "preFactor")
 })
 
 .preFactor <- reactive({
@@ -139,7 +139,7 @@ output$ui_fullFactor <- renderUI({
       	selected = state_init_list("fac_rotation","varimax", fac_rotation)),
       actionButton("fac_savescores", "Save scores")
   	),
-		helpAndReport('Factor analysis','fullFactor',inclMD("tools/help/fullFactor.md"))
+		helpAndReport('Factor','fullFactor',inclMD("tools/help/fullFactor.md"))
 	)
 })
 
@@ -155,7 +155,7 @@ fac_plotHeight <- function() {
 
 output$fullFactor <- renderUI({
 	# for input-output
-  statTabPanel("Factor","Factor analysis",".fullFactor", "fullFactor", "fac_plotWidth", "fac_plotHeight")
+  statTabPanel("Factor","Factor",".fullFactor", "fullFactor", "fac_plotWidth", "fac_plotHeight")
 })
 
 .fullFactor <- reactive({
