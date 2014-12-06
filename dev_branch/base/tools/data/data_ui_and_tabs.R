@@ -15,8 +15,8 @@ output$data_ui_and_tabs <- renderUI({
         conditionalPanel(condition = "input.datatabs == 'Visualize'", uiOutput("ui_Visualize")),
         conditionalPanel(condition = "input.datatabs == 'Explore'", uiOutput("ui_Explore")),
         conditionalPanel(condition = "input.datatabs == 'Merge'", uiOutput("ui_Merge")),
-        conditionalPanel(condition = "input.datatabs == 'Transform'", uiOutput("ui_Transform")),
-        conditionalPanel(condition = "input.datatabs == 'Filter'", uiOutput("ui_Filter"))
+        conditionalPanel(condition = "input.datatabs == 'Transform'", uiOutput("ui_Transform"))
+#         conditionalPanel(condition = "input.datatabs == 'Filter'", uiOutput("ui_Filter"))
       ),
       mainPanel(id = "datatabs",
         uiOutput("tabs_data")

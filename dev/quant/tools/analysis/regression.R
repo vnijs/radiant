@@ -35,14 +35,26 @@
 ###############################
 # Correlation
 ###############################
+
 cor_type <- c("Pearson" = "pearson", "Spearman" = "spearman", "Kendall" = "kendall")
+output$uiCor_var <- renderUI({
+	# isNumFac <- "numeric" == getdata_class() | "integer" == getdata_class() |
+	# 						"factor" == getdata_class()
+	isChar <- "character" == getdata_class()
+	vars <- varnames()[!isChar]
+  if(length(vars) == 0) return()
+  selectInput(inputId = "cor_var", label = "Select variables:", choices = vars,
+ 		selected = state_multvar("cor_var",vars), multiple = TRUE, selectize = FALSE)
+  # selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars,
+  # 	selected = state_singlevar("reg_var1",vars), multiple = FALSE)
+})
 
 output$ui_correlation <- renderUI({
   list(
   	wellPanel(
 	    uiOutput("uiCor_var"),
-		  selectInput(inputId = "cor_var", label = "Select variables:", choices = varnames(),
-  	  	selected = state_multvar("cor_var",varnames()), multiple = TRUE, selectize = FALSE),
+		  # selectInput(inputId = "cor_var", label = "Select variables:", choices = varnames(),
+  	  	# selected = state_multvar("cor_var",varnames()), multiple = TRUE, selectize = FALSE),
 		  selectInput(inputId = "cor_type", label = "Method", choices = cor_type,
   	  	selected = state_init_list("cor_type","pearson", cor_type), multiple = FALSE),
      	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
@@ -247,7 +259,7 @@ output$ui_regression <- renderUI({
 		  ),
 		  actionButton("saveres", "Save residuals")
 	  ),
-		helpAndReport('Regression','regression', inclMD("../quant/tools/help/regression.md"))
+		helpAndReport('Regression','regression', inclRmd("../quant/tools/help/regression.Rmd"))
 	)
 })
 
