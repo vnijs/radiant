@@ -6,7 +6,7 @@ Start by experimenting with different selections for the X-variable for a single
 
 If you have both and X and a Y-variable selected you will see a drop-down Color. Here you can select a variable to create a type of heat-map where the colors are linked to the value of the select Color variable.
 
-Select the Multiple radio button to quickly create multiple plots. For example, with Diamonds data loaded, choose None for the Y-variable and all variables as X-variables (use CTRL-A or CMD-A). This will create histograms for all variables in your data set.
+Select the Multiple radio button to quickly create multiple plots. For example, with `diamonds` data loaded, choose None for the Y-variable and all variables as X-variables (use CTRL-A or CMD-A). This will create histograms for all variables in your data set.
 
 To create multiple scatter/box plots select the Multiple radio button and then, with Diamonds data loaded, choose price as the Y-variable and all others as X-variables. This will produce a set of scatter and box plots. You can select a Color variable but Facet row and Facet column are not available when the Multiple radio-button has been selected.
 

@@ -15,14 +15,15 @@ output$help_data <- reactive({
   all_help %>% HTML
 })
 
-help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "random.md", "Sample size" = "sampleSize.md")
+help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "random.md", "Sample size" = "sampleSize.Rmd")
 output$help_random <- reactive({
 
   if(length(input$help_random) == 0) return()
   all_help <- ""
   local_hd <- help_random[which(help_random %in% input$help_random)]
   for(i in names(local_hd)) {
-    all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),inclMD(paste0("../quant/tools/help/",local_hd[i])), sep="\n")
+    all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),inclRmd(paste0("../quant/tools/help/",local_hd[i])),
+                      '<script>', 'MathJax.Hub.Typeset();', '</script>', sep="\n")
   }
   all_help %>% HTML
 })
@@ -39,14 +40,15 @@ output$help_base_menu <- reactive({
   all_help %>% HTML
 })
 
-help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.md")
+help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd")
 output$help_regression <- reactive({
 
   if(length(input$help_regression) == 0) return()
   all_help <- ""
   local_hd <- help_regression[which(help_regression %in% input$help_regression)]
   for(i in names(local_hd)) {
-    all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),inclMD(paste0("../quant/tools/help/",local_hd[i])), sep="\n")
+    all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),inclRmd(paste0("../quant/tools/help/",local_hd[i])),
+                     '<script>', 'MathJax.Hub.Typeset();', '</script>', sep="\n")
   }
   all_help %>% HTML
 })
