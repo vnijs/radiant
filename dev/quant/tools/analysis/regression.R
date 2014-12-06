@@ -259,7 +259,7 @@ output$ui_regression <- renderUI({
 		  ),
 		  actionButton("saveres", "Save residuals")
 	  ),
-		helpAndReport('Regression','regression', inclMD("../quant/tools/help/regression.md"))
+		helpAndReport('Regression','regression', inclRmd("../quant/tools/help/regression.Rmd"))
 	)
 })
 
