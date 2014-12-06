@@ -58,9 +58,9 @@
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
 # rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
- rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
- rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
- rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
+#  rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+rsync -nav ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
+# rsync -av ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
