@@ -54,7 +54,7 @@ preFactor <- function(datasets, preFactor_vars) {
     variable with a correlation of 1 or -1 from the analysis"
   } else {
     pre_r2 <- data.frame(1 - (1 / diag(solve(cmat))))
-    colnames(pre_r2) <- 'Rsq'
+    colnames(pre_r2) <- 'R-squared'
   }
 
 	list(btest = btest, pre_eigen = pre_eigen, pre_kmo = pre_kmo, pre_r2 = pre_r2)

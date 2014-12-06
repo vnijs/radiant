@@ -1,3 +1,5 @@
+> Group data so the resulting segments are homogenous and each segments is different
+
 The goal of Cluster Analysis is to group respondents (e.g, consumers) into segments based on needs, benefits, and/or behavior. The tool tries to achieve this goal by looking for respondents that are similar, putting them together in a cluster or segment, and separating them from other, dissimilar, respondents. The researcher will then compare the segments and provide a descriptive label for each (i.e., a name).
 
 #### Example: Toothpaste

@@ -47,7 +47,7 @@ shinyUI(navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse =
   tabPanel("Quit", uiOutput("savequit")),
 
   navbarMenu("Help",
-    tabPanel("Radiant help", uiOutput("help_marketing")),
+    tabPanel("Radiant help", uiOutput("help_quant")),
     tabPanel("Radiant videos", withMathJax(), "../base/tools/app/videos_quant.Rmd" %>%
                inclRmd %>% HTML),
     # do NOT remove withMathJax(), load-files breaks!
