@@ -25,8 +25,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
 if(file.exists("~/Desktop/GitHub/radiant_dev") || file.exists("~/../Desktop/GitHub/radiant_dev")) {
   # for debugging
 # options(shiny.trace = TRUE)
-# options(warn=2)
 # options(warn=0)
+# options(warn=2)
 # options(shiny.error=recover)
 # vimKeyBinding <- TRUE
 }
@@ -118,40 +118,34 @@ addResourcePath("imgs", "../base/www/imgs/")
 
 # binding to a bootstrap modal
 helpModal <- function(title, link, content) {
-  html <- sprintf("<div id='%s' class='modal hide fade in' style='display: none; '>
-                     <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
-                       <h3>%s</h3>
-                     </div>
-                     <div class='modal-body'>%s</div>
-                   </div>
-                   <a title='Help' data-toggle='modal' href='#%s' class='icon-question-sign'></a>", link, title, content, link)
-  Encoding(html) <- 'UTF-8'
-  withMathJax(HTML(html))
+  sprintf("<div id='%s' class='modal hide fade in' style='display: none; '>
+          <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
+          <h3>%s</h3>
+          </div>
+          <div class='modal-body'>%s</div></div>
+          <a title='Help' data-toggle='modal' href='#%s' class='icon-question-sign'></a>",
+          link, title, content, link) %>%
+  enc2utf8 %>% HTML %>% withMathJax
 }
 
 helpAndReport <- function(title, link, content) {
-  html <- sprintf("<div id='%sHelp' class='modal hide fade in' style='display: none; '>
-                     <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
-                       <h3>%s</h3>
-                     </div>
-                     <div class='modal-body'>%s</div>
-                   </div>
-                   <div>
-                     <a title='Help' data-toggle='modal' href='#%sHelp' class='icon-question-sign alignleft'></a>
-                     <a title='Report results' class='icon-book action-button shiny-bound-input alignright' href='#%sReport' id='%sReport'></a>
-                   </div>
-                   <div style='clear: both;'></div>
-                   ", link, title, content, link, link, link)
-  withMathJax(HTML(html))
+  sprintf("<div id='%sHelp' class='modal hide fade in' style='display: none; '>
+          <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
+          <h3>%s</h3></div>
+          <div class='modal-body'>%s</div></div>
+          <div><a title='Help' data-toggle='modal' href='#%sHelp' class='icon-question-sign alignleft'></a>
+          <a title='Report results' class='icon-book action-button shiny-bound-input alignright' href='#%sReport' id='%sReport'></a>
+          </div><div style='clear: both;'></div>",
+          link, title, content, link, link, link) %>%
+  enc2utf8 %>% HTML %>% withMathJax
 }
 
-inclMD <- function(file)
-  return(markdown::markdownToHTML(file, options = c(""), stylesheet="../base/www/empty.css"))
+inclMD <- function(path)
+  return(markdown::markdownToHTML(path, options = c(""), stylesheet="../base/www/empty.css"))
 
 inclRmd <- function(path) {
   # function to render .Rmd files to html on-the-fly
-  contents <- paste(readLines(path, warn = FALSE), collapse = '\n')
+  paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   # do not embed image or add css
-  html <- knitr::knit2html(text = contents, fragment.only = TRUE, options = "", stylesheet = "../base/www/empty.css")
-  html
+  knitr::knit2html(text = ., fragment.only = TRUE, options = "", stylesheet = "../base/www/empty.css")
 }

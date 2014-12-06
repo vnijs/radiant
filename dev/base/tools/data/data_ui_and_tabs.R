@@ -16,6 +16,7 @@ output$data_ui_and_tabs <- renderUI({
         conditionalPanel(condition = "input.datatabs == 'Explore'", uiOutput("ui_Explore")),
         conditionalPanel(condition = "input.datatabs == 'Merge'", uiOutput("ui_Merge")),
         conditionalPanel(condition = "input.datatabs == 'Transform'", uiOutput("ui_Transform"))
+#         conditionalPanel(condition = "input.datatabs == 'Filter'", uiOutput("ui_Filter"))
       ),
       mainPanel(id = "datatabs",
         uiOutput("tabs_data")
@@ -36,10 +37,12 @@ output$tabs_data <- renderUI({
                        )
               ),
               tabPanel("View", dataTableOutput("dataviewer")),
-#               , verbatimTextOutput("showSession")
               tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
               tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
               tabPanel("Merge", htmlOutput("mergePossible"), htmlOutput("mergeData1"), htmlOutput("mergeData2")),
               tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary"))
+#               tabPanel("Filter", ggvisOutput("filter_scatter"))
+              # tabPanel("Filter", ggvisOutput("filter_scatter"), verbatimTextOutput("filter_dataviewer"))
   )
 })
+
