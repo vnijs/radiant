@@ -1,3 +1,5 @@
+> Reduce data dimensionality without significant loss of information
+
 As stated in the documentation for pre-factor analysis, the goal is to reduce the dimensionality of the data without significant loss of information. The tool tries to achieve this goal by looking for structure in the correlation matrix of the variables included in the analysis. The researcher will usually try to link each of the original variables to an underlying factor and then provide a descriptive label for each factor (i.e., a name).
 
 # Example: Toothpaste
@@ -6,7 +8,7 @@ Click the 'examples' radio button on the Data > Manage page and click 'Load exam
 
 Once we have determined the number of factors we can extract and rotate them. The factors are rotated to generate a solution where, to the extent possible, a variable has a high loading on only one factor. This is an important benefit because it makes it easier to interpret what the factor represents. While there are numerous algorithms to rotate a factor loadings matrix the most commonly used is Varimax rotation.
 
-The numbers in the table are the correlations of the six variables with the two Factors. For example, variable v1 has a correlation of .962 with Factor 1 and a correlation of -.031 with Factor 2. As such v1 will play a big role in naming Factor 1 but an insignificant role in naming Factor 2. 
+The numbers in the table are the correlations of the six variables with the two Factors. For example, variable v1 has a correlation of .962 with Factor 1 and a correlation of -.031 with Factor 2. As such v1 will play a big role in naming Factor 1 but an insignificant role in naming Factor 2.
 
 The rotated factor loadings will be used to determine labels or names for the different factors. We need to identify and highlight the highest factor loading, in absolute value, in each row. This is most easily done by setting number in the Format loadings input to .4 and checking the Sort box. Together, the variables highlighted in each column (i.e., for each factor) will help us to understand what the factor represents. Questions 1, 3 and 5 reflect the importance of health issues while questions 2, 4, and 6 reflect aesthetics issues. Plausible names for the factors might therefor be:
 
@@ -25,15 +27,15 @@ The final step is to generate the factor scores. You can think of these scores a
 
 #### Summary
 
-1. Determine if the data are appropriate for factor analysis using Bartlett, KMO, and Collinearity (see pre-factor analysis)
-2. Determine the number of factors (see the scree-plot and eigenvalues > 1 produced through pre-factor analysis)
-3. Extract the (rotated) factor solution to produce: 
+1. Determine if the data are appropriate for factor analysis using Bartlett, KMO, and Collinearity (Pre-factor)
+2. Determine the number of factors to extract using the scree-plot and eigenvalues > 1 criteria (Pre-factor)
+3. Extract the (rotated) factor solution to produce:
 	- Factor loadings: Correlations between attributes and factors
-	- Factor scores: Inferred ratings on the new factors
+	- Factor scores: Inferred ratings on the new factors (i.e., new variables that summarize the original variables)
 5. Identify the highest factor loading, in absolute value, in each row (i.e., for each variable)
-4. Interpret the factors using the strongest factor loadings and label them
+4. Label the factors using the strongest factor loadings
 
-If you want more practice open the 'shopping' data set and see if you can reproduce the results shown in the screen capture of the Summary tab below. Using pre-factor analysis determine if the the correct number of factors were selected. Why (not)?
+If you want more practice open the 'shopping' data set and see if you can reproduce the results shown in the screen capture of the Summary tab below. Use Pre-factor to determine if the correct number of factors were selected. Do you agree? Why (not)?
 
 ![facfull shopping - summary](figures_marketing/facfull_shopping_summary.png)
 
