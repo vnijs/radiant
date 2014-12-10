@@ -234,7 +234,7 @@ transform_main <- reactive({
 			newvar <- try(do.call(car::recode, list(dat[,input$tr_columns[1]],recom)), silent = TRUE)
 			if(!is(newvar, 'try-error')) {
 
-				cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="."))
+				cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="_"))
 				dat <- cbind(dat,newvar)
 				colnames(dat) <- cn
 				return(dat)
@@ -246,7 +246,7 @@ transform_main <- reactive({
 		if(input$tr_copyAndPaste != '') {
 			cpdat <- read.table(header=T, text=input$tr_copyAndPaste)
 			cpname <- names(cpdat)
-			if(sum(cpname %in% colnames(dat)) > 0) names(cpdat) <- paste('cp',cpname,sep = '.')
+			if(sum(cpname %in% colnames(dat)) > 0) names(cpdat) <- paste('cp',cpname,sep = '_')
 			if(is.null(input$tr_columns)) return(cpdat)
 			if(nrow(cpdat) == nrow(dat)) dat <- cbind(dat,cpdat)
 		}
