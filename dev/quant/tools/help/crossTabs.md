@@ -11,7 +11,7 @@ We will examine if there is a relationship between income level and choice of ne
 
 If the null-hypothesis is rejected we can investigate which cell(s) contribute to the hypothesized association. In Radiant (Base > Cross-tab) we choose Income as the grouping factor and Newspaper as the second factor. First we compare the observed and expected frequencies. The expected frequencies are calculated using H0 (i.e., no association) as (Row total x Column Total) /  Overall Total.
 
-![cross-tab - summary](figures_quant/crossTabSummary.png)
+![cross-tab - summary](figures_quant/crosstab_summary.png)
 
 The Pearson chi-squared test evaluates if we can reject the null-hypothesis that the two variables are independent. It does so by comparing the observed frequencies (i.e., what we actually see in the data) to the expected frequencies (i.e., what we would expect to see if the two variables were independent). If there are big differences between the table of expected and observed frequencies the chi-square value will be 'large'. The chi-square value for each cell is calculated as (O - E)^2 / E, where O is the observed frequency in a cell and E is the expected frequency in that cell if the null hypothesis holds. These values can be shown by clicking the 'Contribution to chi-square value' box. The overall chi-square value is obtained by summing across all cells, i.e., it is the sum of the values shown in the 'Contribution to chi-square value' table.
 
@@ -21,13 +21,10 @@ Remember to check the expected values: None of of the cells should have an expec
 
 In addition to the numerical output provided in the Summary tab we can evaluate the hypothesis visually (see Plots tab). We choose the same variables as before. However, we will plot the the the standardized deviations. This measure is calculated as O - E / sqrt(E), i.e., a score of how different the observed and expected frequencies in one cell in our table are. When a cell’s standardized deviation is greater than 1.96 (in absolute value) we can say the cell has a significant deviation from the model of independence (or no association).
 
-![cross-tab - plots](figures_quant/crossTabPlots.png)
+![cross-tab - plots](figures_quant/crosstab_plots.png)
 
 In the plots we see that all cells contribute to the association between income and readership as the standardized deviations are larger than 1.96 in absolute value (i.e., the bars extend beyond the dotted lines in the plot).
 
-<!-- #### Example 2 -->
-
-Note: The data description for the tulsa_age and tulsa_marital datasets discusses how rows or columns in a cross-tab can be collapsed when some of the expected values are below 5.
-
+Note: The data description for the goals2 dataset has information on how rows or columns in a cross-tab can be collapsed when some of the expected values are below 5.
 
 &copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

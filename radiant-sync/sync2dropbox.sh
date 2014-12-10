@@ -20,13 +20,15 @@
 
 # from http://superuser.com/questions/536561/rsync-using-regex-to-include-only-some-files
 # rsync -navruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
-rsync -avruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -avruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
 # only copy the files that do not exist to dropbox
 # rsync -navrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
 
-rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
 
 # rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
+# rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
+
 # rsync -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
 
 # syncing the dev branch
@@ -64,6 +66,8 @@ rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-mini
 
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev_branch/ ~/Desktop/GitHub/radiant_dev/dev/
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
+
+rsync -av ~/Desktop/GitHub/radiant_dev/dev_branch/ ~/Desktop/GitHub/radiant_dev/dev/
 
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
