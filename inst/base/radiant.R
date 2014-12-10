@@ -153,12 +153,15 @@ statPanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
 }
 
 statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label, widthFun = "plotWidth", heightFun = "plotHeight") {
+	  tool <- isolate(input$nav_radiant)
 	  sidebarLayout(
 	    sidebarPanel(
 	      wellPanel(
 	        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
-	        HTML(paste("<label><strong>Tool:",isolate(input$nav_radiant),"</strong></label>")),
-	        HTML(paste("<label><strong>Data:",input$datasets,"</strong></label>"))
+	        # HTML(paste("<label><strong>Tool:",isolate(input$nav_radiant),"</strong></label>")),
+	        HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
+	        if(!tool %in% c("Central Limit Theorem", "Sample size"))
+		        HTML(paste("<label><strong>Data:",input$datasets,"</strong></label>"))
 	      ),
 	      uiOutput(paste0("ui_",fun_label))
 	    ),

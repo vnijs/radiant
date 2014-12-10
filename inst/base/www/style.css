@@ -86,9 +86,11 @@ input[type="number"] {
 }
 
 .modal {
-  /*width: 1000px; */
-  width: 800px;
-  left: 600px;
+  width: 700px;
+  /*left: 600px;*/
+  position: absolute;
+  left: 50%;
+  margin-left: -350px;
 }
 
 .modal-body {
