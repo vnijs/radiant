@@ -31,3 +31,32 @@ rnorm(1000)    %>%
 }
 
 ?multiply_by
+
+library("ggplot2")
+library("magrittr")
+library("dplyr")
+
+echo <- function(x) {
+  print(x)
+  x
+}
+
+mtcars %T>%
+  qplot(mpg, cyl, data = .) %T>%
+  summarise(mean(mpg))
+
+library("ggplot2")
+library("magrittr")
+library("dplyr")
+
+echo <- function(x,gg) {
+  print(gg)
+  x
+}
+mtcars %>%
+  echo(., qplot(mpg, cyl, data = .)) %>%
+  summarise(mean(mpg))
+
+mtcars %T>%
+  qplot(mpg, cyl, data=.) %>%
+  summarise(mean_mpg = mean(mpg))
