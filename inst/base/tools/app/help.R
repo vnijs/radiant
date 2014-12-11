@@ -143,8 +143,6 @@ output$help_conjoint <- reactive(append_help("help_conjoint", "../marketing/tool
 observe( help_switch(input$help_conjoint_all, "help_conjoint") )
 observe( help_switch(input$help_conjoint_none, "help_conjoint", help_on = FALSE) )
 
-
-
 help_marketing_ui <- tagList(
   wellPanel(
     HTML("<label>Maps menu: <a id='help_maps_all' title='Check all' href='#' class='action-button icon-ok'></a>
@@ -166,9 +164,9 @@ help_marketing_ui <- tagList(
   ),
   wellPanel(
     HTML("<label>Conjoint menu: <a id='help_conjoint_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_cluster_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    <a id='help_conjointr_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
     checkboxGroupInput("help_conjoint", "", help_conjoint,
-      selected = state_init_list("help_conjoint","", help_conjoint)
+                       selected = state_init_list("help_conjoint","", help_conjoint))
   )
 )
 
