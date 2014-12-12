@@ -19,11 +19,13 @@ In order to determine if the chi-square value can be considered large we first d
 
 Remember to check the expected values: None of of the cells should have an expected count of less than 5. If necessary, ‘collapse’ rows and/or columns. All expected frequencies are > 5 therefore the chi-square statistic is unlikely to be biased. As usual we reject the null-hypothesis when the p-value is smaller 0.05. Since our p-value is very small (< .001) we can reject the null-hypothesis (i.e., the data support the conclusion that there is an association between newspaper readership and income).
 
-In addition to the numerical output provided in the Summary tab we can evaluate the hypothesis visually (see Plots tab). We choose the same variables as before. However, we will plot the the the standardized deviations. This measure is calculated as O - E / sqrt(E), i.e., a score of how different the observed and expected frequencies in one cell in our table are. When a cell’s standardized deviation is greater than 1.96 (in absolute value) we can say the cell has a significant deviation from the model of independence (or no association).
+In addition to the numerical output provided in the Summary tab we can evaluate the hypothesis visually (see Plots tab). We choose the same variables as before. However, we will plot the the the standardized deviations. This measure is calculated as O - E / sqrt(E), i.e., a score of how different the observed and expected frequencies in one cell in our table are. When a cell's standardized deviation is greater than 1.96 (in absolute value) we can say the cell has a significant deviation from the model of independence (or no association).
 
 ![cross-tab - plots](figures_quant/crosstab_plots.png)
 
-In the plots we see that all cells contribute to the association between income and readership as the standardized deviations are larger than 1.96 in absolute value (i.e., the bars extend beyond the dotted lines in the plot).
+In the plot we see that all cells contribute to the association between income and readership as all standardized deviations are larger than 1.96 in absolute value (i.e., the bars extend beyond the outer dotted line in the plot).
+
+In other words, there are significantly fewer low income respondents that read WSJ and significantly more high income respondents that read WSJ than would be expected if the null hypothesis of no-association were true. Furthermore, there are significantly more low income respondents that read USA today and significantly fewer high income respondents that read USA Today than would be expected if the null hypothesis of no-association were true.
 
 Note: The data description for the goals2 dataset has information on how rows or columns in a cross-tab can be collapsed when some of the expected values are below 5.
 
