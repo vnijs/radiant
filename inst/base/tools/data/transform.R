@@ -208,7 +208,7 @@ transform_main <- reactive({
       dat_class <- getdata_class_fun(dat)
       isNum <- "numeric" == dat_class | "integer" == dat_class
       if(length(isNum) == 0) return("Please select numerical variables to normalize")
-      dat_tr <- try(select(dat,which(isNum)) / getdata()[,input$tr_normalizer], silent = TRUE)
+      dat_tr <- try(dplyr::select(dat,which(isNum)) / getdata()[,input$tr_normalizer], silent = TRUE)
       if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
      	cn <- c(vars,paste(vars[isNum],input$tr_normalizer, sep="_"))
 			dat <- cbind(dat,dat_tr)
@@ -328,10 +328,10 @@ output$transform_summary <- renderPrint({
 		perc25 <- function(x) quantile(x,.25, na.rm = TRUE)
 		perc75 <- function(x) quantile(x,.75, na.rm = TRUE)
 
-    res$`25%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
-    res$`75%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
+    res$`25%` <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
+    res$`75%` <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
     # nmissing function is in explore.R
-    res$missing <- select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
+    res$missing <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
 
 		# print desired stats in order
 		res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")] %>% print
