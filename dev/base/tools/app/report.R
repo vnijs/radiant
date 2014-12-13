@@ -13,7 +13,7 @@ This is an example of the type of report you can write in Radiant.
 
 ### Math
 
-You can even include math if you want: $f(\\\\alpha, \\\\beta) \\\\propto x^{\\\\alpha-1}(1-x)^{\\\\beta-1}$.
+You can even include math if you want: $f(\\alpha, \\beta) \\propto x^{\\alpha-1}(1-x)^{\\beta-1}$.
 
 To show the output press the `Update` button.
 
