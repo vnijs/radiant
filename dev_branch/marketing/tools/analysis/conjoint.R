@@ -13,7 +13,7 @@ output$ui_conjointProfiles <- renderUI({
 
 output$conjointProfiles <- renderUI({
 	# create inputs and outputs - function in radiant.R
-  statTabPanel("Conjoint","Create profiles",".conjointProfiles","conjointProfiles")
+  statTabPanel("Conjoint","Create profiles",".conjointProfiles","conjointProfiles", mpan = "onePanel")
 })
 
 .conjointProfiles <- reactive({
@@ -60,7 +60,8 @@ conjointProfiles <- function(ca_attr = values[['ca_attr']]) {
 	return(list(attr = ca_attr, pro.cor = pro.cor, frac = FFdesign, full = CFdesign))
 }
 
-summary_conjointProfiles <- function(result = .conjointProfiles()) {
+# summary_conjointProfiles <- function(result = .conjointProfiles()) {
+main_conjointProfiles <- function(result = .conjointProfiles()) {
 	cat("Attributes and levels:\n")
 	cat(paste0(result$attr, collapse="\n"),"\n\n")
 
@@ -78,10 +79,10 @@ summary_conjointProfiles <- function(result = .conjointProfiles()) {
 	print(result$full[,cn], row.names = FALSE)
 }
 
-plots_conjointProfiles <- function(result = .conjointProfiles()) {
-	result <- "Relevant output is in the Summary tab."
-	return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
-}
+# plots_conjointProfiles <- function(result = .conjointProfiles()) {
+# 	result <- "Relevant output is in the Summary tab."
+# 	return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
+# }
 
 # ca_loadUserProfiles <- function(uFile) {
 # 	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
@@ -206,7 +207,8 @@ output$conjoint <- renderUI({
 
 .conjoint <- reactive({
 
-	ret_text <- "This analysis requires a dependent variable of type\ninteger or numeric and one or more independent variables or type factor.\nPlease select another dataset."
+	ret_text <- "This analysis requires a dependent variable of type\ninteger or numeric and
+							one or more independent variables or type factor.\nPlease select another dataset."
 	if(is.null(input$ca_var1)) return(ret_text)
 	isFct <- "factor" == getdata_class()
  	vars <- varnames()[isFct]

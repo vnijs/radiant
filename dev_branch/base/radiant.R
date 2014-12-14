@@ -118,7 +118,7 @@ plotHeight <- function() {
 		return(input$viz_plot_height))
 }
 
-statPanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
+twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
 
 	if(isolate(input$nav_radiant) != fun_name) return()
 
@@ -152,7 +152,32 @@ statPanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
   ))
 }
 
-statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label, widthFun = "plotWidth", heightFun = "plotHeight") {
+onePanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
+
+	if(isolate(input$nav_radiant) != fun_name) return()
+
+	main_name <- paste0("main_", fun_label)
+
+	# Generate output for the summary tab
+	output[[main_name]] <- renderPrint({
+
+		result <- get(rfun_label)()
+		# when no analysis was conducted (e.g., no variables selected)
+		if(is.character(result)) return(cat(result,"\n"))
+
+		get(main_name)()
+	})
+
+  return(tabsetPanel(
+    id = paste0("tabs_",fun_label),
+    tabPanel("Main", verbatimTextOutput(main_name))
+  ))
+}
+
+
+statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
+                         widthFun = "plotWidth", heightFun = "plotHeight",
+                         mpan = "twoPanels") {
 	  tool <- isolate(input$nav_radiant)
 	  sidebarLayout(
 	    sidebarPanel(
@@ -160,13 +185,20 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label, widthFun = 
 	        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
 	        # HTML(paste("<label><strong>Tool:",isolate(input$nav_radiant),"</strong></label>")),
 	        HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
-	        if(!tool %in% c("Central Limit Theorem", "Sample size"))
+	        if(!tool %in% c("Central Limit Theorem", "Sample size", "Create profiles"))
 		        HTML(paste("<label><strong>Data:",input$datasets,"</strong></label>"))
 	      ),
 	      uiOutput(paste0("ui_",fun_label))
 	    ),
 	    mainPanel(
-				statPanel(fun_name, rfun_label, fun_label, widthFun, heightFun)
+				# statPanel(fun_name, rfun_label, fun_label, widthFun, heightFun)
+				# get("statPanel")(fun_name, rfun_label, fun_label, widthFun, heightFun)
+				get(mpan)(fun_name, rfun_label, fun_label, widthFun, heightFun)
 	    )
 	  )
 }
+
+# pp <- function(x) log(x)
+# test <- function(x) get(x)
+# ppp <- test("pp")
+# ppp(2)
