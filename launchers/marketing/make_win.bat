@@ -8,7 +8,7 @@ if %R% == "-" goto R_not_found else goto R_found
 
 :R_found
 echo R was found in "%R%"
-%R% ../make/make_win_dev.R "%CD%" "marketing" "4475"
+%R% ../make/make_win.R "%CD%" "marketing" "4475"
 goto end
 
 :R_not_found
