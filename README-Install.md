@@ -4,16 +4,15 @@
 
 Download the Dropbox software from <https://www.dropbox.com/downloading> and install it. If you already have Dropbox installed on your computer, this step will ensure that you are running the latest version. If you do not have a Dropbox account yet, you will be asked to create one. Once you have installed Dropbox, make sure that it is running. In Windows, the icon is typically on the bottom right of the screen (i.e., the system tray). In Mac OSX, it is typically on the top right of the screen in the menu bar. If Dropbox is running make sure that you are logged in with the username and password you normally use for Dropbox. For example, if you always login to Dropbox with a gmail account make sure you are logged in with that account now as well.
 
-### Step 2: Accept the invitation to share the dropbox folder (at the bottom of the invitation email from Dropbox)
+### Step 2: Accept the invitation to share the Dropbox folder (at the bottom of the invitation email from Dropbox)
 
 Accept the invitation in the email to share the Radiant folder (see the button at the bottom of the invitation e-mail). If dropbox does not ask you to share the Radiant folter send an email to radiant@rady.ucsd.edu from the email address where you would like the invitation to be sent. Wait until the folder has fully synced to your computer. You may notice that the Dropbox icon changes from a green check-mark to a different form that indicates it is syncing files. Note that the Radiant folder is read-only.
 
 ### Step 3: Download and install R (version 3.1.2) for your operating system.
 
-
-* For Windows: http://vnijs.rady.ucs.edu/site_media/R-3.1.2-win.exe
-* For Mac (10.9 and above): http://vnijs.rady.ucs.edu/site_media/R-3.1.2-mavericks.pkg
-* For Mac (10.6 - 10.8): http://vnijs.rady.ucs.edu/site_media/R-3.1.2-snowleopard.pkg
+* For Windows: http://vnijs.rady.ucs.edu/site_media/R/R-3.1.2-win.exe
+* For Mac (10.9 and above): http://vnijs.rady.ucs.edu/site_media/R/R-3.1.2-mavericks.pkg
+* For Mac (10.6 - 10.8): http://vnijs.rady.ucs.edu/site_media/R/R-3.1.2-snowleopard.pkg
 
 <!-- hosting binaries on personal server because links to 3.1.2 on CRAN
 may disappear when a new version comes out
@@ -25,12 +24,12 @@ may disappear when a new version comes out
 
 ### Step 4: Download and install additional software for your operating system.
 
-For the mac:
+For Mac:
 
 * http://download1.rstudio.org/RStudio-0.98.1091.dmg
 * http://mirror.ctan.org/systems/mac/mactex/mactex-basic.pkg
 
-For windows:
+For Windows:
 
 * http://download1.rstudio.org/RStudio-0.98.1091.exe
 * http://mirrors.ctan.org/systems/win32/miktex/setup/basic-miktex-2.9.5105.exe

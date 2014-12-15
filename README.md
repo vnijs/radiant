@@ -8,7 +8,7 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 
 ### Install
 
-- Required: [R](http://cran.rstudio.com/), version 3.1.1
+- Required: [R](http://cran.rstudio.com/), version 3.1.2
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
