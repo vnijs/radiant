@@ -5,6 +5,9 @@ Radiant is a tool disigned to facilitate decision making using data and models. 
 <!--
 ### Introduction
 ### Big picture video ###
+Examples:
+- http://vimeo.com/113594599
+- 
 -->
 
 ### Radiant code
