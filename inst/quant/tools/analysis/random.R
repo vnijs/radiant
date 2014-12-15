@@ -112,7 +112,7 @@ output$ui_sampleSize <- renderUI({
 		    numericInput("rnd_pop_size", "Population size:", min = 1,
 		  		value = state_init("rnd_pop_size",10^6), step = 1000))
 		),
-	 	helpAndReport('Sample size','sampleSize',inclRmd("../quant/tools/help/sampleSize.Rmd"))
+	 	helpAndReport('Sample size','sampleSize',inclMD("../quant/tools/help/sampleSize.md"))
  	)
 })
 
@@ -167,12 +167,7 @@ summary_sampleSize <- function(result = .sampleSize()) {
 	cat("Required sample size:", result$n)
 	cat("\nRequired contact attempts:", result$n / result$rnd_incidence / result$rnd_response)
 	cat("\n\nChoose a Z-value as follows:\n")
-
-  zvals <- c(.90, .95, .99, .9973, .999)
-  for(z in zvals)
-    cat(paste0(100*z,"%\t"),-qnorm((1-z)/2) %>% round(2),"\n")
-
-	# cat("90%\t1.64\n95%\t1.96\n99%\t2.58\n99.9%\t3.29")
+	cat("90%\t1.64\n95%\t1.96\n99%\t2.58\n99.9%\t3.29")
 }
 
 plots_sampleSize <- function(result = .sampleSize()) {

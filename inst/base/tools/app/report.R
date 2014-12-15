@@ -1,36 +1,24 @@
 ################################################################
 # Create dynamic reports using Radiant and the shinyAce editor
 ################################################################
-rmd_example <- "## Sample report
+rmd_example <- "## Sample report in Markdown
 
-This is an example of the type of report you can write in Radiant.
+This is an example report in markdown. You can embed R code to be executed.
 
-* You can create
-* bullet lists
-
-1. And numbered
-2. lists
-
-### Math
-
-You can even include math if you want: $f(\\alpha, \\beta) \\propto x^{\\alpha-1}(1-x)^{\\beta-1}$.
-
-To show the output press the `Update` button.
-
-### Documenting analysis results in Radiant
-
-When you click the book icon on a page the browser will bring you to this report page. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report. However, you can turn off that feature by clicking the `Manual paste` checkbox. The code will then be put in the clipboard when you click a book icon and you can paste it where you want in the editor window.
-
-Below is some code created in Radiant will generate regression output for the `diamonds` data. There are plots of histograms and a scatterplot / heatmap of the price of diamonds versus carats. The colors in the plot reflect the clarity of the diamond.
-
-```{r fig.width=7, fig.height=3.5}
-result <- regression('diamonds', 'price', 'carat', NULL, NULL, 'none', 'dataframe', '', 'none', FALSE, FALSE, FALSE, 0.95, FALSE, FALSE, FALSE, 'histlist', FALSE, FALSE)
-summary_regression(result)
-plots_regression(result)
+```{r}
+rnorm(5)
+x <- 14*3
 ```
 
-```{r fig.width=7, fig.height=7}
-visualize('diamonds', 'price', 'carat', '', 'single', '.', '.', 'clarity', FALSE, FALSE, FALSE)
+### Inline code
+Inline R code, e.g., the value of x is `r x`.
+
+### Math
+LaTeX math:  $f(\\\\alpha, \\\\beta) \\\\propto x^{\\\\alpha-1}(1-x)^{\\\\beta-1}$.
+
+### Figures
+```{r}
+hist(rnorm(100))
 ```
 "
 
@@ -45,11 +33,9 @@ output$report <- renderUI({
 
   list(
     actionButton("evalRmd", "Update"),
-    downloadButton("saveHTML", "Save HTML"),
-    downloadButton("saveRmd", "Save Rmd"),
-    checkboxInput("manualPaste", "Manual paste",
-                  value = state_init("manualPaste", FALSE)),
-    fileInput("loadRmd", "", multiple=TRUE),
+    downloadButton('saveHTML', 'Save HTML'),
+    downloadButton('saveRmd', 'Save Rmd'),
+    fileInput('loadRmd', '', multiple=TRUE),
 
     div(class="row-fluid",
       div(class="span6",
@@ -168,15 +154,15 @@ updateReportMerge <- function(inp, fun_name) {
 
 updateReportFun <- function(cmd) {
 
-  if(!is.null(input$manualPaste) && input$manualPaste) {
-    os_type <- .Platform$OS.type
-    if (os_type == 'windows') {
-      cat(cmd, file = "clipboard")
-    } else {
-      cat(cmd, file = pipe("pbcopy"))
-    }
-    cmd <- ""
+  os_type <- .Platform$OS.type
+  if (os_type == 'windows') {
+#     write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+    cat(cmd, file = "clipboard")
+  } else {
+#     write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+    cat(cmd, file = pipe("pbcopy"))
   }
+
 
   # should be rmd_selection be added here as well?
   if(is.null(input$rmd_report)) {

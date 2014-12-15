@@ -23,10 +23,6 @@ Radiant is a tool disigned to facilitate decision making using data and models. 
 
 <iframe width="640" height="375" src="//www.youtube.com/embed/Xp1REGAewGU" frameborder="0" allowfullscreen></iframe>
 
-### Creating a report
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen></iframe>
-
 ### Selecting variables for fast and efficient analysis 
 
 ### View data in table form

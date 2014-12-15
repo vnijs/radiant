@@ -54,11 +54,8 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      checkboxInput('man_show_remove', 'Remove data from memory:', FALSE),
-      conditionalPanel(condition = "input.man_show_remove == true",
-        uiOutput("uiRemoveDataset"),
-        actionButton('removeDataButton', 'Remove data')
-      )
+      uiOutput("uiRemoveDataset"),
+      actionButton('removeDataButton', 'Remove data')
     ),
     helpModal('Manage','manageHelp',inclMD("../base/tools/help/manage.md"))
   )
@@ -88,7 +85,7 @@ dataDescriptionOutput <- function(ret = 'html') {
 # removing datasets
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
-  selectInput(inputId = "removeDataset", label = "",
+  selectInput(inputId = "removeDataset", label = "Remove data from memory:",
     choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE
   )
 })
@@ -245,8 +242,7 @@ loadUserData <- function(filename, uFile, ext) {
   }
 
   if(ext == 'csv') {
-    values[[objname]] <- read.csv(uFile, header=input$header,
-                                  sep=input$sep, stringsAsFactors=FALSE)
+    values[[objname]] <- read.csv(uFile, header=input$header, sep=input$sep)
   }
 
   updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,

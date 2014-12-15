@@ -16,13 +16,13 @@ output$ui_preFactor <- renderUI({
   	wellPanel(
 	  	uiOutput("uiPreFactor_vars")
 	  ),
- 		helpAndReport('Pre-factor','preFactor',inclMD("tools/help/preFactor.md"))
+ 		helpAndReport('Pre-factor analysis','preFactor',inclMD("tools/help/preFactor.md"))
  	)
 })
 
 output$preFactor <- renderUI({
 	# for input-output
-  statTabPanel("Factor","Pre-factor",".preFactor", "preFactor")
+  statTabPanel("Factor","Pre-factor analysis",".preFactor", "preFactor")
 })
 
 .preFactor <- reactive({
@@ -54,7 +54,7 @@ preFactor <- function(datasets, preFactor_vars) {
     variable with a correlation of 1 or -1 from the analysis"
   } else {
     pre_r2 <- data.frame(1 - (1 / diag(solve(cmat))))
-    colnames(pre_r2) <- 'Rsq'
+    colnames(pre_r2) <- 'R-squared'
   }
 
 	list(btest = btest, pre_eigen = pre_eigen, pre_kmo = pre_kmo, pre_r2 = pre_r2)
@@ -139,7 +139,7 @@ output$ui_fullFactor <- renderUI({
       	selected = state_init_list("fac_rotation","varimax", fac_rotation)),
       actionButton("fac_savescores", "Save scores")
   	),
-		helpAndReport('Factor','fullFactor',inclMD("tools/help/fullFactor.md"))
+		helpAndReport('Factor analysis','fullFactor',inclMD("tools/help/fullFactor.md"))
 	)
 })
 
@@ -155,7 +155,7 @@ fac_plotHeight <- function() {
 
 output$fullFactor <- renderUI({
 	# for input-output
-  statTabPanel("Factor","Factor",".fullFactor", "fullFactor", "fac_plotWidth", "fac_plotHeight")
+  statTabPanel("Factor","Factor analysis",".fullFactor", "fullFactor", "fac_plotWidth", "fac_plotHeight")
 })
 
 .fullFactor <- reactive({
