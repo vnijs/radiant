@@ -1,15 +1,14 @@
 .Rapp.history
-testing.Rmd
-radiant-install.Rmd
 .Rhistory
 .dropbox
 .Rproj.user
-inst/base/www/MathJax
 
 radiant-sync/
 
 inst/quant/data/data_rady/
 dev/quant/data/data_rady/
+dev_branch/quant/data/data_rady/
 
 inst/marketing/data/data_rady/
 dev/marketing/data/data_rady/
+dev_branch/marketing/data/data_rady/
