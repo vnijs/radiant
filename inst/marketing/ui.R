@@ -25,8 +25,8 @@ shinyUI(navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse =
   ),
 
   navbarMenu("Factor",
-    tabPanel("Pre-factor analysis", uiOutput("preFactor")),
-    tabPanel("Factor analysis", uiOutput("fullFactor"))
+    tabPanel("Pre-factor", uiOutput("preFactor")),
+    tabPanel("Factor", uiOutput("fullFactor"))
   ),
 
   navbarMenu("Cluster",
@@ -36,7 +36,7 @@ shinyUI(navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse =
 
   navbarMenu("Conjoint",
     tabPanel("Create profiles", uiOutput("conjointProfiles")),
-    tabPanel("Conjoint analysis", uiOutput("conjoint"))
+    tabPanel("Conjoint", uiOutput("conjoint"))
   ),
 
   navbarMenu("R",
@@ -47,7 +47,7 @@ shinyUI(navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse =
   tabPanel("Quit", uiOutput("savequit")),
 
   navbarMenu("Help",
-    tabPanel("Radiant help", uiOutput("help_quant")),
+    tabPanel("Radiant help", uiOutput("help_marketing")),
     tabPanel("Radiant videos", withMathJax(), "../base/tools/app/videos_quant.Rmd" %>%
                inclRmd %>% HTML),
     # do NOT remove withMathJax(), load-files breaks!

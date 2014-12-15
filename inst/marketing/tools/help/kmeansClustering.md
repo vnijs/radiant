@@ -22,15 +22,15 @@ Once we have categorized the segments we can create a segment or cluster members
 
 	1 = 'Therapeutic'; 2 = 'Uninvolved'; 3 = 'Cosmetic'
 
-We can profile these segments with demographic data using cross-tabs (e.g., gender vs segment membership). Go to EDAT > Cross-tabs. Our null hypothesis is: 
+We can profile these segments with demographic data using cross-tabs (e.g., gender vs segment membership). Go to Base > Cross-tabs. Our null hypothesis is:
 
 	There is no relationship between gender and segment membership
 
-Alternative hypothesis: 
+Alternative hypothesis:
 
 	There is a relationship between gender and segment membership
 
-In the summary tab we see there is a significant association between these two variables. The p-value is smaller than .001 and there are no cells with expected values below 5. 
+In the summary tab we see there is a significant association between these two variables. The p-value is smaller than .001 and there are no cells with expected values below 5.
 
 ![kmeans toothpaste - crosstab summary](figures_marketing/kmeans_toothpaste_crosstab_summary.png)
 

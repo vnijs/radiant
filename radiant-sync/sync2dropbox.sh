@@ -69,10 +69,13 @@
 
 # rsync -nav ~/Desktop/GitHub/radiant_dev/dev_branch/ ~/Desktop/GitHub/radiant_dev/dev/
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/  ~/Dropbox/radiant/dev/
-# rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+
+rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
+
 # rsync -nav ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
-rsync -av ~/Dropbox/radiant/inst/ ~/Desktop/GitHub/radiant_dev/inst/
+# reverse it
+# rsync -av ~/Dropbox/radiant/inst/ ~/Desktop/GitHub/radiant_dev/inst/
 
 # rsync -nav ~/Desktop/GitHub/radiant_dev/inst/quant/  ~/Dropbox/radiant/inst/quant/
 # rsync -nav ~/Dropbox/radiant/inst/quant/ ~/Desktop/GitHub/radiant_dev/inst/quant/
