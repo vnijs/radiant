@@ -10,9 +10,9 @@ Accept the invitation in the email to share the Radiant folder (see the button a
 
 ### Step 3: Download and install R (version 3.1.2) for your operating system.
 
-* For Windows: http://vnijs.rady.ucs.edu/site_media/R/R-3.1.2-win.exe
-* For Mac (10.9 and above): http://vnijs.rady.ucs.edu/site_media/R/R-3.1.2-mavericks.pkg
-* For Mac (10.6 - 10.8): http://vnijs.rady.ucs.edu/site_media/R/R-3.1.2-snowleopard.pkg
+* For Windows: http://vnijs.rady.ucsd.edu/site_media/R/R-3.1.2-win.exe
+* For Mac (10.9 and above): http://vnijs.rady.ucsd.edu/site_media/R/R-3.1.2-mavericks.pkg
+* For Mac (10.6 - 10.8): http://vnijs.rady.ucsd.edu/site_media/R/R-3.1.2-snowleopard.pkg
 
 <!-- hosting binaries on personal server because links to 3.1.2 on CRAN
 may disappear when a new version comes out
