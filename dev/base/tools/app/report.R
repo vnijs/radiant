@@ -19,12 +19,22 @@ To show the output press the `Update` button.
 
 ### Documenting analysis results in Radiant
 
-When you click the book icon on a page the browser will bring you to this report page. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report. However, you can turn off that feature by clicking the `Manual paste` checkbox. The code will then be put in the clipboard when you click a book icon and you can paste it where you want in the editor window.
+When you click the book icon on a page the browser will bring you
+to this report page. By default Radiant will paste the code generated
+for the analysis you just completed at the bottom of the report.
+However, you can turn off that feature by clicking the `Manual paste`
+checkbox. The code will then be put in the clipboard when you click a
+book icon and you can paste it where you want in the editor window.
 
-Below is some code created in Radiant will generate regression output for the `diamonds` data. There are plots of histograms and a scatterplot / heatmap of the price of diamonds versus carats. The colors in the plot reflect the clarity of the diamond.
+Below is some code created in Radiant will generate regression output
+for the `diamonds` data. There are plots of histograms and a scatterplot
+/ heatmap of the price of diamonds versus carats. The colors in the plot
+reflect the clarity of the diamond.
 
 ```{r fig.width=7, fig.height=3.5}
-result <- regression('diamonds', 'price', 'carat', NULL, NULL, 'none', 'dataframe', '', 'none', FALSE, FALSE, FALSE, 0.95, FALSE, FALSE, FALSE, 'histlist', FALSE, FALSE)
+result <- regression('diamonds', 'price', 'carat', NULL, NULL, 'none',
+                     'dataframe', '', 'none', FALSE, FALSE, FALSE, 0.95,
+                     FALSE, FALSE, FALSE, 'histlist', FALSE, FALSE)
 summary_regression(result)
 plots_regression(result)
 ```
@@ -108,7 +118,8 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if(running_local) {
       isolate({
-        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",  text <- input$rmd_report, text <- input$rmd_selection)
+        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+               text <- input$rmd_report, text <- input$rmd_selection)
         knitIt(text) %>% cat(.,file=file,sep="\n")
       })
     }
@@ -255,7 +266,8 @@ output$rCodeEval <- renderPrint({
       }
 
       r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
-      return(HTML(paste(knitr::knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE), '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
+      return(HTML(paste(knitr::knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE),
+             '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
     } else {
       return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
     }
