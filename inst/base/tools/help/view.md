@@ -10,7 +10,7 @@ By default all columns in the data are shown. Click on any variable to focus on 
 
 #### Browse the data
 
-By default only 10 data rows are shown. You can change this setting through the `records per page` drop-down. Press the `Next` and `Previous` buttons at the bottom-right of the screen to move through pages of the data.
+By default only 10 data rows are shown. You can change this setting through the 'records per page' drop-down. Press the 'Next' and 'Previous' buttons at the bottom-right of the screen to move through pages of the data.
 
 #### Sort
 
@@ -20,16 +20,26 @@ Click on a column header in the table to sort the data by the values of that var
 
 There are several ways to select a subset of the data to view. The Subset box on the left can be used with > and < signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable x has values larger than 3 **and** for which y has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In constrast `!=` is used to determine if variable is _not equal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where Salary is larger than $100,000 or smaller than $20,000 you could use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of operators you can use. Type your statement in the Subset box and press enter to see the result on screen.
 
-| Operator    |     | Description               |
-| ----------- | --- |:------------------------- |
-| <	          |     | less than                 |
-| <=			    |     | less than or equal to     |
-| > 			    |     | greater than              |
-| >=	 	      |     | greater than or equal to  |
-| ==	 		    |     | exactly equal to          |
-| !=	 		    |     | not equal to              |
-| x &#124; y	|     | x OR y                    |
-| x & y	      |     | x AND y                   |
+-----------------------------------
+Operator Description
+-------- --------------------------
+<	       less than
+
+<=	     less than or equal to
+
+>	       greater than
+
+>=	     greater than or equal to
+
+==	     exactly equal to
+
+!=	     not equal to
+
+x | y	   x OR y
+
+x & y	   x AND y
+-----------------------------------
+
 
 ### Search
 

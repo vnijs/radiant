@@ -1,16 +1,16 @@
-> Brand maps based on (dis)similarity data can be analyzed using Multi-Dimensional Scaling (MDS)
+Brand maps based on (dis)similarity data can be analyzed using Multi-Dimensional Scaling (MDS).
 
 #### Example 1
 
-The city data (city) contains information on distances in miles between 10 major cities in the US. Distances for 45 (10 x 9 / 2) from-to city pairs are provided. These data are used to illustrate that MDS can take simple data on distances (or on brand dissimilarities as we will see) and create a 2-dimensional map that accurately depicts the relative city (or brand) positions.
+The city data (city) contains information on distances in miles between 10 major cities in the US. Distances for 45 (10 x 9 / 2) from-to city pairs are provided. These data are used to illustrate that MDS can take simple data on distances (or on brand dissimilarities as we will see) and create a 2-dimensional map that accurately depicts the relative city (or brand) positions. 
 
 Click the 'examples' radio button on the Data > Manage page and click 'Load examples' then choose the city data from the Datasets drop-down. Select 'from' as ID 1, 'to' as ID 2, and 'distance' as the Dissimilarity measure. The original distances are shown in (lower triangular) matrix form in the figure below. If the analysis is successful we expect cities that are close (e.g., Washington DC and New York) should also be located close together on the map and cities that are far apart (e.g., Seattle and Miami) should also be positioned far apart in the map.
 
-The basic measure of (lack of) fit for MDS is called Stress. If MDS cannot create a map that accurately describes the original data this will result in high stress. Stress values of .1 are generally considered fair, .05 is good, and .01 or lower is excellent. High stress values indicate that a dimensionality of three (or higher) is needed to accurately depict the available data. For the city data the stress value is equal to .006 which is outstanding. In the Summary tab we also see the coordinates that will be used to create the two-dimensional map show in the Plots tab.
+The basic measure of (lack of) fit for MDS is called Stress. If MDS cannot create a map that accurately describes the original data this will result in high stress. Stress values of .1 are generally considered fair, .05 is good, and .01 or lower is excellent. High stress values indicate that a dimensionality of three (or higher) is needed to accurately depict the available data. For the city data the stress value is equal to .006 which is outstanding. In the Summary tab we also see the coordinates that will be used to create the two-dimensional map show in the Plots tab. 
 
 ![mds city - summary](figures_marketing/mds_city_summary.png)
 
-In the graph from the screen grab of the Plots tab shown below the relative locations of Los Angeles, Boston, etc. look wrong. This is due to the fact the MDS program has no information on North, South, East and West. We can ‘flip’ the plot in Radiant to see if map becomes easier to recognize and interpret.
+In the graph from the screen grab of the Plots tab shown below the relative locations of Los Angeles, Boston, etc. look wrong. This is due to the fact the MDS program has no information on North, South, East and West. We can ‘flip’ the plot in Radiant to see if map becomes easier to recognize and interpret. 
 
 ![mds city - plots org](figures_marketing/mds_city_plots_org.png)
 
@@ -20,7 +20,7 @@ To create the plot below we clicked the check-boxes for Dimension 1 and Dimensio
 
 #### Example 2
 
-The following plot is based on similarity data for a set of toothpaste brands (tpbrands, available as one of the example datasets). Respondents were asked the following question: "Please rate the following pairs of toothpaste brands on the basis of their similarity (1 = very similar, 7 = very dissimilar)." for all pairwise combinations of 10 brands, i.e., 45 comparisons. MDS will try to create a map that reproduces as accurately as possible the original dissimilarities (or perceptual distances) provided by the 50 respondents. The original dissimilarity ratings are shown in (lower triangular) matrix form in the figure below. From these data we can already see that the respondents perceive some brands to be very similar (e.g., Ultra Brite and Pepsodent have an average dissimilarity score of 1.11) and others to be very dissimilar (e.g., Crest and Sensodyne). The stress value for a two-dimensional solution is quite good (.058).
+The following plot is based on similarity data for a set of toothpaste brands (tpbrands, available as one of the example datasets). Respondents were asked the following question: "Please rate the following pairs of toothpaste brands on the basis of their similarity (1 = very similar, 7 = very dissimilar)." for all pairwise combinations of 10 brands, i.e., 45 comparisons. MDS will try to create a map that reproduces as accurately as possible the original dissimilarities (or perceptual distances) provided by the 50 respondents. The original dissimilarity ratings are shown in (lower triangular) matrix form in the figure below. From these data we can already see that the respondents perceive some brands to be very similar (e.g., Ultra Brite and Pepsodent have an average dissimilarity score of 1.11) and others to be very dissimilar (e.g., Crest and Sensodyne). The stress value for a two-dimensional solution is quite good (.058). 
 
 ![mds toothpaste - summary](figures_marketing/mds_tpbrands_summary.png)
 

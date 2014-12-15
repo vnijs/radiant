@@ -208,7 +208,7 @@ transform_main <- reactive({
       dat_class <- getdata_class_fun(dat)
       isNum <- "numeric" == dat_class | "integer" == dat_class
       if(length(isNum) == 0) return("Please select numerical variables to normalize")
-      dat_tr <- try(dplyr::select(dat,which(isNum)) / getdata()[,input$tr_normalizer], silent = TRUE)
+      dat_tr <- try(select(dat,which(isNum)) / getdata()[,input$tr_normalizer], silent = TRUE)
       if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
      	cn <- c(vars,paste(vars[isNum],input$tr_normalizer, sep="_"))
 			dat <- cbind(dat,dat_tr)
@@ -234,7 +234,7 @@ transform_main <- reactive({
 			newvar <- try(do.call(car::recode, list(dat[,input$tr_columns[1]],recom)), silent = TRUE)
 			if(!is(newvar, 'try-error')) {
 
-				cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="_"))
+				cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="."))
 				dat <- cbind(dat,newvar)
 				colnames(dat) <- cn
 				return(dat)
@@ -246,7 +246,7 @@ transform_main <- reactive({
 		if(input$tr_copyAndPaste != '') {
 			cpdat <- read.table(header=T, text=input$tr_copyAndPaste)
 			cpname <- names(cpdat)
-			if(sum(cpname %in% colnames(dat)) > 0) names(cpdat) <- paste('cp',cpname,sep = '_')
+			if(sum(cpname %in% colnames(dat)) > 0) names(cpdat) <- paste('cp',cpname,sep = '.')
 			if(is.null(input$tr_columns)) return(cpdat)
 			if(nrow(cpdat) == nrow(dat)) dat <- cbind(dat,cpdat)
 		}
@@ -328,10 +328,10 @@ output$transform_summary <- renderPrint({
 		perc25 <- function(x) quantile(x,.25, na.rm = TRUE)
 		perc75 <- function(x) quantile(x,.75, na.rm = TRUE)
 
-    res$`25%` <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
-    res$`75%` <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
+    res$`25%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
+    res$`75%` <- select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
     # nmissing function is in explore.R
-    res$missing <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
+    res$missing <- select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
 
 		# print desired stats in order
 		res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")] %>% print

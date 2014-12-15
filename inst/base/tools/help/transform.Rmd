@@ -1,4 +1,12 @@
-> Modify type, change, create, add, reorder, and remove variables in the data.
+Modify type, change, create, add, reorder, and remove variables in the data.
+
+<!--
+Insert Math in-line: $\alpha^2$
+
+Insert Math as a centered equation:
+
+$$y = \alpha + \beta \times x$$
+-->
 
 #### Type
 
@@ -11,15 +19,12 @@ When you select Type from the 'Transformation type' drop-down another drop-down 
 5. As date (mdy): R will, by default, read dates as factors. Use this function if the dates are ordered as month-day-year
 6. As date (dmy): R will, by default, read dates as factors. Use this function if the dates are ordered as day-month-year
 7. As date (ymd): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day
-7. As date/time (ymd_hms): R will, by default, read dates as factors. Use this function if the dates/time is ordered as 
-year-month-day hour-minute-second
 
 #### Change
 
 When you select Change from the 'Transformation type' drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose Log from the 'Apply function' menu. A new variable is created with the prefix 'log.'. Click the 'Save changes' button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
-1. Log: create a log-transformed version of the selected variable (i.e., log(x)). Note: in R exp(log(x)) = x
-1. Exp: create an exponentiated version of the selected variable (i.e., exp(x)). Note: in R log(exp(x)) = x
+1. Log: create a log-transformed version of the selected variable (i.e., log(x))
 2. Square: multiply a variable by itself (i.e. x^2) 
 3. Square-root: take the square-root of a variable (i.e., x^.5)
 4. Center: create a new variable with a mean equal to zero (i.e., x - mean(x))
@@ -27,10 +32,6 @@ When you select Change from the 'Transformation type' drop-down another drop-dow
 6. Invert: 1/x
 7. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
 8. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
-
-#### Normalize
-
-Choose one variable to normalize one, or more, other variables. For example, to create a new variable that measure the price per carat of a diamond select `price` in the Select column(s) box, choose Normalize as the Transformation type and, select `carat` as the Normalizing variable.
 
 #### Create
 
@@ -82,7 +83,7 @@ To use the recode feature select the variable you want to change and choose 'Rec
 
 	1:12 = 'A'; 13:24 = 'B'; else = 'C'
 
-3.	To reduce the number of levels for a factor variable (e.g., an age variable) you might use a command similar to the one below. Note that < 25 and 25-34 are now assigned to the category <35, 35-44 and 45-54 are assigned to the new category 35-54, and 55-64 and >64 are assigned to the category >54:
+3.	The transformation commands used for the Tulsa-Age cross-tab:
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
@@ -93,14 +94,6 @@ To use the recode feature select the variable you want to change and choose 'Rec
 #### Rename
 
 Choose 'Rename' from the 'Transformation type' dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a ','. Press return to see the variables with their new names on screen and  press 'Save changes' to alter the variable names in the original data.
-
-#### Reorder columns
-
-If you would like to change the order of the columns in the data set choose 'Reorder columns'. Buttons will appear for each variable in the active data set. Simply drag-and-drop these in your preferred order and when you are done press Save changes.
-
-#### Reorder levels
-
-Factor variable in R can be very convenient for analysis. However, by default the levels of a factor are sorted alphabetically. If that is not what you want you can reorder the levels much as you would reorder the variables in a dataset (see the section above). To change the ordering of the levels for a factor variable select that variable and choose 'Reorder columns'. Buttons will appear for each level of the factor you selected. Simply drag-and-drop these in your preferred order and when you are done press Save changes.
 
 #### Remove columns
 
@@ -114,4 +107,4 @@ Choose 'Remove missing' from the 'Transformation type' dropdown to remove missin
 
 Choose 'Subset' from the 'Transformation type' dropdown to select (or omit) specific sets of rows from the data. You can use > and < signs and even combine filter commands. For example, x > 3 & y == 2 would select only those rows for which the variable x has values larger than 3 __and__ for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen. You should see the number of observations in the data summary change (i.e., the value of n changes). Press 'Save changes' to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>

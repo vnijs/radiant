@@ -185,7 +185,7 @@ output$ui_conjoint <- renderUI({
 	      selectInput("ca_plots", "Conjoint plots:", choices = ca_plots,
 	  	  	selected = state_init_list("ca_plots","pw", ca_plots)))
 	  ),
-		helpAndReport('Conjoint','conjoint',inclMD("tools/help/conjoint.md"))
+		helpAndReport('Conjoint analysis','conjoint',inclMD("tools/help/conjoint.md"))
 	)
 })
 
@@ -201,7 +201,7 @@ ca_plotHeight <- function() {
 
 output$conjoint <- renderUI({
 	# create inputs and outputs - function in radiant.R
-  statTabPanel("Conjoint","Conjoint",".conjoint","conjoint", "ca_plotWidth", "ca_plotHeight")
+  statTabPanel("Conjoint","Conjoint analysis",".conjoint","conjoint", "ca_plotWidth", "ca_plotHeight")
 })
 
 .conjoint <- reactive({
