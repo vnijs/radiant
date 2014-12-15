@@ -2,21 +2,21 @@
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Developed by [Vincent Nijs]("http://rady.ucsd.edu/faculty/directory/nijs/") and [Terence August]("http://rady.ucsd.edu/faculty/directory/august/"). You can reach us at radiant@rady.ucsd.edu
 
-### Source code 
+### Source code
 
-There are three (related) apps included in the inst directory. The, base, offers data documenting, viewing, visualizing, merging, and transforming tools. The quant app sources the code from base and extends it. Finally, the marketing app sources the code from base and quant and, again, extends it with additional tools.
+Three (related) apps are included in the inst directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. Finally, the marketing app sources the code from base and quant and extends it with additional tools.
 
 ### Install
 
-- Required: [R](http://cran.rstudio.com/), version 3.1.1 
+- Required: [R](http://cran.rstudio.com/), version 3.1.1
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-To download the app click the 'Download ZIP' button and unzip the file to, for example, your Desktop. To start, for example, the base app use `setwd()` to move to the radiant directory in R(studio). Install Shiny using `install.packages('shiny')`. Then use `shiny::runApp('inst/base')` to run the base app. When Radiant starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN). 
+To download the app click the `Download ZIP` button and unzip the file to, for example, your Desktop. To start, for example, the base app use `setwd()` to move to the radiant directory in R(studio). Install Shiny using `install.packages('shiny')`. Then use `shiny::runApp('inst/base')` to run the base app. When Radiant starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN).
 
 ### Todo
 
-- Use dplyr and tidyr to explore and summarize data
+- Use dplyr, tidyr, and magrittr to explore, transform, and filter data
 - Code documentation
 - Automated testing using Rselenium
 - etc. etc.
