@@ -11,7 +11,7 @@ if(R_loc == "") {
 
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-  pth <- normalizePath(paste0(script_dir,'/../../radiant-miniCRAN'),winslash='/')
+  pth <- normalizePath(paste0(script_dir,'/../../miniCRAN'),winslash='/')
   mcran <- paste0("file:///",pth)
   options(repos = c(CRAN = mcran))
 

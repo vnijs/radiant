@@ -13,18 +13,18 @@
 # rsync -avruz --delete ~/Desktop/GitHub/radiant_dev/inst/ ~/Dropbox/radiant/inst/
 
 
-# diff -x "*.gz" -Nr ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/bin/ ~/Dropbox/radiant/radiant-miniCRAN/bin/
-# diff -Nr ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/bin/windows/contrib/3.1/PACKAGES ~/Dropbox/radiant/radiant-miniCRAN/bin/windows/contrib/3.1/PACKAGES
-# diff -Nr ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/bin/macosx/contrib/3.1/PACKAGES ~/Dropbox/radiant/radiant-miniCRAN/bin/macosx/contrib/3.1/PACKAGES
+# diff -x "*.gz" -Nr ~/Desktop/GitHub/radiant_dev/miniCRAN/bin/ ~/Dropbox/radiant/miniCRAN/bin/
+# diff -Nr ~/Desktop/GitHub/radiant_dev/miniCRAN/bin/windows/contrib/3.1/PACKAGES ~/Dropbox/radiant/miniCRAN/bin/windows/contrib/3.1/PACKAGES
+# diff -Nr ~/Desktop/GitHub/radiant_dev/miniCRAN/bin/macosx/contrib/3.1/PACKAGES ~/Dropbox/radiant/miniCRAN/bin/macosx/contrib/3.1/PACKAGES
 # diff -x ".DS_Store" -Naur ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
 
 # from http://superuser.com/questions/536561/rsync-using-regex-to-include-only-some-files
-# rsync -navruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
-# rsync -avruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -navruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/miniCRAN/ ~/Dropbox/radiant/miniCRAN/
+# rsync -avruzm -f'+ PACKAGE*' -f'+ */' -f'- *' ~/Desktop/GitHub/radiant_dev/miniCRAN/ ~/Dropbox/radiant/miniCRAN/
 # only copy the files that do not exist to dropbox
-# rsync -navrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -navrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/miniCRAN/ ~/Dropbox/radiant/miniCRAN/
 
-# rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/ ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -avrz --delete --ignore-existing ~/Desktop/GitHub/radiant_dev/miniCRAN/ ~/Dropbox/radiant/miniCRAN/
 
 # rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
 # rsync --dry-run -avruz --delete ~/Desktop/GitHub/radiant_dev/dev/base/ ~/Dropbox/radiant/dev/base/
@@ -72,6 +72,8 @@
 
 # rsync -av ~/Desktop/GitHub/radiant_dev/dev/ ~/Desktop/GitHub/radiant_dev/inst/
 
+rsync -av ~/Desktop/GitHub/radiant_dev/dev_branch/marketing/ ~/Desktop/GitHub/radiant_dev/inst/marketing/
+
 # rsync -nav ~/Desktop/GitHub/radiant_dev/inst/  ~/Dropbox/radiant/inst/
 
 # reverse it
@@ -80,11 +82,11 @@
 # rsync -nav ~/Desktop/GitHub/radiant_dev/inst/quant/  ~/Dropbox/radiant/inst/quant/
 # rsync -nav ~/Dropbox/radiant/inst/quant/ ~/Desktop/GitHub/radiant_dev/inst/quant/
 
-# rsync -av ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/*.R ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -av ~/Desktop/GitHub/radiant_dev/miniCRAN/*.R ~/Dropbox/radiant/miniCRAN/
 # rsync -av ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
 # rsync -av ~/Desktop/GitHub/radiant_dev/example_data/ ~/Dropbox/radiant/example_data/
 
-# rsync -nauv ~/Desktop/GitHub/radiant_dev/radiant-miniCRAN/  ~/Dropbox/radiant/radiant-miniCRAN/
+# rsync -nauv ~/Desktop/GitHub/radiant_dev/miniCRAN/  ~/Dropbox/radiant/miniCRAN/
 
 # rsync -av --delete ~/Desktop/GitHub/radiant_dev/launchers/ ~/Dropbox/radiant/launchers/
 # diff -x ".DS_Store" -Naur ~/Desktop/GitHub/radiant_dev/inst/ ~/Desktop/GitHub/radiant_dev/dev/

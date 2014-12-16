@@ -5,10 +5,6 @@ if (.Platform$OS.type == 'windows') {
   Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
 }
 
-# This line is only here to deal with the old launchers on windows
-# Remove after Fall 2014
-# pth <- normalizePath("./radiant-miniCRAN/", winslash = "/")
-
 # setting path to miniCRAN
 pth <- normalizePath("../../miniCRAN", winslash = "/")
 
