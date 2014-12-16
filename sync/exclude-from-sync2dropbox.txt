@@ -1,22 +1,16 @@
 .Rproj.user/
 .git/
 
-launchers/finding_radiant_app.R
-launchers/launchers-code
+miniCRAN/make-miniCRAN.R
+miniCRAN/makeRepo.R
 
-radiant-miniCRAN/radiant-miniCRAN.R
-radiant-miniCRAN/build_from_github.R
-radiant-miniCRAN/makeRepo.R
-
-radiant-miniCRAN/bin
-radiant-miniCRAN/src
+miniCRAN/bin
+miniCRAN/src
 
 radiant-sync/
-testing/
+app_dev/
 
 .Rhistory
 .gitignore
 
 radiant.Rproj
-
-inst/base/www/MathJax/

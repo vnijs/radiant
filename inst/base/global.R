@@ -1,6 +1,6 @@
 if(Sys.getenv('SHINY_PORT') == "") {
   # install and load required packages
-  source("../../radiant-miniCRAN/dependencies.R", local = TRUE)
+  source("../../miniCRAN/dependencies.R", local = TRUE)
 
   # no limit to filesize locally
   options(shiny.maxRequestSize=-1)
@@ -17,7 +17,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
   pkgs_gh <- c("shinyAce", "rvest")
   pkgs <- c(pkgs_cran,pkgs_gh)
 
-  # source("/home/vnijs/Desktop/radiant-miniCRAN/pkgs.R")
   suppressWarnings(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
 
   # limit upload filesize on server (5MB)
