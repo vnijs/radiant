@@ -33,7 +33,8 @@ output$tabs_data <- renderUI({
                        conditionalPanel(condition = "input.man_add_descr == false", HTML(dataDescriptionOutput('html'))),
                        conditionalPanel(condition = "input.man_add_descr == true",
                                         HTML("<label>Add data description:</label>"),
-                                        tags$textarea(id="man_data_descr", rows="10", cols="12", dataDescriptionOutput('md'))
+                                        tags$textarea(id="man_data_descr", rows="10", style="width:650px;",
+                                                      dataDescriptionOutput('md'))
                        )
               ),
               tabPanel("View", dataTableOutput("dataviewer")),

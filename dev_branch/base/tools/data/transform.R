@@ -97,7 +97,7 @@ output$ui_Transform <- renderUI({
     ),
     conditionalPanel(condition = "input.tr_changeType == 'clip'",
     	HTML("<label>Paste from Excel:</label>"),
-	    tags$textarea(id="tr_copyAndPaste", rows=3, cols=5, "")
+	    tags$textarea(id="tr_copyAndPaste", rows=3, "")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'recode'",
 	    returnTextInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')

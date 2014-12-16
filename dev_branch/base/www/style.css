@@ -43,17 +43,17 @@ pre {
   overflow: visible;
 }
 
-textarea {
-  width: 650px;
+/*textarea {*/
+  /*width: 650px;*/
   /*max-height: 200px;*/
   /*overflow: auto;*/
   /*height: auto;*/
 
   /*http://plugins.jquery.com/autosize/*/
-}
+/*}*/
 
 #tr_copyAndPaste, #view_subsbig_area {
-  max-width: 200px;
+  max-width: 185px;
 }
 
 input[type="number"] {
@@ -72,7 +72,7 @@ input[type="number"] {
 
 .span4 {
   /*width: 280px; */
-  max-width: 280px;
+  max-width: 255px;
 }
 
 /*.span8 {
