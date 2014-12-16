@@ -69,5 +69,9 @@ pkgList <- pkgDep(pkgs, repos=repos, type="mac.binary.mavericks", suggests = FAL
 # .makeRepo(pkgs_gh, path=pth, type="mac.binary.mavericks", localdir=pkgsdir)    # needed to copy locally compiled files to the final folders because makeRepo doesn't do this
 makeRepo(pkgList, path=pth, type="mac.binary.mavericks")                       # needed to avoid crash on mac.binary.mavericks
 
+# moving files to server
+rsync -avruz --progress --delete -e ssh bin/ ubu:Rbin/
+rsync -avruz --progress --delete -e ssh src/ ubu:Rsrc/
+
 # when you are all done you could delete the extra dir
 # unlink(pth_gh, recursive=TRUE)
