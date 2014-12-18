@@ -7,10 +7,12 @@ output$ui_fileUpload <- renderUI({
   if(is.null(input$dataType)) return()
   if(input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
-              accept = c('text/csv','text/comma-separated-values','text/tab-separated-values',
+              accept = c('text/csv','text/comma-separated-values',
+                         'text/tab-separated-values',
                          'text/plain','.csv','.tsv'))
   } else if(input$dataType == "rda") {
-    fileInput('uploadfile', '', multiple=TRUE, accept = c(".rda",".rds",".rdata"))
+    fileInput('uploadfile', '', multiple=TRUE,
+              accept = c(".rda",".rds",".rdata"))
   }
 })
 
@@ -18,11 +20,14 @@ output$ui_Manage <- renderUI({
   list(
     wellPanel(
       radioButtons(inputId = "dataType", label = "Load data:",
-                   c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard", "examples" = "examples", "state" = "state"),
-                   selected = "rda"),
-      conditionalPanel(condition = "input.dataType != 'clipboard' && input.dataType != 'examples'",
+                   c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard",
+                     "examples" = "examples", "state" = "state"),
+                     selected = "rda"),
+      conditionalPanel(condition = "input.dataType != 'clipboard' &&
+                                    input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
+          checkboxInput('man_str_as_factor', 'String as Factor', TRUE),
           radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',')
         ),
         uiOutput("ui_fileUpload")
@@ -40,12 +45,14 @@ output$ui_Manage <- renderUI({
     ),
     wellPanel(
       radioButtons(inputId = "saveAs", label = "Save data:",
-                   c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",  "state" = "state"), selected = "rda"),
+                   c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
+                     "state" = "state"), selected = "rda"),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         actionButton('saveClipData', 'Copy data')
       ),
-      conditionalPanel(condition = "input.saveAs != 'clipboard' && input.saveAs != 'state'",
+      conditionalPanel(condition = "input.saveAs != 'clipboard' &&
+                                    input.saveAs != 'state'",
         downloadButton('downloadData', 'Save')
       ),
       conditionalPanel(condition = "input.saveAs == 'state'",
@@ -69,7 +76,8 @@ observe({
   if(is.null(input$updateDescr) || input$updateDescr == 0) return()
   isolate({
     values[[paste0(input$datasets,"_descr")]] <- input$man_data_descr
-    updateCheckboxInput(session = session, "man_add_descr","Add/edit data description", FALSE)
+    updateCheckboxInput(session = session, "man_add_descr",
+                        "Add/edit data description", FALSE)
   })
 })
 
@@ -81,7 +89,8 @@ dataDescriptionOutput <- function(ret = 'html') {
   } else {
     # if there is a data description and the 'add/edit' box has been checked
     ifelse(ret == 'md',return(descr),
-      return(suppressWarnings(markdownToHTML(text = descr, stylesheet="../base/www/empty.css"))))
+      return(suppressWarnings(markdownToHTML(text = descr,
+             stylesheet="../base/www/empty.css"))))
   }
 }
 
@@ -89,7 +98,8 @@ dataDescriptionOutput <- function(ret = 'html') {
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
   selectInput(inputId = "removeDataset", label = "",
-    choices = values$datasetlist, selected = NULL, multiple = TRUE, selectize = FALSE
+    choices = values$datasetlist, selected = NULL, multiple = TRUE,
+    selectize = FALSE
   )
 })
 
@@ -99,12 +109,14 @@ observe({
   isolate({
 
     # only remove datasets if 1 or more were selected
-    # without this line all files would be removed when the removeDataButton is pressed
+    # without this line all files would be removed when the removeDataButton
+    # is pressed
     if(is.null(input$removeDataset)) return()
     datasets <- values[['datasetlist']]
     if(length(datasets) > 1) {  # have to leave at least one dataset
       removeDataset <- input$removeDataset
-      if(length(datasets) == length(removeDataset)) removeDataset <- removeDataset[-1]
+      if(length(datasets) == length(removeDataset))
+        removeDataset <- removeDataset[-1]
 
       # Must use single string to index into reactivevalues so loop is necessary
       for(rem in removeDataset) {
@@ -124,10 +136,14 @@ observe({
     if (os_type == 'windows') {
       write.table(getdata(), "clipboard", sep="\t", row.names=FALSE)
     } else {
-      write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+      write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE,
+                  sep = '\t')
     }
-    updateRadioButtons(session = session, inputId = "saveAs", label = "Save data:",
-                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard","state" = "state"), selected = "rda")
+    updateRadioButtons(session = session, inputId = "saveAs",
+                       label = "Save data:",
+                       c("rda" = "rda", "csv" = "csv",
+                         "clipboard" = "clipboard", "state" = "state"),
+                       selected = "rda")
   })
 })
 
@@ -164,7 +180,8 @@ observe({
   if(!is.null(inFile) && !is.na(inFile)) {
     isolate({
       # iterating through the files to upload
-      for(i in 1:(dim(inFile)[1])) loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType)
+      for(i in 1:(dim(inFile)[1]))
+        loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType)
     })
   }
 })
@@ -189,7 +206,8 @@ observe({
     # sorting files alphabetically
     values[['datasetlist']] <- sort(values[['datasetlist']])
 
-    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+    updateSelectInput(session, "datasets", label = "Datasets:",
+                      choices = values$datasetlist,
                       selected = values$datasetlist[1])
   })
 })
@@ -201,22 +219,30 @@ observe({
     os_type <- .Platform$OS.type
     if (os_type == 'windows') {
 
-      dat <- try(read.table("clipboard", header = TRUE, sep = ''), silent = TRUE)
-      if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
+      dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
+      if(is(dat, 'try-error'))
+        dat <- c("Data from clipboard was not well formatted.
+                 Try exporting the data to csv format.")
     } else {
 
-      dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = ''), silent = TRUE)
-      if(is(dat, 'try-error')) dat <- c("Data from clipboard was not well formatted. Try exporting the data to csv format.")
+      dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
+      if(is(dat, 'try-error'))
+        dat <- c("Data from clipboard was not well formatted.
+                 Try exporting the data to csv format.")
     }
 
 #     values[['xls_data']] <- as.data.frame(dat)
     values[['xls_data']] <- data.frame(dat, check.names = FALSE)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
-    updateRadioButtons(session = session, inputId = "dataType", label = "Load data:",
-                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard", "examples" = "examples", "state" = "state"), selected = "rda")
+    updateRadioButtons(session = session, inputId = "dataType",
+                       label = "Load data:", c("rda" = "rda", "csv" = "csv",
+                                               "clipboard" = "clipboard",
+                                               "examples" = "examples",
+                                               "state" = "state"),
+                       selected = "rda")
 
-    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
-                      selected = 'xls_data')
+    updateSelectInput(session, "datasets", label = "Datasets:",
+                      choices = values$datasetlist, selected = 'xls_data')
   })
 })
 
@@ -246,10 +272,12 @@ loadUserData <- function(filename, uFile, ext) {
 
   if(ext == 'csv') {
     values[[objname]] <- read.csv(uFile, header=input$header,
-                                  sep=input$sep, stringsAsFactors=FALSE)
+                                  sep=input$sep,
+                                  stringsAsFactors=input$man_str_as_factor)
   }
 
-  updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+  updateSelectInput(session, "datasets", label = "Datasets:",
+                    choices = values$datasetlist,
                     selected = values$datasetlist[1])
 }
 
@@ -291,10 +319,7 @@ output$downloadState <- downloadHandler(
 observe({
   if(is.null(input$data_rename)) return()
   if(is.null(input$renameButton) || input$renameButton == 0) return()
-#   if(!input$man_rename_data) return()
-#   if(input$data_rename == input$datasets) return()
   isolate({
-#     values[[input$data_rename]] <- getdata()
     values[[input$data_rename]] <- values[[input$datasets]]
     values[[input$datasets]] <- NULL
     values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$datasets,"_descr")]]
@@ -305,9 +330,6 @@ observe({
 
     updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
                       selected = input$data_rename)
-
-#     updateTextInput(session, "data_rename", "", input$datasets)
-#     updateCheckboxInput("man_rename_data","Rename data", FALSE)
   })
 })
 
@@ -331,7 +353,6 @@ output$uiDatasets <- renderUI({
 
 output$uiRename <- renderUI({
   list(
-#     returnTextInput("data_rename", "", isolate(input$datasets)),
     textInput("data_rename", "", input$datasets),
     actionButton('renameButton', 'Rename')
   )
@@ -348,7 +369,9 @@ output$htmlDataExample <- renderText({
   if(is.null(descr) || descr == "") nshow <- 30
 
   if(backup_loaded) {
-    cat(paste0("Backup loaded from ", normalizePath("~/radiant_temp/state"), ". You can reset the app in the Quit menu and/or from the directory mentioned above."))
+    cat(paste0("Backup loaded from ", normalizePath("~/radiant_temp/state"), ".
+        You can reset the app in the Quit menu and/or from the directory
+        mentioned above."))
     backup_loaded <<- FALSE
   }
 
