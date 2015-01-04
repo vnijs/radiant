@@ -29,16 +29,19 @@ options(repos = c(CRAN = "http://cran.rstudio.com"))
 # setting the default location to get R-packages
 # look locally first and then in the Rstudio CRAN
 from_github = FALSE
+
+
 if(from_github) {
-	pth_gh <- "~/Desktop/GitHub/build_clones/githubMC"
+  # NOT WORKING!!!!
+  # ONLY EMPTY PACKAGES FILES ARE CREATED
+	pth_gh <- "~/Desktop/GitHub/radiant_dev/miniCRAN/gh"
 	if(!file.exists(pth_gh)) dir.create(pth_gh, recursive=TRUE)
 	mcran_gh <- paste0("file:///",normalizePath(pth_gh))
-	repos <- c(mcran_gh,"http://cran.rstudio.com")
-	options(repos = c(CRAN = c(mcran_gh,"http://cran.rstudio.com")))
+	options(repos = c(CRAN = c("http://cran.rstudio.com", mcran_gh)))
 
 	# slightly adapted from from Andrei's source code
 	source("makeRepo.R")
-	pkgsdir <- "~/Desktop/GitHub/build_clones/pkgs"
+	pkgsdir <- "~/Desktop/GitHub/radiant_dev/gh/pkgs"
 
 	# building minicran for source packages built from github
 	# need to build this first so pkgDep can read the PACKAGES files
@@ -66,7 +69,7 @@ makeRepo(pkgList, path=pth, type="mac.binary")
 
 # building minicran for mac mavericks binaries
 pkgList <- pkgDep(pkgs, repos=repos, type="mac.binary.mavericks", suggests = FALSE)
-# .makeRepo(pkgs_gh, path=pth, type="mac.binary.mavericks", localdir=pkgsdir)    # needed to copy locally compiled files to the final folders because makeRepo doesn't do this
+.makeRepo(pkgs_gh, path=pth, type="mac.binary.mavericks", localdir=pkgsdir)    # needed to copy locally compiled files to the final folders because makeRepo doesn't do this
 makeRepo(pkgList, path=pth, type="mac.binary.mavericks")                       # needed to avoid crash on mac.binary.mavericks
 
 # moving files to server

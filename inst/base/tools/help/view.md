@@ -39,4 +39,4 @@ The search boxes have some special features that make them almost as powerful as
 
 If you want to get _really_ fancy you can use the search box in the top right to search across all columns shown using regular expressions. For example, to find all rows that have an entry with the number 72 at the end in one or more of the columns type `72$` (i.e., the `$` sign is used to indicate the end of an entry). For all rows with entries that start with 10 use `^60` (i.e., the `^` is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a _big_ topic area. To learn the basics of regular expressions see <http://www.regular-expressions.info/tutorial.html>.
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

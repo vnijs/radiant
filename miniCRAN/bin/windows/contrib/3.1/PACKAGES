@@ -9,7 +9,7 @@ Suggests: testthat
 License: GPL-3
 
 Package: BH
-Version: 1.54.0-5
+Version: 1.55.0-1
 License: BSL-1.0
 
 Package: bitops
@@ -17,11 +17,16 @@ Version: 1.0-6
 License: GPL (>= 2)
 Archs: i386, x64
 
+Package: brew
+Version: 1.0-6
+License: GPL-2
+
 Package: car
 Version: 2.0-22
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, Matrix, MatrixModels, mgcv, nlme, pbkrtest (>= 0.3-2), quantreg, rgl (>= 0.93.960), sandwich, SparseM, survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, Matrix, MatrixModels, mgcv, nlme, pbkrtest (>=
+          0.3-2), quantreg, rgl (>= 0.93.960), sandwich, SparseM, survival, survey
 License: GPL (>= 2)
 
 Package: caTools
@@ -60,7 +65,7 @@ Depends: R (>= 2.10), stats
 License: GPL-2
 
 Package: digest
-Version: 0.6.6
+Version: 0.6.7
 Depends: R (>= 2.4.1)
 License: GPL-2
 Archs: i386, x64
@@ -70,7 +75,8 @@ Version: 0.3.0.2
 Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr,
+          microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
 License: MIT + file LICENSE
 Archs: i386, x64
 
@@ -89,15 +95,18 @@ License: GPL
 Package: ggplot2
 Version: 1.0.0
 Depends: R (>= 2.14), stats, methods
-Imports: plyr (>= 1.7.1), digest, grid, gtable (>= 0.1.1), reshape2, scales (>= 0.2.3), proto, MASS
-Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, testthat, knitr, mgcv
+Imports: plyr (>= 1.7.1), digest, grid, gtable (>= 0.1.1), reshape2, scales (>= 0.2.3), proto,
+          MASS
+Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, testthat, knitr,
+          mgcv
 Enhances: sp
 License: GPL-2
 
 Package: ggvis
 Version: 0.4
 Depends: R (>= 3.0)
-Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval,
+          htmltools (>= 0.2.4)
 Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
 License: GPL-2
 
@@ -139,6 +148,14 @@ LinkingTo: Rcpp
 License: GPL-3 | file LICENSE
 Archs: i386, x64
 
+Package: httr
+Version: 0.6.0
+Depends: R (>= 3.0.0)
+Imports: digest, jsonlite, methods, mime, RCurl (>= 1.95-0), R6, stringr (>= 0.6.1)
+Suggests: base64enc, httpuv, jpeg, knitr, PKI (>= 0.1-2), png, testthat (>= 0.8.0), XML
+License: MIT + file LICENSE
+Archs: i386, x64
+
 Package: jsonlite
 Version: 0.9.14
 Depends: methods
@@ -149,7 +166,8 @@ Archs: i386, x64
 Package: knitr
 Version: 1.8
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.4), markdown (>= 0.7.4), stringr (>= 0.6), tools
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.4), markdown (>= 0.7.4),
+          stringr (>= 0.6), tools
 Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
 
@@ -302,6 +320,13 @@ Suggests: RUnit, inline, rbenchmark, highlight, pkgKitten (>= 0.1.2)
 License: GPL (>= 2)
 Archs: i386, x64
 
+Package: RCurl
+Version: 1.95-4.5
+Depends: R (>= 3.0.0), methods, bitops
+Suggests: Rcompression, XML
+License: BSD
+Archs: i386, x64
+
 Package: reshape2
 Version: 1.4.1
 Imports: plyr (>= 1.8.1), stringr, Rcpp
@@ -323,6 +348,13 @@ Imports: tools, utils, knitr (>= 1.6), yaml (>= 2.1.5), htmltools (>= 0.2.4), ca
 Suggests: shiny (>= 0.10.1), testthat, digest
 License: GPL-3
 
+Package: rvest
+Version: 0.1.0
+Depends: R (>= 3.0.1)
+Imports: httr (>= 0.5), XML, selectr, magrittr
+Suggests: testthat, knitr, png, stringi (>= 0.3.1)
+License: GPL-3
+
 Package: scales
 Version: 0.2.4
 Depends: R (>= 2.13)
@@ -330,19 +362,27 @@ Imports: RColorBrewer, dichromat, munsell (>= 0.2), plyr (>= 1.2), labeling, met
 Suggests: testthat (>= 0.8)
 License: MIT + file LICENSE
 
+Package: selectr
+Version: 0.2-2
+Depends: R (>= 2.15.2)
+Imports: methods, XML, stringr
+Suggests: testthat
+License: BSD_3_clause + file LICENCE
+
 Package: shiny
 Version: 0.10.2.2
 Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools
+          (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 
 Package: shinyAce
-Version: 0.1.0
+Version: 0.2.0
 Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
-Suggests: testthat
-License: MIT + file LICENSE
+Suggests: testthat, dplyr (>= 0.3.0)
+License: MIT
 
 Package: shinyFiles
 Version: 0.4.0
@@ -401,6 +441,14 @@ Imports: slam, Rcpp (>= 0.9.4)
 LinkingTo: Rcpp
 Suggests: tm (>= 0.6)
 License: LGPL-2.1
+Archs: i386, x64
+
+Package: XML
+Version: 3.98-1.1
+Depends: R (>= 1.2.0), methods, utils
+Imports: methods
+Suggests: bitops, RCurl
+License: BSD
 Archs: i386, x64
 
 Package: xtable

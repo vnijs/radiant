@@ -56,4 +56,4 @@ Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2
 	6.5 + 8.0 + 1.5 + 0 + 1.5 + 4.5 = 22
 
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

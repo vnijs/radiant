@@ -29,4 +29,4 @@ If you would like to reset Radiant to a clean state choose `Quit` in the navbar 
 
 If data are loaded that you no longer need access to in Radiant you can select them and click the 'Remove data' button. One datafile will always remain open.
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
