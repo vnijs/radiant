@@ -19,7 +19,7 @@ Various additional outputs and options can be selected:
 * Sum of Squares: The total variance in the dependent variable split into the variance explained by the model and the remainder
 * VIF: Variance Inflation Factors and Rsq. These are measures of multi-collinearity for the independent variables
 * Standardized coefficients: Coefficients may be hard to compare of the independent variables are measured on different scales. By standardizing the data before estimation we can see which variables move-the-needle most
-* Step-wise: A data-mining approach to select the best fitting model 
+* Step-wise: A data-mining approach to select the best fitting model
 
 
 ### Regression examples
@@ -29,15 +29,15 @@ Various additional outputs and options can be selected:
 We have access to data from a company selling men's and women's apparel through mail-order catalogs (dataset 'catalog'). The company maintains a database on past and current customers' value and characteristics. Value is determined as the total$ sales to the customer in the last year. The data are a random sample of 200 customers from the company's database. The r-data contains a data frame with 200 observations on 4 variables
 
 - Sales =  Total sales (in $) to a household in the past year
-- Income = Household income ($1000) 
-- HH.size = Size of the household (# of people) 
+- Income = Household income ($1000)
+- HH.size = Size of the household (# of people)
 - Age = Age of the head of the household
 
-The catalog company is interested in redesigning their Customer Relationship Management (CRM) strategy. We will proceed in two steps: 
+The catalog company is interested in redesigning their Customer Relationship Management (CRM) strategy. We will proceed in two steps:
 
 1. Estimate a regression model using last year's sales total. Dependent variable: sales total for each of the 200 households; explanatory variables: household income (measured in thousands of dollars), size of household, and age of the household head. The data-set is given in the `catalog` data file. Interpret each of your estimated coefficients. Also provide a statistical evaluation of the model as a whole.
- 
-2. Which explanatory variables are significant predictors of customer value (use a 95% confidence level)? 
+
+2. Which explanatory variables are significant predictors of customer value (use a 95% confidence level)?
 
 Answer:
 
@@ -64,7 +64,7 @@ Ha: The coefficient associated with independent variable X is not equal to 0
 The coefficients for 'Income' and ’HH.size' are both significant (p-values < 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value > 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.
 
 
-#### Example 2: Ideal data for regression 
+#### Example 2: Ideal data for regression
 
 The data 'ideal' contains simulated data that is very useful to demonstrate what data for and residuals from a regression should ideally look like.  The r-data file contains a data-frame with 1000 observations on 4 variables. y is the dependent variable and x1, x2, and x3 are independent variables. The plots shown below can be used as a bench mark for regressions on real world data. We will use Regression > Linear (OLS) to conduct the analysis. First go the the Plots tab and select y as the dependent variable and x1, x2, and x3 as the independent variables.
 
@@ -114,14 +114,14 @@ The dashboard of four residual plots looks less than stellar. The true values an
 
 ![Regression 3 - dashboard](figures_quant/regression_diamonds_dashboard.png)
 
-The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). The residuals fan-out from left to right in the plot of residuals vs carats. The box-plot of clarity versus residuals shows outliers with strong negative values for lower levels of clarity and outliers with strong positive values for diamonds with higher levels of clarity. 
+The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). The residuals fan-out from left to right in the plot of residuals vs carats. The box-plot of clarity versus residuals shows outliers with strong negative values for lower levels of clarity and outliers with strong positive values for diamonds with higher levels of clarity.
 ![Regression 3 - residual vs predicted](figures_quant/regression_diamonds_res_vs_pred.png)
 
 Since the diagnostics do not look good, we should not draw inferences from this regression. A log-log specification may be preferable.
 
-We will apply a log transformation to both price and carat and rerun the analysis to see if the log-log specification is more appropriate for the data. This transformation can be done in Data > Transform. Select the variables price and carat. Choose 'change' from the Transformation type drop-down and choose 'Log' from the Apply function drop-down. Make sure to 'Save changes' so the new variables are available in the data. Note that we cannot apply a log transformation to clarity because it is a <a href="http://en.wikipedia.org/wiki/Categorical_variable" target="_blank">categorical</a> variable.   
+We will apply a log transformation to both price and carat and rerun the analysis to see if the log-log specification is more appropriate for the data. This transformation can be done in Data > Transform. Select the variables price and carat. Choose 'change' from the Transformation type drop-down and choose 'Log' from the Apply function drop-down. Make sure to 'Save changes' so the new variables are available in the data. Note that we cannot apply a log transformation to clarity because it is a <a href="http://en.wikipedia.org/wiki/Categorical_variable" target="_blank">categorical</a> variable.
 
-In Regression > Linear (OLS) select the variable 'log.price' as the dependent variable and 'log.carat' and 'clarity' as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. log.price and log.carat are not longer left skewed, a good sign. 
+In Regression > Linear (OLS) select the variable 'log.price' as the dependent variable and 'log.carat' and 'clarity' as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. log.price and log.carat are not longer left skewed, a good sign.
 
 ![Regression 3 - log histograms](figures_quant/regression_log_diamonds_hist.png)
 
@@ -141,7 +141,7 @@ The final diagnostic we will discuss is a set of plots of the residuals versus t
 
 ![Regression 3 - log residual vs predicted](figures_quant/regression_log_diamonds_res_vs_pred.png)
 
-Since the diagnostics now look much better, we can feel more confident about drawing inferences from this regression. The regression results are available in the Summary tab. Note that we get 7 coefficients for the variable clarity compared to only one for `log_carat`. How come? If you look at the data description (Data > Manage) you will see that clarity is a categorical variables that ranges from IF (worst clarity) to I1 (best clarity). Categorical variables must be converted to a set of dummy (or indicator) variables before we can apply any numerical analysis like regression. Each dummy indicates if a particular diamond has a pariticular clarity level (=1) or if it does not (=0). Interestingly, to capture all information in the 8-level clarity variable we only need 7 dummy variables. Note there is no dummy variable for the clarity level I1 because we don't actually need it in the regression. When a diamond is _not_ of clarity SI2, SI1, VS2, VS1, VVS2, VVS1 or IF we know that in our datas it must therefore be of clarity I1. 
+Since the diagnostics now look much better, we can feel more confident about drawing inferences from this regression. The regression results are available in the Summary tab. Note that we get 7 coefficients for the variable clarity compared to only one for `log_carat`. How come? If you look at the data description (Data > Manage) you will see that clarity is a categorical variables that ranges from IF (worst clarity) to I1 (best clarity). Categorical variables must be converted to a set of dummy (or indicator) variables before we can apply any numerical analysis like regression. Each dummy indicates if a particular diamond has a pariticular clarity level (=1) or if it does not (=0). Interestingly, to capture all information in the 8-level clarity variable we only need 7 dummy variables. Note there is no dummy variable for the clarity level I1 because we don't actually need it in the regression. When a diamond is _not_ of clarity SI2, SI1, VS2, VS1, VVS2, VVS1 or IF we know that in our datas it must therefore be of clarity I1.
 
 The F-statistic suggests that the regression model as a whole explains a significant amount of variance in log.price. The calculated F-value is very large and has a very small p-value (< 0.001) so we can reject the null hypothesis that all regression coefficients are equal to zero. The amount of variance in log.price explained by the model is equal to 96.6. It seems likely that prices of diamonds are much easier to predict then demand for diamonds.
 
@@ -167,4 +167,4 @@ All coefficients in this regression are highly significant.
 
 ![Regression 3 - log summary](figures_quant/regression_log_diamonds_summary.png)
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

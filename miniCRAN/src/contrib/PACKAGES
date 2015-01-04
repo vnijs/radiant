@@ -12,9 +12,9 @@ MD5sum: 59f9d7f7c00077ea54d763b78eeb5798
 NeedsCompilation: no
 
 Package: BH
-Version: 1.54.0-5
+Version: 1.55.0-1
 License: BSL-1.0
-MD5sum: 8e898d459830a3b7abf4b34e7c494730
+MD5sum: 3b348f97574f8082f1b56da206d844f2
 NeedsCompilation: no
 
 Package: bitops
@@ -23,11 +23,18 @@ License: GPL (>= 2)
 MD5sum: fba16485a51b1ccd354abde5816b6bdd
 NeedsCompilation: yes
 
+Package: brew
+Version: 1.0-6
+License: GPL-2
+MD5sum: 4aaca5e6ec145e0fc0fe6375ce1f3806
+NeedsCompilation: no
+
 Package: car
 Version: 2.0-22
 Depends: R (>= 2.14.0), stats, graphics
 Imports: MASS, nnet
-Suggests: alr4, boot, leaps, lme4, lmtest, Matrix, MatrixModels, mgcv, nlme, pbkrtest (>= 0.3-2), quantreg, rgl (>= 0.93.960), sandwich, SparseM, survival, survey
+Suggests: alr4, boot, leaps, lme4, lmtest, Matrix, MatrixModels, mgcv, nlme, pbkrtest (>=
+          0.3-2), quantreg, rgl (>= 0.93.960), sandwich, SparseM, survival, survey
 License: GPL (>= 2)
 MD5sum: 64c52e503497edba18e69d7838ca294f
 NeedsCompilation: no
@@ -75,10 +82,10 @@ MD5sum: 84e194ac95a69763d740947a7ee346a6
 NeedsCompilation: no
 
 Package: digest
-Version: 0.6.6
+Version: 0.6.7
 Depends: R (>= 2.4.1)
 License: GPL-2
-MD5sum: d9745a5673d27a1f094b28962d759a7e
+MD5sum: fb127c997bc0a16859e218422b482078
 NeedsCompilation: yes
 
 Package: dplyr
@@ -86,7 +93,8 @@ Version: 0.3.0.2
 Depends: R (>= 3.1)
 Imports: assertthat, utils, R6, Rcpp, magrittr, lazyeval (>= 0.1.8), DBI (>= 0.3)
 LinkingTo: Rcpp (>= 0.11.3), BH (>= 1.51.0-2)
-Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr, microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
+Suggests: RSQLite, RSQLite.extfuns, RMySQL, RPostgreSQL, data.table, testthat, knitr,
+          microbenchmark, ggplot2, mgcv, Lahman (>= 3.0-1), nycflights13, methods
 License: MIT + file LICENSE
 MD5sum: 2edabf29b4c1c9b71c07955294143067
 NeedsCompilation: yes
@@ -110,8 +118,10 @@ NeedsCompilation: no
 Package: ggplot2
 Version: 1.0.0
 Depends: R (>= 2.14), stats, methods
-Imports: plyr (>= 1.7.1), digest, grid, gtable (>= 0.1.1), reshape2, scales (>= 0.2.3), proto, MASS
-Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, testthat, knitr, mgcv
+Imports: plyr (>= 1.7.1), digest, grid, gtable (>= 0.1.1), reshape2, scales (>= 0.2.3), proto,
+          MASS
+Suggests: quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp, nlme, testthat, knitr,
+          mgcv
 Enhances: sp
 License: GPL-2
 MD5sum: ee7b55af7ffbfa1b80eb7fac9cc4b016
@@ -120,7 +130,8 @@ NeedsCompilation: no
 Package: ggvis
 Version: 0.4
 Depends: R (>= 3.0)
-Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval, htmltools (>= 0.2.4)
+Imports: assertthat, jsonlite (>= 0.9.11), shiny (>= 0.10), magrittr, dplyr (>= 0.3), lazyeval,
+          htmltools (>= 0.2.4)
 Suggests: MASS, mgcv, lubridate, testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown
 License: GPL-2
 MD5sum: 1a004ec86fc4841e25d18fb8ea2cd642
@@ -175,6 +186,15 @@ License: GPL-3 | file LICENSE
 MD5sum: ed7a9373115ac2a0497d90db5ef7f1e7
 NeedsCompilation: yes
 
+Package: httr
+Version: 0.6.0
+Depends: R (>= 3.0.0)
+Imports: digest, jsonlite, methods, mime, RCurl (>= 1.95-0), R6, stringr (>= 0.6.1)
+Suggests: base64enc, httpuv, jpeg, knitr, PKI (>= 0.1-2), png, testthat (>= 0.8.0), XML
+License: MIT + file LICENSE
+MD5sum: ea8fe9038459a16de2251efbe150cb2a
+NeedsCompilation: yes
+
 Package: jsonlite
 Version: 0.9.14
 Depends: methods
@@ -186,7 +206,8 @@ NeedsCompilation: yes
 Package: knitr
 Version: 1.8
 Depends: R (>= 2.14.1)
-Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.4), markdown (>= 0.7.4), stringr (>= 0.6), tools
+Imports: evaluate (>= 0.5.5), digest, formatR (>= 1.0), highr (>= 0.4), markdown (>= 0.7.4),
+          stringr (>= 0.6), tools
 Suggests: testit, rgl, codetools, rmarkdown, XML, RCurl
 License: GPL
 MD5sum: b1e76c4c049b2051ec1ed2c250a0c261
@@ -371,6 +392,14 @@ License: GPL (>= 2)
 MD5sum: 51d4c0ea441cdcc67d5180233d5d9679
 NeedsCompilation: yes
 
+Package: RCurl
+Version: 1.95-4.5
+Depends: R (>= 3.0.0), methods, bitops
+Suggests: Rcompression, XML
+License: BSD
+MD5sum: 622227f934b815015337363f4365d0f1
+NeedsCompilation: yes
+
 Package: reshape2
 Version: 1.4.1
 Imports: plyr (>= 1.8.1), stringr, Rcpp
@@ -388,12 +417,21 @@ MD5sum: 72c395622ba8d1435ec43849fd32c830
 NeedsCompilation: yes
 
 Package: rmarkdown
-Version: 0.3.3
+Version: 0.4.2
 Depends: R (>= 3.0)
 Imports: tools, utils, knitr (>= 1.6), yaml (>= 2.1.5), htmltools (>= 0.2.4), caTools
-Suggests: shiny (>= 0.10.1), testthat, digest
+Suggests: shiny, testthat, digest
 License: GPL-3
-MD5sum: dc4667132de75d6937a3ad37c595d3a9
+MD5sum: a1ffa0a0288436abded994a00ee0cdc3
+NeedsCompilation: no
+
+Package: rvest
+Version: 0.1.0
+Depends: R (>= 3.0.1)
+Imports: httr (>= 0.5), XML, selectr, magrittr
+Suggests: testthat, knitr, png, stringi (>= 0.3.1)
+License: GPL-3
+MD5sum: b17ca3f8ead71ac3404033ae04849da1
 NeedsCompilation: no
 
 Package: scales
@@ -405,22 +443,32 @@ License: MIT + file LICENSE
 MD5sum: 957a5f6533c2baf0d1f030439d6ebc0b
 NeedsCompilation: no
 
+Package: selectr
+Version: 0.2-2
+Depends: R (>= 2.15.2)
+Imports: methods, XML, stringr
+Suggests: testthat
+License: BSD_3_clause + file LICENCE
+MD5sum: 2e0f7b012c2fb980aa0829b7d6c6abb3
+NeedsCompilation: no
+
 Package: shiny
 Version: 0.10.2.2
 Depends: R (>= 3.0.0)
-Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools (>= 0.2.6), R6 (>= 2.0)
+Imports: tools, utils, httpuv (>= 1.2.2), mime (>= 0.1.3), RJSONIO, xtable, digest, htmltools
+          (>= 0.2.6), R6 (>= 2.0)
 Suggests: datasets, Cairo (>= 1.5-5), testthat, knitr (>= 1.6), markdown
 License: GPL-3
 MD5sum: 800916130af77e9b6ecc9fe40a013601
 NeedsCompilation: no
 
 Package: shinyAce
-Version: 0.1.0
+Version: 0.2.0
 Depends: R (>= 2.15.0)
 Imports: shiny (>= 0.7.0)
-Suggests: testthat
-License: MIT + file LICENSE
-MD5sum: 2962eb93a07d4c753c8faef649f97b88
+Suggests: testthat, dplyr (>= 0.3.0)
+License: MIT
+MD5sum: 346efab31093d26f6530029066310f1b
 NeedsCompilation: no
 
 Package: shinyFiles
@@ -491,6 +539,15 @@ LinkingTo: Rcpp
 Suggests: tm (>= 0.6)
 License: LGPL-2.1
 MD5sum: b3e898a6ef74ad68c33b9387722cb969
+NeedsCompilation: yes
+
+Package: XML
+Version: 3.98-1.1
+Depends: R (>= 1.2.0), methods, utils
+Imports: methods
+Suggests: bitops, RCurl
+License: BSD
+MD5sum: d7e5b216dc83174a9e931517955013c5
 NeedsCompilation: yes
 
 Package: xtable

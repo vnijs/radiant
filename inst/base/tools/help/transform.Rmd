@@ -25,7 +25,7 @@ When you select Type from the 'Transformation type' drop-down another drop-down 
 When you select Change from the 'Transformation type' drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose Log from the 'Apply function' menu. A new variable is created with the prefix 'log.'. Click the 'Save changes' button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
 1. Log: create a log-transformed version of the selected variable (i.e., log(x))
-2. Square: multiply a variable by itself (i.e. x^2) 
+2. Square: multiply a variable by itself (i.e. x^2)
 3. Square-root: take the square-root of a variable (i.e., x^.5)
 4. Center: create a new variable with a mean equal to zero (i.e., x - mean(x))
 5. Standardize: create a new variable with a mean equal to zero and standard deviation equal to 1 (i.e., (x - mean(x)/sd(x)))
@@ -60,11 +60,11 @@ Choose Create from the 'Transformation type' drop-down. This is the most flexibl
 6. Create a categorical variable with two levels
 
   z = ifelse(x < y, "x < y", "x < y")
-  
+
 7. Create a categorical variable with three levels
 
   z = ifelse(x < 60, "x < 60", ifelse(x > 65, "x > 65", "60-65"))
-  
+
 Note: For 6 and 7 you should convert the new variable to a factor for analysis (see Type above)
 
 #### Clipboard
@@ -87,7 +87,7 @@ To use the recode feature select the variable you want to change and choose 'Rec
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
-4. To exclude a particular value (e.g., an outlier in the data) from subsequent analyses we can recode it to a missing value. If we want to remove the maximum value from a variable called __sales__ that is equal to 400 we would (1) select the variable __sales__ in the 'Select column(s)' box and enter the command below in the 'Recode box'. Press return and 'Save changes' to add the recoded variable to the data. 
+4. To exclude a particular value (e.g., an outlier in the data) from subsequent analyses we can recode it to a missing value. If we want to remove the maximum value from a variable called __sales__ that is equal to 400 we would (1) select the variable __sales__ in the 'Select column(s)' box and enter the command below in the 'Recode box'. Press return and 'Save changes' to add the recoded variable to the data.
 
 	400 = NA
 
@@ -107,4 +107,4 @@ Choose 'Remove missing' from the 'Transformation type' dropdown to remove missin
 
 Choose 'Subset' from the 'Transformation type' dropdown to select (or omit) specific sets of rows from the data. You can use > and < signs and even combine filter commands. For example, x > 3 & y == 2 would select only those rows for which the variable x has values larger than 3 __and__ for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen. You should see the number of observations in the data summary change (i.e., the value of n changes). Press 'Save changes' to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>

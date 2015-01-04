@@ -38,4 +38,4 @@ For a more detailed view of the association we go to the Plots tab. Select the '
 
 ![kmeans shopping - plots crosstab plots](figures_marketing/kmeans_toothpaste_crosstab_plots.png)
 
-&copy; Vincent Nijs (2014) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
