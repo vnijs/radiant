@@ -4,12 +4,14 @@
 output$uiView_vars <- renderUI({
   vars <- varnames()
   selectInput("view_vars", "Select variables to show:", choices  = vars,
-    selected = state_init_multvar("view_vars",vars, vars), multiple = TRUE, selectize = FALSE)
+    selected = state_init_multvar("view_vars",vars, vars),
+    multiple = TRUE, selectize = FALSE)
 })
 
 output$uiView_subsbig <- renderUI({
   list(
-    tags$textarea(id="view_subsbig_area", rows=3, cols=5, "", state_init("view_subsbig_area",isolate(input$view_select))),
+    tags$textarea(id="view_subsbig_area", rows=3, "",
+                  state_init("view_subsbig_area",isolate(input$view_select))),
     actionButton("view_subsbig_action", "Submit command")
   )
 })
