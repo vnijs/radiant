@@ -1,0 +1,29 @@
+
+## DT with a dplyr back-end
+
+First you will need to install the dev version of Shiny:
+
+	if (!require("devtools"))
+	  install.packages("devtools")
+	devtools::install_github("rstudio/shiny")
+
+
+Links from Yihui about linking DT to alternative backends:
+
+- https://github.com/rstudio/DT/issues/10
+- http://rstudio.github.io/DT/#a-shiny-example-experimental
+- https://github.com/rstudio/shiny/blob/master/R/utils.R#L626-L707
+
+
+## migrating to Shiny 0.11
+
+Links about the migration to Bootstrap 3 in the next release of Shiny:
+
+- https://rstudio-pubs-static.s3.amazonaws.com/47880_ea85145527b84be7aabb86695f6d0230.html
+- http://getbootstrap.com/migration/
+
+To migrate back to the current version of Shiny
+
+	devtools::install_version("shiny", version = "0.10.2.2")
+
+
