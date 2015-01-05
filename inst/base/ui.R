@@ -1,6 +1,5 @@
-shinyUI(
-  navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE,
-             collapsable = TRUE,
+shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE,
+        collapsable = TRUE,
 
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
@@ -14,10 +13,8 @@ shinyUI(
   navbarMenu("Help",
     tabPanel("Radiant help", uiOutput("help_base")),
     tabPanel("Radiant videos", withMathJax(),
-             "../base/tools/app/videos_quant.Rmd" %>%
-               inclRmd %>% HTML),
+             "../base/tools/app/videos_quant.Rmd" %>% inclRmd %>% HTML),
     # do NOT remove withMathJax(), load-files breaks!
-    tabPanel("About", withMathJax(), "../base/tools/app/about.Rmd" %>%
-             inclRmd %>% HTML)
+    tabPanel("About", withMathJax(), "../base/tools/app/about.Rmd" %>% inclRmd %>% HTML)
   )
 ))

@@ -140,7 +140,8 @@ twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
 
 		result <- get(rfun_label)()
 		# when no analysis was conducted (e.g., no variables selected)
-		if(is.character(result)) return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
+		if(is.character(result))
+			return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
 
 		get(plot_name)()
 	}, width=get(widthFun), height=get(heightFun))
@@ -174,31 +175,24 @@ onePanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
   ))
 }
 
-
 statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
                          widthFun = "plotWidth", heightFun = "plotHeight",
                          mpan = "twoPanels") {
-	  tool <- isolate(input$nav_radiant)
-	  sidebarLayout(
-	    sidebarPanel(
-	      wellPanel(
-	        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
-	        # HTML(paste("<label><strong>Tool:",isolate(input$nav_radiant),"</strong></label>")),
-	        HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
-	        if(!tool %in% c("Central Limit Theorem", "Sample size", "Create profiles"))
-		        HTML(paste("<label><strong>Data:",input$datasets,"</strong></label>"))
-	      ),
-	      uiOutput(paste0("ui_",fun_label))
-	    ),
-	    mainPanel(
-				# statPanel(fun_name, rfun_label, fun_label, widthFun, heightFun)
-				# get("statPanel")(fun_name, rfun_label, fun_label, widthFun, heightFun)
-				get(mpan)(fun_name, rfun_label, fun_label, widthFun, heightFun)
-	    )
-	  )
+  tool <- isolate(input$nav_radiant)
+  sidebarLayout(
+    sidebarPanel(
+      wellPanel(
+        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
+        HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
+        if(!tool %in% c("Central Limit Theorem", "Sample size", "Create profiles"))
+	        HTML(paste("<label><strong>Data:",input$datasets,"</strong></label>"))
+      ),
+      uiOutput(paste0("ui_",fun_label))
+    ),
+    mainPanel(
+			# statPanel(fun_name, rfun_label, fun_label, widthFun, heightFun)
+			# get("statPanel")(fun_name, rfun_label, fun_label, widthFun, heightFun)
+			get(mpan)(fun_name, rfun_label, fun_label, widthFun, heightFun)
+    )
+  )
 }
-
-# pp <- function(x) log(x)
-# test <- function(x) get(x)
-# ppp <- test("pp")
-# ppp(2)

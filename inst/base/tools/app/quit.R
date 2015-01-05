@@ -27,6 +27,7 @@ output$savequit <- renderUI({
       conditionalPanel(condition = "input.showState == true",
         verbatimTextOutput("showState")
       )
+      # , uiOutput("debugTools")
     )
   )
 })
