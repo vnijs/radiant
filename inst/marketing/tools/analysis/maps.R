@@ -48,7 +48,7 @@ output$ui_mds <- renderUI({
 	  	uiOutput("uiMds_id2"),
 	  	uiOutput("uiMds_dis"),
 		  radioButtons(inputId = "mds_non_metric", label = "", mds_non_metric,
-		   	selected = state_init_list("mds_non_metric", "non-metric", mds_non_metric)),
+		   	selected = state_init_list("mds_non_metric", "metric", mds_non_metric)),
 		  radioButtons(inputId = "mds_dim_number", label = "", mds_dim_number,
 		   	selected = state_init_list("mds_dim_number",2, mds_dim_number)),
 	 	 	conditionalPanel(condition = "input.tabs_mds == 'Plots'",
