@@ -1,7 +1,5 @@
 shinyServer(function(input, output, session) {
 
-  # setInitValues()
-
 	# source shared functions
 	source('radiant.R', local = TRUE)
 

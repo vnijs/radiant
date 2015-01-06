@@ -61,7 +61,7 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      checkboxInput('man_show_remove', 'Remove data from memory:', FALSE),
+      checkboxInput('man_show_remove', 'Remove data from memory', FALSE),
       conditionalPanel(condition = "input.man_show_remove == true",
         uiOutput("uiRemoveDataset"),
         actionButton('removeDataButton', 'Remove data')
@@ -79,6 +79,17 @@ observe({
     updateCheckboxInput(session = session, "man_add_descr",
                         "Add/edit data description", FALSE)
   })
+})
+
+output$dataDescriptionHTML <- renderUI({
+  dataDescriptionOutput('html') %>% HTML
+})
+
+output$dataDescriptionMD <- renderUI({
+  tagList(
+    "<label>Add data description:</label>" %>% HTML,
+    tags$textarea(id="man_data_descr", rows="15", style="width:650px;", dataDescriptionOutput('md'))
+  )
 })
 
 # managing the description of the dataset

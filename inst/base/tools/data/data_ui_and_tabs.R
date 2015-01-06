@@ -1,6 +1,7 @@
 #######################################
 # Shiny interface for data functions
 #######################################
+
 # data ui and tabs
 output$data_ui_and_tabs <- renderUI({
   list(
@@ -10,14 +11,12 @@ output$data_ui_and_tabs <- renderUI({
       sidebarPanel(
         # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
         uiOutput("uiDatasets"),
-#         uiOutput(paste0("ui_",input$datatabs))
         conditionalPanel(condition = "input.datatabs == 'Manage'", uiOutput("ui_Manage")),
         conditionalPanel(condition = "input.datatabs == 'View'", uiOutput("ui_View")),
         conditionalPanel(condition = "input.datatabs == 'Visualize'", uiOutput("ui_Visualize")),
         conditionalPanel(condition = "input.datatabs == 'Explore'", uiOutput("ui_Explore")),
         conditionalPanel(condition = "input.datatabs == 'Merge'", uiOutput("ui_Merge")),
         conditionalPanel(condition = "input.datatabs == 'Transform'", uiOutput("ui_Transform"))
-#         conditionalPanel(condition = "input.datatabs == 'Filter'", uiOutput("ui_Filter"))
       ),
       mainPanel(id = "datatabs",
         uiOutput("tabs_data")
@@ -29,22 +28,14 @@ output$data_ui_and_tabs <- renderUI({
 # data tabs
 output$tabs_data <- renderUI({
   tabsetPanel(id = "datatabs",
-              tabPanel("Manage",
-                       htmlOutput("htmlDataExample"),
-                       conditionalPanel(condition = "input.man_add_descr == false", HTML(dataDescriptionOutput('html'))),
-                       conditionalPanel(condition = "input.man_add_descr == true",
-                                        HTML("<label>Add data description:</label>"),
-                                        tags$textarea(id="man_data_descr", rows="15", style="width:650px;",
-                                                      dataDescriptionOutput('md'))
-                       )
-              ),
-              tabPanel("View", dataTableOutput("dataviewer")),
-              tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
-              tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
-              tabPanel("Merge", htmlOutput("mergePossible"), htmlOutput("mergeData1"), htmlOutput("mergeData2")),
-              tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary"))
-#               tabPanel("Filter", ggvisOutput("filter_scatter"))
-              # tabPanel("Filter", ggvisOutput("filter_scatter"), verbatimTextOutput("filter_dataviewer"))
+    tabPanel("Manage", htmlOutput("htmlDataExample"),
+             conditionalPanel(condition = "input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
+             conditionalPanel(condition = "input.man_add_descr == true", uiOutput("dataDescriptionMD"))
+    ),
+    tabPanel("View", dataTableOutput("dataviewer")),
+    tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
+    tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
+    tabPanel("Merge", htmlOutput("mergePossible"), htmlOutput("mergeData1"), htmlOutput("mergeData2")),
+    tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary"))
   )
 })
-
