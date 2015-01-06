@@ -1,7 +1,17 @@
 #######################################
-# Help menu
+# Other elements in help menu
 #######################################
+output$help_videos <- renderUI({
+  "../base/tools/app/videos_quant.Rmd" %>% inclRmd %>% HTML
+})
 
+output$help_about <- renderUI({
+  "../base/tools/app/about.Rmd" %>% inclRmd %>% HTML
+})
+
+#######################################
+# Main function of help menu
+#######################################
 help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
 
 append_help <- function(help_str, help_path, Rmd = FALSE) {
@@ -164,7 +174,7 @@ help_marketing_ui <- tagList(
   ),
   wellPanel(
     HTML("<label>Conjoint menu: <a id='help_conjoint_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_conjointr_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    <a id='help_conjoint_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
     checkboxGroupInput("help_conjoint", "", help_conjoint,
                        selected = state_init_list("help_conjoint","", help_conjoint))
   )
