@@ -6,7 +6,6 @@ output$uiMds_id1 <- renderUI({
   vars <- varnames()[isChar]
   if(length(vars) == 0) return(HTML('<label>This dataset has no variables of type character.</label>'))
   selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars,
-  	# selected = names(vars[vars == values$mds_id1]), multiple = FALSE)
    	selected = state_singlevar("mds_id1",vars), multiple = FALSE)
 })
 
@@ -19,7 +18,6 @@ output$uiMds_id2 <- renderUI({
 	vars <- vars[-which(vars == input$mds_id1)]
   if(length(vars) == 0) return(HTML('<label>This dataset has only one variable of type character.</label>'))
   selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
-  	# selected = names(vars[vars == values$mds_id2]), multiple = FALSE)
    	selected = state_singlevar("mds_id2",vars), multiple = FALSE)
 })
 
@@ -30,7 +28,6 @@ output$uiMds_dis <- renderUI({
  	vars <- varnames()[isNum]
   if(length(vars) == 0) return()
   selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
-  	# selected = names(vars[vars == values$mds_dis]), multiple = FALSE)
    	selected = state_singlevar("mds_dis",vars), multiple = FALSE)
 })
 
@@ -38,11 +35,11 @@ output$uiMds_rev_dim <- renderUI({
 	rev_list <- list()
 	rev_list[paste("Dimension",1:input$mds_dim_number)] <- 1:input$mds_dim_number
 	checkboxGroupInput("mds_rev_dim", "Reverse:", rev_list,
-		# selected = names(rev_list[rev_list == values$mds_rev_dim]))
    	selected = state_init_list("mds_rev_dim","", rev_list))
 })
 
 mds_dim_number <- c("2-dims" = 2, "3-dims" = 3)
+mds_non_metric <- c("metric" = "metric", "non-metric" = "non-metric")
 
 output$ui_mds <- renderUI({
   list(
@@ -50,8 +47,9 @@ output$ui_mds <- renderUI({
 	  	uiOutput("uiMds_id1"),
 	  	uiOutput("uiMds_id2"),
 	  	uiOutput("uiMds_dis"),
+		  radioButtons(inputId = "mds_non_metric", label = "", mds_non_metric,
+		   	selected = state_init_list("mds_non_metric", "non-metric", mds_non_metric)),
 		  radioButtons(inputId = "mds_dim_number", label = "", mds_dim_number,
-		  	# selected = values$mds_dim_number),
 		   	selected = state_init_list("mds_dim_number",2, mds_dim_number)),
 	 	 	conditionalPanel(condition = "input.tabs_mds == 'Plots'",
 	 	 		numericInput("mds_fontsz", "Font size:", state_init("mds_fontsz",1.3), .5, 4, .1),
@@ -83,19 +81,20 @@ output$mds <- renderUI({
 	if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
 
 	mds(input$datasets, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
-			input$mds_dim_number, input$mds_fontsz)
+			input$mds_non_metric, input$mds_dim_number, input$mds_fontsz)
 })
 
 observe({
   if(is.null(input$mdsReport) || input$mdsReport == 0) return()
   isolate({
 		inp <- list(input$datasets, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
-			input$mds_dim_number, input$mds_fontsz)
+			input$mds_non_metric, input$mds_dim_number, input$mds_fontsz)
 		updateReport(inp,"mds", round(7 * mds_plotWidth()/650,2), round(7 * mds_plotHeight()/650,2))
   })
 })
 
-mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim, mds_dim_number, mds_fontsz) {
+mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim,
+                mds_non_metric, mds_dim_number, mds_fontsz) {
 
 	dat <- values[[datasets]]
 
@@ -134,6 +133,9 @@ mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim, mds_dim_number
 
 	co.mds <- MASS::isoMDS(co.dist.mat, k = nr.dim, trace = FALSE)
 
+	if(mds_non_metric == "metric")
+		co.mds$points <- cmdscale(co.dist.mat, k = nr.dim)
+
 	out <- list()
 	out$nr.dim <- nr.dim
 	out$data <- co.dist.mat
@@ -141,6 +143,7 @@ mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim, mds_dim_number
 	out$labels <- lab
 	out$nr.levels <- nr.lev
 	out$lim <- max(abs(out$points))
+	out$mds_non_metric <- mds_non_metric
 	out$mds_rev_dim <- as.numeric(mds_rev_dim)
 	out$mds_fontsz <- mds_fontsz
 
@@ -162,7 +165,11 @@ summary_mds <- function(result = .mds()) {
 	colnames(coor) <- paste("Dim ", 1:ncol(coor))
 	print(coor, digits = 3)
 
-	cat("\nFinal stress measure equal to", sprintf("%.3f", co.mds$stress/100))
+	if(result$out$mds_non_metric == "non-metric") {
+		cat("\nFinal stress measure equal to", sprintf("%.3f", co.mds$stress/100))
+	} else {
+		cat("\nNo stress measure available for metric MDS")
+	}
 }
 
 plots_mds <- function(result = .mds()) {
