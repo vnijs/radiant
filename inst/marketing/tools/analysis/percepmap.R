@@ -116,12 +116,9 @@ pmap <- function(datasets, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pm
 	f.data <- dat[,pmap_attr]
 	brands <- dat[,pmap_brand]
 
-# 	f.res <- suppressWarnings(principal(f.data, nfactors=nr.dim, rotate='varimax', scores=FALSE, oblique.scores=FALSE))
-
-
 	f.res <- suppressWarnings(
               suppressMessages(
-                  principal(f.data, nfactors=nr.dim, rotate='varimax', scores=FALSE, oblique.scores=FALSE)
+                  principal(cov(f.data), nfactors=nr.dim, rotate='varimax', scores=FALSE, oblique.scores=FALSE)
               )
 	          )
 	df <- as.data.frame(f.res$loadings[,colnames(f.res$loadings)])

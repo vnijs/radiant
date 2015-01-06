@@ -42,7 +42,7 @@ observe({
 preFactor <- function(datasets, preFactor_vars) {
 	# for main analysis
 	dat <- na.omit( values[[datasets]][,preFactor_vars] )
-	if(nrow(dat) < ncol(dat)) return("Data has more variables than observations.\nPlease reduce the number of variables.")
+	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
   cmat <- cor(dat)
 	btest <- cortest.bartlett(cmat, nrow(dat))
@@ -189,7 +189,7 @@ fullFactor <- function(datasets, factor_vars, fac_method, fac_number, fac_cutoff
 			fac_sort, fac_rotation) {
 
 	dat <- na.omit( values[[datasets]][,factor_vars] )
-	if(nrow(dat) < ncol(dat)) return("Data has more variables than observations.\nPlease reduce the number of variables.")
+	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
 	nrFac <- max(1,as.numeric(fac_number), na.rm = TRUE)
 	if(nrFac > ncol(dat)) {
