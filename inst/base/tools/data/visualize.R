@@ -4,29 +4,33 @@
 output$uiVizvars1 <- renderUI({
   vars <- varnames()
   selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
-    selected = state_multvar("vizvars1",vars), multiple = input$viz_multiple == 'multiple',
+    selected = state_multvar("vizvars1",vars),
+    multiple = input$viz_multiple == 'multiple',
     selectize = input$viz_multiple == 'single')
 })
 
 output$uiVizvars2 <- renderUI({
   vars <- varnames()
-  selectizeInput(inputId = "vizvars2", label = "Y-variable", choices = c("None" = "None", vars),
-#                  selected = state_singlevar("vizvars2",vars), multiple = FALSE)
-              selected = state_init_list("vizvars2","None", vars), multiple = FALSE)
+  selectizeInput(inputId = "vizvars2", label = "Y-variable",
+                 choices = c("None" = "None", vars),
+                 selected = state_init_list("vizvars2","None", vars),
+                 multiple = FALSE)
 })
 
 output$uiViz_color <- renderUI({
   if(is.null(input$vizvars2)) return() 	# can't have an XY plot without an X
   vars <- c("None" = "None", varnames())
   selectizeInput("viz_color", "Color", vars,
-                 selected = state_init_list("viz_color","None", vars), multiple = FALSE)
+                 selected = state_init_list("viz_color","None", vars),
+                 multiple = FALSE)
 })
 
 output$uiViz_facet_row <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
   selectizeInput("viz_facet_row", "Facet row", vars,
-              selected = state_init_list("viz_facet_row", ".", vars), multiple = FALSE)
+                 selected = state_init_list("viz_facet_row", ".", vars),
+                 multiple = FALSE)
 })
 
 output$uiViz_facet_col <- renderUI({
@@ -34,32 +38,36 @@ output$uiViz_facet_col <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
   selectizeInput("viz_facet_col", 'Facet column', vars,
-              selected = state_init_list("viz_facet_col", ".", vars), multiple = FALSE)
+                 selected = state_init_list("viz_facet_col", ".", vars),
+                 multiple = FALSE)
 })
 
 viz_multiple <- c("Single" = "single", "Multiple" = "multiple")
 
 output$ui_Visualize <- renderUI({
   list(wellPanel(
-    radioButtons("viz_multiple", "Number of plots:", viz_multiple, state_init_list("viz_multiple","single", viz_multiple)),
+    radioButtons("viz_multiple", "Number of plots:", viz_multiple,
+                 state_init_list("viz_multiple","single", viz_multiple)),
     uiOutput("uiVizvars1"),
     uiOutput("uiVizvars2"),
     conditionalPanel(condition = "input.viz_multiple == 'single'",
-                     uiOutput("uiViz_facet_row"),
-                     uiOutput("uiViz_facet_col")
+      uiOutput("uiViz_facet_row"),
+      uiOutput("uiViz_facet_col")
     ),
     conditionalPanel(condition = "input.vizvars2 != 'None'",
-                     uiOutput("uiViz_color"),
-                     checkboxInput('viz_line', 'Line', value = state_init("viz_line", FALSE)),
-                     checkboxInput('viz_loess', 'Loess', value = state_init("viz_loess", FALSE)),
-                     checkboxInput('viz_jitter', 'Jitter', value = state_init("viz_jitter", FALSE))
+      uiOutput("uiViz_color"),
+      checkboxInput('viz_line', 'Line', value = state_init("viz_line", FALSE)),
+      checkboxInput('viz_loess', 'Loess', value = state_init("viz_loess", FALSE)),
+      checkboxInput('viz_jitter', 'Jitter', value = state_init("viz_jitter", FALSE))
     ),
     returnTextInput("viz_select", "Subset (e.g., price > 5000)", state_init("viz_select")),
     div(class="row-fluid",
-        div(class="span6",numericInput("viz_plot_height", label = "Plot height:", min = 100, step = 50,
-                                       value = state_init("viz_plot_height", values$plotHeight))),
-        div(class="span6", numericInput("viz_plot_width", label = "Plot width:", min = 100, step = 50,
-                                        value = state_init("viz_plot_width", values$plotWidth)))
+        div(class="span6",
+            numericInput("viz_plot_height", label = "Plot height:", min = 100, step = 50,
+                         value = state_init("viz_plot_height", values$plotHeight))),
+        div(class="span6",
+            numericInput("viz_plot_width", label = "Plot width:", min = 100, step = 50,
+                         value = state_init("viz_plot_width", values$plotWidth)))
     )
     # ,div(class="row-fluid",
     # 	div(class="span6",
@@ -83,7 +91,9 @@ viz_plot_height <- reactive({
   if(is.null(input$viz_plot_height)) return(values$plotHeight)
   if(input$viz_multiple == "multiple") {
     nrPlots <- length(input$vizvars1)
-    ifelse(nrPlots > 1, return((input$viz_plot_height/2) * ceiling(nrPlots / 2)), return(input$viz_plot_height))
+    ifelse(nrPlots > 1,
+           return((input$viz_plot_height/2) * ceiling(nrPlots / 2)),
+           return(input$viz_plot_height))
   } else {
     return(input$viz_plot_height)
   }
@@ -91,11 +101,13 @@ viz_plot_height <- reactive({
 
 output$visualize <- renderPlot({
 
-  # if(isolate(input$datatabs) != 'Visualize') return(invisible())
-
   if(is.null(input$viz_facet_col)) return()
   if(is.null(input$vizvars1) || input$vizvars1 == "None")
-    return(plot(x = 1, type = 'n', main="Please select variables from the dropdown menus to create a plot.", axes = FALSE, xlab = "", ylab = ""))
+    return(
+      plot(x = 1, type = 'n',
+           main="Please select variables from the dropdown menus to create a plot.",
+           axes = FALSE, xlab = "", ylab = "")
+    )
 
   withProgress(message = 'Making plot', value = 0, {
     plots <- .visualize()
