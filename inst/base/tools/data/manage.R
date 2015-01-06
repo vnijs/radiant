@@ -310,7 +310,7 @@ output$refreshOnUpload <- renderUI({
   inFile <- input$uploadState
   if(!is.null(inFile)) {
     # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
-    tags$script("window.location.reload();")
+    # tags$script("window.location.reload();")
   }
 })
 
