@@ -1,8 +1,6 @@
 ###############################
+# Add coeficient plots
 ###############################
-###############################
-###############################
-# Add come coeficient plots
 #
 # customer.stats <- data.frame(b = lm1.c$coefficient[weekday.par.names],
 #                              ci.lower=confint(lm1.c,weekday.par.names)[,1],
@@ -23,14 +21,6 @@
 #   geom_line(aes(x=weekday,y=b,color=usertype,group=usertype),linetype='dotted') +
 #   geom_hline(aes(yintercept=0))+
 #   facet_wrap(~usertype,scales='free_y')
-###############################
-###############################
-###############################
-###############################
-
-
-
-
 
 ###############################
 # Correlation
@@ -148,8 +138,10 @@ plots_correlation <- function(result = .correlation()) {
 	}
 	panel.smooth <- function (x, y) {
     points(x, y)
-#     abline(lm(y~x), col="red")
-#     lines(stats::lowess(y~x), col="blue")
+    # uncomment below if you want linear and loess lines
+    # in the scatter plot matrix
+		# abline(lm(y~x), col="red")
+		# lines(stats::lowess(y~x), col="blue")
 	}
 	pairs(dat, lower.panel=panel.smooth, upper.panel=panel.plot)
 }
@@ -172,8 +164,11 @@ output$uiReg_var2 <- renderUI({
  	vars <- vars[-which(vars == input$reg_var1)]
   if(length(vars) == 0) return()
   selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars,
-#   	selected = state_multvar("reg_var2", vars), multiple = TRUE, selectize = FALSE)
-  	selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars), multiple = TRUE, selectize = FALSE)
+    # the reference to reg_var2 below should help ensure that variables
+    # remain selected even if the dv changes
+  	selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars),
+  	multiple = TRUE, selectize = FALSE)
+ 		# selected = state_multvar("reg_var2", vars), multiple = TRUE, selectize = FALSE)
 })
 
 output$uiReg_var3 <- renderUI({
@@ -182,9 +177,11 @@ output$uiReg_var3 <- renderUI({
  	vars <- vars[which(vars %in% input$reg_var2)]
 
   # adding interaction terms as needed
-	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none') vars <- c(vars,input$reg_intsel)
+	if(!is.null(input$reg_intsel) && input$reg_interactions != 'none')
+		vars <- c(vars,input$reg_intsel)
 
-#   selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
+	# use selectize for reg_var3 or not?
+	# selectInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
   selectizeInput(inputId = "reg_var3", label = "Variables to test:", choices = vars,
   	selected = state_multvar("reg_var3", vars), multiple = TRUE,
     options = list(placeholder = 'None', plugins = list('remove_button'))
@@ -192,27 +189,20 @@ output$uiReg_var3 <- renderUI({
 })
 
 output$uiReg_intsel <- renderUI({
-
   vars <- input$reg_var2
   if(is.null(vars) || length(vars) < 2) return()
-
-  # choices <- ""
-#  	if(!is.null(inChecker(c(input$reg_var2)))) choices <- reg_int_vec(vars,input$reg_interactions)
  	choices <- reg_int_vec(vars,input$reg_interactions)
-
 	selectInput("reg_intsel", label = "", choices = choices,
   	selected = state_multvar("reg_intsel", vars), multiple = TRUE, selectize = FALSE)
 })
 
 reg_interactions <- c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way")
-# reg_pred_buttons <- c("CMD" = "cmd","Data" = "dataframe")
 reg_pred_buttons <- c("Data" = "dataframe","Command" = "cmd")
 output$ui_regression <- renderUI({
   list(
   	wellPanel(
 	    uiOutput("uiReg_var1"),
 	    uiOutput("uiReg_var2"),
-
 		  radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
 	    	selected = state_init_list("reg_interactions","none", reg_interactions)),
 		  conditionalPanel(condition = "input.reg_interactions != 'none'",
@@ -242,7 +232,6 @@ output$ui_regression <- renderUI({
         checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
       		value = state_init('reg_rmse',FALSE)),
 		    conditionalPanel(condition = "input.reg_confint == true | input.reg_predict_data != 'none' | input.reg_predict != ''",
-#            sliderInput('reg_conf_level',"Confidence interval:", min = 0.80, max = 0.99,
            sliderInput('reg_conf_level',"", min = 0.70, max = 0.99,
                        value = state_init('reg_conf_level',.95), step = 0.01)
 		    ),
@@ -291,8 +280,6 @@ output$regression <- renderUI({
 		input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data, input$reg_standardize,
     input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
     input$reg_plots, input$reg_line, input$reg_loess)
-
-
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
@@ -346,9 +333,12 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
 	if(reg_stepwise) {
-# 		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'forward')
-		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), scope = list(upper = formula), direction = 'both')
-		# mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat), k = log(nrow(dat)), scope = list(upper = formula), direction = 'both')
+		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat),
+		            scope = list(upper = formula), direction = 'both')
+		# not sure what the k = log ... setting was for. AIC vs BIC?
+		# mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat),
+		#             k = log(nrow(dat)), scope = list(upper = formula),
+		#             direction = 'both')
 	} else {
 		mod <- lm(formula, data = dat)
 	}
@@ -371,7 +361,6 @@ regression <- function(datasets, reg_var1, reg_var2, reg_var3, reg_intsel, reg_i
 	mod$reg_standardize <- reg_standardize
 	mod$reg_line <- reg_line
 	mod$reg_loess <- reg_loess
-# 	mod$reg_jitter <- reg_jitter
 	mod$datasets <- datasets
 
 	return(mod)
@@ -446,9 +435,6 @@ summary_regression <- function(result = .regression()) {
 
           # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
           if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
-  #           print(names(nval))
-  #           print(names(newdat))
-  #           print(names(nval) %in% names(newdat))
             cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
           } else {
             if(result$reg_predict_buttons == "cmd" & result$reg_predict == "") {
@@ -457,7 +443,7 @@ summary_regression <- function(result = .regression()) {
               newdat[names(nval)] <- list(NULL)
               nnd <- data.frame(newdat[-1],nval)
               pred <- try(predict(result, nnd,interval = 'prediction', level = result$reg_conf_level), silent = TRUE)
-#               pred <- try(predict(result, nnd,interval = 'prediction', level = as.numeric(reg_conf_level)), silent = TRUE)
+              # pred <- try(predict(result, nnd,interval = 'prediction', level = as.numeric(reg_conf_level)), silent = TRUE)
             }
 
             if(!is(pred, 'try-error')) {
@@ -471,7 +457,6 @@ summary_regression <- function(result = .regression()) {
               cl_split <- function(x) 100*(1-x)/2
             	cl_split(result$reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
             	(100 - cl_split(result$reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
-#             	colnames(pred) <- c("Prediction","2.5%","97.5%","+/-")
             	colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
 
             	nnd <- data.frame(nnd, pred, check.names = FALSE)
@@ -484,9 +469,7 @@ summary_regression <- function(result = .regression()) {
             	  write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
             	}
 
-            	# print(data.frame(nnd, pred, check.names = FALSE), row.names = FALSE)
             	nnd %>% print(., row.names = FALSE)
-
               cat("\n")
             } else {
               cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
@@ -561,8 +544,8 @@ summary_regression <- function(result = .regression()) {
 .print.summary.lm <- function (x, dataset = "", dv = "", std_c = FALSE, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
 
   # adapted from getAnywhere(print.summary.lm)
-#   cat(paste("Dependent variable:",input$reg_var1,"\n"))
-  cat(paste("Data set:",dataset,"\n"))
+	# cat(paste("Dependent variable:",input$reg_var1,"\n"))
+  cat(paste("Data:",dataset,"\n"))
   cat(paste("Dependent variable:",dv,"\n"))
 
   if(std_c == TRUE) {
@@ -577,7 +560,7 @@ summary_regression <- function(result = .regression()) {
     coefs[!aliased, ] <- x$coefficients
   }
   printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", ...)
-#   printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", scientific = FALSE, ...)
+	# printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", scientific = FALSE, ...)
 
   cat("\n")
   if (nzchar(mess <- naprint(x$na.action)))
@@ -598,7 +581,6 @@ r_plots <- list("None" = "", "Histograms" = "histlist", "Correlations" = "correl
 		# "Residual vs predictor" = "resid_vs_predictorlist", "Leverage plots" = "leverage_plots", "Coefficient plot" = "coef")
 		"Residual vs predictor" = "resid_vs_predictorlist", "Leverage plots" = "leverage_plots")
 
-# plots_regression <- reactive({ .plots_regression() })
 plots_regression <- function(result = .regression()) {
 
 	if(class(result) != 'lm') return(result)
@@ -629,7 +611,7 @@ plots_regression <- function(result = .regression()) {
 		plots <- list()
 		df <- data.frame(cbind(mod$.fitted,mod[1]))
 		colnames(df) <- c("x","y")
-# 		plots[[1]] <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
+		# plots[[1]] <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
 		p <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
     if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
@@ -640,7 +622,7 @@ plots_regression <- function(result = .regression()) {
     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[2]] <- p
 
-# 		p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
+		#	p <- qplot(y=.resid, x=seq_along(.resid), data = mod) + geom_point() +
 		p <- qplot(y=.resid, x=seq_along(.resid), data = mod, geom="line") +
 			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
     if(result$reg_line) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
@@ -650,7 +632,7 @@ plots_regression <- function(result = .regression()) {
 		p <- qplot(sample =.stdresid, data = mod, stat = "qq") +
 			labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
     if(result$reg_line) p <- p + geom_abline(linetype = 'dotdash')
-#     if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+		# if(result$reg_loess) p <- p + geom_smooth(size = .75, linetype = "dotdash")
     plots[[4]] <- p
 
 	plots[[5]] <- ggplot(mod, aes(x = .resid)) + geom_histogram() +
@@ -789,4 +771,3 @@ test_regression <- function(result = .regression()) {
 	reg_sub <- update(result, sub_formula)
 	anova(reg_sub, result, test='F')
 }
-
