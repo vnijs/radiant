@@ -177,7 +177,10 @@ twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
 		if(is.character(result))
 			return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
 
-		get(plot_name)()
+    withProgress(message = 'Making plot', value = 0, {
+      get(plot_name)()
+    })
+
 	}, width=get(widthFun), height=get(heightFun))
 
   return(tabsetPanel(
