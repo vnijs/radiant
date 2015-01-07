@@ -16,6 +16,10 @@ setInitValues <- function() {
   } else {
 
     backup_loaded <<- FALSE
+
+    # different proc for server?
+    # if(running_local)
+
     state_list <<- list()
     values <<- reactiveValues()
 
