@@ -146,9 +146,11 @@ observe({
     os_type <- .Platform$OS.type
     if (os_type == 'windows') {
       write.table(getdata(), "clipboard", sep="\t", row.names=FALSE)
-    } else {
+    } else if (Sys.info()["sysname"] == "Darwin") {
       write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE,
                   sep = '\t')
+    } else {
+      print("Saving data through the clipboard is not currently supported on Radiant server.")
     }
     updateRadioButtons(session = session, inputId = "saveAs",
                        label = "Save data:",
@@ -234,12 +236,14 @@ observe({
       if(is(dat, 'try-error'))
         dat <- c("Data from clipboard was not well formatted.
                  Try exporting the data to csv format.")
-    } else {
+    } else if (Sys.info()["sysname"] == "Darwin") {
 
       dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
       if(is(dat, 'try-error'))
         dat <- c("Data from clipboard was not well formatted.
                  Try exporting the data to csv format.")
+    } else {
+        dat <- c("Loading data through the clipboard is not currently supported on Radiant server.")
     }
 
 #     values[['xls_data']] <- as.data.frame(dat)
