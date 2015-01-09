@@ -76,11 +76,12 @@ output$report <- renderUI({
 
 valsRmd <- reactiveValues(knit = 0)
 
-tmp_file <- function(text){
-  tmp <- tempfile(tmpdir="/")
-  write(text, tmp)
-  tmp
-}
+# don't know what this is supposed to do - depracate
+# tmp_file <- function(text){
+#   tmp <- tempfile(tmpdir="/")
+#   write(text, tmp)
+#   tmp
+# }
 
 knitIt <- function(text) knitr::knit2html(text = text, quiet = TRUE, options=c("mathjax", "base64_images"),
                                           stylesheet = "../base/www/rmarkdown.css") %>% HTML
@@ -154,30 +155,68 @@ observe({
 updateReport <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = "",
                          sum_name = paste0("summary_",fun_name), plots_name = paste0("plots_",fun_name)) {
 
+  # deprecate in favor of update_report below
+
   cmd <- paste0("result <- ", sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)),
                 collapse="\n")
   cmd <- paste0(cmd, "\n", sum_name,"(result)\n", plots_name,"(result)")
   if(xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
   cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
-  updateReportFun(cmd)
+  update_report_fun(cmd)
+}
+
+#
+# test for update_report
+#
+
+# library(dplyr)
+# c("datasets", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
+#   setNames(as.list(.),.) -> base_sm_list
+
+# update_report(inp = base_sm_list, fun_name = "single_mean")
+# update_report(inp = base_sm_list, fun_name = "single_mean", pre = "",
+#                outputs = c(), figs = FALSE)
+
+# updating the report when called
+update_report <- function(inp, fun_name, pre_cmd = "result <- ",
+  outputs = c(paste0("summary_",fun_name), paste0("plots_",fun_name)),
+  figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
+
+  cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)),
+                collapse="\n")
+
+  for(i in outputs)
+    cmd <- paste0(cmd, "\n", i, "(result)")
+
+  if(xcmd != "")
+    cmd <- paste0(cmd, "\n", xcmd)
+
+  if(figs)
+    cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
+  else
+    cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
+
+  update_report_fun(cmd)
 }
 
 updateReportViz <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = "") {
 
+  # update_report should be able to handel this function - deprecate when tested
   cmd <- sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L))
   if(xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
   cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
-  updateReportFun(cmd)
+  update_report_fun(cmd)
 }
 
 updateReportMerge <- function(inp, fun_name) {
 
+  # update_report should be able to handel this function - deprecate when tested
   cmd <- sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L))
   cmd <- paste0("\n```{r }\n",cmd,"\n```\n")
-  updateReportFun(cmd)
+  update_report_fun(cmd)
 }
 
-updateReportFun <- function(cmd) {
+update_report_fun <- function(cmd) {
 
   if(!is.null(input$manualPaste) && input$manualPaste) {
     os_type <- .Platform$OS.type
@@ -186,18 +225,21 @@ updateReportFun <- function(cmd) {
     } else {
       cat(cmd, file = pipe("pbcopy"))
     }
+    # by setting cmd to "" nothing is added to the report
     cmd <- ""
   }
 
-  # should be rmd_selection be added here as well?
-  if(is.null(input$rmd_report)) {
-    if(is.null(state_list$rmd_report)) {
-      state_list$rmd_report <<- cmd
+  if(cmd != "") {
+    if(is.null(input$rmd_report)) {
+      if(is.null(state_list$rmd_report)) {
+        state_list$rmd_report <<- cmd
+      } else {
+        state_list$rmd_report <<- paste0(state_list$rmd_report,"\n",cmd)
+      }
     } else {
-      state_list$rmd_report <<- paste0(state_list$rmd_report,"\n",cmd)
+      updateAceEditor(session, "rmd_report",
+                      value = paste0(input$rmd_report,"\n",cmd))
     }
-  } else {
-    updateAceEditor(session, "rmd_report", value = paste0(input$rmd_report,"\n",cmd))
   }
 
   # move to the report panel

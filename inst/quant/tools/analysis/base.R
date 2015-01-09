@@ -22,7 +22,7 @@ output$ui_singleMean <- renderUI({
     		value = state_init('sm_sigLevel',.95), step = 0.01),
     	numericInput("sm_compValue", "Comparison value:", state_init('sm_compValue',0.0))
   	),
-		helpAndReport('Single mean','singleMean',inclMD("../quant/tools/help/singleMean.md"))
+		helpAndReport('Single mean','singleMean',inclMD("../quant/tools/help/single_mean.md"))
  	)
 })
 
@@ -156,21 +156,28 @@ observe({
 
 compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter, cm_select) {
 
-	dat <- na.omit(values[[datasets]])
 
-	if(cm_select != '') {
-	  selcom <- gsub(" ", "", cm_select)
- 	  seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
-	  if(!is(seldat, 'try-error')) {
-	    if(is.data.frame(seldat)) {
-	      dat <- seldat
-	      seldat <- NULL
-	    }
-	  }
-	}
+	#
+	#
+	# do you really need select here? maybe only if you have a factor, select
+	# the levels (id's) you want to use
+	#
+	#
+	dat <- values[[datasets]]
+
+	# if(cm_select != '') {
+	#   selcom <- gsub(" ", "", cm_select)
+ 	# 	  seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
+	#   if(!is(seldat, 'try-error')) {
+	#     if(is.data.frame(seldat)) {
+	#       dat <- seldat
+	#       seldat <- NULL
+	#     }
+	#   }
+	# }
 
 	vars <- c(var1,var2)
-	dat <- dat[,vars]
+	dat <- dat[,vars] %>% na.omit
 
 	if(!is.factor(dat[,var1])) {
 		cm_paired <- TRUE
