@@ -2,22 +2,23 @@
 # Single mean
 ###############################
 single_mean <- function(dataset, sm_var,
-                        data_set_filter = "",
+                        dataset_filter = "",
                         sm_comp_value = 0,
                         sm_alternative = 'two.sided',
                         sm_sig_level = .95) {
 
-	values[[dataset]][,sm_var] %>%
-		data.frame %>%
-  	set_names(sm_var) -> dat
-
-	# dat_filter <- values[[dataset_filter]]
+	if(exists("values"))
+		dat <- select_(values[[dataset]], sm_var)
+		# if a data_filter has been defined
+		# dat <- filter(dat, values[[dataset_filter]])
+	else
+		dat <- select_(get(dataset), sm_var)
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
-	       conf.level = sm_sig_level) %>%
-		tidy -> res
+	       conf.level = sm_sig_level) %>% tidy -> res
 
-  as.list(environment())
+  # as.list(environment())
+  environment() %>% as.list
 }
 
 summary_single_mean <- function(result = .single_mean()) {
@@ -35,7 +36,8 @@ summary_single_mean <- function(result = .single_mean()) {
 	}
 
 	cat("Null hyp.: the mean of", result$sm_var, "=", result$sm_comp_value, "\n")
-	cat("Alt. hyp.: the mean of", result$sm_var, "is", hyp_symbol, result$sm_comp_value, "\n\n")
+	cat("Alt. hyp.: the mean of", result$sm_var, "is", hyp_symbol,
+	    result$sm_comp_value, "\n\n")
 
 	# determine lower and upper % for ci
 	{100 * (1-result$sm_sig_level)/2} %>%

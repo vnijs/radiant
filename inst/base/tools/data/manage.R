@@ -190,7 +190,8 @@ output$downloadData <- downloadHandler(
 observe({
   # loading files from disk
   inFile <- input$uploadfile
-  if(!is.null(inFile) && !is.na(inFile)) {
+  # if(!is.null(inFile) && !is.na(inFile)) {
+  if(!is.null(inFile)) {
     isolate({
       # iterating through the files to upload
       for(i in 1:(dim(inFile)[1]))
@@ -201,7 +202,7 @@ observe({
 
 # loading all examples files (linked to helpfiles)
 observe({
-  if(is.null(input$loadExampleData) || input$loadExampleData == 0) return()
+  if(input$loadExampleData %>% not_pressed) return()
   isolate({
 
     # loading data bundled with Radiant
