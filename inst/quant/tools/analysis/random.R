@@ -39,25 +39,25 @@ output$random <- renderUI({
 
 	if(is.na(input$rnd_sample_size)) return("Please select a sample size of 1 or greater.")
 
-	random(input$datasets, input$rnd_var, input$rnd_sample_size)
+	random(input$dataset, input$rnd_var, input$rnd_sample_size)
 })
 
 observe({
   if(is.null(input$randomReport) || input$randomReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$rnd_var, input$rnd_sample_size)
+		inp <- list(input$dataset, input$rnd_var, input$rnd_sample_size)
 		updateReport(inp,"random")
   })
 })
 
-random <- function(datasets, rnd_var, rnd_sample_size) {
+random <- function(dataset, rnd_var, rnd_sample_size) {
 
 	# example list of names obtained from http://listofrandomnames.com
-# 	dat <- values[[datasets]]
+# 	dat <- values[[dataset]]
 # 	selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
 # 	return(list(sample = selDat, dat = dat))
 
-  dat <- values[[datasets]]
+  dat <- values[[dataset]]
   dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
   dat %>%
     arrange(desc(rnd_number)) %>%

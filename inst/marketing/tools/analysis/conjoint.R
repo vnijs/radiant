@@ -207,8 +207,7 @@ output$conjoint <- renderUI({
 
 .conjoint <- reactive({
 
-	ret_text <- "This analysis requires a dependent variable of type\ninteger or numeric and
-							one or more independent variables or type factor.\nPlease select another dataset."
+	ret_text <- "This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nPlease select another dataset."
 	if(is.null(input$ca_var1)) return(ret_text)
 	isFct <- "factor" == getdata_class()
  	vars <- varnames()[isFct]
@@ -216,7 +215,7 @@ output$conjoint <- renderUI({
 	if(is.null(input$ca_var2)) return("Please select one or more independent variables of type factor.")
 	if(is.null(inChecker(c(input$ca_var1, input$ca_var2)))) return(ret_text)
 
-	mod <- conjoint(input$datasets, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
+	mod <- conjoint(input$dataset, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
 		input$ca_plots, input$ca_scale_plot)
 
 	if(class(mod) != 'lm') return(mod)
@@ -239,15 +238,15 @@ observe({
   if(is.null(input$conjointReport) || input$conjointReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
+		inp <- list(input$dataset, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
 			input$ca_plots, input$ca_scale_plot)
 		updateReport(inp,"conjoint", round(7 * ca_plotWidth()/650,2), round(7 * ca_plotHeight()/650,2))
   })
 })
 
-conjoint <- function(datasets, ca_var1, ca_var2, ca_rev, ca_vif, ca_plots, ca_scale_plot) {
+conjoint <- function(dataset, ca_var1, ca_var2, ca_rev, ca_vif, ca_plots, ca_scale_plot) {
 
-	dat <- values[[datasets]]
+	dat <- values[[dataset]]
 	formula <- paste(ca_var1, "~", paste(ca_var2, collapse = " + "))
 
 	if(ca_rev) {
@@ -257,7 +256,7 @@ conjoint <- function(datasets, ca_var1, ca_var2, ca_rev, ca_vif, ca_plots, ca_sc
 
 	mod <- lm(formula, data = dat)
 
-	mod$datasets <- datasets
+	mod$dataset <- dataset
 	mod$ca_var2 <- ca_var2
 	mod$nrVars <- length(ca_var2)
 	mod$ca_vif <- ca_vif
@@ -324,7 +323,7 @@ plots_conjoint <- function(result = .conjoint()) {
 ca_theTable <- function(result = .conjoint()) {
 	if(is.character(result)) return(list("PW" = "No attributes selected."))
 
-	dat <- values[[result$datasets]]
+	dat <- values[[result$dataset]]
 	attr <- data.frame(dat[ ,result$ca_var2, drop = FALSE])
 
 	isFct <- sapply(attr,is.factor)
@@ -396,8 +395,8 @@ vif.conjoint <- function(result = .conjoint()) {
 }
 
 output$downloadPWs <- downloadHandler(
-	# filename = function() { paste(input$datasets[1], '_PWs.csv', sep='') },
-	filename = function() { paste(input$datasets, '_PWs.csv', sep='') },
+	# filename = function() { paste(input$dataset[1], '_PWs.csv', sep='') },
+	filename = function() { paste(input$dataset, '_PWs.csv', sep='') },
   content = function(file) {
 	  write.csv(ca_theTable()[['PW']], file = file, row.names = FALSE)
   }

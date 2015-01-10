@@ -170,8 +170,14 @@ updateReport <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = ""
 #
 
 # library(dplyr)
-# c("datasets", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
+# c("dataset", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
 #   setNames(as.list(.),.) -> base_sm_list
+
+
+# # removing elements that are NA!!
+# base_sm_list$sm_sig_level <- NA
+# base_sm_list <- base_sm_list[!is.na(base_sm_list)]
+# deparse(base_sm_list, control = c("keepNA"))
 
 # update_report(inp = base_sm_list, fun_name = "single_mean")
 # update_report(inp = base_sm_list, fun_name = "single_mean", pre = "",

@@ -2,25 +2,70 @@
 # Single mean
 ###############################
 
-single_mean <- function(datasets, sm_var, sm_comp_value = 0,
-                        sm_alternative = 'two.sided', sm_sig_level = .95) {
+# single_mean <- function(dataset, sm_var, sm_comp_value = 0,
+single_mean <- function(dataset, sm_var,
+                        data_set_filter = "",
+                        sm_comp_value = 0,
+                        sm_alternative = 'two.sided',
+                        sm_sig_level = .95) {
 
-	dat <- values[[datasets]][,sm_var]
+
+
+
+  # argg <- c(as.list(environment()), list(...))
+  # argg <- c(as.list(environment()))
+  # print(argg)
+
+
+
+
+	dat <- values[[dataset]][,sm_var]
+
+	# dat_filter <- values[[dataset_filter]]
+
 	res <- t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 		conf.level = sm_sig_level)
 
   data.frame(dat) %>%
   	set_names(sm_var) %>%
-  	list("dataset" = datasets, dat = .) -> xtra
+  	list("dataset" = dataset, dat = .) -> xtra
+
+
+
+
+  # print(as.list(match.call()))
+
+
+  # if you can pass the full function call then perhaps you should
+  # do broom::tidy here. That way you can use the function call
+  # names in the summary_ and plots_ which should make the code easier
+  # to read
+
+
 
 	list(res = res, xtra = xtra)
 }
+
+# values <- list()
+# values$mtcars <- mtcars
+# result <- single_mean("mtcars", "mpg")
+# summary_single_mean(result)
+# result <- single_mean("mtcars", "mpg", sm_comp_value = 10)
+# summary_single_mean(result)
+# result <- single_mean("mtcars", "mpg", sm_comp_value = 10,
+#                       sm_alternative = 'less', sm_sig_level = .90)
+# summary_single_mean(result)
+
+
 
 summary_single_mean <- function(result = .single_mean()) {
 	res <- result$res
 	dat <- result$xtra$dat
 	res$data.name <- names(dat)
 	cat("Data     :", result$xtra$dataset, "\n")
+
+	# cat("Filter   :", result$xtra$filter, "\n")
+
 	cat("Variable :", res$data.name, "\n")
 
 	if (res$alternative == "two.sided") {

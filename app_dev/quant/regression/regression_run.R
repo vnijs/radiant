@@ -1,16 +1,3 @@
-
-								###############################
-								###############################
-								###############################
-								# turn single_mean into a mini-package
-								# to see if you can (1) compile rmd outside
-								# of radiant, (2) report within radiant, and
-								# (3) see if you can embed the package ui in a
-								# dynamic document
-								###############################
-								###############################
-								###############################
-
 rm(list = ls())
 
 options(repos = c(CRAN = "http://cran.rstudio.com"))
@@ -23,7 +10,7 @@ library(shiny)
 library(magrittr)
 library(dplyr)
 
-setwd("~/Desktop/GitHub/radiant_dev/app_dev/quant/base")
+setwd("~/Desktop/GitHub/radiant_dev/app_dev/quant/regression")
 
 ui <- bootstrapPage(
 
@@ -31,7 +18,7 @@ ui <- bootstrapPage(
               choices = c("mtcars"),
     					selected = "mtcars",
     					multiple = FALSE),
-  uiOutput("single_mean")
+  uiOutput("regression")
 )
 
 server <- function(input, output, session) {
@@ -47,11 +34,20 @@ server <- function(input, output, session) {
 	source('../../../R/radiant.R', local = TRUE)
 
 	# dummy functions, help not tested (yet)
+  ##
+  ## Could this be a function that creates a popup of the text that
+  ## would be sent to the report function??
+  ##
 	help_and_report <- function(...) {}
+
+  ##
+  ## Could this be the same as inclMD in radiant.R but that it 'fixes'
+  ## the url to the help file? i.e., adds ../ as in paste0("../",path)
+  ##
 	inclMD <- function(...) {}
 
-	source("single_mean.R", local = TRUE)
-	source("single_mean_ui.R", local = TRUE)
+	source("regression.R", local = TRUE)
+	source("regression_ui.R", local = TRUE)
 }
 
 shinyApp(ui = ui, server = server)

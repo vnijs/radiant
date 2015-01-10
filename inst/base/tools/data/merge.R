@@ -4,7 +4,7 @@
 output$uiMergeDataset <- renderUI({
   datasetlist <- values$datasetlist
   if(length(datasetlist) < 2) return()
-  mdatasets <- datasetlist[-which(input$datasets == datasetlist)]
+  mdatasets <- datasetlist[-which(input$dataset == datasetlist)]
   selectInput(inputId = "mergeDataset", label = "Merge with:",
     choices = mdatasets, selected = state_init("mergeDataset"), multiple = FALSE)
 })
@@ -38,7 +38,7 @@ output$ui_Merge <- renderUI({
       uiOutput("uiMerge_vars"),
       conditionalPanel(condition = "output.uiMerge_vars != null",
         uiOutput("uiMerge_type"),
-        textInput("merge_name", "Data name:", state_init("merge_name",paste0("merged_",input$datasets))),
+        textInput("merge_name", "Data name:", state_init("merge_name",paste0("merged_",input$dataset))),
         actionButton('mergeData', 'Merge data')
       )
     ),
@@ -50,23 +50,23 @@ observe({
   # merging data
   if(is.null(input$mergeData) || input$mergeData == 0) return()
   isolate({
-    mergeData(input$datasets, input$mergeDataset, input$merge_vars, input$merge_type,
+    mergeData(input$dataset, input$mergeDataset, input$merge_vars, input$merge_type,
       input$merge_name)
   })
 })
 
-mergeData <- function(datasets, mergeDataset, merge_vars, merge_type, merge_name) {
+mergeData <- function(dataset, mergeDataset, merge_vars, merge_type, merge_name) {
 
   # gettin the join-type from the string
   tmpjoin <- get(merge_type)
-  values[[merge_name]] <- tmpjoin(values[[datasets]], values[[mergeDataset]], by = merge_vars)
+  values[[merge_name]] <- tmpjoin(values[[dataset]], values[[mergeDataset]], by = merge_vars)
   values[['datasetlist']] <- unique(c(merge_name,values[['datasetlist']]))
 }
 
 observe({
   if(is.null(input$mergeReport) || input$mergeReport == 0) return()
   isolate({
-    inp <- list(input$datasets, input$mergeDataset, input$merge_vars, input$merge_type, input$merge_name)
+    inp <- list(input$dataset, input$mergeDataset, input$merge_vars, input$merge_type, input$merge_name)
     updateReportMerge(inp,"mergeData")
   })
 })
@@ -80,7 +80,7 @@ output$mergePossible <- renderText({
 
 output$mergeData1 <- renderText({
   if(is.null(input$mergeDataset)) return()
-  show_data_snippet(title = paste("<h3>Data:",input$datasets,"</h3>"))
+  show_data_snippet(title = paste("<h3>Data:",input$dataset,"</h3>"))
 })
 
 output$mergeData2 <- renderText({

@@ -48,7 +48,7 @@ output$hierCluster <- renderUI({
 	ret_text <- "This analysis requires variables of type numeric or integer.\nPlease select another dataset."
 	if(is.null(inChecker(c(input$hc_vars)))) return(ret_text)
 
-	hierCluster(input$datasets, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
+	hierCluster(input$dataset, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
 		input$hc_cutoff)
 })
 
@@ -56,15 +56,15 @@ observe({
   if(is.null(input$hierClusterReport) || input$hierClusterReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
+		inp <- list(input$dataset, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
 			input$hc_cutoff)
 		updateReport(inp,"hierCluster")
   })
 })
 
-hierCluster <- function(datasets, hc_vars, hc_dist, hc_meth, hc_plots, hc_cutoff) {
+hierCluster <- function(dataset, hc_vars, hc_dist, hc_meth, hc_plots, hc_cutoff) {
 
-	dat <- na.omit( values[[datasets]][,hc_vars] ) 	# omitting missing values
+	dat <- na.omit( values[[dataset]][,hc_vars] ) 	# omitting missing values
 	dat <- scale(dat) 															# standardizing the data
 
 	if(hc_dist == "sq.euclidian") {
@@ -189,14 +189,14 @@ output$kmeansCluster <- renderUI({
 	ret_text <- "This analysis requires variables of type numeric or integer.\nPlease select another dataset."
 	if(is.null(inChecker(c(input$km_vars)))) return(ret_text)
 
-	kmeansCluster(input$datasets, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
+	kmeansCluster(input$dataset, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
 		input$km_nrClus)
 })
 
 observe({
   if(is.null(input$kmeansClusterReport) || input$kmeansClusterReport == 0) return()
   isolate({
-	  inp <- list(input$datasets, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
+	  inp <- list(input$dataset, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
 			input$km_nrClus)
 
 		# extra command to save cluster membership
@@ -205,13 +205,13 @@ observe({
   })
 })
 
-kmeansCluster <- function(datasets, km_vars, km_hcinit, km_dist, km_meth, km_seed, km_nrClus) {
+kmeansCluster <- function(dataset, km_vars, km_hcinit, km_dist, km_meth, km_seed, km_nrClus) {
 
-	dat <- na.omit( values[[datasets]][,km_vars] ) 					# omitting missing values
+	dat <- na.omit( values[[dataset]][,km_vars] ) 					# omitting missing values
 	dat <- scale(dat)
 
 	if(km_hcinit) {
-		hinit <- hierCluster(datasets, km_vars, km_dist, km_meth, "", 0)
+		hinit <- hierCluster(dataset, km_vars, km_dist, km_meth, "", 0)
 		clusmem <- cutree(hinit, k = km_nrClus)
 		cluscenters <- as.matrix(aggregate(dat,list(clusmem),mean)[-1])
 		km_res <- kmeans(na.omit(object = data.frame(dat)), centers = cluscenters, iter.max = 500)
@@ -225,7 +225,7 @@ kmeansCluster <- function(datasets, km_vars, km_hcinit, km_dist, km_meth, km_see
 	km_res$plotHeight <- 325 * (1 + floor((nrVars - 1) / 2))
 	km_res$plotWidth <- 325 * min(nrVars,2)
 
-	km_res$datasets <- datasets
+	km_res$dataset <- dataset
 	km_res$km_vars <- km_vars
 	km_res$km_nrClus <- km_nrClus
 
@@ -238,7 +238,7 @@ summary_kmeansCluster <- function(result = .kmeansCluster()) {
 	cat("Kmeans clustering with", nrClus, "clusters of sizes", paste0(result$size, collapse=", "),"\n\n")
 	cat("Cluster means:\n")
 
-	dat <- na.omit( values[[result$datasets]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
+	dat <- na.omit( values[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
 	cvar <- as.factor(result$cluster)
 	dat <- cbind(cvar,dat)
 	cnt <- ddply(dat, c("cvar"), colwise(mean))
@@ -262,7 +262,7 @@ summary_kmeansCluster <- function(result = .kmeansCluster()) {
 }
 
 plots_kmeansCluster <- function(result = .kmeansCluster()) {
-	dat <- na.omit( values[[result$datasets]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
+	dat <- na.omit( values[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
 	dat$clusvar <- as.factor(result$cluster)
 
 	plots <- list()
