@@ -6,16 +6,15 @@ if (.Platform$OS.type == 'windows') {
 }
 
 # setting path to miniCRAN
-# pth <- normalizePath("../../miniCRAN", winslash = "/")
+# setwd("~/Desktop/GitHub/radiant_dev/inst/base")
+pth <- normalizePath("../../launchers", winslash = "/")
 
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
 # loading the list of pkgs needed to run radiant
-# setwd("~/Desktop/GitHub/")
-# source(paste0(pth,"/pkgs.R"))
-source("../pkgs.R")
+source(paste0(pth,"/pkgs.R"))
 
 # setting the url for the miniCRAN
 # look to rady server first and then in the Rstudio CRAN
@@ -28,8 +27,6 @@ update.packages(lib.loc = local_dir, ask = FALSE)
 
 # install packages that are available but were not installed before
 to_inp <- new.packages(lib.loc = local_dir)
-
-#   if(length(to_inp) != 0) install.packages(to_inp, lib.loc = local_dir)
 if(length(to_inp) != 0)
 	install.packages(to_inp, local_dir, dependencies = TRUE)
 
