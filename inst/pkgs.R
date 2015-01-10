@@ -3,10 +3,9 @@ pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "vegan",
                "RColorBrewer", "wordcloud", "AlgDesign", "brew", "reshape2",
                "plyr", "markdown", "knitr", "rmarkdown", "testthat",
                "lubridate", "ggplot2", "shinyFiles", "shiny","magrittr",
-               "tidyr", "dplyr", "ggvis", "rvest")
+               "tidyr", "dplyr", "ggvis", "broom")
 pkgs_gh <- c("shinyAce")
-pkgs_new <- c("broom")
-pkgs <- c(pkgs_cran, pkgs_gh, pkgs_new)
+pkgs <- c(pkgs_cran, pkgs_gh)
 
 # remove plyr, and perhaps reshape2, when possible
 # Specify list of packages needed

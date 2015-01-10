@@ -28,8 +28,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
                  "RColorBrewer", "wordcloud", "AlgDesign", "brew", "reshape2",
                  "plyr", "markdown", "knitr", "rmarkdown", "testthat",
                  "lubridate", "ggplot2", "shinyFiles", "shiny","magrittr",
-                 "tidyr", "dplyr", "ggvis")
-  pkgs_gh <- c("shinyAce", "rvest")
+                 "tidyr", "dplyr", "ggvis","broom")
+  pkgs_gh <- c("shinyAce")
   pkgs <- c(pkgs_cran,pkgs_gh)
 
   suppressWarnings(
