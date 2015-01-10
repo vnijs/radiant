@@ -1,5 +1,5 @@
 shinyUI(
-  navbarPage("Radiant - Marketing Research", id = "nav_radiant", inverse = TRUE,
+  navbarPage("Radiant - Marketing", id = "nav_radiant", inverse = TRUE,
              collapsable = TRUE,
 
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
@@ -11,7 +11,8 @@ shinyUI(
   ),
 
   navbarMenu("Base",
-    tabPanel("Single mean", uiOutput("singleMean")),
+    # tabPanel("Single mean", uiOutput("singleMean")),
+    tabPanel("Single mean", uiOutput("single_mean")),
     tabPanel("Compare means", uiOutput("compareMeans")),
     tabPanel("Cross-tabs", uiOutput("crosstab"))
   ),

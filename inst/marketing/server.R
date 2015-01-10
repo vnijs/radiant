@@ -11,6 +11,10 @@ shinyServer(function(input, output, session) {
 	for(file in list.files(c("../quant/tools/analysis"), pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
 
+  # integrate components from app_dev
+	source('../../app_dev/quant/base/single_mean.R', local = TRUE)
+	source('../../app_dev/quant/base/single_mean_ui.R', local = TRUE)
+
 	# source additional analysis tools for marketing app
   for(file in list.files(c("tools/analysis"), pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)

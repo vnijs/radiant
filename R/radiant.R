@@ -60,10 +60,6 @@ changedata_names <- function(oldnames, newnames) {
 	return(colnames(values[[input$dataset]]) <- upnames)
 }
 
-inChecker <- function(tocheck) {
-	ifelse(sum(tocheck %in% varnames()) < length(tocheck), return(NULL), return('OK'))
-}
-
 getdata <- reactive({
 	values[[input$dataset]]
 })
@@ -87,9 +83,25 @@ varnames <- reactive({
 	vars
 })
 
+# are all variables in the currently selected dataset
+# deprecate in favor of not_available
+inChecker <- function(x)
+  ifelse(sum(x %in% varnames()) < length(x), NULL, return('OK'))
+
+# check if a variable is null or not in the data
+not_available <- function(x)
+  ifelse(is.null(x) || (sum(x %in% varnames()) < length(x)), TRUE, FALSE)
+
+# check if a button was NOT pressed
+not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+
+# is x some type of date variable
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
+
+# convert a date variable to character for printing
 d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
 
+# show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
 
   # not sure what happend to this next line

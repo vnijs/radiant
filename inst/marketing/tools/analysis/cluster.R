@@ -44,16 +44,15 @@ output$hierCluster <- renderUI({
 
 .hierCluster <- reactive({
 
-	if(is.null(input$hc_vars)) return("Please select one or more variables of type numeric or integer.")
-	ret_text <- "This analysis requires variables of type numeric or integer.\nPlease select another dataset."
-	if(is.null(inChecker(c(input$hc_vars)))) return(ret_text)
+	if(input$hc_vars %>% not_available)
+		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
 
 	hierCluster(input$dataset, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
 		input$hc_cutoff)
 })
 
 observe({
-  if(is.null(input$hierClusterReport) || input$hierClusterReport == 0) return()
+  if(input$hierClusterReport %>% not_pressed) return()
   isolate({
 
 		inp <- list(input$dataset, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
@@ -194,7 +193,7 @@ output$kmeansCluster <- renderUI({
 })
 
 observe({
-  if(is.null(input$kmeansClusterReport) || input$kmeansClusterReport == 0) return()
+  if(input$kmeansClusterReport %>% not_pressed) return()
   isolate({
 	  inp <- list(input$dataset, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
 			input$km_nrClus)
@@ -281,7 +280,7 @@ saveClusters <- function(result = .kmeansCluster()) {
 
 # save cluster membership when action button is pressed
 observe({
-	if(is.null(input$km_saveclus) || input$km_saveclus == 0) return()
+	if(input$km_saveclus %>% not_pressed) return()
 	isolate({
 		result <- .kmeansCluster()
 		if(is.character(result)) return()
