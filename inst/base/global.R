@@ -1,3 +1,6 @@
+# vim key bindings for shinyAce
+vimKeyBinding <<- FALSE
+
 if(Sys.getenv('SHINY_PORT') == "") {
   # install and load required packages
   source("../../launchers/dependencies.R", local = TRUE)
@@ -6,8 +9,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize=-1)
   running_local <<- TRUE
 
-  # vim key bindings for shinyAce
-  vimKeyBinding <<- FALSE
 
   # if running on my computer
   if(file.exists("~/Desktop/GitHub/radiant_dev")) {
@@ -16,7 +17,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
     # options(warn=0)
     # options(warn=2)
     # options(shiny.error=recover)
-    # vimKeyBinding <<- TRUE
+    vimKeyBinding <<- TRUE
   }
 
 } else {
