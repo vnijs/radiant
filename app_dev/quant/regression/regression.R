@@ -57,6 +57,15 @@ regression <- function(dataset, reg_var1, reg_var2,
 	# http://stackoverflow.com/questions/14397364/match-call-with-default-arguments
 
 
+  #
+  #
+  # use one of the following like in single mean
+  #
+  #
+
+  # print(as.list(match.call()))
+  # as.list(environment())
+
 	# list of inputs
 	mod$reg_predict_buttons <- reg_predict_buttons
 	mod$reg_predict <- reg_predict
