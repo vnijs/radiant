@@ -33,17 +33,8 @@ server <- function(input, output, session) {
 
 	source('../../../R/radiant.R', local = TRUE)
 
-	# dummy functions, help not tested (yet)
-  ##
-  ## Could this be a function that creates a popup of the text that
-  ## would be sent to the report function??
-  ##
+  # dummy functions, when using alternate functions styling is messed up
 	help_and_report <- function(...) {}
-
-  ##
-  ## Could this be the same as inclMD in radiant.R but that it 'fixes'
-  ## the url to the help file? i.e., adds ../ as in paste0("../",path)
-  ##
 	inclMD <- function(...) {}
 
 	source("regression.R", local = TRUE)

@@ -1,15 +1,10 @@
-
-								###############################
-								###############################
-								###############################
-								# turn single_mean into a mini-package
-								# to see if you can (1) compile rmd outside
-								# of radiant, (2) report within radiant, and
-								# (3) see if you can embed the package ui in a
-								# dynamic document
-								###############################
-								###############################
-								###############################
+###############################################
+# turn single_mean into a mini-package
+# to see if you can (1) compile rmd outside
+# of radiant, (2) report within radiant, and
+# (3) see if you can embed the package ui in a
+# dynamic document
+###############################################
 
 rm(list = ls())
 
@@ -46,9 +41,14 @@ server <- function(input, output, session) {
 
 	source('../../../R/radiant.R', local = TRUE)
 
-	# dummy functions, help not tested (yet)
+	# dummy functions, when using alternate functions styling is messed up
 	help_and_report <- function(...) {}
 	inclMD <- function(...) {}
+	# inclMD <- function(path) {
+	# 	path <- paste0("../../../inst/base/",path)
+ 	# 	markdown::markdownToHTML(path, options = c(""),
+ 	#                            stylesheet="../../../inst/base/www/empty.css")
+  #	}
 
 	source("single_mean.R", local = TRUE)
 	source("single_mean_ui.R", local = TRUE)
