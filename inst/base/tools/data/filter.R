@@ -21,7 +21,7 @@
 # observe({
 #   if(is.null(input$exploreReport) || input$exploreReport == 0) return()
 #   isolate({
-#     inp <- list(input$datasets, input$fil_columns, input$fil_filter)
+#     inp <- list(input$dataset, input$fil_columns, input$fil_filter)
 #     updateReport(inp,"rfilter")
 #   })
 # })
@@ -31,13 +31,13 @@
 #   if(is.null(inChecker(input$fil_columns))) return()
 #
 #   withProgress(message = 'Calculating', value = 0, {
-#     explore(input$datasets, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select, input$expl_show_tab, input$expl_show_viz)
+#     explore(input$dataset, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select, input$expl_show_tab, input$expl_show_viz)
 #   })
 # })
 #
-# explore <- function(datasets, expl_columns, expl_byvar, expl_function, expl_select, expl_show_tab, expl_show_viz) {
+# explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_select, expl_show_tab, expl_show_viz) {
 #
-#   dat <- values[[datasets]]
+#   dat <- values[[dataset]]
 #   if(expl_select != '') {
 #     selcom <- gsub(" ", "", expl_select)
 #     seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)

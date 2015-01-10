@@ -7,7 +7,7 @@ output$uiTool_var <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- vars[isNum]
   if(length(vars) == 0) return()
-  selectInput(inputId = "tool_var", label = "Variable (select one):", choices = vars, 
+  selectInput(inputId = "tool_var", label = "Variable (select one):", choices = vars,
   	selected = state_singlevar("tool_var",vars), multiple = FALSE)
 })
 
@@ -33,14 +33,14 @@ output$tool <- renderUI({
 	tool()
 })
 
-tool <- function(datasets, ...) {
+tool <- function(dataset, ...) {
 	# function for main analysis
 
   ...
 
   result <- list()
 
-  ... 
+  ...
 
   return(result)
 }

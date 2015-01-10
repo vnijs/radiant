@@ -44,7 +44,7 @@ output$ui_View <- renderUI({
 observe({
 #   if(is.null(input$view_subsbig_action) || input$view_subsbig_action == 0) return()
 #   isolate({
-#     values[[paste0(input$datasets,"_filter")]] <- input$view_subsbig_action
+#     values[[paste0(input$dataset,"_filter")]] <- input$view_subsbig_action
 #      updateCheckboxInput(session = session, "man_add_descr","Add/edit data description", FALSE)
 #   })
 })
@@ -52,7 +52,7 @@ observe({
 output$dataviewer <- renderDataTable({
 
   # if(isolate(input$datatabs) != 'View') return(invisible())
-  # if(is.null(input$datasets) || is.null(input$view_vars)) return()
+  # if(is.null(input$dataset) || is.null(input$view_vars)) return()
   if(is.null(input$view_vars)) return()
   # dat <- date2character()
   dat <- getdata()

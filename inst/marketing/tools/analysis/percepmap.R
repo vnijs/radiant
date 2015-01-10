@@ -89,14 +89,14 @@ output$pmap <- renderUI({
 	if(is.null(inChecker(c(input$pmap_brand, input$pmap_attr)))) return(ret_text)
 	if(length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
 
-	pmap(input$datasets, input$pmap_brand, input$pmap_attr, input$pmap_pref, input$pmap_dim_number,
+	pmap(input$dataset, input$pmap_brand, input$pmap_attr, input$pmap_pref, input$pmap_dim_number,
 		input$pmap_scaling, input$pmap_fontsz, input$pmap_cutoff, input$pmap_plot)
 })
 
 observe({
   if(is.null(input$pmapReport) || input$pmapReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$pmap_brand, input$pmap_attr, input$pmap_pref,
+		inp <- list(input$dataset, input$pmap_brand, input$pmap_attr, input$pmap_pref,
 			input$pmap_dim_number, input$pmap_scaling, input$pmap_fontsz, input$pmap_cutoff, input$pmap_plot)
 
 		# extra command to save factor scores
@@ -105,10 +105,10 @@ observe({
   })
 })
 
-pmap <- function(datasets, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pmap_scaling,
+pmap <- function(dataset, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pmap_scaling,
 	pmap_fontsz, pmap_cutoff, pmap_plot) {
 
-	dat <- values[[datasets]]
+	dat <- values[[dataset]]
 
 	nr.dim <- as.numeric(pmap_dim_number)
 	nr.attr <- length(pmap_attr)

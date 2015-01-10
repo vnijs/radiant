@@ -1,11 +1,17 @@
 # alternative hypothesis options
 base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 
-# list of inputs
-# base_sm_variables <- c("datasets", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level")
-c("datasets", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
-	setNames(as.list(.),.) -> base_sm_list
+# list of function arguments
+# c("dataset", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
+# 	setNames(as.list(.),.) -> base_sm_list
+args_sm <- as.list(formals(single_mean))
 
+# list of function inputs selected by user
+inputs_sm <- reactive({
+  for(i in names(args_sm))
+    args_sm[[i]] <- input[[i]]
+  args_sm
+})
 
 ###############################
 # Single mean
@@ -27,12 +33,13 @@ output$ui_single_mean <- renderUI({
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = base_alt,
-  	  	selected = state_init_list("sm_alternative","two.sided", base_alt),
+  	  	# selected = state_init_list("sm_alternative","two.sided", base_alt),
+        selected = state_init_list("sm_alternative",args_sm$sm_alternative, base_alt),
   	  	multiple = FALSE),
     	sliderInput('sm_sig_level',"Significance level:", min = 0.85, max = 0.99,
-    		value = state_init('sm_sig_level',.95), step = 0.01),
+    		value = state_init('sm_sig_level',args_sm$sm_sig_level), step = 0.01),
     	numericInput("sm_comp_value", "Comparison value:",
-    	             state_init('sm_comp_value',0.0))
+    	             state_init('sm_comp_value',args_sm$sm_comp_value))
   	),
   	help_and_report(modal_title = 'Single mean',
   	                fun_name = 'single_mean',
@@ -42,7 +49,7 @@ output$ui_single_mean <- renderUI({
 })
 
 # this is the name of the output that will be called from the main
-# radiant ui file
+# radiant ui.R file
 output$single_mean <- renderUI({
 
 		register_print_output("summary_single_mean", ".single_mean")
@@ -84,9 +91,10 @@ output$single_mean <- renderUI({
   	return("Please choose a comparison value.")
 
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(base_sm_list))
-  	base_sm_list[[i]] <- input[[i]]
-	do.call(single_mean, base_sm_list)
+  # for(i in names(args_sm))
+  # 	args_sm[[i]] <- input[[i]]
+
+	do.call(single_mean, inputs_sm())
 })
 
 
@@ -94,7 +102,7 @@ observe({
 
 	#
 	#
-	# yeugh. need to button-check function
+	# yeugh. need a button-check function
 	#
 	#
 
@@ -102,9 +110,9 @@ observe({
 
   isolate({
   	# loop needed because reactive values don't allow single bracket indexing
-  	for(i in names(base_sm_list))
-  		base_sm_list[[i]] <- input[[i]]
-		update_report(inp = base_sm_list, fun_name = "single_mean",
+    # for(i in names(args_sm))
+    #   args_sm[[i]] <- input[[i]]
+		update_report(inp = inputs_sm(), fun_name = "single_mean",
 		              outputs = c("summary_single_mean", "plots_single_mean"))
   })
 })

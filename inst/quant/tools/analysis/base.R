@@ -36,22 +36,22 @@ output$singleMean <- renderUI({
   rtext <- "This analysis requires a variable of type numeric or interval.\nPlease select another database"
  	if(is.null(input$sm_var)) return(rtext)
 	if(is.null(inChecker(c(input$sm_var)))) return(rtext)
-	singleMean(input$datasets, input$sm_var, input$sm_compValue, input$sm_alternative, input$sm_sigLevel)
+	singleMean(input$dataset, input$sm_var, input$sm_compValue, input$sm_alternative, input$sm_sigLevel)
 })
 
 observe({
   if(is.null(input$singleMeanReport) || input$singleMeanReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$sm_var, input$sm_compValue,
+		inp <- list(input$dataset, input$sm_var, input$sm_compValue,
 			input$sm_alternative, input$sm_sigLevel)
 		updateReport(inp,"singleMean")
   })
 })
 
-singleMean <- function(datasets, sm_var, sm_compValue = 0, sm_alternative = 'two.sided',
+singleMean <- function(dataset, sm_var, sm_compValue = 0, sm_alternative = 'two.sided',
 	sm_sigLevel = .95) {
 
-	dat <- values[[datasets]][,sm_var]
+	dat <- values[[dataset]][,sm_var]
 	result <- t.test(dat, mu = sm_compValue, alternative = sm_alternative,
 		conf.level = sm_sigLevel)
 	result$data <- data.frame(dat)
@@ -143,18 +143,18 @@ output$compareMeans <- renderUI({
 	if(is.null(input$cm_var2)) return("Please select a numeric or interval variable")
 	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
 
-	compareMeans(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
+	compareMeans(input$dataset, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
 })
 
 observe({
   if(is.null(input$compareMeansReport) || input$compareMeansReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
+		inp <- list(input$dataset, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
 		updateReport(inp,"compareMeans")
   })
 })
 
-compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter, cm_select) {
+compareMeans <- function(dataset, var1, var2, cm_alternative, cm_jitter, cm_select) {
 
 
 	#
@@ -163,7 +163,7 @@ compareMeans <- function(datasets, var1, var2, cm_alternative, cm_jitter, cm_sel
 	# the levels (id's) you want to use
 	#
 	#
-	dat <- values[[datasets]]
+	dat <- values[[dataset]]
 
 	# if(cm_select != '') {
 	#   selcom <- gsub(" ", "", cm_select)
@@ -314,22 +314,22 @@ output$singleProp <- renderUI({
   ret_text <- "This analysis requires a variable of type factor with two levels.\nPlease select another dataset."
   if(is.null(input$sp_var)) return(ret_text)
 
-  singleProp(input$datasets, input$sp_var, input$sp_compValue, input$sp_alternative, input$sp_sigLevel)
+  singleProp(input$dataset, input$sp_var, input$sp_compValue, input$sp_alternative, input$sp_sigLevel)
 })
 
 observe({
   if(is.null(input$singlePropReport) || input$singlePropReport == 0) return()
   isolate({
-    inp <- list(input$datasets, input$sp_var, input$sp_compValue,
+    inp <- list(input$dataset, input$sp_var, input$sp_compValue,
                 input$sp_alternative, input$sp_sigLevel)
     updateReport(inp,"singleProp")
   })
 })
 
-singleProp <- function(datasets, sp_var, sp_compValue = 0.5, sp_alternative = 'two.sided',
+singleProp <- function(dataset, sp_var, sp_compValue = 0.5, sp_alternative = 'two.sided',
                        sp_sigLevel = .95) {
 
-  dat <- values[[datasets]][,sp_var]
+  dat <- values[[dataset]][,sp_var]
 	lev <- levels(dat)
 	if(length(lev) >2) return("The selected variable has more than two levels.\nTry another variable or a cross-tab.")
 	prop <- sum(dat == rev(lev)[1])
@@ -418,7 +418,7 @@ output$crosstab <- renderUI({
 	ret_text <- "This analysis requires variables of type factor.\nPlease select another dataset."
  	if(is.null(input$ct_var1) || is.null(input$ct_var2)) return(ret_text)
 	if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
-	crosstab(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
+	crosstab(input$dataset, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
 		input$ct_std_residuals, input$ct_contrib)
 })
 
@@ -426,16 +426,16 @@ observe({
   if(is.null(input$crosstabReport) || input$crosstabReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
+		inp <- list(input$dataset, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
 			input$ct_std_residuals, input$ct_contrib)
 
 		updateReport(inp,"crosstab", round(7 * ct_plotWidth()/650,2), round(7 * ct_plotHeight()/650,2))
   })
 })
 
-crosstab <- function(datasets, ct_var1, ct_var2, ct_expected, ct_deviation, ct_std_residuals, ct_contrib) {
+crosstab <- function(dataset, ct_var1, ct_var2, ct_expected, ct_deviation, ct_std_residuals, ct_contrib) {
 
-  dat <- na.omit( values[[datasets]][,c(ct_var1,ct_var2)] )
+  dat <- na.omit( values[[dataset]][,c(ct_var1,ct_var2)] )
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
@@ -449,7 +449,7 @@ crosstab <- function(datasets, ct_var1, ct_var2, ct_expected, ct_deviation, ct_s
 	nrPlot <- 1 + sum(c(ct_expected,ct_deviation, ct_std_residuals))
 
 	cinp <- list()
-	cinp$datasets <- datasets
+	cinp$dataset <- dataset
 	cinp$ct_var1 <- ct_var1
 	cinp$ct_var2 <- ct_var2
 	cinp$ct_expected <- ct_expected
@@ -506,7 +506,7 @@ plots_crosstab <- function(result = .crosstab()) {
 
 	cinp <- result$cinp
 
-  dat <- na.omit( values[[cinp$datasets]][,c(cinp$ct_var1,cinp$ct_var2)] )
+  dat <- na.omit( values[[cinp$dataset]][,c(cinp$ct_var1,cinp$ct_var2)] )
 	# dat <- na.omit( getdata()[,c(cinp$ct_var1,cinp$ct_var2)] )
 	plots <- list()
 

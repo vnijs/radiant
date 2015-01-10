@@ -80,23 +80,23 @@ output$mds <- renderUI({
 	if(is.null(input$mds_id2) || is.null(input$mds_dis)) return(ret_text)
 	if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
 
-	mds(input$datasets, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
+	mds(input$dataset, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
 			input$mds_non_metric, input$mds_dim_number, input$mds_fontsz)
 })
 
 observe({
   if(is.null(input$mdsReport) || input$mdsReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
+		inp <- list(input$dataset, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
 			input$mds_non_metric, input$mds_dim_number, input$mds_fontsz)
 		updateReport(inp,"mds", round(7 * mds_plotWidth()/650,2), round(7 * mds_plotHeight()/650,2))
   })
 })
 
-mds <- function(datasets, mds_id1, mds_id2, mds_dis, mds_rev_dim,
+mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
                 mds_non_metric, mds_dim_number, mds_fontsz) {
 
-	dat <- values[[datasets]]
+	dat <- values[[dataset]]
 
 	nr.dim <- as.numeric(mds_dim_number)
 

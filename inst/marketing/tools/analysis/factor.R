@@ -28,20 +28,20 @@ output$preFactor <- renderUI({
 .preFactor <- reactive({
 	# for main analysis
 	if(is.null(input$preFactor_vars) || length(input$preFactor_vars) < 2) return("Please select two or more numeric variables")
-	preFactor(input$datasets, input$preFactor_vars)
+	preFactor(input$dataset, input$preFactor_vars)
 })
 
 observe({
   if(is.null(input$preFactorReport) || input$preFactorReport == 0) return()
   isolate({
-		inp <- list(input$datasets, input$preFactor_vars)
+		inp <- list(input$dataset, input$preFactor_vars)
 		updateReport(inp,"preFactor")
   })
 })
 
-preFactor <- function(datasets, preFactor_vars) {
+preFactor <- function(dataset, preFactor_vars) {
 	# for main analysis
-	dat <- na.omit( values[[datasets]][,preFactor_vars] )
+	dat <- na.omit( values[[dataset]][,preFactor_vars] )
 	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
   cmat <- cor(dat)
@@ -166,7 +166,7 @@ output$fullFactor <- renderUI({
 	ret_text <- "This analysis requires a multiple variables of type\nnumeric or integer.\nPlease select another dataset."
 	if(is.null(inChecker(c(input$factor_vars)))) return(ret_text)
 
-	fullFactor(input$datasets, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
+	fullFactor(input$dataset, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
 		input$fac_sort, input$fac_rotation)
 })
 
@@ -174,7 +174,7 @@ observe({
   if(is.null(input$fullFactorReport) || input$fullFactorReport == 0) return()
   isolate({
 
-		inp <- list(input$datasets, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
+		inp <- list(input$dataset, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
 			input$fac_sort, input$fac_rotation)
 
 		# extra command to save factor scores
@@ -185,10 +185,10 @@ observe({
   })
 })
 
-fullFactor <- function(datasets, factor_vars, fac_method, fac_number, fac_cutoff,
+fullFactor <- function(dataset, factor_vars, fac_method, fac_number, fac_cutoff,
 			fac_sort, fac_rotation) {
 
-	dat <- na.omit( values[[datasets]][,factor_vars] )
+	dat <- na.omit( values[[dataset]][,factor_vars] )
 	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
 	nrFac <- max(1,as.numeric(fac_number), na.rm = TRUE)

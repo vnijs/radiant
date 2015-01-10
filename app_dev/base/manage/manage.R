@@ -75,7 +75,7 @@ output$ui_Manage <- renderUI({
 observe({
   if(is.null(input$updateDescr) || input$updateDescr == 0) return()
   isolate({
-    values[[paste0(input$datasets,"_descr")]] <- input$man_data_descr
+    values[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr",
                         "Add/edit data description", FALSE)
   })
@@ -83,7 +83,7 @@ observe({
 
 # managing the description of the dataset
 dataDescriptionOutput <- function(ret = 'html') {
-  descr <- values[[paste0(input$datasets,"_descr")]]
+  descr <- values[[paste0(input$dataset,"_descr")]]
   if(is.null(descr) || descr == "") {
     return("")  # if there is no data description
   } else {
@@ -148,11 +148,11 @@ observe({
 })
 
 output$downloadData <- downloadHandler(
-  filename = function() { paste(input$datasets,'.',input$saveAs, sep='') },
+  filename = function() { paste(input$dataset,'.',input$saveAs, sep='') },
   content = function(file) {
 
     ext <- input$saveAs
-    robj <- input$datasets
+    robj <- input$dataset
 
     if(ext == 'rda') {
       if(input$man_data_descr != "") {
@@ -206,7 +206,7 @@ observe({
     # sorting files alphabetically
     values[['datasetlist']] <- sort(values[['datasetlist']])
 
-    updateSelectInput(session, "datasets", label = "Datasets:",
+    updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = values$datasetlist,
                       selected = values$datasetlist[1])
   })
@@ -241,7 +241,7 @@ observe({
                                                "state" = "state"),
                        selected = "rda")
 
-    updateSelectInput(session, "datasets", label = "Datasets:",
+    updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = values$datasetlist, selected = 'xls_data')
   })
 })
@@ -276,7 +276,7 @@ loadUserData <- function(filename, uFile, ext) {
                                   stringsAsFactors=input$man_str_as_factor)
   }
 
-  updateSelectInput(session, "datasets", label = "Datasets:",
+  updateSelectInput(session, "dataset", label = "Datasets:",
                     choices = values$datasetlist,
                     selected = values$datasetlist[1])
 }
@@ -320,15 +320,15 @@ observe({
   if(is.null(input$data_rename)) return()
   if(is.null(input$renameButton) || input$renameButton == 0) return()
   isolate({
-    values[[input$data_rename]] <- values[[input$datasets]]
-    values[[input$datasets]] <- NULL
-    values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$datasets,"_descr")]]
-    values[[paste0(input$datasets,"_descr")]] <- NULL
+    values[[input$data_rename]] <- values[[input$dataset]]
+    values[[input$dataset]] <- NULL
+    values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$dataset,"_descr")]]
+    values[[paste0(input$dataset,"_descr")]] <- NULL
 
-    ind <- which(input$datasets == values[['datasetlist']])
+    ind <- which(input$dataset == values[['datasetlist']])
     values[['datasetlist']][ind] <- input$data_rename
 
-    updateSelectInput(session, "datasets", label = "Datasets:", choices = values$datasetlist,
+    updateSelectInput(session, "dataset", label = "Datasets:", choices = values$datasetlist,
                       selected = input$data_rename)
   })
 })
@@ -336,8 +336,8 @@ observe({
 output$uiDatasets <- renderUI({
   # Drop-down selection of data set
   list(wellPanel(
-    selectInput(inputId = "datasets", label = "Datasets:", choices = values$datasetlist,
-      selected = state_init("datasets"), multiple = FALSE),
+    selectInput(inputId = "dataset", label = "Datasets:", choices = values$datasetlist,
+      selected = state_init("dataset"), multiple = FALSE),
     conditionalPanel(condition = "input.datatabs == 'Manage'",
       checkboxInput("man_add_descr","Add/edit data description", FALSE),
       conditionalPanel(condition = "input.man_add_descr == true",
@@ -353,7 +353,7 @@ output$uiDatasets <- renderUI({
 
 output$uiRename <- renderUI({
   list(
-    textInput("data_rename", "", input$datasets),
+    textInput("data_rename", "", input$dataset),
     actionButton('renameButton', 'Rename')
   )
 })
@@ -364,7 +364,7 @@ output$htmlDataExample <- renderText({
   if(is.null(dat)) return()
 
   # Show only the first 10 (or 30) rows
-  descr <- values[[paste0(input$datasets,"_descr")]]
+  descr <- values[[paste0(input$dataset,"_descr")]]
   nshow <- 10
   if(is.null(descr) || descr == "") nshow <- 30
 

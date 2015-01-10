@@ -120,7 +120,7 @@ output$visualize <- renderPlot({
 .visualize <- reactive({
   # need dependency on ..
   input$viz_plot_height; input$viz_plot_width
-  visualize(input$datasets, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple,
+  visualize(input$dataset, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple,
             input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_line, input$viz_loess,
             input$viz_jitter)
 })
@@ -128,7 +128,7 @@ output$visualize <- renderPlot({
 observe({
   if(is.null(input$visualizeReport) || input$visualizeReport == 0) return()
   isolate({
-    inp <- list(input$datasets, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple,
+    inp <- list(input$dataset, input$vizvars1, input$vizvars2, input$viz_select, input$viz_multiple,
                 input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_line,
                 input$viz_loess, input$viz_jitter)
     updateReportViz(inp,"visualize", round(7 * viz_plot_width()/650,2),
@@ -136,11 +136,11 @@ observe({
   })
 })
 
-visualize <- function(datasets, vizvars1, vizvars2, viz_select, viz_multiple, viz_facet_row,
+visualize <- function(dataset, vizvars1, vizvars2, viz_select, viz_multiple, viz_facet_row,
                       viz_facet_col, viz_color, viz_line, viz_loess, viz_jitter) {
 
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
-  dat <- values[[datasets]]
+  dat <- values[[dataset]]
   if(sum(vizvars1 %in% colnames(dat)) != length(vizvars1)) return()
 
   if(viz_select != '') {

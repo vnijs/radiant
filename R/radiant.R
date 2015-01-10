@@ -50,14 +50,14 @@ saveStateOnCrash <- function(session = session)
 ################################################################
 changedata <- function(addCol, addColName = "") {
 	if(nrow(getdata()) == nrow(addCol) && addColName[1] != "") {
-  	return(values[[input$datasets]][,addColName] <- addCol)
+  	return(values[[input$dataset]][,addColName] <- addCol)
 	}
 }
 
 changedata_names <- function(oldnames, newnames) {
-	upnames <- colnames(values[[input$datasets]])
+	upnames <- colnames(values[[input$dataset]])
 	upnames[which(upnames %in% oldnames)] <- newnames
-	return(colnames(values[[input$datasets]]) <- upnames)
+	return(colnames(values[[input$dataset]]) <- upnames)
 }
 
 inChecker <- function(tocheck) {
@@ -65,7 +65,7 @@ inChecker <- function(tocheck) {
 }
 
 getdata <- reactive({
-	values[[input$datasets]]
+	values[[input$dataset]]
 })
 
 getdata_class <- reactive({
@@ -90,7 +90,7 @@ varnames <- reactive({
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
 
-show_data_snippet <- function(dat = input$datasets, nshow = 5, title = "") {
+show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
 
   # not sure what happend to this next line
   # leaving line for now (1/7/2015). remove if no issues pop up
@@ -238,7 +238,7 @@ register_plot_output <- function(fun_name, rfun_name,
 
 # the 1/2015 version
 statTabPanel2 <- function(menu, tool, tool_ui, output_panels,
-                          data = input$datasets) {
+                          data = input$dataset) {
   sidebarLayout(
     sidebarPanel(
       wellPanel(
@@ -267,7 +267,7 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
         HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
         HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
         if(!tool %in% c("Central Limit Theorem", "Sample size", "Create profiles"))
-	        HTML(paste("<label><strong>Data:",input$datasets,"</strong></label>"))
+	        HTML(paste("<label><strong>Data:",input$dataset,"</strong></label>"))
       ),
       uiOutput(paste0("ui_",fun_label))
     ),
