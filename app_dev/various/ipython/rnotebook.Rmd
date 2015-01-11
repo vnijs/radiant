@@ -1,3 +1,0 @@
-## rnotebook: iPython in Shiny?
-
-See discussion: https://github.com/yihui/rnotebook/issues/1
