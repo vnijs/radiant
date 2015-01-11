@@ -4,6 +4,10 @@
 # of radiant, (2) report within radiant, and
 # (3) see if you can embed the package ui in a
 # dynamic document
+
+# From previous setup ...
+# install.packages('radiant',repos=c("http://vnijs.rady.ucsd.edu/site_media/R", CRAN = "http://cran.rstudio.com"), dependencies = TRUE)
+# shiny::runApp(system.file('marketing', package='radiant'), port = 8100)
 ###############################################
 
 rm(list = ls())

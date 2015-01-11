@@ -4,7 +4,7 @@
 single_mean <- function(dataset, sm_var,
                         dataset_filter = "",
                         sm_comp_value = 0,
-                        sm_alternative = 'two.sided',
+                        sm_alternative = "two.sided",
                         sm_sig_level = .95) {
 
 	if(exists("values"))

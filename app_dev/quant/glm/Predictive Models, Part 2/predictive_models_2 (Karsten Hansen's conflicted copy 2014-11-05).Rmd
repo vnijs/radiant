@@ -1,0 +1,294 @@
+---
+title: "Predictive Models in R, Part 2"
+author: " "
+date: ""
+output:
+  ioslides_presentation:    
+    transition: faster
+    widescreen: true
+    fig_retina: 2
+    mathjax: default
+    smaller: false
+---
+
+
+<style>
+  .bigtext {
+     text-align:center;     
+     font-size:150%;
+  }
+</style>
+
+
+<!-- ## set options ## -->
+```{r, echo=FALSE,message=FALSE,warnings=FALSE}
+library(knitr)
+opts_chunk$set(fig.width=3, 
+               fig.height=3,
+               echo=TRUE,
+               warning=FALSE,
+               message=FALSE)
+```
+
+<!-- ## read chunks ## -->
+```{r, echo=FALSE}
+read_chunk("chunks/chunksA.r")
+```
+
+```{r load.libs, echo=FALSE}
+```
+
+## Predicting Binary Events
+
+- Given characteristics of a user and an ad, what is the probability that a user will click on an online ad?
+- Given characteristics of a patient, what is the probability that the patient is Type 2 diabetic?
+- Given characteristics of a loan application, what is the probability of default?
+- Given user characteristics, what is the probability of churn?
+
+
+## Scenario       
+
+<div class="columns-2">
+
+- Imagine you are about to board the Titanic 
+- Who would you rather be - Jack or Rose? 
+- Who has the highest probability of surviving? 
+
+
+<img src="images/jack_rose.jpg" align="middle" alt="WWW" width="300" height="300">
+
+<img src="images/titanic_sinking.jpg" align="middle" alt="WWW" width="300" height="300">
+
+## Titanic Survival Data {.smaller}
+
+```{r}
+## load data 
+load('data/titanic2.rda')
+head(titanic)
+```
+
+
+## Survival Counts
+
+```{r,fig.height=2.75,fig.width=4.5, echo=FALSE}
+titanic %>%
+  ggplot(aes(x=pclass,fill=survived)) + geom_bar(position='dodge') + xlab('Passenger Class')
+
+titanic %>%
+  ggplot(aes(x=sex,fill=survived)) + geom_bar(position='dodge') + xlab('Gender')
+
+titanic %>%
+  filter(!age=='NA') %>%
+  mutate(age.f=cut(age,breaks=c(0,20,30,40,50,60,100))) %>%
+  ggplot(aes(x=age.f,fill=survived)) + geom_bar(position='dodge') + xlab('Age') 
+```
+
+## Logit Model {.smaller}
+
+- A model for predicting the outcome of binary event
+- Model describes probability of outcome as a function of X variables 
+- The Logit model is 
+$$
+{\rm Pr(Y=1|X)} = \frac{\exp\lbrace \beta_1 X_1 + \beta_2 X_2 +... \rbrace }{1 + \exp\lbrace \beta_1 X_1 + \beta_2 X_2 +... \rbrace }
+$$
+
+- If we know $\beta$ we can predict probabilities for each $X$
+
+- In the Titanic example we can let $X$ consist of gender, age and class of travel
+
+## Example  {.smaller}
+
+$$
+{\rm Pr(Y=1|X)} = \frac{\exp\lbrace -2 + 0.06*age \rbrace }{1 + \exp\lbrace -2 + 0.06*age \rbrace }
+$$
+$$
+{\rm Pr(Y=1|X)} = \frac{\exp\lbrace -0.8 - 0.5 D_{0-20}  -0.4 D_{20-40} ...  \rbrace }{1 + \exp\lbrace -0.8 - 0.5 D_{0-20} - D_{20-40} ... \rbrace }
+$$
+
+
+```{r,fig.height=3,fig.width=3.5,echo=FALSE}
+age=seq(1,90,5)
+plot.df1 <- data.frame(age,pr = exp(-2.0 + 0.06*age)/(1.0 + exp(-2.0 + 0.06*age)), version='Continuous Age')
+
+age=c('0-20','20-40','40-50','50-60','60+')            
+plot.df2 <- data.frame(age,
+                      pr = c(exp(-1.0 + 0.20)/(1.0 + exp(-1.0 + 0.20)),
+                             exp(-1.0 - 0.30)/(1.0 + exp(-1.0 - 0.30)),
+                             exp(-1.0 - 0.20)/(1.0 + exp(-1.0 - 0.20)),
+                             exp(-1.0 + 0.60)/(1.0 + exp(-1.0 + 0.60)),
+                             exp(-1.0 + 1.20)/(1.0 + exp(-1.0 + 1.20))),
+                      version='Age Groups')
+
+ggplot(data=plot.df1,aes(x=age,y=pr)) + geom_line() + ylab('Prob.')+xlab('Age') + ggtitle('Continuous Age')
+ggplot(data=plot.df2,aes(x=age,y=pr,group=1)) + geom_point() + geom_line(linetype='dotted') + ylab('Prob.')+xlab('Age')+ ggtitle('Age Groups')
+```
+
+
+## Logit Model in R {.smaller}
+
+```{r titanic.logit.A}
+```
+
+- Here we defined the dependent variable as a logical
+- We are modelling the probability that the logical is TRUE (i.e., person survived)
+- R will calibrate the $\beta$'s to give the best fit to the data
+
+## What do the $\beta$'s look like? {.smaller}
+
+```{r}
+summary(logit.titanic.A)$coefficients
+```
+
+- What does this mean?
+- Start with the baseline passenger: 1st class, female, 20 years or younger. The predicted survival probability for this group is 
+
+$$
+Pr(Surv|base)=  \frac{\exp (2.932)}{1.0 + \exp(2.932)} \approx 0.95
+$$
+
+## Interpreting the $\beta$'s {.smaller}
+
+- Suppose the same person (female, 20 years or younger) travelled on 2nd class?
+
+$$
+Pr(Surv|female, age 20, 2nd class)=  \frac{\exp (2.932 -  1.192)}{1.0 + \exp(2.932 - 1.192)} \approx 0.85
+$$
+
+- 3rd Class:
+
+$$
+Pr(Surv|female, age 20, 3rd class)=  \frac{\exp (2.932 - 2.15)}{1.0 + \exp(2.932 - 2.15)} \approx 0.69
+$$
+
+## Predicting Survival for All Groups {.smaller}
+
+```{r pred.logit.A}
+```
+
+
+- The array pred.df contains the data for the passenger groups for which we want to form predictions
+- The **predict** command will make the predictions for these group using the logit model 
+- Visualize the predictions: 
+
+```{r plot.predictions.logit.A, eval=FALSE}
+```
+
+## Predictions 
+
+```{r plot.predictions.logit.A, echo=FALSE,fig.height=5,fig.width=10.5}
+```
+
+## Plot of $\beta$ estimates {.smaller}
+
+<div class="columns-2">
+
+```{r plot.beta.estimates, echo=TRUE,eval=FALSE}
+```
+
+
+```{r plot.beta.estimates, echo=FALSE,eval=TRUE, fig.height=5,fig.width=4}
+```
+
+
+## Adding an Interaction
+
+- Question: Is the effect passenger class different for males and females? 
+
+```{r logit.titanic.B}
+```
+
+## Result
+
+```{r pred.logit.B,echo=FALSE,fig.height=5,fig.width=10.5}
+```
+
+## Case Study:  Who doesn't wear seat belts? 
+
+<div class="columns-2">
+
+
+<img src="images/dog.bmp" align="middle" alt="WWW" width="350" height="350">
+
+<img src="images/SeatBeltlaws.gif" align="middle" alt="WWW" width="300" height="400">
+
+## Objectives {.smaller}
+
+```{r, echo=FALSE}
+load('data/brfss11_sub.rda')
+```
+- <div class="red2"> You have been tasked with designing a marketing communications campaign to promote seat bealt usage </div>
+- <div class="red2"> Who should this campaign target? </div>
+
+- Data: 2011 wave of the Behavioral Risk Factor Surveillance System (**brfs11_sub.rda**)
+- Annual survey conducted by the [CDC](http://www.cdc.gov/brfss/)
+- `r  prettyNum(dim(brfss11)[1],big.mark=",",scientific=F)` respondents 
+- Key question: "How often do you use seat belts when you drive or ride in a car?"
+
+```{r, echo=FALSE, fig.height=3,fig.width=6,fig.align='center'}
+ggplot(data=brfss11,aes(x=SEATBELT)) + geom_bar()
+```
+
+## Data Set-up {.smaller}
+
+```{r,load.seatbelt.data}
+```
+
+- EDU=Highest level of education of respondent
+- INCOME=Annual household income of respondent
+- AGE=Age group of respondent
+- Red_Blue=Political orientiation of respondent's home state 
+- State=Name of respondent's home state
+
+## Click Analytics {.smaller}
+
+- The file **clicks.rda** contains 973,683 instances of online users being exposed to an ad. 
+- The data is colleced over a 4 hour period.
+- This data is heavily masked for proprietary reasons
+- Variables are
+
+1. click = Did the user click on the ad? (1=yes,0=no)
+2. hour = Index for hour 
+3. banner_pos = Position of ad on page
+4. site_id = web site id
+5. site_category = web site category
+6. app_category = Application category
+7. device_os = Operation sytem of device
+8-11. C18,21,C24 = Masked variables 
+
+## Can You Predict Clicks? 
+
+You are web developer interested in making advertising dollars. What type of web site ("category") should you develop? 
+
+<!--
+## {.flexbox .vcenter}
+
+<div class="bigtext">
+Predicting Binary Events
+</div>
+
+
+## Examples
+
+- list of examples 
+
+## Titanic
+
+## Seatbelts
+
+## Some Marketing App
+-->
+
+
+
+
+
+
+
+
+
+       
+ 
+
+
+
+
