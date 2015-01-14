@@ -15,8 +15,8 @@ if(R_loc == "") {
   pth <- normalizePath(paste0(script_dir,'/../../launchers'),winslash='/')
   # mcran <- paste0("file:///",pth)
   # options(repos = c(CRAN = mcran))
-  options(repos = "http://vnijs.rady.ucsd.edu/site_media/R")
-
+  # options(repos = "http://vnijs.rady.ucsd.edu/site_media/R")
+  options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
   source(paste0(pth,"/pkgs.R"))
 
   # udpate old-packages
