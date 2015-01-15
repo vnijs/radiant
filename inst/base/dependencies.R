@@ -1,18 +1,6 @@
-# Windows or Mac
-if (.Platform$OS.type == 'windows') {
-  Sys.setlocale(category = 'LC_ALL','English_United States.1252')
-} else {
-  Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
-}
-
-# setting path to miniCRAN
-# setwd("~/Desktop/GitHub/radiant_dev/inst/base")
-pth <- normalizePath("../../launchers", winslash = "/")
-
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-
 
 # setting the url for the miniCRAN, using XRAN as in yihui/xran :)
 # options(repos = c(XRAN="http://vnijs.rady.ucsd.edu/site_media/R", CRAN="http://cran.rstudio.com"))
@@ -25,11 +13,11 @@ options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 # installed.packages() %>% rownames
 
 # list of pkgs needed to run radiant
-pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan",
-          "RColorBrewer", "wordcloud", "AlgDesign", "brew",
-          "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
-          "testthat", "lubridate", "ggplot2", "shiny","magrittr",
-          "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
+# pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan",
+#           "RColorBrewer", "wordcloud", "AlgDesign", "brew",
+#           "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
+#           "testthat", "lubridate", "ggplot2", "shiny","magrittr",
+#           "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
 
 # udpate old-packages
 update.packages(lib.loc = local_dir, ask = FALSE)
