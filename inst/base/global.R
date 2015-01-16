@@ -4,7 +4,7 @@ pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
           "knitr", "rmarkdown", "testthat", "lubridate", "ggplot2", "shiny",
           "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
 
-# vim key bindings for shinyAce
+# vim key bindings for shinyAce ... which don't work well
 vimKeyBinding <<- FALSE
 
 if(Sys.getenv('SHINY_PORT') == "") {
@@ -43,7 +43,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize=5*1024^2)
 
   suppressWarnings(
-    sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
+    Sys.getenv("R_LIBS_USER") %>%
+      sapply(pkgs, require, lib.loc = ., character.only=TRUE)
   )
  }
 
