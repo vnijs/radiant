@@ -6,8 +6,13 @@
 # using a function here so it can also be called from quit.R to reset the app
 setInitValues <- function() {
   # initialize state list and reactive values
+
+  # if the state_list list already exists this was just a refresh so don't reset
+  if(exists("state_list")) return()
+
   pth <- "~/radiant_temp/state"
   filename = paste0(pth,"/RadiantState-",Sys.Date(),".rsf")
+
   if(file.exists(filename)) {
     load(filename)
     if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
@@ -16,9 +21,6 @@ setInitValues <- function() {
   } else {
 
     backup_loaded <<- FALSE
-
-    # different proc for server?
-    # if(running_local)
 
     state_list <<- list()
     values <<- reactiveValues()
@@ -42,7 +44,6 @@ setInitValues <- function() {
 setInitValues()
 
 source('../../R/radiant.R', local = TRUE)
-
 
 # state_singlevar <- function(inputvar, vars) vars[vars == state_list[[inputvar]]]
 # state_multvar <- function(inputvar, vars) vars[vars %in% state_list[[inputvar]]]
