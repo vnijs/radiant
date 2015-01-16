@@ -43,8 +43,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize=5*1024^2)
 
   suppressWarnings(
-    Sys.getenv("R_LIBS_USER") %>%
-      sapply(pkgs, require, lib.loc = ., character.only=TRUE)
+      sapply(pkgs, require, lib.loc = Sys.getenv("R_LIBS_USER"),
+             character.only=TRUE)
   )
  }
 
