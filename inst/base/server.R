@@ -1,7 +1,6 @@
 shinyServer(function(input, output, session) {
 
 	# source shared functions
-	source('init.R', local = TRUE)
 	source('radiant.R', local = TRUE)
 
 	# source data & analysis tools

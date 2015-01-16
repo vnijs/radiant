@@ -3,21 +3,17 @@ args <- commandArgs(trailingOnly = TRUE)
 script_dir <- args[1]
 class_app <- args[2:3]
 
-# get the pkgs information from the repo on github
-# source("http://mostly-harmless.github.io/radiant_miniCRAN/pkgs.R")
-# pkgs
-
 # setting the url for the miniCRAN
 local_dir <- Sys.getenv("R_LIBS_USER")
-# if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-# pth <- normalizePath(paste0(script_dir,'/../../miniCRAN'),winslash='/')
+if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+pth <- normalizePath(paste0(script_dir,'/../../miniCRAN'),winslash='/')
 # mcran <- paste0("file:///",pth)
 # options(repos = c(CRAN = mcran))
 # options(repos = "http://vnijs.rady.ucsd.edu/site_media/R")
 options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 
 # install.packages('shiny', local_dir, dependencies = TRUE)
-# source(paste0(pth,"/pkgs.R"))
+source(paste0(pth,"/pkgs.R"))
 
 # udpate old-packages
 update.packages(lib.loc = local_dir, ask = FALSE)
