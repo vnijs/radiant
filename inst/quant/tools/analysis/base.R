@@ -2,87 +2,6 @@
 base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 
 ###############################
-# Single mean
-###############################
-output$uiSm_var <- renderUI({
-	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
-  vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
-  selectInput(inputId = "sm_var", label = "Variable (select one):", choices = vars,
-  	selected = state_singlevar("sm_var",vars), multiple = FALSE)
-})
-
-output$ui_singleMean <- renderUI({
-  list(
-  	wellPanel(
- 	   	uiOutput("uiSm_var"),
-  	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
-  	  	choices = base_alt, selected = state_init_list("sm_alternative","two.sided", base_alt), multiple = FALSE),
-    	sliderInput('sm_sigLevel',"Significance level:", min = 0.85, max = 0.99,
-    		value = state_init('sm_sigLevel',.95), step = 0.01),
-    	numericInput("sm_compValue", "Comparison value:", state_init('sm_compValue',0.0))
-  	),
-		helpAndReport('Single mean','singleMean',inclMD("../quant/tools/help/single_mean.md"))
- 	)
-})
-
-output$singleMean <- renderUI({
-	# create inputs and outputs - function in radiant.R
-  statTabPanel("Base","Single mean",".singleMean","singleMean")
-})
-
-.singleMean <- reactive({
-
-  rtext <- "This analysis requires a variable of type numeric or interval.\nPlease select another database"
- 	if(is.null(input$sm_var)) return(rtext)
-	if(is.null(inChecker(c(input$sm_var)))) return(rtext)
-	singleMean(input$dataset, input$sm_var, input$sm_compValue, input$sm_alternative, input$sm_sigLevel)
-})
-
-observe({
-  if(is.null(input$singleMeanReport) || input$singleMeanReport == 0) return()
-  isolate({
-		inp <- list(input$dataset, input$sm_var, input$sm_compValue,
-			input$sm_alternative, input$sm_sigLevel)
-		updateReport(inp,"singleMean")
-  })
-})
-
-singleMean <- function(dataset, sm_var, sm_compValue = 0, sm_alternative = 'two.sided',
-	sm_sigLevel = .95) {
-
-	dat <- values[[dataset]][,sm_var]
-	result <- t.test(dat, mu = sm_compValue, alternative = sm_alternative,
-		conf.level = sm_sigLevel)
-	result$data <- data.frame(dat)
-	names(result$data) <- sm_var
-	result$data.name <- sm_var
-	result
-
-	## http://stackoverflow.com/questions/3978266/number-format-writing-1e-5-instead-of-0-00001
-  ## Check out the format command and look at the digits option as well
-  ## Get this to look nice!
-  ## Download to pdf?
-}
-
-summary_singleMean <- function(result = .singleMean()) {
-	result
-}
-
-plots_singleMean <- function(result = .singleMean()) {
-
-	dat <- result$data
-	bw <- diff(range(dat, na.rm = TRUE)) / 12
-
-	p <- ggplot(dat, aes_string(x=result$data.name)) +
-		geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
-		geom_vline(xintercept = c(result$null.value), color = 'red', linetype = 'longdash', size = 1) +
-		geom_vline(xintercept = result$estimate, color = 'black', linetype = 'solid', size = 1) +
-		geom_vline(xintercept = result$conf.int, color = 'black', linetype = 'longdash', size = .5)
-	print(p)
-}
-
-###############################
 # Compare means
 ###############################
 output$uiCm_var1 <- renderUI({
@@ -138,10 +57,15 @@ output$compareMeans <- renderUI({
 
 .compareMeans <- reactive({
 
-	ret_text <- "This analysis requires variables of type factor, numeric or interval.\nPlease select another dataset."
-	if(is.null(input$cm_var1)) return(ret_text)
-	if(is.null(input$cm_var2)) return("Please select a numeric or interval variable")
-	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
+	# ret_text <- "This analysis requires variables of type factor, numeric or interval.\nPlease select another dataset."
+	# if(is.null(input$cm_var1)) return(ret_text)
+	# if(is.null(input$cm_var2)) return("Please select a numeric or interval variable")
+# 	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
+# 	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
+
+#   if(list(input$cm_var1, input$cm_var2) %>% not_available)
+  if(input$cm_var2 %>% not_available)
+    return("This analysis requires a variables of type factor, numeric, or interval.\nIf none are available please select another dataset")
 
 	compareMeans(input$dataset, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
 })
