@@ -1,14 +1,28 @@
+# load/attach packages
+pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
+          "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
+          "knitr", "rmarkdown", "testthat", "lubridate", "ggplot2", "shiny",
+          "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
+
 # vim key bindings for shinyAce
 vimKeyBinding <<- FALSE
 
 if(Sys.getenv('SHINY_PORT') == "") {
-  # install and load required packages
-  source("../../launchers/dependencies.R", local = TRUE)
+
+  running_local <<- TRUE
 
   # no limit to filesize locally
   options(shiny.maxRequestSize=-1)
-  running_local <<- TRUE
 
+  # Windows or Mac
+  if (.Platform$OS.type == 'windows') {
+    Sys.setlocale(category = 'LC_ALL','English_United States.1252')
+  } else {
+    Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
+  }
+
+  # install and load required packages
+  source("../base/dependencies.R", local = TRUE)
 
   # if running on my computer
   if(file.exists("~/Desktop/GitHub/radiant_dev")) {
@@ -17,30 +31,21 @@ if(Sys.getenv('SHINY_PORT') == "") {
     # options(warn=0)
     # options(warn=2)
     # options(shiny.error=recover)
-    vimKeyBinding <<- TRUE
+    # vimKeyBinding <<- TRUE
   }
 
-} else {
-  # load/attach packages, use dependencies-server.R to install relevant packages
-  # before running shiny-server
-  local_dir <- Sys.getenv("R_LIBS_USER")
 
-  pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "vegan",
-                 "RColorBrewer", "wordcloud", "AlgDesign", "brew", "reshape2",
-                 "plyr", "markdown", "knitr", "rmarkdown", "testthat",
-                 "lubridate", "ggplot2", "shiny","magrittr",
-                 "tidyr", "dplyr", "ggvis","broom")
-  pkgs_gh <- c("shinyAce")
-  pkgs <- c(pkgs_cran,pkgs_gh)
+} else {
+
+  running_local <<- FALSE
+
+  # limit upload filesize on server (5MB)
+  options(shiny.maxRequestSize=5*1024^2)
 
   suppressWarnings(
     sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
   )
-
-  # limit upload filesize on server (5MB)
-  options(shiny.maxRequestSize=5*1024^2)
-  running_local <<- FALSE
-}
+ }
 
 # Notation
 # options(scipen = 100)
