@@ -1,8 +1,5 @@
 class_app <- commandArgs(trailingOnly = TRUE)
 
-# get the pkgs information from the repo on github
-# source("http://mostly-harmless.github.io/radiant_miniCRAN/pkgs.R")
-
 R_loc <- Sys.which('R')
 if(R_loc == "") {
   cat("R is not installed or is not installed in the expected location")
@@ -14,12 +11,13 @@ if(R_loc == "") {
 
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-  # pth <- normalizePath(paste0(script_dir,'/../../launchers'),winslash='/')
+  # pth <- normalizePath(paste0(script_dir,'/../../miniCRAN'),winslash='/')
+  pth <- normalizePath(paste0(script_dir,'/../../launchers'),winslash='/')
   # mcran <- paste0("file:///",pth)
   # options(repos = c(CRAN = mcran))
+  # options(repos = "http://vnijs.rady.ucsd.edu/site_media/R")
   options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
-  # options(repos = "http://mostly-harmless.github.io/radiant_miniCRAN/")
-  # source(paste0(pth,"/pkgs.R"))
+  source(paste0(pth,"/pkgs.R"))
 
   # udpate old-packages
   update.packages(lib.loc = local_dir, ask = FALSE)

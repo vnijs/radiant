@@ -1,7 +1,6 @@
 shinyServer(function(input, output, session) {
 
 	# source shared functions
-	source('../base/init.R', local = TRUE)
 	source('../base/radiant.R', local = TRUE)
 
 	# source data & app tools from base
@@ -13,8 +12,8 @@ shinyServer(function(input, output, session) {
     source(file, local = TRUE)
 
   # integrate components from app_dev
-	# source('../../app_dev/quant/base/single_mean.R', local = TRUE)
-	# source('../../app_dev/quant/base/single_mean_ui.R', local = TRUE)
+	source('../../app_dev/quant/base/single_mean.R', local = TRUE)
+	source('../../app_dev/quant/base/single_mean_ui.R', local = TRUE)
 
   if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnCrash(session)
 
