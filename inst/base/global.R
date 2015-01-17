@@ -27,10 +27,10 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # if running on my computer
   if(file.exists("~/Desktop/GitHub/radiant_dev")) {
     # for debugging
-    # options(shiny.trace = TRUE)
+#     options(shiny.trace = TRUE)
     # options(warn=0)
-    # options(warn=2)
-    # options(shiny.error=recover)
+#     options(warn=2)
+#     options(shiny.error=recover)
     # vimKeyBinding <<- TRUE
   }
 
