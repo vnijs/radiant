@@ -2,14 +2,17 @@ shinyServer(function(input, output, session) {
 
   ip_state_list <- paste0("state_list",session$request$REMOTE_ADDR)
   ip_values <- paste0("values",session$request$REMOTE_ADDR)
+
   if(exists(ip_state_list)) {
     state_list <- get(ip_state_list)
-    assign(ip_state_list, NULL)
+    if(is.null(state_list)) state_list <- list()
+    assign(ip_state_list, NULL, envir = .GlobalEnv)
   }
 
   if(exists(ip_values)) {
     values <- get(ip_values)
-    assign(ip_values, NULL)
+    if(is.null(values)) values <<- reactiveValues()
+    assign(ip_values, NULL, envir = .GlobalEnv)
   }
 
   if(exists("state_list")) {
