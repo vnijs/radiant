@@ -38,12 +38,19 @@ saveStateOnCrash <- function(session = session)
     observe({
       pth <- normalizePath("~/radiant_temp/state",winslash="/")
 
-      ip_state_list <- paste0("state_list",session$request$REMOTE_ADDR)
-      assign(ip_state_list, state_list, envir = .GlobalEnv)
+      isolate({
+        RadiantInputs <- state_list
+        LiveInputs <- reactiveValuesToList(input)
+        RadiantInputs[names(LiveInputs)] <- LiveInputs
 
-      ip_values <- paste0("values",session$request$REMOTE_ADDR)
-      assign(ip_values, values, envir = .GlobalEnv)
+        ip_state_list <- paste0("state_list",session$request$REMOTE_ADDR)
+  #       assign(ip_state_list, state_list, envir = .GlobalEnv)
+        assign(ip_state_list, RadiantInputs, envir = .GlobalEnv)
 
+        ip_values <- paste0("values",session$request$REMOTE_ADDR)
+        assign(ip_values, values, envir = .GlobalEnv)
+
+      })
 #       cdir <- ""
 #       if(!file.exists(pth))
 #         cdir <- try(dir.create(pth), silent = TRUE)

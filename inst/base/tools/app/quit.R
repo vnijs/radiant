@@ -59,13 +59,13 @@ observe({
   # cleaning out the state file temp
   unlink("~/radiant_temp/state/RadiantState*.rsf")
 
-  state_list <- list()
-  values <- reactiveValues()
-
-  paste0("state_list",session$request$REMOTE_ADDR) %>%
-    assign(., NULL, envir = .GlobalEnv)
-  paste0("values",session$request$REMOTE_ADDR) %>%
-    assign(., NULL, envir = .GlobalEnv)
+#   state_list <- list()
+#   values <- reactiveValues()
+#
+#   paste0("state_list",session$request$REMOTE_ADDR) %>%
+#     assign(., NULL, envir = .GlobalEnv)
+#   paste0("values",session$request$REMOTE_ADDR) %>%
+#     assign(., NULL, envir = .GlobalEnv)
 
   setInitValues()
 })
