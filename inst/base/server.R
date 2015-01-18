@@ -1,3 +1,6 @@
+state_list <- list()
+values <- reactiveValues()
+
 shinyServer(function(input, output, session) {
 
   # ip_state_list <- paste0("state_list",session$request$REMOTE_ADDR)
@@ -15,15 +18,19 @@ shinyServer(function(input, output, session) {
   #   assign(ip_values, NULL, envir = .GlobalEnv)
   # }
 
-  # if(exists("state_list")) {
-  #   print(state_list)
-  # } else {
-  #   print("no state_list")
-  # }
-
 	# source shared functions
 	source('init.R', local = TRUE)
 	source('radiant.R', local = TRUE)
+
+	if(exists("state_list")) {
+	  if(length(state_list) == 0) {
+	    print("Empty list")
+	  } else {
+	    print(str(state_list[sort(names(state_list))]))
+	  }
+	} else {
+	  print("no state_list")
+	}
 
 	# source data & analysis tools
   for(file in list.files(c("tools/app","tools/data"),
@@ -34,6 +41,6 @@ shinyServer(function(input, output, session) {
   }
 
 # 	if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnCrash(session)
-	# if(running_local) saveStateOnCrash(session)
+	  if(running_local) saveStateOnCrash(session)
 # 	if(!running_local) saveStateOnServerCrash(session)
 })

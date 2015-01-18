@@ -384,12 +384,12 @@ output$htmlDataExample <- renderText({
   nshow <- 10
   if(is.null(descr) || descr == "") nshow <- 30
 
-  # if(backup_loaded) {
-  #   cat(paste0("Backup loaded from ", normalizePath("~/radiant_temp/state"), ".
-  #       You can reset the app in the Quit menu and/or from the directory
-  #       mentioned above."))
-  #   backup_loaded <<- FALSE
-  # }
+  if(backup_loaded) {
+    cat(paste0("Backup loaded from ", normalizePath("~/radiant_temp/state"), ".
+        You can reset the app in the Quit menu and/or from the directory
+        mentioned above."))
+    backup_loaded <<- FALSE
+  }
 
   show_data_snippet(nshow = nshow)
 })

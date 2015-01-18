@@ -55,12 +55,13 @@ output$showState <- renderPrint({
 })
 
 observe({
-  if(is.null(input$resetState) || input$resetState == 0) return()
+#   if(is.null(input$resetState) || input$resetState == 0) return()
+  if(input$resetState %>% not_pressed) return()
   # cleaning out the state file temp
   unlink("~/radiant_temp/state/RadiantState*.rsf")
 
-#   state_list <- list()
-#   values <- reactiveValues()
+#   state_list <<- list()
+#   values <<- reactiveValues()
 #
 #   paste0("state_list",session$request$REMOTE_ADDR) %>%
 #     assign(., NULL, envir = .GlobalEnv)
