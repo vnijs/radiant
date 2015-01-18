@@ -13,6 +13,12 @@ setInitValues <- function() {
     load(filename)
     if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
     if(exists("RadiantInputs")) state_list <<- RadiantInputs
+
+    # unlink("~/radiant_temp/state/RadiantState*.rsf")
+    unlink(filename)
+    RadiantValues <- NULL
+    RadiantInputs <- NULL
+
     backup_loaded <<- TRUE
   } else {
 
@@ -40,12 +46,38 @@ setInitValues <- function() {
 # global environment
 # backup_loaded <- logical()
 
-setInitValues()   # setup reactiveValues object to store data
-
-# if the state_list list already exists this was just a refresh so don't reset
-# if(!exists("state_list")) {
-# if(!exists("values")) {
+# if(!running_local) {
 #   state_list <- list()
 #   values <- reactiveValues()
 #   setInitValues()   # setup reactiveValues object to store data
 # }
+
+
+setInitValues()   # setup reactiveValues object to store data
+
+# if(!exists("values"))
+#   setInitValues()   # setup reactiveValues object to store data
+
+# reset state_list if the dataset is changed
+observe({
+  if(is.null(state_list$dataset) || is.null(input$dataset)) return()
+  if(state_list$dataset != input$dataset) state_list <<- list()
+})
+
+# observe({
+#     if(is.null(input$resetState) || input$resetState == 0) return()
+# #   if(input$resetState %>% not_pressed) return()
+#   # cleaning out the state file temp
+#   unlink("~/radiant_temp/state/RadiantState*.rsf")
+#
+#   state_list <<- list()
+#   values <<- reactiveValues()
+#
+# # if the state_list list already exists this was just a refresh so don't reset
+# # if(!exists("state_list")) {
+# # if(!exists("values")) {
+# #   state_list <- list()
+# #   values <- reactiveValues()
+#   setInitValues()   # setup reactiveValues object to store data
+# # }
+# })

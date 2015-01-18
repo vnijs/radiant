@@ -24,43 +24,39 @@ state_init_multvar <- function(inputvar, pre_inputvar, vals) {
 # function to save app state on refresh or crash
 ################################################################################
 saveState <- function(filename) {
+
+  if(input$resetState %>% not_pressed) {
   isolate({
     RadiantInputs <- state_list
     LiveInputs <- reactiveValuesToList(input)
     RadiantInputs[names(LiveInputs)] <- LiveInputs
+
     RadiantValues <- reactiveValuesToList(values)
     save(RadiantInputs, RadiantValues , file = filename)
+
+    # putting state_list in global environment
+#     if(is.null(input$resetState) || input$resetState == 0)
+#     if(input$resetState %>% not_pressed)
+#       state_list <<- RadiantInputs
   })
+  }
 }
 
-saveStateOnCrash <- function(session = session)
+saveStateOnCrash <- function(session = session) {
   session$onSessionEnded(function() {
     observe({
       pth <- normalizePath("~/radiant_temp/state",winslash="/")
 
-      isolate({
-        RadiantInputs <- state_list
-        LiveInputs <- reactiveValuesToList(input)
-        RadiantInputs[names(LiveInputs)] <- LiveInputs
+      cdir <- ""
+      if(!file.exists(pth))
+        cdir <- try(dir.create(pth), silent = TRUE)
+      if(!is(cdir, 'try-error'))
+        try(saveState(paste0(pth,"/RadiantState-",Sys.Date(),".rsf")),
+            silent = TRUE)
 
-        ip_state_list <- paste0("state_list",session$request$REMOTE_ADDR)
-  #       assign(ip_state_list, state_list, envir = .GlobalEnv)
-        assign(ip_state_list, RadiantInputs, envir = .GlobalEnv)
-
-        ip_values <- paste0("values",session$request$REMOTE_ADDR)
-        assign(ip_values, values, envir = .GlobalEnv)
-
-      })
-#       cdir <- ""
-#       if(!file.exists(pth))
-#         cdir <- try(dir.create(pth), silent = TRUE)
-#       if(!is(cdir, 'try-error'))
-#         try(saveState(paste0(pth,"/RadiantState-",Sys.Date(),".rsf")),
-#             silent = TRUE)
-
-   })
-})
-
+    })
+  })
+}
 
 ################################################################
 # functions used across tools in radiant
