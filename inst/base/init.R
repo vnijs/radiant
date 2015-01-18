@@ -9,11 +9,8 @@ setInitValues <- function() {
   # initialize state list and reactive values
   pth <- "~/radiant_temp/state"
   filename = paste0(pth,"/RadiantState-",Sys.Date(),".rsf")
-#   if(file.exists(filename)) {
   if(file.exists(filename)) {
     load(filename)
-#     if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
-#     if(exists("RadiantInputs")) state_list <<- RadiantInputs
     if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
     if(exists("RadiantInputs")) state_list <<- RadiantInputs
     backup_loaded <<- TRUE
@@ -21,8 +18,8 @@ setInitValues <- function() {
 
     backup_loaded <<- FALSE
 
-#     state_list <<- list()
-#     values <<- reactiveValues()
+    state_list <<- list()
+    values <<- reactiveValues()
 
     # initial plot height and width
     values$plotHeight <<- 600
@@ -41,12 +38,14 @@ setInitValues <- function() {
 
 # setting variable in shiny's environment to avoid putting variables in the
 # global environment
-backup_loaded <- logical()
+# backup_loaded <- logical()
+
+setInitValues()   # setup reactiveValues object to store data
 
 # if the state_list list already exists this was just a refresh so don't reset
 # if(!exists("state_list")) {
-if(!exists("values")) {
-  state_list <- list()
-  values <- reactiveValues()
-  setInitValues()   # setup reactiveValues object to store data
-}
+# if(!exists("values")) {
+#   state_list <- list()
+#   values <- reactiveValues()
+#   setInitValues()   # setup reactiveValues object to store data
+# }

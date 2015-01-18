@@ -366,7 +366,8 @@ helpModal <- function(modal_title, link, help_file) {
           <div class='modal-body'>%s</div></div>
           <a title='Help' data-toggle='modal' href='#%s' class='icon-question-sign'></a>",
           link, modal_title, help_file, link) %>%
-  enc2utf8 %>% HTML %>% withMathJax
+#   enc2utf8 %>% HTML %>% withMathJax
+  enc2utf8 %>% HTML
 }
 
 helpAndReport <- function(title, link, content) {
@@ -377,10 +378,13 @@ helpAndReport <- function(title, link, content) {
           <div class='modal-body'>%s</div></div>
           <div><a title='Help' data-toggle='modal' href='#%sHelp' class='icon-question-sign alignleft'></a>
           <a title='Report results' class='icon-book action-button shiny-bound-input alignright' href='#%sReport' id='%sReport'></a>
-          </div><div style='clear: both;'></div>",
+          </div><div style='clear: both;'></div>
+          <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
           link, title, content, link, link, link) %>%
-  enc2utf8 %>% HTML %>% withMathJax
+  # enc2utf8 %>% HTML %>% withMathJax
+  enc2utf8 %>% HTML
 }
+
 
 help_and_report <- function(modal_title, fun_name, help_file) {
   sprintf("<div id='%s_help' class='modal hide fade in' style='display: none; '>
@@ -389,16 +393,18 @@ help_and_report <- function(modal_title, fun_name, help_file) {
           <div class='modal-body'>%s</div></div>
           <div><a title='Help' data-toggle='modal' href='#%s_help' class='icon-question-sign alignleft'></a>
           <a title='Report results' class='icon-book action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></a>
-          </div><div style='clear: both;'></div>",
+          </div><div style='clear: both;'></div>
+          <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
           fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
-  enc2utf8 %>% HTML %>% withMathJax
+  # enc2utf8 %>% HTML %>% withMathJax
+  enc2utf8 %>% HTML
 }
 
-
 # function to render .md files to html
-inclMD <- function(path)
-  markdown::markdownToHTML(path, options = c(""),
+inclMD <- function(path) {
+  markdown::markdownToHTML(path, fragment.only = TRUE, options = c(""),
                            stylesheet="../base/www/empty.css")
+}
 
 # function to render .Rmd files to html
 # does not embed image or add css

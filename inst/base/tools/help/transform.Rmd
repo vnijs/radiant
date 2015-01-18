@@ -1,4 +1,4 @@
-Modify type, change, create, add, reorder, and remove variables in the data.
+> Modify type, change, create, add, reorder, and remove variables in the data.
 
 <!--
 Insert Math in-line: $\alpha^2$
@@ -59,11 +59,11 @@ Choose Create from the 'Transformation type' drop-down. This is the most flexibl
 
 6. Create a categorical variable with two levels
 
-  z = ifelse(x < y, "x < y", "x < y")
+	z = ifelse(x < y, "x < y", "x < y")
 
 7. Create a categorical variable with three levels
 
-  z = ifelse(x < 60, "x < 60", ifelse(x > 65, "x > 65", "60-65"))
+	z = ifelse(x < 60, "x < 60", ifelse(x > 65, "x > 65", "60-65"))
 
 Note: For 6 and 7 you should convert the new variable to a factor for analysis (see Type above)
 
@@ -107,4 +107,4 @@ Choose 'Remove missing' from the 'Transformation type' dropdown to remove missin
 
 Choose 'Subset' from the 'Transformation type' dropdown to select (or omit) specific sets of rows from the data. You can use > and < signs and even combine filter commands. For example, x > 3 & y == 2 would select only those rows for which the variable x has values larger than 3 __and__ for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen. You should see the number of observations in the data summary change (i.e., the value of n changes). Press 'Save changes' to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
 
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
