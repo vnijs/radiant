@@ -22,15 +22,15 @@ shinyServer(function(input, output, session) {
 	source('init.R', local = TRUE)
 	source('radiant.R', local = TRUE)
 
-	if(exists("state_list")) {
-	  if(length(state_list) == 0) {
-	    print("Empty list")
-	  } else {
-	    print(str(state_list[sort(names(state_list))]))
-	  }
-	} else {
-	  print("no state_list")
-	}
+# 	if(exists("state_list")) {
+# 	  if(length(state_list) == 0) {
+# 	    print("Empty list")
+# 	  } else {
+# 	    print(str(state_list[sort(names(state_list))]))
+# 	  }
+# 	} else {
+# 	  print("no state_list")
+# 	}
 
 	# source data & analysis tools
   for(file in list.files(c("tools/app","tools/data"),
@@ -40,7 +40,6 @@ shinyServer(function(input, output, session) {
   	source(file, local = TRUE)
   }
 
-# 	if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnCrash(session)
-	  if(running_local) saveStateOnCrash(session)
-# 	if(!running_local) saveStateOnServerCrash(session)
+  # state state on crash only if running locally and not from Rstudio
+  if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnCrash(session)
 })

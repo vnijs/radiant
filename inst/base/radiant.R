@@ -26,19 +26,15 @@ state_init_multvar <- function(inputvar, pre_inputvar, vals) {
 saveState <- function(filename) {
 
   if(input$resetState %>% not_pressed) {
-  isolate({
-    RadiantInputs <- state_list
-    LiveInputs <- reactiveValuesToList(input)
-    RadiantInputs[names(LiveInputs)] <- LiveInputs
+    # unless you want to reset the app, save state on refresh
+    isolate({
+      RadiantInputs <- state_list
+      LiveInputs <- reactiveValuesToList(input)
+      RadiantInputs[names(LiveInputs)] <- LiveInputs
 
-    RadiantValues <- reactiveValuesToList(values)
-    save(RadiantInputs, RadiantValues , file = filename)
-
-    # putting state_list in global environment
-#     if(is.null(input$resetState) || input$resetState == 0)
-#     if(input$resetState %>% not_pressed)
-#       state_list <<- RadiantInputs
-  })
+      RadiantValues <- reactiveValuesToList(values)
+      save(RadiantInputs, RadiantValues , file = filename)
+    })
   }
 }
 
