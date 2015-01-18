@@ -20,4 +20,4 @@ Click on a column header in the table to sort the data by the values of that var
 
 There are several ways to select a subset of the data to view. For variables that have a limited number of different values (e.g., a factor) you can type a value in the text box below the column for one, or more, variables. For continuous variables use the Subset box on the left. Here you can use > and < signs and even combine filter commands. For example, x > 3 & y == 2 would show only those rows for which the variable x has values larger than 3 __and__ for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen.
 
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

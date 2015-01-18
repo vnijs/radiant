@@ -5,11 +5,12 @@
 #   }
 # )
 
-# require(knitr)
-# helpfiles <- list.files(".", pattern = "*.Rmd")
-# for(hf in helpfiles) {
-# 	knit2html(hf, options = "", stylesheet = "empty.css")
-# }
+require(knitr)
+helpfiles <- list.files(".", pattern = "*.Rmd")
+for(hf in helpfiles) {
+	knit2html(hf, fragment.only=TRUE, options = c("mathjax"), stylesheet = "empty.css")
+# 	knit2html(hf, options = c("mathjax"), stylesheet = "empty.css")
+}
 
 #     require(markdown)
 #     markdownToHTML(inputFile, outputFile, options = c(""), stylesheet='empty.css')
@@ -20,3 +21,6 @@
 # 	# markdowntohtml(inputfile, outputfile, options = c(""), stylesheet='empty.css')
 # }
 #
+
+readLines("regression.html", warn=FALSE)
+paste(readLines("regression.html", warn = FALSE), collapse = '\n')

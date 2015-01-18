@@ -296,13 +296,8 @@ ctl <- function(ctl_dist, ctl_n, ctl_m, ctl_stat) {
   data
 }
 
-summary_ctl <- function(result = .ctl()) {
+summary_ctl <- function(result = .ctl())
     cat("See the Plots tab for output")
-#    withMathJax("Testing math $\alpha$")
-}
-
-# getting back to the page in progress when developing
-# observe( updateTabsetPanel(session, "nav_radiant", selected = "Central Limit Theorem") )
 
 plots_ctl <- function(result = .ctl()) {
 

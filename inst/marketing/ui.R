@@ -53,6 +53,7 @@ shinyUI(
     tabPanel("Radiant help", uiOutput("help_marketing")),
     tabPanel("Radiant videos", uiOutput("help_videos")),
     # do NOT remove withMathJax(), load-files breaks!
-    tabPanel("About", withMathJax(), uiOutput("help_about"))
+    # tabPanel("About", withMathJax(), uiOutput("help_about"))
+    tabPanel("About", uiOutput("help_about"))
   )
 ))

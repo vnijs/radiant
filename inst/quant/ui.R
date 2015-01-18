@@ -33,6 +33,7 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
     tabPanel("Radiant help", uiOutput("help_quant")),
     tabPanel("Radiant videos", uiOutput("help_videos")),
     # do NOT remove withMathJax(), load-files breaks!
-    tabPanel("About", withMathJax(), uiOutput("help_about"))
+    # tabPanel("About", withMathJax(), uiOutput("help_about"))
+    tabPanel("About", uiOutput("help_about"))
   )
 ))

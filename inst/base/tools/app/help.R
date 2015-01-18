@@ -24,7 +24,11 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
                       inclMD(paste0(help_path,local_hd[i])),
                       sep="\n")
   }
-  mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
+  # mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
+  mathjax_script <- ifelse(Rmd, "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+                           "")
+  mathjax_script <- ifelse(Rmd, paste(mathjax_script,"\n","<script>MathJax.Hub.Typeset();</script>"), "")
+  # mathjax_script <- ""
   paste(all_help,"\n",mathjax_script) %>% help2html
 }
 
@@ -112,6 +116,7 @@ help_quant_ui <- tagList(
 
 help_quant_main <- tagList(
   HTML("<h3>Select one or more help documents</h3>"),
+  # HTML("<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
   htmlOutput("help_data"),
   htmlOutput("help_random"),
   htmlOutput("help_base_menu"),

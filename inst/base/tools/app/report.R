@@ -91,7 +91,10 @@ knitIt <- function(text) knitr::knit2html(text = text, quiet = TRUE, options=c("
 # knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
 
 knitIt2 <- function(text) paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
-                                '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n') %>% HTML
+                                "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+                                "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
+
+# knitIt2 <- function(text) knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, options=c("mathjax")) %>% HTML
 
 observe({
   input$runKeyRmd
