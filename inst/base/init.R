@@ -32,7 +32,8 @@ if (exists("state_list") && exists("values")) {
   values <- do.call(reactiveValues, get(ip_values))
   state_list <- get(ip_inputs)
   # rm(list = c(ip_inputs, ip_values), envir = .GlobalEnv)
-  rm(list = ls(pattern = "^Radiant"), envir = .GlobalEnv)
+  rm(list = ls(pattern = "^RadiantInputs"), envir = .GlobalEnv)
+  rm(list = ls(pattern = "^RadiantValues"), envir = .GlobalEnv)
 } else {
   state_list <- list()
   values <- reactiveValues()
