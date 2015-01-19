@@ -27,17 +27,14 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # install and load required packages
   source("../base/dependencies.R", local = TRUE)
 
-  # if running on my computer
-  if(file.exists("~/Desktop/GitHub/radiant_dev")) {
+  if (Sys.getenv("HOME") == "/Users/vnijs") {
     # for debugging
-#     options(shiny.trace = TRUE)
+    # options(shiny.trace = TRUE)
     # options(warn=0)
-#     options(warn=2)
-#     options(shiny.error=recover)
+    # options(warn=2)
+    # options(shiny.error=recover)
     # vimKeyBinding <<- TRUE
   }
-
-
 } else {
 
   running_local <<- FALSE
@@ -45,6 +42,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # limit upload filesize on server (5MB)
   options(shiny.maxRequestSize=5*1024^2)
 
+  # load packages in order set by variable pkgs
   suppressWarnings(
       sapply(pkgs, require, lib.loc = Sys.getenv("R_LIBS_USER"),
              character.only=TRUE)
@@ -53,7 +51,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
 # Notation
 # options(scipen = 100)
-options(digits = 3)
+# options(digits = 3)
 
 # adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", "../base/tools/help/figures/")

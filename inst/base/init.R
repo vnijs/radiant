@@ -3,81 +3,43 @@
 # when available
 ################################################################################
 
-# using a function here so it can also be called from quit.R to reset the app
-setInitValues <- function() {
+ip <- session$request$REMOTE_ADDR
 
-  # initialize state list and reactive values
-  pth <- "~/radiant_temp/state"
-  filename = paste0(pth,"/RadiantState-",Sys.Date(),".rsf")
-  if(file.exists(filename)) {
-    load(filename)
-    if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
-    if(exists("RadiantInputs")) state_list <<- RadiantInputs
+init_state <- function() {
 
-    # unlink("~/radiant_temp/state/RadiantState*.rsf")
-    unlink(filename)
-    RadiantValues <- NULL
-    RadiantInputs <- NULL
+  # initial plot height and width
+  values$plotHeight <<- 600
+  values$plotWidth <<- 600
 
-    backup_loaded <<- TRUE
-  } else {
-
-    backup_loaded <<- FALSE
-
-    state_list <<- list()
-    values <<- reactiveValues()
-
-    # initial plot height and width
-    values$plotHeight <<- 600
-    values$plotWidth <<- 600
-
-    # Datasets can change over time (i.e. the changedata function). Therefore,
-    # the data need to be a reactive value so the other reactive functions
-    # and outputs that depend on these datasets will know when they are changed.
-    robj <- load("../base/data/data_init/diamonds.rda")
-    df <- get(robj)
-    values[["diamonds"]] <<- df
-    values[["diamonds_descr"]] <<- attr(df,'description')
-    values$datasetlist <<- c("diamonds")
-  }
+  # Datasets can change over time (i.e. the changedata function). Therefore,
+  # the data need to be a reactive value so the other reactive functions
+  # and outputs that depend on these datasets will know when they are changed.
+  robj <- load("../base/data/data_init/diamonds.rda")
+  df <- get(robj)
+  values[["diamonds"]] <<- df
+  values[["diamonds_descr"]] <<- attr(df,'description')
+  values$datasetlist <<- c("diamonds")
 }
 
-# setting variable in shiny's environment to avoid putting variables in the
-# global environment
-# backup_loaded <- logical()
+ip_inputs <- paste0("RadiantInputs",ip)
+ip_values <- paste0("RadiantValues",ip)
 
-# if(!running_local) {
-#   state_list <- list()
-#   values <- reactiveValues()
-#   setInitValues()   # setup reactiveValues object to store data
-# }
+if (exists("state_list") && exists("values")) {
+  values <- do.call(reactiveValues, values)
+  state_list <- state_list
+  rm(values, state_list, envir = .GlobalEnv)
+} else if (exists(ip_inputs) && exists(ip_values)) {
+  values <- do.call(reactiveValues, get(ip_values))
+  state_list <- get(ip_inputs)
+  rm(list = c(ip_inputs, ip_values), envir = .GlobalEnv)
+} else {
+  state_list <- list()
+  values <- reactiveValues()
+  init_state()
+}
 
-
-setInitValues()   # setup reactiveValues object to store data
-
-# if(!exists("values"))
-#   setInitValues()   # setup reactiveValues object to store data
-
-# reset state_list if the dataset is changed
 observe({
+  # reset state_list on dataset change
   if(is.null(state_list$dataset) || is.null(input$dataset)) return()
   if(state_list$dataset != input$dataset) state_list <<- list()
 })
-
-# observe({
-#     if(is.null(input$resetState) || input$resetState == 0) return()
-# #   if(input$resetState %>% not_pressed) return()
-#   # cleaning out the state file temp
-#   unlink("~/radiant_temp/state/RadiantState*.rsf")
-#
-#   state_list <<- list()
-#   values <<- reactiveValues()
-#
-# # if the state_list list already exists this was just a refresh so don't reset
-# # if(!exists("state_list")) {
-# # if(!exists("values")) {
-# #   state_list <- list()
-# #   values <- reactiveValues()
-#   setInitValues()   # setup reactiveValues object to store data
-# # }
-# })

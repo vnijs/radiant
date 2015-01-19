@@ -15,8 +15,10 @@ output$savequit <- renderUI({
         checkboxInput('showState', 'Show state', FALSE)
       ),
       wellPanel(
-        HTML("<label>Quit:</label>"),
-        actionButton('quitApp', 'Quit')
+        tags$button(id = 'quitApp', type = "button",
+                    class = "btn action-button",
+                    onclick = "window.close();",
+                    "Quit")
       ),
       helpModal('State','stateHelp',inclMD("../base/tools/help/state.md"))
     ),
@@ -55,38 +57,18 @@ output$showState <- renderPrint({
 })
 
 observe({
-#   if(is.null(input$resetState) || input$resetState == 0) return()
-  if(input$resetState %>% not_pressed) return()
-  # cleaning out the state file temp
-  unlink("~/radiant_temp/state/RadiantState*.rsf")
+  if(input$quitApp %>% not_pressed) return()
 
-#   state_list <<- list()
-#   values <<- reactiveValues()
-#
-#   paste0("state_list",session$request$REMOTE_ADDR) %>%
-#     assign(., NULL, envir = .GlobalEnv)
-#   paste0("values",session$request$REMOTE_ADDR) %>%
-#     assign(., NULL, envir = .GlobalEnv)
-
-  setInitValues()
-})
-
-observe({
-  if(is.null(input$quitApp) || input$quitApp == 0) return()
-  unlink("~/radiant_temp/rmd/figure/*", recursive = TRUE)
-  unlink("~/radiant_temp/state/RadiantState*.rsf")
-
-  # quit R, unless you are running Rstudio or Rgui
+  # quit R, unless you are running Rstudio
   if(Sys.getenv("RSTUDIO") != "1") {
-    stopApp("Stopped Radiant")   # stop Radiant
+    stopApp("Stopped Radiant")
     q("no")
   } else {
     # flush input and values into Rstudio
     isolate({
-      radiant <<- list()
-      radiant$input <<- isolate(reactiveValuesToList(input))
-      radiant$values <<- isolate(reactiveValuesToList(values))
-      stopApp("Stopping Radiant. Input and Values returned in list radiant") # stop Radiant
+      assign("state_list", reactiveValuesToList(input), envir = .GlobalEnv)
+      assign("values", reactiveValuesToList(values), envir = .GlobalEnv)
+      stopApp(cat("\nStopping Radiant. State flushed to Rstudio as lists 'state_list' and 'values'\n\n"))
     })
   }
 })
