@@ -15,6 +15,8 @@ if(length(to_inp) != 0)
 	install.packages(to_inp, local_dir, dependencies = TRUE)
 
 # load pkgs as defined in global.R - order is important!
-suppressWarnings(
-  sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
-)
+if(exists("pkgs")) {
+	suppressWarnings(
+  	sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
+  )
+}
