@@ -11,7 +11,6 @@ shinyUI(
   ),
 
   navbarMenu("Base",
-    # tabPanel("Single mean", uiOutput("singleMean")),
     tabPanel("Single mean", uiOutput("single_mean")),
     tabPanel("Compare means", uiOutput("compareMeans")),
     tabPanel("Cross-tabs", uiOutput("crosstab"))

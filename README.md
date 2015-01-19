@@ -11,21 +11,68 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 - Required: [R](http://cran.rstudio.com/), version 3.1.2
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
+- You can install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) by copy-and-pasting the commands below into the Rstudio console:
 
-To download the app click the `Download ZIP` button and unzip the file to, for example, your Desktop. To start, for example, the base app use `setwd()` to move to the radiant directory in R(studio). Install Shiny using `install.packages('shiny')`. Then use `shiny::runApp('inst/base')` to run the base app (or use `shiny::runApp('inst/quant')` or `shiny::runApp('inst/marketing')`. When Radiant starts for the first time a number of required packages will be installed from a local [miniCRAN](https://github.com/andrie/miniCRAN).
+		# install to user directory
+		local_dir <- Sys.getenv("R_LIBS_USER")
+		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-To tryout the app online go to http://vnijs.rady.ucsd.edu:3838/marketing
+    # install packages
+		options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
+		install.packages(new.packages(), local_dir, dependencies = TRUE)
+
+If you are familiar with Git(Hub) clone the repo. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
+
+Note that Radiant does not currently work well with Shiny version 0.11.
+
+#### From Rstudio
+
+Navigate to `inst/` in the radiant directory. Choose the app you want to run (e.g., quant or marketing). If you choose the marketing app, from the `inst/marketing` directory, open `ui.R`. Then click the play button (see screenshot below).
+
+When Radiant starts for the first time a number of required packages will be installed from a [miniCRAN](https://github.com/andrie/miniCRAN).
+
+![Starting Radiant from Rstudio](start_from_rstudio.png)
+
+#### Using a desktop launcher
+
+You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`
+
+On Windows you create a launcher for Radiant on your Desktop by double-clicking the make\_win.bat file. Find the new file on your Desktop (i.e., radiant\_quant.bat or radiant_marketing.bat). Double click the .bat file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute
+
+For Mac, double-click the make\_mac.command file to create a launcher for Radiant on your Desktop. Find the new file on your Desktop (i.e., radiant\_quant.command or radiant_marketing.command). Double click the .command file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute
+
+When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button. The Radiant process will stop and the browser window will close.
+
+#### Online
+
+To tryout the app online go to <http://vnijs.rady.ucsd.edu:3838/marketing>.
 
 ### Help
 
-There are numerous help files linked in the app. See for example the `Help` menu at http://vnijs.rady.ucsd.edu:3838/marketing. To help you get started using Radiant you can also take a look at this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
+There are numerous help files linked in the app. See for example the `Help` menu at <http://vnijs.rady.ucsd.edu:3838/marketing>. To help you get started using Radiant you can also take a look at this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
+
+### Saving and loading state
+
+To save the analysis you did in Radiant you can save the state of the app (see Data > Manage). You can open the state file at a latter time to continue where you left off. For an example, load the state_file `RadiantState.rda` in `example_data` in the radiant folder (see the View and Visualize tabs after loading the file).
+
+A related feature in Radiant is that state is also maintained if you close (and reopen) the browser and/or hit refresh on the browser. Use Quit > Reset to return to a clean/new state.
+
+Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit > Quit to stop the app, a list called `values` and a list called `state_list` will be put into Rstudio's global workspace. If you start radiant again it will use these lists (i.e., `values` and `state_list`) to restore state. This can be convenient if you want to make changes to a data file and load it back into Radiant.
+
+You can also open a state file in Rstudio. When you start Radiant from Rstudio it will use the state files to recreate a previous app state.
+
+**Technical note**: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `state_list`. If there is, this value is used. The `state_list` is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `state_list` can be used.
+
+     numericInput("sm_comp_value", "Comparison value:",
+    	            state_init('sm_comp_value',sm_args$sm_comp_value))
+
 
 ### Todo
 
-- Use dplyr, tidyr, and magrittr to explore, transform, and filter data
-- Code documentation
+- Develop Radiant into an R-package that exports analysis functions
+- Document functions
 - Automated testing using Rselenium
-- Post to CRAN as an R-package
+- Use dplyr, tidyr, and magrittr to explore, transform, and filter data
 - etc. etc.
 
 ### License
@@ -36,4 +83,4 @@ As a summary, the AGPLv3 license requires, attribution, include copyright and li
 
 If you are interested in using Radiant please email me at vnijs@ucsd.edu
 
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>

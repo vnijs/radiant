@@ -11,8 +11,8 @@ output$savequit <- renderUI({
       wellPanel(
         HTML("<label>Reset app state:</label>"),
         HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button></br>"),
-#         actionButton('resetState', 'Reset'),
-#         uiOutput("refreshOnReset"),
+        # actionButton('resetState', 'Reset'),
+        # uiOutput("refreshOnReset"),
         checkboxInput('showInput', 'Show input', FALSE), br(),
         checkboxInput('showState', 'Show state', FALSE)
       ),
@@ -70,14 +70,21 @@ observe({
     isolate({
       assign("state_list", reactiveValuesToList(input), envir = .GlobalEnv)
       assign("values", reactiveValuesToList(values), envir = .GlobalEnv)
-      stopApp(cat("\nStopping Radiant. State flushed to Rstudio as lists 'state_list' and 'values'\n\n"))
+      if(!is.null(input$rmd_report) && input$rmd_report != "") {
+        os_type <- .Platform$OS.type
+        if (os_type == 'windows') {
+          cat(input$rmd_report, file = "clipboard")
+        } else {
+          cat(input$rmd_report, file = pipe("pbcopy"))
+        }
+      }
+      stopApp(cat("\nStopping Radiant. State flushed to Rstudio as lists 'state_list' and 'values'.\n\n"))
     })
   }
 })
 
 # output$refreshOnReset <- renderUI({
 #   if(input$resetState %>% not_pressed) return()
-#
 #   # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
 #   tags$script("window.location.reload();")
 # })
