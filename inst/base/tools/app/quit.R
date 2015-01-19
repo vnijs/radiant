@@ -57,7 +57,7 @@ output$showState <- renderPrint({
 })
 
 observe({
-  if(input$quitApp %>% not_pressed) return()
+  if(input$quitApp %>% not_pressed || !running_local) return()
 
   # quit R, unless you are running Rstudio
   if(Sys.getenv("RSTUDIO") != "1") {
