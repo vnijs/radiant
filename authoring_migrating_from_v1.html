@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Migrating from R Markdown v1</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">R Markdown v2</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li class="dropdown">
+          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Authoring <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">R Markdown</li>
+             <li><a href="authoring_basics.html">Markdown Basics</a></li>
+             <li><a href="authoring_pandoc_markdown.html">Pandoc Markdown</a></li>
+             <li><a href="authoring_rcodechunks.html">R Code Chunks</a></li>
+             <li><a href="authoring_bibliographies_and_citations.html">Bibliographies &amp; Citations</a></li>
+             <li><a href="authoring_migrating_from_v1.html">Migrating from v1</a></li>
+             <li class="divider"></li>
+             <li><a href="RMarkdownCheatSheet.pdf">Cheat Sheet [PDF]</a></li>
+             <li><a href="RMarkdownReferenceGuide.pdf">Reference Guide [PDF]</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Shiny</li>
+             <li><a href="authoring_shiny.html">Interactive Documents</a></li>
+             <li><a href="authoring_embedded_shiny.html">Embedded Shiny Apps</a></li>
+             <li><a href="authoring_shiny_widgets.html">Creating Shiny Widgets</a></li>
+             <li><a href="authoring_shiny_advanced.html">Advanced Topics</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="formats" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Formats <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Documents</li>
+             <li><a href="html_document_format.html">HTML</a></li>
+             <li><a href="pdf_document_format.html">PDF</a></li>
+             <li><a href="word_document_format.html">Word</a></li>
+             <li><a href="markdown_document_format.html">Markdown</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Presentations</li>
+             <li><a href="ioslides_presentation_format.html">ioslides</a></li>
+             <li><a href="slidy_presentation_format.html">Slidy</a></li>
+             <li><a href="beamer_presentation_format.html">Beamer</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Other</li>
+             <li><a href="package_vignette_format.html">Package Vignette</a></li>
+             <li><a href="tufte_handout_format.html">Tufte Handout</a></li>
+             <li class="divider"></li>
+             <li><a href="r_notebook_format.html">R Notebooks</a></li>
+          </ul>
+        </li>
+         <li class="dropdown">
+          <a href="developer" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Developer <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="developer_html_widgets.html">HTML Widgets</a></li>
+             <li class="divider"></li>
+             <li><a href="developer_document_templates.html">Document Templates</a></li>
+             <li><a href="developer_custom_formats.html">Creating New Formats</a></li>
+             <li class="divider"></li>
+             <li><a href="https://github.com/rstudio/rmarkdown">R Markdown on GitHub</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Migrating from R Markdown v1</h1>
+</div>
+
+
+<div id="changes-in-v2" class="section level2">
+<h2>Changes in v2</h2>
+<p>The current implementation of R Markdown (v2) is an evolution of the original implementation, which was not based on pandoc but rather the <a href="https://github.com/rstudio/markdown">markdown</a> package. Moving to pandoc brings many new features to R Markdown however carries some minor incompatibilities with the previous implementation that are described below.</p>
+<div id="markdown-syntax" class="section level3">
+<h3>Markdown Syntax</h3>
+<p>The following changes to markdown syntax were made in R Markdown v2:</p>
+<ol style="list-style-type: decimal">
+<li>The syntax for superscript now requires a closing ^ (e.g. <code>superscript^2^</code>).</li>
+<li>The WordPress-style LaTeX equation syntax (e.g. <code>$latex &lt;equation&gt;$</code>) is no longer supported.</li>
+<li>Markdown is rendered even if it’s contained within HTML tags.</li>
+</ol>
+</div>
+<div id="the-knitr-package" class="section level3">
+<h3>The knitr Package</h3>
+<p>R Markdown v2 no longer attaches the <strong>knitr</strong> package by default, i.e. it does not do <code>library(knitr)</code> before an R Markdown document is compiled (whereas v1 does), and <strong>knitr</strong> is only <em>loaded</em> but not <em>attached</em>. As a result, you may see an error message like <code>object 'opts_chunk' not found</code> (or other objects in <strong>knitr</strong> not found). Not attaching a package makes the work space cleaner. If you only need to use a small number of objects in a package occasionally, you are recommended to use the <code>::</code> operator, e.g. <code>knitr::opts_chunk</code>. However, sometimes we may need to a lot of objects in a package, and it will be cumbersome to type <code>package::</code> again and again. In this case, you can attach the package to the current R session explicitly, e.g. <code>library(knitr)</code>.</p>
+</div>
+<div id="knitr-caching" class="section level3">
+<h3>Knitr Caching</h3>
+<p>One other important change relates to the use of the <a href="http://yihui.name/knitr/demo/cache/">knitr cache</a>. When R Markdown knits documents it explicitly configures the knitr cache to use a directory based on the name of the input file (e.g. <code>inputfile_cache</code>). If you are setting an explicit cache directory within your document (e.g. via <code>opts_chunk$set(cache.path = ...))</code>) you should remove this code and rely on R Markdown to set the cache directory.</p>
+</div>
+<div id="other-knitr-options" class="section level3">
+<h3>Other knitr Options</h3>
+<p>Besides the <code>cache.path</code> option, the rmarkdown package has also modifies a few other default <a href="http://yihui.name/knitr/options">chunk options</a> in knitr when calling <code>rmarkdown::render()</code>, including</p>
+<ul>
+<li><code>fig.path</code>: the default value in knitr is <code>figure/</code>, and it has been changed to <code>inputfile_files/figure-format/</code>, where <code>format</code> is the output format, such as <code>html</code>;</li>
+<li><code>error</code>: it was changed from <code>TRUE</code> to <code>FALSE</code>, meaning that knitr will stop on error by default;</li>
+</ul>
+<p>There are some other subtle changes, such as <code>fig.retina</code> (from <code>NULL</code> to <code>2</code> for the HTML output), <code>fig.width</code> and <code>fig.height</code> (depending on the document output format). You can print <code>knitr::opts_chunk$get()</code> in an R Markdown document to see the default chunk options configured by rmarkdown.</p>
+</div>
+</div>
+<div id="continuing-to-use-v1" class="section level2">
+<h2>Continuing to Use v1</h2>
+<p>If you are using RStudio you can force RStudio to render documents using R Markdown v1 by adding a special comment to your source file:</p>
+<pre>&lt;!-- rmarkdown v1 --&gt;</pre>
+
+<p>For rendering R Markdown v1 documents outside of RStudio you can continue to use the <a href="https://github.com/rstudio/markdown">markdown</a> package.</p>
+</div>
+
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+<!-- disqus -->
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'rmarkdown'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

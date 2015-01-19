@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Markdown Basics</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">R Markdown v2</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li class="dropdown">
+          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Authoring <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">R Markdown</li>
+             <li><a href="authoring_basics.html">Markdown Basics</a></li>
+             <li><a href="authoring_pandoc_markdown.html">Pandoc Markdown</a></li>
+             <li><a href="authoring_rcodechunks.html">R Code Chunks</a></li>
+             <li><a href="authoring_bibliographies_and_citations.html">Bibliographies &amp; Citations</a></li>
+             <li><a href="authoring_migrating_from_v1.html">Migrating from v1</a></li>
+             <li class="divider"></li>
+             <li><a href="RMarkdownCheatSheet.pdf">Cheat Sheet [PDF]</a></li>
+             <li><a href="RMarkdownReferenceGuide.pdf">Reference Guide [PDF]</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Shiny</li>
+             <li><a href="authoring_shiny.html">Interactive Documents</a></li>
+             <li><a href="authoring_embedded_shiny.html">Embedded Shiny Apps</a></li>
+             <li><a href="authoring_shiny_widgets.html">Creating Shiny Widgets</a></li>
+             <li><a href="authoring_shiny_advanced.html">Advanced Topics</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="formats" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Formats <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Documents</li>
+             <li><a href="html_document_format.html">HTML</a></li>
+             <li><a href="pdf_document_format.html">PDF</a></li>
+             <li><a href="word_document_format.html">Word</a></li>
+             <li><a href="markdown_document_format.html">Markdown</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Presentations</li>
+             <li><a href="ioslides_presentation_format.html">ioslides</a></li>
+             <li><a href="slidy_presentation_format.html">Slidy</a></li>
+             <li><a href="beamer_presentation_format.html">Beamer</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Other</li>
+             <li><a href="package_vignette_format.html">Package Vignette</a></li>
+             <li><a href="tufte_handout_format.html">Tufte Handout</a></li>
+             <li class="divider"></li>
+             <li><a href="r_notebook_format.html">R Notebooks</a></li>
+          </ul>
+        </li>
+         <li class="dropdown">
+          <a href="developer" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Developer <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="developer_html_widgets.html">HTML Widgets</a></li>
+             <li class="divider"></li>
+             <li><a href="developer_document_templates.html">Document Templates</a></li>
+             <li><a href="developer_custom_formats.html">Creating New Formats</a></li>
+             <li class="divider"></li>
+             <li><a href="https://github.com/rstudio/rmarkdown">R Markdown on GitHub</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Markdown Basics</h1>
+</div>
+
+
+<p>This document provides quick references to the most commonly used R Markdown syntax. See the following articles for more in-depth treatment of all the capabilities of R Markdown:</p>
+<ul>
+<li><p><a href="authoring_rcodechunks.html">R Code Chunks</a></p></li>
+<li><p><a href="authoring_pandoc_markdown.html">Pandoc Markdown</a></p></li>
+</ul>
+<div id="emphasis" class="section level4">
+<h4>Emphasis</h4>
+<pre class="markdown"><code>*italic*   **bold**
+
+_italic_   __bold__</code></pre>
+</div>
+<div id="headers" class="section level4">
+<h4>Headers</h4>
+<pre class="markdown"><code># Header 1
+
+## Header 2
+
+### Header 3</code></pre>
+</div>
+<div id="lists" class="section level4">
+<h4>Lists</h4>
+<p>Unordered List:</p>
+<pre class="markdown"><code>* Item 1
+* Item 2
+    + Item 2a
+    + Item 2b</code></pre>
+<p>Ordered List:</p>
+<pre class="markdown"><code>1. Item 1
+2. Item 2
+3. Item 3
+    + Item 3a
+    + Item 3b</code></pre>
+</div>
+<div id="r-code-chunks" class="section level4">
+<h4>R Code Chunks</h4>
+<p>R code will be evaluated and printed</p>
+<pre class="markdown"><code>&#96;&#96;&#96;{r}
+summary(cars$dist)
+summary(cars$speed)
+&#96;&#96;&#96;
+</code></pre>
+
+</div>
+<div id="inline-r-code" class="section level4">
+<h4>Inline R Code</h4>
+<pre class="markdown"><code>There were `r nrow(cars)` cars studied</code></pre>
+</div>
+<div id="links" class="section level4">
+<h4>Links</h4>
+<p>Use a plain http address or add a link to a phrase:</p>
+<pre class="markdown"><code>http://example.com
+
+[linked phrase](http://example.com)</code></pre>
+</div>
+<div id="images" class="section level4">
+<h4>Images</h4>
+<p>Images on the web or local files in the same directory:</p>
+<pre class="markdown"><code>![alt text](http://example.com/logo.png)
+
+![alt text](figures/img.png)</code></pre>
+</div>
+<div id="blockquotes" class="section level4">
+<h4>Blockquotes</h4>
+<pre class="markdown"><code>A friend once said:
+
+&gt; It&#39;s always better to give
+&gt; than to receive.</code></pre>
+</div>
+<div id="plain-code-blocks" class="section level4">
+<h4>Plain Code Blocks</h4>
+<p>Plain code blocks are displayed in a fixed-width font but not evaulated</p>
+<pre class="markdown"><code>&#96;&#96;&#96;
+This text is displayed verbatim / preformatted
+&#96;&#96;&#96;
+</code></pre>
+
+</div>
+<div id="inline-code" class="section level4">
+<h4>Inline Code</h4>
+<pre class="markdown"><code>We defined the `add` function to
+compute the sum of two numbers.
+LaTeX Equations</code></pre>
+</div>
+<div id="latex-equations" class="section level4">
+<h4>LaTeX Equations</h4>
+<p>Inline equation:</p>
+<pre class="markdown"><code>$equation$</code></pre>
+<p>Display equation:</p>
+<pre class="markdown"><code>$$ equation $$</code></pre>
+</div>
+<div id="horizontal-rule-page-break" class="section level4">
+<h4>Horizontal Rule / Page Break</h4>
+<p>Three or more asterisks or dashes:</p>
+<pre class="markdown"><code>******
+
+------</code></pre>
+</div>
+<div id="tables" class="section level4">
+<h4>Tables</h4>
+<pre class="markdown"><code>First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+Reference Style Links and Images</code></pre>
+</div>
+<div id="links-1" class="section level4">
+<h4>Links</h4>
+<pre class="markdown"><code>A [linked phrase][id].</code></pre>
+<p>At the bottom of the document:</p>
+<pre class="markdown"><code>[id]: http://example.com/ &quot;Title&quot;
+Images
+![alt text][id]</code></pre>
+<p>At the bottom of the document:</p>
+<pre class="markdown"><code>[id]: figures/img.png &quot;Title&quot;</code></pre>
+</div>
+<div id="manual-line-breaks" class="section level4">
+<h4>Manual Line Breaks</h4>
+<p>End a line with two or more spaces:</p>
+<pre class="markdown"><code>Roses are red,
+Violets are blue.</code></pre>
+</div>
+<div id="miscellaneous" class="section level4">
+<h4>Miscellaneous</h4>
+<pre class="markdown"><code>superscript^2^
+
+~~strikethrough~~</code></pre>
+</div>
+
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+<!-- disqus -->
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'rmarkdown'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>
