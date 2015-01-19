@@ -11,7 +11,7 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 - Required: [R](http://cran.rstudio.com/), version 3.1.2
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
-- You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo by copy-and-pasting the commands below into the Rstudio console:
+- You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)) by copy-and-pasting the commands below into the Rstudio console:
 
 		# install user directory
 		local_dir <- Sys.getenv("R_LIBS_USER")
@@ -21,7 +21,7 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 		options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 		install.packages(new.packages(), local_dir, dependencies = TRUE)
 
-If you are familiar with Git(Hub) you clone the repo. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
+If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
 
 Note that Radiant does not currently work well with Shiny version 0.11.
 
@@ -63,15 +63,14 @@ You can also open a state file in Rstudio. When you start Radiant from Rstudio i
 
 **Technical note**: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `state_list`. If there is, this value is used. The `state_list` is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `state_list` can be used.
 
-     numericInput("sm_comp_value", "Comparison value:",
-    	            state_init('sm_comp_value',sm_args$sm_comp_value))
-
+	numericInput("sm_comp_value", "Comparison value:",
+							state_init('sm_comp_value',sm_args$sm_comp_value))
 
 ### Todo
 
-- Develop Radiant into an R-package that exports analysis functions
-- Document functions
-- Automated testing using Rselenium
+- Create Radiant-package that exports analysis functions
+- Use roxygen for documentation
+- Testing using Rselenium
 - Use dplyr, tidyr, and magrittr to explore, transform, and filter data
 - etc. etc.
 
