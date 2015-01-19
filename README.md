@@ -13,7 +13,7 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 - You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)) by copy-and-pasting the commands below into the Rstudio console:
 
-		# install user directory
+		# install to user directory
 		local_dir <- Sys.getenv("R_LIBS_USER")
 		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
@@ -23,17 +23,23 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 
 If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
 
-Note that Radiant does not currently work well with Shiny version 0.11.
 
 #### From Rstudio
 
-Navigate to `inst/` in the radiant directory. Choose the app you want to run (e.g., quant or marketing). If you choose the marketing app, from the `inst/marketing` directory, open `ui.R`. Then click the play button (see screenshot below).
-
-When Radiant starts for the first time a number of required packages will be installed from a [miniCRAN](https://github.com/andrie/miniCRAN).
+Navigate to `inst/` in the radiant directory. Choose the app you want to run (e.g., quant or marketing). If you choose the marketing app, from the `inst/marketing` directory, open `ui.R`. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above.
 
 ![Starting Radiant from Rstudio](start_from_rstudio.png)
 
-#### Using a desktop launcher
+**Note that Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove shiny and install the required packages.
+
+	detach('package:shiny', unload=TRUE)
+	remove.packages('shiny')
+	local_dir <- Sys.getenv("R_LIBS_USER")
+	if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+	options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
+	install.packages(new.packages(), local_dir, dependencies = TRUE)
+
+#### Creating a desktop launcher
 
 You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`
 
@@ -63,8 +69,7 @@ You can also open a state file in Rstudio. When you start Radiant from Rstudio i
 
 **Technical note**: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `state_list`. If there is, this value is used. The `state_list` is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `state_list` can be used.
 
-	numericInput("sm_comp_value", "Comparison value:",
-							state_init('sm_comp_value',sm_args$sm_comp_value))
+	numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm_args$sm_comp_value))
 
 ### Todo
 
