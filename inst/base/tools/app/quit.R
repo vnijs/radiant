@@ -46,6 +46,7 @@ output$showInput <- renderPrint({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
     str(inp[sort(names(inp))])
+    print(ls())
   })
 })
 
