@@ -5,14 +5,9 @@ if (.Platform$OS.type == 'windows') {
   Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
 }
 
-# setting path to miniCRAN
-# setwd("~/Desktop/GitHub/radiant_dev/inst/base")
-pth <- normalizePath("../../launchers", winslash = "/")
-
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-
 
 # setting the url for the miniCRAN, using XRAN as in yihui/xran :)
 # options(repos = c(XRAN="http://vnijs.rady.ucsd.edu/site_media/R", CRAN="http://cran.rstudio.com"))
