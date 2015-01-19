@@ -13,9 +13,11 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 - You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo by copy-and-pasting the commands below into the Rstudio console:
 
-    # install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo to user directory
+		# install user directory
 		local_dir <- Sys.getenv("R_LIBS_USER")
 		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+
+		# install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo
 		options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 		install.packages(new.packages(), local_dir, dependencies = TRUE)
 
