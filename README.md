@@ -26,10 +26,6 @@ If you are familiar with Git(Hub) you can clone the repo as usual. You can also 
 
 #### From Rstudio
 
-Navigate to `inst/` in the radiant directory. Choose the app you want to run (e.g., quant or marketing). If you choose the marketing app, from the `inst/marketing` directory, open `ui.R`. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above. After installing, you will most likely need to restart Rstudio before the play button is shown.
-
-![Starting Radiant from Rstudio](start_from_rstudio.png)
-
 **Note that Radiant currently does not support Shiny 0.11.** To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove the installed version of Shiny and install the required packages and versions.
 
 		detach('package:shiny', unload=TRUE)
@@ -38,6 +34,11 @@ Navigate to `inst/` in the radiant directory. Choose the app you want to run (e.
 		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 		options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
 		install.packages(new.packages(), local_dir, dependencies = TRUE)
+
+Once you have install the dependencies, open the Radiant project in Rstudio by double-clicking the `radiant.Rproj` file in the radiant directory. In Rstudio navigate to `inst/` in the radiant directory and choose the app you want to run (e.g., quant or marketing). If you choose the marketing app open `ui.R` from the `inst/marketing` directory. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above. After installing dependencies you may need to restart Rstudio before the play button is shown.
+
+![Starting Radiant from Rstudio](start_from_rstudio.png)
+
 
 #### Creating a desktop launcher
 
