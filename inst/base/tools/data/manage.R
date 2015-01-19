@@ -39,7 +39,7 @@ output$ui_Manage <- renderUI({
         actionButton('loadExampleData', 'Load examples')
       ),
       conditionalPanel(condition = "input.dataType == 'state'",
-        fileInput('uploadState', 'Load previous app state:',  accept = ".rsf"),
+        fileInput('uploadState', 'Load previous app state:',  accept = ".rda"),
         uiOutput("refreshOnUpload")
       )
     ),
@@ -168,8 +168,7 @@ output$downloadData <- downloadHandler(
     robj <- input$dataset
 
     if(ext == 'rda') {
-      if(input$man_data_descr != "") {
-
+      if(!is.null(input$man_data_descr) && input$man_data_descr != "") {
         # save data description
         dat <- getdata()
         attr(dat,"description") <- values[[paste0(robj,"_descr")]]
@@ -247,7 +246,6 @@ observe({
         dat <- c("Loading data through the clipboard is not currently supported on Radiant server.")
     }
 
-#     values[['xls_data']] <- as.data.frame(dat)
     values[['xls_data']] <- data.frame(dat, check.names = FALSE)
     values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
     updateRadioButtons(session = session, inputId = "dataType",
@@ -304,9 +302,13 @@ observe({
   inFile <- input$uploadState
   if(!is.null(inFile)) {
     isolate({
-      load(inFile$datapath)
-      if(exists("RadiantValues")) values <<- do.call(reactiveValues, RadiantValues)
-      if(exists("RadiantInputs")) state_list <<- RadiantInputs
+      tmpEnv <- new.env()
+      load(inFile$datapath, envir=tmpEnv)
+      if (exists("values", envir=tmpEnv, inherits=FALSE))
+        assign(ip_values, tmpEnv$values, envir=.GlobalEnv)
+      if (exists("state_list", envir=tmpEnv, inherits=FALSE))
+        assign(ip_inputs, tmpEnv$state_list, envir=.GlobalEnv)
+      rm(tmpEnv)
     })
   }
 })
@@ -322,8 +324,17 @@ output$refreshOnUpload <- renderUI({
 #######################################
 # Save state
 #######################################
+saveState <- function(filename) {
+  isolate({
+    LiveInputs <- reactiveValuesToList(input)
+    state_list[names(LiveInputs)] <- LiveInputs
+    values <- reactiveValuesToList(values)
+    save(state_list, values , file = filename)
+  })
+}
+
 output$downloadState <- downloadHandler(
-  filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
+  filename = function() { paste0("RadiantState-",Sys.Date(),".rda") },
   content = function(file) {
     saveState(file)
   }
@@ -383,13 +394,6 @@ output$htmlDataExample <- renderText({
   descr <- values[[paste0(input$dataset,"_descr")]]
   nshow <- 10
   if(is.null(descr) || descr == "") nshow <- 30
-
-  if(backup_loaded) {
-    cat(paste0("Backup loaded from ", normalizePath("~/radiant_temp/state"), ".
-        You can reset the app in the Quit menu and/or from the directory
-        mentioned above."))
-    backup_loaded <<- FALSE
-  }
 
   show_data_snippet(nshow = nshow)
 })
