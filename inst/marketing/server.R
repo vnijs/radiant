@@ -18,6 +18,6 @@ shinyServer(function(input, output, session) {
 
   # save state on crash only if running locally and not from Rstudio
   # if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnRefresh(session)
-  if(running_local) saveStateOnRefresh(session)
+  saveStateOnRefresh(session)
 
 })
