@@ -309,7 +309,7 @@ observe({
 output$rCodeEval <- renderPrint({
   if(valsCode$code == 1) return()
   isolate({
-    if(running_local) {
+    # if(running_local) {
       if(is.null(input$r_code_selection) || input$r_code_selection == "") {
         r_code <- input$r_code
       } else {
@@ -319,9 +319,9 @@ output$rCodeEval <- renderPrint({
       r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
       return(HTML(paste(knitr::knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE),
              '<script>', 'MathJax.Hub.Typeset();', '</script>', sep = '\n')))
-    } else {
-      return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
-    }
+    # } else {
+    #   return(HTML("<h2>Code is not evaluated when running Radiant on a server</h2>"))
+    # }
   })
 })
 
