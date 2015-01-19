@@ -33,7 +33,7 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
 }
 
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
-               "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.md")
+               "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.Rmd")
 output$help_data <- reactive(append_help("help_data", "../base/tools/help/"))
 
 help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "random.md",

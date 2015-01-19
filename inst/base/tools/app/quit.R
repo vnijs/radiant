@@ -78,27 +78,6 @@ observe({
 # output$refreshOnReset <- renderUI({
 #   if(input$resetState %>% not_pressed) return()
 #
-#   state_list <<- list()
-#   values <<- reactiveValues()
-#   init_state()
-#
 #   # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
 #   tags$script("window.location.reload();")
-# })
-
-# observe({
-#   # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
-#   # if(input$resetState %>% not_pressed) return()
-#   input$resetState
-#   tags$script("window.location.reload();")
-# })
-
-# for server reset
-# observe({
-#   if(input$resetState %>% not_pressed) return()
-#   isolate({
-#     state_list <- list()
-#     values <- reactiveValues()
-#     init_state()
-#   })
 # })
