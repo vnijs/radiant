@@ -30,6 +30,7 @@ saveStateOnRefresh <- function(session = session) {
       if(input$resetState %>% not_pressed &&
          input$quitApp %>% not_pressed &&
          is.null(input$uploadState)) {
+
         # RadiantInputs <- state_list
         # LiveInputs <- reactiveValuesToList(input)
         # RadiantInputs[names(LiveInputs)] <- LiveInputs
