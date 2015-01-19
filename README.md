@@ -11,17 +11,16 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 - Required: [R](http://cran.rstudio.com/), version 3.1.2
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
-- You can install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) by copy-and-pasting the commands below into the Rstudio console:
+- You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo by copy-and-pasting the commands below into the Rstudio console:
 
 		# install to user directory
 		local_dir <- Sys.getenv("R_LIBS_USER")
 		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-
-    # install packages
+    # install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo
 		options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 		install.packages(new.packages(), local_dir, dependencies = TRUE)
 
-If you are familiar with Git(Hub) clone the repo. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
+If you are familiar with Git(Hub) you clone the repo. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
 
 Note that Radiant does not currently work well with Shiny version 0.11.
 
