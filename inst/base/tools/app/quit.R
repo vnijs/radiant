@@ -11,6 +11,8 @@ output$savequit <- renderUI({
       wellPanel(
         HTML("<label>Reset app state:</label>"),
         HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button></br>"),
+#         actionButton('resetState', 'Reset'),
+#         uiOutput("refreshOnReset"),
         checkboxInput('showInput', 'Show input', FALSE), br(),
         checkboxInput('showState', 'Show state', FALSE)
       ),
@@ -46,7 +48,6 @@ output$showInput <- renderPrint({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
     str(inp[sort(names(inp))])
-    print(ls())
   })
 })
 
@@ -73,3 +74,31 @@ observe({
     })
   }
 })
+
+# output$refreshOnReset <- renderUI({
+#   if(input$resetState %>% not_pressed) return()
+#
+#   state_list <<- list()
+#   values <<- reactiveValues()
+#   init_state()
+#
+#   # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
+#   tags$script("window.location.reload();")
+# })
+
+# observe({
+#   # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
+#   # if(input$resetState %>% not_pressed) return()
+#   input$resetState
+#   tags$script("window.location.reload();")
+# })
+
+# for server reset
+# observe({
+#   if(input$resetState %>% not_pressed) return()
+#   isolate({
+#     state_list <- list()
+#     values <- reactiveValues()
+#     init_state()
+#   })
+# })
