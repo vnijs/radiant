@@ -34,4 +34,4 @@ The coordinates shown in the Summary tab are used to plot the brands in two-dime
 
 From the plot a manager might conclude that the brands that are closest together in the map are perceived by consumers as close substitutes and, hence, close competitors in the minds of consumers in this market segment. A manager for Aqua Fresh or Macleans, in contrast, might focus less on Sensodyne when developing a competitive positioning plan for her brand. An important limitation of the brand maps based on (dis)similarity data is that the axes are difficult to interpret. For example, why are Close-up and Crest located at opposite ends of the horizontal axes? The researcher could respondents to explain the meaning of the axes or else obtain additional attribute information for the brands and correlate/overlay these on to the plot to facilitate interpretation. Such attribute data could, however, also be used to create a brand map without the need for (dis)similarity ratings (see Maps > Attribute).
 
-![mds toothpaste - plots org](figures_marketing/mds_tpbrands_plots.png)
+![mds toothpaste - plots](figures_marketing/mds_tpbrands_plots.png)
