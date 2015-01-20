@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"suppre",
+				"suppressMessages"
+			],
+			[
 				"mathj",
 				"mathjax_script"
 			],
@@ -20,10 +24,10 @@
 	"buffers":
 	[
 		{
-			"file": "index.Rmd",
+			"file": "include/before_body.html",
 			"settings":
 			{
-				"buffer_size": 7226,
+				"buffer_size": 4766,
 				"line_ending": "Unix"
 			}
 		}
@@ -140,13 +144,72 @@
 	},
 	"expanded_folders":
 	[
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/images",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/include",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app"
 	],
 	"file_history":
 	[
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/help/kmeansClustering.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/mds.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/kmeansClustering.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/README.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/include/after_body.html",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/about.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/about.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/DESCRIPTION",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/videos_quant.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/regression.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/percepmap.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/preFactor.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/compareMeans.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/compareProps.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/crossTabs.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/ctl.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/MakeFile.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/Makefile",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/manage.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/transform.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/README.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/view.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/visualize.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/conjoint.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/fullFactor.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/hcclustering.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/index.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/explore.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/single_mean.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/sampleSize.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/singleProp.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/random.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/random.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/quant/correlation.md",
+		"/Users/vnijs/Dropbox/BA_UCD_MSBA/UCD_MSBA_proposal_review.Rmd",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/merge.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/view.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/help/visualize.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/marketing/visualize.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/state.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/empty.css",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/style.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/Makefile",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/include/before_body.html",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/base/_output.yaml",
 		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/CNAME",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/authoring_basics.md",
+		"/Users/vnijs/Desktop/GitHub/rmarkdown/authoring_rcodechunks.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/authoring_basics.html",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/index.html",
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/README.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/README.md",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/dependencies.R",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/quit.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/README.md",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/README-Install.md",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/report.R",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/server.R",
@@ -185,7 +248,6 @@
 		"/Users/vnijs/.profile",
 		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/glm/glm.R",
 		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/glm/glm_run.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_parts/README.md",
 		"/Users/vnijs/Desktop/GitHub/radiant_parts/.gitignore",
 		"/Users/vnijs/Desktop/install_superpack.sh",
 		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/.Rapp.history",
@@ -193,7 +255,6 @@
 		"/Users/vnijs/Dropbox/BA_UCD_MSBA/UCD_MSBA_proposal_review.md",
 		"/Users/vnijs/Dropbox/BA-IAA-visit/BA-indep-study/BA-indep.Rmd",
 		"/Users/vnijs/Dropbox/BA-IAA-visit/IAA-visit-questions.Rmd",
-		"/Users/vnijs/Dropbox/BA_UCD_MSBA/UCD_MSBA_proposal_review.Rmd",
 		"/Users/vnijs/Dropbox/AdvertisingTiming/JMR_11_0335_130319",
 		"/Users/vnijs/Dropbox/reviewing/JMR.14.0576/notes.md",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/radiant_as_a_package/DESCRIPTION",
@@ -222,59 +283,11 @@
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/tests/test-basic.R",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression_run.R",
 		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/single_mean.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression_ui.R",
-		"/Users/vnijs/Dropbox/radiant/inst/base/global.R",
-		"/Users/vnijs/Dropbox/radiant/inst/quant/global.R",
-		"/Users/vnijs/Dropbox/radiant/inst/quant/server.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/dependencies.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/pkgs.R",
-		"/Users/vnijs/Desktop/gh_radiant_marketing.command",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/miniCRAN/dependencies.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/miniCRAN/rsync_miniCRAN.sh",
-		"/Users/vnijs/Dropbox/Django/2013/Nijs/site_media/R/update.R",
-		"/Users/vnijs/Dropbox/Django/Nijs/site_media/R/update.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/todo_notes.md",
-		"/Users/vnijs/Desktop/todo_notes.md",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/single_mean_test.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/data_ui_and_tabs.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/conjoint.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/radiant.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/various/stuff/testing.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/explore.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/filter.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/merge.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/transform.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/view.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/visualize.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/factor.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/maps.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/percepmap.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis_skeleton.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/random.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/regression.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/base/manage/manage.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base_run.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base_ui.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/tools/analysis/base.R",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/miniCRAN/pkgs.R",
-		"/Users/vnijs/Dropbox/teaching/radiant_stuff/radiant_dev/inst/base/radiant.R",
-		"/Users/vnijs/Dropbox/teaching/radiant_stuff/dev-old/dev_branch/base/radiant.R",
-		"/Users/vnijs/Dropbox/teaching/radiant_stuff/dev-old/dev/base/radiant.R",
-		"/Users/vnijs/Dropbox/teaching/radiant_stuff/sim/GentilLentel.R",
-		"/Users/vnijs/Dropbox/teaching/radiant_stuff/sim/RadyTastyPastry.R",
-		"/Users/vnijs/Dropbox Pro/GitHub/make_radiant/radiant/inst/tests/regression_runApp.txt",
-		"/Users/vnijs/Dropbox Pro/GitHub/radiant_dev_old/scratch.R",
-		"/Users/vnijs/Desktop/stuff/rad-stuff/radiant-stuff/radiant_dev_old/scratch.R",
-		"/Users/vnijs/Desktop/stuff/rad-stuff/radiant-stuff/radiant_dev_old/dev_scratch.R",
-		"/Users/vnijs/Dropbox Pro/GitHub/radiant_dev_old/dev_scratch.R",
-		"/Users/vnijs/Dropbox/teaching/radiant_stuff/joe-on-making-a-shiny-package.md",
-		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/help.R"
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression.R"
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 37.0
 	},
 	"find_in_files":
 	{
@@ -291,6 +304,10 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"^##### ",
+			"^#### ",
+			"^### ",
+			"### ",
 			"img",
 			"resetState",
 			"running_loca",
@@ -414,18 +431,17 @@
 			"numer",
 			".dots",
 			"htmloutput",
-			"renderui",
-			"_base",
-			"_random_",
-			"_data_",
-			"label"
+			"renderui"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"#### ",
+			"### ",
+			"## ",
 			"sm_args",
 			"dataset",
 			"Vincent Nijs (2015)",
@@ -451,36 +467,47 @@
 			[
 				{
 					"buffer": 0,
-					"file": "index.Rmd",
-					"semi_transient": true,
+					"file": "include/before_body.html",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7226,
+						"buffer_size": 4766,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								4766,
+								4766
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/R-Box/syntax/R Markdown.tmLanguage",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"vintage":
 							{
+								"_vintageous_glue_until_normal_mode": false,
+								"_vintageous_non_interactive": true,
+								"_vintageous_processing_notation": false,
 								"action": null,
 								"action_count": "",
 								"mode": "mode_normal",
 								"motion": null,
 								"motion_count": "",
 								"must_capture_register_name": false,
+								"normal_insert_count": "1",
 								"partial_sequence": "",
 								"register": "\"",
+								"repeat_data":
+								[
+									"vi",
+									"dd",
+									"mode_internal_normal",
+									null
+								],
 								"sequence": "",
 								"xpos": 0
 							}
@@ -563,6 +590,7 @@
 	"selected_group": 0,
 	"settings":
 	{
+		"_vintageous_last_buffer_search": "HTML_FILES",
 		"vintage":
 		{
 		}
