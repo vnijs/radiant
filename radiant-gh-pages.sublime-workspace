@@ -1,0 +1,579 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"mathj",
+				"mathjax_script"
+			],
+			[
+				"new",
+				"newfood2014"
+			],
+			[
+				"rt",
+				"rtimes"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.Rmd",
+			"settings":
+			{
+				"buffer_size": 7226,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 93.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"color",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"colo",
+				"Colorsublime: Browse Themes"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"instl",
+				"Package Control: Install Package"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"upd",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"proj",
+				"Project: Save As"
+			],
+			[
+				"pro",
+				"Project: Save As"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"up",
+				"Evernote: Update Evernote Note"
+			],
+			[
+				"upda",
+				"Evernote: Update Evernote Note"
+			],
+			[
+				"ever",
+				"Evernote: Update Evernote Note"
+			],
+			[
+				"evern",
+				"Evernote: Update Evernote Note"
+			],
+			[
+				"ever up",
+				"Evernote: Update Evernote Note"
+			],
+			[
+				"eve",
+				"Evernote: Open Evernote Note"
+			],
+			[
+				"ev",
+				"Evernote: Open Evernote Note"
+			],
+			[
+				"vinta",
+				"Vintageous: Open .vintageousrc"
+			],
+			[
+				"evernot",
+				"Evernote: Open Evernote Note"
+			],
+			[
+				"evernote",
+				"Evernote: New empty note"
+			]
+		],
+		"width": 732.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/Users/vnijs/Desktop/GitHub/radiant_gh-pages/CNAME",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/dependencies.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/quit.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/README.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/README-Install.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/report.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/server.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/manage.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/global.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/server.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/launchers/dependencies.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/global.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/server.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/R/radiant.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/ui.R",
+		"/Users/vnijs/Desktop/radiant_marketing.command",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/base/manage/manage.R",
+		"/Users/vnijs/Dropbox/radiant/dev/base/tools/data/manage.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/radiant.sublime-project",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/base.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/single_mean.R",
+		"/Users/vnijs/Desktop/rad_starters/radiant_marketing.command",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/single_mean_ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/launchers/make/make_mac.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/launchers/marketing/make_mac.command",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/launchers/make/make_win.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/launchers/pkgs.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/init.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/glm/glmreg.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/single_mean.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/regression/regression_ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/regression/regression.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/todo_notes.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/glm/glmreg_ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/single_mean_ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_miniCRAN/src/contrib/PACKAGES",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/single_mean_run.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/single_mean_test.R",
+		"/Users/vnijs/.bash_profile",
+		"/Users/vnijs/.profile",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/glm/glm.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/glm/glm_run.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/README.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/.gitignore",
+		"/Users/vnijs/Desktop/install_superpack.sh",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/inst/quant/base/.Rapp.history",
+		"/Users/vnijs/Desktop/GitHub/radiant_parts/README-Install.md",
+		"/Users/vnijs/Dropbox/BA_UCD_MSBA/UCD_MSBA_proposal_review.md",
+		"/Users/vnijs/Dropbox/BA-IAA-visit/BA-indep-study/BA-indep.Rmd",
+		"/Users/vnijs/Dropbox/BA-IAA-visit/IAA-visit-questions.Rmd",
+		"/Users/vnijs/Dropbox/BA_UCD_MSBA/UCD_MSBA_proposal_review.Rmd",
+		"/Users/vnijs/Dropbox/AdvertisingTiming/JMR_11_0335_130319",
+		"/Users/vnijs/Dropbox/reviewing/JMR.14.0576/notes.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/radiant_as_a_package/DESCRIPTION",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/radiant_as_a_package/NAMESPACE",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/tests/tests_from_fall_2013/test-regression.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/tests/tests_from_fall_2013/regression_reactive.txt",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/radiant_as_a_package/inst/tests/regression_runApp.txt",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/tests/tests_from_fall_2013/regression_correct.txt",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/tests/tests_from_fall_2013/regression_no_runApp.txt",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/ui.R",
+		"/Users/vnijs/Dropbox/Karsten/Predictive Models/predictive_models.Rmd",
+		"/Users/vnijs/Dropbox Pro/GitHub/radiant_dev/inst/marketing_fall/tools/help/glmreg.Rmd",
+		"/Users/vnijs/Dropbox Pro/GitHub/radiant_dev/inst/marketing_fall/tools/analysis/glmreg.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/glm/glmreg.R",
+		"/Users/vnijs/anaconda/pkgs/statsmodels-0.5.0-np19py27_2/lib/python2.7/site-packages/statsmodels/genmod/tests/results/glm_test_resids.py",
+		"/Users/vnijs/anaconda/pkgs/statsmodels-0.5.0-np19py34_2/lib/python3.4/site-packages/statsmodels/genmod/tests/results/glm_test_resids.py",
+		"/Users/vnijs/Desktop/radiant 2/inst/marketing/tools/analysis/regression.R",
+		"/Users/vnijs/Desktop/radiant/inst/marketing/tools/analysis/regression.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/RadyMenu/debugging/old/conjoint/R/caLogit.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/RadyMenu/R/regression.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/dev-old/dev_branch/marketing/tools/help/glmreg.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/single_mean_ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/single_mean_run.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/cluster.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/tests/test-basic.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression_run.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/single_mean.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/regression/regression_ui.R",
+		"/Users/vnijs/Dropbox/radiant/inst/base/global.R",
+		"/Users/vnijs/Dropbox/radiant/inst/quant/global.R",
+		"/Users/vnijs/Dropbox/radiant/inst/quant/server.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/dependencies.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/pkgs.R",
+		"/Users/vnijs/Desktop/gh_radiant_marketing.command",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/miniCRAN/dependencies.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/miniCRAN/rsync_miniCRAN.sh",
+		"/Users/vnijs/Dropbox/Django/2013/Nijs/site_media/R/update.R",
+		"/Users/vnijs/Dropbox/Django/Nijs/site_media/R/update.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/todo_notes.md",
+		"/Users/vnijs/Desktop/todo_notes.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base/single_mean_test.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/data_ui_and_tabs.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/conjoint.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/radiant.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/various/stuff/testing.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/explore.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/filter.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/merge.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/transform.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/view.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/data/visualize.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/factor.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/maps.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/tools/analysis/percepmap.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis_skeleton.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/random.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/quant/tools/analysis/regression.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/base/manage/manage.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base_run.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/base_ui.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/app_dev/quant/tools/analysis/base.R",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/miniCRAN/pkgs.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/radiant_dev/inst/base/radiant.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/dev-old/dev_branch/base/radiant.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/dev-old/dev/base/radiant.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/sim/GentilLentel.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/sim/RadyTastyPastry.R",
+		"/Users/vnijs/Dropbox Pro/GitHub/make_radiant/radiant/inst/tests/regression_runApp.txt",
+		"/Users/vnijs/Dropbox Pro/GitHub/radiant_dev_old/scratch.R",
+		"/Users/vnijs/Desktop/stuff/rad-stuff/radiant-stuff/radiant_dev_old/scratch.R",
+		"/Users/vnijs/Desktop/stuff/rad-stuff/radiant-stuff/radiant_dev_old/dev_scratch.R",
+		"/Users/vnijs/Dropbox Pro/GitHub/radiant_dev_old/dev_scratch.R",
+		"/Users/vnijs/Dropbox/teaching/radiant_stuff/joe-on-making-a-shiny-package.md",
+		"/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/tools/app/help.R"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"",
+			"*.R",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"img",
+			"resetState",
+			"running_loca",
+			"backup",
+			"backup_loaded",
+			"radiant_temp",
+			"backup_loaded",
+			"NULL",
+			"exists",
+			"prev",
+			"state",
+			"not_available",
+			"app_dev",
+			"pkgs",
+			"pth",
+			"dependencies",
+			"BH",
+			".print.summary.lm",
+			"select",
+			"reg_pred_buttons",
+			"dataframe",
+			"reg_predict_buttons",
+			"input.reg_predict_buttons",
+			"reg_predict",
+			"saveres",
+			"reg_intsel",
+			"uiReg_intsel",
+			"uiReg_var3",
+			"uiReg_var2",
+			"uiReg_var1",
+			"reg_var3",
+			"reg_var2",
+			"reg_var1",
+			"reg_var3",
+			"reg_var2",
+			"reg_var1",
+			"reg_int_vec",
+			"int_vec",
+			"reg_int_vec",
+			"reg_vars",
+			"g_plots",
+			"r_plots",
+			"g_plots",
+			"glm_interactions",
+			"glm_linkfunc",
+			"not_pressed",
+			"inChecker",
+			"sm_inputs",
+			"inputs_sm",
+			"args_sm",
+			"base_alt",
+			"error",
+			"set_",
+			"datasets",
+			"helpModal",
+			"tmp_file",
+			"valsRmd",
+			"tmp_file",
+			"650",
+			"updateReportViz",
+			"rstudio",
+			"snippet",
+			"runApp",
+			"run_app",
+			"base_alt",
+			"clipboard",
+			"clip",
+			"clipboard",
+			"clip",
+			"princi",
+			"testingRadiant",
+			"tagList",
+			"dataDescriptionOutput",
+			"inclRmd",
+			"function_list",
+			"Vincent Nijs (2014)",
+			"2014",
+			"bin",
+			"input",
+			"details",
+			"textare",
+			"280",
+			"ruler",
+			"man",
+			"textarea",
+			"shinyFiles",
+			"textarea",
+			"which(",
+			"select",
+			"which(isNum",
+			"which\\(isNum\\)",
+			"which(isNum)",
+			"(which(isNum))",
+			"which",
+			"miss",
+			"sep",
+			"recode",
+			"\\%",
+			"Radyant",
+			"radyant",
+			"factor",
+			"maps",
+			"data",
+			"help_data",
+			"random",
+			"natrual",
+			"figures_quant",
+			"factors",
+			"\\%",
+			"inclMD",
+			"$",
+			"log.",
+			" |:-------------------------",
+			"inclRmd",
+			"inclMD",
+			"files",
+			"addresource",
+			"uiCor_var",
+			"subset",
+			"split",
+			"numer",
+			".dots",
+			"htmloutput",
+			"renderui",
+			"_base",
+			"_random_",
+			"_data_",
+			"label"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"sm_args",
+			"dataset",
+			"Vincent Nijs (2015)",
+			"%",
+			"_",
+			"_regression",
+			"_base_",
+			"_random_",
+			" \\$",
+			"pdf"
+		],
+		"reverse": false,
+		"show_context": false,
+		"use_buffer2": false,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.Rmd",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 7226,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/R-Box/syntax/R Markdown.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"vintage":
+							{
+								"action": null,
+								"action_count": "",
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"must_capture_register_name": false,
+								"partial_sequence": "",
+								"register": "\"",
+								"sequence": "",
+								"xpos": 0
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 246.0
+	},
+	"project": "radiant-gh-pages.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"vintage":
+		{
+		}
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 141.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

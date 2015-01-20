@@ -1,47 +1,258 @@
 <!DOCTYPE html>
-<html>
 
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Radiant : Business analytics using R and Shiny">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+<head>
 
-    <title>Radiant</title>
-  </head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
 
-  <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/mostly-harmless/radiant">View on GitHub</a>
 
-          <h1 id="project_title">Radiant</h1>
-          <h2 id="project_tagline">Business analytics using R and Shiny</h2>
+<title>Radiant – Business analytics using R and Shiny</title>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/mostly-harmless/radiant/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/mostly-harmless/radiant/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Radiant</a>
     </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li class="dropdown">
+          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Authoring <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">R Markdown</li>
+             <li><a href="authoring_basics.html">Markdown Basics</a></li>
+             <li><a href="authoring_pandoc_markdown.html">Pandoc Markdown</a></li>
+             <li><a href="authoring_rcodechunks.html">R Code Chunks</a></li>
+             <li><a href="authoring_bibliographies_and_citations.html">Bibliographies &amp; Citations</a></li>
+             <li><a href="authoring_migrating_from_v1.html">Migrating from v1</a></li>
+             <li class="divider"></li>
+             <li><a href="RMarkdownCheatSheet.pdf">Cheat Sheet [PDF]</a></li>
+             <li><a href="RMarkdownReferenceGuide.pdf">Reference Guide [PDF]</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Shiny</li>
+             <li><a href="authoring_shiny.html">Interactive Documents</a></li>
+             <li><a href="authoring_embedded_shiny.html">Embedded Shiny Apps</a></li>
+             <li><a href="authoring_shiny_widgets.html">Creating Shiny Widgets</a></li>
+             <li><a href="authoring_shiny_advanced.html">Advanced Topics</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<div id="header">
+<h1 class="title">Radiant – Business analytics using R and Shiny</h1>
+</div>
 
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Radiant maintained by <a href="https://github.com/mostly-harmless">mostly-harmless</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+<hr />
+<p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Developed by <a href="" title="http://rady.ucsd.edu/faculty/directory/nijs/">Vincent Nijs</a> and <a href="" title="http://rady.ucsd.edu/faculty/directory/august/">Terence August</a>. You can reach us at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a></p>
+<div id="source-code" class="section level3">
+<h3>Source code</h3>
+<p>Three (related) apps are included in the inst directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools.</p>
+</div>
+<div id="install" class="section level3">
+<h3>Install</h3>
+<ul>
+<li>Required: <a href="http://cran.rstudio.com/">R</a>, version 3.1.2</li>
+<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox)</li>
+<li>Suggested: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
+<li><p>You should install package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>) by copy-and-pasting the commands below into the Rstudio console:</p>
+<h1>install to user directory</h1>
+<p>local_dir &lt;- Sys.getenv(“R_LIBS_USER”) if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)</p>
+<h1>install packages from <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo</h1>
+<p>options(repos = c(XRAN = “<a href="http://mostly-harmless.github.io/radiant_miniCRAN/">http://mostly-harmless.github.io/radiant_miniCRAN/</a>”)) install.packages(new.packages(), local_dir, dependencies = TRUE)</p></li>
+</ul>
+<p>If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the <code>Download ZIP</code> button and unzipping the folder to, for example, your Desktop.</p>
+<div id="from-rstudio" class="section level4">
+<h4>From Rstudio</h4>
+<p><strong>Note that Radiant currently does not support Shiny 0.11.</strong> To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove the installed version of Shiny and install the required packages and versions.</p>
+<pre><code>detach(&#39;package:shiny&#39;, unload=TRUE)
+remove.packages(&#39;shiny&#39;)
+local_dir &lt;- Sys.getenv(&quot;R_LIBS_USER&quot;)
+if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
+install.packages(new.packages(), local_dir, dependencies = TRUE)</code></pre>
+<p>Once you have install the dependencies, open the Radiant project in Rstudio by double-clicking the <code>radiant.Rproj</code> file in the radiant directory. In Rstudio navigate to <code>inst/</code> in the radiant directory and choose the app you want to run (e.g., quant or marketing). If you choose the marketing app open <code>ui.R</code> from the <code>inst/marketing</code> directory. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above. After installing dependencies you may need to restart Rstudio before the play button is shown.</p>
+<p><img src="start_from_rstudio.png" alt="Starting Radiant from Rstudio" /></p>
+</div>
+<div id="creating-a-desktop-launcher" class="section level4">
+<h4>Creating a desktop launcher</h4>
+<p>You can also create a launcher on your Desktop to make it easy to start Radiant. Go to <code>launchers/quant</code> or <code>lauchers/marketing</code></p>
+<p>On Windows you create a launcher for Radiant on your Desktop by double-clicking the make_win.bat file. Find the new file on your Desktop (i.e., radiant_quant.bat or radiant_marketing.bat). Double click the .bat file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute</p>
+<p>For Mac, double-click the make_mac.command file to create a launcher for Radiant on your Desktop. Find the new file on your Desktop (i.e., radiant_quant.command or radiant_marketing.command). Double click the .command file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute</p>
+<p>When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on <code>Quit</code> in the Navigation bar and then click the <code>Quit</code> button. The Radiant process will stop and the browser window will close.</p>
+</div>
+<div id="online" class="section level4">
+<h4>Online</h4>
+<p>To tryout the app online go to <a href="http://vnijs.rady.ucsd.edu:3838/marketing">http://vnijs.rady.ucsd.edu:3838/marketing</a>.</p>
+</div>
+</div>
+<div id="help" class="section level3">
+<h3>Help</h3>
+<p>There are numerous help files linked in the app. See for example the <code>Help</code> menu at <a href="http://vnijs.rady.ucsd.edu:3838/marketing">http://vnijs.rady.ucsd.edu:3838/marketing</a>. To help you get started using Radiant you can also take a look at this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
+</div>
+<div id="saving-and-loading-state" class="section level3">
+<h3>Saving and loading state</h3>
+<p>To save the analysis you did in Radiant you can save the state of the app (see Data &gt; Manage). You can open the state file at a latter time to continue where you left off. For an example, load the state_file <code>RadiantState.rda</code> in <code>example_data</code> in the radiant folder (see the View and Visualize tabs after loading the file).</p>
+<p>A related feature in Radiant is that state is also maintained if you close (and reopen) the browser and/or hit refresh on the browser. Use Quit &gt; Reset to return to a clean/new state.</p>
+<p>Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit &gt; Quit to stop the app, a list called <code>values</code> and a list called <code>state_list</code> will be put into Rstudio’s global workspace. If you start radiant again it will use these lists (i.e., <code>values</code> and <code>state_list</code>) to restore state. This can be convenient if you want to make changes to a data file and load it back into Radiant.</p>
+<p>You can also open a state file in Rstudio. When you start Radiant from Rstudio it will use the state files to recreate a previous app state.</p>
+<p><strong>Technical note</strong>: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>state_list</code>. If there is, this value is used. The <code>state_list</code> is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>state_list</code> can be used. <code>sm_args$sm_comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
+<pre><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$sm_comp_value))</code></pre>
+</div>
+<div id="todo" class="section level3">
+<h3>Todo</h3>
+<ul>
+<li>Create Radiant-package that exports analysis functions</li>
+<li>Use roxygen for documentation</li>
+<li>Testing using Rselenium</li>
+<li>Use dplyr, tidyr, and magrittr to explore, transform, and filter data</li>
+<li>etc. etc.</li>
+</ul>
+</div>
+<div id="license" class="section level3">
+<h3>License</h3>
+<p>The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.</p>
+<p>As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.</p>
+<p>If you are interested in using Radiant please email me at <a href="mailto:vnijs@ucsd.edu">vnijs@ucsd.edu</a></p>
+<p>© Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a></p>
+</div>
 
-  </body>
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
 </html>
