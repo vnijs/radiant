@@ -174,11 +174,7 @@ img {
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
-
-
-
-
-
+        <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -201,8 +197,8 @@ Insert Math as a centered equation:
 $$y = \alpha + \beta \times x$$
 -->
 
-<div id="type" class="section level4">
-<h4>Type</h4>
+<div id="type" class="section level3">
+<h3>Type</h3>
 <p>When you select Type from the ‘Transformation type’ drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, to change a variable of type factor or character to a variable of type date. Click the ‘Save changes’ button to change variable(s) in the data set. A description of the type transformations included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>As factor: convert a variable to type factor (i.e., as.factor(x))</li>
@@ -214,8 +210,8 @@ $$y = \alpha + \beta \times x$$
 <li>As date (ymd): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day</li>
 </ol>
 </div>
-<div id="change" class="section level4">
-<h4>Change</h4>
+<div id="change" class="section level3">
+<h3>Change</h3>
 <p>When you select Change from the ‘Transformation type’ drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose Log from the ‘Apply function’ menu. A new variable is created with the prefix ‘log.’. Click the ‘Save changes’ button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>Log: create a log-transformed version of the selected variable (i.e., log(x))</li>
@@ -228,8 +224,8 @@ $$y = \alpha + \beta \times x$$
 <li>Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, …, 90th percentiles.</li>
 </ol>
 </div>
-<div id="create" class="section level4">
-<h4>Create</h4>
+<div id="create" class="section level3">
+<h3>Create</h3>
 <p>Choose Create from the ‘Transformation type’ drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the ‘=’ sign is the name of the new variable. On the right of the ‘=’ sign you can include other variable names and basic R functions. After you have typed the command press return to create the new variable and press ‘Save changes’ to add it to the data.</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new variable z that is the difference between variables x and y in the data</p>
@@ -249,12 +245,12 @@ $$y = \alpha + \beta \times x$$
 </ol>
 <p>Note: For 6 and 7 you should convert the new variable to a factor for analysis (see Type above)</p>
 </div>
-<div id="clipboard" class="section level4">
-<h4>Clipboard</h4>
+<div id="clipboard" class="section level3">
+<h3>Clipboard</h3>
 <p>It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel format use the ‘clipboard’ feature in Data &gt; Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard from Excel (i.e, CTRL-C on Windows and CMD-C on Mac). Select ‘Clipboard’ from the ‘Transformation type’ dropdown and paste your new data into the ‘Paste from Excel’ box shown. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click ‘Save changes’.</p>
 </div>
-<div id="recode" class="section level4">
-<h4>Recode</h4>
+<div id="recode" class="section level3">
+<h3>Recode</h3>
 <p>To use the recode feature select the variable you want to change and choose ‘Recode’ from the ‘Transformation type’ dropdown. Provide one or more recode commands (separate the commands by a ‘;’) and press return to see the newly created variable. Click ‘Save changes’ to add the new variable to the data. Some recode command examples are given below.</p>
 <ol style="list-style-type: decimal">
 <li><p>All values below 20 are set to ‘Low’ and all others to ‘High’</p>
@@ -267,20 +263,20 @@ $$y = \alpha + \beta \times x$$
 <p>400 = NA</p></li>
 </ol>
 </div>
-<div id="rename" class="section level4">
-<h4>Rename</h4>
+<div id="rename" class="section level3">
+<h3>Rename</h3>
 <p>Choose ‘Rename’ from the ‘Transformation type’ dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a ‘,’. Press return to see the variables with their new names on screen and press ‘Save changes’ to alter the variable names in the original data.</p>
 </div>
-<div id="remove-columns" class="section level4">
-<h4>Remove columns</h4>
+<div id="remove-columns" class="section level3">
+<h3>Remove columns</h3>
 <p>Choose ‘Remove columns’ from the ‘Transformation type’ dropdown and select one or more variables to remove. Press ‘Save changes’ to remove the variables from the original data. Note that this action cannot be undone. If you want to the original variables back you will have to reload the data through the Data &gt; Manage page.</p>
 </div>
-<div id="remove-missing" class="section level4">
-<h4>Remove missing</h4>
+<div id="remove-missing" class="section level3">
+<h3>Remove missing</h3>
 <p>Choose ‘Remove missing’ from the ‘Transformation type’ dropdown to remove missing values. Press ‘Save changes’ to remove all rows with missing values from the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of n changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data &gt; Manage page.</p>
 </div>
-<div id="subset" class="section level4">
-<h4>Subset</h4>
+<div id="subset" class="section level3">
+<h3>Subset</h3>
 <p>Choose ‘Subset’ from the ‘Transformation type’ dropdown to select (or omit) specific sets of rows from the data. You can use &gt; and &lt; signs and even combine filter commands. For example, x &gt; 3 &amp; y == 2 would select only those rows for which the variable x has values larger than 3 <strong>and</strong> for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen. You should see the number of observations in the data summary change (i.e., the value of n changes). Press ‘Save changes’ to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data &gt; Manage page.</p>
 </div>
 
@@ -290,6 +286,8 @@ $$y = \alpha + \beta \times x$$
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>
 
+<!-- mathjax -->
+<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <script>
 

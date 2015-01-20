@@ -6,11 +6,11 @@ title: Radiant -- Business analytics using R and Shiny
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Developed by [Vincent Nijs]("http://rady.ucsd.edu/faculty/directory/nijs/") and [Terence August]("http://rady.ucsd.edu/faculty/directory/august/"). You can reach us at radiant@rady.ucsd.edu
 
-### Source code
+## Source code
 
 Three (related) apps are included in the inst directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools.
 
-### Install
+## Install
 
 - Required: [R](http://cran.rstudio.com/), version 3.1.2
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
@@ -30,7 +30,7 @@ install.packages(new.packages(), local_dir, dependencies = TRUE)
 If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
 
 
-#### From Rstudio
+### From Rstudio
 
 **Note that Radiant currently does not support Shiny 0.11.** To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove the installed version of Shiny and install the required packages and versions.
 
@@ -51,7 +51,7 @@ Once you have install the dependencies, open the Radiant project in Rstudio by d
 ![Starting Radiant from Rstudio](images/start_from_rstudio.png)
 
 
-#### Creating a desktop launcher
+### Creating a desktop launcher
 
 You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`
 
@@ -61,15 +61,15 @@ For Mac, double-click the make\_mac.command file to create a launcher for Radian
 
 When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button. The Radiant process will stop and the browser window will close.
 
-#### Online
+### Online
 
 To tryout the app online go to <http://vnijs.rady.ucsd.edu:3838/marketing>.
 
-### Help
+## Help
 
 There are numerous help files linked in the app. See for example the `Help` menu at <http://vnijs.rady.ucsd.edu:3838/marketing>. To help you get started using Radiant you can also take a look at this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
 
-### Saving and loading state
+## Saving and loading state
 
 To save the analysis you did in Radiant you can save the state of the app (see Data > Manage). You can open the state file at a latter time to continue where you left off. For an example, load the state_file `RadiantState.rda` in `example_data` in the radiant folder (see the View and Visualize tabs after loading the file).
 
@@ -85,7 +85,7 @@ You can also open a state file in Rstudio. When you start Radiant from Rstudio i
 numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm_args$sm_comp_value))
 ```
 
-### Todo
+## Todo
 
 - Create Radiant-package that exports analysis functions
 - Use roxygen for documentation
@@ -93,7 +93,7 @@ numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm
 - Use dplyr, tidyr, and magrittr to explore, transform, and filter data
 - etc. etc.
 
-### License
+## License
 
 The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
 

@@ -6,7 +6,7 @@ title: Maps > (Dis)similarity
 
 > Brand maps based on (dis)similarity data can be analyzed using Multi-Dimensional Scaling (MDS)
 
-#### Example 1
+### Example 1
 
 The city data (city) contains information on distances in miles between 10 major cities in the US. Distances for 45 (10 x 9 / 2) from-to city pairs are provided. These data are used to illustrate that MDS can take simple data on distances (or on brand dissimilarities as we will see) and create a 2-dimensional map that accurately depicts the relative city (or brand) positions.
 
@@ -24,7 +24,7 @@ To create the plot below we clicked the check-boxes for Dimension 1 and Dimensio
 
 ![mds city - plots flip](figures_marketing/mds_city_plots_flip.png)
 
-#### Example 2
+### Example 2
 
 The following plot is based on similarity data for a set of toothpaste brands (tpbrands, available as one of the example datasets). Respondents were asked the following question: "Please rate the following pairs of toothpaste brands on the basis of their similarity (1 = very similar, 7 = very dissimilar)." for all pairwise combinations of 10 brands, i.e., 45 comparisons. MDS will try to create a map that reproduces as accurately as possible the original dissimilarities (or perceptual distances) provided by the 50 respondents. The original dissimilarity ratings are shown in (lower triangular) matrix form in the figure below. From these data we can already see that the respondents perceive some brands to be very similar (e.g., Ultra Brite and Pepsodent have an average dissimilarity score of 1.11) and others to be very dissimilar (e.g., Crest and Sensodyne). The stress value for a two-dimensional solution is quite good (.058).
 

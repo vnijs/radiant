@@ -174,11 +174,7 @@ img {
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
-
-
-
-
-
+        <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -194,8 +190,8 @@ img {
 <p>(Linear) Regression: The workhorse of empirical research in the social sciences</p>
 </blockquote>
 <p>All example files discussed below can be loaded from the Data &gt; Manage page. Click the <code>examples</code> radio button and press <code>Load examples</code>.</p>
-<div id="functionality" class="section level4">
-<h4>Functionality</h4>
+<div id="functionality" class="section level3">
+<h3>Functionality</h3>
 <p>Start by selecting a dependent variable and one or more independents variables. If two or more Independent variables are included in the model we may want to investigate if any interactions are present. An interaction exists when the effect of an independent variable on the dependent variable is determined, at least partially, by the level of another independent variable. For example, the increase in price for a 1 versus a 2 carrot diamond may depend on the clarity level of the diamond.</p>
 <p>The <code>Predict</code> box allows you calculate predicted values from a regression model. You must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., <code>carat</code> must one of the selected independent variables to predict the <code>price</code> of a 2-carat diamond)</p>
 <ul>
@@ -213,8 +209,8 @@ img {
 <li>Step-wise: A data-mining approach to select the best fitting model</li>
 </ul>
 </div>
-<div id="example-1-catalog-sales" class="section level4">
-<h4>Example 1: Catalog sales</h4>
+<div id="example-1-catalog-sales" class="section level3">
+<h3>Example 1: Catalog sales</h3>
 <p>We have access to data from a company selling men’s and women’s apparel through mail-order catalogs (dataset <code>catalog</code>). The company maintains a database on past and current customers’ value and characteristics. Value is determined as the total $ sales to the customer in the last year. The data are a random sample of 200 customers from the company’s database. The r-data contains a data frame with 200 observations on 4 variables</p>
 <ul>
 <li>Sales = Total sales (in $) to a household in the past year</li>
@@ -241,8 +237,8 @@ img {
 <p>For each of the independent variables the following null and alternate hypotheses can be formulated: H0: The coefficient associated with independent variable X is equal to 0 Ha: The coefficient associated with independent variable X is not equal to 0</p>
 <p>The coefficients for <code>Income</code> and <code>HH.size</code> are both significant (p-values &lt; 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value &gt; 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.</p>
 </div>
-<div id="example-2-ideal-data-for-regression" class="section level4">
-<h4>Example 2: Ideal data for regression</h4>
+<div id="example-2-ideal-data-for-regression" class="section level3">
+<h3>Example 2: Ideal data for regression</h3>
 <p>The data <code>ideal</code> contains simulated data that is very useful to demonstrate what data for and residuals from a regression should ideally look like. The r-data file contains a data-frame with 1000 observations on 4 variables. y is the dependent variable and x1, x2, and x3 are independent variables. The plots shown below can be used as a bench mark for regressions on real world data. We will use Regression &gt; Linear (OLS) to conduct the analysis. First go the the Plots tab and select y as the dependent variable and x1, x2, and x3 as the independent variables.</p>
 <p>y, x2, and x3 appear roughly normally distributed whereas x1 appears roughly uniformly distributed. No indication of outliers or severely skewed distributions.</p>
 <p><img src="figures_quant/regression_ideal_hist.png" alt="Regression 2 - ideal histograms" /></p>
@@ -258,8 +254,8 @@ img {
 <p>Increases in x1 and x3 are associated with increases in y whereas increases in x2 are associated with decreases in y. Since these are simulated data the exact interpretation of the coefficient is not interesting. However, in the scatterplot it looks like increases in x3 are associated with decreases in y. What explains the difference? Hint: consider the correlation plots.</p>
 <p><img src="figures_quant/regression_ideal_summary.png" alt="Regression 2 - ideal summary" /></p>
 </div>
-<div id="example-3-linear-or-log-log-regression" class="section level4">
-<h4>Example 3: Linear or log-log regression?</h4>
+<div id="example-3-linear-or-log-log-regression" class="section level3">
+<h3>Example 3: Linear or log-log regression?</h3>
 <p>In marketing both linear and log-log regressions are very common. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.</p>
 <p>The data <code>diamonds</code> contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data &gt; Manage page. Select the variable <code>price</code> as the dependent variable and <code>carat</code> and <code>clarity</code> as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the <em>tail</em> is.</p>
 <p><img src="figures_quant/regression_diamonds_hist.png" alt="Regression 3 - histograms" /></p>
@@ -297,25 +293,37 @@ img {
 <p>All coefficients in this regression are highly significant.</p>
 <p><img src="figures_quant/regression_log_diamonds_summary.png" alt="Regression 3 - log summary" /></p>
 </div>
-<div id="technical-notes" class="section level4">
-<h4>Technical notes</h4>
-<div id="coefficient-interpretation-for-linear-model" class="section level5">
-<h5>Coefficient interpretation for linear model</h5>
+<div id="technical-notes" class="section level3">
+<h3>Technical notes</h3>
+<div id="coefficient-interpretation-for-linear-model" class="section level4">
+<h4>Coefficient interpretation for linear model</h4>
 <p>To illustrate the interpretation of coefficients in a regression model we start with the following equation:</p>
-<p><br /><span class="math"><em>S</em><sub><em>t</em></sub> = <em>a</em> + <em>b</em><em>P</em><sub><em>t</em></sub> + <em>c</em><em>D</em><sub><em>t</em></sub> + <em>ε</em><sub><em>t</em></sub></span><br /></p>
+<p><br /><span class="math">$$
+    \begin{equation}
+  S_t = a + b P_t + c D_t + \epsilon_t
+    \end{equation}
+$$</span><br /></p>
 <p>where <span class="math"><em>S</em><sub><em>t</em></sub></span> is sales in units at time <span class="math"><em>t</em></span>, <span class="math"><em>P</em><sub><em>t</em></sub></span> is the price in $ at time <span class="math"><em>t</em></span>, <span class="math"><em>D</em><sub><em>t</em></sub></span> is a dummy variable that indicates if a product is on display in a given week, and <span class="math"><em>ε</em><sub><em>t</em></sub></span> is the error term.</p>
 <p>For a continuous variable such as price we can determine the effect of a $1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to <span class="math"><em>P</em></span>.</p>
 <p><br /><span class="math">$$
   \frac{ \partial S_t }{ \partial P_t } = b
 $$</span><br /></p>
 <p>So <span class="math"><em>b</em></span> is the marginal effect on sales of a $1 change in price. Because a dummy variable such as <span class="math"><em>D</em></span> is not continuous we cannot use differentiation and the approach needed to determine the marginal effect is a little different. If we compare sales levels when <span class="math"><em>D</em> = 1</span> to sales levels when <span class="math"><em>D</em> = 0</span> we see that</p>
-<p><br /><span class="math"><em>a</em> + <em>b</em><em>P</em><sub><em>t</em></sub> + <em>c</em> × 1 − <em>a</em> + <em>b</em><em>P</em><sub><em>t</em></sub> + <em>c</em> × 0 = <em>c</em></span><br /></p>
+<p><br /><span class="math">$$
+    \begin{equation}
+  a + b P_t + c \times 1 - a + b P_t + c \times 0 = c
+    \end{equation}
+$$</span><br /></p>
 <p>For a linear model <span class="math"><em>c</em></span> is the marginal effect on sales when the product is on display.</p>
 </div>
-<div id="coefficient-interpretation-for-a-semi-log-model" class="section level5">
-<h5>Coefficient interpretation for a semi-log model</h5>
+<div id="coefficient-interpretation-for-a-semi-log-model" class="section level4">
+<h4>Coefficient interpretation for a semi-log model</h4>
 <p>To illustrate the interpretation of coefficients in a semi-log regression model we start with the following equation:</p>
-<p><br /><span class="math"><em>l</em><em>n</em><em>S</em><sub><em>t</em></sub> = <em>a</em> + <em>b</em><em>P</em><sub><em>t</em></sub> + <em>c</em><em>D</em><sub><em>t</em></sub> + <em>ε</em><sub><em>t</em></sub></span><br /></p>
+<p><br /><span class="math">$$
+    \begin{equation}
+  ln S_t = a + b P_t + c D_t + \epsilon_t
+    \end{equation}
+$$</span><br /></p>
 <p>where <span class="math"><em>l</em><em>n</em><em>S</em><sub><em>t</em></sub></span> is the (natural) log of sales at time <span class="math"><em>t</em></span>. For a continuous variable such as price we can again determine the effect of a $1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to <span class="math"><em>P</em></span>. For the left-hand side of the equation we can use the chain-rule to get</p>
 <p><br /><span class="math">$$
   \frac {\partial ln S_t}{\partial P_t} = \frac{1}{S_t} \frac{\partial S_t}{\partial P_t}
@@ -334,10 +342,14 @@ $$</span><br /></p>
 $$</span><br /></p>
 <p>For the semi-log model 100 <span class="math"> ×  <em>c</em></span> is the percentage change in sales when the product is on display.</p>
 </div>
-<div id="coefficient-interpretation-for-a-log-log-model" class="section level5">
-<h5>Coefficient interpretation for a log-log model</h5>
+<div id="coefficient-interpretation-for-a-log-log-model" class="section level4">
+<h4>Coefficient interpretation for a log-log model</h4>
 <p>To illustrate the interpretation of coefficients in a log-log regression model we start with the following equation:</p>
-<p><br /><span class="math"><em>l</em><em>n</em><em>S</em><sub><em>t</em></sub> = <em>a</em> + <em>b</em><em>l</em><em>n</em><em>P</em><sub><em>t</em></sub> + <em>ε</em><sub><em>t</em></sub></span><br /></p>
+<p><br /><span class="math">$$
+  \begin{equation}
+  ln S_t = a + b ln P_t + \epsilon_t
+  \end{equation}
+$$</span><br /></p>
 <p>where <span class="math"><em>l</em><em>n</em><em>P</em><sub><em>t</em></sub></span> is the (natural) log of sales at time <span class="math"><em>t</em></span>. Ignoring the error term for simplicity we can rewrite this model in its multiplicative form by taking the exponent on both sides:</p>
 <p><br /><span class="math">$$
   \begin{aligned}
@@ -367,6 +379,8 @@ $$</span><br /></p>
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>
 
+<!-- mathjax -->
+<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <script>
 

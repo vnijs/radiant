@@ -9,7 +9,7 @@ title: Regression > Linear (OLS)
 
 All example files discussed below can be loaded from the Data > Manage page. Click the `examples` radio button and press `Load examples`.
 
-#### Functionality
+### Functionality
 
 Start by selecting a dependent variable and one or more independents variables. If two or more Independent variables are included in the model we may want to investigate if any interactions are present. An interaction exists when the effect of an independent variable on the dependent variable is determined, at least partially, by the level of another independent variable. For example, the increase in price for a 1 versus a 2 carrot diamond may depend on the clarity level of the diamond.
 
@@ -30,7 +30,7 @@ Various additional outputs and options can be selected:
 * Step-wise: A data-mining approach to select the best fitting model
 
 
-#### Example 1: Catalog sales
+### Example 1: Catalog sales
 
 We have access to data from a company selling men's and women's apparel through mail-order catalogs (dataset `catalog`). The company maintains a database on past and current customers' value and characteristics. Value is determined as the total \$ sales to the customer in the last year. The data are a random sample of 200 customers from the company's database. The r-data contains a data frame with 200 observations on 4 variables
 
@@ -69,7 +69,7 @@ Ha: The coefficient associated with independent variable X is not equal to 0
 The coefficients for `Income` and `HH.size` are both significant (p-values < 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value > 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.
 
 
-#### Example 2: Ideal data for regression
+### Example 2: Ideal data for regression
 
 The data `ideal` contains simulated data that is very useful to demonstrate what data for and residuals from a regression should ideally look like.  The r-data file contains a data-frame with 1000 observations on 4 variables. y is the dependent variable and x1, x2, and x3 are independent variables. The plots shown below can be used as a bench mark for regressions on real world data. We will use Regression > Linear (OLS) to conduct the analysis. First go the the Plots tab and select y as the dependent variable and x1, x2, and x3 as the independent variables.
 
@@ -99,7 +99,7 @@ Increases in x1 and x3 are associated with increases in y whereas increases in x
 
 ![Regression 2 - ideal summary](figures_quant/regression_ideal_summary.png)
 
-#### Example 3: Linear or log-log regression?
+### Example 3: Linear or log-log regression?
 
 In marketing both linear and log-log regressions are very common. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.
 
@@ -172,14 +172,16 @@ All coefficients in this regression are highly significant.
 ![Regression 3 - log summary](figures_quant/regression_log_diamonds_summary.png)
 
 
-#### Technical notes
+### Technical notes
 
-##### Coefficient interpretation for linear model
+#### Coefficient interpretation for linear model
 
 To illustrate the interpretation of coefficients in a regression model we start with the following equation:
 
 $$
+	\begin{equation}
   S_t = a + b P_t + c D_t + \epsilon_t
+	\end{equation}
 $$
 
 where $S_t$ is sales in units at time $t$, $P_t$ is the price in \$ at time $t$, $D_t$ is a dummy variable that indicates if a product is on display in a given week, and $\epsilon_t$ is the error term.
@@ -193,17 +195,21 @@ $$
 So $b$ is the marginal effect on sales of a \$1 change in price. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and the approach needed to determine the marginal effect is a little different. If we compare sales levels when $D = 1$ to sales levels when $D = 0$ we see that
 
 $$
+	\begin{equation}
   a + b P_t + c \times 1 - a + b P_t + c \times 0 = c
+	\end{equation}
 $$
 
 For a linear model $c$ is the marginal effect on sales when the product is on display.
 
-##### Coefficient interpretation for a semi-log model
+#### Coefficient interpretation for a semi-log model
 
 To illustrate the interpretation of coefficients in a semi-log regression model we start with the following equation:
 
 $$
+	\begin{equation}
   ln S_t = a + b P_t + c D_t + \epsilon_t
+	\end{equation}
 $$
 
 where $ln S_t$ is the (natural) log of sales at time $t$. For a continuous variable such as price we can again determine the effect of a \$1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to $P$. For the left-hand side of the equation we can use the chain-rule to get
@@ -230,12 +236,14 @@ $$
 
 For the semi-log model 100 $\times\:c$ is the percentage change in sales when the product is on display.
 
-##### Coefficient interpretation for a log-log model
+#### Coefficient interpretation for a log-log model
 
 To illustrate the interpretation of coefficients in a log-log regression model we start with the following equation:
 
 $$
+  \begin{equation}
   ln S_t = a + b ln P_t + \epsilon_t
+  \end{equation}
 $$
 
 where $ln P_t$ is the (natural) log of sales at time $t$. Ignoring the error term for simplicity we can rewrite this model in its multiplicative form by taking the exponent on both sides:

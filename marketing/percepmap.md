@@ -6,7 +6,7 @@ title: Maps > Attributes
 
 > Create brand maps based on attribute data to provide a rich visual summary of large numeric tables
 
-#### Example
+### Example
 
 Click the 'examples' radio button on the Data > Manage page and click 'Load examples' then choose the retailers data from the Datasets dropdown. The data set contains information on consumer evaluations for a set of retailers in the Chicago area on 7 attributes. In addition to attribute evaluations the dataset contains preference ratings on a scale from 1-9 for each retailer for two predefined consumer segments.
 

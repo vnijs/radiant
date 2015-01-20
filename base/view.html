@@ -174,11 +174,7 @@ img {
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
-
-
-
-
-
+        <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -193,24 +189,24 @@ img {
 <blockquote>
 <p>Show the available data in table form</p>
 </blockquote>
-<div id="datasets" class="section level4">
-<h4>Datasets</h4>
+<div id="datasets" class="section level3">
+<h3>Datasets</h3>
 <p>Choose one of the datasets from the drop-down menu. These files were loaded into Radiant through the Manage tab.</p>
 </div>
-<div id="select-columns" class="section level4">
-<h4>Select columns</h4>
+<div id="select-columns" class="section level3">
+<h3>Select columns</h3>
 <p>By default all columns in the data are shown. Click on any variable to focus on it alone. To select several variables use the SHIFT and ARROW keys on your keyboard. On a mac the CMD key can also be used to select multiple variables. The same effect is achieved on windows using the CTRL key. To select all variable use CTRL-A (or CMD-A on Mac).</p>
 </div>
-<div id="browse-the-data" class="section level4">
-<h4>Browse the data</h4>
+<div id="browse-the-data" class="section level3">
+<h3>Browse the data</h3>
 <p>By default only 10 data rows are shown. You can change this setting through the <code>records per page</code> drop-down. Press the <code>Next</code> and <code>Previous</code> buttons at the bottom-right of the screen to move through pages of the data.</p>
 </div>
-<div id="sort" class="section level4">
-<h4>Sort</h4>
+<div id="sort" class="section level3">
+<h3>Sort</h3>
 <p>Click on a column header in the table to sort the data by the values of that variable. Clicking again will toggle between sorting in ascending and descending order. To sort on multiple columns at once press shift and then click on the 2nd, 3rd, etc. column you would like to sort by.</p>
 </div>
-<div id="subset" class="section level4">
-<h4>Subset</h4>
+<div id="subset" class="section level3">
+<h3>Subset</h3>
 <p>There are several ways to select a subset of the data to view. The Subset box on the left can be used with &gt; and &lt; signs and you can also combine subset commands. For example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable x has values larger than 3 <strong>and</strong> for which y has values equal to 2. Note that in R <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is equal to some other value. In constrast <code>!=</code> is used to determine if variable is <em>not equal</em> to some value. You can also use expression that have an <strong>or</strong> condition. For example, to select rows where Salary is larger than $100,000 or smaller than $20,000 you could use <code>Salary &lt; 20000 | Salary &gt; 100000</code>. <code>|</code> is the symbol for <strong>or</strong>. The table below gives an overview of operators you can use. Type your statement in the Subset box and press enter to see the result on screen.</p>
 <table>
 <thead>
@@ -264,8 +260,8 @@ img {
 </tbody>
 </table>
 </div>
-<div id="search" class="section level3">
-<h3>Search</h3>
+<div id="search" class="section level2">
+<h2>Search</h2>
 <p>For variables that have a limited number of different values (e.g., a factor) you can type a value in the text box below the column for one, or more, variables. For example, to filter on rows with Ideal cut, type <code>ideal</code> in the box below that column. Matching in the filter fields is case-insensitive. In fact, just typing <code>eal</code> would produce the same result because the search will match any part of a string.</p>
 <p>The search boxes have some special features that make them almost as powerful as the Subset box. For numerical or integer variables you can use <code>,</code> to indicate range. For example, to select Price values between $500 and $2000 dollars you would type <code>500,2000</code>. The range is inclusive of the values typed. The <code>,</code> can also be used as a substitute for &gt; or &lt; in the Subset box. For example, <code>0.32,</code> will show only diamonds with carat values larger than or equal to 0.32.</p>
 <p>If you want to get <em>really</em> fancy you can use the search box in the top right to search across all columns shown using regular expressions. For example, to find all rows that have an entry with the number 72 at the end in one or more of the columns type <code>72$</code> (i.e., the <code>$</code> sign is used to indicate the end of an entry). For all rows with entries that start with 10 use <code>^60</code> (i.e., the <code>^</code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn the basics of regular expressions see <a href="http://www.regular-expressions.info/tutorial.html">http://www.regular-expressions.info/tutorial.html</a>.</p>
@@ -277,6 +273,8 @@ img {
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>
 
+<!-- mathjax -->
+<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <script>
 

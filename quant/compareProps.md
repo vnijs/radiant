@@ -12,7 +12,7 @@ This is important since we seldom have access to data for an entire population. 
 
 We can perform either a one-tailed test (i.e., less than or greater than) or two-tailed test (see 'Alternative hypothesis'). In marketing we often use one-tailed tests because we want to evaluate if the available data provide evidence that a variable or effect is larger (or smaller) in one sample than another.
 
-#### Example
+### Example
 
 We have access to data from <a href="http://www.pewinternet.org/Shared-Content/Data-Sets/2012/December-2012--Facebook-%28omnibus%29.aspx" target="_blank">Pew Internet & American Life Project</a> on people's Facebook habits and attitudes. We are interested in whether men and women have different habits and attitudes towards their use of Facebook.
 

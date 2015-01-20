@@ -6,7 +6,7 @@ title: Base > Cross-tabs
 
 > Cross-tab analysis is used to evaluate if two nominally scaled variables are associated. This tool is also known as chi-square or contingency table analysis
 
-#### Example 1
+### Example 1
 
 The data are from a sample for 580 newspaper readers that indicated which newspaper they read most frequently (USA today or Wall Street Journal) and their level of income (Low income vs. High income). The data has three variables:  A respondent identifier (Resp), respondent income (High or Low), and the primary newspaper the respondent reads (USA today or Wall Street Journal).
 

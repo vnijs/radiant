@@ -31,7 +31,7 @@ The best way to see what rotation does is to toggle the radio buttons for Varima
 
 The final step is to generate the factor scores. You can think of these scores as a weighted average of the variables that are linked to a factor. They approximate the scores that a respondent would have provided if we could have asked about the factor in a single question, i.e., the respondents inferred ratings on the factors. By clicking on the 'Save scores' button two new variables will be added to the toothpaste data file. You can see them by going to Data > View. We can use factor scores in other analyses (e.g., cluster analysis or regression). You can rename the new variables, e.g., to 'health' and 'social' through Data > Transform by selecting 'Rename' from the Transformation type dropdown.
 
-#### Summary
+### Summary
 
 1. Determine if the data are appropriate for factor analysis using Bartlett, KMO, and Collinearity (Pre-factor)
 2. Determine the number of factors to extract using the scree-plot and eigenvalues > 1 criteria (Pre-factor)

@@ -8,10 +8,6 @@
 		{
 			"follow_symlinks": true,
 			"path": "/Users/vnijs/Desktop/GitHub/radiant_dev"
-		},
-		{
-			"follow_symlinks": true,
-			"path": "/Users/vnijs/Desktop/GitHub/rmarkdown"
 		}
 	]
 }
