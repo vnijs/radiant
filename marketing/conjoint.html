@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Conjoint &gt; Conjoint</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/radiant/index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/base/manage.html">Manage</a></li>
+             <li><a href="/radiant/base/view.html">View</a></li>
+             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
+             <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/merge.html">Merge</a></li>
+             <li><a href="/radiant/base/transform.html">Transform</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/quant/coming_soon.html">Test</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
+             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/radiant/marketing/preFactor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/fullFactor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/radiant/marketing/hcclustering.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeansClustering.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/radiant/marketing/conjoint.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
+
+
+
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Conjoint &gt; Conjoint</h1>
+</div>
+
+
+<hr />
+<blockquote>
+<p>Generate an efficient set of product profiles and analyze responses from a conjoint survey</p>
+</blockquote>
+<p>To setup a conjoint study from scratch we need to determine the attributes and attributes levels that should be included. Once that has been done we would typically need to generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected.</p>
+<p>Once data is available from respondents we would analyze their evaluations of the profiles in the conjoint survey to determine the Part Worths (PW) and Importance Weights (IW).</p>
+<div id="example-carpet-cleaner" class="section level4">
+<h4>Example: Carpet cleaner</h4>
+<p>A respondent was presented 18 product profiles for a carpet cleaning product described on five attributes in a conjoint study (dataset: carpet.rda is part of the example datasets). The attributes are:</p>
+<ul>
+<li>design = Package Design (A, B, C)</li>
+<li>brand = Brand Name (K2R, Glory, Bissell)</li>
+<li>price = Price (1.19, 1.39, 1.59)</li>
+<li>seal = Good Housekeeping seal of approval (Yes or No)</li>
+<li>money_back = Money Back Guarantee (Yes or No)</li>
+<li>ranking = Respondent ranking of 18 attributes</li>
+</ul>
+<p>Design characteristics:</p>
+<p><img src="figures_marketing/conjoint_carpet_design.png" alt="conjoint carpet cleaner design" /></p>
+<p>Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108). The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank of 1) to least preferred (rank of 18). The first five columns represent the five attributes and the last column is the respondent’s ranking.</p>
+<ol style="list-style-type: decimal">
+<li><p>Compute the correlation matrix for the attribute variables. Display the correlation matrix. What do you notice in the correlation matrix? What does this say about the particular set of 18 profiles that was presented to the respondent?</p>
+<p>The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In other words, the fractional factorial design is such that all attributes are uncorrelated (i.e., orthogonal).</p></li>
+<li><p>Estimate a conjoint regression using the ranking as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.</p></li>
+<li>Calculate the predicted utilities for the following options: (2 points)
+<ul>
+<li>Package A, K2R, $1.19, no Good Housekeeping seal, no money back guarantee</li>
+<li>Package C, Bissell, $1.19, no Good Housekeeping seal with money back guarantee</li>
+<li><p>Package B, Bissell, $1.59, Good Housekeeping seal with money back guarantee.</p></li>
+<li><p>Package A, K2R, $1.19, no GHKS, no MBG</p></li>
+</ul>
+<p>Predicted Utility based on PWs: 6.5 + 0 + 0 + 0 + 0 + 0 = 6.5</p>
+<ul>
+<li>Package C, Bissell, $1.19, no GHKS, with MBG</li>
+</ul>
+<p>Predicted Utility based on PWs: 6.5 + 4.5 + 1.5 + 0 + 4.5 = 17</p>
+<ul>
+<li>Package B, Bissell, $1.59, with GHKS, with MBG</li>
+</ul>
+<p>Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 - 7.67 + 1.5 + 4.5 = 14.33</p></li>
+<li><p>What is the highest predicted utility that can be obtained? What are the characteristics of that option? (2 points)</p>
+<p>The highest predicted utility option is the following: Package B, Bissell, $1.19, with GHKS, with MBG</p>
+<p>Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 + 0 + 1.5 + 4.5 = 22</p></li>
+</ol>
+</div>
+
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>
