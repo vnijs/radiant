@@ -109,26 +109,39 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li><a href="/">Home</a></li>
+
+
         <li class="dropdown">
-          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Authoring <span class="caret"></span></a>
+          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Base<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">R Markdown</li>
-             <li><a href="authoring_basics.html">Markdown Basics</a></li>
-             <li><a href="authoring_pandoc_markdown.html">Pandoc Markdown</a></li>
-             <li><a href="authoring_rcodechunks.html">R Code Chunks</a></li>
-             <li><a href="authoring_bibliographies_and_citations.html">Bibliographies &amp; Citations</a></li>
-             <li><a href="authoring_migrating_from_v1.html">Migrating from v1</a></li>
-             <li class="divider"></li>
-             <li><a href="RMarkdownCheatSheet.pdf">Cheat Sheet [PDF]</a></li>
-             <li><a href="RMarkdownReferenceGuide.pdf">Reference Guide [PDF]</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Shiny</li>
-             <li><a href="authoring_shiny.html">Interactive Documents</a></li>
-             <li><a href="authoring_embedded_shiny.html">Embedded Shiny Apps</a></li>
-             <li><a href="authoring_shiny_widgets.html">Creating Shiny Widgets</a></li>
-             <li><a href="authoring_shiny_advanced.html">Advanced Topics</a></li>
+             <li><a href="test.html">Test</a></li>
+             <!-- <li class="dropdown-header">R Markdown</li> -->
+             <!-- <li class="divider"></li> -->
           </ul>
         </li>
+
+        <li class="dropdown">
+          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="test.html">Test</a></li>
+             <!-- <li class="dropdown-header">R Markdown</li> -->
+             <!-- <li class="divider"></li> -->
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="authoring" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="test.html">Test</a></li>
+             <!-- <li class="dropdown-header">R Markdown</li> -->
+             <!-- <li class="divider"></li> -->
+          </ul>
+        </li>
+
+
+
+
+
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -151,24 +164,30 @@ img {
 <li>Required: <a href="http://cran.rstudio.com/">R</a>, version 3.1.2</li>
 <li>Required: A modern browser (e.g., Chrome, Safari, or Firefox)</li>
 <li>Suggested: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
-<li><p>You should install package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>) by copy-and-pasting the commands below into the Rstudio console:</p>
-<h1>install to user directory</h1>
-<p>local_dir &lt;- Sys.getenv(“R_LIBS_USER”) if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)</p>
-<h1>install packages from <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo</h1>
-<p>options(repos = c(XRAN = “<a href="http://mostly-harmless.github.io/radiant_miniCRAN/">http://mostly-harmless.github.io/radiant_miniCRAN/</a>”)) install.packages(new.packages(), local_dir, dependencies = TRUE)</p></li>
+<li>You should install package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>) by copy-and-pasting the commands below into the Rstudio console:</li>
 </ul>
+<pre class="r"><code># install to user directory
+local_dir &lt;- Sys.getenv(&quot;R_LIBS_USER&quot;)
+if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+
+# install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo
+options(repos = c(XRAN = &quot;http://mostly-harmless.github.io/radiant_miniCRAN/&quot;))
+install.packages(new.packages(), local_dir, dependencies = TRUE)</code></pre>
 <p>If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the <code>Download ZIP</code> button and unzipping the folder to, for example, your Desktop.</p>
 <div id="from-rstudio" class="section level4">
 <h4>From Rstudio</h4>
 <p><strong>Note that Radiant currently does not support Shiny 0.11.</strong> To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove the installed version of Shiny and install the required packages and versions.</p>
-<pre><code>detach(&#39;package:shiny&#39;, unload=TRUE)
+<pre class="r"><code># remove current version of shiny package
+detach(&#39;package:shiny&#39;, unload=TRUE)
 remove.packages(&#39;shiny&#39;)
+
+# install all dependencies to local dir
 local_dir &lt;- Sys.getenv(&quot;R_LIBS_USER&quot;)
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
 install.packages(new.packages(), local_dir, dependencies = TRUE)</code></pre>
 <p>Once you have install the dependencies, open the Radiant project in Rstudio by double-clicking the <code>radiant.Rproj</code> file in the radiant directory. In Rstudio navigate to <code>inst/</code> in the radiant directory and choose the app you want to run (e.g., quant or marketing). If you choose the marketing app open <code>ui.R</code> from the <code>inst/marketing</code> directory. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above. After installing dependencies you may need to restart Rstudio before the play button is shown.</p>
-<p><img src="start_from_rstudio.png" alt="Starting Radiant from Rstudio" /></p>
+<p><img src="images/start_from_rstudio.png" alt="Starting Radiant from Rstudio" /></p>
 </div>
 <div id="creating-a-desktop-launcher" class="section level4">
 <h4>Creating a desktop launcher</h4>
@@ -193,7 +212,7 @@ install.packages(new.packages(), local_dir, dependencies = TRUE)</code></pre>
 <p>Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit &gt; Quit to stop the app, a list called <code>values</code> and a list called <code>state_list</code> will be put into Rstudio’s global workspace. If you start radiant again it will use these lists (i.e., <code>values</code> and <code>state_list</code>) to restore state. This can be convenient if you want to make changes to a data file and load it back into Radiant.</p>
 <p>You can also open a state file in Rstudio. When you start Radiant from Rstudio it will use the state files to recreate a previous app state.</p>
 <p><strong>Technical note</strong>: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>state_list</code>. If there is, this value is used. The <code>state_list</code> is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>state_list</code> can be used. <code>sm_args$sm_comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
-<pre><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$sm_comp_value))</code></pre>
+<pre class="r"><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$sm_comp_value))</code></pre>
 </div>
 <div id="todo" class="section level3">
 <h3>Todo</h3>
@@ -210,7 +229,6 @@ install.packages(new.packages(), local_dir, dependencies = TRUE)</code></pre>
 <p>The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.</p>
 <p>As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.</p>
 <p>If you are interested in using Radiant please email me at <a href="mailto:vnijs@ucsd.edu">vnijs@ucsd.edu</a></p>
-<p>© Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a></p>
 </div>
 
 

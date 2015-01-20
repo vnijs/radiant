@@ -17,13 +17,15 @@ Three (related) apps are included in the inst directory. `Base`, offers data loa
 - Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 - You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)) by copy-and-pasting the commands below into the Rstudio console:
 
-    # install to user directory
-    local_dir <- Sys.getenv("R_LIBS_USER")
-    if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+```r
+# install to user directory
+local_dir <- Sys.getenv("R_LIBS_USER")
+if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-    # install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo
-    options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
-    install.packages(new.packages(), local_dir, dependencies = TRUE)
+# install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo
+options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
+install.packages(new.packages(), local_dir, dependencies = TRUE)
+```
 
 If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
 
@@ -32,16 +34,21 @@ If you are familiar with Git(Hub) you can clone the repo as usual. You can also 
 
 **Note that Radiant currently does not support Shiny 0.11.** To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove the installed version of Shiny and install the required packages and versions.
 
-    detach('package:shiny', unload=TRUE)
-    remove.packages('shiny')
-    local_dir <- Sys.getenv("R_LIBS_USER")
-    if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-    options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
-    install.packages(new.packages(), local_dir, dependencies = TRUE)
+```r
+# remove current version of shiny package
+detach('package:shiny', unload=TRUE)
+remove.packages('shiny')
+
+# install all dependencies to local dir
+local_dir <- Sys.getenv("R_LIBS_USER")
+if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
+install.packages(new.packages(), local_dir, dependencies = TRUE)
+```
 
 Once you have install the dependencies, open the Radiant project in Rstudio by double-clicking the `radiant.Rproj` file in the radiant directory. In Rstudio navigate to `inst/` in the radiant directory and choose the app you want to run (e.g., quant or marketing). If you choose the marketing app open `ui.R` from the `inst/marketing` directory. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above. After installing dependencies you may need to restart Rstudio before the play button is shown.
 
-![Starting Radiant from Rstudio](start_from_rstudio.png)
+![Starting Radiant from Rstudio](images/start_from_rstudio.png)
 
 
 #### Creating a desktop launcher
@@ -74,7 +81,9 @@ You can also open a state file in Rstudio. When you start Radiant from Rstudio i
 
 **Technical note**: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `state_list`. If there is, this value is used. The `state_list` is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `state_list` can be used. `sm_args$sm_comp_value` is the default value specified in the `single_mean` function call.
 
-    numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm_args$sm_comp_value))
+```r
+numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm_args$sm_comp_value))
+```
 
 ### Todo
 
@@ -92,4 +101,3 @@ As a summary, the AGPLv3 license requires, attribution, include copyright and li
 
 If you are interested in using Radiant please email me at vnijs@ucsd.edu
 
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>
