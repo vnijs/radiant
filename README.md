@@ -6,6 +6,10 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 Three (related) apps are included in the inst directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools.
 
+### Documentation
+
+Documentation and tutorials for Radiant are available at <http://mostly-harmless.github.io/radiant/>
+
 ### Install
 
 - Required: [R](http://cran.rstudio.com/), version 3.1.2

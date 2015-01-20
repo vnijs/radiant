@@ -1,8 +1,8 @@
 Package: radiant
 Title: Business analytics using R and Shiny
 Type: Shiny-app
-Version: 0.61
-Date: 2015-1-17
+Version: 0.60
+Date: 2015-1-19
 Author: Vincent Nijs <radiant@rady.ucsd.edu>
 Maintainer: Vincent Nijs <radiant@rady.ucsd.edu>
 Description: Business analytics using R and Shiny
