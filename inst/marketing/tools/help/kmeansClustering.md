@@ -1,6 +1,8 @@
+> Create segments using Kmeans clustering
+
 The goal of Cluster Analysis is to group respondents (e.g, consumers) into segments based on needs, benefits, and/or behavior. The tool tries to achieve this goal by looking for respondents that are similar, putting them together in a cluster or segment, and separating them from other, dissimilar, respondents. The researcher will then compare the segments and provide a descriptive label for each (i.e., a name).
 
-#### Example: Toothpaste
+### Example: Toothpaste
 
 Click the 'examples' radio button on the Data > Manage page and click 'Load examples' then choose the toothpaste  data from the Datasets dropdown. The data set contains information from 60 consumers who were asked to respond to six questions to determine their attitudes towards toothpaste. The scores shown for variables v1-v6 indicate the level of agreement with the statement indicated on a 7-point scale where 1 = strongly disagree and 7 = strongly agree.
 
@@ -18,9 +20,13 @@ It can be useful to visualize how well the segments are separated by plotting th
 
 By reviewing the Cluster means table in the Summary tab and the density plots in the Plots tab we can derive the following labels: Segment 3 stands out with high scores on questions v2, v4, and v6. We could call them the 'Cosmetic brushers'. Segment 1 stands out with high scores on questions v1 and v3 and a low score on v5. As the clearly care a great deal about the health benefits of toothpaste we might call them the 'Therapeutic brushers'. Segment 2 scores low in v1 and v3 and high on v5, i.e., the care little about the health benefits of toothpaste. Since their scores for their scores for the cosmetics benefits are not high either but rather middle-of-the-road we could label them the 'Uninvolved brushers'.
 
-Once we have categorized the segments we can create a segment or cluster membership variable by clicking the 'Save cluster membership'. A new variable is added to the toothpaste data showing which respondents were assigned to which cluster (i.e., cluster membership). We can change the created cluster variable to show the descriptive labels above through the Data > Transform menu. Select the kclus3 variable in the Select column(s) box. Then from the Transform type dropdown select Recode. In the recode box type (or paste) the command below to recode and press return:
+Once we have categorized the segments we can create a segment or cluster membership variable by clicking the 'Save cluster membership'. A new variable is added to the toothpaste data showing which respondents were assigned to which cluster (i.e., cluster membership). We can change the created cluster variable to show the descriptive labels above through the Data > Transform menu. Select the kclus3 variable in the Select column(s) box. Then from the Transform type dropdown select Recode. In the recode box type (or paste) the command below to recode and press return or click the `show` button:
 
 	1 = 'Therapeutic'; 2 = 'Uninvolved'; 3 = 'Cosmetic'
+
+This should produce the output below. After verifying the results are as expected, click the `Save changes` button to save the recode variable to the Toothpaste dataset.
+
+![kmeans toothpaste - recode](figures_marketing/kmeans_toothpaste_recode.png)
 
 We can profile these segments with demographic data using cross-tabs (e.g., gender vs segment membership). Go to Base > Cross-tabs. Our null hypothesis is:
 
@@ -36,6 +42,6 @@ In the summary tab we see there is a significant association between these two v
 
 For a more detailed view of the association we go to the Plots tab. Select the 'Deviation (standardized)' plot. The ‘Uninvolved’ segment has more men than we would expect under the null of no-association. If we are willing to use an alpha value of .10 we could also state that the ‘Cosmetics’ segment is composed of more women than we would expect under the null of no-association. In sum, in these data men are more likely to be in the 'Uninvolved brushers' segment and women are more likely to be in the 'Cosmetic brushers' segment.
 
-![kmeans shopping - plots crosstab plots](figures_marketing/kmeans_toothpaste_crosstab_plots.png)
+![kmeans shopping - crosstab plots](figures_marketing/kmeans_toothpaste_crosstab_plots.png)
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

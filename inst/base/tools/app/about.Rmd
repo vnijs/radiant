@@ -7,12 +7,12 @@ Radiant is a tool disigned to facilitate decision making using data and models. 
 ### Big picture video ###
 Examples:
 - http://vimeo.com/113594599
-- 
+-
 -->
 
 ### Radiant code
 
-Version 0.560 (1/5/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+Version 0.60 (1/19/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 `r sprintf("Dependencies for local use: %s", paste0(pkgs, collapse = ", "))`
 
