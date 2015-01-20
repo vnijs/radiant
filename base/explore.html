@@ -10,7 +10,7 @@
 
 
 
-<title></title>
+<title>Data &gt; Explore</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -148,18 +148,20 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
-
-<div id="radiant-business-analytics-using-r-and-shiny" class="section level2">
-<h2>Radiant: Business analytics using R and Shiny</h2>
-<p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Developed by <a href="" title="http://rady.ucsd.edu/faculty/directory/nijs/">Vincent Nijs</a>. You can reach me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>. Full source code for radiant is at at <a href="https://github.com/mostly-harmless/radiant">https://github.com/mostly-harmless/radiant</a>.</p>
-<div id="license" class="section level3">
-<h3>License</h3>
-<p>The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation on this site and the radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.</p>
-<p>As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.</p>
-<p>If you are interested in using Radiant please email me at <a href="mailto:vnijs@ucsd.edu">vnijs@ucsd.edu</a></p>
-<p>© Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a></p>
+<div id="header">
+<h1 class="title">Data &gt; Explore</h1>
 </div>
+
+
+<hr />
+<blockquote>
+<p>Summarize and plot the data</p>
+</blockquote>
+<p>Create various summary statistics for one or more variables in your data. The most powerful feature in Explore is that you can easy describe the data <em>by</em> some other variable and create corresponding plots.</p>
+<p>If we select price from the diamonds dataset we can see the number of observations (n), the mean, the median, etc. etc. However, the mean price per clarity level of the diamond can also be easily provided by choosing clarity as the Group by variable.</p>
+<div id="subset" class="section level4">
+<h4>Subset</h4>
+<p>Choose ‘Subset’ from the ‘Transformation type’ dropdown to select (or omit) specific sets of rows from the data. You can use &gt; and &lt; signs and even combine filter commands. For example, x &gt; 3 &amp; y == 2 would select only those rows for which the variable x has values larger than 3 <strong>and</strong> for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen. You should see the number of observations in the data summary change (i.e., the value of n changes).</p>
 </div>
 
 

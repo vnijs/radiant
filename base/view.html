@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Data &gt; View</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li class="dropdown">
+          <a href="/base" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/base/manage.html">Manage</a></li>
+             <li><a href="/base/view.html">View</a></li>
+             <li><a href="/base/visualize.html">Visualize</a></li>
+             <!-- <li><a href="coming_soon.html">Test</a></li> -->
+             <!-- <li class="dropdown-header">R Markdown</li> -->
+             <!-- <li class="divider"></li> -->
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="quant" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="coming_soon.html">Test</a></li>
+             <!-- <li class="dropdown-header">R Markdown</li> -->
+             <!-- <li class="divider"></li> -->
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="marketing" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="coming_soon.html">Test</a></li>
+             <!-- <li class="dropdown-header">R Markdown</li> -->
+             <!-- <li class="divider"></li> -->
+          </ul>
+        </li>
+
+
+
+
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Data &gt; View</h1>
+</div>
+
+
+<hr />
+<blockquote>
+<p>Show the available data in table form</p>
+</blockquote>
+<div id="datasets" class="section level4">
+<h4>Datasets</h4>
+<p>Choose one of the datasets from the drop-down menu. These files were loaded into Radiant through the Manage tab.</p>
+</div>
+<div id="select-columns" class="section level4">
+<h4>Select columns</h4>
+<p>By default all columns in the data are shown. Click on any variable to focus on it alone. To select several variables use the SHIFT and ARROW keys on your keyboard. On a mac the CMD key can also be used to select multiple variables. The same effect is achieved on windows using the CTRL key. To select all variable use CTRL-A (or CMD-A on Mac).</p>
+</div>
+<div id="browse-the-data" class="section level4">
+<h4>Browse the data</h4>
+<p>By default only 10 data rows are shown. You can change this setting through the <code>records per page</code> drop-down. Press the <code>Next</code> and <code>Previous</code> buttons at the bottom-right of the screen to move through pages of the data.</p>
+</div>
+<div id="sort" class="section level4">
+<h4>Sort</h4>
+<p>Click on a column header in the table to sort the data by the values of that variable. Clicking again will toggle between sorting in ascending and descending order. To sort on multiple columns at once press shift and then click on the 2nd, 3rd, etc. column you would like to sort by.</p>
+</div>
+<div id="subset" class="section level4">
+<h4>Subset</h4>
+<p>There are several ways to select a subset of the data to view. The Subset box on the left can be used with &gt; and &lt; signs and you can also combine subset commands. For example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable x has values larger than 3 <strong>and</strong> for which y has values equal to 2. Note that in R <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is equal to some other value. In constrast <code>!=</code> is used to determine if variable is <em>not equal</em> to some value. You can also use expression that have an <strong>or</strong> condition. For example, to select rows where Salary is larger than $100,000 or smaller than $20,000 you could use <code>Salary &lt; 20000 | Salary &gt; 100000</code>. <code>|</code> is the symbol for <strong>or</strong>. The table below gives an overview of operators you can use. Type your statement in the Subset box and press enter to see the result on screen.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Operator</th>
+<th align="left"></th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">&lt;</td>
+<td align="left"></td>
+<td align="left">less than</td>
+</tr>
+<tr class="even">
+<td align="left">&lt;=</td>
+<td align="left"></td>
+<td align="left">less than or equal to</td>
+</tr>
+<tr class="odd">
+<td align="left">&gt;</td>
+<td align="left"></td>
+<td align="left">greater than</td>
+</tr>
+<tr class="even">
+<td align="left">&gt;=</td>
+<td align="left"></td>
+<td align="left">greater than or equal to</td>
+</tr>
+<tr class="odd">
+<td align="left">==</td>
+<td align="left"></td>
+<td align="left">exactly equal to</td>
+</tr>
+<tr class="even">
+<td align="left">!=</td>
+<td align="left"></td>
+<td align="left">not equal to</td>
+</tr>
+<tr class="odd">
+<td align="left">x | y</td>
+<td align="left"></td>
+<td align="left">x OR y</td>
+</tr>
+<tr class="even">
+<td align="left">x &amp; y</td>
+<td align="left"></td>
+<td align="left">x AND y</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="search" class="section level3">
+<h3>Search</h3>
+<p>For variables that have a limited number of different values (e.g., a factor) you can type a value in the text box below the column for one, or more, variables. For example, to filter on rows with Ideal cut, type <code>ideal</code> in the box below that column. Matching in the filter fields is case-insensitive. In fact, just typing <code>eal</code> would produce the same result because the search will match any part of a string.</p>
+<p>The search boxes have some special features that make them almost as powerful as the Subset box. For numerical or integer variables you can use <code>,</code> to indicate range. For example, to select Price values between $500 and $2000 dollars you would type <code>500,2000</code>. The range is inclusive of the values typed. The <code>,</code> can also be used as a substitute for &gt; or &lt; in the Subset box. For example, <code>0.32,</code> will show only diamonds with carat values larger than or equal to 0.32.</p>
+<p>If you want to get <em>really</em> fancy you can use the search box in the top right to search across all columns shown using regular expressions. For example, to find all rows that have an entry with the number 72 at the end in one or more of the columns type <code>72$</code> (i.e., the <code>$</code> sign is used to indicate the end of an entry). For all rows with entries that start with 10 use <code>^60</code> (i.e., the <code>^</code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn the basics of regular expressions see <a href="http://www.regular-expressions.info/tutorial.html">http://www.regular-expressions.info/tutorial.html</a>.</p>
+</div>
+
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

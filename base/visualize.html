@@ -10,7 +10,7 @@
 
 
 
-<title></title>
+<title>Data &gt; Visualize</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -148,18 +148,37 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-
-
-<div id="radiant-business-analytics-using-r-and-shiny" class="section level2">
-<h2>Radiant: Business analytics using R and Shiny</h2>
-<p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Developed by <a href="" title="http://rady.ucsd.edu/faculty/directory/nijs/">Vincent Nijs</a>. You can reach me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>. Full source code for radiant is at at <a href="https://github.com/mostly-harmless/radiant">https://github.com/mostly-harmless/radiant</a>.</p>
-<div id="license" class="section level3">
-<h3>License</h3>
-<p>The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation on this site and the radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.</p>
-<p>As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.</p>
-<p>If you are interested in using Radiant please email me at <a href="mailto:vnijs@ucsd.edu">vnijs@ucsd.edu</a></p>
-<p>© Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a></p>
+<div id="header">
+<h1 class="title">Data &gt; Visualize</h1>
 </div>
+
+
+<hr />
+<div id="number-of-plots" class="section level4">
+<h4>Number of plots</h4>
+<p>Start by experimenting with different selections for the X-variable for a single plot (click the Single radio button). This will produce a simple histogram for the X-variable. Then try adding a Y-variable to create a scatter plot (or a box-plot if one of the variables is categorical). Facet row and Facet column can be used to split the data into different parts and then create a separate plot for each subset of the data (either a histogram or a scatter/box plot depending on whether a Y-variable has been selected).</p>
+<p>If you have both and X and a Y-variable selected you will see a drop-down Color. Here you can select a variable to create a type of heat-map where the colors are linked to the value of the select Color variable.</p>
+<p>Select the Multiple radio button to quickly create multiple plots. For example, with <code>diamonds</code> data loaded, choose None for the Y-variable and all variables as X-variables (use CTRL-A or CMD-A). This will create histograms for all variables in your data set.</p>
+<p>To create multiple scatter/box plots select the Multiple radio button and then, with Diamonds data loaded, choose price as the Y-variable and all others as X-variables. This will produce a set of scatter and box plots. You can select a Color variable but Facet row and Facet column are not available when the Multiple radio-button has been selected.</p>
+</div>
+<div id="line-loess-and-jitter" class="section level4">
+<h4>Line, Loess, and Jitter</h4>
+<p>To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values, checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter simply adds a small random value to each data point so they do not overlap completely in the plot(s).</p>
+</div>
+<div id="box-plots" class="section level4">
+<h4>Box plots</h4>
+<p>The upper and lower “hinges” of the box correspond to the first and third quartiles (the 25th and 75th percentiles) in the data. The middle hinge is the median value of the data. The upper whisker extends from the upper hinge (i.e., the top of the box) to the highest value in the data that is within 1.5 x IQR of the upper hinge. IQR is the inter-quartile range, or distance, between the first and third quartiles. The lower whisker extends from the lower hinge to the lowest value in the data within 1.5 x IQR of the lower hinge. Data beyond the end of the whiskers could be outliers and are plotted as points (as suggested by Tukey).</p>
+<p>In sum: 1. The upper whisker extends from Q3 to min(max(data), Q3+1.5<em>IQR) 2. The lower whisker extends from Q1 to max(min(data), Q1-1.5</em>IQR)</p>
+<p>You may have to read the two bullets a few times before it sinks in. The plot below should help to explain the structure of the box plot.</p>
+<p><img src="figures/boxplot.png" alt="Box plot illustration" /> <a href="http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg">Source</a></p>
+</div>
+<div id="subset" class="section level4">
+<h4>Subset</h4>
+<p>Use Subset to select (or omit) specific sets of rows from the data. You can use &gt; and &lt; signs and even combine filter commands. For example, x &gt; 3 &amp; y == 2 would select only those rows for which the variable x has values larger than 3 <strong>and</strong> for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen.</p>
+</div>
+<div id="plot-height-and-width" class="section level4">
+<h4>Plot height and Width</h4>
+<p>To make plots bigger or smaller adjust the values in the height and width boxes on the bottom left.</p>
 </div>
 
 
