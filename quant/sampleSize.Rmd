@@ -1,3 +1,9 @@
+---
+title: Random > Sample size
+---
+
+***
+
 > Determine the required sample size to test a mean or proportion calculated from sample data
 
 #### Example 1
@@ -92,5 +98,3 @@ As an example, suppose we determine that we need to draw a sample of size 217 fr
 $$
 	n^* = \frac{ 217 \times 5000 }{ 217 - 1 + 5000 } = 208
 $$
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Random &gt; Sample size</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/radiant/index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/base/manage.html">Manage</a></li>
+             <li><a href="/radiant/base/view.html">View</a></li>
+             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
+             <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/merge.html">Merge</a></li>
+             <li><a href="/radiant/base/transform.html">Transform</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compareMeans.html">Compare means</a></li>
+             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compareMeans.html">Compare means</a></li>
+             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
+             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/radiant/marketing/preFactor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/fullFactor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/radiant/marketing/hcclustering.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeansClustering.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/radiant/marketing/conjoint.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
+
+
+
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Random &gt; Sample size</h1>
+</div>
+
+
+<hr />
+<blockquote>
+<p>Determine the required sample size to test a mean or proportion calculated from sample data</p>
+</blockquote>
+<div id="example-1" class="section level4">
+<h4>Example 1</h4>
+<p>We would like to start an ISP and need to estimate the average Internet usage of households in one week for our business plan and model. How many households must we randomly select to be 95% sure that the sample mean is within 10 minute of the population mean? Assume that a previous survey of household usage has shown a standard deviation of 60.95 minutes.</p>
+<p><strong>Answer:</strong></p>
+<p>Since we are interested in estimating the average (or mean) internet usage in the population we select sample size calculation for <code>Mean</code>. In the screen shot below we entered 10 (minutes) as the Acceptable error and 60.95 as the estimate of the Sample standard deviation. The Confidence level is 95% so we choose a z-value of 1.96.</p>
+<p><img src="figures_quant/sampleSize_ex1a.png" alt="Example 1b" /></p>
+<p>As you can see the required sample size is equal to 143, i.e., we need 143 valid responses from our target population to make an inference of the population average with the required Acceptable Error, Confidence level, and Sample standard deviation. This number assumes an Incidence and Response rate of 1 (or 100%). Suppose that only 75% of the household in out market have access to internet at home. In addition, suppose that the anticipated response rate is 20%. What would be the required number of household to contact?</p>
+<p><img src="figures_quant/sampleSize_ex1b.png" alt="Example 1a" /></p>
+<p>In the screen shot above the incidence rate is set to 75% and response rate to 20%. The required number of valid responses is the same as before (143), however the number of contact requests is now equal to 143 / .75 / .2 = 953.</p>
+<p><a href="http://www.isixsigma.com/tools-templates/sampling-data/how-determine-sample-size-determining-sample-size/" target="_blank">Source</a></p>
+</div>
+<div id="example-2" class="section level4">
+<h4>Example 2</h4>
+<p>Suppose that you want to investigate if the true prevalence of HIV antibodies in a population is 10%. You plan to take a random sample of the population to estimate the prevalence. You would like 95% confidence that the true proportion in the population will fall within the error bounds calculated from your sample.</p>
+<p>Let’s say that the population size is 5000 and the initial estimate of the prevalence is 10% with an acceptable error of 4%.</p>
+<p><strong>Answer:</strong></p>
+<p>Because we want to estimate the proportion of people with HIV antibodies in the population of interest we select sample size calculation for a <code>Proportion</code>. In the screen shot below we entered 4% as the Acceptable error and 10% as the initial estimate of the proportion (p). The Confidence level is 95% so we choose a z-value of 1.96.</p>
+<p><img src="figures_quant/sampleSize_ex2a.png" alt="Example 2a" /></p>
+<p>As you can see the required sample size is equal to 217, i.e., we need 217 valid responses to make an inference of the population proportion with the required Acceptable error and Confidence level. This number again assumes an Incidence and Response rate of 100%. The example suggests the population of interest has only 5000 people so it may be worthwhile to apply a correction for population size.</p>
+<p><img src="figures_quant/sampleSize_ex2b.png" alt="Example 2b" /></p>
+<p>In the screen shot above we clicked <code>Yes</code> to apply the population correction and then entered 5000 as the population size. The required number of valid responses drops only slightly from 217 to 208.</p>
+<p>In general, the size of the population can be influential when the sample size we need (<span class="math"><em>n</em></span>) is large compared to the size of the total population (<span class="math"><em>N</em></span>). For example, if the population was only 250 people the adjusted sample size would have been 117 rather than 217.</p>
+<p><a href="http://bphc.hrsa.gov/policiesregulations/performancemeasures/patientsurvey/calculating.html" target="_blank">Source</a></p>
+</div>
+<div id="technical-notes" class="section level4">
+<h4>Technical notes</h4>
+<div id="sample-size-for-a-mean" class="section level5">
+<h5>Sample size for a mean:</h5>
+<p><br /><span class="math">$$
+    n = \frac{ z^2 \times s^2 }{ E^2 }
+$$</span><br /></p>
+<p>where <span class="math"><em>n</em></span> is the sample size, <span class="math"><em>z</em></span> is the z-value associated with the desired level of confidence (e.g., 1.96 for 95% confidence), <span class="math"><em>s</em></span> is the sample standard deviation, and <span class="math"><em>E</em></span> is the acceptable error. Even if you have not seen the equation above before you may recall the formula for a confidence interval:</p>
+<p><br /><span class="math">$$
+    x \pm z \frac{s}{\sqrt{n}}
+$$</span><br /></p>
+<p>The boundaries around <span class="math"><em>x</em></span> are equal to <span class="math"><em>E</em></span>, i.e., the acceptable error. Squaring both sides and rearranging terms gives the formula for sample size:</p>
+<p><br /><span class="math">$$
+    E = z \frac{s}{\sqrt{n}} \; \Rightarrow \; n = \frac{ z^2 \times s^2 }{ E^2 }
+$$</span><br /></p>
+</div>
+<div id="sample-size-for-a-proportion" class="section level5">
+<h5>Sample size for a proportion:</h5>
+<p><br /><span class="math">$$
+    n = \frac{ z^2 \times p(1-p) }{ E^2 }
+$$</span><br /></p>
+<p>where <span class="math"><em>n</em></span> is the sample size, <span class="math"><em>z</em></span> is the z-value associated with the desired level of confidence (e.g., 1.96 for 95% confidence), <span class="math"><em>p</em></span> is the sample proportion, and <span class="math"><em>E</em></span> is the acceptable error. Even if you have not seen the equation above before you may recall the formula for a confidence interval:</p>
+<p><br /><span class="math">$$
+    p \pm z \sqrt{ \frac{p(1-p)}{n} }
+$$</span><br /></p>
+<p>The boundaries around <span class="math"><em>p</em></span> are equal to <span class="math"><em>E</em></span>, i.e., the acceptable error. Squaring both sides and rearranging terms gives the formula for sample size:</p>
+<p><br /><span class="math">$$
+    E = z \sqrt{ \frac{p(1-p)}{n} } \; \Rightarrow \; n = \frac{ z^2 p(1-p) }{ E^2 }
+$$</span><br /></p>
+</div>
+<div id="population-correction" class="section level5">
+<h5>Population correction</h5>
+<p>While we can always apply a population correction, the size of the population can have a substantial impact on the required sample size when (<span class="math"><em>n</em></span>) is large compared to the size of the total population (<span class="math"><em>N</em></span>).</p>
+<p><br /><span class="math">$$
+    n^* = \frac{ nN }{ n - 1 + N }
+$$</span><br /></p>
+<p>As an example, suppose we determine that we need to draw a sample of size 217 from a population of 5000. The the sample size adjusted for population size (<span class="math"><em>n</em><sup> * </sup></span>) would be calculated as follows:</p>
+<p><br /><span class="math">$$
+    n^* = \frac{ 217 \times 5000 }{ 217 - 1 + 5000 } = 208
+$$</span><br /></p>
+</div>
+</div>
+
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

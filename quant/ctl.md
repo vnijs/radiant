@@ -1,3 +1,9 @@
+---
+title: Random > Central Limit Theorem
+---
+
+***
+
 > Using random sampling to illustrate the Central Limit Theorem
 
 #### What is the Central Limit Theorem?
@@ -9,5 +15,3 @@ Source: <a href="http://en.wikipedia.org/wiki/Central_limit_theorem" target="_bl
 #### Kahn on the CLT
 
 <div align="center"><iframe width="640" height="375" src="//www.youtube.com/embed/JNm3M9cqWyc" frameborder="0" allowfullscreen></iframe></div>
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

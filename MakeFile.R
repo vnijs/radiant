@@ -1,0 +1,5 @@
+system('make')
+setwd('base'); system('make')
+setwd('../marketing'); system('make')
+setwd('../quant'); system('make')
+setwd('../')

@@ -1,4 +1,11 @@
+---
+title: Regression > Linear (OLS)
+---
+
+***
+
 > (Linear) Regression: The workhorse of empirical research in the social sciences
+
 
 All example files discussed below can be loaded from the Data > Manage page. Click the `examples` radio button and press `Load examples`.
 
@@ -127,7 +134,7 @@ In the plot of correlations there are still clear associations among the depende
 
 ![Regression 3 - log correlations](figures_quant/regression_log_diamonds_corr.png)
 
-The scatter plots of log_price (the dependent variable) against the independent variables are now much cleaner. The line through the scatter plot of log_price versus log_carat is (mostly) straight. Although the points do have a bit of a blocked shape around the line the scattering seem mostly random. We no longer see the points fan-out for higher values of log_price and log_carat. There seems to be a bit more movement in log_price for different levels of clarity. However, the log_price of the diamond still goes down as clarity increase which is unexpected. We will discuss this result below.
+The scatter plots of log\_price (the dependent variable) against the independent variables are now much cleaner. The line through the scatter plot of log\_price versus log\_carat is (mostly) straight. Although the points do have a bit of a blocked shape around the line the scattering seem mostly random. We no longer see the points fan-out for higher values of log\_price and log\_carat. There seems to be a bit more movement in log\_price for different levels of clarity. However, the log_price of the diamond still goes down as clarity increase which is unexpected. We will discuss this result below.
 
 ![Regression 3 - log scatter](figures_quant/regression_log_diamonds_scatter.png)
 
@@ -141,7 +148,7 @@ The final diagnostic we will discuss is a set of plots of the residuals versus t
 
 Since the diagnostics now look much better, we can feel more confident about drawing inferences from this regression. The regression results are available in the Summary tab. Note that we get 7 coefficients for the variable clarity compared to only one for `log_carat`. How come? If you look at the data description (Data > Manage) you will see that clarity is a categorical variables with levels that go from IF (worst clarity) to I1 (best clarity). Categorical variables must be converted to a set of dummy (or indicator) variables before we can apply numerical analysis tools like regression. Each dummy indicates if a particular diamond has a particular clarity level (=1) or not (=0). Interestingly, to capture all information in the 8-level clarity variable we only need 7 dummy variables. Note there is no dummy variable for the clarity level I1 because we don't actually need it in the regression. When a diamond is **not** of clarity SI2, SI1, VS2, VS1, VVS2, VVS1 or IF we know that in our data it must therefore be of clarity I1.
 
-The F-statistic suggests that the regression model as a whole explains a significant amount of variance in log_price. The calculated F-value is very large and has a very small p-value (< 0.001) so we can reject the null hypothesis that all regression coefficients are equal to zero. The amount of variance in log_price explained by the model is equal to 96.6. It seems likely that prices of diamonds are much easier to predict than demand for diamonds.
+The F-statistic suggests that the regression model as a whole explains a significant amount of variance in log\_price. The calculated F-value is very large and has a very small p-value (< 0.001) so we can reject the null hypothesis that all regression coefficients are equal to zero. The amount of variance in log_price explained by the model is equal to 96.6. It seems likely that prices of diamonds are much easier to predict than demand for diamonds.
 
 The null and alternate hypothesis for the F-test test can be formulated as follows:
 H0: All regression coefficients are equal to 0
@@ -149,12 +156,12 @@ Ha: At least one regression coefficient is not equal to zero
 
 The coefficients from the regression can be interpreted as follows:
 
-- For a 1% increase in carats we expect, on average, to see a 1.809% increase in the price of a diamond of, keeping all other variables constant
-- Compared to a diamond of clarity I1 we expect, on average, to pay 100x(exp(.444)-1) = 55.89% more for a diamond of clarity SI2, keeping all other variables constant
-- Compared to a diamond of clarity I1 we expect, on average, to pay 100x(exp(.591)-1) = 80.58% more for a diamond of clarity SI1, keeping all other variables constant
-- Compared to a diamond of clarity I1 we expect, on average, to pay 100x(exp(1.080)-1) = 194.47% more for a diamond of clarity IF, keeping all other variables constant
+- For a 1\% increase in carats we expect, on average, to see a 1.809\% increase in the price of a diamond of, keeping all other variables constant
+- Compared to a diamond of clarity I1 we expect, on average, to pay 100x(exp(.444)-1) = 55.89\% more for a diamond of clarity SI2, keeping all other variables constant
+- Compared to a diamond of clarity I1 we expect, on average, to pay 100x(exp(.591)-1) = 80.58\% more for a diamond of clarity SI1, keeping all other variables constant
+- Compared to a diamond of clarity I1 we expect, on average, to pay 100x(exp(1.080)-1) = 194.47\% more for a diamond of clarity IF, keeping all other variables constant
 
-The coefficients for each of the levels of clarity imply that an increase in clarity will increase the price of diamond. Why then did the boxplot of clarity versus (log) price show price decreasing with clarity? The difference is that in a regression we can determine the effect of a change in one variable (e.g., clarity) keeping all else constant (e.g., carat). Bigger, heavier, diamonds are more likely to have flaws compared to small diamonds so when we look at the boxplot we are really seeing the effect of not only improving clarity on price but also the effect of carats which are negatively correlated with clarity. In a regression we can compare the effects of different levels of clarity on (log) price for a diamond of **the same size** (i.e., keeping carat constant). Without (log) carat in the model the estimated effect of clarity would be incorrect due to <a href="http://en.wikipedia.org/wiki/Omitted-variable_bias" target="_blank">omitted variable bias</a>. In fact, from a regression of log_price on clarity we would conclude that a diamond of the highest clarity in the data (IF) would cost 59.22% less compared to a diamond of the lowest clarity (I1). Clearly this is not a sensible conclusion.
+The coefficients for each of the levels of clarity imply that an increase in clarity will increase the price of diamond. Why then did the boxplot of clarity versus (log) price show price decreasing with clarity? The difference is that in a regression we can determine the effect of a change in one variable (e.g., clarity) keeping all else constant (e.g., carat). Bigger, heavier, diamonds are more likely to have flaws compared to small diamonds so when we look at the boxplot we are really seeing the effect of not only improving clarity on price but also the effect of carats which are negatively correlated with clarity. In a regression we can compare the effects of different levels of clarity on (log) price for a diamond of **the same size** (i.e., keeping carat constant). Without (log) carat in the model the estimated effect of clarity would be incorrect due to <a href="http://en.wikipedia.org/wiki/Omitted-variable_bias" target="_blank">omitted variable bias</a>. In fact, from a regression of log_price on clarity we would conclude that a diamond of the highest clarity in the data (IF) would cost 59.22\% less compared to a diamond of the lowest clarity (I1). Clearly this is not a sensible conclusion.
 
 For each of the independent variables the following null and alternate hypotheses can be formulated:
 H0: The coefficient associated with independent variable X is equal to 0
@@ -211,7 +218,7 @@ $$
   \frac {1}{S_t} \frac{\partial S_t}{\partial P_t} = b \; \text{or} \; \frac {\Delta S_t}{S_t} \approx b
 $$
 
-So a \$1 change in price leads to a $b$% change in sales. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and will again compare sales levels when $D = 1$ to sales levels when $D = 0$ to get $\frac {\Delta S_t}{S_t}$. To get $S_t$ rather than $ln S_t$ on the left hand side we take the exponent of both sides. This gives $S_t = e^{a + b P_t + c D_t}$. The percentage change in $S_t$ when $D_t$ changes from 0 to 1 is then given by:
+So a \$1 change in price leads to a $b$\% change in sales. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and will again compare sales levels when $D = 1$ to sales levels when $D = 0$ to get $\frac {\Delta S_t}{S_t}$. To get $S_t$ rather than $ln S_t$ on the left hand side we take the exponent of both sides. This gives $S_t = e^{a + b P_t + c D_t}$. The percentage change in $S_t$ when $D_t$ changes from 0 to 1 is then given by:
 
 $$
   \begin{aligned}
@@ -256,6 +263,4 @@ $$
   \frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t} = b \frac{S_t}{P_t} \frac{P_t}{S_t} = b
 $$
 
-So a 1% change in price leads to a $b$% change in sales.
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+So a 1\% change in price leads to a $b$\% change in sales.
