@@ -1,26 +1,12 @@
 Package: radiant
 Title: Business analytics using R and Shiny
 Version: 0.1
+Date: 2015-1-20
 Authors@R: "Vincent Nijs <radiant@rady.ucsd.edu> [aut, cre]"
 Description: Business analytics using R and Shiny
-Depends: R (>= 3.1.2)
+Depends: R (>= 3.1.0),
+		shiny (>= 0.10.2.2)
 License: AGPLv3 (code) and CC-NC-SA (documentation)
 LazyData: true
-Depends: shiny (>= 0.10.2.2)
-
-
-asdlkfjasdlkfjads
-
-
-Package: radiant
-Title: Business analytics using R and Shiny
-Type: Shiny-app
-Version: 0.60
-Date: 2015-1-19
-Author: Vincent Nijs <radiant@rady.ucsd.edu>
-Maintainer: Vincent Nijs <radiant@rady.ucsd.edu>
-Description: Business analytics using R and Shiny
-License: AGPLv3 (code) and CC-NC-SA (documentation)
-Depends:
-  R (>= 3.1.1),
-	shiny (>= 0.10.2)
+Imports: dplyr,
+    shiny
