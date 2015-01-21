@@ -11,9 +11,9 @@ radiant <- function(app = c("marketing","quant")) {
 
   addResourcePath("figures", system.file("base/tools/help/figures/", package="radiant"))
   addResourcePath("imgs", system.file("base/www/imgs/", package="radiant"))
-  if(app == "marketing")
+  if(app[1] == "marketing")
     addResourcePath("figures_marketing", system.file("marketing/tools/help/figures/", package="radiant"))
-  if(app == "quant")
+  if(app[1] == "quant")
     addResourcePath("figures_quant", system.file("quant/tools/help/figures/", package="radiant"))
 
   runApp(system.file("marketing", package='radiant'))
