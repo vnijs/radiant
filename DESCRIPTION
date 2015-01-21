@@ -23,7 +23,7 @@ Depends:
 		testthat (>= 0.9.1),
 		lubridate (>= 1.3.3),
 		ggplot2 (>= 1.0.0),
-		shiny (>= 0.10.2.2),
+		shiny (== 0.10.2.2),
 		magrittr (>= 1.5),
 		tidyr (>= 0.2.0),
 		dplyr (>= 0.4.1),
