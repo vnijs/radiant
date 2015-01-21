@@ -21,8 +21,10 @@ if(Sys.getenv('SHINY_PORT') == "") {
     Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
   }
 
-  # install and load required packages
-  source("../base/dependencies.R", local = TRUE)
+
+  # if radiant was not installed as a package install and load dependencies
+  if(!require(radiant))
+    source("../base/dependencies.R", local = TRUE)
 
   if (Sys.getenv("HOME") == "/Users/vnijs") {
     # for debugging
