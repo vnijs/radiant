@@ -7,9 +7,6 @@ pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
           "knitr", "rmarkdown", "testthat", "lubridate", "ggplot2", "shiny",
           "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
 
-# vim key bindings for shinyAce ... which don't work well
-vimKeyBinding <<- FALSE
-
 if(Sys.getenv('SHINY_PORT') == "") {
 
   running_local <<- TRUE
@@ -33,7 +30,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
     # options(warn=0)
     # options(warn=2)
     # options(shiny.error=recover)
-    # vimKeyBinding <<- TRUE
   }
 } else {
 
@@ -49,10 +45,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
   )
  }
 
-# Notation
-# options(scipen = 100)
-# options(digits = 3)
-
 # adding the figures path to avoid making a copy of all figures in www/figures
-addResourcePath("figures", "../base/tools/help/figures/")
-addResourcePath("imgs", "../base/www/imgs/")
+# addResourcePath("figures", "../base/tools/help/figures/")
+# addResourcePath("imgs", "../base/www/imgs/")
