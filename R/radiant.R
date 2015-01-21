@@ -1,13 +1,12 @@
 #' Launch Radiant
 #'
-#' @importFrom shiny addResourcePath runApp
 #'
 #' @export
 #'
 radiant <- function(app = c("marketing","quant")) {
 
-  if(packageVersion('shiny') > "0.10.2.2")
-    stop("Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11.\nCopy-and-paste the code below to install the required packages.\n\n\ndetach('package:shiny', unload=TRUE)\nremove.packages('shiny')\noptions(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\ninstall.packages(new.packages(), dependencies = TRUE)")
+#   if(packageVersion('shiny') > "0.10.2.2")
+#     stop("Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11.\nCopy-and-paste the code below to install the required packages.\n\n\ndetach('package:shiny', unload=TRUE)\nremove.packages('shiny')\noptions(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\ninstall.packages(new.packages(), dependencies = TRUE)")
 
   addResourcePath("figures", system.file("base/tools/help/figures/", package="radiant"))
   addResourcePath("imgs", system.file("base/www/imgs/", package="radiant"))
@@ -18,6 +17,9 @@ radiant <- function(app = c("marketing","quant")) {
 
   runApp(system.file("marketing", package='radiant'))
 }
+
+# @import car gridExtra GPArotation psych vegan RColorBrewer wordcloud AlgDesign brew reshape2 plyr markdown knitr rmarkdown testthat lubridate ggplot2 shiny magrittr tidyr dplyr ggvis broom shinyAce
+# @importFrom shiny addResourcePath runApp
 
 # # load/attach packages
 # pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",

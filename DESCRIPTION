@@ -5,8 +5,7 @@ Date: 2015-1-21
 Authors@R: "Vincent Nijs <radiant@rady.ucsd.edu> [aut, cre]"
 Description: Business analytics using R and Shiny
 Depends:
-		R (>= 3.1.0)
-Imports:
+		R (>= 3.1.0),
 		car (>= 2.0.22),
 		gridExtra (>= 0.9.1),
 		GPArotation (>= 2014.11.1),
@@ -31,6 +30,7 @@ Imports:
 		ggvis (>= 0.4),
 		broom (>= 0.3.5),
 		shinyAce (>= 0.2.0)
+Imports:
 URL: https://github.com/mostly-harmless/radiant, http://mostly-harmless.github.io/radiant/
 BugReports: https://github.com/mostly-harmless/radiant/issues
 License: AGPLv3 (code) and CC-NC-SA (documentation)
