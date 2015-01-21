@@ -66,7 +66,6 @@ output$report <- renderUI({
         aceEditor("rmd_report", mode="markdown", wordWrap = TRUE,
                   height = "600px",
                   selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
-                  vimKeyBinding=vimKeyBinding,
                   hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
                   )),
       div(class="span6", htmlOutput("rmd_knitDoc"))
