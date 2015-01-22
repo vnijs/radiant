@@ -1,3 +1,4 @@
 library(devtools)
-build('radiant')
-build('radiant', binary = TRUE)
+document(roclets=c('rd', 'collate', 'namespace'))
+build('../radiant_dev')
+build('../radiant_dev', binary = TRUE)
