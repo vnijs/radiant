@@ -16,36 +16,22 @@ Documentation and tutorials for Radiant are available at <http://mostly-harmless
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)).  by copy-and-pasting the commands below into the Rstudio console:
+You can install the `Radiant` package and all package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
 
-		# install to user directory
-		local_dir <- Sys.getenv("R_LIBS_USER")
-		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-
-		# install packages from [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo
 		options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
-		install.packages(new.packages(), local_dir, dependencies = TRUE)
+		install.packages("radiant")
 
-If you are familiar with Git(Hub) you can clone the repo as usual. You can also download the app by clicking the `Download ZIP` button and unzipping the folder to, for example, your Desktop.
+Once all packages are installed use the commands below to start the app:
 
+		library('radiant')
+		radiant()
 
-#### From Rstudio
+To start the quant app use:
 
-**Note that Radiant currently does not support Shiny 0.11.** To use Radiant please remove Shiny 0.11 if you already have it installed. Copy-and-paste the code below to the Rstudio console to remove the installed version of Shiny and install the required packages and versions.
+		library('radiant')
+		radiant('quant')
 
-		detach('package:shiny', unload=TRUE)
-		remove.packages('shiny')
-		local_dir <- Sys.getenv("R_LIBS_USER")
-		if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
-		options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
-		install.packages(new.packages(), local_dir, dependencies = TRUE)
-
-Once you have install the dependencies, open the Radiant project in Rstudio by double-clicking the `radiant.Rproj` file in the radiant directory. In Rstudio navigate to `inst/` in the radiant directory and choose the app you want to run (e.g., quant or marketing). If you choose the marketing app open `ui.R` from the `inst/marketing` directory. Then click the play button (see screenshot below). Package dependencies will be updated if needed but you should install shiny and other dependencies using the commands above. After installing dependencies you may need to restart Rstudio before the play button is shown.
-
-![Starting Radiant from Rstudio](start_from_rstudio.png)
-
-
-#### Creating a desktop launcher
+<!-- #### Creating a desktop launcher
 
 You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`
 
@@ -54,6 +40,7 @@ On Windows you create a launcher for Radiant on your Desktop by double-clicking 
 For Mac, double-click the make\_mac.command file to create a launcher for Radiant on your Desktop. Find the new file on your Desktop (i.e., radiant\_quant.command or radiant_marketing.command). Double click the .command file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute
 
 When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button. The Radiant process will stop and the browser window will close.
+-->
 
 #### Online
 
@@ -79,8 +66,8 @@ You can also open a state file in Rstudio. When you start Radiant from Rstudio i
 
 ### Todo
 
-- Create Radiant-package that exports analysis functions
-- Use roxygen for documentation
+- Export all analysis functions
+- Add roxygen documentation
 - Testing using Rselenium
 - Use dplyr, tidyr, and magrittr to explore, transform, and filter data
 - etc. etc.
