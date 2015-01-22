@@ -2,5 +2,6 @@
 source('../base/global.R', local = TRUE)
 
 # add functions below that may not be needed in other apps
-addResourcePath("figures_marketing", "../marketing/tools/help/figures/")
-addResourcePath("figures_quant", "../quant/tools/help/figures/")
+if(!"package:radiant" %in% search())
+	addResourcePath("figures_marketing", "../marketing/tools/help/figures/")
+	addResourcePath("figures_quant", "../quant/tools/help/figures/")
