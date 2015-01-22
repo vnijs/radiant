@@ -23,8 +23,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   }
 
 
-  # if radiant was not installed as a package install and load dependencies
-  if(running_local && !require(radiant))
+  # if radiant package was not loaded load dependencies
+  if(running_local && (!"package:radiant" %in% search()))
     source("../base/dependencies.R", local = TRUE)
 
   if (Sys.getenv("HOME") == "/Users/vnijs") {
@@ -49,5 +49,6 @@ if(Sys.getenv('SHINY_PORT') == "") {
  }
 
 # adding the figures path to avoid making a copy of all figures in www/figures
-# addResourcePath("figures", "../base/tools/help/figures/")
-# addResourcePath("imgs", "../base/www/imgs/")
+if(!"package:radiant" %in% search())
+  addResourcePath("figures", "../base/tools/help/figures/")
+  addResourcePath("imgs", "../base/www/imgs/")
