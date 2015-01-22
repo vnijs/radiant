@@ -9,7 +9,8 @@ pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
 
 if(Sys.getenv('SHINY_PORT') == "") {
 
-  running_local <<- TRUE
+  # running_local <<- TRUE
+  running_local <- TRUE
 
   # no limit to filesize locally
   options(shiny.maxRequestSize=-1)
@@ -23,7 +24,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
 
   # if radiant was not installed as a package install and load dependencies
-  if(!require(radiant))
+  if(running_local && !require(radiant))
     source("../base/dependencies.R", local = TRUE)
 
   if (Sys.getenv("HOME") == "/Users/vnijs") {
@@ -35,7 +36,7 @@ if(Sys.getenv('SHINY_PORT') == "") {
   }
 } else {
 
-  running_local <<- FALSE
+  running_local <- FALSE
 
   # limit upload filesize on server (5MB)
   options(shiny.maxRequestSize=5*1024^2)

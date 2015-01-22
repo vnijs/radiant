@@ -4,7 +4,10 @@
 \alias{radiant}
 \title{Launch the Radiant app in a browser}
 \usage{
-radiant(app = c("marketing", "quant"))
+radiant(app = c("marketing", "quant", "base"))
+}
+\arguments{
+\item{app}{Choose the app to run. Either "base", "quant", or "marketing". "marketing" is the default}
 }
 \description{
 Launch the Radiant app in a browser

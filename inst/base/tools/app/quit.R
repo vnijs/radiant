@@ -44,6 +44,9 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
+  print(ip)
+  print(ls())
+  print(ls(envir = .GlobalEnv))
   isolate({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
@@ -62,11 +65,9 @@ observe({
   if(input$quitApp %>% not_pressed || !running_local) return()
 
   # quit R, unless you are running Rstudio
-  if(Sys.getenv("RSTUDIO") != "1") {
-    stopApp("Stopped Radiant")
-    q("no")
-  } else {
-    # flush input and values into Rstudio
+  # if(Sys.getenv("RSTUDIO") != "1") {
+  if(interactive()) {
+    # flush input and values into Rgui or Rstudio
     isolate({
       assign("state_list", reactiveValuesToList(input), envir = .GlobalEnv)
       assign("values", reactiveValuesToList(values), envir = .GlobalEnv)
@@ -78,13 +79,10 @@ observe({
           cat(input$rmd_report, file = pipe("pbcopy"))
         }
       }
-      stopApp(cat("\nStopping Radiant. State flushed to Rstudio as lists 'state_list' and 'values'.\n\n"))
+      stopApp(cat("\nStopping Radiant. State available as 'state_list' and 'values'.\nReport content was copied to the clipboard.\n"))
     })
+  } else {
+    stopApp("Stopped Radiant")
+    q("no")
   }
 })
-
-# output$refreshOnReset <- renderUI({
-#   if(input$resetState %>% not_pressed) return()
-#   # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
-#   tags$script("window.location.reload();")
-# })
