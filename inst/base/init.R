@@ -5,6 +5,12 @@
 
 ip <- session$request$REMOTE_ADDR
 
+# observe({
+#   qs <- parseQueryString(session$clientData$url_search)
+#   if(!is.null(qs$id) && qs$id != "")
+#     ip <<- qs$id
+# })
+
 init_state <- function(values) {
 
   # initial plot height and width
@@ -35,6 +41,10 @@ if (exists("state_list") && exists("values")) {
   rm(list = c(ip_inputs, ip_values), envir = .GlobalEnv)
   rm(list = ls(pattern = "^RadiantInputs"), envir = .GlobalEnv)
   rm(list = ls(pattern = "^RadiantValues"), envir = .GlobalEnv)
+  # rm(list = ls(pattern = "^RadiantInputs", envir = .GlobalEnv), envir = .GlobalEnv)
+  # rm(list = ls(pattern = "^RadiantValues", envir = .GlobalEnv), envir = .GlobalEnv)
+  # rm(list = ls(pattern = "^RadiantInputs", envir = .GlobalEnv), inherits = TRUE)
+  # rm(list = ls(pattern = "^RadiantValues", envir = .GlobalEnv), inherits = TRUE)
 } else {
   state_list <- list()
   # values <- reactiveValues()

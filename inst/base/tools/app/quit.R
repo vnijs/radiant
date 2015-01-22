@@ -81,7 +81,9 @@ output$showInput <- renderPrint({
     "IP address XFF: ", session$request$HTTP_X_FORWARDED_FOR,   "\n",
     "IP address: ", session$request$REMOTE_ADDR,   "\n"
   ) %>% cat
+  print("ip next")
   print(ip)
+  print("ip prev")
   print(ls())
   print(ls(envir = .GlobalEnv))
   isolate({
