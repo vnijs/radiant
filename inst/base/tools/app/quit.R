@@ -61,8 +61,8 @@ output$showInput <- renderPrint({
 
   cat("Env?\n")
 
-  # cdata <- session$clientData
-  cdata <- session$request
+  cdata <- session$clientData
+  # cdata <- session$request
 
   # Values from cdata returned as text
   cnames <- names(cdata)
