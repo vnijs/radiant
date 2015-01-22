@@ -285,7 +285,6 @@ summary(reg)
 output$rcode <- renderUI({
   div(class="row-fluid", div(class="span6",
     aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example),
-              vimKeyBinding=vimKeyBinding,
               hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
               ),
     actionButton("rEval", "Run"),
