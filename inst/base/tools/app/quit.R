@@ -44,6 +44,15 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
+  paste(sep = "",
+    "protocol: ", session$clientData$url_protocol, "\n",
+    "hostname: ", session$clientData$url_hostname, "\n",
+    "pathname: ", session$clientData$url_pathname, "\n",
+    "port: ",     session$clientData$url_port,     "\n",
+    "search: ",   session$clientData$url_search,   "\n",
+    "IP address XFF: ", session$request$HTTP_X_FORWARDED_FOR,   "\n",
+    "IP address: ", session$request$REMOTE_ADDR,   "\n"
+  ) %>% cat
   print(ip)
   print(ls())
   print(ls(envir = .GlobalEnv))
