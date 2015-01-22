@@ -44,8 +44,36 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
+  query <- parseQueryString(session$clientData$url_search)
+
+  # Return a string with key-value pairs
+  print(query)
+  print(str(query))
+#   paste(names(query), query, sep = "=", collapse=", ") %>% cat
+
+  cat("\n\n")
+
+
+  cat("Env?\n")
+  req <- ls(env=session$request)
+  for(i in req)
+    print(get(i, envir=session$request))
+
+  cat("Env?\n")
+
+  # cdata <- session$clientData
+  cdata <- session$request
+
+  # Values from cdata returned as text
+  cnames <- names(cdata)
+
+  allvalues <- lapply(cnames, function(name) {
+    paste(name, cdata[[name]], sep=" = ")
+  })
+  paste(allvalues, collapse = "\n") %>% cat
+
   paste(sep = "",
-    "protocol: ", session$clientData$url_protocol, "\n",
+    "\nprotocol: ", session$clientData$url_protocol, "\n",
     "hostname: ", session$clientData$url_hostname, "\n",
     "pathname: ", session$clientData$url_pathname, "\n",
     "port: ",     session$clientData$url_port,     "\n",
