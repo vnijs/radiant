@@ -4,6 +4,16 @@ shinyServer(function(input, output, session) {
 	source('../base/init.R', local = TRUE)
 	source('../base/radiant.R', local = TRUE)
 
+	# for shiny-server
+  if(!running_local) {
+	  for(file in list.files("../../R",
+	      pattern="\\.(r|R)$",
+	      full.names = TRUE)) {
+
+	  	source(file, local = TRUE)
+	  }
+	}
+
 	# source data & app tools from base
 	for(file in list.files(c("../base/tools/app","../base/tools/data"), pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
@@ -16,8 +26,7 @@ shinyServer(function(input, output, session) {
   for(file in list.files(c("tools/analysis"), pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
 
-  # save state on crash only if running locally and not from Rstudio
-  # if(Sys.getenv("RSTUDIO") != "1" & running_local) saveStateOnRefresh(session)
+  # save state on refresh or browser close
   saveStateOnRefresh(session)
 
 })

@@ -5,20 +5,21 @@
 
 ip <- session$request$REMOTE_ADDR
 
-init_state <- function() {
+init_state <- function(values) {
 
   # initial plot height and width
-  values$plotHeight <<- 600
-  values$plotWidth <<- 600
+  values$plotHeight <- 600
+  values$plotWidth <- 600
 
   # Datasets can change over time (i.e. the changedata function). Therefore,
   # the data need to be a reactive value so the other reactive functions
   # and outputs that depend on these datasets will know when they are changed.
   robj <- load("../base/data/data_init/diamonds.rda")
   df <- get(robj)
-  values[["diamonds"]] <<- df
-  values[["diamonds_descr"]] <<- attr(df,'description')
-  values$datasetlist <<- c("diamonds")
+  values[["diamonds"]] <- df
+  values[["diamonds_descr"]] <- attr(df,'description')
+  values$datasetlist <- c("diamonds")
+  values
 }
 
 ip_inputs <- paste0("RadiantInputs",ip)
@@ -36,8 +37,8 @@ if (exists("state_list") && exists("values")) {
   rm(list = ls(pattern = "^RadiantValues"), envir = .GlobalEnv)
 } else {
   state_list <- list()
-  values <- reactiveValues()
-  init_state()
+  # values <- reactiveValues()
+  values <- init_state(reactiveValues())
 }
 
 observe({
