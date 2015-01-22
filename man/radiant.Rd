@@ -2,11 +2,14 @@
 % Please edit documentation in R/radiant.R
 \name{radiant}
 \alias{radiant}
-\title{Launch Radiant}
+\title{Launch the Radiant app in a browser}
 \usage{
 radiant(app = c("marketing", "quant"))
 }
 \description{
-Launch Radiant
+Launch the Radiant app in a browser
+}
+\details{
+See \url{http://mostly-harmless.github.io/radiant} for documentation and tutorials
 }
 

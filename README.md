@@ -12,10 +12,11 @@ Documentation and tutorials for Radiant are available at <http://mostly-harmless
 
 ### Install
 
-- Required: [R](http://cran.rstudio.com/), version 3.1.2
+- Required: [R](https://github.com/mostly-harmless/radiant_miniCRAN/tree/gh-pages/R-3.1.2), version 3.1.2
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox)
-- Suggested: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
-- You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)) by copy-and-pasting the commands below into the Rstudio console:
+- Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
+
+You should install package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)).  by copy-and-pasting the commands below into the Rstudio console:
 
 		# install to user directory
 		local_dir <- Sys.getenv("R_LIBS_USER")
