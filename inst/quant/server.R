@@ -14,8 +14,10 @@ shinyServer(function(input, output, session) {
     }
   }
 
-	# source data & app tools from base
-  for(file in list.files(c("../base/tools/app","../base/tools/data"), pattern="\\.(r|R)$", full.names = TRUE))
+  # source data & app tools from base
+  for(file in list.files(c("../base/functions", "../base/tools/app",
+                           "../base/tools/data"), pattern="\\.(r|R)$",
+                           full.names = TRUE))
     source(file, local = TRUE)
 
 	# source analysis tools for quant app

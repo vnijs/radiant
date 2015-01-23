@@ -92,18 +92,7 @@ output$dataDescriptionMD <- renderUI({
   )
 })
 
-# managing the description of the dataset
-dataDescriptionOutput <- function(ret = 'html') {
-  descr <- values[[paste0(input$dataset,"_descr")]]
-  if(is.null(descr) || descr == "") {
-    return("")  # if there is no data description
-  } else {
-    # if there is a data description and the 'add/edit' box has been checked
-    ifelse(ret == 'md',return(descr),
-      return(suppressWarnings(markdownToHTML(text = descr,
-             stylesheet="../base/www/empty.css"))))
-  }
-}
+
 
 # removing datasets
 output$uiRemoveDataset <- renderUI({
@@ -143,15 +132,7 @@ observe({
 observe({
   if(is.null(input$saveClipData) || input$saveClipData == 0) return()
   isolate({
-    os_type <- .Platform$OS.type
-    if (os_type == 'windows') {
-      write.table(getdata(), "clipboard", sep="\t", row.names=FALSE)
-    } else if (Sys.info()["sysname"] == "Darwin") {
-      write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE,
-                  sep = '\t')
-    } else {
-      print("Saving data through the clipboard is not currently supported on Radiant server.")
-    }
+    saveClipboardData()
     updateRadioButtons(session = session, inputId = "saveAs",
                        label = "Save data:",
                        c("rda" = "rda", "csv" = "csv",
@@ -194,7 +175,17 @@ observe({
     isolate({
       # iterating through the files to upload
       for(i in 1:(dim(inFile)[1]))
-        loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType)
+        loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
+                     header = input$header,
+                     man_str_as_factor = input$man_str_as_factor,
+                     sep = input$sep)
+
+      # loadUserData <- function(filename, uFile, ext, header = TRUE,
+      #                    man_str_as_factor = TRUE, sep = ",") {
+
+      updateSelectInput(session, "dataset", label = "Datasets:",
+                        choices = values$datasetlist,
+                        selected = values$datasetlist[1])
     })
   }
 })
@@ -229,25 +220,7 @@ observe({
   # 'reading' data from clipboard
   if(is.null(input$loadClipData) || input$loadClipData == 0) return()
   isolate({
-    os_type <- .Platform$OS.type
-    if (os_type == 'windows') {
-
-      dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
-      if(is(dat, 'try-error'))
-        dat <- c("Data from clipboard was not well formatted.
-                 Try exporting the data to csv format.")
-    } else if (Sys.info()["sysname"] == "Darwin") {
-
-      dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
-      if(is(dat, 'try-error'))
-        dat <- c("Data from clipboard was not well formatted.
-                 Try exporting the data to csv format.")
-    } else {
-        dat <- c("Loading data through the clipboard is not currently supported on Radiant server.")
-    }
-
-    values[['xls_data']] <- data.frame(dat, check.names = FALSE)
-    values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
+    loadClipboardData()
     updateRadioButtons(session = session, inputId = "dataType",
                        label = "Load data:", c("rda" = "rda", "csv" = "csv",
                                                "clipboard" = "clipboard",
@@ -260,40 +233,7 @@ observe({
   })
 })
 
-loadUserData <- function(filename, uFile, ext) {
 
-  objname <- sub(paste(".",ext,sep = ""),"",basename(filename))
-
-  if(ext == 'rda') {
-    # objname will hold the name of the object(s) inside the R datafile
-    robjname <- load(uFile)
-
-    if(length(robjname) > 1) {
-      # keeping this bit for legacy
-      values[[objname]] <- as.data.frame(get(robjname[-which(robjname == "description")]))
-      values[[paste0(objname,"_descr")]] <- get("description")
-    } else {
-      values[[objname]] <- as.data.frame(get(robjname))
-      values[[paste0(objname,"_descr")]] <- attr(values[[objname]], "description")
-    }
-  }
-
-  if(length(values[['datasetlist']]) == 0 || values[['datasetlist']][1] == '') {
-    values[['datasetlist']] <- c(objname)
-  } else {
-    values[['datasetlist']] <- unique(c(objname,values[['datasetlist']]))
-  }
-
-  if(ext == 'csv') {
-    values[[objname]] <- read.csv(uFile, header=input$header,
-                                  sep=input$sep,
-                                  stringsAsFactors=input$man_str_as_factor)
-  }
-
-  updateSelectInput(session, "dataset", label = "Datasets:",
-                    choices = values$datasetlist,
-                    selected = values$datasetlist[1])
-}
 
 #######################################
 # Load previous state
