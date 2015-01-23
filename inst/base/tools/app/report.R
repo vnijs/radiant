@@ -45,11 +45,10 @@ visualize('diamonds', 'price', 'carat', '', 'single', '.', '.', 'clarity', FALSE
 "
 
 # opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
-opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
+knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                fig.path = "~/radiant_temp/rmd/figure/")
-opts_knit$set(progress = TRUE)
+knitr::opts_knit$set(progress = TRUE)
 # options(markdown.HTML.stylesheet = "https://github.com/rstudio/markdown/blob/master/inst/resources/markdown.css")
-
 
 output$report <- renderUI({
 

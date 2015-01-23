@@ -2,8 +2,10 @@
 # Multidimensional scaling
 ###############################
 output$uiMds_id1 <- renderUI({
-	isChar <- "character" == getdata_class()
-  vars <- varnames()[isChar]
+	# isChar <- "character" == getdata_class()
+	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
+  # vars <- varnames()[isChar]
+  vars <- varnames()[isLabel]
   if(length(vars) == 0) return(HTML('<label>This dataset has no variables of type character.</label>'))
   selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars,
    	selected = state_singlevar("mds_id1",vars), multiple = FALSE)
@@ -13,8 +15,10 @@ output$uiMds_id2 <- renderUI({
 
   if(is.null(input$mds_id1) || !input$mds_id1 %in% varnames()) return()
 
-	isChar <- "character" == getdata_class()
-  vars <- varnames()[isChar]
+	# isChar <- "character" == getdata_class()
+	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
+  # vars <- varnames()[isChar]
+  vars <- varnames()[isLabel]
 	vars <- vars[-which(vars == input$mds_id1)]
   if(length(vars) == 0) return(HTML('<label>This dataset has only one variable of type character.</label>'))
   selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
@@ -78,7 +82,9 @@ output$mds <- renderUI({
 
 	ret_text <- "This analysis requires two id-variables of type character\nand a measure of dissimilarity of type numeric or interval.\nPlease select another dataset."
 	if(is.null(input$mds_id2) || is.null(input$mds_dis)) return(ret_text)
-	if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
+
+	# if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
+	if( c(input$mds_id1, input$mds_id2, input$mds_dis) %>% not_available ) return(ret_text)
 
 	mds(input$dataset, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
 			input$mds_non_metric, input$mds_dim_number, input$mds_fontsz)
@@ -100,9 +106,16 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 
 	nr.dim <- as.numeric(mds_dim_number)
 
+	# dat <- read.csv("~/Desktop/Car Survey MDS 2015.csv")
+	# mds_id1 <- "ID.1"
+	# mds_id2 <- "ID.2"
+	# mds_dis <- "Distance"
+	# nr.dim <- 2
+	# library(dplyr)
+
 	dis <- dat[,mds_dis]
-	id1 <- dat[,mds_id1]
-	id2 <- dat[,mds_id2]
+	id1 <- dat[,mds_id1] %>% as.character
+	id2 <- dat[,mds_id2] %>% as.character
 
 	lab <- unique(c(id1,id2))
 	nr.lev <- length(lab)
@@ -116,7 +129,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 	} else if((lower + nr.lev) == nr.obs) {
 		co.dist[lower.tri(co.dist, diag = TRUE)] <- dis
 	} else {
-		return("Number of observations and unique id's does not match.")
+		return("Number of observations and unique id's does not match. Please choose another dataset.")
 	}
 
 	rownames(co.dist) <- lab
@@ -126,15 +139,24 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 	set.seed(1234)
 
 	###############################################
-	# Try metaMDS
+	# Try metaMDS ?
 	###############################################
 	# co.mds <- suppressWarnings(metaMDS(co.dist.mat, k = nr.dim, trymax = 500))
 	# if(co.mds$converged == FALSE) return("The MDS algorithm did not converge. Please try again.")
 
 	co.mds <- MASS::isoMDS(co.dist.mat, k = nr.dim, trace = FALSE)
+	co.mds
 
-	if(mds_non_metric == "metric")
+	if(mds_non_metric == "metric") {
 		co.mds$points <- cmdscale(co.dist.mat, k = nr.dim)
+		co.mds$stress <- sqrt(1 - cor(dist(co.mds$points),co.dist.mat)^2) * 100
+	}
+
+	# x <- rnorm(100)
+	# y <- x + rnorm(100)
+	# cor(y,x)^2
+	# fit <- lm(y ~ x)
+	# summary(fit)
 
 	out <- list()
 	out$nr.dim <- nr.dim
@@ -165,11 +187,11 @@ summary_mds <- function(result = .mds()) {
 	colnames(coor) <- paste("Dim ", 1:ncol(coor))
 	print(coor, digits = 3)
 
-	if(result$out$mds_non_metric == "non-metric") {
+	# if(result$out$mds_non_metric == "non-metric") {
 		cat("\nFinal stress measure equal to", sprintf("%.3f", co.mds$stress/100))
-	} else {
-		cat("\nNo stress measure available for metric MDS")
-	}
+	# } else {
+		# cat("\nNo stress measure available for metric MDS")
+	# }
 }
 
 plots_mds <- function(result = .mds()) {
