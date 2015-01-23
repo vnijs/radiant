@@ -27,8 +27,10 @@ saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     # print("Session ended")
     isolate({
-      if(input$resetState %>% not_pressed &&
-         input$quitApp %>% not_pressed &&
+      # if(input$resetState %>% not_pressed &&
+      #    input$quitApp %>% not_pressed &&
+      if(not_pressed(input$resetState) &&
+         not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
 
         # RadiantInputs <- state_list
@@ -94,8 +96,7 @@ inChecker <- function(x)
 #
 #
 not_available <- function(x)
-  ifelse(is.null(x) || (sum(x %in% varnames()) < length(x)), TRUE, FALSE)
-
+  ifelse(any(is.null(x)) || (sum(x %in% varnames()) < length(x)), TRUE, FALSE)
 
 # check if a button was NOT pressed
 not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
