@@ -145,18 +145,16 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 	# if(co.mds$converged == FALSE) return("The MDS algorithm did not converge. Please try again.")
 
 	co.mds <- MASS::isoMDS(co.dist.mat, k = nr.dim, trace = FALSE)
-	co.mds
+	co.mds$stress <- co.mds$stress / 100
 
 	if(mds_non_metric == "metric") {
 		co.mds$points <- cmdscale(co.dist.mat, k = nr.dim)
-		co.mds$stress <- sqrt(1 - cor(dist(co.mds$points),co.dist.mat)^2) * 100
+		# Using R^2
+		# co.mds$stress <- sqrt(1 - cor(dist(co.mds$points),co.dist.mat)^2) * 100
+		# Using standard Kruskal formula for metric MDS
+		co.mds$stress	<- { sum((dist(co.mds$points) - co.dist.mat)^2) / sum(co.dist.mat^2) } %>%
+											 sqrt
 	}
-
-	# x <- rnorm(100)
-	# y <- x + rnorm(100)
-	# cor(y,x)^2
-	# fit <- lm(y ~ x)
-	# summary(fit)
 
 	out <- list()
 	out$nr.dim <- nr.dim
@@ -180,18 +178,13 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 summary_mds <- function(result = .mds()) {
 
 	cat("Distance data:\n")
-	print(result$co.dist.mat, digits = 3)
+	result$co.dist.mat %>% round(3) %>% print
 	cat("\nCoordinates:\n")
 	co.mds <- result$co.mds
-	coor <- co.mds$points
-	colnames(coor) <- paste("Dim ", 1:ncol(coor))
-	print(coor, digits = 3)
+	colnames(co.mds$points) <- paste("Dim ", 1:ncol(co.mds$points))
+	co.mds$points %>% round(3) %>% print
 
-	# if(result$out$mds_non_metric == "non-metric") {
-		cat("\nFinal stress measure equal to", sprintf("%.3f", co.mds$stress/100))
-	# } else {
-		# cat("\nNo stress measure available for metric MDS")
-	# }
+	cat("\nStress:", sprintf("%.2f", co.mds$stress))
 }
 
 plots_mds <- function(result = .mds()) {
