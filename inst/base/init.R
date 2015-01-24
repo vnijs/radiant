@@ -70,14 +70,17 @@ check_state_dump_times <- function() {
   dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
   for (i in dump_times) {
     dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
-    state_email(c(dump_times,dump_time,str(dump_time)), subject = "Pre state test")
+    body_part1 <- c("\nState files erased\n\nBefore:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
     if (dump_time > 1) {
-      body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       sub("RadiantDumpTime","",i) %>%
         paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
         rm(list = ., envir = .GlobalEnv)
       body_part2 <- c("\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       state_email(c(body_part1,body_part2))
+    } else {
+      state_email(c(body_part1, "\n\nDump times less than 1 minute:\n",
+                    dump_times,dump_time),
+                    subject = "Nothing erased on init")
     }
   }
 }
