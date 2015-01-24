@@ -33,29 +33,29 @@ ip_values <- paste0("RadiantValues",ip)
 ip_dump <- paste0("RadiantDumpTime",ip)
 
 #### test section
-# rm(list = ls())
-# library(lubridate)
-# library(dplyr)
-# t1 <- now()
-# t2 <- t1 + 30
-# less_1 <- t2 - t1
-# t2 <- t1 + minutes(1)
-# less_2 <- t2 - t1
-# t2 <- t1 + minutes(10)
-# more_2 <- t2 - t1
-# str(less_2)
-# attr(less_2,"units")
+rm(list = ls())
+library(lubridate)
+library(dplyr)
+t1 <- now()
+t2 <- t1 + 30
+less_1 <- t2 - t1
+t2 <- t1 + minutes(1)
+less_2 <- t2 - t1
+t2 <- t1 + minutes(10)
+more_2 <- t2 - t1
+str(less_2)
+attr(less_2,"units")
 
-# ip <- "127.0.0.1"
-# ip_dump <- paste0("RadiantDumpTime",ip)
-# assign(ip_dump, less_3)
+ip <- "127.0.0.1"
+ip_dump <- paste0("RadiantDumpTime",ip)
+assign(ip_dump, less_3)
 
-# ip <- "127.0.0.2"
-# ip_dump2 <- paste0("RadiantDumpTime",ip)
-# assign(ip_dump2, more_2)
+ip <- "127.0.0.2"
+ip_dump2 <- paste0("RadiantDumpTime",ip)
+assign(ip_dump2, more_2)
 
-# email may work only on linux
-# check_state_dump_times()
+email may work only on linux
+check_state_dump_times()
 #### end test section
 
 state_email <- function(p1, p2) {
@@ -73,9 +73,10 @@ state_email <- function(p1, p2) {
 
 check_state_dump_times <- function() {
   dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
+  dump_times
   for(i in dump_times) {
     dump_time <- get(i)
-    dump_time
+    print(dump_time)
     if (attr(dump_time, "units") != "secs" && dump_time > 2) {
       body_part1 <- c("Before:",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       sub("RadiantDumpTime","",i) %>%
