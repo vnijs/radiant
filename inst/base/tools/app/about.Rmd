@@ -10,9 +10,13 @@ Examples:
 -
 -->
 
+### Documentation
+
+Documentation and tutorials for Radiant are available at <http://mostly-harmless.github.io/radiant/>
+
 ### Radiant code
 
-Version 0.60 (1/19/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+Version 0.1.1 (1/23/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 ```{r echo=FALSE}
 	# suppressMessages(
@@ -22,6 +26,8 @@ Version 0.60 (1/19/2015)  Built using <a href="http://www.rstudio.com/shiny/" ta
 
 `r sprintf("Package dependencies for local use: %s", paste0(pkgs, collapse = ", "))`
 
+See <http://mostly-harmless.github.io/radiant/about.html> for details on citing the package authors.
+
 ### License
 
 The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
@@ -29,3 +35,11 @@ The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AG
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+
+
+### Citations
+
+```{r echo=FALSE}
+	for(i in pkgs) citation(i) %>% print
+```
+
