@@ -1,19 +1,30 @@
-# managing the description of the dataset
-dataDescriptionOutput <- function(ret = 'html') {
-  descr <- values[[paste0(input$dataset,"_descr")]]
-  if(is.null(descr) || descr == "") {
-    return("")  # if there is no data description
-  } else {
-    # if there is a data description and the 'add/edit' box has been checked
-    ifelse(ret == 'md',return(descr),
-      return(suppressWarnings(markdownToHTML(text = descr,
-             stylesheet="../base/www/empty.css"))))
-  }
+descr_out <- function(descr, ret_type = 'html') {
+   # if there is no data description
+  if(descr %>% is_empty) return("")
+
+  # if there is a data description and we want html output
+  if(ret_type == 'html')
+    # descr <- markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
+    suppressWarnings(
+      markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
+    ) -> descr
+
+  descr
 }
 
+#### test section
+# library(markdown)
+# is_empty("## header example")
+# is_empty(NULL)
+# descr_out(NULL)
+# descr_out("## header example", 'html')
+# descr_out("## header example", 'md')
+#### end test section
+
 upload_error_handler <- function(objname, ret) {
-  values[[paste0(objname,"_descr")]] <- ret
-  values[[objname]] <- data.frame(matrix(rep("",12), nrow = 2))
+  # create an empty data.frame and return error message as description
+  values[[paste0(objname,"_descr")]] <<- ret
+  values[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
 }
 
 loadClipboardData <- function() {
@@ -31,9 +42,9 @@ loadClipboardData <- function() {
     if(ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
     upload_error_handler("xls_data",ret)
   } else {
-    values[['xls_data']] <- data.frame(dat, check.names = FALSE)
-    values[['xls_data_description']] <- ret
-    values[['datasetlist']] <- unique(c('xls_data',values[['datasetlist']]))
+    values[['xls_data']] <<- data.frame(dat, check.names = FALSE)
+    values[['xls_data_description']] <<- ret
+    values[['datasetlist']] <<- unique(c('xls_data',values[['datasetlist']]))
   }
 }
 
@@ -49,12 +60,12 @@ saveClipboardData <- function() {
   }
 }
 
-loadUserData <- function(filename, uFile, ext, header = TRUE,
+loadUserData <- function(fname, uFile, ext, header = TRUE,
                          man_str_as_factor = TRUE, sep = ",") {
 
-  # this is going to be the name of the data.frame in the file
-  objname <- sub(paste0(".",ext,"$"),"",basename(filename))
-  # objname <- sub(paste(".",ext,sep = ""),"",basename(filename))
+  filename <- basename(fname)
+  # objname is used as the name of the data.frame
+  objname <- sub(paste0(".",ext,"$"),"", filename)
 
   # if ext isn't in the filename ...
   if(objname == filename) {
@@ -78,31 +89,53 @@ loadUserData <- function(filename, uFile, ext, header = TRUE,
       return()
     } else if(length(robjname) > 1) {
       if(sum(robjname %in% c("state_list", "values")) == 2) {
-        upload_error_handler("state_file","### To restore app state from a state-file please click the state radio button before uploading the file")
+        upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
       } else {
-        upload_error_handler("load error","###  ")
+        upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
-      values[[objname]] <- as.data.frame(get(robjname))
-      values[[paste0(objname,"_descr")]] <- attr(values[[objname]], "description")
+      values[[objname]] <<- as.data.frame(get(robjname))
+      values[[paste0(objname,"_descr")]] <<- attr(values[[objname]], "description")
     }
   }
 
-  # if(length(values[['datasetlist']]) == 0 || values[['datasetlist']][1] == '') {
-  #   values[['datasetlist']] <- c(objname)
-  # } else {
-    # values[['datasetlist']] <- unique(c(objname,values[['datasetlist']]))
-  # }
-
   if(ext == 'csv') {
-    values[[objname]] <- read.csv(uFile, header=header,
+    values[[objname]] <<- read.csv(uFile, header=header,
                                   sep=sep,
                                   stringsAsFactors=man_str_as_factor)
   }
 
-  values[['datasetlist']] <- unique(c(objname,values[['datasetlist']]))
+  values[['datasetlist']] <<- unique(c(objname,values[['datasetlist']]))
 }
 
+# rm(list = ls())
+# library(dplyr)
 # values <- list()
+# fname <- normalizePath("~/Desktop/Car Survey MDS 2015.csv")
+# # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
+# filename <- fname
+# loadUserData(fname, fname, "csv")
+# values
+# loadUserData(fname, fname, "rda")
+# values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
+# loadUserData(fname, fname, "csv")
+# values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.xlsx")
+# loadUserData(fname, fname, "rda")
+# values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/RadiantState-2015-01-18.rda")
+# loadUserData(fname, fname, "rda")
+# values
 
-# loadUserData("~/")
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/example_data/RadiantState.rda")
+# loadUserData(fname, fname, "rda")
+# values[['datasetlist']][1]
+
+
+
+    # robjname <- try(load(fname), silent=TRUE)
+    # robjname
+    # length(robjname) > 1
+    # sum(robjname %in% c("state_list", "values")) == 2
+

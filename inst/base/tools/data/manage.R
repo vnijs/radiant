@@ -82,17 +82,24 @@ observe({
 })
 
 output$dataDescriptionHTML <- renderUI({
-  dataDescriptionOutput('html') %>% HTML
+  values[[paste0(input$dataset,"_descr")]] %>%
+    descr_out('html') %>%
+    HTML
 })
 
 output$dataDescriptionMD <- renderUI({
   tagList(
     "<label>Add data description:</label>" %>% HTML,
-    tags$textarea(id="man_data_descr", rows="15", style="width:650px;", dataDescriptionOutput('md'))
+    tags$textarea(id="man_data_descr",
+                  rows="15",
+                  style="width:650px;",
+                  descr_out(
+                    values[[paste0(input$dataset,"_descr")]],
+                    'md'
+                  )
+    )
   )
 })
-
-
 
 # removing datasets
 output$uiRemoveDataset <- renderUI({
@@ -170,7 +177,6 @@ output$downloadData <- downloadHandler(
 observe({
   # loading files from disk
   inFile <- input$uploadfile
-  # if(!is.null(inFile) && !is.na(inFile)) {
   if(!is.null(inFile)) {
     isolate({
       # iterating through the files to upload
@@ -179,9 +185,6 @@ observe({
                      header = input$header,
                      man_str_as_factor = input$man_str_as_factor,
                      sep = input$sep)
-
-      # loadUserData <- function(filename, uFile, ext, header = TRUE,
-      #                    man_str_as_factor = TRUE, sep = ",") {
 
       updateSelectInput(session, "dataset", label = "Datasets:",
                         choices = values$datasetlist,
@@ -248,6 +251,7 @@ observe({
         assign(ip_values, tmpEnv$values, envir=.GlobalEnv)
       if (exists("state_list", envir=tmpEnv, inherits=FALSE))
         assign(ip_inputs, tmpEnv$state_list, envir=.GlobalEnv)
+      assign(ip_dump, now(), envir = .GlobalEnv)
       rm(tmpEnv)
     })
   }
