@@ -37,12 +37,13 @@ saveStateOnRefresh <- function(session = session) {
         # LiveInputs <- reactiveValuesToList(input)
         # RadiantInputs[names(LiveInputs)] <- LiveInputs
 
-        assign(paste0("RadiantInputs",ip), reactiveValuesToList(input),
+        # assign(paste0("RadiantInputs",ip), reactiveValuesToList(input),
+        assign(ip_inputs, reactiveValuesToList(input),
                envir = .GlobalEnv)
-        assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
+        # assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
+        assign(ip_values, reactiveValuesToList(values),
                envir = .GlobalEnv)
-        assign(paste0("RadiantDumpTime",ip), now(),
-               envir = .GlobalEnv)
+        assign(ip_dump, now(), envir = .GlobalEnv)
       }
     })
   })

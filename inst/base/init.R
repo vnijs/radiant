@@ -3,7 +3,7 @@
 # when available
 ################################################################################
 
-ip <- session$request$REMOTE_ADDR
+ip <- ifelse(running_local, "", session$request$REMOTE_ADDR)
 
 # observe({
 #   qs <- parseQueryString(session$clientData$url_search)
