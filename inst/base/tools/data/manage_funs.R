@@ -89,9 +89,9 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
       return()
     } else if(length(robjname) > 1) {
       if(sum(robjname %in% c("state_list", "values")) == 2) {
-        upload_error_handler("state_file","### To restore app state from a state-file please click the state radio button before uploading the file")
+        upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
       } else {
-        upload_error_handler("load error","###  ")
+        upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
       values[[objname]] <<- as.data.frame(get(robjname))
@@ -124,3 +124,18 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
 # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.xlsx")
 # loadUserData(fname, fname, "rda")
 # values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/RadiantState-2015-01-18.rda")
+# loadUserData(fname, fname, "rda")
+# values
+
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/example_data/RadiantState.rda")
+# loadUserData(fname, fname, "rda")
+# values[['datasetlist']][1]
+
+
+
+    # robjname <- try(load(fname), silent=TRUE)
+    # robjname
+    # length(robjname) > 1
+    # sum(robjname %in% c("state_list", "values")) == 2
+
