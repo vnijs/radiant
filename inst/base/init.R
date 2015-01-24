@@ -68,11 +68,10 @@ state_email <- function(body, subject = "State of state files") {
 check_state_dump_times <- function() {
 
   dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
-  for(i in dump_times) {
+  for (i in dump_times) {
     dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
-    # state_email(c(dump_times,dump_time,str(dump_time)),
-                # subject = "Pre state test")
-    if (dump_time > 2) {
+    state_email(c(dump_times,dump_time,str(dump_time)), subject = "Pre state test")
+    if (dump_time > 1) {
       body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       sub("RadiantDumpTime","",i) %>%
         paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
