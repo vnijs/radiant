@@ -58,15 +58,14 @@ ip_dump <- paste0("RadiantDumpTime",ip)
 # check_state_dump_times()
 #### end test section
 
-state_email <- function(p1, p2) {
+state_email <- function(body, subject = "State of state files") {
   if(!require(sendmailR))
     install.packages("sendmailR", repos = "http://cran.rstudio.com")
   library(sendmailR)
 
   from <- '<vincent.nijs@gmail.com>'
   to <- '<vincent.nijs@gmail.com>'
-  subject <- 'State of state files'
-  body <- list(p1,"\n\n",p2)
+  body <- as.list(paste0(body,collapse="\n"))
   sendmail(from, to, subject, body,
            control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
 }
@@ -77,14 +76,15 @@ check_state_dump_times <- function() {
   library(lubridate)
   dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
   for(i in dump_times) {
-    dump_time <- get(i, envir=.GlobalEnv)
+    dump_time <- now() - get(i, envir=.GlobalEnv)
+    state_email(c(dump_times,dump_time,str(dump_time)), subject = "Pre state test")
     if (attr(dump_time, "units") != "secs" && dump_time > 2) {
       body_part1 <- c("Before:",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       sub("RadiantDumpTime","",i) %>%
         paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
         rm(list = ., envir = .GlobalEnv)
-      body_part2 <- c("After:",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-      state_email(body_part1,body_part2)
+      body_part2 <- c("","","After:",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+      state_email(c(body_part1,body_part2))
     }
   }
 }
