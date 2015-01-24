@@ -41,7 +41,7 @@ saveStateOnRefresh <- function(session = session) {
                envir = .GlobalEnv)
         assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
                envir = .GlobalEnv)
-        assign(paste0("RadiantDumpTime",ip), lubridate::now(),
+        assign(paste0("RadiantDumpTime",ip), now(),
                envir = .GlobalEnv)
       }
     })
