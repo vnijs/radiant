@@ -12,7 +12,7 @@ Radiant is a tool designed to facilitate decision making using data and models. 
 
 ### Goal
 
-Provide a bridge between a GUI and programming in R(studio). For example, in Radiant you can run your analysis and output the relevant function calls into an [Rmarkdown document](http://rmarkdown.rstudio.com/). No programming required. You can create and render the rmarkdown document in `R > Report`. Most pages have an icon you can click (e.g., the book icon on the bottom left on the Base > Single mean page) to start working on your report. Press `update` to render the report.
+Provide access the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls into an [Rmarkdown document](http://rmarkdown.rstudio.com/). Reproducible research with no programming required. You can create and render the rmarkdown document in `R > Report`. Most pages have an icon you can click (e.g., the book icon on the bottom left on the Base > Single mean page) to start working on your report. Press `update` to render the report.
 
 In the near future it will be possible to use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it will export functions that can be called from R-code and/or an rmarkdown document (_work in progress_).
 
