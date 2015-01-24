@@ -41,6 +41,8 @@ saveStateOnRefresh <- function(session = session) {
                envir = .GlobalEnv)
         assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
                envir = .GlobalEnv)
+        assign(paste0("RadiantDumpTime",ip), lubridate::now(),
+               envir = .GlobalEnv)
       }
     })
   })
@@ -95,6 +97,9 @@ not_available <- function(x)
 
 # check if a button was NOT pressed
 not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+
+# check if string variable is defined
+is_empty <- function(x, empty = "") ifelse(is.null(x) || x == "", TRUE, FALSE)
 
 # is x some type of date variable
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)

@@ -1,17 +1,28 @@
-# managing the description of the dataset
-dataDescriptionOutput <- function(ret = 'html') {
-  descr <<- values[[paste0(input$dataset,"_descr")]]
-  if(is.null(descr) || descr == "") {
-    return("")  # if there is no data description
-  } else {
-    # if there is a data description and the 'add/edit' box has been checked
-    ifelse(ret == 'md',return(descr),
-      return(suppressWarnings(markdownToHTML(text = descr,
-             stylesheet="../base/www/empty.css"))))
-  }
+descr_out <- function(descr, ret_type = 'html') {
+   # if there is no data description
+  if(descr %>% is_empty) return("")
+
+  # if there is a data description and we want html output
+  if(ret_type == 'html')
+    # descr <- markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
+    suppressWarnings(
+      markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
+    ) -> descr
+
+  descr
 }
 
+#### test section
+# library(markdown)
+# is_empty("## header example")
+# is_empty(NULL)
+# descr_out(NULL)
+# descr_out("## header example", 'html')
+# descr_out("## header example", 'md')
+#### end test section
+
 upload_error_handler <- function(objname, ret) {
+  # create an empty data.frame and return error message as description
   values[[paste0(objname,"_descr")]] <<- ret
   values[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
 }
@@ -87,18 +98,6 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
       values[[paste0(objname,"_descr")]] <<- attr(values[[objname]], "description")
     }
   }
-
-  # if(length(values[['datasetlist']]) == 0 || values[['datasetlist']][1] == '') {
-  #   values[['datasetlist']] <- c(objname)
-  # } else {
-    # values[['datasetlist']] <- unique(c(objname,values[['datasetlist']]))
-  # }
-
-  # header <- TRUE
-  # sep <- ","
-  # man_str_as_factor <- TRUE
-  # uFile <- filename
-
 
   if(ext == 'csv') {
     values[[objname]] <<- read.csv(uFile, header=header,

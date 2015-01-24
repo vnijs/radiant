@@ -82,13 +82,23 @@ observe({
 })
 
 output$dataDescriptionHTML <- renderUI({
-  dataDescriptionOutput('html') %>% HTML
+
+  isolate(values[[paste0(input$dataset,"_descr")]]) %>%
+    descr_out('html') %>%
+    HTML
 })
 
 output$dataDescriptionMD <- renderUI({
   tagList(
     "<label>Add data description:</label>" %>% HTML,
-    tags$textarea(id="man_data_descr", rows="15", style="width:650px;", dataDescriptionOutput('md'))
+    tags$textarea(id="man_data_descr",
+                  rows="15",
+                  style="width:650px;",
+                  descr_out(
+                    isolate(values[[paste0(input$dataset,"_descr")]]),
+                    'md'
+                  )
+    )
   )
 })
 
