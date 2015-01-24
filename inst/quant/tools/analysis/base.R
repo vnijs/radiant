@@ -363,7 +363,7 @@ crosstab <- function(dataset, ct_var1, ct_var2, ct_expected, ct_deviation, ct_st
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
-	cst <- suppressWarnings(suppressMessages( chisq.test(tab, correct = FALSE) ))
+	cst <- sshh(chisq.test(tab, correct = FALSE))
 
 	# adding the % deviation table
 	o <- cst$observed
@@ -489,5 +489,5 @@ plots_crosstab <- function(result = .crosstab()) {
 	# 	labs(list(title = paste("Crosstab of ",cinp$ct_var2," versus ",cinp$ct_var1, sep = ""),
 	# 			x = '', y = "Count", fill = cinp$ct_var2))
 
-	do.call(grid.arrange, c(plots, list(ncol = 1)))
+	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }

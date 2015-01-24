@@ -102,6 +102,22 @@ not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
 # check if string variable is defined
 is_empty <- function(x, empty = "") ifelse(is.null(x) || x == "", TRUE, FALSE)
 
+# from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+sshh <- function(...) {
+  suppressWarnings(
+    suppressMessages(
+      ...
+    )
+  )
+  invisible()
+}
+
+#### test
+# sshh(library(dplyr))
+# detach("package:dplyr")
+# library(dplyr)
+#### end test
+
 # is x some type of date variable
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 

@@ -1,6 +1,44 @@
 ## Radiant - Business analytics using R and Shiny
 
-Radiant is a tool disigned to facilitate decision making using data and models. It is currently used in the Quantitive Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. You can reach us at radiant@rady.ucsd.edu.
+Radiant is a tool designed to facilitate decision making using data and models. It is currently used in the Quantitative Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. You can reach us at radiant@rady.ucsd.edu.
+
+### Key features
+
+- Explore: Quickly and easily summarize and visualize your data
+- Interactive: Changes to analysis inputs generate updated results immediately (i.e., no separate dialog boxes)
+- Context: Data and examples focus on applications in business
+- Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using rmarkdown. You will not lose your work if you accidentally leave the radiant page in your browser
+- Cross-platform: It runs in a browser
+
+### Goal
+
+Provide a bridge between a GUI and programming in R(studio). For example, in Radiant you can run your analysis and output the relevant function calls into an [Rmarkdown document](http://rmarkdown.rstudio.com/). No programming required. You can create and render the rmarkdown document in `R > Report`. Most pages have an icon you can click (e.g., the book icon on the bottom left on the Base > Single mean page) to start working on your report. Press `update` to render the report.
+
+In the near future it will be possible to use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it will export functions that can be called from R-code and/or an rmarkdown document (_work in progress_).
+
+If launch Radiant from Rstudio of Rgui and close Radiant in the browser using Quit > Quit you can can paste the commands below into the command console to get the same output as in the browser.
+
+```r
+result <- single_mean("diamonds","price")
+summary_single_mean(result)
+plots_single_mean(result)
+```
+
+You can call functions for visualization and analysis in your R-code and access basic help using:
+
+```r
+?single_mean
+```
+
+As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/example_data/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Note this currently only works for the `single_mean` functions.
+
+### Saving and loading state
+
+To save the your analyses you can save the state of the app (Data > Manage). You can open the state file at a later time to continue where you left off. As a simple example, go to the Data > View and Data > Visualize tabs to see what they look like by default. Then load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/example_data/RadiantState.rda?raw=true) in the `example_data` folder and go back the View and Visualize tabs.
+
+A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit > Reset to return to a clean/new state.
+
+Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit > Quit to stop the app, lists called `values` and `state_list` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists (i.e., `values` and `state_list`) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file in Rstudio it will be used when you start Radiant to recreate a previous state.
 
 <!--
 ### Introduction
@@ -18,15 +56,9 @@ Documentation and tutorials for Radiant are available at <http://mostly-harmless
 
 Version 0.1.1 (1/23/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
-```{r echo=FALSE}
-	# suppressMessages(
-	# 	devtools::source_url("https://raw.githubusercontent.com/mostly-harmless/radiant_miniCRAN/gh-pages/pkgs.R")
-	# )
-```
+`r sprintf("Package dependencies: %s", paste0(pkgs, collapse = ", "))`
 
-`r sprintf("Package dependencies for local use: %s", paste0(pkgs, collapse = ", "))`
-
-See <http://mostly-harmless.github.io/radiant/about.html> for details on citing the package authors.
+See <http://mostly-harmless.github.io/radiant/about.html> for package author information.
 
 ### License
 
@@ -35,11 +67,3 @@ The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AG
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
-
-
-### Citations
-
-```{r echo=FALSE}
-	for(i in pkgs) citation(i) %>% print
-```
-
