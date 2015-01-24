@@ -53,7 +53,7 @@ ip_dump <- paste0("RadiantDumpTime",ip)
 # check_state_dump_times()
 #### end test section
 
-state_email <- function(body, subject = "State of state files") {
+state_email <- function(body, subject = "State files erased on init") {
   if(!require(sendmailR))
     install.packages("sendmailR", repos = "http://cran.rstudio.com")
   library(sendmailR)
@@ -70,17 +70,17 @@ check_state_dump_times <- function() {
   dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
   for (i in dump_times) {
     dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
-    body_part1 <- c("\nState files erased\n\nBefore:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+    body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
     if (dump_time > 1) {
       sub("RadiantDumpTime","",i) %>%
         paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
         rm(list = ., envir = .GlobalEnv)
-      body_part2 <- c("\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+      body_part2 <- c("\nState files erased:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       state_email(c(body_part1,body_part2))
     } else {
       state_email(c(body_part1, "\n\nDump times less than 1 minute:\n",
                     dump_times,dump_time),
-                    subject = "Nothing erased on init")
+                    subject = "No state files erased on init")
     }
   }
 }
