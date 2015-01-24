@@ -72,13 +72,12 @@ check_state_dump_times <- function() {
     dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
     # state_email(c(dump_times,dump_time,str(dump_time)),
                 # subject = "Pre state test")
-    # if (attr(dump_time, "units") != "secs" && dump_time > 2) {
-    if (dump_time < 2) {
+    if (dump_time > 2) {
       body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       sub("RadiantDumpTime","",i) %>%
         paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
         rm(list = ., envir = .GlobalEnv)
-      body_part2 <- c("\n\nAfter\n:",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+      body_part2 <- c("\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       state_email(c(body_part1,body_part2))
     }
   }
