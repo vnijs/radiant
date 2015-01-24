@@ -33,24 +33,24 @@ ip_values <- paste0("RadiantValues",ip)
 ip_dump <- paste0("RadiantDumpTime",ip)
 
 #### test section
-rm(list = ls())
-library(lubridate)
-library(dplyr)
-t1 <- lubridate::now()
-less_1 <- t1 - 5
-less_2 <- t1 - minutes(1)
-more_2 <- t1 - minutes(5)
+# rm(list = ls())
+# library(lubridate)
+# library(dplyr)
+# t1 <- lubridate::now()
+# less_1 <- t1 - 5
+# less_2 <- t1 - minutes(1)
+# more_2 <- t1 - minutes(5)
 
-ip <- "127.0.0.1"
-ip_dump <- paste0("RadiantDumpTime",ip)
-assign(ip_dump, less_2)
+# ip <- "127.0.0.1"
+# ip_dump <- paste0("RadiantDumpTime",ip)
+# assign(ip_dump, less_2)
 
-ip <- "127.0.0.2"
-ip_dump2 <- paste0("RadiantDumpTime",ip)
-assign(ip_dump2, more_2)
+# ip <- "127.0.0.2"
+# ip_dump2 <- paste0("RadiantDumpTime",ip)
+# assign(ip_dump2, more_2)
 
 ## email may work only on linux
-check_state_dump_times()
+# check_state_dump_times()
 #### end test section
 
 state_email <- function(body, subject = "State of state files") {
