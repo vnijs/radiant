@@ -37,10 +37,13 @@ saveStateOnRefresh <- function(session = session) {
         # LiveInputs <- reactiveValuesToList(input)
         # RadiantInputs[names(LiveInputs)] <- LiveInputs
 
-        assign(paste0("RadiantInputs",ip), reactiveValuesToList(input),
+        # assign(paste0("RadiantInputs",ip), reactiveValuesToList(input),
+        assign(ip_inputs, reactiveValuesToList(input),
                envir = .GlobalEnv)
-        assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
+        # assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
+        assign(ip_values, reactiveValuesToList(values),
                envir = .GlobalEnv)
+        assign(ip_dump, now(), envir = .GlobalEnv)
       }
     })
   })
@@ -90,16 +93,14 @@ inChecker <- function(x)
   ifelse(sum(x %in% varnames()) < length(x), NULL, return('OK'))
 
 # check if a variable is null or not in the data
-#
-#
-# is.null for multiple elements? pass in a list?
-#
-#
 not_available <- function(x)
   ifelse(any(is.null(x)) || (sum(x %in% varnames()) < length(x)), TRUE, FALSE)
 
 # check if a button was NOT pressed
 not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+
+# check if string variable is defined
+is_empty <- function(x, empty = "") ifelse(is.null(x) || x == "", TRUE, FALSE)
 
 # is x some type of date variable
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
