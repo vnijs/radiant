@@ -72,11 +72,12 @@ state_email <- function(p1, p2) {
 }
 
 check_state_dump_times <- function() {
+  if(!require(lubridate))
+    install.packages("lubridate", repos = "http://cran.rstudio.com")
+  library(lubridate)
   dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
-  dump_times
   for(i in dump_times) {
-    dump_time <- get(i)
-    print(dump_time)
+    dump_time <- get(i, envir=.GlobalEnv)
     if (attr(dump_time, "units") != "secs" && dump_time > 2) {
       body_part1 <- c("Before:",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       sub("RadiantDumpTime","",i) %>%
