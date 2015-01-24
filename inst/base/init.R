@@ -75,7 +75,7 @@ check_state_dump_times <- function() {
       sub("RadiantDumpTime","",i) %>%
         paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
         rm(list = ., envir = .GlobalEnv)
-      body_part2 <- c("\nState files erased:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+      body_part2 <- c("\n\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
       state_email(c(body_part1,body_part2))
     } else {
       state_email(c(body_part1, "\n\nDump times less than 1 minute:\n",
