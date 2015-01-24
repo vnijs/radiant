@@ -10,6 +10,10 @@ Examples:
 -
 -->
 
+### Documentation
+
+Documentation and tutorials for Radiant are available at <http://mostly-harmless.github.io/radiant/>
+
 ### Radiant code
 
 Version 0.1.1 (1/23/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
@@ -21,6 +25,8 @@ Version 0.1.1 (1/23/2015)  Built using <a href="http://www.rstudio.com/shiny/" t
 ```
 
 `r sprintf("Package dependencies for local use: %s", paste0(pkgs, collapse = ", "))`
+
+See <http://mostly-harmless.github.io/radiant/about.html> for details on citing the package authors.
 
 ### License
 
