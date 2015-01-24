@@ -53,7 +53,7 @@ ip_dump <- paste0("RadiantDumpTime",ip)
 # check_state_dump_times()
 #### end test section
 
-state_email <- function(body, subject = paste0("From", Sys.info()['nodename'])) {
+state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
   if(!require(sendmailR))
     install.packages("sendmailR", repos = "http://cran.rstudio.com")
   library(sendmailR)
