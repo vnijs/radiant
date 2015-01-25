@@ -3,8 +3,8 @@
 #########################################
 output$uiPmap_brand <- renderUI({
 
-	isChar <- "character" == getdata_class()
-  vars <- varnames()[isChar]
+	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
+  vars <- varnames()[isLabel]
   if(length(vars) == 0) return()
  	selectInput(inputId = "pmap_brand", label = "Brand:", choices = vars,
    	selected = state_singlevar("pmap_brand",vars), multiple = FALSE)
@@ -108,13 +108,13 @@ observe({
 pmap <- function(dataset, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pmap_scaling,
 	pmap_fontsz, pmap_cutoff, pmap_plot) {
 
-	dat <- values[[dataset]]
+	dat <- values[[dataset]] %>% na.omit
 
 	nr.dim <- as.numeric(pmap_dim_number)
 	nr.attr <- length(pmap_attr)
 
 	f.data <- dat[,pmap_attr]
-	brands <- dat[,pmap_brand]
+	brands <- dat[,pmap_brand] %>% as.character
 
 	f.res <- suppressWarnings(
               suppressMessages(

@@ -23,3 +23,20 @@ radiant <- function(app = c("marketing", "quant", "base")) {
 
 # @import car gridExtra GPArotation psych vegan RColorBrewer wordcloud AlgDesign brew reshape2 plyr markdown knitr rmarkdown testthat lubridate ggplot2 shiny magrittr tidyr dplyr ggvis broom shinyAce
 # @importFrom shiny addResourcePath runApp
+
+#' Add *** to a data.frame based on the p.values
+#'
+#' @param p.value Vector of p.values from an analysis
+#'
+#' @return A list with all variables defined in the function
+#'
+#' @examples
+#' sig_stars(c(.0009,.009, .049, .09, .4))
+#'
+#' @export
+sig_stars <- function(p.value) {
+  sapply(p.value, function(x) x < c(.001,.01, .05, .1)) %>%
+  colSums %>%
+  add(1) %>%
+  c("",".","*", "**", "***")[.]
+}
