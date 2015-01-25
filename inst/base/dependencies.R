@@ -16,7 +16,5 @@ if(length(to_inp) != 0)
 
 # load pkgs as defined in global.R - order is important!
 if(exists("pkgs")) {
-	suppressWarnings(
-  	sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
-  )
+	sshh(sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE))
 }
