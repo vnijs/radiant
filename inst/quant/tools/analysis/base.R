@@ -33,19 +33,21 @@ output$uiCm_var2 <- renderUI({
 
 })
 
+cm_paired <- c("independent" = "independent", "paired" = "paired")
+
 output$ui_compareMeans <- renderUI({
   list(
   	wellPanel(
 	    uiOutput("uiCm_var1"),
 	    uiOutput("uiCm_var2"),
 	    conditionalPanel(condition = "input.tabs_compareMeans == 'Summary'",
-	      selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:", choices = base_alt,
-	      	selected = state_init_list("cm_alternative","two.sided", base_alt))
+   		  radioButtons(inputId = "cm_paired", label = "", cm_paired,
+		   		selected = state_init_list("cm_paired", "independent", cm_paired)),
+	      selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:", choices = base_alt, selected = state_init_list("cm_alternative","two.sided", base_alt))
 	    ),
 	    conditionalPanel(condition = "input.tabs_compareMeans == 'Plots'",
 			  checkboxInput('cm_jitter', 'Jitter', value = state_init("cm_jitter",FALSE))
-			),
-      returnTextInput("cm_select", "Subset (e.g., price > 5000)", state_init("cm_select"))
+			)
 		),
   	helpAndReport('Compare means','compareMeans',inclMD("../quant/tools/help/compareMeans.md"))
   )
@@ -57,142 +59,96 @@ output$compareMeans <- renderUI({
 
 .compareMeans <- reactive({
 
-	# ret_text <- "This analysis requires variables of type factor, numeric or interval.\nPlease select another dataset."
-	# if(is.null(input$cm_var1)) return(ret_text)
-	# if(is.null(input$cm_var2)) return("Please select a numeric or interval variable")
-# 	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
-# 	if(is.null(inChecker(c(input$cm_var1, input$cm_var2)))) return(ret_text)
-
-#   if(list(input$cm_var1, input$cm_var2) %>% not_available)
+	# if(c(input$cm_var1, input$cm_var2) %>% not_available)
   if(input$cm_var2 %>% not_available)
     return("This analysis requires a variables of type factor, numeric, or interval.\nIf none are available please select another dataset")
 
-	compareMeans(input$dataset, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
+	compareMeans(input$dataset, input$cm_var1, input$cm_var2, input$cm_paired,
+	             input$cm_alternative, input$cm_jitter)
 })
 
 observe({
   if(is.null(input$compareMeansReport) || input$compareMeansReport == 0) return()
   isolate({
-		inp <- list(input$dataset, input$cm_var1, input$cm_var2, input$cm_alternative, input$cm_jitter, input$cm_select)
+		inp <- list(input$dataset, input$cm_var1, input$cm_var2, input$cm_paired,
+		            input$cm_alternative, input$cm_jitter)
 		updateReport(inp,"compareMeans")
   })
 })
 
-compareMeans <- function(dataset, var1, var2, cm_alternative, cm_jitter, cm_select) {
-
-
-	#
-	#
-	# do you really need select here? maybe only if you have a factor, select
-	# the levels (id's) you want to use
-	#
-	#
-	dat <- values[[dataset]]
-
-	# if(cm_select != '') {
-	#   selcom <- gsub(" ", "", cm_select)
- 	# 	  seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
-	#   if(!is(seldat, 'try-error')) {
-	#     if(is.data.frame(seldat)) {
-	#       dat <- seldat
-	#       seldat <- NULL
-	#     }
-	#   }
-	# }
+compareMeans <- function(dataset, var1, var2,
+                         cm_paired = "independent",
+                         cm_alternative = "two.sided",
+                         cm_jitter = FALSE) {
 
 	vars <- c(var1,var2)
-	dat <- dat[,vars] %>% na.omit
-
-	if(!is.factor(dat[,var1])) {
-		cm_paired <- TRUE
-		dat <- melt(dat)
-		var1 <- colnames(dat)[1]
-		var2 <- colnames(dat)[2]
+	if(exists("values")) {
+		dat <- select_(values[[dataset]], .dots = vars) %>% na.omit
 	} else {
-		cm_paired <- FALSE
-		colnames(dat)[1] <- "variable"
+		dat <- select_(get(dataset), .dots = vars) %>% na.omit
 	}
 
-	if(cm_paired) {
-		pwcomp <- with(dat,pairwise.t.test(get(var2), get('variable'), pool.sd = FALSE,
-			p.adj = "bonf", paired = TRUE, alternative = cm_alternative))
+	if(dat[,var1] %>% is.factor) {
+		colnames(dat) <- c("variable","values")
 	} else {
-		pwcomp <- with(dat,pairwise.t.test(get(var2), get('variable'), pool.sd = FALSE,
-			p.adj = "bonf", paired = FALSE, alternative = cm_alternative))
+		dat %<>% gather_("variable", "values", c(var1,var2))
 	}
 
-	pwcomp$vars <- paste0(vars, collapse=", ")
-	pwcomp$cm_alternative <- cm_alternative
-	pwcomp$cm_jitter <- cm_jitter
+	pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
+	                p.adj = "bonf", paired = cm_paired == "paired",
+	                alternative = cm_alternative) %>% tidy -> res
 
-	list("pwcomp" = pwcomp, "data" = data.frame(dat))
+	vars <- paste0(vars, collapse=", ")
+  environment() %>% as.list
+
 }
 
-
-# Generate output for the summary tab
 summary_compareMeans <- function(result = .compareMeans()) {
 
-	cat("Pairwise comparisons using t-tests (bonferroni adjustment)\n")
-	cat(paste0("Variables: ",result$pwcomp$vars,"\n\n"))
-	# cat("\nMeans table:\n")
-	means_tab <- ddply(result$data, c("variable"), colwise(mean))
-	n_tab <- ddply(result$data, c("variable"), colwise(length))
-	sd_tab <- ddply(result$data, c("variable"), colwise(sd))
-# 	colnames(means_tab) <- c("","mean")
-# 	print(means_tab, row.names = FALSE, right = FALSE)
+	cat("Pairwise comparisons (bonferroni adjustment)\n")
+	cat("Data     :", result$dataset, "\n")
+	cat("Variables:", result$vars, "\n")
+	cat("Samples  :", result$cm_paired, "\n\n")
 
-  tabs <- cbind(means_tab, n_tab[,2], sd_tab[,2])
-	colnames(tabs) <- c("","mean", "n", "sd")
-	print(tabs, row.names = FALSE, right = FALSE)
+	result$dat %>%
+		group_by(variable) %>%
+    summarise_each(funs(mean, n = length(.), sd)) %>%
+    set_colnames(c("","mean","n","sd")) -> dat
 
-	if(result$pwcomp$cm_alternative == "two.sided") {
-		h.sym <- "not equal to"
-	} else if(result$pwcomp$cm_alternative == "less") {
-		h.sym <- "<"
-	} else {
-		h.sym <- ">"
-	}
-
-	mod <- result[['pwcomp']]$p.value
-	dvar <- dimnames(mod)
-	var1 <- dvar[[1]]
-	var2 <- dvar[[2]]
-
-	res <- data.frame(matrix(ncol = 3, nrow = length(var1)*length(var1)/2))
-	colnames(res) <- c("Alternative hyp.", "Null hyp.", "p-value")
-
-	rnr <- 1
-	for(i in var1) {
-		for(j in var2) {
-			if(is.na(mod[i,j])) next
-			res[rnr, 'Alternative hyp.'] <- paste(i, h.sym, j,"     ")
-			res[rnr, 'Null hyp.'] <- paste(i, "=", j, "     ")
-			if(mod[i,j] < .001) {
-				pval = "< 0.001"
-			} else {
-				pval <- sprintf("%.3f", mod[i,j])
-			}
-			res[rnr, 'p-value'] <- pval
-			rnr <- rnr + 1
-		}
-	}
+  dat[,-1] %<>% round(3)
+  print(dat %>% as.data.frame, row.names = FALSE)
 	cat("\n")
-	print(res, row.names = FALSE, right = FALSE)
+
+  hyp_symbol <- c("two.sided" = "not equal to",
+                  "less" = "<",
+                  "greater" = ">")[result$cm_alternative]
+
+	mod <- result$res
+	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
+	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
+	mod <- mod[,c("Alt. hyp.", "Null hyp.", "p.value")]
+	mod$` ` <- sig_stars(mod$p.value)
+	mod$p.value <- round(mod$p.value,3)
+	mod$p.value[ mod$p.value < .001 ] <- "< .001"
+	print(mod, row.names = FALSE, right = FALSE)
+	cat("\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1\n")
 }
 
 # Generate output for the plots tab
 plots_compareMeans <- function(result = .compareMeans()) {
 
-	dat <- result$data
+	dat <- result$dat
 	var1 <- colnames(dat)[1]
 	var2 <- colnames(dat)[-1]
 
+	p <- ggplot(dat, aes_string(x=var1, y=var2,
+	            fill=var1)) + geom_boxplot(alpha=.7)
+	p
+	if(result$cm_jitter) p <- p + geom_jitter()
 	plots <- list()
-	# p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.3, legend = FALSE)
-	p <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) + geom_boxplot(alpha=.7)
-	if(result$pwcomp$cm_jitter)	p <- p + geom_jitter()
 	plots[["Boxplot"]] <- p
-	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.7)
+	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) +
+													geom_density(alpha=.7)
 
 	do.call(grid.arrange, c(plots, list(ncol = 1)))
 }

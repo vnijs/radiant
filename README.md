@@ -1,6 +1,6 @@
 ## Radiant: Business analytics using R and Shiny
 
-Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is a tool designed to facilitate decision making using data and models. It is currently used in the Quantitative Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. You can reach us at radiant@rady.ucsd.edu.
+Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is a tool designed to facilitate decision making using data and models. It is currently used in the Quantitative Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a> and <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. You can reach us at radiant@rady.ucsd.edu.
 
 ## Key features
 
@@ -60,20 +60,27 @@ Documentation and tutorials for Radiant are available at <http://mostly-harmless
 
 You can install the `Radiant` package and all package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
 
-		options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
-		install.packages("radiant")
+```r
+options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
+install.packages("radiant")
+```
 
 Once all packages are installed use the commands below to start the app:
 
-		library('radiant')
-		radiant()
+```r
+library('radiant')
+radiant()
+```
 
 To start the quant app use:
 
-		library('radiant')
-		radiant('quant')
+```r
+library('radiant')
+radiant('quant')
+```
 
-<!-- #### Creating a desktop launcher
+<!-- 
+#### Creating a desktop launcher
 
 You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`
 
@@ -106,6 +113,6 @@ The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3
 
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
-If you are interested in using Radiant please email me at vnijs@ucsd.edu
+If you are interested in using Radiant please email me at radiant@rady.ucsd.edu
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>

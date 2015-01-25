@@ -24,18 +24,17 @@ single_mean <- function(dataset, sm_var,
                         sm_alternative = "two.sided",
                         sm_sig_level = .95) {
 
-	if(exists("values"))
+	if(exists("values")) {
 		dat <- select_(values[[dataset]], sm_var)
 		# if a data_filter has been defined
 		# dat <- filter(dat, values[[dataset_filter]])
-	else
+	} else {
 		dat <- select_(get(dataset), sm_var)
+	}
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res
 
-
-  # as.list(environment())
   environment() %>% as.list
 }
 
@@ -59,13 +58,10 @@ summary_single_mean <- function(result) {
 	# cat("Filter   :", result$xtra$filter, "\n")
 	cat("Variable :", result$sm_var, "\n")
 
-	if (result$sm_alternative == "two.sided") {
-		hyp_symbol <- "not equal to"
-	} else if (result$sm_alternative == "less") {
-		hyp_symbol <- "<"
-	} else {
-		hyp_symbol <- ">"
-	}
+
+	hyp_symbol <- c("two.sided" = "not equal to",
+                  "less" = "<",
+                  "greater" = ">")[result$sm_alternative]
 
 	cat("Null hyp.: the mean of", result$sm_var, "=", result$sm_comp_value, "\n")
 	cat("Alt. hyp.: the mean of", result$sm_var, "is", hyp_symbol,

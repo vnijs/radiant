@@ -1,6 +1,6 @@
 ## Radiant - Business analytics using R and Shiny
 
-Radiant is a tool designed to facilitate decision making using data and models. It is currently used in the Quantitative Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. You can reach us at radiant@rady.ucsd.edu.
+Radiant is a tool designed to facilitate decision making using data and models. It is currently used in the Quantitative Analysis and Research for Marketing Decisions classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a> and <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. You can reach us at radiant@rady.ucsd.edu.
 
 ### Key features
 
