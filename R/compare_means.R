@@ -109,7 +109,7 @@ summary_compare_means <- function(result) {
 	mod$p.value <- round(mod$p.value,3)
 	mod$p.value[ mod$p.value < .001 ] <- "< .001"
 	print(mod, row.names = FALSE, right = FALSE)
-	cat("\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1\n")
+	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 
 #' Plot output from compare_means for two or more variables
