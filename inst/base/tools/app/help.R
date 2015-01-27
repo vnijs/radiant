@@ -40,7 +40,7 @@ help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "random.md",
                  "Sample size" = "sampleSize.Rmd")
 output$help_random <- reactive(append_help("help_random", "../quant/tools/help/", Rmd = TRUE))
 
-help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compareMeans.md",
+help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
                     "Cross-tabs" = "crossTabs.md")
 output$help_base_menu <- reactive(append_help("help_base_menu", "../quant/tools/help/"))
 
