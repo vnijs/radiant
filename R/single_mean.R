@@ -22,21 +22,7 @@ single_mean <- function(dataset, sm_var,
                         sm_alternative = "two.sided",
                         sm_sig_level = .95) {
 
-	# probably not added to global environment because the environment is
-	# attached inside a function
-	# if(exists("env_shiny")) attach(env_shiny)
-	# need to detach if used
-	# if(exists("env_shiny")) detach(env_shiny)
-
-	if(exists("values")) {
-		dat <- select_(values[[dataset]], sm_var) %>% na.omit
-	} else if(exists("env_shiny") && exists("values", envir = env_shiny)) {
-		dat <- select_(get("values", envir = env_shiny)[[dataset]], sm_var) %>% na.omit
-	} else if(exists("dataset")) {
-		dat <- select_(get(dataset), sm_var) %>% na.omit
-	} else {
-		stop(paste0("Dataset ", dataset, " is not available. Please load a dataset and pass the string with the name of the data.frame to single_mean"))
-	}
+	dat <- getdata_exp(dataset, sm_var)
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res

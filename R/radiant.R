@@ -56,6 +56,62 @@ sshh <- function(...) {
 #### end test
 
 
+# probably not added to global environment because the environment is
+# attached inside a function
+# if(exists("env_shiny")) attach(env_shiny)
+# need to detach if used
+# if(exists("env_shiny")) detach(env_shiny)
+
+#' Get data for analysis functions exported by Radiant
+#'
+#' @param dataset Name of the data.frame
+#' @param vars Variables to extract from the data.frame
+#' @param na.rm Remove rows with missing values (default is TRUE)
+#'
+#' @return Data.frame with the specified columns selected
+#'
+#' @export
+getdata_exp <- function(dataset, vars, na.rm = TRUE) {
+
+  #########################
+  # specify search order?
+  #########################
+  clean <- ifelse(na.rm, na.omit, f(...))
+  if(exists(dataset)) {
+    cat("Data loaded from global environment\n")
+    select_(get(dataset), .dots = vars) %>% clean
+  } else if(exists("values")) {
+    if(values[[dataset]] %>% is.null) {
+      paste0("Dataset ", dataset, " is not available. Please load the dataset and put the name in the function call") %>%
+        stop %>% return
+    }
+    cat("Data loaded from 'values' list\n")
+    select_(values[[dataset]], .dots = vars) %>% clean
+  } else if(exists("env_shiny") && exists("values", envir = env_shiny)) {
+    cat("Data loaded from env_shiny\n")
+    select_(get("values", envir = env_shiny)[[dataset]], .dots = vars) %>% clean
+  } else {
+    paste0("Dataset ", dataset, " is not available. Please load the dataset and put the name in the function call") %>%
+      stop %>% return
+  }
+}
+
+# test
+# library(dplyr)
+# values <- list()
+# values$mtcars <- mtcars
+# getdata_exp("mtcars", c("cyl","mpg"))
+# values$mtcars[5:20,2] <- NA
+# getdata_exp("mtcars", c("cyl","mpg"))
+# env_shiny <- new.env()
+# env_shiny$values <- values
+# rm(values)
+# getdata_exp("mtcars", c("cyl","mpg"))
+# rm(env_shiny)
+# getdata_exp("mtcars", c("cyl","mpg"))
+# getdata_exp("mtcarsx", c("cyl","mpg"))
+# end test
+
 
 # @import car gridExtra GPArotation psych vegan RColorBrewer wordcloud AlgDesign brew reshape2 plyr markdown knitr rmarkdown testthat lubridate ggplot2 shiny magrittr tidyr dplyr ggvis broom shinyAce
 # @importFrom shiny addResourcePath runApp

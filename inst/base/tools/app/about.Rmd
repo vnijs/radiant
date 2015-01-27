@@ -54,7 +54,7 @@ Documentation and tutorials for Radiant are available at <http://mostly-harmless
 
 ### Radiant code
 
-Version 0.1.2 (1/26/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+Version 0.1.3 (1/27/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 `r sprintf("Package dependencies: %s", paste0(pkgs, collapse = ", "))`
 
