@@ -31,11 +31,13 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	vars <- c(cm_var1, cm_var2)
 	if(exists("values")) {
 		dat <- select_(values[[dataset]], .dots = vars) %>% na.omit
-	} else if(exists("values", envir = env_shiny)) {
+	} else if(exists("env_shiny") && exists("values", envir = env_shiny)) {
 		dat <- select_(get("values", envir = env_shiny)[[dataset]], .dots = vars) %>%
 						 na.omit
-	} else {
+	} else if(exists("dataset")) {
 		dat <- select_(get(dataset), .dots = vars) %>% na.omit
+	} else {
+		stop(paste0("Dataset ", dataset, " is not available. Please load a dataset and pass the string with the name of the data.frame to compare_means"))
 	}
 
 	if(dat[,cm_var1] %>% is.factor) {
