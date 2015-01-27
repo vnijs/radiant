@@ -8,7 +8,7 @@ single_mean(dataset, sm_var, sm_comp_value = 0,
   sm_alternative = "two.sided", sm_sig_level = 0.95)
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in a values list from Radiant}
+\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
 \item{sm_var}{The variable selected for the mean comparison}
 

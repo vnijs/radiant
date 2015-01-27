@@ -20,8 +20,8 @@ descr_out <- function(descr, ret_type = 'html') {
 
 upload_error_handler <- function(objname, ret) {
   # create an empty data.frame and return error message as description
-  values[[paste0(objname,"_descr")]] <<- ret
-  values[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
+  r_data[[paste0(objname,"_descr")]] <<- ret
+  r_data[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
 }
 
 loadClipboardData <- function(objname = "xls_data", ret = "") {
@@ -40,10 +40,10 @@ loadClipboardData <- function(objname = "xls_data", ret = "") {
     upload_error_handler(objname,ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on", lubridate::now())
-    values[[objname]] <<- data.frame(dat, check.names = FALSE)
-    values[[paste0(objname,"description")]] <<- ret
+    r_data[[objname]] <<- data.frame(dat, check.names = FALSE)
+    r_data[[paste0(objname,"description")]] <<- ret
   }
-  values[['datasetlist']] <<- c(objname,values[['datasetlist']]) %>% unique
+  r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique
 }
 
 saveClipboardData <- function() {
@@ -86,53 +86,53 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
       return()
     } else if(length(robjname) > 1) {
-      if(sum(robjname %in% c("state_list", "values")) == 2) {
+      if(sum(robjname %in% c("r_state", "r_data")) == 2) {
         upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
       } else {
         upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
-      values[[objname]] <<- as.data.frame(get(robjname))
-      values[[paste0(objname,"_descr")]] <<- attr(values[[objname]], "description")
+      r_data[[objname]] <<- as.data.frame(get(robjname))
+      r_data[[paste0(objname,"_descr")]] <<- attr(r_data[[objname]], "description")
     }
   }
 
   if(ext == 'csv') {
-    values[[objname]] <<- read.csv(uFile, header=header,
+    r_data[[objname]] <<- read.csv(uFile, header=header,
                                   sep=sep,
                                   stringsAsFactors=man_str_as_factor)
   }
 
-  values[['datasetlist']] <<- c(objname,values[['datasetlist']]) %>% unique
+  r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique
 }
 
 # rm(list = ls())
 # source("~/gh/radiant_dev/R/radiant.R")
 # source("~/gh/radiant_dev/inst/base/radiant.R")
 # library(dplyr)
-# values <- list()
+# r_data <- list()
 # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
 # filename <- fname
 # loadUserData(fname, fname, "csv")
-# values
+# r_data
 # loadUserData(fname, fname, "rda")
-# values
+# r_data
 # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
 # loadUserData(fname, fname, "csv")
-# values
+# r_data
 # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.xlsx")
 # loadUserData(fname, fname, "rda")
-# values
+# r_data
 # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/RadiantState-2015-01-18.rda")
 # loadUserData(fname, fname, "rda")
-# values
+# r_data
 
 # fname <- normalizePath("~/Desktop/GitHub/radiant_dev/example_data/RadiantState.rda")
 # loadUserData(fname, fname, "rda")
-# values[['datasetlist']][1]
+# r_data[['datasetlist']][1]
 
 # robjname <- try(load(fname), silent=TRUE)
 # robjname
 # length(robjname) > 1
-# sum(robjname %in% c("state_list", "values")) == 2
+# sum(robjname %in% c("r_state", "r_data")) == 2
 

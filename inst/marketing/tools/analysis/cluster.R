@@ -63,7 +63,7 @@ observe({
 
 hierCluster <- function(dataset, hc_vars, hc_dist, hc_meth, hc_plots, hc_cutoff) {
 
-	dat <- na.omit( values[[dataset]][,hc_vars] ) 	# omitting missing values
+	dat <- na.omit( r_data[[dataset]][,hc_vars] ) 	# omitting missing values
 	dat <- scale(dat) 															# standardizing the data
 
 	if(hc_dist == "sq.euclidian") {
@@ -206,7 +206,7 @@ observe({
 
 kmeansCluster <- function(dataset, km_vars, km_hcinit, km_dist, km_meth, km_seed, km_nrClus) {
 
-	dat <- na.omit( values[[dataset]][,km_vars] ) 					# omitting missing values
+	dat <- na.omit( r_data[[dataset]][,km_vars] ) 					# omitting missing values
 	dat <- scale(dat)
 
 	if(km_hcinit) {
@@ -237,7 +237,7 @@ summary_kmeansCluster <- function(result = .kmeansCluster()) {
 	cat("Kmeans clustering with", nrClus, "clusters of sizes", paste0(result$size, collapse=", "),"\n\n")
 	cat("Cluster means:\n")
 
-	dat <- na.omit( values[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
+	dat <- na.omit( r_data[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
 	cvar <- as.factor(result$cluster)
 	dat <- cbind(cvar,dat)
 	cnt <- ddply(dat, c("cvar"), colwise(mean))
@@ -261,7 +261,7 @@ summary_kmeansCluster <- function(result = .kmeansCluster()) {
 }
 
 plots_kmeansCluster <- function(result = .kmeansCluster()) {
-	dat <- na.omit( values[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
+	dat <- na.omit( r_data[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
 	dat$clusvar <- as.factor(result$cluster)
 
 	plots <- list()

@@ -17,8 +17,8 @@ output$uiView_subsbig <- renderUI({
 })
 
 output$uiView_err <- renderUI({
-  if(is.null(values$error) || values$error == "") return()
-  helpText(values$error)
+  if(is.null(r_data$error) || r_data$error == "") return()
+  helpText(r_data$error)
 })
 
 output$ui_View <- renderUI({
@@ -41,7 +41,7 @@ output$ui_View <- renderUI({
 observe({
 #   if(is.null(input$view_subsbig_action) || input$view_subsbig_action == 0) return()
 #   isolate({
-#     values[[paste0(input$dataset,"_filter")]] <- input$view_subsbig_action
+#     r_data[[paste0(input$dataset,"_filter")]] <- input$view_subsbig_action
 #      updateCheckboxInput(session = session, "man_add_descr","Add/edit data description", FALSE)
 #   })
 })
@@ -109,16 +109,16 @@ output$dataviewer <- renderDataTable({
      seldat <- try(filter_(dat, selcom), silent = TRUE)
 
     if(!is(seldat, 'try-error')) {
-      isolate(values$error <- "")
+      isolate(r_data$error <- "")
       if(is.data.frame(seldat)) {
         dat <- seldat
         seldat <- NULL
       }
     } else {
-      isolate(values$error <- attr(seldat,"condition")$message)
+      isolate(r_data$error <- attr(seldat,"condition")$message)
     }
   } else {
-    isolate(values$error <- "")
+    isolate(r_data$error <- "")
   }
 
   as.data.frame(dat[, input$view_vars, drop = FALSE])

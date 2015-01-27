@@ -75,14 +75,14 @@ output$ui_Manage <- renderUI({
 observe({
   if(is.null(input$updateDescr) || input$updateDescr == 0) return()
   isolate({
-    values[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
+    r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr",
                         "Add/edit data description", FALSE)
   })
 })
 
 output$dataDescriptionHTML <- renderUI({
-  values[[paste0(input$dataset,"_descr")]] %>%
+  r_data[[paste0(input$dataset,"_descr")]] %>%
     descr_out('html') %>%
     HTML
 })
@@ -94,7 +94,7 @@ output$dataDescriptionMD <- renderUI({
                   rows="15",
                   style="width:650px;",
                   descr_out(
-                    values[[paste0(input$dataset,"_descr")]],
+                    r_data[[paste0(input$dataset,"_descr")]],
                     'md'
                   )
     )
@@ -105,7 +105,7 @@ output$dataDescriptionMD <- renderUI({
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
   selectInput(inputId = "removeDataset", label = "",
-    choices = values$datasetlist, selected = NULL, multiple = TRUE,
+    choices = r_data$datasetlist, selected = NULL, multiple = TRUE,
     selectize = FALSE
   )
 })
@@ -119,7 +119,7 @@ observe({
     # without this line all files would be removed when the removeDataButton
     # is pressed
     if(is.null(input$removeDataset)) return()
-    datasets <- values[['datasetlist']]
+    datasets <- r_data[['datasetlist']]
     if(length(datasets) > 1) {  # have to leave at least one dataset
       removeDataset <- input$removeDataset
       if(length(datasets) == length(removeDataset))
@@ -127,10 +127,10 @@ observe({
 
       # Must use single string to index into reactivevalues so loop is necessary
       for(rem in removeDataset) {
-        values[[rem]] <- NULL
-        values[[paste0(rem,"_descr")]] <- NULL
+        r_data[[rem]] <- NULL
+        r_data[[paste0(rem,"_descr")]] <- NULL
       }
-      values[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
+      r_data[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
     }
   })
 })
@@ -159,7 +159,7 @@ output$downloadData <- downloadHandler(
       if(!is.null(input$man_data_descr) && input$man_data_descr != "") {
         # save data description
         dat <- getdata()
-        attr(dat,"description") <- values[[paste0(robj,"_descr")]]
+        attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
         assign(robj, dat)
         save(list = robj, file = file)
       } else {
@@ -187,8 +187,8 @@ observe({
                      sep = input$sep)
 
       updateSelectInput(session, "dataset", label = "Datasets:",
-                        choices = values$datasetlist,
-                        selected = values$datasetlist[1])
+                        choices = r_data$datasetlist,
+                        selected = r_data$datasetlist[1])
     })
   }
 })
@@ -211,11 +211,11 @@ observe({
     for(ex in examples) loadUserData(ex, paste0(path,ex), 'rda')
 
     # sorting files alphabetically
-    values[['datasetlist']] <- sort(values[['datasetlist']])
+    r_data[['datasetlist']] <- sort(r_data[['datasetlist']])
 
     updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = values$datasetlist,
-                      selected = values$datasetlist[1])
+                      choices = r_data$datasetlist,
+                      selected = r_data$datasetlist[1])
   })
 })
 
@@ -232,7 +232,7 @@ observe({
                        selected = "rda")
 
     updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = values$datasetlist, selected = 'xls_data')
+                      choices = r_data$datasetlist, selected = 'xls_data')
   })
 })
 
@@ -247,10 +247,10 @@ observe({
     isolate({
       tmpEnv <- new.env()
       load(inFile$datapath, envir=tmpEnv)
-      if (exists("values", envir=tmpEnv, inherits=FALSE))
-        assign(ip_values, tmpEnv$values, envir=.GlobalEnv)
-      if (exists("state_list", envir=tmpEnv, inherits=FALSE))
-        assign(ip_inputs, tmpEnv$state_list, envir=.GlobalEnv)
+      if (exists("r_data", envir=tmpEnv, inherits=FALSE))
+        assign(ip_data, tmpEnv$r_data, envir=.GlobalEnv)
+      if (exists("r_state", envir=tmpEnv, inherits=FALSE))
+        assign(ip_inputs, tmpEnv$r_state, envir=.GlobalEnv)
       assign(ip_dump, now(), envir = .GlobalEnv)
       rm(tmpEnv)
     })
@@ -271,9 +271,9 @@ output$refreshOnUpload <- renderUI({
 saveState <- function(filename) {
   isolate({
     LiveInputs <- reactiveValuesToList(input)
-    state_list[names(LiveInputs)] <- LiveInputs
-    values <- reactiveValuesToList(values)
-    save(state_list, values , file = filename)
+    r_state[names(LiveInputs)] <- LiveInputs
+    r_data <- reactiveValuesToList(r_data)
+    save(r_state, r_data , file = filename)
   })
 }
 
@@ -291,15 +291,15 @@ observe({
   if(is.null(input$data_rename)) return()
   if(is.null(input$renameButton) || input$renameButton == 0) return()
   isolate({
-    values[[input$data_rename]] <- values[[input$dataset]]
-    values[[input$dataset]] <- NULL
-    values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$dataset,"_descr")]]
-    values[[paste0(input$dataset,"_descr")]] <- NULL
+    r_data[[input$data_rename]] <- r_data[[input$dataset]]
+    r_data[[input$dataset]] <- NULL
+    r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
+    r_data[[paste0(input$dataset,"_descr")]] <- NULL
 
-    ind <- which(input$dataset == values[['datasetlist']])
-    values[['datasetlist']][ind] <- input$data_rename
+    ind <- which(input$dataset == r_data[['datasetlist']])
+    r_data[['datasetlist']][ind] <- input$data_rename
 
-    updateSelectInput(session, "dataset", label = "Datasets:", choices = values$datasetlist,
+    updateSelectInput(session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
                       selected = input$data_rename)
   })
 })
@@ -307,7 +307,7 @@ observe({
 output$uiDatasets <- renderUI({
   # Drop-down selection of data set
   list(wellPanel(
-    selectInput(inputId = "dataset", label = "Datasets:", choices = values$datasetlist,
+    selectInput(inputId = "dataset", label = "Datasets:", choices = r_data$datasetlist,
       selected = state_init("dataset"), multiple = FALSE),
     conditionalPanel(condition = "input.datatabs == 'Manage'",
       checkboxInput("man_add_descr","Add/edit data description", FALSE),
@@ -335,7 +335,7 @@ output$htmlDataExample <- renderText({
   if(is.null(dat)) return()
 
   # Show only the first 10 (or 30) rows
-  descr <- values[[paste0(input$dataset,"_descr")]]
+  descr <- r_data[[paste0(input$dataset,"_descr")]]
   nshow <- 10
   if(is.null(descr) || descr == "") nshow <- 30
 

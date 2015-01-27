@@ -95,9 +95,9 @@ output$showInput <- renderPrint({
 
 output$showState <- renderPrint({
   cat("State list:\n")
-  if(is.null(state_list)) return()
-  if(length(state_list) == 0) return("[empty]")
-  str(state_list[sort(names(state_list))])
+  if(is.null(r_state)) return()
+  if(length(r_state) == 0) return("[empty]")
+  str(r_state[sort(names(r_state))])
 })
 
 observe({
@@ -106,10 +106,10 @@ observe({
   # quit R, unless you are running Rstudio
   # if(Sys.getenv("RSTUDIO") != "1") {
   if(interactive()) {
-    # flush input and values into Rgui or Rstudio
+    # flush input and r_data into Rgui or Rstudio
     isolate({
-      assign("state_list", reactiveValuesToList(input), envir = .GlobalEnv)
-      assign("values", reactiveValuesToList(values), envir = .GlobalEnv)
+      assign("r_state", reactiveValuesToList(input), envir = .GlobalEnv)
+      assign("r_data", reactiveValuesToList(r_data), envir = .GlobalEnv)
       if(!is.null(input$rmd_report) && input$rmd_report != "") {
         os_type <- .Platform$OS.type
         if (os_type == 'windows') {
@@ -118,8 +118,8 @@ observe({
           cat(input$rmd_report, file = pipe("pbcopy"))
         }
       }
-      stopApp(cat("\nStopping Radiant. State available as 'state_list' and 'values'.\nReport content was copied to the clipboard.\n"))
-      # rm(env_shiny) # removing the reference to the shiny environment
+      rm(r_env, envir = .GlobalEnv) # removing the reference to the shiny environment
+      stopApp(cat("\nStopping Radiant. State available as 'r_state' and 'r_data'.\nReport content was copied to the clipboard.\n"))
     })
   } else {
     stopApp("Stopped Radiant")

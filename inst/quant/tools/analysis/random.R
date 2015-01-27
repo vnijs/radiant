@@ -53,11 +53,11 @@ observe({
 random <- function(dataset, rnd_var, rnd_sample_size) {
 
 	# example list of names obtained from http://listofrandomnames.com
-# 	dat <- values[[dataset]]
+# 	dat <- r_data[[dataset]]
 # 	selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
 # 	return(list(sample = selDat, dat = dat))
 
-  dat <- values[[dataset]]
+  dat <- r_data[[dataset]]
   dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
   dat %>%
     arrange(desc(rnd_number)) %>%
