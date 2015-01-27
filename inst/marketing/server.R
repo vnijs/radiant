@@ -1,3 +1,4 @@
+
 shinyServer(function(input, output, session) {
 
 	# source shared functions
@@ -12,6 +13,11 @@ shinyServer(function(input, output, session) {
 
 	  	source(file, local = TRUE)
 	  }
+	} else {
+		# this works when compare_means is not exported
+		# source("~/gh/radiant_dev/R/compare_means.R", local = TRUE)
+		# this works to get the environment shiny is using
+		env_shiny <<- pryr::where("values")
 	}
 
 	# source data & app tools from base

@@ -1,24 +1,65 @@
 ################################################################################
 # functions to set initial values and take information from state_list
 # when available
+#
+# Note: puting functions in R/radiant.R produces
+# Error in eval(expr, envir, enclos) : object 'state_list' not found
+# because exported functions cannot access variables in the environment
+# created by shinyServer
 ################################################################################
 
-state_singlevar <- function(inputvar, vars) vars[vars == state_list[[inputvar]]]
-state_multvar <- function(inputvar, vars) vars[vars %in% state_list[[inputvar]]]
+#' Set initial selection for shiny input (e.g., selectInput for multiple = FALSE)
+state_singlevar <- function(inputvar, vars)
+  vars[vars == state_list[[inputvar]]]
+  # ifelse(exists("state_list"), vars[vars == state_list[[inputvar]]], c())
 
+#' Set initial selection for shiny input (e.g., selectInput for multiple = TRUE)
+state_multvar <- function(inputvar, vars)
+  vars[vars %in% state_list[[inputvar]]]
+
+  # adding the following condition causes an error in Visualize and others
+  # ifelse(exists("state_list"), vars[vars %in% state_list[[inputvar]]], c())
+  # Error in ifelse(exists("state_list"), vars[vars %in% state_list[[inputvar]]],  :
+  # replacement has length zero
+
+#' Set initial value for shiny input
 state_init <- function(inputvar, init = "") {
-  ifelse(is.null(state_list[[inputvar]]), return(init), return(state_list[[inputvar]]))
+  # if(!exists("state_list")) return(init)
+  ifelse(state_list[[inputvar]] %>% is.null, return(init),
+         return(state_list[[inputvar]]))
 }
 
-state_init_list <- function(inputvar, init = "", vals) {
-  ifelse(is.null(state_list[[inputvar]]), return(init), return(state_singlevar(inputvar, vals)))
+
+# state_list <- list()
+# state_init("test")
+# state_init("test",0)
+# state_list$test <- 8
+# state_init("test",0)
+
+#' Set initial value for shiny input from a list of values
+state_init_list <- function(inputvar, init, vals) {
+  ifelse(state_list[[inputvar]] %>% is.null, return(init),
+         return(state_singlevar(inputvar, vals)))
 }
 
+# state_list <- list()
+# state_init_list("test",1,1:10)
+# state_list$test <- 8
+# state_init_list("test",1,1:10)
+
+#' Set initial values for variable selection from a prior analysis
 state_init_multvar <- function(inputvar, pre_inputvar, vals) {
-  # for factor and cluster use variable selection from the pre-analysis
-  ifelse(is.null(state_list[[inputvar]]), return(vals[vals %in% pre_inputvar]),
-    return(state_multvar(inputvar, vals)))
+  # Data > View does not select all variables unless you use return
+  # inside ifelse
+  ifelse(state_list[[inputvar]] %>% is.null, return(vals[vals %in% pre_inputvar]),
+         return(state_multvar(inputvar, vals)))
+
 }
+
+# state_list <- list()
+# state_init_multvar("test",letters[1:5],letters)
+# state_list$test <- letters[6:10]
+# state_init_multvar("test",letters[1:5],letters)
 
 ################################################################################
 # function to save app state on refresh or crash
@@ -52,28 +93,24 @@ saveStateOnRefresh <- function(session = session) {
 ################################################################
 # functions used across tools in radiant
 ################################################################
-changedata <- function(addCol, addColName = "") {
-	if(nrow(getdata()) == nrow(addCol) && addColName[1] != "") {
-  	return(values[[input$dataset]][,addColName] <- addCol)
-	}
+changedata <- function(new_col, new_col_name = "") {
+	if(values[[input$dataset]] %>% nrow == new_col %>% nrow &&
+     new_col_name[1] != "")
+    values[[input$dataset]][,new_col_name] <- new_col
 }
 
-changedata_names <- function(oldnames, newnames) {
-	upnames <- colnames(values[[input$dataset]])
-	upnames[which(upnames %in% oldnames)] <- newnames
-	return(colnames(values[[input$dataset]]) <- upnames)
-}
+changedata_names <- function(oldnames, newnames)
+  values[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
 
 getdata <- reactive({
 	values[[input$dataset]]
 })
 
 getdata_class <- reactive({
-	# don't use isolate here or values won't change when the dataset is changed
-  getdata() %>% getdata_class_fun
+  values[[input$dataset]][1,] %>% getdata_class_fun
 })
 
-getdata_class_fun <- function(dat = getdata()) {
+getdata_class_fun <- function(dat = values[[input$dataset]][1,]) {
   sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%
@@ -101,22 +138,6 @@ not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
 
 # check if string variable is defined
 is_empty <- function(x, empty = "") ifelse(is.null(x) || x == "", TRUE, FALSE)
-
-# from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
-sshh <- function(...) {
-  suppressWarnings(
-    suppressMessages(
-      ...
-    )
-  )
-  invisible()
-}
-
-#### test
-# sshh(library(dplyr))
-# detach("package:dplyr")
-# library(dplyr)
-#### end test
 
 # is x some type of date variable
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
