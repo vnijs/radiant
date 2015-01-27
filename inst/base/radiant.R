@@ -1,64 +1,64 @@
 ################################################################################
-# functions to set initial values and take information from state_list
+# functions to set initial values and take information from r_state
 # when available
 #
 # Note: puting functions in R/radiant.R produces
-# Error in eval(expr, envir, enclos) : object 'state_list' not found
+# Error in eval(expr, envir, enclos) : object 'r_state' not found
 # because exported functions cannot access variables in the environment
 # created by shinyServer
 ################################################################################
 
 #' Set initial selection for shiny input (e.g., selectInput for multiple = FALSE)
 state_singlevar <- function(inputvar, vars)
-  vars[vars == state_list[[inputvar]]]
-  # ifelse(exists("state_list"), vars[vars == state_list[[inputvar]]], c())
+  vars[vars == r_state[[inputvar]]]
+  # ifelse(exists("r_state"), vars[vars == r_state[[inputvar]]], c())
 
 #' Set initial selection for shiny input (e.g., selectInput for multiple = TRUE)
 state_multvar <- function(inputvar, vars)
-  vars[vars %in% state_list[[inputvar]]]
+  vars[vars %in% r_state[[inputvar]]]
 
   # adding the following condition causes an error in Visualize and others
-  # ifelse(exists("state_list"), vars[vars %in% state_list[[inputvar]]], c())
-  # Error in ifelse(exists("state_list"), vars[vars %in% state_list[[inputvar]]],  :
+  # ifelse(exists("r_state"), vars[vars %in% r_state[[inputvar]]], c())
+  # Error in ifelse(exists("r_state"), vars[vars %in% r_state[[inputvar]]],  :
   # replacement has length zero
 
 #' Set initial value for shiny input
 state_init <- function(inputvar, init = "") {
-  # if(!exists("state_list")) return(init)
-  ifelse(state_list[[inputvar]] %>% is.null, return(init),
-         return(state_list[[inputvar]]))
+  # if(!exists("r_state")) return(init)
+  ifelse(r_state[[inputvar]] %>% is.null, return(init),
+         return(r_state[[inputvar]]))
 }
 
 
-# state_list <- list()
+# r_state <- list()
 # state_init("test")
 # state_init("test",0)
-# state_list$test <- 8
+# r_state$test <- 8
 # state_init("test",0)
 
 #' Set initial value for shiny input from a list of values
 state_init_list <- function(inputvar, init, vals) {
-  ifelse(state_list[[inputvar]] %>% is.null, return(init),
+  ifelse(r_state[[inputvar]] %>% is.null, return(init),
          return(state_singlevar(inputvar, vals)))
 }
 
-# state_list <- list()
+# r_state <- list()
 # state_init_list("test",1,1:10)
-# state_list$test <- 8
+# r_state$test <- 8
 # state_init_list("test",1,1:10)
 
 #' Set initial values for variable selection from a prior analysis
 state_init_multvar <- function(inputvar, pre_inputvar, vals) {
   # Data > View does not select all variables unless you use return
   # inside ifelse
-  ifelse(state_list[[inputvar]] %>% is.null, return(vals[vals %in% pre_inputvar]),
+  ifelse(r_state[[inputvar]] %>% is.null, return(vals[vals %in% pre_inputvar]),
          return(state_multvar(inputvar, vals)))
 
 }
 
-# state_list <- list()
+# r_state <- list()
 # state_init_multvar("test",letters[1:5],letters)
-# state_list$test <- letters[6:10]
+# r_state$test <- letters[6:10]
 # state_init_multvar("test",letters[1:5],letters)
 
 ################################################################################
@@ -74,15 +74,15 @@ saveStateOnRefresh <- function(session = session) {
          not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
 
-        # RadiantInputs <- state_list
+        # RadiantInputs <- r_state
         # LiveInputs <- reactiveValuesToList(input)
         # RadiantInputs[names(LiveInputs)] <- LiveInputs
 
         # assign(paste0("RadiantInputs",ip), reactiveValuesToList(input),
         assign(ip_inputs, reactiveValuesToList(input),
                envir = .GlobalEnv)
-        # assign(paste0("RadiantValues",ip), reactiveValuesToList(values),
-        assign(ip_values, reactiveValuesToList(values),
+        # assign(paste0("RadiantValues",ip), reactiveValuesToList(r_data),
+        assign(ip_data, reactiveValuesToList(r_data),
                envir = .GlobalEnv)
         assign(ip_dump, now(), envir = .GlobalEnv)
       }
@@ -94,23 +94,23 @@ saveStateOnRefresh <- function(session = session) {
 # functions used across tools in radiant
 ################################################################
 changedata <- function(new_col, new_col_name = "") {
-	if(values[[input$dataset]] %>% nrow == new_col %>% nrow &&
+	if(r_data[[input$dataset]] %>% nrow == new_col %>% nrow &&
      new_col_name[1] != "")
-    values[[input$dataset]][,new_col_name] <- new_col
+    r_data[[input$dataset]][,new_col_name] <- new_col
 }
 
 changedata_names <- function(oldnames, newnames)
-  values[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
+  r_data[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
 
 getdata <- reactive({
-	values[[input$dataset]]
+	r_data[[input$dataset]]
 })
 
 getdata_class <- reactive({
-  values[[input$dataset]][1,] %>% getdata_class_fun
+  r_data[[input$dataset]][1,] %>% getdata_class_fun
 })
 
-getdata_class_fun <- function(dat = values[[input$dataset]][1,]) {
+getdata_class_fun <- function(dat = r_data[[input$dataset]][1,]) {
   sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%
@@ -152,7 +152,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
   # leaving line for now (1/7/2015). remove if no issues pop up
   # if(title != "") p
 
-  if(is.character(dat) && length(dat) == 1) dat <- values[[dat]]
+  if(is.character(dat) && length(dat) == 1) dat <- r_data[[dat]]
   dat %>%
     slice(1:min(nshow,nrow(.))) %>%
     mutate_each(funs(d2c)) %>%
@@ -168,12 +168,12 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
 # functions used to create Shiny in and outputs
 ################################################################
 plotWidth <- function() {
-	ifelse(is.null(input$viz_plot_width), return(values$plotWidth),
+	ifelse(is.null(input$viz_plot_width), return(r_data$plotWidth),
 		return(input$viz_plot_width))
 }
 
 plotHeight <- function() {
-	ifelse(is.null(input$viz_plot_height), return(values$plotHeight),
+	ifelse(is.null(input$viz_plot_height), return(r_data$plotHeight),
 		return(input$viz_plot_height))
 }
 

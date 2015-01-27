@@ -87,7 +87,7 @@ observe({
 
 correlation <- function(dataset, cor_var, cor_type, cor_cutoff) {
 
-	dat <- na.omit( values[[dataset]][,cor_var] )
+	dat <- na.omit( r_data[[dataset]][,cor_var] )
 	dat <- data.frame(lapply(dat,as.numeric))
 
 	nc <- ncol(dat)
@@ -217,7 +217,7 @@ output$ui_regression <- renderUI({
 	    		  value = state_init('reg_predict',''))
         ),
         conditionalPanel(condition = "input.reg_predict_buttons == 'dataframe'",
-          selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",values$datasetlist),
+          selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",r_data$datasetlist),
             selected = state_init("reg_predict_data"), multiple = FALSE)
         ),
 
@@ -328,7 +328,7 @@ regression <- function(dataset, reg_var1, reg_var2, reg_var3, reg_intsel, reg_in
 		vars <- c(vars,reg_intsel)
 	}
 
-	dat <- values[[dataset]]
+	dat <- r_data[[dataset]]
 	if(reg_standardize) dat <- mutate_each(dat,funs(reg_standardize_fun))
 
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
@@ -395,7 +395,7 @@ summary_regression <- function(result = .regression()) {
      		reg_predict <- gsub("\"","\'", result$reg_predict)
         nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
       } else {
-        nval <- values[[result$reg_predict_data]]
+        nval <- r_data[[result$reg_predict_data]]
         vars <- as.character(attr(result$terms,'variables'))[-1]
         nval <- try(select_(nval, .dots = vars[-1]), silent = TRUE)
       }
@@ -411,7 +411,7 @@ summary_regression <- function(result = .regression()) {
           cat("Model variables: ")
           cat(ivars,"\n")
           cat("Profile variables to be added: ")
-          nval_names <- names(values[[result$reg_predict_data]])
+          nval_names <- names(r_data[[result$reg_predict_data]])
           cat(ivars[!ivars %in% nval_names])
         }
       } else {
@@ -756,7 +756,7 @@ vif_regression <- function(result = .regression()) {
 }
 
 test_regression <- function(result = .regression()) {
-	dat <- values[[result$dataset]]
+	dat <- r_data[[result$dataset]]
 	if(result$reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
 
 	sub_formula <- ". ~ 1"

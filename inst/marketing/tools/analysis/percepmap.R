@@ -108,7 +108,7 @@ observe({
 pmap <- function(dataset, pmap_brand, pmap_attr, pmap_pref, pmap_dim_number, pmap_scaling,
 	pmap_fontsz, pmap_cutoff, pmap_plot) {
 
-	dat <- values[[dataset]] %>% na.omit
+	dat <- r_data[[dataset]] %>% na.omit
 
 	nr.dim <- as.numeric(pmap_dim_number)
 	nr.attr <- length(pmap_attr)

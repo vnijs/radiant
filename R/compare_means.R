@@ -2,7 +2,7 @@
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in a values list from Radiant
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cm_var1 A numeric variable or factor selected for comparison
 #' @param cm_var2 One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1
 #' @param cm_alternative The alternative hypothesis (two.sided, greater or less)
@@ -29,16 +29,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                           cm_jitter = FALSE) {
 
 	vars <- c(cm_var1, cm_var2)
-	if(exists("values")) {
-		dat <- select_(values[[dataset]], .dots = vars) %>% na.omit
-	} else if(exists("env_shiny") && exists("values", envir = env_shiny)) {
-		dat <- select_(get("values", envir = env_shiny)[[dataset]], .dots = vars) %>%
-						 na.omit
-	} else if(exists("dataset")) {
-		dat <- select_(get(dataset), .dots = vars) %>% na.omit
-	} else {
-		stop(paste0("Dataset ", dataset, " is not available. Please load a dataset and pass the string with the name of the data.frame to compare_means"))
-	}
+	dat <- getdata_exp(dataset, vars)
 
 	if(dat[,cm_var1] %>% is.factor) {
 		colnames(dat) <- c("variable","values")

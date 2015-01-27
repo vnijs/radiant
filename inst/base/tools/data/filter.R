@@ -37,7 +37,7 @@
 #
 # explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_select, expl_show_tab, expl_show_viz) {
 #
-#   dat <- values[[dataset]]
+#   dat <- r_data[[dataset]]
 #   if(expl_select != '') {
 #     selcom <- gsub(" ", "", expl_select)
 #     seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)

@@ -102,7 +102,7 @@ observe({
 mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
                 mds_non_metric, mds_dim_number, mds_fontsz) {
 
-	dat <- values[[dataset]]
+	dat <- r_data[[dataset]]
 
 	nr.dim <- as.numeric(mds_dim_number)
 

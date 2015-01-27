@@ -8,7 +8,7 @@
 #   vars <- varnames()[isFct]
 #   if(length(vars) == 0) return()
 #   selectInput(inputId = "cp_var1", label = "Select a grouping factor:", choices = vars,
-#   	selected = names(vars[vars == values$cp_var1]), multiple = FALSE)
+#   	selected = names(vars[vars == r_data$cp_var1]), multiple = FALSE)
 # })
 #
 # output$uiCp_var2 <- renderUI({
@@ -21,7 +21,7 @@
 # 	vars <- vars[-which(vars == input$cp_var1)]
 #   if(length(vars) == 0) return()
 #   selectInput(inputId = "cp_var2", label = "Select a 2-level factor:", choices = vars,
-#   	selected = names(vars[vars %in% values$cp_var2]), multiple = FALSE)
+#   	selected = names(vars[vars %in% r_data$cp_var2]), multiple = FALSE)
 # })
 #
 # ui_compareProps <- function() {
@@ -31,9 +31,9 @@
 # 		# alternative and siglevel ignored per the helpfile
 #     # conditionalPanel(condition = "input.analysistabs == 'Summary'",
 #     #   selectInput(inputId = "cp_alternative", label = "Alternative hypothesis", choices = alt,
-#     #   	selected = values$cp_alternative),
+#     #   	selected = r_data$cp_alternative),
 #     #   sliderInput('cp_sigLevel',"Significance level:", min = 0.85, max = 0.99,
-#     #   	value = values$cp_sigLevel, step = 0.01)
+#     #   	value = r_data$cp_sigLevel, step = 0.01)
 #     # )
 #     ),
 # 	 	helpModal('Compare proportions','compareProps',includeHTML("tools/help/compareProps.html"))
