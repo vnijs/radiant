@@ -1,5 +1,5 @@
 ################################################################################
-# functions to set initial values and take information from state_list
+# functions to set initial values and take information from r_state
 # when available
 ################################################################################
 
@@ -11,25 +11,25 @@ ip <- ifelse(running_local, "", session$request$REMOTE_ADDR)
 #     ip <<- qs$id
 # })
 
-init_state <- function(values) {
+init_state <- function(r_data) {
 
   # initial plot height and width
-  values$plotHeight <- 600
-  values$plotWidth <- 600
+  r_data$plotHeight <- 600
+  r_data$plotWidth <- 600
 
   # Datasets can change over time (i.e. the changedata function). Therefore,
   # the data need to be a reactive value so the other reactive functions
   # and outputs that depend on these datasets will know when they are changed.
   robj <- load("../base/data/data_init/diamonds.rda")
   df <- get(robj)
-  values[["diamonds"]] <- df
-  values[["diamonds_descr"]] <- attr(df,'description')
-  values$datasetlist <- c("diamonds")
-  values
+  r_data[["diamonds"]] <- df
+  r_data[["diamonds_descr"]] <- attr(df,'description')
+  r_data$datasetlist <- c("diamonds")
+  r_data
 }
 
 ip_inputs <- paste0("RadiantInputs",ip)
-ip_values <- paste0("RadiantValues",ip)
+ip_data <- paste0("RadiantValues",ip)
 ip_dump <- paste0("RadiantDumpTime",ip)
 
 #### test section
@@ -91,21 +91,26 @@ if(!running_local) {
 }
 
 # load previous state if available
-if (exists("state_list") && exists("values")) {
-  values <- do.call(reactiveValues, values)
-  state_list <- state_list
-  rm(values, state_list, envir = .GlobalEnv)
-} else if (exists(ip_inputs) && exists(ip_values)) {
-  values <- do.call(reactiveValues, get(ip_values))
-  state_list <- get(ip_inputs)
-  rm(list = c(ip_inputs, ip_values, ip_dump), envir = .GlobalEnv)
+if (exists("r_state") && exists("r_data")) {
+  r_data <- do.call(reactiveValues, r_data)
+  r_state <- r_state
+  rm(r_data, r_state, envir = .GlobalEnv)
+} else if (exists(ip_inputs) && exists(ip_data)) {
+  r_data <- do.call(reactiveValues, get(ip_data))
+  r_state <- get(ip_inputs)
+  rm(list = c(ip_inputs, ip_data, ip_dump), envir = .GlobalEnv)
 } else {
-  state_list <- list()
-  values <- init_state(reactiveValues())
+  r_state <- list()
+  r_data <- init_state(reactiveValues())
+}
+
+if(running_local) {
+  # reference to radiant environment that can be accessed by exported functions
+  r_env <<- pryr::where("r_data")
 }
 
 observe({
-  # reset state_list on dataset change
-  if(is.null(state_list$dataset) || is.null(input$dataset)) return()
-  if(state_list$dataset != input$dataset) state_list <<- list()
+  # reset r_state on dataset change
+  if(is.null(r_state$dataset) || is.null(input$dataset)) return()
+  if(r_state$dataset != input$dataset) r_state <<- list()
 })

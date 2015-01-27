@@ -1,7 +1,7 @@
 # initial settings
 setwd("~/github/radiant/inst/marketing")
 # install.packages('png')
-libs <- c("shiny", "knitr", "markdown", "shinyAce", "car", "gridExtra", "psych", 
+libs <- c("shiny", "knitr", "markdown", "shinyAce", "car", "gridExtra", "psych",
   "plyr", "reshape2", "vegan", "lubridate", "wordcloud", "AlgDesign", "ggplot2","png")
 suppressWarnings(sapply(libs, require, character.only=TRUE))
 options(digits = 3)
@@ -13,10 +13,10 @@ input <- list()
 output <- list()
 values <- list()
 
-robj <- load("data/data_init/diamonds.rda") 
+robj <- load("data/data_init/diamonds.rda")
 df <- get(robj)
-values[["diamonds"]] <- df
-values[["diamonds_descr"]] <- attr(df,'description')
+r_data[["diamonds"]] <- df
+r_data[["diamonds_descr"]] <- attr(df,'description')
 values$datasetlist <- c("diamonds")
 
 source("tools/analysis/regression.R")
@@ -85,10 +85,10 @@ ui <- basicPage(
 server <- function(session, input, output) {
 
   source("global.R", local = TRUE)
-  state_list$datasets <<- "diamonds"
-  state_list$reg_var1 <<- "price"
-  state_list$reg_var2 <<- c("carat","clarity")
-  state_list$reg_standardize <<- FALSE
+  r_state$datasets <<- "diamonds"
+  r_state$reg_var1 <<- "price"
+  r_state$reg_var2 <<- c("carat","clarity")
+  r_state$reg_standardize <<- FALSE
 
   source('radiant.R', local = TRUE)
   R.utils::sourceDirectory('tools/analysis', recursive = TRUE)
@@ -126,7 +126,7 @@ runApp(list(ui = ui, server = server))
 res1 <- paste0(readLines("../tests/regression_reactive.txt"), collapse = "\n")
 res2 <- paste0(readLines("../tests/regression_correct.txt"), collapse = "\n")
 all.equal(res1,res2)
-state_list
+r_state
 values
 
 ######################################
@@ -194,10 +194,10 @@ ui <- navbarPage("Radiant", id = "nav_radiant", inverse = TRUE, collapsable = TR
 server <- function(session, input, output) {
 
   # source("global.R", local = TRUE)
-  state_list$datasets <<- "diamonds"
-  state_list$reg_var1 <<- "price"
-  state_list$reg_var2 <<- c("carat","clarity")
-  state_list$reg_standardize <<- FALSE
+  r_state$datasets <<- "diamonds"
+  r_state$reg_var1 <<- "price"
+  r_state$reg_var2 <<- c("carat","clarity")
+  r_state$reg_standardize <<- FALSE
 
   source('radiant.R', local = TRUE)
   R.utils::sourceDirectory('tools/analysis', recursive = TRUE)
@@ -214,7 +214,7 @@ server <- function(session, input, output) {
 
     if(is.null(input$reg_var2))
       tags$script("window.location.reload();")
-      
+
     print(input$reg_var1)
     print(input$reg_var2)
     print(input$reg_standardize)
@@ -225,7 +225,7 @@ server <- function(session, input, output) {
       summary_regression(result)
     sink()
 
-    # updateTabsetPanel(session, "nav_radiant", selected = "Report") 
+    # updateTabsetPanel(session, "nav_radiant", selected = "Report")
 
 
     if(!is.character(result))
@@ -272,10 +272,10 @@ server <- function(input, output, session) {
 
   # source("global.R", local = TRUE)
   source("global.R")
-  # state_list$datasets <<- "diamonds"
-  # state_list$reg_var1 <<- "price"
-  # state_list$reg_var2 <<- c("carat","clarity")
-  # state_list$reg_standardize <<- FALSE
+  # r_state$datasets <<- "diamonds"
+  # r_state$reg_var1 <<- "price"
+  # r_state$reg_var2 <<- c("carat","clarity")
+  # r_state$reg_standardize <<- FALSE
 
   source('radiant.R', local = TRUE)
   R.utils::sourceDirectory('tools/analysis', recursive = TRUE)
@@ -288,12 +288,12 @@ server <- function(input, output, session) {
 runApp(list(ui = ui, server = server))
 
 # trial from R > Code, doesn't work
-updateTabsetPanel(session, "nav_radiant", selected = "Correlation") 
+updateTabsetPanel(session, "nav_radiant", selected = "Correlation")
 
 summary_correlation()
 plots_correlation()
 
-updateTabsetPanel(session, "nav_radiant", selected = "Code") 
+updateTabsetPanel(session, "nav_radiant", selected = "Code")
 
 
 # Loading previous state from a fixed location
@@ -301,11 +301,11 @@ updateTabsetPanel(session, "nav_radiant", selected = "Code")
 #   if(is.null(input$loadState) || input$loadState == 0) return()
 
 #   # Joe Cheng: https://github.com/rstudio/shiny/issues/331
-#   if(file.exists("state/RadiantValues.rds")) 
+#   if(file.exists("state/RadiantValues.rds"))
 #     values <<- do.call(reactiveValues, readRDS("state/RadiantValues.rds"))
 
-#   if(file.exists("state/RadiantInputs.rds")) 
-#     state_list <<- readRDS("state/RadiantInputs.rds")
+#   if(file.exists("state/RadiantInputs.rds"))
+#     r_state <<- readRDS("state/RadiantInputs.rds")
 # })
 
 # Saving current state from a fixed location

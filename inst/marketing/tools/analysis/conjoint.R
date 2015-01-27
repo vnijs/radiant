@@ -19,20 +19,20 @@ output$conjointProfiles <- renderUI({
 .conjointProfiles <- reactive({
 	ret_text <- "Please load a file with attribute information."
 	if(is.null(input$uploadAttr)) return(ret_text)
-  if(is.null(values[['ca_attr']])) return(ret_text)
+  if(is.null(r_data[['ca_attr']])) return(ret_text)
 
-	conjointProfiles(values[['ca_attr']])
+	conjointProfiles(r_data[['ca_attr']])
 })
 
 observe({
   if(is.null(input$conjointProfilesReport) || input$conjointProfilesReport == 0) return()
   isolate({
-		inp <- list(values[['ca_attr']])
+		inp <- list(r_data[['ca_attr']])
 		updateReport(inp,"conjointProfiles")
   })
 })
 
-conjointProfiles <- function(ca_attr = values[['ca_attr']]) {
+conjointProfiles <- function(ca_attr = r_data[['ca_attr']]) {
 	for(it in 1:20) {
 		cmd <- "ca.attributes <- list(c()"
 		for(l in ca_attr) {
@@ -86,7 +86,7 @@ main_conjointProfiles <- function(result = .conjointProfiles()) {
 
 # ca_loadUserProfiles <- function(uFile) {
 # 	objname <- robjname <- sub(paste(".",ext,sep = ""),"",basename(uFile))
-# 	values[[objname]] <- read.csv(uFile)
+# 	r_data[[objname]] <- read.csv(uFile)
 # }
 
 conjointFFD <-function(dat,trial) { #{{{
@@ -131,7 +131,7 @@ observe({
 	inFile <- input$uploadAttr
   if(!is.null(inFile)) {
     isolate({
-      values[['ca_attr']] <- gsub("\"","\'",readLines(inFile$datapath))
+      r_data[['ca_attr']] <- gsub("\"","\'",readLines(inFile$datapath))
     })
   }
 })
@@ -246,7 +246,7 @@ observe({
 
 conjoint <- function(dataset, ca_var1, ca_var2, ca_rev, ca_vif, ca_plots, ca_scale_plot) {
 
-	dat <- values[[dataset]]
+	dat <- r_data[[dataset]]
 	formula <- paste(ca_var1, "~", paste(ca_var2, collapse = " + "))
 
 	if(ca_rev) {
@@ -323,7 +323,7 @@ plots_conjoint <- function(result = .conjoint()) {
 ca_theTable <- function(result = .conjoint()) {
 	if(is.character(result)) return(list("PW" = "No attributes selected."))
 
-	dat <- values[[result$dataset]]
+	dat <- r_data[[result$dataset]]
 	attr <- data.frame(dat[ ,result$ca_var2, drop = FALSE])
 
 	isFct <- sapply(attr,is.factor)

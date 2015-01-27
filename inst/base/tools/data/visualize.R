@@ -64,10 +64,10 @@ output$ui_Visualize <- renderUI({
     div(class="row-fluid",
         div(class="span6",
             numericInput("viz_plot_height", label = "Plot height:", min = 100, step = 50,
-                         value = state_init("viz_plot_height", values$plotHeight))),
+                         value = state_init("viz_plot_height", r_data$plotHeight))),
         div(class="span6",
             numericInput("viz_plot_width", label = "Plot width:", min = 100, step = 50,
-                         value = state_init("viz_plot_width", values$plotWidth)))
+                         value = state_init("viz_plot_width", r_data$plotWidth)))
     )
     # ,div(class="row-fluid",
     # 	div(class="span6",
@@ -83,12 +83,12 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  ifelse(is.null(input$viz_plot_width), return(values$plotWidth), return(input$viz_plot_width))
+  ifelse(is.null(input$viz_plot_width), return(r_data$plotWidth), return(input$viz_plot_width))
 })
 
 viz_plot_height <- reactive({
-  # if(is.null(input$viz_plot_height)) return(values$plotHeight)
-  if(is.null(input$viz_plot_height)) return(values$plotHeight)
+  # if(is.null(input$viz_plot_height)) return(r_data$plotHeight)
+  if(is.null(input$viz_plot_height)) return(r_data$plotHeight)
   if(input$viz_multiple == "multiple") {
     nrPlots <- length(input$vizvars1)
     ifelse(nrPlots > 1,
@@ -140,7 +140,7 @@ visualize <- function(dataset, vizvars1, vizvars2, viz_select, viz_multiple, viz
                       viz_facet_col, viz_color, viz_line, viz_loess, viz_jitter) {
 
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
-  dat <- values[[dataset]]
+  dat <- r_data[[dataset]]
   if(sum(vizvars1 %in% colnames(dat)) != length(vizvars1)) return()
 
   if(viz_select != '') {
