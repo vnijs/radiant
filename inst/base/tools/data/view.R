@@ -16,13 +16,10 @@ output$uiView_subsbig <- renderUI({
   )
 })
 
-# values$error = ""
-
 output$uiView_err <- renderUI({
   if(is.null(values$error) || values$error == "") return()
   helpText(values$error)
 })
-
 
 output$ui_View <- renderUI({
   list(
@@ -51,13 +48,11 @@ observe({
 
 output$dataviewer <- renderDataTable({
 
-  # if(isolate(input$datatabs) != 'View') return(invisible())
-  # if(is.null(input$dataset) || is.null(input$view_vars)) return()
-  if(is.null(input$view_vars)) return()
-  # dat <- date2character()
-  dat <- getdata()
+  # if(is.null(input$view_vars)) return()
+  # if(!all(input$view_vars %in% colnames(dat))) return()
+  if(input$view_vars %>% not_available) return()
 
-  if(!all(input$view_vars %in% colnames(dat))) return()
+  dat <- getdata()
 
   selcom <- gsub("\\s","",input$view_select)
   if(!(is.null(input$view_subsbig_action) || input$view_subsbig_action == 0)) {
@@ -123,7 +118,6 @@ output$dataviewer <- renderDataTable({
       isolate(values$error <- attr(seldat,"condition")$message)
     }
   } else {
-#     values$error <- ""
     isolate(values$error <- "")
   }
 

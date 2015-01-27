@@ -30,7 +30,7 @@ You can call functions for visualization and analysis in your R-code and access 
 ?single_mean
 ```
 
-As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/example_data/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Note this currently only works for the `single_mean` functions.
+As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/example_data/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Note that this currently only works for the `single_mean` and `compare_means` functions.
 
 ## Saving and loading state
 
@@ -79,7 +79,7 @@ library('radiant')
 radiant('quant')
 ```
 
-<!-- 
+<!--
 #### Creating a desktop launcher
 
 You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`

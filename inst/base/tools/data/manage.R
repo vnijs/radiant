@@ -1,343 +1,138 @@
-#######################################
-# Manage datasets in/out of Radiant
-#######################################
+descr_out <- function(descr, ret_type = 'html') {
+   # if there is no data description
+  if(descr %>% is_empty) return("")
 
-output$ui_fileUpload <- renderUI({
+  # if there is a data description and we want html output
+  if(ret_type == 'html')
+    descr <- markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
 
-  if(is.null(input$dataType)) return()
-  if(input$dataType == "csv") {
-    fileInput('uploadfile', '', multiple=TRUE,
-              accept = c('text/csv','text/comma-separated-values',
-                         'text/tab-separated-values',
-                         'text/plain','.csv','.tsv'))
-  } else if(input$dataType == "rda") {
-    fileInput('uploadfile', '', multiple=TRUE,
-              accept = c(".rda",".rds",".rdata"))
-  }
-})
-
-output$ui_Manage <- renderUI({
-  list(
-    wellPanel(
-      radioButtons(inputId = "dataType", label = "Load data:",
-                   c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard",
-                     "examples" = "examples", "state" = "state"),
-                     selected = "rda"),
-      conditionalPanel(condition = "input.dataType != 'clipboard' &&
-                                    input.dataType != 'examples'",
-        conditionalPanel(condition = "input.dataType == 'csv'",
-          checkboxInput('header', 'Header', TRUE),
-          checkboxInput('man_str_as_factor', 'String as Factor', TRUE),
-          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',')
-        ),
-        uiOutput("ui_fileUpload")
-      ),
-      conditionalPanel(condition = "input.dataType == 'clipboard'",
-        actionButton('loadClipData', 'Paste data')
-      ),
-      conditionalPanel(condition = "input.dataType == 'examples'",
-        actionButton('loadExampleData', 'Load examples')
-      ),
-      conditionalPanel(condition = "input.dataType == 'state'",
-        fileInput('uploadState', 'Load previous app state:',  accept = ".rda"),
-        uiOutput("refreshOnUpload")
-      )
-    ),
-    wellPanel(
-      radioButtons(inputId = "saveAs", label = "Save data:",
-                   c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                     "state" = "state"), selected = "rda"),
-
-      conditionalPanel(condition = "input.saveAs == 'clipboard'",
-        actionButton('saveClipData', 'Copy data')
-      ),
-      conditionalPanel(condition = "input.saveAs != 'clipboard' &&
-                                    input.saveAs != 'state'",
-        downloadButton('downloadData', 'Save')
-      ),
-      conditionalPanel(condition = "input.saveAs == 'state'",
-        HTML("<label>Save current app state:</label>"),
-        downloadButton('downloadState', 'Save')
-      )
-    ),
-    wellPanel(
-      checkboxInput('man_show_remove', 'Remove data from memory', FALSE),
-      conditionalPanel(condition = "input.man_show_remove == true",
-        uiOutput("uiRemoveDataset"),
-        actionButton('removeDataButton', 'Remove data')
-      )
-    ),
-    helpModal('Manage','manageHelp',inclMD("../base/tools/help/manage.md"))
-  )
-})
-
-# updating the dataset description
-observe({
-  if(is.null(input$updateDescr) || input$updateDescr == 0) return()
-  isolate({
-    values[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
-    updateCheckboxInput(session = session, "man_add_descr",
-                        "Add/edit data description", FALSE)
-  })
-})
-
-output$dataDescriptionHTML <- renderUI({
-  values[[paste0(input$dataset,"_descr")]] %>%
-    descr_out('html') %>%
-    HTML
-})
-
-output$dataDescriptionMD <- renderUI({
-  tagList(
-    "<label>Add data description:</label>" %>% HTML,
-    tags$textarea(id="man_data_descr",
-                  rows="15",
-                  style="width:650px;",
-                  descr_out(
-                    values[[paste0(input$dataset,"_descr")]],
-                    'md'
-                  )
-    )
-  )
-})
-
-# removing datasets
-output$uiRemoveDataset <- renderUI({
-  # Drop-down selection of data set to remove
-  selectInput(inputId = "removeDataset", label = "",
-    choices = values$datasetlist, selected = NULL, multiple = TRUE,
-    selectize = FALSE
-  )
-})
-
-observe({
-  # removing datasets
-  if(is.null(input$removeDataButton) || input$removeDataButton == 0) return()
-  isolate({
-
-    # only remove datasets if 1 or more were selected
-    # without this line all files would be removed when the removeDataButton
-    # is pressed
-    if(is.null(input$removeDataset)) return()
-    datasets <- values[['datasetlist']]
-    if(length(datasets) > 1) {  # have to leave at least one dataset
-      removeDataset <- input$removeDataset
-      if(length(datasets) == length(removeDataset))
-        removeDataset <- removeDataset[-1]
-
-      # Must use single string to index into reactivevalues so loop is necessary
-      for(rem in removeDataset) {
-        values[[rem]] <- NULL
-        values[[paste0(rem,"_descr")]] <- NULL
-      }
-      values[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
-    }
-  })
-})
-
-# 'saving' data to clipboard
-observe({
-  if(is.null(input$saveClipData) || input$saveClipData == 0) return()
-  isolate({
-    saveClipboardData()
-    updateRadioButtons(session = session, inputId = "saveAs",
-                       label = "Save data:",
-                       c("rda" = "rda", "csv" = "csv",
-                         "clipboard" = "clipboard", "state" = "state"),
-                       selected = "rda")
-  })
-})
-
-output$downloadData <- downloadHandler(
-  filename = function() { paste(input$dataset,'.',input$saveAs, sep='') },
-  content = function(file) {
-
-    ext <- input$saveAs
-    robj <- input$dataset
-
-    if(ext == 'rda') {
-      if(!is.null(input$man_data_descr) && input$man_data_descr != "") {
-        # save data description
-        dat <- getdata()
-        attr(dat,"description") <- values[[paste0(robj,"_descr")]]
-        assign(robj, dat)
-        save(list = robj, file = file)
-      } else {
-        assign(robj, getdata())
-        save(list = robj, file = file)
-      }
-    } else if(ext == 'csv') {
-      assign(robj, getdata())
-      write.csv(get(robj), file)
-    }
-  }
-)
-
-# loading data
-observe({
-  # loading files from disk
-  inFile <- input$uploadfile
-  if(!is.null(inFile)) {
-    isolate({
-      # iterating through the files to upload
-      for(i in 1:(dim(inFile)[1]))
-        loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
-                     header = input$header,
-                     man_str_as_factor = input$man_str_as_factor,
-                     sep = input$sep)
-
-      updateSelectInput(session, "dataset", label = "Datasets:",
-                        choices = values$datasetlist,
-                        selected = values$datasetlist[1])
-    })
-  }
-})
-
-# loading all examples files (linked to helpfiles)
-observe({
-  if(input$loadExampleData %>% not_pressed) return()
-  isolate({
-
-    # loading data bundled with Radiant
-    path <- "data/data_examples/"
-    examples <- list.files(path)
-
-    for(ex in examples) loadUserData(ex, paste0(path,ex), 'rda')
-
-    # loading data available for Rady students
-    path <- "data/data_rady/"
-    examples <- list.files(path)
-
-    for(ex in examples) loadUserData(ex, paste0(path,ex), 'rda')
-
-    # sorting files alphabetically
-    values[['datasetlist']] <- sort(values[['datasetlist']])
-
-    updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = values$datasetlist,
-                      selected = values$datasetlist[1])
-  })
-})
-
-observe({
-  # 'reading' data from clipboard
-  if(is.null(input$loadClipData) || input$loadClipData == 0) return()
-  isolate({
-    loadClipboardData()
-    updateRadioButtons(session = session, inputId = "dataType",
-                       label = "Load data:", c("rda" = "rda", "csv" = "csv",
-                                               "clipboard" = "clipboard",
-                                               "examples" = "examples",
-                                               "state" = "state"),
-                       selected = "rda")
-
-    updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = values$datasetlist, selected = 'xls_data')
-  })
-})
-
-
-
-#######################################
-# Load previous state
-#######################################
-observe({
-  inFile <- input$uploadState
-  if(!is.null(inFile)) {
-    isolate({
-      tmpEnv <- new.env()
-      load(inFile$datapath, envir=tmpEnv)
-      if (exists("values", envir=tmpEnv, inherits=FALSE))
-        assign(ip_values, tmpEnv$values, envir=.GlobalEnv)
-      if (exists("state_list", envir=tmpEnv, inherits=FALSE))
-        assign(ip_inputs, tmpEnv$state_list, envir=.GlobalEnv)
-      assign(ip_dump, now(), envir = .GlobalEnv)
-      rm(tmpEnv)
-    })
-  }
-})
-
-output$refreshOnUpload <- renderUI({
-  inFile <- input$uploadState
-  if(!is.null(inFile)) {
-    # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
-    tags$script("window.location.reload();")
-  }
-})
-
-#######################################
-# Save state
-#######################################
-saveState <- function(filename) {
-  isolate({
-    LiveInputs <- reactiveValuesToList(input)
-    state_list[names(LiveInputs)] <- LiveInputs
-    values <- reactiveValuesToList(values)
-    save(state_list, values , file = filename)
-  })
+  descr
 }
 
-output$downloadState <- downloadHandler(
-  filename = function() { paste0("RadiantState-",Sys.Date(),".rda") },
-  content = function(file) {
-    saveState(file)
+#### test
+# library(markdown)
+# is_empty("## header example")
+# is_empty(NULL)
+# descr_out(NULL)
+# descr_out("## header example", 'html')
+# descr_out("## header example", 'md')
+#### end test
+
+upload_error_handler <- function(objname, ret) {
+  # create an empty data.frame and return error message as description
+  values[[paste0(objname,"_descr")]] <<- ret
+  values[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
+}
+
+loadClipboardData <- function(objname = "xls_data", ret = "") {
+
+  if (.Platform$OS.type == 'windows') {
+    dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
+  } else if (Sys.info()["sysname"] == "Darwin") {
+    dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
+  } else {
+    ret <- c("### Loading data through the clipboard is not currently supported online.")
+    dat <- try(log("a"), silent = TRUE)   # create try-error
   }
-)
 
-#######################################
-# Loading data into memory
-#######################################
-observe({
-  if(is.null(input$data_rename)) return()
-  if(is.null(input$renameButton) || input$renameButton == 0) return()
-  isolate({
-    values[[input$data_rename]] <- values[[input$dataset]]
-    values[[input$dataset]] <- NULL
-    values[[paste0(input$data_rename,"_descr")]] <- values[[paste0(input$dataset,"_descr")]]
-    values[[paste0(input$dataset,"_descr")]] <- NULL
+  if(is(dat, 'try-error')) {
+    if(ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
+    upload_error_handler(objname,ret)
+  } else {
+    ret <- paste0("### Clipboard data\nData copied from clipboard on", lubridate::now())
+    values[[objname]] <<- data.frame(dat, check.names = FALSE)
+    values[[paste0(objname,"description")]] <<- ret
+  }
+  values[['datasetlist']] <<- c(objname,values[['datasetlist']]) %>% unique
+}
 
-    ind <- which(input$dataset == values[['datasetlist']])
-    values[['datasetlist']][ind] <- input$data_rename
+saveClipboardData <- function() {
+  os_type <- .Platform$OS.type
+  if (os_type == 'windows') {
+    write.table(getdata(), "clipboard", sep="\t", row.names=FALSE)
+  } else if (Sys.info()["sysname"] == "Darwin") {
+    write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE,
+                sep = '\t')
+  } else {
+    print("### Saving data through the clipboard is not currently supported online.")
+  }
+}
 
-    updateSelectInput(session, "dataset", label = "Datasets:", choices = values$datasetlist,
-                      selected = input$data_rename)
-  })
-})
+loadUserData <- function(fname, uFile, ext, header = TRUE,
+                         man_str_as_factor = TRUE, sep = ",") {
 
-output$uiDatasets <- renderUI({
-  # Drop-down selection of data set
-  list(wellPanel(
-    selectInput(inputId = "dataset", label = "Datasets:", choices = values$datasetlist,
-      selected = state_init("dataset"), multiple = FALSE),
-    conditionalPanel(condition = "input.datatabs == 'Manage'",
-      checkboxInput("man_add_descr","Add/edit data description", FALSE),
-      conditionalPanel(condition = "input.man_add_descr == true",
-        actionButton('updateDescr', 'Update description')
-      ),
-      checkboxInput("man_rename_data","Rename data", FALSE),
-      conditionalPanel(condition = "input.man_rename_data == true",
-        uiOutput("uiRename")
-      )
-    )
-  ))
-})
+  filename <- basename(fname)
+  # objname is used as the name of the data.frame
+  objname <- sub(paste0(".",ext,"$"),"", filename)
 
-output$uiRename <- renderUI({
-  list(
-    textInput("data_rename", "", input$dataset),
-    actionButton('renameButton', 'Rename')
-  )
-})
+  # if ext isn't in the filename ...
+  if(objname == filename) {
+    fext <- tools::file_ext(filename) %>% tolower
 
-output$htmlDataExample <- renderText({
+    if(fext %in% c("xls","xlsx")) {
+      ret <- "### Radiant does not load xls files directly. Please save the data as a csv file and try again."
+    } else {
+      ret <- paste0("### The filename extension (",fext,") does not match the specified file-type (",ext,"). Please specify the file type you are trying to upload (i.e., csv or rda).")
+    }
 
-  dat <- getdata()
-  if(is.null(dat)) return()
+    upload_error_handler(objname,ret)
+    ext <- "---"
+  }
 
-  # Show only the first 10 (or 30) rows
-  descr <- values[[paste0(input$dataset,"_descr")]]
-  nshow <- 10
-  if(is.null(descr) || descr == "") nshow <- 30
+  if(ext == 'rda') {
+    # objname will hold the name of the object(s) inside the R datafile
+    robjname <- try(load(uFile), silent=TRUE)
+    if(is(robjname, 'try-error')) {
+      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+      return()
+    } else if(length(robjname) > 1) {
+      if(sum(robjname %in% c("state_list", "values")) == 2) {
+        upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
+      } else {
+        upload_error_handler(objname,"### More than one R object contained in the data.")
+      }
+    } else {
+      values[[objname]] <<- as.data.frame(get(robjname))
+      values[[paste0(objname,"_descr")]] <<- attr(values[[objname]], "description")
+    }
+  }
 
-  show_data_snippet(nshow = nshow)
-})
+  if(ext == 'csv') {
+    values[[objname]] <<- read.csv(uFile, header=header,
+                                  sep=sep,
+                                  stringsAsFactors=man_str_as_factor)
+  }
+
+  values[['datasetlist']] <<- c(objname,values[['datasetlist']]) %>% unique
+}
+
+# rm(list = ls())
+# source("~/gh/radiant_dev/R/radiant.R")
+# source("~/gh/radiant_dev/inst/base/radiant.R")
+# library(dplyr)
+# values <- list()
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
+# filename <- fname
+# loadUserData(fname, fname, "csv")
+# values
+# loadUserData(fname, fname, "rda")
+# values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
+# loadUserData(fname, fname, "csv")
+# values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.xlsx")
+# loadUserData(fname, fname, "rda")
+# values
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/RadiantState-2015-01-18.rda")
+# loadUserData(fname, fname, "rda")
+# values
+
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/example_data/RadiantState.rda")
+# loadUserData(fname, fname, "rda")
+# values[['datasetlist']][1]
+
+# robjname <- try(load(fname), silent=TRUE)
+# robjname
+# length(robjname) > 1
+# sum(robjname %in% c("state_list", "values")) == 2
+

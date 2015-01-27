@@ -4,7 +4,6 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in a values list from Radiant
 #' @param sm_var The variable selected for the mean comparison
-#' @param dataset_file Feature not yet implemented
 #' @param sm_comp_value Population value to compare the sample mean with
 #' @param sm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sm_sig_level Span of the confidence interval
@@ -19,17 +18,22 @@
 #'
 #' @export
 single_mean <- function(dataset, sm_var,
-                        dataset_filter = "",
                         sm_comp_value = 0,
                         sm_alternative = "two.sided",
                         sm_sig_level = .95) {
 
+	# probably not added to global environment because the environment is
+	# attached inside a function
+	# if(exists("env_shiny")) attach(env_shiny)
+	# need to detach if used
+	# if(exists("env_shiny")) detach(env_shiny)
+
 	if(exists("values")) {
-		dat <- select_(values[[dataset]], sm_var)
-		# if a data_filter has been defined
-		# dat <- filter(dat, values[[dataset_filter]])
+		dat <- select_(values[[dataset]], sm_var) %>% na.omit
+	} else if(exists("values", envir = env_shiny)) {
+		dat <- select_(get("values", envir = env_shiny)[[dataset]], sm_var) %>% na.omit
 	} else {
-		dat <- select_(get(dataset), sm_var)
+		dat <- select_(get(dataset), sm_var) %>% na.omit
 	}
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
@@ -57,7 +61,6 @@ summary_single_mean <- function(result) {
 	cat("Data     :", result$dataset, "\n")
 	# cat("Filter   :", result$xtra$filter, "\n")
 	cat("Variable :", result$sm_var, "\n")
-
 
 	hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
@@ -100,7 +103,7 @@ plots_single_mean <- function(result) {
 
 	bw <- diff(range(result$dat, na.rm = TRUE)) / 12
 	res <- result$res
-	p <- ggplot(result$dat, aes_string(x=result$sm_var)) +
+	ggplot(result$dat, aes_string(x=result$sm_var)) +
 		geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 		geom_vline(xintercept = result$sm_comp_value, color = 'red',
 		           linetype = 'longdash', size = 1) +
@@ -108,5 +111,4 @@ plots_single_mean <- function(result) {
 		           linetype = 'solid', size = 1) +
 		geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
 		           color = 'black', linetype = 'longdash', size = .5)
-	print(p)
 }
