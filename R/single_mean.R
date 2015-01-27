@@ -30,10 +30,12 @@ single_mean <- function(dataset, sm_var,
 
 	if(exists("values")) {
 		dat <- select_(values[[dataset]], sm_var) %>% na.omit
-	} else if(exists("values", envir = env_shiny)) {
+	} else if(exists("env_shiny") && exists("values", envir = env_shiny)) {
 		dat <- select_(get("values", envir = env_shiny)[[dataset]], sm_var) %>% na.omit
-	} else {
+	} else if(exists("dataset")) {
 		dat <- select_(get(dataset), sm_var) %>% na.omit
+	} else {
+		stop(paste0("Dataset ", dataset, " is not available. Please load a dataset and pass the string with the name of the data.frame to single_mean"))
 	}
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
