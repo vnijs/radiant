@@ -370,22 +370,22 @@ observe({
 		if(is.character(dat)) return(dat)
 
 		if(input$tr_changeType == 'remove') {
-	  	values[[input$dataset]][,colnames(dat)] <- list(NULL)
+	  	r_data[[input$dataset]][,colnames(dat)] <- list(NULL)
 	  } else if(input$tr_changeType == 'type') {
-	  	values[[input$dataset]][,colnames(dat)] <- dat
+	  	r_data[[input$dataset]][,colnames(dat)] <- dat
 		} else if(input$tr_changeType == 'na.remove') {
-	  	values[[input$dataset]] <- dat
+	  	r_data[[input$dataset]] <- dat
 		} else if(input$tr_changeType == 'sub_filter') {
-	  	values[['datasetlist']] %>%  c(paste0(input$dataset,"_filter"),.) -> newdatasetlist
-	  	values[[newdatasetlist[1]]] <- dat
-	  	values[['datasetlist']] <- newdatasetlist
-	    values[[paste0(newdatasetlist[1],"_descr")]] <- paste0(values[[paste0(input$dataset,"_descr")]],
+	  	r_data[['datasetlist']] %>%  c(paste0(input$dataset,"_filter"),.) -> newdatasetlist
+	  	r_data[[newdatasetlist[1]]] <- dat
+	  	r_data[['datasetlist']] <- newdatasetlist
+	    r_data[[paste0(newdatasetlist[1],"_descr")]] <- paste0(r_data[[paste0(input$dataset,"_descr")]],
                                                              "\n\n### Subset\n\nCommand used: `", input$tr_subset,
                                                              "` to filter from dataset: ", input$dataset)
 		} else if(input$tr_changeType == 'rename') {
 			changedata_names(input$tr_columns, colnames(dat))
 		} else if(input$tr_changeType == 'reorder_cols') {
-	  	values[[input$dataset]] <- values[[input$dataset]][,input$tr_reorder_cols]
+	  	r_data[[input$dataset]] <- r_data[[input$dataset]][,input$tr_reorder_cols]
 	  } else {
 			changedata(dat, colnames(dat))
 		}

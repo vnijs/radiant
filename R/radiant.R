@@ -58,9 +58,9 @@ sshh <- function(...) {
 
 # probably not added to global environment because the environment is
 # attached inside a function
-# if(exists("env_shiny")) attach(env_shiny)
+# if(exists("r_env")) attach(r_env)
 # need to detach if used
-# if(exists("env_shiny")) detach(env_shiny)
+# if(exists("r_env")) detach(r_env)
 
 #' Get data for analysis functions exported by Radiant
 #'
@@ -73,23 +73,20 @@ sshh <- function(...) {
 #' @export
 getdata_exp <- function(dataset, vars, na.rm = TRUE) {
 
-  #########################
-  # specify search order?
-  #########################
   clean <- ifelse(na.rm, na.omit, f(...))
-  if(exists(dataset)) {
-    cat("Data loaded from global environment\n")
+  if(exists("r_env")) {
+    cat("Dataset", dataset, "loaded from the radiant environment (r_env)\n")
+    select_(r_env$r_data[[dataset]], .dots = vars) %>% clean
+  } else if(exists(dataset)) {
+    cat("Dataset", dataset, "loaded from global environment\n")
     select_(get(dataset), .dots = vars) %>% clean
-  } else if(exists("values")) {
-    if(values[[dataset]] %>% is.null) {
+  } else if(exists("r_data")) {
+    if(r_data[[dataset]] %>% is.null) {
       paste0("Dataset ", dataset, " is not available. Please load the dataset and put the name in the function call") %>%
         stop %>% return
     }
-    cat("Data loaded from 'values' list\n")
-    select_(values[[dataset]], .dots = vars) %>% clean
-  } else if(exists("env_shiny") && exists("values", envir = env_shiny)) {
-    cat("Data loaded from env_shiny\n")
-    select_(get("values", envir = env_shiny)[[dataset]], .dots = vars) %>% clean
+    cat("Dataset", dataset, "loaded from r_data list\n")
+    select_(r_data[[dataset]], .dots = vars) %>% clean
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and put the name in the function call") %>%
       stop %>% return
@@ -97,19 +94,24 @@ getdata_exp <- function(dataset, vars, na.rm = TRUE) {
 }
 
 # test
+# rm(list = ls())
 # library(dplyr)
-# values <- list()
-# values$mtcars <- mtcars
-# getdata_exp("mtcars", c("cyl","mpg"))
-# values$mtcars[5:20,2] <- NA
-# getdata_exp("mtcars", c("cyl","mpg"))
-# env_shiny <- new.env()
-# env_shiny$values <- values
-# rm(values)
-# getdata_exp("mtcars", c("cyl","mpg"))
-# rm(env_shiny)
-# getdata_exp("mtcars", c("cyl","mpg"))
-# getdata_exp("mtcarsx", c("cyl","mpg"))
+# mtcars_ <- mtcars
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# r_data <- list()
+# r_data$mtcars_ <- mtcars_
+# r_data$mtcars_[5:20,2] <- NA
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# rm(mtcars_)
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# r_env <- new.env()
+# r_env$r_data <- r_data
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# rm(r_data)
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# rm(r_env)
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# getdata_exp("mycars", c("cyl","mpg"))
 # end test
 
 

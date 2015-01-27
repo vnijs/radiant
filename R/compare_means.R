@@ -2,7 +2,7 @@
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in a values list from Radiant
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cm_var1 A numeric variable or factor selected for comparison
 #' @param cm_var2 One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1
 #' @param cm_alternative The alternative hypothesis (two.sided, greater or less)

@@ -41,7 +41,7 @@ observe({
 
 preFactor <- function(dataset, preFactor_vars) {
 	# for main analysis
-	dat <- na.omit( values[[dataset]][,preFactor_vars] )
+	dat <- na.omit( r_data[[dataset]][,preFactor_vars] )
 	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
   cmat <- cor(dat)
@@ -188,7 +188,7 @@ observe({
 fullFactor <- function(dataset, factor_vars, fac_method, fac_number, fac_cutoff,
 			fac_sort, fac_rotation) {
 
-	dat <- na.omit( values[[dataset]][,factor_vars] )
+	dat <- na.omit( r_data[[dataset]][,factor_vars] )
 	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
 	nrFac <- max(1,as.numeric(fac_number), na.rm = TRUE)

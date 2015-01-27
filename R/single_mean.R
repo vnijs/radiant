@@ -2,7 +2,7 @@
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in a values list from Radiant
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sm_var The variable selected for the mean comparison
 #' @param sm_comp_value Population value to compare the sample mean with
 #' @param sm_alternative The alternative hypothesis (two.sided, greater or less)

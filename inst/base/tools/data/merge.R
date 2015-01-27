@@ -2,7 +2,7 @@
 # Merge/Join datasets
 #######################################
 output$uiMergeDataset <- renderUI({
-  datasetlist <- values$datasetlist
+  datasetlist <- r_data$datasetlist
   if(length(datasetlist) < 2) return()
   mdatasets <- datasetlist[-which(input$dataset == datasetlist)]
   selectInput(inputId = "mergeDataset", label = "Merge with:",
@@ -13,7 +13,7 @@ output$uiMerge_vars <- renderUI({
 
   if(is.null(input$mergeDataset)) return()
   vars1 <- varnames()
-  vars2 <- colnames(values[[input$mergeDataset]])
+  vars2 <- colnames(r_data[[input$mergeDataset]])
   vars <- intersect(vars1, vars2)
   if(length(vars) == 0) return()
   vars <- vars1[vars1 %in% vars]  # need variable labels from varnames()
@@ -59,8 +59,8 @@ mergeData <- function(dataset, mergeDataset, merge_vars, merge_type, merge_name)
 
   # gettin the join-type from the string
   tmpjoin <- get(merge_type)
-  values[[merge_name]] <- tmpjoin(values[[dataset]], values[[mergeDataset]], by = merge_vars)
-  values[['datasetlist']] <- unique(c(merge_name,values[['datasetlist']]))
+  r_data[[merge_name]] <- tmpjoin(r_data[[dataset]], r_data[[mergeDataset]], by = merge_vars)
+  r_data[['datasetlist']] <- unique(c(merge_name,r_data[['datasetlist']]))
 }
 
 observe({

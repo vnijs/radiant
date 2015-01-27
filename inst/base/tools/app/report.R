@@ -238,10 +238,10 @@ update_report_fun <- function(cmd) {
 
   if(cmd != "") {
     if(is.null(input$rmd_report)) {
-      if(is.null(state_list$rmd_report)) {
-        state_list$rmd_report <<- cmd
+      if(is.null(r_state$rmd_report)) {
+        r_state$rmd_report <<- cmd
       } else {
-        state_list$rmd_report <<- paste0(state_list$rmd_report,"\n",cmd)
+        r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
       }
     } else {
       updateAceEditor(session, "rmd_report",
@@ -264,11 +264,11 @@ dat <- getdata()
 head(dat)
 
 # to access a specific dataset by name
-dat <- values[['diamonds']]
+dat <- r_data[['diamonds']]
 
 # add a variable to the data used by Radiant
-values[['diamonds']]$log.price <- log(dat$price)
-dat <- values[['diamonds']]
+r_data[['diamonds']]$log.price <- log(dat$price)
+dat <- r_data[['diamonds']]
 
 # show the first observations
 head(dat)

@@ -9,7 +9,7 @@ compare_means(dataset, cm_var1, cm_var2, cm_paired = "independent",
   cm_plots = "bar", cm_jitter = FALSE)
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in a values list from Radiant}
+\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
 \item{cm_var1}{A numeric variable or factor selected for comparison}
 

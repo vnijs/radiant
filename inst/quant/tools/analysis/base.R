@@ -53,7 +53,7 @@ observe({
 singleProp <- function(dataset, sp_var, sp_compValue = 0.5, sp_alternative = 'two.sided',
                        sp_sigLevel = .95) {
 
-  dat <- values[[dataset]][,sp_var]
+  dat <- r_data[[dataset]][,sp_var]
 	lev <- levels(dat)
 	if(length(lev) >2) return("The selected variable has more than two levels.\nTry another variable or a cross-tab.")
 	prop <- sum(dat == rev(lev)[1])
@@ -87,7 +87,6 @@ output$uiCt_var1 <- renderUI({
   vars <- varnames()[isFct]
   if(length(vars) == 0) return()
   selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
-  	# selected = names(vars[vars == values$ct_var1]), multiple = FALSE)
   	selected = state_singlevar("ct_var1",vars), multiple = FALSE)
 })
 
@@ -159,7 +158,7 @@ observe({
 
 crosstab <- function(dataset, ct_var1, ct_var2, ct_expected, ct_deviation, ct_std_residuals, ct_contrib) {
 
-  dat <- na.omit( values[[dataset]][,c(ct_var1,ct_var2)] )
+  dat <- na.omit( r_data[[dataset]][,c(ct_var1,ct_var2)] )
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
@@ -231,7 +230,7 @@ plots_crosstab <- function(result = .crosstab()) {
 
 	cinp <- result$cinp
 
-  dat <- na.omit( values[[cinp$dataset]][,c(cinp$ct_var1,cinp$ct_var2)] )
+  dat <- na.omit( r_data[[cinp$dataset]][,c(cinp$ct_var1,cinp$ct_var2)] )
 	# dat <- na.omit( getdata()[,c(cinp$ct_var1,cinp$ct_var2)] )
 	plots <- list()
 
