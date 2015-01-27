@@ -119,7 +119,7 @@ observe({
         }
       }
       stopApp(cat("\nStopping Radiant. State available as 'state_list' and 'values'.\nReport content was copied to the clipboard.\n"))
-      rm(env_shiny) # removing the reference to the shiny environment
+      # rm(env_shiny) # removing the reference to the shiny environment
     })
   } else {
     stopApp("Stopped Radiant")
