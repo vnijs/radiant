@@ -4,16 +4,6 @@ shinyServer(function(input, output, session) {
 	source('init.R', local = TRUE)
 	source('radiant.R', local = TRUE)
 
-	# if(exists("state_list")) {
-	#   if(length(state_list) == 0) {
-	#     print("Empty list")
-	#   } else {
-	#     print(str(state_list[sort(names(state_list))]))
-	#   }
-	# } else {
-	#   print("no state_list")
-	# }
-
 	# for shiny-server
   if(!running_local) {
 	  for(file in list.files("../../R",
@@ -22,6 +12,12 @@ shinyServer(function(input, output, session) {
 
 	  	source(file, local = TRUE)
 	  }
+	} else {
+		# this works when compare_means is not exported
+		# source("~/gh/radiant_dev/R/compare_means.R", local = TRUE)
+		# this works to get the environment shiny is using
+		env_shiny <<- pryr::where("values")
+		# what about attach?
 	}
 
 	# source data & analysis tools

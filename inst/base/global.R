@@ -4,8 +4,8 @@ if(packageVersion('shiny') > "0.10.2.2")
 # load/attach packages
 pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
           "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
-          "knitr", "rmarkdown", "testthat", "lubridate", "ggplot2", "shiny",
-          "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
+          "knitr", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
+          "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
 
 if(Sys.getenv('SHINY_PORT') == "") {
 
@@ -29,8 +29,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
 
   if (Sys.getenv("HOME") == "/Users/vnijs") {
     # for debugging
-    # options(shiny.trace = TRUE)
     # options(warn=0)
+    # options(shiny.trace = TRUE)
     # options(warn=2)
     # options(shiny.error=recover)
   }

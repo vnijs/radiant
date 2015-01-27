@@ -21,10 +21,7 @@ radiant <- function(app = c("marketing", "quant", "base")) {
   runApp(system.file(app[1], package='radiant'))
 }
 
-# @import car gridExtra GPArotation psych vegan RColorBrewer wordcloud AlgDesign brew reshape2 plyr markdown knitr rmarkdown testthat lubridate ggplot2 shiny magrittr tidyr dplyr ggvis broom shinyAce
-# @importFrom shiny addResourcePath runApp
-
-#' Add *** to a data.frame based on the p.values
+#' Add "***" to a data.frame based on the p.values
 #'
 #' @param p.value Vector of p.values from an analysis
 #'
@@ -40,3 +37,25 @@ sig_stars <- function(p.value) {
   add(1) %>%
   c("",".","*", "**", "***")[.]
 }
+
+#' Avoid warnings and messages. Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+#'
+#' @examples
+#' sshh( library(dplyr) )
+#'
+#' @export
+sshh <- function(...) {
+  suppressWarnings( suppressMessages( ... ) )
+  invisible()
+}
+
+#### test
+# sshh(library(dplyr))
+# detach("package:dplyr")
+# library(dplyr)
+#### end test
+
+
+
+# @import car gridExtra GPArotation psych vegan RColorBrewer wordcloud AlgDesign brew reshape2 plyr markdown knitr rmarkdown testthat lubridate ggplot2 shiny magrittr tidyr dplyr ggvis broom shinyAce
+# @importFrom shiny addResourcePath runApp

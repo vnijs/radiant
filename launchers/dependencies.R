@@ -23,7 +23,7 @@ options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan",
           "RColorBrewer", "wordcloud", "AlgDesign", "brew",
           "reshape2", "plyr", "markdown", "knitr", "rmarkdown",
-          "testthat", "lubridate", "ggplot2", "shiny","magrittr",
+          "testthat", "lubridate", "ggplot2", "pryr", "shiny","magrittr",
           "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
 
 # udpate old-packages

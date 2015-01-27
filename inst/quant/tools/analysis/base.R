@@ -1,165 +1,9 @@
 # alternative hypothesis options
 base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 
-###############################
-# Compare means
-###############################
-output$uiCm_var1 <- renderUI({
-
-	isNumOrFct <- "numeric" == getdata_class() | "integer" == getdata_class() | "factor" == getdata_class()
-  vars <- varnames()[isNumOrFct]
-  if(length(vars) == 0) return()
-  selectInput(inputId = "cm_var1", label = "Select a factor or numerical variable:", choices = vars,
-  	selected = state_singlevar("cm_var1",vars), multiple = FALSE)
-})
-
-output$uiCm_var2 <- renderUI({
-
-  if(is.null(input$cm_var1)) return()
-	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
-  vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
- 	if(input$cm_var1 %in% vars) {
- 		# when cm_var1 is numeric comparison for multiple variables are possible
-	 	vars <- vars[-which(vars == input$cm_var1)]
-	  if(length(vars) == 0) return()
-	  selectInput(inputId = "cm_var2", label = "Variables (select one or more):", choices = vars,
-	  	selected = state_multvar("cm_var2",vars), multiple = TRUE, selectize = FALSE)
-	} else {
- 		# when cm_var1 is not numeric then comparisons are across levels/groups
-	  selectInput(inputId = "cm_var2", label = "Variables (select one):", choices = vars,
-	  	selected = state_singlevar("cm_var2",vars), multiple = FALSE)
-	}
-
-})
-
-cm_paired <- c("independent" = "independent", "paired" = "paired")
-
-output$ui_compareMeans <- renderUI({
-  list(
-  	wellPanel(
-	    uiOutput("uiCm_var1"),
-	    uiOutput("uiCm_var2"),
-	    conditionalPanel(condition = "input.tabs_compareMeans == 'Summary'",
-   		  radioButtons(inputId = "cm_paired", label = "", cm_paired,
-		   		selected = state_init_list("cm_paired", "independent", cm_paired)),
-	      selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:", choices = base_alt, selected = state_init_list("cm_alternative","two.sided", base_alt))
-	    ),
-	    conditionalPanel(condition = "input.tabs_compareMeans == 'Plots'",
-			  checkboxInput('cm_jitter', 'Jitter', value = state_init("cm_jitter",FALSE))
-			)
-		),
-  	helpAndReport('Compare means','compareMeans',inclMD("../quant/tools/help/compareMeans.md"))
-  )
-})
-
-output$compareMeans <- renderUI({
-  statTabPanel("Base","Compare means",".compareMeans", "compareMeans")
-})
-
-.compareMeans <- reactive({
-
-	# if(c(input$cm_var1, input$cm_var2) %>% not_available)
-  if(input$cm_var2 %>% not_available)
-    return("This analysis requires a variables of type factor, numeric, or interval.\nIf none are available please select another dataset")
-
-	compareMeans(input$dataset, input$cm_var1, input$cm_var2, input$cm_paired,
-	             input$cm_alternative, input$cm_jitter)
-})
-
-observe({
-  if(is.null(input$compareMeansReport) || input$compareMeansReport == 0) return()
-  isolate({
-		inp <- list(input$dataset, input$cm_var1, input$cm_var2, input$cm_paired,
-		            input$cm_alternative, input$cm_jitter)
-		updateReport(inp,"compareMeans")
-  })
-})
-
-compareMeans <- function(dataset, var1, var2,
-                         cm_paired = "independent",
-                         cm_alternative = "two.sided",
-                         cm_jitter = FALSE) {
-
-	vars <- c(var1,var2)
-	if(exists("values")) {
-		dat <- select_(values[[dataset]], .dots = vars) %>% na.omit
-	} else {
-		dat <- select_(get(dataset), .dots = vars) %>% na.omit
-	}
-
-	if(dat[,var1] %>% is.factor) {
-		colnames(dat) <- c("variable","values")
-	} else {
-		dat %<>% gather_("variable", "values", c(var1,var2))
-	}
-
-	pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
-	                p.adj = "bonf", paired = cm_paired == "paired",
-	                alternative = cm_alternative) %>% tidy -> res
-
-	vars <- paste0(vars, collapse=", ")
-  environment() %>% as.list
-
-}
-
-summary_compareMeans <- function(result = .compareMeans()) {
-
-	cat("Pairwise comparisons (bonferroni adjustment)\n")
-	cat("Data     :", result$dataset, "\n")
-	cat("Variables:", result$vars, "\n")
-	cat("Samples  :", result$cm_paired, "\n\n")
-
-	result$dat %>%
-		group_by(variable) %>%
-    summarise_each(funs(mean, n = length(.), sd)) %>%
-    set_colnames(c("","mean","n","sd")) -> dat
-
-  dat[,-1] %<>% round(3)
-  print(dat %>% as.data.frame, row.names = FALSE)
-	cat("\n")
-
-  hyp_symbol <- c("two.sided" = "not equal to",
-                  "less" = "<",
-                  "greater" = ">")[result$cm_alternative]
-
-	mod <- result$res
-	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
-	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
-	mod <- mod[,c("Alt. hyp.", "Null hyp.", "p.value")]
-	mod$` ` <- sig_stars(mod$p.value)
-	mod$p.value <- round(mod$p.value,3)
-	mod$p.value[ mod$p.value < .001 ] <- "< .001"
-	print(mod, row.names = FALSE, right = FALSE)
-	cat("\nSignif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1\n")
-}
-
-# Generate output for the plots tab
-plots_compareMeans <- function(result = .compareMeans()) {
-
-	dat <- result$dat
-	var1 <- colnames(dat)[1]
-	var2 <- colnames(dat)[-1]
-
-	p <- ggplot(dat, aes_string(x=var1, y=var2,
-	            fill=var1)) + geom_boxplot(alpha=.7)
-	p
-	if(result$cm_jitter) p <- p + geom_jitter()
-	plots <- list()
-	plots[["Boxplot"]] <- p
-	plots[["Density"]] <- ggplot(dat, aes_string(x=var2, fill=var1)) +
-													geom_density(alpha=.7)
-
-	do.call(grid.arrange, c(plots, list(ncol = 1)))
-}
-
-###############################
+################################
 # Single proportion
 ###############################
-
-# getting back to the page in progress when developing
-# observe( updateTabsetPanel(session, "nav_radiant", selected = "Single proportion") )
-
 output$uiSp_var <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
@@ -248,15 +92,14 @@ output$uiCt_var1 <- renderUI({
 })
 
 output$uiCt_var2 <- renderUI({
-	if(is.null(input$ct_var1)) return()
+	if(input$ct_var1 %>% not_available) return()
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
 	# if(!input$ct_var1 %in% vars) return()
-	if(is.null(inChecker(input$ct_var1))) return()
+	# if(is.null(inChecker(input$ct_var1))) return()
 	vars <- vars[-which(vars == input$ct_var1)]
   if(length(vars) == 0) return()
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
-  	# selected = names(vars[vars == values$ct_var2]), multiple = FALSE)
   	selected = state_singlevar("ct_var2",vars), multiple = FALSE)
 })
 
@@ -296,8 +139,9 @@ output$crosstab <- renderUI({
 
 .crosstab <- reactive({
 	ret_text <- "This analysis requires variables of type factor.\nPlease select another dataset."
- 	if(is.null(input$ct_var1) || is.null(input$ct_var2)) return(ret_text)
-	if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
+ # 	if(is.null(input$ct_var1) || is.null(input$ct_var2)) return(ret_text)
+	# if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
+	if(input$ct_var2 %>% not_available) return(ret_text)
 	crosstab(input$dataset, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
 		input$ct_std_residuals, input$ct_contrib)
 })
@@ -319,7 +163,8 @@ crosstab <- function(dataset, ct_var1, ct_var2, ct_expected, ct_deviation, ct_st
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
-	cst <- sshh(chisq.test(tab, correct = FALSE))
+	# cst <- sshh(chisq.test(tab, correct = FALSE))
+	cst <- chisq.test(tab, correct = FALSE)
 
 	# adding the % deviation table
 	o <- cst$observed
