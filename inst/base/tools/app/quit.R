@@ -44,48 +44,48 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
-  query <- parseQueryString(session$clientData$url_search)
+  # query <- parseQueryString(session$clientData$url_search)
 
-  # Return a string with key-value pairs
-  print(query)
-  print(str(query))
-#   paste(names(query), query, sep = "=", collapse=", ") %>% cat
+  # # Return a string with key-value pairs
+  # print(query)
+  # print(str(query))
+  # # paste(names(query), query, sep = "=", collapse=", ") %>% cat
 
-  cat("\n\n")
+  # cat("\n\n")
 
 
-  cat("Env?\n")
-  req <- ls(env=session$request)
-  for(i in req)
-    print(get(i, envir=session$request))
+  # cat("Env?\n")
+  # req <- ls(env=session$request)
+  # for(i in req)
+  #   print(get(i, envir=session$request))
 
-  cat("Env?\n")
+  # cat("Env?\n")
 
-  cdata <- session$clientData
-  # cdata <- session$request
+  # cdata <- session$clientData
+  # # cdata <- session$request
 
-  # Values from cdata returned as text
-  cnames <- names(cdata)
+  # # Values from cdata returned as text
+  # cnames <- names(cdata)
 
-  allvalues <- lapply(cnames, function(name) {
-    paste(name, cdata[[name]], sep=" = ")
-  })
-  paste(allvalues, collapse = "\n") %>% cat
+  # allvalues <- lapply(cnames, function(name) {
+  #   paste(name, cdata[[name]], sep=" = ")
+  # })
+  # paste(allvalues, collapse = "\n") %>% cat
 
-  paste(sep = "",
-    "\nprotocol: ", session$clientData$url_protocol, "\n",
-    "hostname: ", session$clientData$url_hostname, "\n",
-    "pathname: ", session$clientData$url_pathname, "\n",
-    "port: ",     session$clientData$url_port,     "\n",
-    "search: ",   session$clientData$url_search,   "\n",
-    "IP address XFF: ", session$request$HTTP_X_FORWARDED_FOR,   "\n",
-    "IP address: ", session$request$REMOTE_ADDR,   "\n"
-  ) %>% cat
-  print("ip next")
-  print(ip)
-  print("ip prev")
-  print(ls())
-  print(ls(envir = .GlobalEnv))
+  # paste(sep = "",
+  #   "\nprotocol: ", session$clientData$url_protocol, "\n",
+  #   "hostname: ", session$clientData$url_hostname, "\n",
+  #   "pathname: ", session$clientData$url_pathname, "\n",
+  #   "port: ",     session$clientData$url_port,     "\n",
+  #   "search: ",   session$clientData$url_search,   "\n",
+  #   "IP address XFF: ", session$request$HTTP_X_FORWARDED_FOR,   "\n",
+  #   "IP address: ", session$request$REMOTE_ADDR,   "\n"
+  # ) %>% cat
+  # print("ip next")
+  # print(ip)
+  # print("ip prev")
+  # print(ls())
+  # print(ls(envir = .GlobalEnv))
   isolate({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
@@ -119,6 +119,7 @@ observe({
         }
       }
       stopApp(cat("\nStopping Radiant. State available as 'state_list' and 'values'.\nReport content was copied to the clipboard.\n"))
+      rm(env_shiny) # removing the reference to the shiny environment
     })
   } else {
     stopApp("Stopped Radiant")

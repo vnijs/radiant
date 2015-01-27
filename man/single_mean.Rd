@@ -4,7 +4,7 @@
 \alias{single_mean}
 \title{Compare a sample mean to a population mean}
 \usage{
-single_mean(dataset, sm_var, dataset_filter = "", sm_comp_value = 0,
+single_mean(dataset, sm_var, sm_comp_value = 0,
   sm_alternative = "two.sided", sm_sig_level = 0.95)
 }
 \arguments{
@@ -17,8 +17,6 @@ single_mean(dataset, sm_var, dataset_filter = "", sm_comp_value = 0,
 \item{sm_alternative}{The alternative hypothesis (two.sided, greater or less)}
 
 \item{sm_sig_level}{Span of the confidence interval}
-
-\item{dataset_file}{Feature not yet implemented}
 }
 \value{
 A list with all variables defined in the function
