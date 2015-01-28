@@ -8,13 +8,13 @@
 #' @param sm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sm_sig_level Span of the confidence interval
 #'
-#' @return A list with all variables defined in the function
+#' @return A list with all variables defined in the function as an object of class single_mean
 #'
 #' @examples
 #' single_mean("diamonds","price")
 #'
-#' @seealso \code{\link{summary_single_mean}} to print results
-#' @seealso \code{\link{plots_single_mean}} to plot results
+#' @seealso \code{\link{summary.single_mean}} to summarize results
+#' @seealso \code{\link{plots.single_mean}} to plot results
 #'
 #' @export
 single_mean <- function(dataset, sm_var,
@@ -27,10 +27,10 @@ single_mean <- function(dataset, sm_var,
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res
 
-  environment() %>% as.list
+  environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
 
-#' Summarize results from the single_mean function
+#' Summarize results from the single_mean function. This is a method of class single_mean and can be called as summary or summary.single_mean
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
@@ -38,13 +38,13 @@ single_mean <- function(dataset, sm_var,
 #'
 #' @examples
 #' result <- single_mean("diamonds","price")
-#' summary_single_mean(result)
+#' summary(result)
 #'
-#' @seealso \code{\link{single_mean}} to generate the result
-#' @seealso \code{\link{plots_single_mean}} to plot results
+#' @seealso \code{\link{single_mean}} to generate the results
+#' @seealso \code{\link{plots.single_mean}} to plot results
 #'
 #' @export
-summary_single_mean <- function(result) {
+summary.single_mean <- function(result) {
 
 	cat("Data     :", result$dataset, "\n")
 	# cat("Filter   :", result$xtra$filter, "\n")
@@ -73,7 +73,7 @@ summary_single_mean <- function(result) {
 	print(res, row.names = FALSE)
 }
 
-#' Plot results from the single_mean function
+#' Plot results from the single_mean function. This is a method of class single_mean and can be called as plot or plot.single_mean
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
@@ -81,13 +81,13 @@ summary_single_mean <- function(result) {
 #'
 #' @examples
 #' result <- single_mean("diamonds","price")
-#' plots_single_mean(result)
+#' plot(result)
 #'
 #' @seealso \code{\link{single_mean}} to generate the result
-#' @seealso \code{\link{summary_single_mean}} to print results
+#' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
 #' @export
-plots_single_mean <- function(result) {
+plot.single_mean <- function(result) {
 
 	bw <- diff(range(result$dat, na.rm = TRUE)) / 12
 	res <- result$res

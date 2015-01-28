@@ -14,6 +14,17 @@ plots_pmap(result)
 savePmapFactorScores(result)
 ```
 
+# library(pryr)
+# environmentName(environment())
+# env.profile(environment())
+# r_env
+# object_size(r_env)
+# r_env_copy <- r_env
+# object_size(r_env_copy)
+# object_size(r_env_copy, r_env)
+# r_env$values
+# rm(r_env_copy)
+# r_env
 
 
 

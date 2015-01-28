@@ -11,13 +11,13 @@
 #' @param cm_plots One or more plots of mean values (bar, box, or density plot)
 #' @param cm_jitter Add jitter to data points for a box plot
 #'
-#' @return A list with all variables defined in the function
+#' @return A list with all variables defined in the function as an object of class compare_means
 #'
 #' @examples
 #' compare_means("diamonds","price",c("carats","table"))
 #'
-#' @seealso \code{\link{summary_compare_means}} to print results
-#' @seealso \code{\link{plots_compare_means}} to plot results
+#' @seealso \code{\link{summary.compare_means}} to summarize results
+#' @seealso \code{\link{plots.compare_means}} to plot results
 #'
 #' @export
 compare_means <- function(dataset, cm_var1, cm_var2,
@@ -59,22 +59,22 @@ compare_means <- function(dataset, cm_var1, cm_var2,
     rename_(.dots = setNames("variable", " ")) -> dat_summary
 
 	vars <- paste0(vars, collapse=", ")
-  environment() %>% as.list
+  environment() %>% as.list %>% set_class(c("compare_means",class(.)))
 }
 
-#' Summarize output from compare_means for two or more variables
+#' Summarize method for output from compare_means
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @examples
 #' result <- compare_means("diamonds","price",c("carats","table"))
-#' summary_compare_means(result)
+#' summary(result)
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
-#' @seealso \code{\link{plots_compare_means}} to plot results
+#' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-summary_compare_means <- function(result) {
+summary.compare_means <- function(result) {
 
   if(result$cm_adjust == "bonf") {
     cat("Pairwise comparisons (bonferroni adjustment)\n")
@@ -105,19 +105,19 @@ summary_compare_means <- function(result) {
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 
-#' Plot output from compare_means for two or more variables
+#' Plot results from the compare_means function. This is a method of class compare_means and can be called as plot or plot.compare_means
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @examples
 #' result <- compare_means("diamonds","price",c("carats","table"))
-#' plots_compare_means(result)
+#' plot(result)
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
-#' @seealso \code{\link{summary_compare_means}} to plot results
+#' @seealso \code{\link{summary.compare_means}} to summarize results
 #'
 #' @export
-plots_compare_means <- function(result) {
+plot.compare_means <- function(result) {
 
 	dat <- result$dat
 	var1 <- colnames(dat)[1]

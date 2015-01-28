@@ -49,19 +49,19 @@ output$ui_single_mean <- renderUI({
 output$single_mean <- renderUI({
 
 		register_print_output("summary_single_mean", ".single_mean")
-		register_plot_output("plots_single_mean", ".single_mean")
+		register_plot_output("plot_single_mean", ".single_mean")
 
 		# two separate tabs
 		sm_output_panels <- tabsetPanel(
 	    id = "tabs_single_mean",
 	    tabPanel("Summary", verbatimTextOutput("summary_single_mean")),
-	    tabPanel("Plots", plotOutput("plots_single_mean", height = "100%"))
+	    tabPanel("Plot", plotOutput("plot_single_mean", height = "100%"))
 	  )
 
 		# one output with components stacked
 		# sm_output_panels <- tagList(
 	  #    tabPanel("Summary", verbatimTextOutput("summary_single_mean")),
-	  #    tabPanel("Plots", plotOutput("plots_single_mean", height = "100%"))
+	  #    tabPanel("Plot", plotOutput("plot_single_mean", height = "100%"))
 	  # )
 
 		statTabPanel2(menu = "Base",
@@ -88,6 +88,6 @@ observe({
   if(input$single_mean_report %>% not_pressed) return()
   isolate({
 		update_report(inp = sm_inputs(), fun_name = "single_mean",
-		              outputs = c("summary_single_mean", "plots_single_mean"))
+		              outputs = c("summary", "plot"))
   })
 })
