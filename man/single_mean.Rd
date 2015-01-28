@@ -19,7 +19,7 @@ single_mean(dataset, sm_var, sm_comp_value = 0,
 \item{sm_sig_level}{Span of the confidence interval}
 }
 \value{
-A list with all variables defined in the function
+A list with all variables defined in the function as an object of class single_mean
 }
 \description{
 Compare a sample mean to a population mean
@@ -31,8 +31,8 @@ See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an
 single_mean("diamonds","price")
 }
 \seealso{
-\code{\link{summary_single_mean}} to print results
+\code{\link{summary.single_mean}} to summarize results
 
-\code{\link{plots_single_mean}} to plot results
+\code{\link{plots.single_mean}} to plot results
 }
 

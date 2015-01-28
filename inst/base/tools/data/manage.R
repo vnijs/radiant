@@ -127,7 +127,7 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
 # loadUserData(fname, fname, "rda")
 # r_data
 
-# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/example_data/RadiantState.rda")
+# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/examples/RadiantState.rda")
 # loadUserData(fname, fname, "rda")
 # r_data[['datasetlist']][1]
 

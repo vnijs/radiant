@@ -74,7 +74,7 @@ output$ui_compare_means <- renderUI({
           selected = state_init_list("cm_adjust", cm_args$cm_adjust, cm_adjust),
           inline = TRUE)
       ),
-      conditionalPanel(condition = "input.tabs_compare_means == 'Plots'",
+      conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
         selectizeInput(inputId = "cm_plots", label = "Select plots:",
                 choices = cm_plots,
                 selected = state_init_list("cm_plots", cm_args$cm_plots, cm_plots),
@@ -92,21 +92,21 @@ output$ui_compare_means <- renderUI({
 
 cm_plot_height <- function() {
   result <- .compare_means()
-  ifelse(class(result) != 'character', result$plot_height, 650)
+  ifelse(!"character" %in% class(result), result$plot_height, 650)
 }
 
 # output is called from the main radiant ui.R
 output$compare_means <- renderUI({
 
     register_print_output("summary_compare_means", ".compare_means", )
-    register_plot_output("plots_compare_means", ".compare_means",
+    register_plot_output("plot_compare_means", ".compare_means",
                          height_fun = "cm_plot_height")
 
     # two separate tabs
     cm_output_panels <- tabsetPanel(
       id = "tabs_compare_means",
       tabPanel("Summary", verbatimTextOutput("summary_compare_means")),
-      tabPanel("Plots", plotOutput("plots_compare_means", height = "100%"))
+      tabPanel("Plot", plotOutput("plot_compare_means", height = "100%"))
     )
 
     statTabPanel2(menu = "Base",
@@ -133,7 +133,7 @@ observe({
   if(input$compare_means_report %>% not_pressed) return()
   isolate({
     update_report(inp = cm_inputs(), fun_name = "compare_means",
-                  outputs = c("summary_compare_means", "plots_compare_means"),
+                  outputs = c("summary", "plot"),
                   fig.height = round(7 * cm_plot_height()/650))
   })
 })

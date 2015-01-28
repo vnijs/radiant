@@ -259,7 +259,8 @@ register_print_output <- function(fun_name, rfun_name, out_name = fun_name) {
 
     # when no analysis was conducted (e.g., no variables selected)
     if(is.character(result)) return(cat(result,"\n"))
-    get(fun_name)(result)
+    # get(fun_name)(result)
+    summary(result)
   })
 }
 
@@ -283,7 +284,8 @@ register_plot_output <- function(fun_name, rfun_name,
              axes = FALSE, xlab = "", ylab = ""))
 
     withProgress(message = 'Making plot', value = 0, {
-      get(fun_name)(result)
+      # get(fun_name)(result)
+      plot(result)
     })
   }, width=get(width_fun), height=get(height_fun))
 
