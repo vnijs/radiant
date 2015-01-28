@@ -184,9 +184,11 @@ updateReport <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = ""
 # update_report(inp = base_sm_list, fun_name = "single_mean", pre = "",
 #                outputs = c(), figs = FALSE)
 
+  # outputs = c(paste0("summary_",fun_name), paste0("plots_",fun_name)),
+
 # updating the report when called
 update_report <- function(inp, fun_name, pre_cmd = "result <- ",
-  outputs = c(paste0("summary_",fun_name), paste0("plots_",fun_name)),
+  outputs = c("summary", "plot"),
   figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
 
   cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)),

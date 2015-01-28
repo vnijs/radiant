@@ -20,8 +20,8 @@ If you close Radiant using `Quit > Quit` after launching it from Rstudio or Rgui
 
 ```r
 result <- single_mean("diamonds","price")
-summary_single_mean(result)
-plots_single_mean(result)
+summary(result)
+plot(result)
 ```
 
 You can call functions for visualization and analysis in your R-code and access basic help from the console using:
@@ -30,11 +30,11 @@ You can call functions for visualization and analysis in your R-code and access 
 ?single_mean
 ```
 
-As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/example_data/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Note that this feature is currently available for the `single_mean` and `compare_means` functions.
+As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Note that this feature is currently available for the `single_mean` and `compare_means` functions.
 
 ## Saving and loading state
 
-To save the your analyses you can save the state of the app (Data > Manage). You can open the state file at a later time to continue where you left off. As a simple example, go to the Data > View and Data > Visualize tabs to see what they look like by default. Then load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/example_data/RadiantState.rda?raw=true) in the `example_data` folder and go back the View and Visualize tabs.
+To save the your analyses you can save the state of the app (Data > Manage). You can open the state file at a later time to continue where you left off. As a simple example, go to the Data > View and Data > Visualize tabs to see what they look like by default. Then load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.rda?raw=true) in the `examples` folder and go back the View and Visualize tabs.
 
 A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit > Reset to return to a clean/new state.
 
@@ -93,7 +93,7 @@ Documentation and tutorials for Radiant are also available at <http://mostly-har
 
 ### Radiant code
 
-Version 0.1.5 (1/27/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+Version 0.1.6 (1/28/2015)  Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 `r sprintf("Package dependencies: %s", paste0(pkgs, collapse = ", "))`
 

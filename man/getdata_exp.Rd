@@ -4,7 +4,7 @@
 \alias{getdata_exp}
 \title{Get data for analysis functions exported by Radiant}
 \usage{
-getdata_exp(dataset, vars, na.rm = TRUE)
+getdata_exp(dataset, vars, na.rm = TRUE, filt = NULL)
 }
 \arguments{
 \item{dataset}{Name of the data.frame}
@@ -12,6 +12,8 @@ getdata_exp(dataset, vars, na.rm = TRUE)
 \item{vars}{Variables to extract from the data.frame}
 
 \item{na.rm}{Remove rows with missing values (default is TRUE)}
+
+\item{filt}{Filter to apply to the data (default is NULL)}
 }
 \value{
 Data.frame with the specified columns selected
