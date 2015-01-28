@@ -1,6 +1,12 @@
 if(packageVersion('shiny') > "0.10.2.2")
   warning("Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11.\nCopy-and-paste the code below to install the required packages.\n\n\ndetach('package:shiny', unload=TRUE)\nremove.packages('shiny')\noptions(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\ninstall.packages(new.packages(), dependencies = TRUE)")
 
+# for debugging
+# options(warn=0)
+# options(shiny.trace = TRUE)
+# options(warn=2)
+# options(shiny.error=recover)
+
 # load/attach packages
 pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
           "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
@@ -22,18 +28,10 @@ if(Sys.getenv('SHINY_PORT') == "") {
     Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
   }
 
-
   # if radiant package was not loaded load dependencies
-  if(running_local && (!"package:radiant" %in% search()))
+  if(!"package:radiant" %in% search())
     source("../base/dependencies.R", local = TRUE)
 
-  if (Sys.getenv("HOME") == "/Users/vnijs") {
-    # for debugging
-    # options(warn=0)
-    # options(shiny.trace = TRUE)
-    # options(warn=2)
-    # options(shiny.error=recover)
-  }
 } else {
 
   running_local <- FALSE

@@ -5,7 +5,7 @@ shinyServer(function(input, output, session) {
 	source('../base/radiant.R', local = TRUE)
 
   # for shiny-server
-  if(!running_local) {
+  if(!"package:radiant" %in% search()) {
     for(file in list.files("../../R",
         pattern="\\.(r|R)$",
         full.names = TRUE)) {
