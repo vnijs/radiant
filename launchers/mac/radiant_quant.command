@@ -4,4 +4,5 @@ if(!require(radiant)) {
 	install.packages('radiant')
 }
 
+require(radiant)
 shiny::runApp(system.file('quant', package='radiant'), port = 4403, launch.browser = TRUE)

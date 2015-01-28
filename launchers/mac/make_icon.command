@@ -1,5 +1,3 @@
-cd ~/Desktop
-
 sips -i radiant_green.png
 
 # Extract the icon to its own resource file:
