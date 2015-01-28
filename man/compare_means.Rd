@@ -26,7 +26,7 @@ compare_means(dataset, cm_var1, cm_var2, cm_paired = "independent",
 \item{cm_jitter}{Add jitter to data points for a box plot}
 }
 \value{
-A list with all variables defined in the function
+A list with all variables defined in the function as an object of class compare_means
 }
 \description{
 Compare means for two or more variables
@@ -38,8 +38,8 @@ See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for 
 compare_means("diamonds","price",c("carats","table"))
 }
 \seealso{
-\code{\link{summary_compare_means}} to print results
+\code{\link{summary.compare_means}} to summarize results
 
-\code{\link{plots_compare_means}} to plot results
+\code{\link{plots.compare_means}} to plot results
 }
 
