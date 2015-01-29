@@ -186,10 +186,7 @@ img {
 
 
 <hr />
-<div id="radiant-business-analytics-using-r-and-shiny" class="section level2">
-<h2>Radiant: Business analytics using R and Shiny</h2>
 <p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis and classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
-</div>
 <div id="key-features" class="section level2">
 <h2>Key features</h2>
 <ul>
@@ -197,73 +194,66 @@ img {
 <li>Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes)</li>
 <li>Context: Data and examples focus on business applications</li>
 <li>Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a>. You will not lose your work if you accidentally leave the radiant page in your browser</li>
-<li>Cross-platform: It runs in a browser</li>
+<li>Cross-platform: It runs in a browser (e.g., Chrome or Firefow). No data will leave your computer when Radiant is running on your computer. When you have installed the app you can even run it without an internet connection.</li>
 </ul>
 </div>
 <div id="goal" class="section level2">
 <h2>Goal</h2>
-<p>Provide access the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a> (see <code>R &gt; Report</code>). Reproducible research, with no programming required. Most pages have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press <code>Update</code> to render the report to HTML.</p>
-<p>In the near future it will be possible to use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an rmarkdown document (<em>work in progress</em>).</p>
+<p>Provide access to the power of R for business and marketing analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a> (see <code>R &gt; Report</code>). Reproducible research, with no programming required. Most pages have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press <code>Update</code> to render the report to HTML.</p>
+<p>You can also use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an rmarkdown document (<em>work in progress</em>).</p>
 <p>If you close Radiant using <code>Quit &gt; Quit</code> after launching it from Rstudio or Rgui you can can paste the commands below into the command console to get the same output as in the browser.</p>
 <pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;)
-summary_single_mean(result)
-plots_single_mean(result)</code></pre>
+summary(result)
+plot(result)</code></pre>
 <p>You can call functions for visualization and analysis in your R-code and access basic help from the console using:</p>
 <pre class="r"><code>?single_mean</code></pre>
-<p>As an example, you can compile the <a href="https://github.com/mostly-harmless/radiant/blob/master/example_data/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Note that this feature is currently available for the <code>single_mean</code> and <code>compare_means</code> functions.</p>
+<p>As an example, you can compile the <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/radiant_rcode.r?raw=true"><code>radiant_rcode.R</code></a> for a more extensive example. Note that this feature is a <em>work in progress</em> and will be expanded over time. It is currently available for the <code>single_mean</code> and <code>compare_means</code> functions.</p>
+</div>
+<div id="documentation" class="section level2">
+<h2>Documentation</h2>
+<p>Documentation and tutorials for Radiant are available at <a href="http://mostly-harmless.github.io/radiant/">http://mostly-harmless.github.io/radiant/</a> and through the help files in the Radiant interface (see the <code>?</code> icon on most pages and the Help menu in the navbar).</p>
+<p>To help you get started you can also take a look at this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
+</div>
+<div id="how-to-install-radiant" class="section level2">
+<h2>How-to install Radiant</h2>
+<ul>
+<li>Required: <a href="https://github.com/mostly-harmless/radiant_miniCRAN/tree/gh-pages/R-3.1.2">R</a>, version 3.1.2</li>
+<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
+<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
+</ul>
+<p>You can install the <code>Radiant</code> package and all package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
+<pre class="r"><code>options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
+install.packages(&#39;radiant&#39;)</code></pre>
+<p>Once all packages are installed use the commands below to start the app:</p>
+<pre class="r"><code>library(&#39;radiant&#39;)
+radiant(&#39;marketing&#39;)</code></pre>
+<p><code>marketing</code> is the default app so you could also use the command <code>radiant()</code> to launch it. To start the <code>quant</code> app use:</p>
+<pre class="r"><code>library(&#39;radiant&#39;)
+radiant(&#39;quant&#39;)</code></pre>
+<p>See also the <a href="https://www.youtube.com/">installing Radiant</a> video.</p>
+</div>
+<div id="creating-a-desktop-launcher-work-in-progress" class="section level2">
+<h2>Creating a desktop launcher (<em>work in progress</em>)</h2>
+<p>You can also put a launcher on your Desktop to make it easy to start Radiant. For a mac you can download the <a href="https://github.com/mostly-harmless/radiant/blob/master/launchers/mac/radiant_marketing.command.zip">marketing</a> or <a href="https://github.com/mostly-harmless/radiant/blob/master/launchers/mac/radiant_quant.command.zip">quant</a> launcher to your Desktop and upzip the file. Double-click the (red) <code>radiant_marketing.command</code> icon to launch Radiant in your default browser.</p>
+<p>On Windows you can create a launcher for Radiant on your Desktop by typing <code>win_launcher()</code> in the R-console. The function should create a new file called <code>radiant.bat</code> on your Desktop. Double click the .bat file and Radiant should start in your default browser. Note that the first time you start the Radiant several required packages will be installed, and this may take a few minute</p>
+<p>When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on <code>Quit</code> in the Navigation bar and then click the <code>Quit</code> button on the left of the screen. The Radiant process will stop and the browser window should close or gray-out.</p>
 </div>
 <div id="saving-and-loading-state" class="section level2">
 <h2>Saving and loading state</h2>
-<p>To save the your analyses you can save the state of the app (Data &gt; Manage). You can open the state file at a later time to continue where you left off. As a simple example, go to the Data &gt; View and Data &gt; Visualize tabs to see what they look like by default. Then load the state file <a href="https://github.com/mostly-harmless/radiant/blob/master/example_data/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a> in the <code>example_data</code> folder and go back the View and Visualize tabs.</p>
+<p>To save your analyses you can save the state of the app to a state file (Data &gt; Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that would like to replicate your analyses. As an example, load the state_file <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a> in the <code>examples</code> folder. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the changes. There is also a report in <code>R &gt; Report</code> created using the Radiant interface. The html file <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
 <p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit &gt; Reset to return to a clean/new state.</p>
 <p>Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit &gt; Quit to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists (i.e., <code>r_data</code> and <code>r_state</code>) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file in Rstudio it will be used when you start Radiant to recreate a previous state.</p>
-<p><strong>Technical note</strong>: The way loading state works in the app is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$sm_comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
+<p>See <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/radiant_rcode.r?raw=true"><code>radiant_rcode.R</code></a> for an example.</p>
+<p><strong>Technical note</strong>: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$sm_comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
 <pre class="r"><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$sm_comp_value))</code></pre>
 </div>
 <div id="source-code" class="section level2">
 <h2>Source code</h2>
-<p>Three (related) apps are included in the inst directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools.</p>
-<div id="documentation" class="section level3">
-<h3>Documentation</h3>
-<p>Documentation and tutorials for Radiant are available at <a href="http://mostly-harmless.github.io/radiant/">http://mostly-harmless.github.io/radiant/</a></p>
-</div>
-<div id="how-to-install-radiant" class="section level3">
-<h3>How-to install Radiant</h3>
-<ul>
-<li>Required: <a href="https://github.com/mostly-harmless/radiant_miniCRAN/tree/gh-pages/R-3.1.2">R</a>, version 3.1.2</li>
-<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox)</li>
-<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
-</ul>
-<p>You can install the <code>Radiant</code> package and all package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
-<pre class="r"><code>options(repos = c(XRAN = &quot;http://mostly-harmless.github.io/radiant_miniCRAN/&quot;))
-install.packages(&quot;radiant&quot;)</code></pre>
-<p>Once all packages are installed use the commands below to start the app:</p>
-<pre class="r"><code>library(&#39;radiant&#39;)
-radiant()</code></pre>
-<p>To start the quant app use:</p>
-<pre class="r"><code>library(&#39;radiant&#39;)
-radiant(&#39;quant&#39;)</code></pre>
-<!--
-#### Creating a desktop launcher
-
-You can also create a launcher on your Desktop to make it easy to start Radiant. Go to `launchers/quant` or `lauchers/marketing`
-
-On Windows you create a launcher for Radiant on your Desktop by double-clicking the make\_win.bat file. Find the new file on your Desktop (i.e., radiant\_quant.bat or radiant_marketing.bat). Double click the .bat file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute
-
-For Mac, double-click the make\_mac.command file to create a launcher for Radiant on your Desktop. Find the new file on your Desktop (i.e., radiant\_quant.command or radiant_marketing.command). Double click the .command file and Radiant will start. The first time you start the app a number of required packages will be installed, and this may take a few minute
-
-When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button. The Radiant process will stop and the browser window will close.
--->
-
-</div>
-</div>
-<div id="help" class="section level2">
-<h2>Help</h2>
-<p>There are numerous help files linked in the app. See for example the <code>Help</code> menu at <a href="http://vnijs.rady.ucsd.edu:3838/marketing">http://vnijs.rady.ucsd.edu:3838/marketing</a>. To help you get started using Radiant you can also take a look at this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
+<p>Three (related) apps are included in the inst/ directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools. The <code>quant</code> app focusses on basic quantitative analysis (e.g., comparing means, regression, etc.). The <code>marketing</code> app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc.</p>
 </div>
 <div id="online" class="section level2">
 <h2>Online</h2>
-<p>To tryout the app online go to <a href="http://vnijs.rady.ucsd.edu:3838/marketing">http://vnijs.rady.ucsd.edu:3838/marketing</a>.</p>
+<p>If you really don’t want to install Radiant on your computer (yet) you can tryout the app online at <a href="http://vnijs.rady.ucsd.edu:3838/marketing">http://vnijs.rady.ucsd.edu:3838/marketing</a>. Note that this is a test server only!</p>
 </div>
 <div id="license" class="section level2">
 <h2>License</h2>
