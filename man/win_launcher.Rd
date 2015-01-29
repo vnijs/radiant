@@ -4,7 +4,13 @@
 \alias{win_launcher}
 \title{Make a .bat launcher for Windows on the desktop}
 \usage{
-win_launcher()
+win_launcher(app = c("marketing", "quant", "base"))
+}
+\arguments{
+\item{app}{App to install ('marketing', 'quant', or 'base'). Default is the 'marketing'}
+}
+\value{
+On a windows machine a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the Radiant app selected
 }
 \description{
 Make a .bat launcher for Windows on the desktop

@@ -757,7 +757,7 @@ vif_regression <- function(result = .regression()) {
 
 test_regression <- function(result = .regression()) {
 	dat <- r_data[[result$dataset]]
-	if(result$reg_standardize) dat <- data.frame(lapply(dat,reg_standardize))
+	if(result$reg_standardize) dat <- data.frame(lapply(dat,reg_standardize_fun))
 
 	sub_formula <- ". ~ 1"
 	vars <- result$reg_var2
