@@ -107,10 +107,10 @@ getdata <- reactive({
 })
 
 getdata_class <- reactive({
-  r_data[[input$dataset]][1,] %>% getdata_class_fun
+  r_data[[input$dataset]][1,,drop = FALSE] %>% getdata_class_fun
 })
 
-getdata_class_fun <- function(dat = r_data[[input$dataset]][1,]) {
+getdata_class_fun <- function(dat) {
   sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%
@@ -118,10 +118,8 @@ getdata_class_fun <- function(dat = r_data[[input$dataset]][1,]) {
 }
 
 varnames <- reactive({
-	dat <- getdata_class()
-	vars <- names(dat)
-	names(vars) <- paste(vars, " {", dat, "}", sep = "")
-	vars
+  getdata_class() %>% names %>%
+    set_names(., paste0(., " {", getdata_class(), "}"))
 })
 
 # are all variables in the currently selected dataset
@@ -147,10 +145,6 @@ d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
 
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
-
-  # not sure what happend to this next line
-  # leaving line for now (1/7/2015). remove if no issues pop up
-  # if(title != "") p
 
   if(is.character(dat) && length(dat) == 1) dat <- r_data[[dat]]
   dat %>%

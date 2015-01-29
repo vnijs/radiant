@@ -20,17 +20,17 @@ output$uiExpl_byvar <- renderUI({
   if(length(vars) == 0) return()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multvar("expl_byvar",vars), multiple = TRUE,
-    options = list(maxItems = 2, placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
+    # options = list(maxItems = 2, placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
+    options = list(placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
   )
 })
 
-nmissing <<- function(x) sum(is.na(x))
-
-# adding Q1 and Q3, na.rm set to true in colwise function call below
-p25 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
-p75 <<- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
-serr <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
-cv <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
+# nmissing <<- function(x) sum(is.na(x))
+# # adding Q1 and Q3, na.rm set to true in colwise function call below
+# p25 <<- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
+# p75 <<- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
+# serr <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
+# cv <<- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
 
 expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "75%" = "p75",
                         "Max" = "max", "Min" = "min", "Std. dev" = "sd", "Std. err" = "serr", "cv" = "cv", "Skew" = "skew",
@@ -85,6 +85,13 @@ observe({
   })
 })
 
+nmissing <- function(x) sum(is.na(x))
+# adding Q1 and Q3, na.rm set to true in colwise function call below
+p25 <- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
+p75 <- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
+serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
+cv <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
+
 explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_select, expl_show_tab, expl_show_viz) {
 
   dat <- r_data[[dataset]]
@@ -100,38 +107,32 @@ explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_selec
   }
 
   if(is.null(expl_byvar)) {
-    dat <- dat[,expl_columns, drop = FALSE]
+    dat %<>% select_(.dots = expl_columns)
     isNum <- sapply(dat, is.numeric)
     if(sum(isNum) > 0) {
-      res <- data.frame(psych::describe(dat[isNum])[,c("n","mean","median","min","max","sd","se","skew","kurtosis")])
 
-      # adding Coefficient of Variation
-      cv <- res$sd/res$mean
-      res <- cbind(res,cv)
-
-      # adding Q1 and Q3
-      perc <- function(x) quantile(x,c(.25,.75))
-      percres <- colwise(perc)(dat[,isNum, drop = FALSE])
-      rownames(percres) <- c("25%","75%")
-      res <- cbind(res,t(percres))
-
-      # number of missing values
-      res$missing <- c(colwise(nmissing)(dat[,isNum, drop = FALSE]))
-
-      # when you move to dplyr have the stats selected here be determined by the set of selected functions
-      # return desired stats in order
-      return(res[,c("n","mean","median","25%","75%","min","max","sd","se","cv","skew","kurtosis","missing")])
+      # skew, kurtosis = kurtosi, missing = nmissing)) %>%
+      select(dat, which(isNum)) %>%
+        gather_("variable", "values", expl_columns) %>%
+        group_by(variable) %>%
+        summarise_each(funs(n = length, mean, median, min, max, `25%` = p25,
+                            `75%` = p75, sd, se = serr, cv = sd/mean,
+                            missing = nmissing)) %>%
+        as.data.frame -> dat
+        dat[,-1] %<>% round(3)
+        colnames(dat)[1] <- ""
+        dat
     }
   } else {
-    dat <- dat[,c(expl_byvar,expl_columns)]
+
+    dat %>%
+      group_by_(.dots = expl_byvar) %>%
+      select_(.dots = expl_columns) -> dat
+
     plyres <- list()
     for(func in expl_function) {
-      # if(sum(func %in% c('length','nmissing') > 0)) {
-      if(func %in% c('length','nmissing')) {
-        plyres[[func]] <- ddply(dat, c(expl_byvar), colwise(func))
-      } else {
-        plyres[[func]] <- ddply(dat, c(expl_byvar), colwise(func, na.rm = TRUE))
-      }
+      gfunc <- get(func)
+      plyres[[func]] <- dat %>% summarise_each(funs(gfunc)) %>% as.data.frame
     }
 
     plyres$expl_columns <- expl_columns
@@ -139,7 +140,7 @@ explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_selec
     plyres$expl_byvar <- expl_byvar
     plyres$expl_show_viz <- expl_show_viz
 
-    return(plyres)
+    plyres
   }
 }
 
@@ -154,12 +155,13 @@ summary_explore <- function(result = .explore()) {
 
   if(class(result)[1] != 'list') {
     cat("Summarize numeric variables:\n")
-    print(result)
+    result %>% print(row.names = FALSE)
   } else {
     for(func in result$expl_function) {
       cat("Results grouped by: ", result$expl_byvar, "\n")
       cat("Function used: ", names(which(expl_functions == func)), "\n")
-      print(result[[func]])
+      result[[func]][,result$expl_columns] %<>% round(3)
+      result[[func]] %>% print
       cat("\n")
     }
   }

@@ -288,9 +288,11 @@ output$downloadState <- downloadHandler(
 # Loading data into memory
 #######################################
 observe({
-  if(is.null(input$data_rename)) return()
-  if(is.null(input$renameButton) || input$renameButton == 0) return()
+  if(input$data_rename %>% is_empty) return()
+  if(input$renameButton %>% not_pressed) return()
   isolate({
+    # you can use pryr::object_size to see that the size of the list doesn't change
+    # when you assing a list element another name
     r_data[[input$data_rename]] <- r_data[[input$dataset]]
     r_data[[input$dataset]] <- NULL
     r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
@@ -331,13 +333,11 @@ output$uiRename <- renderUI({
 
 output$htmlDataExample <- renderText({
 
-  dat <- getdata()
-  if(is.null(dat)) return()
+  # dat <- getdata()
+  if(r_data[[input$dataset]] %>% is.null) return()
 
   # Show only the first 10 (or 30) rows
-  descr <- r_data[[paste0(input$dataset,"_descr")]]
-  nshow <- 10
-  if(is.null(descr) || descr == "") nshow <- 30
-
-  show_data_snippet(nshow = nshow)
+  r_data[[paste0(input$dataset,"_descr")]] %>%
+    { is_empty(.) %>% ifelse(., 30, 10) } %>%
+    show_data_snippet(nshow = .)
 })

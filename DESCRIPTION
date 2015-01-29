@@ -16,7 +16,6 @@ Depends:
 		AlgDesign (>= 1.1.7.3),
 		brew (>= 1.0.6),
 		reshape2 (>= 1.4.1),
-		plyr (>= 1.8.1),
 		markdown (>= 0.7.4),
 		knitr (>= 1.8),
 		rmarkdown (>= 0.4.2),
