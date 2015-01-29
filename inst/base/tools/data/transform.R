@@ -140,13 +140,8 @@ transform_main <- reactive({
 
   ##### Fix - show data snippet if changeType == 'none' and no columns select #####
 	if(input$tr_changeType == "none") {
-		if(!is.null(input$tr_columns)) {
-	    if(is.null(inChecker(input$tr_columns))) return()
-      # select_ needs .dots when passed a vector of variable name strings
- 			dat <- select_(dat, .dots = input$tr_columns)
-		} else {
-			return()
-		}
+	  if(input$tr_columns %>% not_available) return()
+ 		dat <- select_(dat, .dots = input$tr_columns)
 	}
 
 	if(input$tr_changeType == 'reorder_cols') {

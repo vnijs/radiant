@@ -5,7 +5,7 @@ output$uiPreFactor_vars <- renderUI({
 	# variable selection
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "preFactor_vars", label = "Variables:", choices = vars,
   	selected = state_multvar("preFactor_vars",vars), multiple = TRUE, selectize = FALSE)
 })
@@ -26,13 +26,14 @@ output$preFactor <- renderUI({
 })
 
 .preFactor <- reactive({
-	# for main analysis
-	if(is.null(input$preFactor_vars) || length(input$preFactor_vars) < 2) return("Please select two or more numeric variables")
+	if(input$preFactor_vars %>% not_available)
+		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
+	if(length(input$preFactor_vars) < 2) return("Please select two or more numeric variables")
 	preFactor(input$dataset, input$preFactor_vars)
 })
 
 observe({
-  if(is.null(input$preFactorReport) || input$preFactorReport == 0) return()
+  if(input$preFactorReport %>% not_pressed) return()
   isolate({
 		inp <- list(input$dataset, input$preFactor_vars)
 		updateReport(inp,"preFactor")
@@ -41,7 +42,15 @@ observe({
 
 preFactor <- function(dataset, preFactor_vars) {
 	# for main analysis
-	dat <- na.omit( r_data[[dataset]][,preFactor_vars] )
+
+	# load("~/gh/radiant_dev/inst/marketing/data/data_examples/anscombe.rda")
+	# r_data <- list()
+	# dataset <- "anscombe"
+	# r_data[[dataset]] <- anscombe
+	# preFactor_vars <- colnames(anscombe)[1:6]
+	# library(psych)
+
+	dat <- select_(r_data[[dataset]], .dots = preFactor_vars)
 	if(nrow(dat) <= ncol(dat)) return("Data should have more observations than variables.\nPlease reduce the number of variables.")
 
   cmat <- cor(dat)
@@ -49,12 +58,18 @@ preFactor <- function(dataset, preFactor_vars) {
 	pre_kmo <- KMO(cmat)
 	pre_eigen <- eigen(cmat)$values
 
-  if(det(cmat) == 0) {
-    pre_r2 <- "The selected variables are perfectly collinear. Please check the correlations and remove any
-    variable with a correlation of 1 or -1 from the analysis"
+  err_mess <- "The selected variables are perfectly collinear. Please check the correlations\nand remove any variable with a correlation of 1 or -1 from the analysis"
+  if(det(cmat) > 0) {
+    # pre_r2 <- data.frame(1 - (1 / diag(solve(cmat))))
+    scmat <- try(solve(cmat), silent = TRUE)
+    if(is(scmat, 'try-error')) {
+    	pre_r2 <- err_mess
+    } else {
+    	pre_r2 <- 1 - (1 / diag(scmat))
+    	colnames(pre_r2) <- 'Rsq'
+    }
   } else {
-    pre_r2 <- data.frame(1 - (1 / diag(solve(cmat))))
-    colnames(pre_r2) <- 'Rsq'
+  	pre_r2 <- err_mess
   }
 
 	list(btest = btest, pre_eigen = pre_eigen, pre_kmo = pre_kmo, pre_r2 = pre_r2)
@@ -62,6 +77,11 @@ preFactor <- function(dataset, preFactor_vars) {
 
 # Generate output for the summary tab
 summary_preFactor <- function(result = .preFactor()) {
+
+	if(result$pre_r2 %>% is.character) {
+		cat(result$pre_r2)
+		return(invisible())
+	}
 
 	# for summary
 	btest <- result$btest
@@ -92,6 +112,8 @@ summary_preFactor <- function(result = .preFactor()) {
 # Generate output for the plots tab
 plots_preFactor <- function(result = .preFactor()){
 
+	if(result$pre_r2 %>% is.character) return()
+
 	ev <- result$pre_eigen
 
 	p <- ggplot(data.frame(ev), aes(x=1:length(ev), y=ev, group = 1)) +
@@ -109,7 +131,7 @@ output$uiFactor_vars <- renderUI({
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "factor_vars", label = "Variables:", choices = vars,
   	selected = state_init_multvar("factor_vars",input$preFactor_vars, vars), multiple = TRUE, selectize = FALSE)
 })
@@ -159,12 +181,12 @@ output$fullFactor <- renderUI({
 })
 
 .fullFactor <- reactive({
-	# for main analysis
-	if(is.null(input$factor_vars) || length(input$factor_vars) < 2) return("Please select two or more variables")
-	if(is.null(input$fac_number)) return("Number of factors should be > 1.")
 
-	ret_text <- "This analysis requires a multiple variables of type\nnumeric or integer.\nPlease select another dataset."
-	if(is.null(inChecker(c(input$factor_vars)))) return(ret_text)
+	if(input$factor_vars %>% not_available)
+		return("This analysis requires multiple variables of type\nnumeric or integer.\nIf these variables are not available please select another dataset.")
+
+	if(length(input$factor_vars) < 2) return("Please select two or more variables")
+	if(is.null(input$fac_number)) return("Number of factors should be > 1.")
 
 	fullFactor(input$dataset, input$factor_vars, input$fac_method, input$fac_number, input$fac_cutoff,
 		input$fac_sort, input$fac_rotation)

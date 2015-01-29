@@ -122,11 +122,6 @@ varnames <- reactive({
     set_names(., paste0(., " {", getdata_class(), "}"))
 })
 
-# are all variables in the currently selected dataset
-# deprecate in favor of not_available
-inChecker <- function(x)
-  ifelse(sum(x %in% varnames()) < length(x), NULL, return('OK'))
-
 # check if a variable is null or not in the data
 not_available <- function(x)
   ifelse(any(is.null(x)) || (sum(x %in% varnames()) < length(x)), TRUE, FALSE)

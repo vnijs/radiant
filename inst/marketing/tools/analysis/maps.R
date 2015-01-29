@@ -6,31 +6,31 @@ output$uiMds_id1 <- renderUI({
 	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
   # vars <- varnames()[isChar]
   vars <- varnames()[isLabel]
-  if(length(vars) == 0) return(HTML('<label>This dataset has no variables of type character.</label>'))
+  # if(length(vars) == 0) return(HTML('<label>This dataset has no variables of type character.</label>'))
   selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars,
    	selected = state_singlevar("mds_id1",vars), multiple = FALSE)
 })
 
 output$uiMds_id2 <- renderUI({
 
-  if(is.null(input$mds_id1) || !input$mds_id1 %in% varnames()) return()
+  # if(is.null(input$mds_id1) || !input$mds_id1 %in% varnames()) return()
+  if(input$mds_id1 %>% not_available) return()
 
-	# isChar <- "character" == getdata_class()
 	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
-  # vars <- varnames()[isChar]
   vars <- varnames()[isLabel]
-	vars <- vars[-which(vars == input$mds_id1)]
-  if(length(vars) == 0) return(HTML('<label>This dataset has only one variable of type character.</label>'))
+  if(length(vars) > 0) vars <- vars[-which(vars == input$mds_id1)]
+  # if(length(vars) == 0) return(HTML('<label>This dataset has only one variable of type character.</label>'))
   selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
    	selected = state_singlevar("mds_id2",vars), multiple = FALSE)
 })
 
 output$uiMds_dis <- renderUI({
-  if(is.null(input$mds_id2) || !input$mds_id2 %in% varnames()) return()
+  # if(is.null(input$mds_id2) || !input$mds_id2 %in% varnames()) return()
+  if(input$mds_id2 %>% not_available) return()
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
    	selected = state_singlevar("mds_dis",vars), multiple = FALSE)
 })
@@ -80,11 +80,12 @@ output$mds <- renderUI({
 
 .mds <- reactive({
 
-	ret_text <- "This analysis requires two id-variables of type character\nand a measure of dissimilarity of type numeric or interval.\nPlease select another dataset."
-	if(is.null(input$mds_id2) || is.null(input$mds_dis)) return(ret_text)
+	# ret_text <- "This analysis requires two id-variables of type character\nand a measure of dissimilarity of type numeric or interval.\nPlease select another dataset."
+	# if(is.null(input$mds_id2) || is.null(input$mds_dis)) return(ret_text)
 
 	# if(is.null(inChecker(c(input$mds_id1, input$mds_id2, input$mds_dis)))) return(ret_text)
-	if( c(input$mds_id1, input$mds_id2, input$mds_dis) %>% not_available ) return(ret_text)
+	if( c(input$mds_id1, input$mds_id2, input$mds_dis) %>% not_available )
+		return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
 
 	mds(input$dataset, input$mds_id1, input$mds_id2, input$mds_dis, input$mds_rev_dim,
 			input$mds_non_metric, input$mds_dim_number, input$mds_fontsz)
@@ -129,7 +130,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 	} else if((lower + nr.lev) == nr.obs) {
 		co.dist[lower.tri(co.dist, diag = TRUE)] <- dis
 	} else {
-		return("Number of observations and unique id's does not match. Please choose another dataset.")
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
 	}
 
 	rownames(co.dist) <- lab
@@ -218,7 +219,3 @@ plots_mds <- function(result = .mds()) {
 	par(op)
 
 }
-
-###############################################
-# move this over to an interactive viz lib
-###############################################

@@ -5,18 +5,20 @@ output$uiPmap_brand <- renderUI({
 
 	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
   vars <- varnames()[isLabel]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
  	selectInput(inputId = "pmap_brand", label = "Brand:", choices = vars,
    	selected = state_singlevar("pmap_brand",vars), multiple = FALSE)
 })
 
 output$uiPmap_attr <- renderUI({
-  if(is.null(input$pmap_brand)) return()
+  # if(is.null(input$pmap_brand)) return()
+  # if(input$pmap_brand %>% not_available) return()
+
   # if(is.null(input$pmap_brand) || is.null(inChecker(c(input$pmap_brand)))) return()
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "pmap_attr", label = "Attributes:", choices = vars,
    	selected = state_multvar("pmap_attr",vars), multiple = TRUE, selectize = FALSE)
 })
@@ -24,11 +26,12 @@ output$uiPmap_attr <- renderUI({
 output$uiPmap_pref <- renderUI({
 #   if(is.null(input$pmap_attr)) return()
 #   if(is.null(inChecker(c(input$pmap_pref)))) return()
+  # if(length(vars) == 0) return()
 
+  if(input$pmap_attr %>% not_available) return()
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
- 	vars <- vars[-which(vars %in% input$pmap_attr)]
-  if(length(vars) == 0) return()
+ 	if(length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
 
   selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,
    	selected = state_multvar("pmap_pref",vars), multiple = TRUE, selectize = FALSE)
@@ -84,9 +87,13 @@ output$pmap <- renderUI({
 
 .pmap <- reactive({
 
-	ret_text <- "This analysis requires a brand variable of type character\nand multiple attribute variables of type numeric or integer.\nPlease select another dataset."
-	if(is.null(input$pmap_brand)) return(ret_text)
-	if(is.null(inChecker(c(input$pmap_brand, input$pmap_attr)))) return(ret_text)
+	if(c(input$pmap_brand, input$pmap_attr) %>% not_available)
+		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.")
+
+	brand <- getdata()[,input$pmap_brand]
+	if(length(unique(brand)) < length(brand))
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
+
 	if(length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
 
 	pmap(input$dataset, input$pmap_brand, input$pmap_attr, input$pmap_pref, input$pmap_dim_number,
