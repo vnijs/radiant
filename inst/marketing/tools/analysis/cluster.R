@@ -5,8 +5,7 @@ output$uiHc_vars <- renderUI({
 
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
 	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
-
+  # if(length(vars) == 0) return()
   selectInput(inputId = "hc_vars", label = "Variables:", choices = vars,
    	selected = state_multvar("hc_vars",vars), multiple = TRUE, selectize = FALSE)
 })
@@ -39,7 +38,7 @@ output$ui_hierCluster <- renderUI({
 
 output$hierCluster <- renderUI({
 	# for input-output
-  statTabPanel("Clustser", "Hierarchical", ".hierCluster", "hierCluster")
+  statTabPanel("Cluster", "Hierarchical", ".hierCluster", "hierCluster")
 })
 
 .hierCluster <- reactive({
@@ -135,8 +134,7 @@ output$uiKm_vars <- renderUI({
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
-
+  # if(length(vars) == 0) return()
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars,
 	  selected = state_init_multvar("km_vars",input$hc_vars, vars), multiple = TRUE, selectize = FALSE)
 })
@@ -178,16 +176,12 @@ kmeans_plotHeight <- function() {
 }
 
 output$kmeansCluster <- renderUI({
-	# for input-output
   statTabPanel("Cluster","K-means",".kmeansCluster", "kmeansCluster", "kmeans_plotWidth", "kmeans_plotHeight")
 })
 
 .kmeansCluster <- reactive({
 
-	if(is.null(input$km_vars)) return("Please select one or more variables of type numeric or integer.")
-	ret_text <- "This analysis requires variables of type numeric or integer.\nPlease select another dataset."
-	if(is.null(inChecker(c(input$km_vars)))) return(ret_text)
-
+	if(input$km_vars %>% not_available) return("This analysis requires variables of type numeric or integer.\nIf none are availble please select another dataset.")
 	kmeansCluster(input$dataset, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
 		input$km_nrClus)
 })
