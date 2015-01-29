@@ -21,7 +21,7 @@ radiant <- function(app = c("marketing", "quant", "base")) {
   runApp(system.file(app[1], package='radiant'))
 }
 
-#' Alias to set class for an object (i.e., the main analysis functions)
+#' Alias to set the class for an object. In radiant this is organized per analysis function (e.g., single_mean)
 #'
 #' @examples
 #' foo <- function(x) x^2 %>% set_class(c("foo", class(.)))
@@ -29,21 +29,20 @@ radiant <- function(app = c("marketing", "quant", "base")) {
 #' @export
 set_class <- `class<-`
 
-#' Add "***" to a data.frame based on the p.values
+#' Add '***' to a data.frame based on the p.values
 #'
 #' @param p.value Vector of p.values from an analysis
 #'
 #' @return A list with all variables defined in the function
 #'
 #' @examples
-#' sig_stars(c(.0009,.009, .049, .09, .4))
+#' sig_stars(c(.0009, .049, .009, .4, .09))
 #'
 #' @export
-sig_stars <- function(p.value) {
-  sapply(p.value, function(x) x < c(.001,.01, .05, .1)) %>%
-  colSums %>%
-  add(1) %>%
-  c("",".","*", "**", "***")[.]
+sig_stars <- function(pval) {
+  sapply(pval, function(x) x < c(.001,.01, .05, .1)) %>%
+    colSums %>% add(1) %>%
+    c("",".","*", "**", "***")[.]
 }
 
 #' Avoid warnings and messages. Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
@@ -56,19 +55,6 @@ sshh <- function(...) {
   suppressWarnings( suppressMessages( ... ) )
   invisible()
 }
-
-#### test
-# sshh(library(dplyr))
-# detach("package:dplyr")
-# library(dplyr)
-#### end test
-
-
-# probably not added to global environment because the environment is
-# attached inside a function
-# if(exists("r_env")) attach(r_env)
-# need to detach if used
-# if(exists("r_env")) detach(r_env)
 
 #' Get data for analysis functions exported by Radiant
 #'
@@ -101,8 +87,13 @@ getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = NULL) {
 
 #' Make a .bat launcher for Windows on the desktop
 #'
+#' @param app App to install ('marketing', 'quant', or 'base'). Default is the 'marketing'
+#'
+#' @return On a windows machine a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the Radiant app selected
+#'
 #' @export
-win_launcher <- function() {
+win_launcher <- function(app = c("marketing", "quant", "base")) {
+
   if(.Platform$OS.type != 'windows')
     return("This function is for Windows only. For mac download launcher icons from http://mostly-harmless.github.io/radiant/index.html")
 
@@ -110,10 +101,9 @@ win_launcher <- function() {
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
   filepath <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
-  launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/')); install.packages('radiant'); }; require(radiant); shiny::runApp(system.file('marketing', package='radiant'), port = 4475, launch.browser = TRUE)\"")
+  launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/')); install.packages('radiant'); }; require(radiant); shiny::runApp(system.file(", app[1], "'marketing', package='radiant'), port = 4475, launch.browser = TRUE)\"")
   cat(launch_string,file=paste0(filepath,"radiant.bat"),sep="\n")
 }
-
 
 # test
 # rm(list = ls())
@@ -135,7 +125,3 @@ win_launcher <- function() {
 # getdata_exp("mtcars_", c("cyl","mpg"))
 # getdata_exp("mycars", c("cyl","mpg"))
 # end test
-
-
-# @import car gridExtra GPArotation psych vegan RColorBrewer wordcloud AlgDesign brew reshape2 plyr markdown knitr rmarkdown testthat lubridate ggplot2 shiny magrittr tidyr dplyr ggvis broom shinyAce
-# @importFrom shiny addResourcePath runApp

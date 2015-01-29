@@ -44,11 +44,9 @@ visualize('diamonds', 'price', 'carat', '', 'single', '.', '.', 'clarity', FALSE
 ```
 "
 
-# opts_chunk$set(echo=FALSE, comment=NA, cache=TRUE, message=FALSE, warning=FALSE,
 knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                fig.path = "~/radiant_temp/rmd/figure/")
 knitr::opts_knit$set(progress = TRUE)
-# options(markdown.HTML.stylesheet = "https://github.com/rstudio/markdown/blob/master/inst/resources/markdown.css")
 
 output$report <- renderUI({
 
@@ -74,25 +72,15 @@ output$report <- renderUI({
 
 valsRmd <- reactiveValues(knit = 0)
 
-# don't know what this is supposed to do - depracate
-# tmp_file <- function(text){
-#   tmp <- tempfile(tmpdir="/")
-#   write(text, tmp)
-#   tmp
-# }
-
 knitIt <- function(text) knitr::knit2html(text = text, quiet = TRUE, options=c("mathjax", "base64_images"),
                                           stylesheet = "../base/www/rmarkdown.css") %>% HTML
-#                                           stylesheet = "../base/www/bootstrap.min.css") %>% HTML
 
-# requires pandoc install
+# rmarkdown requires pandoc install
 # knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
 
 knitIt2 <- function(text) paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
                                 "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
                                 "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
-
-# knitIt2 <- function(text) knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, options=c("mathjax")) %>% HTML
 
 observe({
   input$runKeyRmd
@@ -138,10 +126,6 @@ output$saveRmd <- downloadHandler(
 )
 
 observe({
-
-  # Useful to jump to reporting tab on refresh when testing
-  # updateTabsetPanel(session, "nav_radiant", selected = "Report")
-
   # loading rmd report from disk
   inFile <- input$loadRmd
   if(!is.null(inFile) && !is.na(inFile)) {
@@ -166,25 +150,18 @@ updateReport <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = ""
   update_report_fun(cmd)
 }
 
-#
 # test for update_report
-#
-
 # library(dplyr)
 # c("dataset", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
 #   setNames(as.list(.),.) -> base_sm_list
-
-
 # # removing elements that are NA!!
 # base_sm_list$sm_sig_level <- NA
 # base_sm_list <- base_sm_list[!is.na(base_sm_list)]
 # deparse(base_sm_list, control = c("keepNA"))
-
 # update_report(inp = base_sm_list, fun_name = "single_mean")
 # update_report(inp = base_sm_list, fun_name = "single_mean", pre = "",
 #                outputs = c(), figs = FALSE)
 
-  # outputs = c(paste0("summary_",fun_name), paste0("plots_",fun_name)),
 
 # updating the report when called
 update_report <- function(inp, fun_name, pre_cmd = "result <- ",
@@ -290,13 +267,12 @@ output$rcode <- renderUI({
               ),
     actionButton("rEval", "Run"),
     downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
-    fileInput('sourceCode', 'Source R-code', multiple=TRUE),
     fileInput('loadCode', 'Load R-code', multiple=FALSE)
+    #, fileInput('sourceCode', 'Source R-code', multiple=TRUE)
   ),
   div(class="span6", htmlOutput("rCodeEval"))
   )
 })
-
 
 valsCode <- reactiveValues(code = 0)
 
@@ -333,23 +309,21 @@ output$saveCode <- downloadHandler(
   }
 )
 
+# loading r-code from disk
 observe({
-  # loading r-code from disk
   inFile <- input$loadCode
-  if(!is.null(inFile) && !is.na(inFile)) {
+  if(!is.null(inFile)) {
     isolate({
-      rfile <- paste0(readLines(inFile$datapath), collapse = "\n")
-      updateAceEditor(session, "r_code", value = rfile)
+      paste0(readLines(inFile$datapath), collapse = "\n") %>%
+        updateAceEditor(session, "r_code", value = .)
     })
   }
 })
 
-observe({
-  # source r-code from disk
-  inFile <- input$sourceCode
-  if(!is.null(inFile) && !is.na(inFile)) {
-    isolate({
-      source(inFile$datapath)
-    })
-  }
-})
+# source r-code from disk
+# observe({
+#   inFile <- input$sourceCode
+#   isolate({
+#     if(!is.null(inFile)) source(inFile$datapath)
+#   })
+# })

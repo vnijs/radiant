@@ -2,9 +2,9 @@
 % Please edit documentation in R/radiant.R
 \name{sig_stars}
 \alias{sig_stars}
-\title{Add "***" to a data.frame based on the p.values}
+\title{Add '***' to a data.frame based on the p.values}
 \usage{
-sig_stars(p.value)
+sig_stars(pval)
 }
 \arguments{
 \item{p.value}{Vector of p.values from an analysis}
@@ -13,9 +13,9 @@ sig_stars(p.value)
 A list with all variables defined in the function
 }
 \description{
-Add "***" to a data.frame based on the p.values
+Add '***' to a data.frame based on the p.values
 }
 \examples{
-sig_stars(c(.0009,.009, .049, .09, .4))
+sig_stars(c(.0009, .049, .009, .4, .09))
 }
 
