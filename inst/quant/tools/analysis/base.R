@@ -85,19 +85,19 @@ plots_singleProp <- function(result = .singleProp()) {
 output$uiCt_var1 <- renderUI({
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
   	selected = state_singlevar("ct_var1",vars), multiple = FALSE)
 })
 
 output$uiCt_var2 <- renderUI({
-	if(input$ct_var1 %>% not_available) return()
+	# if(input$ct_var1 %>% not_available) return()
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
 	# if(!input$ct_var1 %in% vars) return()
 	# if(is.null(inChecker(input$ct_var1))) return()
-	vars <- vars[-which(vars == input$ct_var1)]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
+  if(length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
   	selected = state_singlevar("ct_var2",vars), multiple = FALSE)
 })
@@ -137,18 +137,18 @@ output$crosstab <- renderUI({
 })
 
 .crosstab <- reactive({
-	ret_text <- "This analysis requires variables of type factor.\nPlease select another dataset."
  # 	if(is.null(input$ct_var1) || is.null(input$ct_var2)) return(ret_text)
 	# if(is.null(inChecker(c(input$ct_var1, input$ct_var2)))) return(ret_text)
-	if(input$ct_var2 %>% not_available) return(ret_text)
+	if(input$ct_var2 %>% not_available)
+		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
+
 	crosstab(input$dataset, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
 		input$ct_std_residuals, input$ct_contrib)
 })
 
 observe({
-  if(is.null(input$crosstabReport) || input$crosstabReport == 0) return()
+  if(input$crosstabReport %>% not_pressed) return()
   isolate({
-
 		inp <- list(input$dataset, input$ct_var1, input$ct_var2, input$ct_expected, input$ct_deviation,
 			input$ct_std_residuals, input$ct_contrib)
 
