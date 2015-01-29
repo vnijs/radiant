@@ -71,7 +71,7 @@ See also the [installing Radiant](https://www.youtube.com/) video.
 
 ## Creating a desktop launcher (_work in progress_)
 
-You can also put a launcher on your Desktop to make it easy to start Radiant. For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/blob/master/launchers/mac/radiant_marketing.command.zip) or [quant](https://github.com/mostly-harmless/radiant/blob/master/launchers/mac/radiant_quant.command.zip) launcher to your Desktop and upzip the file. Double-click the (red) `radiant_marketing.command` icon to launch Radiant in your default browser.
+You can also put a launcher on your Desktop to make it easy to start Radiant. For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_marketing.zip) or [quant](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_quant.zip) launcher to your Desktop and upzip the file. Double-click the `radiant_marketing.command` icon to launch Radiant in your default browser.
 
 On Windows you can create a launcher for Radiant on your Desktop by typing `win_launcher()` in the R-console. The function should create a new file called `radiant.bat` on your Desktop. Double click the .bat file and Radiant should start in your default browser. Note that the first time you start the Radiant several required packages will be installed, and this may take a few minute
 
