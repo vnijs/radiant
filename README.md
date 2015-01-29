@@ -30,7 +30,9 @@ You can call functions for visualization and analysis in your R-code and access 
 ?single_mean
 ```
 
-As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://github.com/mostly-harmless/radiant/blob/master/examples/radiant_rcode.r?raw=true) for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean` and `compare_means` functions.
+As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R)
+
+for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean` and `compare_means` functions.
 
 ## Documentation
 
@@ -83,7 +85,7 @@ A related feature in Radiant is that state is maintained if you accidentally nav
 
 Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit > Quit to stop the app, lists called `r_data` and `r_state` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists (i.e., `r_data` and `r_state`) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file in Rstudio it will be used when you start Radiant to recreate a previous state.
 
-See [`radiant_rcode.R`](https://github.com/mostly-harmless/radiant/blob/master/examples/radiant_rcode.r?raw=true) for an example.
+See [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R) for an example.
 
 **Technical note**: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `r_state`. If there is, this value is used. The `r_state` list is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `r_state` can be used. `sm_args$sm_comp_value` is the default value specified in the `single_mean` function call.
 
