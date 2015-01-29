@@ -77,8 +77,7 @@ observe({
 })
 
 .explore <- reactive({
-  if(is.null(input$expl_columns)) return()
-  if(is.null(inChecker(input$expl_columns))) return()
+  if(input$expl_columns %>% not_available) return()
 
   withProgress(message = 'Calculating', value = 0, {
     explore(input$dataset, input$expl_columns, input$expl_byvar, input$expl_function, input$expl_select, input$expl_show_tab, input$expl_show_viz)

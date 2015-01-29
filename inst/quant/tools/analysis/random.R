@@ -30,9 +30,9 @@ output$random <- renderUI({
 	# reactive that calls the function for main analysis
 	# . used to indicate this is an 'internal' function
 
-	ret_text <- "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nPlease select another dataset."
-	if(is.null(input$rnd_var)) return(ret_text)
-	if(is.null(inChecker(c(input$rnd_var)))) return(ret_text)
+  ret_text <- "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nIf a variable of this type is not available please select another dataset."
+  if(input$rnd_var %>% not_available)
+	  return(ret_text)
 
 	rvar <- getdata()$rnd_var
 	if(length(unique(rvar)) != length(rvar)) return(ret_text)

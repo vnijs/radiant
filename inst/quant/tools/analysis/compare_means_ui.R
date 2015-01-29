@@ -23,7 +23,7 @@ output$ui_cm_var1 <- renderUI({
                 "integer" == getdata_class() |
                 "factor" == getdata_class()
   vars <- varnames()[isNumOrFct]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "cm_var1",
               label = "Select a factor or numeric variable:",
               choices = vars,
@@ -35,7 +35,7 @@ output$ui_cm_var2 <- renderUI({
   if(input$cm_var1 %>% not_available) return()
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   if(input$cm_var1 %in% vars) {
     # when cm_var1 is numeric comparisons for multiple variables are possible
     vars <- vars[-which(vars == input$cm_var1)]
@@ -117,9 +117,8 @@ output$compare_means <- renderUI({
 
 .compare_means <- reactive({
 
-  ret_text <- "This analysis requires variables of type factor, numeric, or interval.\nIf none are available please select another dataset"
-
-  if(input$cm_var2 %>% not_available) return(ret_text)
+  if(input$cm_var2 %>% not_available)
+    return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
   # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
   if(length(input$cm_var2) > 1 && getdata_class()[input$cm_var1] == 'factor')
     return(" ")

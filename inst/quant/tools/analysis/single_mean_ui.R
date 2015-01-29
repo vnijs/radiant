@@ -19,7 +19,7 @@ sm_inputs <- reactive({
 output$ui_sm_var <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "sm_var", label = "Variable (select one):",
               choices = vars,
               selected = state_singlevar("sm_var",vars), multiple = FALSE)

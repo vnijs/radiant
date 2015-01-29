@@ -150,7 +150,7 @@ output$uiCa_var1 <- renderUI({
 
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
 
   selectInput(inputId = "ca_var1", label = "Profile evaluations:", choices = vars,
    	selected = state_singlevar("ca_var1",vars), multiple = FALSE)
@@ -158,10 +158,10 @@ output$uiCa_var1 <- renderUI({
 
 output$uiCa_var2 <- renderUI({
 
-  if(is.null(input$ca_var1)) return()
+  # if(is.null(input$ca_var1)) return()
 	isFct <- "factor" == getdata_class()
  	vars <- varnames()[isFct]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "ca_var2", label = "Attributes:", choices = vars,
   	selected = state_multvar("ca_var2", vars), multiple = TRUE, selectize = FALSE)
 })
@@ -207,13 +207,12 @@ output$conjoint <- renderUI({
 
 .conjoint <- reactive({
 
-	ret_text <- "This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nPlease select another dataset."
-	if(is.null(input$ca_var1)) return(ret_text)
-	isFct <- "factor" == getdata_class()
- 	vars <- varnames()[isFct]
-  if(length(vars) == 0) return(ret_text)
-	if(is.null(input$ca_var2)) return("Please select one or more independent variables of type factor.")
-	if(is.null(inChecker(c(input$ca_var1, input$ca_var2)))) return(ret_text)
+	# if(c(input$ca_var1, input$ca_var2) %>% not_available)
+	if(input$ca_var1 %>% not_available)
+		return("This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nIf these variables are not available please select another dataset")
+
+	if(input$ca_var2 %>% not_available)
+		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
 	mod <- conjoint(input$dataset, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif,
 		input$ca_plots, input$ca_scale_plot)

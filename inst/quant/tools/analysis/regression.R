@@ -70,25 +70,32 @@ output$correlation <- renderUI({
 })
 
 .correlation <- reactive({
-	vars <- input$cor_var
 	ret_text <- "Please select two or more variables"
-	if(is.null(vars) || length(vars) < 2) return(ret_text)
-	if(is.null(inChecker(c(input$cor_var)))) return(ret_text)
+	if(input$cor_var %>% not_available) return(ret_text)
+	if(length(input$cor_var) < 2) return(ret_text)
+
 	correlation(input$dataset, input$cor_var, input$cor_type, input$cor_cutoff)
 })
 
 observe({
-  if(is.null(input$correlationReport) || input$correlationReport == 0) return()
+	if(input$correlationReport %>% not_pressed) return()
+  # if(is.null(input$correlationReport) || input$correlationReport == 0) return()
   isolate({
 		inp <- list(input$dataset, input$cor_var, input$cor_type, input$cor_cutoff)
 		updateReport(inp,"correlation", round(7 * cor_plotWidth()/650,2), round(7 * cor_plotHeight()/650,2))
   })
 })
 
-correlation <- function(dataset, cor_var, cor_type, cor_cutoff) {
+correlation <- function(dataset, cor_var,
+                        cor_type = "pearson",
+                        cor_cutoff = 0) {
 
-	dat <- na.omit( r_data[[dataset]][,cor_var] )
-	dat <- data.frame(lapply(dat,as.numeric))
+	# dat <- na.omit( r_data[[dataset]][,cor_var] )
+	# dat <- data.frame(lapply(dat,as.numeric))
+
+	select_(r_data[[dataset]], .dots = cor_var) %>%
+		na.omit %>%
+		mutate_each(funs(as.numeric)) -> dat
 
 	nc <- ncol(dat)
 	list('dat' = dat, 'cor_type' = cor_type, 'cor_cutoff' = cor_cutoff,
@@ -152,26 +159,25 @@ plots_correlation <- function(result = .correlation()) {
 output$uiReg_var1 <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars,
   	selected = state_singlevar("reg_var1",vars), multiple = FALSE)
 })
 
 output$uiReg_var2 <- renderUI({
-  if(is.null(input$reg_var1)) return()
+  # if(is.null(input$reg_var1)) return()
 	notChar <- "character" != getdata_class()
   vars <- varnames()[notChar]
- 	vars <- vars[-which(vars == input$reg_var1)]
-  if(length(vars) == 0) return()
+  if(length(vars) > 0 ) vars <- vars[-which(vars == input$reg_var1)]
   selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars,
     # the reference to reg_var2 below should help ensure that variables
     # remain selected even if the dv changes
   	selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars),
   	multiple = TRUE, selectize = FALSE)
- 		# selected = state_multvar("reg_var2", vars), multiple = TRUE, selectize = FALSE)
 })
 
 output$uiReg_var3 <- renderUI({
+	if(input$reg_var2 %>% not_available) return()
   # if(is.null(input$reg_var2)) return()
   vars <- varnames()
  	vars <- vars[which(vars %in% input$reg_var2)]
@@ -190,7 +196,8 @@ output$uiReg_var3 <- renderUI({
 
 output$uiReg_intsel <- renderUI({
   vars <- input$reg_var2
-  if(is.null(vars) || length(vars) < 2) return()
+	if(vars %>% not_available || length(vars) < 2) return()
+  # if(is.null(vars) || length(vars) < 2) return()
  	choices <- reg_int_vec(vars,input$reg_interactions)
 	selectInput("reg_intsel", label = "", choices = choices,
   	selected = state_multvar("reg_intsel", vars), multiple = TRUE, selectize = FALSE)
@@ -271,11 +278,9 @@ output$regression <- renderUI({
 .regression <- reactive({
 	if(is.null(input$reg_standardize)) return("")
 
-	ret_text <- "This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nPlease select another dataset."
-	if(is.null(input$reg_var1)) return(ret_text)
-	if(is.null(input$reg_var2)) return("Please select one or more independent variables.")
-
-  if(is.null(inChecker(c(input$reg_var1, input$reg_var2)))) return()
+	if(input$reg_var1 %>% not_available)
+		return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.")
+	if(input$reg_var2 %>% not_available) return("Please select one or more independent variables.")
 
 	result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
 		input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data, input$reg_standardize,
