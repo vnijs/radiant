@@ -11,8 +11,6 @@ output$savequit <- renderUI({
       wellPanel(
         HTML("<label>Reset app state:</label>"),
         HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button></br>"),
-        # actionButton('resetState', 'Reset'),
-        # uiOutput("refreshOnReset"),
         checkboxInput('showInput', 'Show input', FALSE), br(),
         checkboxInput('showState', 'Show state', FALSE)
       ),
@@ -31,7 +29,6 @@ output$savequit <- renderUI({
       conditionalPanel(condition = "input.showState == true",
         verbatimTextOutput("showState")
       )
-      # , uiOutput("debugTools")
     )
   )
 })
@@ -44,48 +41,6 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
-  # query <- parseQueryString(session$clientData$url_search)
-
-  # # Return a string with key-value pairs
-  # print(query)
-  # print(str(query))
-  # # paste(names(query), query, sep = "=", collapse=", ") %>% cat
-
-  # cat("\n\n")
-
-
-  # cat("Env?\n")
-  # req <- ls(env=session$request)
-  # for(i in req)
-  #   print(get(i, envir=session$request))
-
-  # cat("Env?\n")
-
-  # cdata <- session$clientData
-  # # cdata <- session$request
-
-  # # Values from cdata returned as text
-  # cnames <- names(cdata)
-
-  # allvalues <- lapply(cnames, function(name) {
-  #   paste(name, cdata[[name]], sep=" = ")
-  # })
-  # paste(allvalues, collapse = "\n") %>% cat
-
-  # paste(sep = "",
-  #   "\nprotocol: ", session$clientData$url_protocol, "\n",
-  #   "hostname: ", session$clientData$url_hostname, "\n",
-  #   "pathname: ", session$clientData$url_pathname, "\n",
-  #   "port: ",     session$clientData$url_port,     "\n",
-  #   "search: ",   session$clientData$url_search,   "\n",
-  #   "IP address XFF: ", session$request$HTTP_X_FORWARDED_FOR,   "\n",
-  #   "IP address: ", session$request$REMOTE_ADDR,   "\n"
-  # ) %>% cat
-  # print("ip next")
-  # print(ip)
-  # print("ip prev")
-  # print(ls())
-  # print(ls(envir = .GlobalEnv))
   isolate({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
@@ -103,8 +58,7 @@ output$showState <- renderPrint({
 observe({
   if(input$quitApp %>% not_pressed || !running_local) return()
 
-  # quit R, unless you are running Rstudio
-  # if(Sys.getenv("RSTUDIO") != "1") {
+  # quit R, unless you are running an interactive session
   if(interactive()) {
     # flush input and r_data into Rgui or Rstudio
     isolate({

@@ -232,32 +232,38 @@ kmeansCluster <- function(dataset, km_vars, km_hcinit, km_dist, km_meth, km_seed
 }
 
 summary_kmeansCluster <- function(result = .kmeansCluster()) {
-	nrClus <- result$km_nrClus
 
+	# print cluster means
+	nrClus <- result$km_nrClus
 	cat("Kmeans clustering with", nrClus, "clusters of sizes", paste0(result$size, collapse=", "),"\n\n")
 	cat("Cluster means:\n")
-
-	dat <- na.omit( r_data[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
-	cvar <- as.factor(result$cluster)
-	dat <- cbind(cvar,dat)
-	cnt <- ddply(dat, c("cvar"), colwise(mean))
-	cnt <- cnt[,-1, drop = FALSE]
-	colnames(cnt) <- result$km_vars
 	clusNames <- paste("Cluster",1:nrClus)
-	rownames(cnt) <- clusNames
-	print(cnt, digits = 3)
+	select_(r_data[[result$dataset]], .dots = result$km_vars) %>%
+		na.omit %>%
+		mutate(cvar = result$cluster) %>%
+		group_by(cvar) %>%
+		summarise_each(funs(mean)) %>%
+		select(-cvar) %>%
+		round(3) %>%
+		set_rownames(clusNames) %>%
+		as.data.frame %>%
+		print
 
 	# percentage of within cluster variance accounted for by each cluster
-	perc_within <- 100 * (result$withinss / result$tot.withinss)
-	perc_within <- data.frame(paste0(sprintf("%.2f",perc_within),"%"))
-	rownames(perc_within) <- clusNames
-	colnames(perc_within) <- ""
 	cat("\nPercentage of within cluster variance accounted for by each cluster:\n")
-	print(perc_within, digits = 1)
+	(100 * result$withinss / result$tot.withinss) %>%
+		round(2) %>%
+		sprintf("%.2f",.) %>%
+		paste0(.,"%") %>%
+		as.data.frame %>%
+		set_rownames(clusNames) %>%
+		set_colnames("") %>%
+		print
 
 	# percentage of between cluster variance versus the total higher is better
-	perc_between <- 100*(result$betweenss / result$totss)
-	cat(paste0("\nBetween cluster variance accounts for ", sprintf("%.2f",perc_between), "% of the\ntotal variance in the data (higher is better)."))
+	(100 * result$betweenss / result$totss) %>% sprintf("%.2f",.) %>%
+		paste0("\nBetween cluster variance accounts for ", . , "% of the\ntotal variance in the data (higher is better).") %>%
+		cat
 }
 
 plots_kmeansCluster <- function(result = .kmeansCluster()) {

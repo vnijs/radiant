@@ -321,21 +321,20 @@ output$transform_summary <- renderPrint({
 	isLogic <- "logical" == dat_class
 
 	if(sum(isNum) > 0) {
+
+		cn <- names(dat_class)[isNum]
+
 		cat("Summarize numeric variables:\n")
-  	dat[,isNum] %>% psych::describe(.,na.rm=T) %>%
-      select_(.dots = c("n","mean","median","min","max","sd", "se","skew","kurtosis")) -> res
-
-		# adding Q1 and Q3
-		perc25 <- function(x) quantile(x,.25, na.rm = TRUE)
-		perc75 <- function(x) quantile(x,.75, na.rm = TRUE)
-
-    res$`25%` <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(perc25)) %>% t
-    res$`75%` <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(perc75)) %>% t
-    # nmissing function is in explore.R
-    res$missing <- dplyr::select(dat, which(isNum)) %>% summarise_each(funs(nmissing)) %>% t
-
-		# print desired stats in order
-		res[,c("n","mean","median","25%","75%","min","max","sd","se","skew","kurtosis","missing")] %>% print
+    select(dat, which(isNum)) %>%
+      gather_("variable", "values", cn) %>%
+      group_by(variable) %>%
+      summarise_each(funs(n = length, mean, median, min, max, `25%` = p25,
+                    `75%` = p75, sd, se = serr, cv = sd/mean,
+                    missing = nmissing)) %>%
+      as.data.frame -> num_dat
+      num_dat[,-1] %<>% round(3)
+      colnames(num_dat)[1] <- ""
+      num_dat %>% print(row.names = FALSE)
 		cat("\n")
 	}
 	if(sum(isFct) > 0) {
