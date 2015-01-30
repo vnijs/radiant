@@ -35,8 +35,8 @@ output$singleProp <- renderUI({
 
 .singleProp <- reactive({
 
-  ret_text <- "This analysis requires a variable of type factor with two levels.\nPlease select another dataset."
-  if(is.null(input$sp_var)) return(ret_text)
+  if(input$sp_var %>% not_available)
+  	return("This analysis requires a variable of type factor with two levels.\nPlease select another dataset.\n\n" %>% suggest_data("facebook"))
 
   singleProp(input$dataset, input$sp_var, input$sp_compValue, input$sp_alternative, input$sp_sigLevel)
 })
@@ -50,7 +50,9 @@ observe({
   })
 })
 
-singleProp <- function(dataset, sp_var, sp_compValue = 0.5, sp_alternative = 'two.sided',
+singleProp <- function(dataset, sp_var,
+                       sp_compValue = 0.5,
+                       sp_alternative = 'two.sided',
                        sp_sigLevel = .95) {
 
   dat <- r_data[[dataset]][,sp_var]
