@@ -5,7 +5,7 @@ output$uiRnd_var <- renderUI({
   vars <- varnames()
 	isChar <- "character" == getdata_class()
  	vars <- vars[isChar]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput(inputId = "rnd_var", label = "Variable (select one):", choices = vars,
   	selected = state_singlevar("rnd_var",vars), multiple = FALSE)
 })
@@ -15,8 +15,8 @@ output$ui_random <- renderUI({
   	wellPanel(
 	 	 	uiOutput("uiRnd_var"),
 	  	numericInput("rnd_sample_size", "Sample size:", min = 1,
-	  		value = state_init("rnd_sample_size",1))
-	  ),
+	  		value = state_init("rnd_sample_size",1))),
+
 	 	helpAndReport('Random','random',inclMD("../quant/tools/help/random.md"))
  	)
 })
@@ -27,23 +27,21 @@ output$random <- renderUI({
 })
 
 .random <- reactive({
-	# reactive that calls the function for main analysis
-	# . used to indicate this is an 'internal' function
 
-  ret_text <- "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nIf a variable of this type is not available please select another dataset."
+  "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nIf a variable of this type is not available please select another dataset.\n\n" %>%
+  suggest_data("rndnames") -> rt
+
   if(input$rnd_var %>% not_available)
-	  return(ret_text)
+	  return(rt)
 
 	rvar <- getdata()$rnd_var
-	if(length(unique(rvar)) != length(rvar)) return(ret_text)
-
-	if(is.na(input$rnd_sample_size)) return("Please select a sample size of 1 or greater.")
-
+	if(rvar %>% has_duplicates) return(rt)
+	if(input$rnd_sample_size %>% is.na) return("Please select a sample size of 1 or greater.")
 	random(input$dataset, input$rnd_var, input$rnd_sample_size)
 })
 
 observe({
-  if(is.null(input$randomReport) || input$randomReport == 0) return()
+  if(input$randomReport %>% not_pressed) return()
   isolate({
 		inp <- list(input$dataset, input$rnd_var, input$rnd_sample_size)
 		updateReport(inp,"random")
@@ -53,16 +51,16 @@ observe({
 random <- function(dataset, rnd_var, rnd_sample_size) {
 
 	# example list of names obtained from http://listofrandomnames.com
-# 	dat <- r_data[[dataset]]
-# 	selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
-# 	return(list(sample = selDat, dat = dat))
+	# dat <- r_data[[dataset]]
+	# selDat <- dat[sample(1:nrow(dat), rnd_sample_size),, drop = FALSE]
+	# return(list(sample = selDat, dat = dat))
 
   dat <- r_data[[dataset]]
   dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
   dat %>%
     arrange(desc(rnd_number)) %>%
     slice(1:rnd_sample_size) -> seldat
-	return(list(sample = seldat, dat = dat))
+	list(sample = seldat, dat = dat)
 }
 
 summary_random <- function(result = .random()) {
@@ -255,10 +253,11 @@ output$ctl <- renderUI({
 
 .ctl<- reactive({
 
-  if(is.null(input$ctl_dist)) return()
+  if(input$ctl_dist %>% not_available) return()
+
+  # avoiding input errors
   if(is.na(input$ctl_n) | input$ctl_n < 2) return("Please choose a sample size larger than 2.")
   if(is.na(input$ctl_m) | input$ctl_m < 2) return("Please choose 2 or more samples.")
-
   if(is.na(input$ctl_unif_min)) return("Please choose a minimum value for the uniform distribution.")
   if(is.na(input$ctl_unif_max)) return("Please choose a maximum value for the uniform distribution.")
   if(is.na(input$ctl_norm_mean)) return("Please choose a mean value for the normal distribution.")
@@ -267,14 +266,14 @@ output$ctl <- renderUI({
   if(is.na(input$ctl_binom_size) | input$ctl_binom_size < 1) return("Please choose a size parameter larger than 1 for the binomial distribution.")
   if(is.na(input$ctl_binom_prob) | input$ctl_binom_prob < 0.01) return("Please choose a probability between 0 and 1 for the binomial distribution.")
 
-  # creating a dependency to a new set of draw is generated every time the button is pressed
+  # creating a dependency so a new set of draw is generated every time the button is pressed
   input$ctl_resample
 
 	ctl(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 })
 
  observe({
-  if(is.null(input$ctlReport) || input$ctlReport == 0) return()
+  if(input$ctlReport %>% not_pressed) return()
   isolate({
 		inp <- list(input$ctl_dist, input$ctl_n, input$ctl_m, input$ctl_stat)
 		updateReport(inp,"ctl")
@@ -318,15 +317,9 @@ plots_ctl <- function(result = .ctl()) {
   bwd1 <- diff(range(data1, na.rm = TRUE)) / 10
   bwdm <- diff(range(datam, na.rm = TRUE)) / 10
 
-#   x <- stat_function(fun = dnorm, args = list(mean = 3, sd = .5, color = "blue"))
-#   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") + x
-
   plots <- list()
   plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
   plots[[2]] <- ggplot(datam, aes_string(x=sample_m)) + geom_histogram(binwidth = bwdm)
-#   plots[[2]] <- ggplot(data, aes_string(x="Sample")) + geom_density(alpha=.3, fill = "green") +
-#     stat_function(fun = dnorm, args = list(mean = mean(data[,1]), sd = sd(data[,1])), color = "blue") +
-#     labs(y = "") + theme(axis.text.y = element_blank())
   plots[[3]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw)
   plots[[4]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_density(alpha=.3, fill = "green") +
       stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]), sd = sd(sstat[,1])), color = "blue") +

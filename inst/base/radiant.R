@@ -132,6 +132,10 @@ not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
 # check if string variable is defined
 is_empty <- function(x, empty = "") ifelse(is.null(x) || x == "", TRUE, FALSE)
 
+# check for duplicate entries
+has_duplicates <- function(x)
+  ifelse(length(x %>% unique) < length(x), TRUE, FALSE)
+
 # is x some type of date variable
 isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 
@@ -152,6 +156,9 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
     paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
     enc2utf8
 }
+
+suggest_data <- function(text = "", dat = "diamonds")
+  paste0(text, "For an example dataset go to Data > Manage, select the 'examples' radio button,\nand press the 'Load examples' button. Then select the \'", dat, "\' dataset")
 
 ################################################################
 # functions used to create Shiny in and outputs

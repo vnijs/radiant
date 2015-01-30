@@ -1,6 +1,6 @@
 # Radiant: Business analytics using R and Shiny
 
-Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis and classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
+Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
 
 ## Key features
 
@@ -71,7 +71,7 @@ See also the [installing Radiant](https://www.youtube.com/) video.
 
 ## Creating a desktop launcher (_work in progress_)
 
-You can also put a launcher on your Desktop to make it easy to start Radiant. For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/blob/master/launchers/mac/radiant_marketing.command.zip) or [quant](https://github.com/mostly-harmless/radiant/blob/master/launchers/mac/radiant_quant.command.zip) launcher to your Desktop and upzip the file. Double-click the (red) `radiant_marketing.command` icon to launch Radiant in your default browser.
+You can also put a launcher on your Desktop to make it easy to start Radiant. For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_marketing.zip) or [quant](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_quant.zip) launcher to your Desktop and upzip the file. Double-click the `radiant_marketing.command` icon to launch Radiant in your default browser.
 
 On Windows you can create a launcher for Radiant on your Desktop by typing `win_launcher()` in the R-console. The function should create a new file called `radiant.bat` on your Desktop. Double click the .bat file and Radiant should start in your default browser. Note that the first time you start the Radiant several required packages will be installed, and this may take a few minute
 
@@ -107,6 +107,6 @@ The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3
 
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
-If you are interested in using Radiant please email me at radiant@rady.ucsd.edu
+If you are interested in using Radiant please send an email to radiant@rady.ucsd.edu
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>
