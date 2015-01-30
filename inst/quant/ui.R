@@ -12,7 +12,7 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
     # update when all elements of base have been upgraded and tested
     tabPanel("Single mean", uiOutput("single_mean")),
     tabPanel("Compare means", uiOutput("compare_means")),
-    tabPanel("Single proportion", uiOutput("singleProp")),
+    tabPanel("Single proportion", uiOutput("single_prop")),
     tabPanel("Cross-tabs", uiOutput("crosstab"))
   ),
 
