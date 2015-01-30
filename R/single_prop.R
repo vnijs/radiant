@@ -36,9 +36,10 @@ single_prop <- function(dataset, sp_var, sp_levels,
 
 	dat <- getdata_exp(dataset, sp_var)
 	levs <- levels(dat[,sp_var])
-	if(sp_levels %in% levs && levs[1] != sp_levels)
+	if(sp_levels %in% levs && levs[1] != sp_levels) {
 		dat[,sp_var] %<>% relevel(sp_levels)
 		levs <- levels(dat[,sp_var])
+	}
 	n <- nrow(dat)
 	ns <- sum(dat == sp_levels)
 	# binom.test for exact
@@ -72,9 +73,10 @@ summary.single_prop <- function(result) {
                   "less" = "<",
                   "greater" = ">")[result$sp_alternative]
 
-	cat("Null hyp.: the proportion of", result$sp_var, "=", result$sp_comp_value, "\n")
-	cat("Alt. hyp.: the proportion of", result$sp_var, "is", hyp_symbol,
-	    result$sp_comp_value, "\n\n")
+	cat("Null hyp.: the proportion of", result$sp_levels, "in", result$sp_var, "=",
+	    result$sp_comp_value, "\n")
+	cat("Alt. hyp.: the proportion of", result$sp_levels, "in", result$sp_var, hyp_symbol,
+	    result$sp_comp_value, "\n")
 
 	# determine lower and upper % for ci
 	{100 * (1-result$sp_sig_level)/2} %>%
