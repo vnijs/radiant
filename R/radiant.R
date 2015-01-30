@@ -74,7 +74,7 @@ getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = NULL) {
     # cat("Dataset", dataset, "loaded from the radiant environment (r_env)\n")
     select_(r_env$r_data[[dataset]], .dots = vars) %>% clean
   } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-    cat("Dataset", dataset, "loaded from r_data list\n")
+    if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
     select_(r_data[[dataset]], .dots = vars) %>% clean
   } else if(exists(dataset)) {
     cat("Dataset", dataset, "loaded from global environment\n")
