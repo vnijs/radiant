@@ -46,6 +46,7 @@ single_mean <- function(dataset, sm_var,
 #' @export
 summary.single_mean <- function(result) {
 
+  cat("Single mean test\n")
 	cat("Data     :", result$dataset, "\n")
 	# cat("Filter   :", result$xtra$filter, "\n")
 	cat("Variable :", result$sm_var, "\n")

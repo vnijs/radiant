@@ -70,9 +70,11 @@ output$correlation <- renderUI({
 })
 
 .correlation <- reactive({
-	ret_text <- "Please select two or more variables"
-	if(input$cor_var %>% not_available) return(ret_text)
-	if(length(input$cor_var) < 2) return(ret_text)
+	"Please select two or more variables.\n\n" %>%
+		suggest_data("diamonds") -> rt
+
+	if(input$cor_var %>% not_available) return(rt)
+	if(length(input$cor_var) < 2) return(rt)
 
 	correlation(input$dataset, input$cor_var, input$cor_type, input$cor_cutoff)
 })
@@ -208,6 +210,12 @@ reg_pred_buttons <- c("Data" = "dataframe","Command" = "cmd")
 output$ui_regression <- renderUI({
   list(
   	wellPanel(
+		  conditionalPanel(condition = "input.tabs_regression == 'Plots'",
+		    selectInput("reg_plots", "Regression plots:", choices = r_plots,
+			  	selected = state_init_list("reg_plots","", r_plots)),
+		    checkboxInput('reg_line', 'Line', value = state_init("reg_line", FALSE)),
+		    checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE))
+		  ),
 	    uiOutput("uiReg_var1"),
 	    uiOutput("uiReg_var2"),
 		  radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
@@ -227,7 +235,6 @@ output$ui_regression <- renderUI({
           selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",r_data$datasetlist),
             selected = state_init("reg_predict_data"), multiple = FALSE)
         ),
-
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
         checkboxInput(inputId = "reg_rmse", label = "RMSE",
@@ -247,12 +254,6 @@ output$ui_regression <- renderUI({
         checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
       		value = state_init('reg_stepwise',FALSE))
 			),
-		  conditionalPanel(condition = "input.tabs_regression == 'Plots'",
-		    selectInput("reg_plots", "Regression plots:", choices = r_plots,
-			  	selected = state_init_list("reg_plots","", r_plots)),
-		    checkboxInput('reg_line', 'Line', value = state_init("reg_line", FALSE)),
-		    checkboxInput('reg_loess', 'Loess', value = state_init("reg_loess", FALSE))
-		  ),
 		  actionButton("saveres", "Save residuals")
 	  ),
 		helpAndReport('Regression','regression', inclRmd("../quant/tools/help/regression.Rmd"))
@@ -276,11 +277,12 @@ output$regression <- renderUI({
 })
 
 .regression <- reactive({
-	if(is.null(input$reg_standardize)) return("")
-
+	# if(is.null(input$reg_standardize)) return("")
 	if(input$reg_var1 %>% not_available)
-		return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.")
-	if(input$reg_var2 %>% not_available) return("Please select one or more independent variables.")
+		return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
+
+	if(input$reg_var2 %>% not_available)
+		return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
 	result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
 		input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data, input$reg_standardize,
