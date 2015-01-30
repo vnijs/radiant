@@ -111,4 +111,4 @@ The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3
 
 As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
 
-If you are interested in using Radiant please send and email to radiant@rady.ucsd.edu
+If you are interested in using Radiant please send an email to radiant@rady.ucsd.edu
