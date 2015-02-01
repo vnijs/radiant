@@ -9,7 +9,6 @@
 #' @param cm_sig_level Span of the confidence interval
 #' @param cm_adjust Adjustment for multiple comparisons (none or bonferroni)
 #' @param cm_plots One or more plots of mean values (bar, box, or density plot)
-#' @param cm_jitter Add jitter to data points for a box plot
 #'
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
@@ -25,8 +24,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                           cm_alternative = "two.sided",
                           cm_sig_level = .95,
                           cm_adjust = "none",
-                          cm_plots = "bar",
-                          cm_jitter = FALSE) {
+                          cm_plots = "bar") {
 
 	vars <- c(cm_var1, cm_var2)
 	dat <- getdata_exp(dataset, vars)
@@ -37,11 +35,9 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 		dat %<>% gather_("variable", "values", vars)
 	}
 
+	# check variances in the data
   if(summarise_each(dat, funs(var(., na.rm = TRUE))) %>% min %>% equals(0))
 		return("Test could not be calculated. Please select another variable.")
-	# check variances in the data
-	# summarise_each(dat, funs(var)) %>%
-	# 	{ if(min(.) == 0) return("Test could not be calculated. Please select another variable.") }
 
 	# resetting option to independent if the number of observations
 	# is unequal
@@ -49,9 +45,23 @@ compare_means <- function(dataset, cm_var1, cm_var2,
     if(summary(dat$variable) %>% { max(.) != min(.) })
       cm_paired <- "independent (obs. per level unequal)"
 
+	##############################################
+	# flip the order of pairwise testing - part 1
+	##############################################
+  flip_alt <- c("two.sided" = "two.sided",
+                "less" = "greater",
+                "greater" = "less")
+	##############################################
+
 	pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
 	                p.adj = cm_adjust, paired = cm_paired == "paired",
-                  alternative = cm_alternative) %>% tidy -> res
+                  alternative = flip_alt[cm_alternative]) %>% tidy -> res
+
+	##############################################
+	# flip the order of pairwise testing - part 2
+	##############################################
+	res[,c("group1","group2")] <- res[,c("group2","group1")]
+	##############################################
 
 	plot_height <- 400 * length(cm_plots)
 
@@ -72,9 +82,19 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 # library(broom)
 # library(dplyr)
+# library(tidyr)
 # library(magrittr)
+# library(ggplot2)
 # load("~/Desktop/convenience.rda")
-# compare_means("convenience","Convenience","Hotel")
+# result <- compare_means("convenience","Convenience","Price",cm_alternative = "greater")
+# summary(result)
+# result <- compare_means("diamonds","cut","price",cm_alternative = "greater")
+# result
+# summary(result)
+# load("~/Desktop/PairwiseBrand.rda")
+# PairwiseBrand
+# result <- compare_means("PairwiseBrand","BrandA","BrandB",cm_alternative = "less")
+# summary(result)
 
 #' Summarize method for output from compare_means
 #'
@@ -108,10 +128,15 @@ summary.compare_means <- function(result) {
                   "less" = "<",
                   "greater" = ">")[result$cm_alternative]
 
+  means <- result$dat_summary$mean
+  names(means) <- result$dat_summary$` ` %>% as.character
+
 	mod <- result$res
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
-	mod <- mod[,c("Alt. hyp.", "Null hyp.", "p.value")]
+	mod$diff <- means[mod$group1 %>% as.character] -
+							means[mod$group2 %>% as.character]
+	mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
 	mod$` ` <- sig_stars(mod$p.value)
 	mod$p.value <- round(mod$p.value,3)
 	mod$p.value[ mod$p.value < .001 ] <- "< .001"
@@ -151,10 +176,9 @@ plot.compare_means <- function(result) {
 
 	# graphs on full data
 	if("box" %in% result$cm_plots) {
-		pbox <- ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) +
-						geom_boxplot(alpha=.7)
-		if(result$cm_jitter) pbox <- pbox + geom_jitter()
-		plots[[which("box" == result$cm_plots)]] <- pbox
+		plots[[which("box" == result$cm_plots)]] <-
+			ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) +
+				geom_boxplot(alpha=.7)
 	}
 
 	if("density" %in% result$cm_plots) {

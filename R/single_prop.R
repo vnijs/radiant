@@ -11,7 +11,7 @@
 #' @return A list with all variables defined in the function as an object of class single_prop
 #'
 #' @examples
-#' single_prop("diamond","cut")
+#' single_prop("diamond","cut","IF")
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize results
 #' @seealso \code{\link{plots.single_prop}} to plot results
@@ -22,23 +22,11 @@ single_prop <- function(dataset, sp_var, sp_levels,
                         sp_alternative = "two.sided",
                         sp_sig_level = .95,
                         sp_plots = "hist") {
-                        # sp_plots = c("hist","simulate")) {
-
-	# library(ggplot2)
-	# library(dplyr)
-	# library(radiant)
-	# dataset <- "diamonds"
-	# sp_var <- "cut"
-	# sp_levels <- "Fair"
-	# sp_comp_value = 0.05
-	# sp_alternative = "less"
-	# sp_sig_level = .95
-	# sp_plots = "hist"
 
 	dat <- getdata_exp(dataset, sp_var)
 	levs <- levels(dat[,sp_var])
 	if(sp_levels %in% levs && levs[1] != sp_levels) {
-		dat[,sp_var] %<>% relevel(sp_levels)
+		dat[,sp_var] %<>% as.character %>% as.factor %>% relevel(sp_levels)
 		levs <- levels(dat[,sp_var])
 	}
 	n <- nrow(dat)
@@ -128,19 +116,57 @@ plot.single_prop <- function(result) {
 								divide_by(result$n) %>%
 							  data.frame %>%
 							  set_colnames(lev_name)
+
+		ci_perc <- {if(result$sp_alternative == 'two.sided') {
+									{(1-result$sp_sig_level)/2}  %>% c(., 1 - .)
+								} else if(result$sp_alternative == 'less') {
+									{1-result$sp_sig_level}
+								} else {
+									result$sp_sig_level
+								}} %>%
+									quantile(simdat[,result$sp_var], probs = . )
+
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
 		plots[[which("simulate" == result$sp_plots)]] <-
 			ggplot(simdat, aes_string(x=lev_name)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = result$sp_comp_value, color = 'red',
-				           linetype = 'longdash', size = 1) +
+				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = result$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
-				# geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
-				#            color = 'black', linetype = 'longdash', size = .5) +
+				geom_vline(xintercept = ci_perc,
+				           color = 'red', linetype = 'longdash', size = .5) +
 	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", result$sp_var, ")"))
 	}
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }
+
+# rm(list = ls())
+# library(ggplot2)
+# library(dplyr)
+# library(broom)
+# dataset <- "diamonds"
+# single_prop("diamonds","clarity","VS")
+
+# diamonds[1:10,"clarity"] %>% as.character %>% as.factor
+# lapply(diamonds,class)
+# x <- diamonds[,"clarity"] %>% as.character %>% as.factor
+# class(x)
+# diamonds$x
+
+# %>% relevel(sp_levels)
+
+# dat <- diamonds
+# sp_var <- "clarity"
+# sp_levels <- "VVS2"
+
+# dat[,sp_var] %>% as.factor %>% relevel(sp_levels)
+# dat[,sp_var] %>% as.character %>% as.factor %>% relevel(sp_levels)
+
+# sp_levels <- "Fair"
+# sp_comp_value = 0.05
+# sp_alternative = "less"
+# sp_sig_level = .95
+# sp_plots = "hist"

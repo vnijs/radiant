@@ -57,6 +57,13 @@ output$ui_cm_var2 <- renderUI({
 output$ui_compare_means <- renderUI({
   tagList(
     wellPanel(
+      conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
+        selectizeInput(inputId = "cm_plots", label = "Select plots:",
+                choices = cm_plots,
+                selected = state_init_list("cm_plots", cm_args$cm_plots, cm_plots),
+                multiple = TRUE,
+                options = list(plugins = list('remove_button', 'drag_drop')))
+      ),
       uiOutput("ui_cm_var1"),
       uiOutput("ui_cm_var2"),
       conditionalPanel(condition = "input.tabs_compare_means == 'Summary'",
@@ -73,15 +80,6 @@ output$ui_compare_means <- renderUI({
         radioButtons(inputId = "cm_adjust", label = "Multiple comp. adjustment:", cm_adjust,
           selected = state_init_list("cm_adjust", cm_args$cm_adjust, cm_adjust),
           inline = TRUE)
-      ),
-      conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
-        selectizeInput(inputId = "cm_plots", label = "Select plots:",
-                choices = cm_plots,
-                selected = state_init_list("cm_plots", cm_args$cm_plots, cm_plots),
-                multiple = TRUE,
-                options = list(plugins = list('remove_button', 'drag_drop'))),
-        checkboxInput('cm_jitter', 'Jitter',
-                      value = state_init("cm_jitter", cm_args$cm_jitter))
       )
     ),
     help_and_report(modal_title = 'Compare means',

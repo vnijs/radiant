@@ -28,7 +28,7 @@ Compare a sample proportion to a population proportion
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
-single_prop("diamond","cut")
+single_prop("diamond","cut","IF")
 }
 \seealso{
 \code{\link{summary.single_prop}} to summarize results
