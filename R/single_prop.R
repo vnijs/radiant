@@ -124,7 +124,7 @@ plot.single_prop <- function(result) {
 								} else {
 									result$sp_sig_level
 								}} %>%
-									quantile(simdat[,result$sp_var], probs = . )
+									quantile(simdat[,lev_name], probs = . )
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
