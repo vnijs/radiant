@@ -20,12 +20,16 @@
 single_mean <- function(dataset, sm_var,
                         sm_comp_value = 0,
                         sm_alternative = "two.sided",
-                        sm_sig_level = .95) {
+                        sm_sig_level = .95,
+                        sm_plots = "hist") {
+                        # sm_plots = c("hist","simulate")) {
 
 	dat <- getdata_exp(dataset, sm_var)
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res
+
+	plot_height <- 400 * length(sm_plots)
 
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
@@ -90,14 +94,58 @@ summary.single_mean <- function(result) {
 #' @export
 plot.single_mean <- function(result) {
 
-	bw <- diff(range(result$dat, na.rm = TRUE)) / 12
-	res <- result$res
-	ggplot(result$dat, aes_string(x=result$sm_var)) +
-		geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
-		geom_vline(xintercept = result$sm_comp_value, color = 'red',
-		           linetype = 'longdash', size = 1) +
-		geom_vline(xintercept = result$res$estimate, color = 'black',
-		           linetype = 'solid', size = 1) +
-		geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
-		           color = 'black', linetype = 'longdash', size = .5)
+ 	plots <- list()
+
+	if("hist" %in% result$sm_plots) {
+		bw <- result$dat %>% range(na.rm = TRUE) %>% diff %>% divide_by(10)
+
+		plots[[which("hist" == result$sm_plots)]] <-
+			ggplot(result$dat, aes_string(x=result$sm_var)) +
+				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
+				geom_vline(xintercept = result$sm_comp_value, color = 'red',
+				           linetype = 'longdash', size = 1) +
+				geom_vline(xintercept = result$res$estimate, color = 'black',
+				           linetype = 'solid', size = 1) +
+				geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
+				           color = 'black', linetype = 'longdash', size = .5)
+	}
+	if("simulate" %in% result$sm_plots) {
+
+		# simdat <- rnorm(1000, mean = result$sm_comp_value,
+		#                 sd = sd(result$dat[,result$sm_var])) %>%
+		# 					  data.frame %>%
+		# 					  set_colnames(result$sm_var)
+
+		simdat <- matrix(0, nrow = 1000)
+		for(i in 1:1000) {
+			simdat[i] <- result$dat[,result$sm_var] %>%
+										 sample(., length(.), replace = TRUE) %>%
+										 mean
+		}
+		simdat %<>% { (. - mean(.)) + result$sm_comp_value } %>%
+									as.data.frame %>% set_colnames(result$sm_var)
+
+		bw <- simdat %>% range %>% diff %>% divide_by(20)
+
+		plots[[which("simulate" == result$sm_plots)]] <-
+			ggplot(simdat, aes_string(x=result$sm_var)) +
+				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
+				geom_vline(xintercept = result$sm_comp_value, color = 'red',
+				           linetype = 'longdash', size = 1) +
+				geom_vline(xintercept = result$res$estimate, color = 'black',
+				           linetype = 'solid', size = 1) +
+				# geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
+				#            color = 'black', linetype = 'longdash', size = .5) +
+	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", result$sm_var, ")"))
+	}
+
+	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }
+
+# library(gridExtra)
+# library(ggplot2)
+# library(dplyr)
+# diamonds <- diamonds[1:100,]
+# result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"))
+# summary(result)
+# plot(result)
