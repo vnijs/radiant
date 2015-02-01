@@ -107,7 +107,8 @@ getdata <- reactive({
 })
 
 getdata_class <- reactive({
-  r_data[[input$dataset]][1,,drop = FALSE] %>% getdata_class_fun
+  # r_data[[input$dataset]][1,,drop = FALSE] %>% getdata_class_fun
+  r_data[[input$dataset]] %>% getdata_class_fun
 })
 
 getdata_class_fun <- function(dat) {
@@ -137,10 +138,10 @@ has_duplicates <- function(x)
   ifelse(length(x %>% unique) < length(x), TRUE, FALSE)
 
 # is x some type of date variable
-isSomeDate <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
+is_date <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 
 # convert a date variable to character for printing
-d2c <- function(x) ifelse(isSomeDate(x),return(as.character(x)),return(x))
+d2c <- function(x) if(x %>% is_date) { x %>% as.character } else { x }
 
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {

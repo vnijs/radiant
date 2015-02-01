@@ -89,32 +89,94 @@ main_conjointProfiles <- function(result = .conjointProfiles()) {
 # 	r_data[[objname]] <- read.csv(uFile)
 # }
 
-conjointFFD <-function(dat,trial) { #{{{
 
-	experiment = expand.grid(dat)
-	nr.levels <- 0
-	nr.vars <- length(dat)
-	for(i in 1:nr.vars) nr.levels <- nr.levels + length(dat[[i]])
-	min.profiles <- nr.levels - nr.vars + 1
-	max.profiles <- dim(experiment)[1]
-	for (i in min.profiles:max.profiles) {
-		set.seed(172110)
-		# set.seed(1234)
+# library(DoE.base)
+# # prof <- read.csv("~/Desktop/conjointProfiles.csv") %>%
+# prof <- structure(list(sight = structure(c(1L, 1L, 1L, 1L, 1L, 1L, 1L,
+# 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L), .Label = c("Not Staggered",
+# "Staggered"), class = "factor"), food = structure(c(1L, 1L, 1L,
+# 2L, 2L, 2L, 3L, 3L, 3L, 1L, 1L, 1L, 2L, 2L, 2L, 3L, 3L, 3L), .Label = c("Gourmet food",
+# "Hot dogs and popcorn", "No food"), class = "factor"), price = structure(c(1L,
+# 1L, 2L, 2L, 2L, 3L, 1L, 3L, 3L, 2L, 3L, 3L, 1L, 1L, 3L, 1L, 2L,
+# 2L), .Label = c("$10", "$13", "$16"), class = "factor"), comfort = structure(c(1L,
+# 3L, 3L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 2L, 2L, 3L, 3L, 1L, 1L,
+# 3L), .Label = c("Average cup", "Average no cup", "Large cup"), class = "factor"),
+#     audio.visual = structure(c(1L, 3L, 2L, 2L, 3L, 1L, 3L, 1L,
+#     2L, 1L, 3L, 2L, 2L, 1L, 3L, 2L, 3L, 1L), .Label = c("Large digital",
+#     "Large plain", "Small plain"), class = "factor")), class = "data.frame", row.names = c(NA,
+# -18L), .Names = c("sight", "food", "price", "comfort", "audio.visual")) %>%
+#     select(sight, food, price, comfort, audio.visual) %>%
+#     arrange(sight, food, price, comfort, audio.visual)
 
-		design <- optFederov(data = experiment, nTrials=i, maxIteration=1000)
+# lev <- list(price = c('$10','$13','$16'),
+#             sight = c('Staggered','Not Staggered'),
+#             comfort = c('Average no cup','Average cup','Large cup'),
+#             audio.visual = c('Small plain','Large plain','Large digital'),
+#             food = c('No food','Hot dogs and popcorn','Gourmet food'))
 
-		cor.mat <- cor(data.matrix(design$design))
+# to_pad <- sapply(lev, length)
+# max(to_pad) == min(to_pad)
+# for(i in 1:length(lev)) {
+# 	lev[[i]] <- c(lev[[i]], rep("",max(to_pad)-length(lev[[i]])))
+# }
 
-		# cat('\nEvaluating the',i,'profile design\n\n')
-		# print(as.dist(cor.mat), digits = 1)
-		# cat('\nD-efficiency:',design$Dea,'\n')
+# write.csv(lev, "~/Desktop/test.csv", row.names = FALSE)
+# read.csv(test, colClasses = "character")
 
-		if(det(cor.mat)==1) break
+# oa.design(seed = 1234, factor.names = sample(lev), columns="min34") %>%
+#   select(sight, food, price, comfort, audio.visual) %>%
+#   arrange(sight, food, price, comfort, audio.visual)
+
+# cor_mat <- cor(data.matrix(res))
+# cor_mat
+# cat(paste(nrow(res)," ", det(cor_mat)), "\n")
+
+# library(DoE.base)
+# library(dplyr)
+# lev <- list(price = c('$10','$13','$16'),
+#             sight = c('Staggered','Not Staggered'),
+#             comfort = c('Average no cup','Average cup','Large cup'),
+#             audio.visual = c('Small plain','Large plain','Large digital'),
+#             food = c('No food','Hot dogs and popcorn','Gourmet food'))
+
+# oa.design(seed = 1234, factor.names = sample(lev), columns="min34") %>%
+#   select(sight, food, price, comfort, audio.visual) %>%
+#   arrange(sight, food, price, comfort, audio.visual)
+
+# cor_mat <- cor(data.matrix(res))
+# cor_mat
+# cat(paste(nrow(res)," ", det(cor_mat)), "\n")
+
+
+conjointFFD <-function(dat, trial = 50, rseed = 172110) {
+
+	experiment <- expand.grid(dat)
+
+	###############################################
+	# eliminate combinations from experiment
+	# by removing then from the 'experiment'
+	# http://stackoverflow.com/questions/18459311/creating-a-fractional-factorial-design-in-r-without-prohibited-pairs?rq=1
+	###############################################
+
+	nr_levels <- sapply(dat, length) %>% sum
+	min_profiles <- nr_levels - length(dat) + 1
+	max_profiles <- nrow(experiment)
+	set.seed(rseed)
+
+	for (i in min_profiles:max_profiles) {
+		design <- optFederov(data = experiment, nTrials=i,
+		                     maxIteration=1000)
+		cor_mat <- cor(data.matrix(design$design))
+		cat('\nEvaluating the',i,'profile design\n\n')
+		print(as.dist(cor_mat), digits = 1)
+		cat('\nD-efficiency:',design$Dea,'\n')
+		# if(det(cor_mat)==1) break
+		if(design$Dea == 1) break
 	}
 
-	nr.profiles <- dim(design$design)[1]
-	# cat(paste("\nThe number of profiles selected is equal to",nr.profiles,"\n\n"))
-	if(nr.profiles > 24) {
+	nr_profiles <- design$design %>% nrow
+	cat(paste("\nThe number of profiles selected is equal to",nr_profiles,"\n\n"))
+	if(nr_profiles> 24) {
 		if(trial < 20) {
 			return()
 		} else {
@@ -124,20 +186,20 @@ conjointFFD <-function(dat,trial) { #{{{
 		}
 	}
 
-	return(list(frac = design$design, full = experiment))
+	list(frac = design$design, full = experiment)
 }
 
 observe({
-	inFile <- input$uploadAttr
-  if(!is.null(inFile)) {
+	# inFile <- input$uploadAttr
+  if(!is.null(input$uploadAttr)) {
     isolate({
-      r_data[['ca_attr']] <- gsub("\"","\'",readLines(inFile$datapath))
+      r_data[['ca_attr']] <- gsub("\"","\'",readLines(input$uploadAttr$datapath))
     })
   }
 })
 
 output$downloadProfiles <- downloadHandler(
-	filename = function() { 'conjointProfiles.csv' },
+	filename = function() { 'conjoint_profiles.csv' },
   content = function(file) {
 		write.csv(.conjointProfiles()$frac, file, row.names = FALSE)
 	}

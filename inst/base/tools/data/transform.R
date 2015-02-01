@@ -34,17 +34,17 @@ cent <- function(x) {
 }
 
 # median split
-msp <- function(x) cut(x, breaks=quantile(x,c(0,.5,1)), include.lowest=TRUE, labels=c("Below","Above"))
+msp <- function(x) cut(x, breaks = quantile(x,c(0,.5,1)),
+                       include.lowest = TRUE,
+                       labels = c("Below", "Above"))
 # decile split
-dec <- function(x) cut(x, breaks=quantile(x,seq(0,1,.1)), include.lowest=TRUE, labels=seq(1,10,1))
+dec <- function(x) cut(x, breaks = quantile(x, seq(0,1,.1)),
+                       include.lowest = TRUE,
+                       labels = seq(1,10,1))
 
 sq <- function(x) x^2
 inv <- function(x) 1/x
 normalize <- function(x,y) x/y
-# st <- standardize_1sd
-# cent <- centerVar
-# msp <- medianSplit
-# dec <- decileSplit
 
 # as character needed here in case x is a factor
 d_mdy <- function(x) as.character(x) %>% mdy %>% as.Date
@@ -54,26 +54,48 @@ d_ymd <- function(x) as.character(x) %>% ymd %>% as.Date
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
 d_ymd_hms <- function(x) as.character(x) %>% ymd_hms
 
-as.int <- function(x) ifelse(is.factor(x),
-                              return(as.integer(levels(x))[x]),
-                              return(as.integer(x)))
-as.num <- function(x) ifelse(is.factor(x),
-                              return(as.numeric(levels(x))[x]),
-                              return(as.numeric(x)))
+as_int <- function(x) {
+	if(x %>% is.factor) {
+		x %>% levels %>% as.integer %>% extract(x)
+	} else {
+		x %>% as.integer
+	}
+}
 
-trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp", "Square" = "sq",
-                      "Square-root" = "sqrt", "Center" = "cent", "Standardize" = "st",
-                      "Invert" = "inv", "Median split" = "msp", "Deciles" = "dec")
+as_num <- function(x) {
+	if(x %>% is.factor) {
+		levels(x) %>% as.numeric %>% extract(x)
+	} else {
+    x %>% as.numeric
+	}
+}
 
-type_options <- list("None" = "none", "As factor" = "as.factor",  "As number" = "as.num",
-                     "As integer" = "as.int", "As character" = "as.character",
-                     "As date (mdy)" = "d_mdy", "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd",
+# test
+# x <- as.factor(rep(c('2','3'), 8))
+# as.numeric(x)
+# as.integer(x)
+# as_num(x)
+# as_int(x)
+# end test
+
+trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp",
+                      "Square" = "sq", "Square-root" = "sqrt",
+                      "Center" = "cent", "Standardize" = "st", "Invert" = "inv",
+                      "Median split" = "msp", "Deciles" = "dec")
+
+type_options <- list("None" = "none", "As factor" = "as.factor",
+                     "As number" = "as_num", "As integer" = "as_int",
+                     "As character" = "as.character", "As date (mdy)" = "d_mdy",
+                     "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd",
                      "As date/time (ymd_hms)" = "d_ymd_hms")
 
-trans_types <- list("None" = "none", "Type" = "type", "Change" = "change", "Normalize" = "normalize",
-                    "Create" = "create", "Clipboard" = "clip", "Recode" = "recode", "Rename" = "rename",
-                    "Reorder columns" = "reorder_cols", "Reorder levels" = "reorder_levs",
-                    "Remove columns" = "remove", "Remove missing" = "na.remove", "Subset" = "sub_filter")
+trans_types <- list("None" = "none", "Type" = "type", "Change" = "change",
+                    "Normalize" = "normalize", "Create" = "create",
+                    "Clipboard" = "clip", "Recode" = "recode",
+                    "Rename" = "rename", "Reorder columns" = "reorder_cols",
+                    "Reorder levels" = "reorder_levs",
+                    "Remove columns" = "remove", "Remove missing" = "na.remove",
+                    "Subset" = "sub_filter")
 
 output$ui_Transform <- renderUI({
 
@@ -138,7 +160,7 @@ transform_main <- reactive({
 
 	dat <- getdata()
 
-  ##### Fix - show data snippet if changeType == 'none' and no columns select #####
+  ##### Fix - show data snippet if changeType == 'none' and no columns selected #####
 	if(input$tr_changeType == "none") {
 	  if(input$tr_columns %>% not_available) return()
  		dat <- select_(dat, .dots = input$tr_columns)
@@ -307,6 +329,8 @@ output$transform_summary <- renderPrint({
 	if(is.null(dat)) return(invisible())
 	if(is.character(dat)) return(dat)
 
+	# lapply(dat, class)
+
   dat_class <- getdata_class_fun(dat)
 
 	isFct <- "factor" == dat_class
@@ -323,9 +347,10 @@ output$transform_summary <- renderPrint({
     select(dat, which(isNum)) %>%
       gather_("variable", "values", cn) %>%
       group_by(variable) %>%
-      summarise_each(funs(n = length, mean, median, min, max, `25%` = p25,
-                    `75%` = p75, sd, se = serr, cv = sd/mean,
-                    missing = nmissing)) %>%
+      summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
+                     median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),
+                     `25%` = p25, `75%` = p75, sd(.,na.rm=TRUE), se = serr,
+                     cv = sd/mean)) %>%
       as.data.frame -> num_dat
       num_dat[,-1] %<>% round(3)
       colnames(num_dat)[1] <- ""

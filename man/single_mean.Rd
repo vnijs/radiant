@@ -5,7 +5,7 @@
 \title{Compare a sample mean to a population mean}
 \usage{
 single_mean(dataset, sm_var, sm_comp_value = 0,
-  sm_alternative = "two.sided", sm_sig_level = 0.95)
+  sm_alternative = "two.sided", sm_sig_level = 0.95, sm_plots = "hist")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}

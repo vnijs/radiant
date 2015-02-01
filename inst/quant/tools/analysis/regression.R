@@ -92,17 +92,35 @@ correlation <- function(dataset, cor_var,
                         cor_type = "pearson",
                         cor_cutoff = 0) {
 
-	# dat <- na.omit( r_data[[dataset]][,cor_var] )
-	# dat <- data.frame(lapply(dat,as.numeric))
-
+	# could also use data.matrix as the last step in the chain
+	# but it seems to be about 25% slower based on system time
 	select_(r_data[[dataset]], .dots = cor_var) %>%
 		na.omit %>%
 		mutate_each(funs(as.numeric)) -> dat
 
 	nc <- ncol(dat)
-	list('dat' = dat, 'cor_type' = cor_type, 'cor_cutoff' = cor_cutoff,
-		'plotHeight' = 150 * nc,  'plotWidth' = 150 * nc)
+	plotHeight <- 150 * nc
+	plotWidth <- 150 * nc
+
+  environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }
+
+# library(ggplot2)
+# library(psych)
+# r_data <- list()
+# dataset <- "diamonds"
+# r_data$diamonds <- diamonds[1:100,1:5]
+# cor_var <- colnames(diamonds)[1:5]
+# result <- correlation("diamonds",cor_var)
+# summary_correlation(result)
+# plots_correlation(result)
+
+# system.time(
+# 	for(i in 1:100) {
+# 		print(i)
+# 		correlation("diamonds",colnames(diamonds))
+# 	}
+# )
 
 summary_correlation <- function(result = .correlation()) {
 
@@ -126,9 +144,8 @@ summary_correlation <- function(result = .correlation()) {
   print(cp, quote = FALSE)
 }
 
-plots_correlation <- function(result = .correlation()) {
 
-	if(class(result) == 'list') dat <- result$dat
+plots_correlation <- function(result = .correlation()) {
 
 	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
 	panel.plot <- function(x, y) {
@@ -152,7 +169,7 @@ plots_correlation <- function(result = .correlation()) {
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	pairs(dat, lower.panel=panel.smooth, upper.panel=panel.plot)
+	pairs(result$dat, lower.panel=panel.smooth, upper.panel=panel.plot)
 }
 
 ################################################################

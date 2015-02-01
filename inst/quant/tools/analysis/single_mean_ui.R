@@ -4,6 +4,7 @@
 
 # alternative hypothesis options
 sm_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
+sm_plots <- c("Histogram" = "hist", "Simulate" = "simulate")
 
 # list of function arguments
 sm_args <- as.list(formals(single_mean))
@@ -28,6 +29,12 @@ output$ui_sm_var <- renderUI({
 output$ui_single_mean <- renderUI({
   tagList(
   	wellPanel(
+      conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
+        selectizeInput(inputId = "sm_plots", label = "Select plots:",
+                choices = sm_plots,
+                selected = state_init_list("sm_plots", sm_args$sm_plots, sm_plots),
+                multiple = TRUE,
+                options = list(plugins = list('remove_button', 'drag_drop')))),
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
@@ -45,11 +52,18 @@ output$ui_single_mean <- renderUI({
  	)
 })
 
+
+sm_plot_height <- function() {
+  result <- .single_mean()
+  ifelse(!"character" %in% class(result), result$plot_height, 400)
+}
+
 # output is called from the main radiant ui.R
 output$single_mean <- renderUI({
 
 		register_print_output("summary_single_mean", ".single_mean")
-		register_plot_output("plot_single_mean", ".single_mean")
+		register_plot_output("plot_single_mean", ".single_mean",
+                         height_fun = "sm_plot_height")
 
 		# two separate tabs
 		sm_output_panels <- tabsetPanel(

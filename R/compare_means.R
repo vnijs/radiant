@@ -37,6 +37,14 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 		dat %<>% gather_("variable", "values", vars)
 	}
 
+  if(summarise_each(dat, funs(var(., na.rm = TRUE))) %>% min %>% equals(0))
+		return("Test could not be calculated. Please select another variable.")
+	# check variances in the data
+	# summarise_each(dat, funs(var)) %>%
+	# 	{ if(min(.) == 0) return("Test could not be calculated. Please select another variable.") }
+
+	# resetting option to independent if the number of observations
+	# is unequal
   if(cm_paired == "paired")
     if(summary(dat$variable) %>% { max(.) != min(.) })
       cm_paired <- "independent (obs. per level unequal)"
@@ -45,7 +53,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	                p.adj = cm_adjust, paired = cm_paired == "paired",
                   alternative = cm_alternative) %>% tidy -> res
 
-	plot_height <- 500 * length(cm_plots)
+	plot_height <- 400 * length(cm_plots)
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, n, conf.lev = .95)
@@ -61,6 +69,12 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	vars <- paste0(vars, collapse=", ")
   environment() %>% as.list %>% set_class(c("compare_means",class(.)))
 }
+
+# library(broom)
+# library(dplyr)
+# library(magrittr)
+# load("~/Desktop/convenience.rda")
+# compare_means("convenience","Convenience","Hotel")
 
 #' Summarize method for output from compare_means
 #'
