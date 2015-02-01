@@ -1,4 +1,4 @@
-#!/bin/bash
+e!/bin/bash
 
 # set directories
 cd ~/Desktop/GitHub/radiant_dev
