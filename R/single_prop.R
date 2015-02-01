@@ -22,6 +22,7 @@ single_prop <- function(dataset, sp_var, sp_levels,
                         sp_alternative = "two.sided",
                         sp_sig_level = .95,
                         sp_plots = "hist") {
+                        # sp_plots = c("hist","simulate")) {
 
 	# library(ggplot2)
 	# library(dplyr)
@@ -45,6 +46,8 @@ single_prop <- function(dataset, sp_var, sp_levels,
 	# binom.test for exact
 	prop.test(ns, n, p = sp_comp_value, alternative = sp_alternative,
 	           conf.level = sp_sig_level, correct = FALSE) %>% tidy -> res
+
+	plot_height <- 400 * length(sp_plots)
 
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }
@@ -76,7 +79,7 @@ summary.single_prop <- function(result) {
 	cat("Null hyp.: the proportion of", result$sp_levels, "in", result$sp_var, "=",
 	    result$sp_comp_value, "\n")
 	cat("Alt. hyp.: the proportion of", result$sp_levels, "in", result$sp_var, hyp_symbol,
-	    result$sp_comp_value, "\n")
+	    result$sp_comp_value, "\n\n")
 
 	# determine lower and upper % for ci
 	{100 * (1-result$sp_sig_level)/2} %>%
@@ -111,22 +114,21 @@ summary.single_prop <- function(result) {
 #' @export
 plot.single_prop <- function(result) {
 
+	lev_name <- result$levs[1]
+
  	plots <- list()
 	if("hist" %in% result$sp_plots) {
 		plots[[which("hist" == result$sp_plots)]] <-
 			ggplot(result$dat, aes_string(x = result$sp_var, fill = result$sp_var)) +
 	 			geom_histogram(alpha=.7) +
-	 	 		ggtitle(paste("Single proportion:", result$sp_var))
+	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", result$sp_var))
 	}
 	if("simulate" %in% result$sp_plots) {
-		lev_name <- result$levs[1]
 		simdat <- rbinom(1000, prob = result$sp_comp_value, result$n) %>%
 								divide_by(result$n) %>%
 							  data.frame %>%
 							  set_colnames(lev_name)
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
-
-		result$res
 
 		plots[[which("simulate" == result$sp_plots)]] <-
 			ggplot(simdat, aes_string(x=lev_name)) +
@@ -135,8 +137,9 @@ plot.single_prop <- function(result) {
 				           linetype = 'longdash', size = 1) +
 				geom_vline(xintercept = result$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
-				           color = 'black', linetype = 'longdash', size = .5)
+				# geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
+				#            color = 'black', linetype = 'longdash', size = .5) +
+	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", result$sp_var, ")"))
 	}
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )

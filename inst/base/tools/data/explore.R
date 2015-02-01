@@ -110,17 +110,17 @@ explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_selec
     isNum <- sapply(dat, is.numeric)
     if(sum(isNum) > 0) {
 
-      # skew, kurtosis = kurtosi, missing = nmissing)) %>%
-      select(dat, which(isNum)) %>%
-        gather_("variable", "values", expl_columns) %>%
-        group_by(variable) %>%
-        summarise_each(funs(n = length, mean, median, min, max, `25%` = p25,
-                            `75%` = p75, sd, se = serr, cv = sd/mean,
-                            missing = nmissing)) %>%
-        as.data.frame -> dat
-        dat[,-1] %<>% round(3)
-        colnames(dat)[1] <- ""
-        dat
+    select(dat, which(isNum)) %>%
+      gather_("variable", "values", expl_columns) %>%
+      group_by(variable) %>%
+      summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
+                     median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),
+                     `25%` = p25, `75%` = p75, sd(.,na.rm=TRUE), se = serr,
+                     cv = sd/mean)) %>%
+      as.data.frame -> dat
+      dat[,-1] %<>% round(3)
+      colnames(dat)[1] <- ""
+      dat
     }
   } else {
 

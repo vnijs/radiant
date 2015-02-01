@@ -64,11 +64,17 @@ output$ui_single_prop <- renderUI({
   )
 })
 
+sp_plot_height <- function() {
+  result <- .single_prop()
+  ifelse(!"character" %in% class(result), result$plot_height, 400)
+}
+
 # output is called from the main radiant ui.R
 output$single_prop <- renderUI({
 
 		register_print_output("summary_single_prop", ".single_prop")
-		register_plot_output("plot_single_prop", ".single_prop")
+		register_plot_output("plot_single_prop", ".single_prop",
+                         height_fun = "sp_plot_height")
 
 		# two separate tabs
 		sp_output_panels <- tabsetPanel(
