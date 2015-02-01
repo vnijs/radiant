@@ -6,7 +6,7 @@
 \usage{
 compare_means(dataset, cm_var1, cm_var2, cm_paired = "independent",
   cm_alternative = "two.sided", cm_sig_level = 0.95, cm_adjust = "none",
-  cm_plots = "bar", cm_jitter = FALSE)
+  cm_plots = "bar")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -22,8 +22,6 @@ compare_means(dataset, cm_var1, cm_var2, cm_paired = "independent",
 \item{cm_adjust}{Adjustment for multiple comparisons (none or bonferroni)}
 
 \item{cm_plots}{One or more plots of mean values (bar, box, or density plot)}
-
-\item{cm_jitter}{Add jitter to data points for a box plot}
 }
 \value{
 A list with all variables defined in the function as an object of class compare_means

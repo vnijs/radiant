@@ -103,18 +103,13 @@ plot.single_mean <- function(result) {
 			ggplot(result$dat, aes_string(x=result$sm_var)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = result$sm_comp_value, color = 'red',
-				           linetype = 'longdash', size = 1) +
+				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = result$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
 				           color = 'black', linetype = 'longdash', size = .5)
 	}
 	if("simulate" %in% result$sm_plots) {
-
-		# simdat <- rnorm(1000, mean = result$sm_comp_value,
-		#                 sd = sd(result$dat[,result$sm_var])) %>%
-		# 					  data.frame %>%
-		# 					  set_colnames(result$sm_var)
 
 		simdat <- matrix(0, nrow = 1000)
 		for(i in 1:1000) {
@@ -125,27 +120,59 @@ plot.single_mean <- function(result) {
 		simdat %<>% { (. - mean(.)) + result$sm_comp_value } %>%
 									as.data.frame %>% set_colnames(result$sm_var)
 
+		ci_perc <- {if(result$sm_alternative == 'two.sided') {
+									{(1-result$sm_sig_level)/2}  %>% c(., 1 - .)
+								} else if(result$sm_alternative == 'less') {
+									{1-result$sm_sig_level}
+								} else {
+									result$sm_sig_level
+								}} %>%
+									quantile(simdat[,result$sm_var], probs = . )
+
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
 		plots[[which("simulate" == result$sm_plots)]] <-
 			ggplot(simdat, aes_string(x=result$sm_var)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = result$sm_comp_value, color = 'red',
-				           linetype = 'longdash', size = 1) +
+				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = result$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
-				# geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
-				#            color = 'black', linetype = 'longdash', size = .5) +
+				geom_vline(xintercept = ci_perc,
+				           color = 'red', linetype = 'longdash', size = .5) +
 	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", result$sm_var, ")"))
 	}
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }
 
+# test
 # library(gridExtra)
 # library(ggplot2)
 # library(dplyr)
 # diamonds <- diamonds[1:100,]
 # result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"))
 # summary(result)
+# result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"),
+#                       sm_alternative = "less")
 # plot(result)
+# result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"),
+#                       sm_alternative = "greater")
+# plot(result)
+# end test
+
+# bootstrap using dplyr and broom NOT WORKING
+# library(broom)
+# select(mtcars, mpg) %>% bootstrap(10)
+# mtcars %>% bootstrap(10) %>% summarize(mean(mpg))
+# boot <- bootstrap(mtcars,10)
+
+# mtcars %>%
+# 	group_by(vs) %>%
+# 	summarize(mean = mean(mpg))
+
+# mtcars %>%
+# 	bootstrap(10) %>%
+# 	summarize(mean = mean(mpg))
+
+# bootstrap(mtcars, 5) %>% summarize(min(mpg))

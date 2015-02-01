@@ -27,7 +27,7 @@ R --save < build/write_package_files.R 2>&1
 
 # commit to repo
 cd ../radiant_miniCRAN
-git add .
+git add --all .
 # from http://stackoverflow.com/questions/4654437/how-to-set-current-date-as-git-commit-message
 git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
 git push
