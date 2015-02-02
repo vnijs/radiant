@@ -7,7 +7,7 @@
 win_launcher(app = c("marketing", "quant", "base"))
 }
 \arguments{
-\item{app}{App to install ('marketing', 'quant', or 'base'). Default is the 'marketing'}
+\item{app}{App to install ('marketing', 'quant', or 'base'). Default is 'marketing'}
 }
 \value{
 On a windows machine a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the Radiant app selected

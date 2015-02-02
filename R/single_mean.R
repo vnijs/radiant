@@ -112,11 +112,12 @@ plot.single_mean <- function(result) {
 	if("simulate" %in% result$sm_plots) {
 
 		simdat <- matrix(0, nrow = 1000)
-		for(i in 1:1000) {
+		for(i in 1:nrow(simdat)) {
 			simdat[i] <- result$dat[,result$sm_var] %>%
 										 sample(., length(.), replace = TRUE) %>%
 										 mean
 		}
+
 		simdat %<>% { (. - mean(.)) + result$sm_comp_value } %>%
 									as.data.frame %>% set_colnames(result$sm_var)
 
@@ -176,3 +177,28 @@ plot.single_mean <- function(result) {
 # 	summarize(mean = mean(mpg))
 
 # bootstrap(mtcars, 5) %>% summarize(min(mpg))
+
+# select(mtcars,mpg) %>% sample(., length(.), replace = TRUE) %>% summarize(mean = mean(mpg))
+
+# don't use the suggestion below. seems much slower than a simple loop
+# library(broom)
+# library(ggplot2)
+# library(dplyr)
+
+# nruns <- 1000
+
+# system.time(
+# 	simdat1 <- select(diamonds,price) %>% bootstrap(nruns) %>% do(data.frame(mean = mean(.$price)))
+# )
+
+# system.time({
+# 	simdat2 <- matrix(0, nrow = nruns)
+# 	for(i in 1:nrow(simdat)) {
+# 		simdat2[i] <- diamonds$price %>%
+# 									 sample(., length(.), replace = TRUE) %>%
+# 									 mean
+# 	}
+# })
+
+# simdat1
+# simdat2[1:10]
