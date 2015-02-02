@@ -32,6 +32,11 @@ You can call functions for visualization and analysis in your R-code and access 
 
 As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Note that this feature is currently available for the `single_mean`, `single_prop`, and `compare_means` functions.
 
+Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, executing the code above will produce the following error:
+
+`Error in .getReactiveEnvironment()\$currentContext() :
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)`
+
 ## Saving and loading state
 
 To save the your analyses you can save the state of the app (Data > Manage). You can open the state file at a later time to continue where you left off. As a simple example, go to the Data > View and Data > Visualize tabs to see what they look like by default. Then load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.rda?raw=true) in the `examples` folder and go back the View and Visualize tabs.
@@ -61,7 +66,6 @@ Documentation and tutorials for Radiant are available at <http://mostly-harmless
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
 You can install the `Radiant` package and all package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
-
 
 ```r
 options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
