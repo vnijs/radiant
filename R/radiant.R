@@ -87,23 +87,52 @@ getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = NULL) {
 
 #' Make a .bat launcher for Windows on the desktop
 #'
-#' @param app App to install ('marketing', 'quant', or 'base'). Default is the 'marketing'
+#' @param app App to install ('marketing', 'quant', or 'base'). Default is 'marketing'
 #'
 #' @return On a windows machine a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the Radiant app selected
 #'
 #' @export
 win_launcher <- function(app = c("marketing", "quant", "base")) {
 
+  # return("This function is for Windows only. For mac download launcher icons from http://mostly-harmless.github.io/radiant/index.html")
   if(.Platform$OS.type != 'windows')
-    return("This function is for Windows only. For mac download launcher icons from http://mostly-harmless.github.io/radiant/index.html")
+    return("This function is for Windows only. For Mac use the mac_launcher() function")
 
   local_dir <- Sys.getenv("R_LIBS_USER")
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
   filepath <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
-  launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/')); install.packages('radiant'); }; require(radiant); shiny::runApp(system.file(", app[1], "'marketing', package='radiant'), port = 4475, launch.browser = TRUE)\"")
+  launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/')); install.packages('radiant'); }; require(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
   cat(launch_string,file=paste0(filepath,"radiant.bat"),sep="\n")
 }
+
+
+#' Make a .command launcher for Mac on the desktop
+#'
+#' @param app App to install ('marketing', 'quant', or 'base'). Default is 'marketing'
+#'
+#' @return On a mac a file named 'radiant.command' will be put on the desktop. Double-click the file to launch the Radiant app selected
+#'
+#' @export
+mac_launcher <- function(app = c("marketing", "quant", "base")) {
+
+  if(Sys.info()["sysname"] != "Darwin")
+    return("This function is for Mac only. For windows use the win_launcher() function")
+
+  local_dir <- Sys.getenv("R_LIBS_USER")
+  if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+
+  filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
+  launch_string <- paste0("#!/usr/bin/env Rscript\n if(!require(radiant)) {\n options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\n install.packages('radiant')\n }\n\nrequire(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
+  cat(launch_string,file=filename,sep="\n")
+  Sys.chmod(filename, mode = "0755")
+}
+
+# mac_launcher("base")
+# mac_launcher("quant")
+# mac_launcher()
+# win_launcher()
+
 
 # test
 # rm(list = ls())
