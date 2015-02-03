@@ -193,7 +193,7 @@ img {
 <h3>How-to install Radiant</h3>
 <ul>
 <li>Required: <a href="http://cran.cnr.berkeley.edu/">R</a>, version 3.1.2 or later</li>
-<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox)</li>
+<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
 <li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
 </ul>
 <p>You can install the <code>Radiant</code> package and all package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
@@ -201,8 +201,8 @@ img {
 install.packages(&#39;radiant&#39;)</code></pre>
 <p>Once all packages are installed use the commands below to start the app:</p>
 <pre class="r"><code>library(&#39;radiant&#39;)
-radiant()</code></pre>
-<p>To start the quant app use:</p>
+radiant(&#39;marketing&#39;)</code></pre>
+<p><code>marketing</code> is the default app so you could also use the command <code>radiant()</code> to launch it. To start the <code>quant</code> app use:</p>
 <pre class="r"><code>library(&#39;radiant&#39;)
 radiant(&#39;quant&#39;)</code></pre>
 <p>See also the <a href="https://www.youtube.com/">installing Radiant</a> video.</p>

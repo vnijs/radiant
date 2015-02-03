@@ -212,7 +212,7 @@ plot(result)</code></pre>
 <p>As an example, you can compile the <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a></p>
 <p>for a more extensive example. Note that this feature is a <em>work in progress</em> and will be expanded over time. It is currently available for the <code>single_mean</code>, <code>single_prop</code>, and <code>compare_means</code> functions.</p>
 <p>Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using <code>Quit &gt; Quit</code>, executing the code above will produce the following error:</p>
-<p><code>Error in .getReactiveEnvironment()\$currentContext() :   Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)</code></p>
+<pre class="r"><code>Error in .getReactiveEnvironment()\$currentContext() : Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)</code></pre>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
@@ -222,7 +222,7 @@ plot(result)</code></pre>
 <div id="how-to-install-radiant" class="section level2">
 <h2>How-to install Radiant</h2>
 <ul>
-<li>Required: <a href="https://github.com/mostly-harmless/radiant_miniCRAN/tree/gh-pages/R-3.1.2">R</a>, version 3.1.2</li>
+<li>Required: <a href="http://cran.cnr.berkeley.edu/">R</a>, version 3.1.2 or later</li>
 <li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
 <li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
 </ul>
