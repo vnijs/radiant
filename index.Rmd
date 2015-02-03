@@ -36,7 +36,12 @@ You can call functions for visualization and analysis in your R-code and access 
 
 As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R)
 
-for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean` and `compare_means` functions.
+for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean`, `single_prop`, and `compare_means` functions.
+
+Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, executing the code above will produce the following error:
+
+`Error in .getReactiveEnvironment()\$currentContext() :
+  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)`
 
 ## Documentation
 
@@ -75,9 +80,15 @@ See also the [installing Radiant](https://www.youtube.com/) video.
 
 ## Creating a desktop launcher (_work in progress_)
 
-You can also put a launcher on your Desktop to make it easy to start Radiant. For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_marketing.zip) or [quant](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_quant.zip) launcher to your Desktop and upzip the file. Double-click the `radiant_marketing.command` icon to launch Radiant in your default browser.
+You can also put a launcher on your Desktop to make it easy to start Radiant.
 
-On Windows you can create a launcher for Radiant on your Desktop by typing `win_launcher()` in the R-console. The function should create a new file called `radiant.bat` on your Desktop. Double click the .bat file and Radiant should start in your default browser. Note that the first time you start the Radiant several required packages will be installed, and this may take a few minute
+<!-- For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_marketing.zip) or [quant](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_quant.zip) launcher to your Desktop and upzip the file. Double-click the `radiant_marketing.command` icon to launch Radiant in your default browser. -->
+
+On Windows you can create a launcher for Radiant on your Desktop by typing `win_launcher()` in the R-console. The function should create a new file called `radiant.bat` on your Desktop. Double click the .bat file and Radiant should start in your default browser.
+
+On a Mac you can create a launcher for Radiant on your Desktop by typing `mac_launcher()` in the R-console. The function should create a new file called `radiant.command` on your Desktop. Double click the .command file and Radiant should start in your default browser.
+
+Note that the first time you start Radiant several required packages will be installed, and this may take a few minute
 
 When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button on the left of the screen. The Radiant process will stop and the browser window should close or gray-out.
 
