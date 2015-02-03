@@ -82,7 +82,7 @@ On Windows you can create a launcher for Radiant on your Desktop by typing `win_
 
 On a Mac you can create a launcher for Radiant on your Desktop by typing `mac_launcher()` in the R-console. The function should create a new file called `radiant.command` on your Desktop. Double click the .command file and Radiant should start in your default browser.
 
-Note that the first time you start the Radiant several required packages will be installed, and this may take a few minute
+Note that the first time you start Radiant several required packages will be installed, and this may take a few minute
 
 When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button on the left of the screen. The Radiant process will stop and the browser window should close or gray-out.
 
