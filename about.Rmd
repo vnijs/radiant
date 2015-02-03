@@ -33,7 +33,7 @@ library('radiant')
 radiant('quant')
 ```
 
-See also the [installing Radiant](https://www.youtube.com/) video.
+See also the [installing Radiant](https://www.youtube.com/watch?v=AtB2SsmzBsk) video.
 
 <!--
 <iframe width="640" height="375" src="//www.youtube.com/embed/e02LFmNysoM" frameborder="0" allowfullscreen></iframe>
