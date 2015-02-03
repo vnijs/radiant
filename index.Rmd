@@ -40,9 +40,9 @@ for a more extensive example. Note that this feature is a _work in progress_ and
 
 Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, executing the code above will produce the following error:
 
-`Error in .getReactiveEnvironment()\$currentContext() :
-  Operation not allowed without an active reactive context.
-  (You tried to do something that can only be done from inside a reactive expression or observer.)`
+```r
+Error in .getReactiveEnvironment()\$currentContext() : Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+```
 
 ## Documentation
 
