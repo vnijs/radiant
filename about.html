@@ -189,26 +189,9 @@ img {
 
 <hr />
 <p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis and classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
-<div id="how-to-install-radiant" class="section level3">
-<h3>How-to install Radiant</h3>
-<ul>
-<li>Required: <a href="http://cran.cnr.berkeley.edu/">R</a>, version 3.1.2 or later</li>
-<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
-<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
-</ul>
-<p>You can install the <code>Radiant</code> package and all package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
-<pre class="r"><code>options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
-install.packages(&#39;radiant&#39;)</code></pre>
-<p>Once all packages are installed use the commands below to start the app:</p>
-<pre class="r"><code>library(&#39;radiant&#39;)
-radiant(&#39;marketing&#39;)</code></pre>
-<p><code>marketing</code> is the default app so you could also use the command <code>radiant()</code> to launch it. To start the <code>quant</code> app use:</p>
-<pre class="r"><code>library(&#39;radiant&#39;)
-radiant(&#39;quant&#39;)</code></pre>
-<p>See also the <a href="https://www.youtube.com/watch?v=AtB2SsmzBsk">installing Radiant</a> video.</p>
-<!--
-<iframe width="640" height="375" src="//www.youtube.com/embed/e02LFmNysoM" frameborder="0" allowfullscreen></iframe>
--->
+<div id="installing-radiant" class="section level3">
+<h3>Installing Radiant</h3>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
 
 </div>
 <div id="starting-and-stopping-radiant" class="section level3">
@@ -628,23 +611,19 @@ A BibTeX entry for LaTeX users is
 
 To cite package &#39;shiny&#39; in publications use:
 
-  RStudio and Inc. (2014). shiny: Web Application Framework for R.
-  R package version 0.10.2.2.
-  http://CRAN.R-project.org/package=shiny
+  Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
+  McPherson (2015). shiny: Web Application Framework for R. R
+  package version 0.11.0.9001. http://shiny.rstudio.com
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
     title = {shiny: Web Application Framework for R},
-    author = {{RStudio} and {Inc.}},
-    year = {2014},
-    note = {R package version 0.10.2.2},
-    url = {http://CRAN.R-project.org/package=shiny},
+    author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
+    year = {2015},
+    note = {R package version 0.11.0.9001},
+    url = {http://shiny.rstudio.com},
   }
-
-ATTENTION: This citation information has been auto-generated from
-the package DESCRIPTION file and may need manual editing, see
-&#39;help(&quot;citation&quot;)&#39;.
 
 
 To cite package &#39;magrittr&#39; in publications use:

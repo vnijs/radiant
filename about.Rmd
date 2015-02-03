@@ -6,38 +6,9 @@ title: Radiant -- Business analytics using R and Shiny
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis and classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
 
-### How-to install Radiant
+### Installing Radiant
 
-- Required: [R](http://cran.cnr.berkeley.edu/), version 3.1.2 or later
-- Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
-- Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
-
-You can install the `Radiant` package and all package dependencies from the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repo (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
-
-```r
-options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
-install.packages('radiant')
-```
-
-Once all packages are installed use the commands below to start the app:
-
-```r
-library('radiant')
-radiant('marketing')
-```
-
-`marketing` is the default app so you could also use the command `radiant()` to launch it. To start the `quant` app use:
-
-```r
-library('radiant')
-radiant('quant')
-```
-
-See also the [installing Radiant](https://www.youtube.com/watch?v=AtB2SsmzBsk) video.
-
-<!--
-<iframe width="640" height="375" src="//www.youtube.com/embed/e02LFmNysoM" frameborder="0" allowfullscreen></iframe>
--->
+<iframe width="640" height="375" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
 
 ### Starting and stopping Radiant
 
