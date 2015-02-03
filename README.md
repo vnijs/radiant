@@ -34,8 +34,9 @@ As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly
 
 Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, executing the code above will produce the following error:
 
-`Error in .getReactiveEnvironment()\$currentContext() :
-  Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)`
+```r
+Error in .getReactiveEnvironment()\$currentContext() : Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
+```
 
 ## Documentation
 
@@ -45,7 +46,7 @@ To help you get started you can also take a look at this [playlist](https://www.
 
 ## How-to install Radiant
 
-- Required: [R](https://github.com/mostly-harmless/radiant_miniCRAN/tree/gh-pages/R-3.1.2), version 3.1.2
+- Required: [R](http://cran.cnr.berkeley.edu/), version 3.1.2 or later
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
