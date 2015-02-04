@@ -8,7 +8,6 @@ How does it work? Each person in the data is assigned a random number between 0 
 
 The full list of 100 people used here is what we would call the `sampling frame`. Ideally, this is a comprehensive list of _all_ sampling units (e.g., customers or companies) in your target market.
 
-How do you determine the appropriate value for $n$? See the sample size tool in the Random menu.
-
+How do you determine the appropriate value for _n_? See the sample size tool in the Random menu.
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

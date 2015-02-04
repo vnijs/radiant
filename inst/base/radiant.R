@@ -341,7 +341,7 @@ returnTextInput <- function(inputId, label, value = "") {
   tagList(
     includeScript("../base/www/js/returnTextInputBinding.js"),
     tags$label(label, `for` = inputId),
-    tags$input(id = inputId, type = "text", value = value, class = "returnTextInput")
+    tags$input(id = inputId, type = "text", value = value, class = "returnTextInput form-control")
   )
 }
 
@@ -370,50 +370,64 @@ helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'botto
     singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
     tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
       `data-placement` = match.arg(placement, several.ok=TRUE)[1],
-      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="icon-question-sign"))
+      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="glyphicon-question-sign"))
   )
 }
 
-# binding to a bootstrap modal
 helpModal <- function(modal_title, link, help_file) {
-  sprintf("<div id='%s' class='modal hide fade in' style='display: none; '>
-          <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
-          <h3>%s</h3>
-          </div>
-          <div class='modal-body'>%s</div></div>
-          <a title='Help' data-toggle='modal' href='#%s' class='icon-question-sign'></a>",
-          link, modal_title, help_file, link) %>%
-#   enc2utf8 %>% HTML %>% withMathJax
+  sprintf("<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
+            <div class='modal-dialog'>
+              <div class='modal-content'>
+                <div class='modal-header'>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                  <h4 class='modal-title' id='%s_label'>%s</h4>
+                  </div>
+                <div class='modal-body'>%s</div>
+              </div>
+            </div>
+           </div>
+           <i title='Help' class='glyphicon glyphicon-question-sign' data-toggle='modal' data-target='#%s'></i>",
+           link, link, link, modal_title, help_file, link) %>%
   enc2utf8 %>% HTML
 }
 
 helpAndReport <- function(title, link, content) {
-  # deprecate in favor of help_and_report when possible
-  sprintf("<div id='%sHelp' class='modal hide fade in' style='display: none; '>
-          <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
-          <h3>%s</h3></div>
-          <div class='modal-body'>%s</div></div>
-          <div><a title='Help' data-toggle='modal' href='#%sHelp' class='icon-question-sign alignleft'></a>
-          <a title='Report results' class='icon-book action-button shiny-bound-input alignright' href='#%sReport' id='%sReport'></a>
-          </div><div style='clear: both;'></div>
-          <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-          link, title, content, link, link, link) %>%
-  # enc2utf8 %>% HTML %>% withMathJax
+  sprintf("<div class='modal fade' id='%sHelp' tabindex='-1' role='dialog' aria-labelledby='%sHelp_label' aria-hidden='true'>
+            <div class='modal-dialog'>
+              <div class='modal-content'>
+                <div class='modal-header'>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                  <h4 class='modal-title' id='%sHelp_label'>%s</h4>
+                  </div>
+                <div class='modal-body'>%s</div>
+              </div>
+            </div>
+           </div>
+           <i title='Help' class='glyphicon glyphicon-question-sign alignleft' data-toggle='modal' data-target='#%sHelp'></i>
+           <i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input alignright' href='#%sReport' id='%sReport'></i>
+           <div style='clear: both;'></div>
+           <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+          link, link, link, title, content, link, link, link) %>%
   enc2utf8 %>% HTML
 }
 
-
 help_and_report <- function(modal_title, fun_name, help_file) {
-  sprintf("<div id='%s_help' class='modal hide fade in' style='display: none; '>
-          <div class='modal-header'><a class='close' data-dismiss='modal' href='#'>&times;</a>
-          <h3>%s</h3></div>
-          <div class='modal-body'>%s</div></div>
-          <div><a title='Help' data-toggle='modal' href='#%s_help' class='icon-question-sign alignleft'></a>
-          <a title='Report results' class='icon-book action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></a>
-          </div><div style='clear: both;'></div>
-          <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-          fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
-  # enc2utf8 %>% HTML %>% withMathJax
+  sprintf("<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
+            <div class='modal-dialog'>
+              <div class='modal-content'>
+                <div class='modal-header'>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                  <h4 class='modal-title' id='%s_help_label'>%s</h4>
+                  </div>
+                <div class='modal-body'>%s</div>
+              </div>
+            </div>
+           </div>
+           <i title='Help' class='glyphicon glyphicon-question-sign alignleft' data-toggle='modal' data-target='#%s_help'></i>
+           <i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
+           <div style='clear: both;'></div>
+           <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+          fun_name, fun_name, fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
   enc2utf8 %>% HTML
 }
 

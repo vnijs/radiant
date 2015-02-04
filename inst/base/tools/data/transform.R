@@ -1,22 +1,38 @@
 # UI-elements for transform
 output$uiTr_columns <- renderUI({
-	cols <- varnames()
-	selectInput("tr_columns", "Select column(s):", choices  = as.list(cols), selected = NULL, multiple = TRUE, selectize = FALSE)
+  vars <- varnames()
+  selectizeInput("tr_columns", "Select variable(s):", choices  = vars,
+    selected = state_init_multvar("tr_columns", NULL, vars), multiple = TRUE,
+    options = list(placeholder = 'Select variable(s)',
+                   plugins = list('remove_button', 'drag_drop')))
+})
+
+output$uiTr_reorg_cols <- renderUI({
+  vars <- varnames()
+  selectizeInput("tr_reorg_cols", "Reorder/remove variables", choices  = vars,
+    selected = state_init_multvar("tr_reorg_cols", vars, vars), multiple = TRUE,
+    options = list(placeholder = 'Select variable(s)',
+                   plugins = list('remove_button', 'drag_drop')))
 })
 
 output$uiTr_normalizer <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
   if(length(vars) == 0) return(NULL)
-  selectInput("tr_normalizer", "Normalizing variable:", c("None" = "none", vars), selected = "none")
+  selectInput("tr_normalizer", "Normalizing variable:", c("None" = "none", vars),
+              selected = "none")
 })
 
-output$uiTr_reorder_levs <- renderUI({
+output$uiTr_reorg_levs <- renderUI({
+	if(input$tr_columns %>% not_available) return()
   fctCol <- input$tr_columns[1]
 	isFct <- "factor" == getdata_class()[fctCol]
   if(!isFct) return()
-	getdata() %>% .[,fctCol] %>% levels -> levs
-  returnOrder("tr_reorder_levs", levs)
+	getdata()[,fctCol] %>% levels -> levs
+  selectizeInput("tr_reorg_levs", "Reorder/remove levels", choices  = levs,
+    selected = state_init_multvar("tr_reorg_levs", levs, levs), multiple = TRUE,
+    options = list(placeholder = 'Select level(s)',
+                   plugins = list('remove_button', 'drag_drop')))
 })
 
 # standardize variable
@@ -56,21 +72,23 @@ d_ymd_hms <- function(x) as.character(x) %>% ymd_hms
 
 as_int <- function(x) {
 	if(x %>% is.factor) {
-		x %>% levels %>% as.integer %>% extract(x)
+		levels(x) %>% .[x] %>% as.integer
 	} else {
-		x %>% as.integer
+		as.integer(x)
 	}
 }
 
 as_num <- function(x) {
 	if(x %>% is.factor) {
-		levels(x) %>% as.numeric %>% extract(x)
+		levels(x) %>% .[x] %>% as.numeric
 	} else {
-    x %>% as.numeric
+    as.numeric(x)
 	}
 }
 
 # test
+# library(magrittr)
+# library(dplyr)
 # x <- as.factor(rep(c('2','3'), 8))
 # as.numeric(x)
 # as.integer(x)
@@ -92,9 +110,9 @@ type_options <- list("None" = "none", "As factor" = "as.factor",
 trans_types <- list("None" = "none", "Type" = "type", "Change" = "change",
                     "Normalize" = "normalize", "Create" = "create",
                     "Clipboard" = "clip", "Recode" = "recode",
-                    "Rename" = "rename", "Reorder columns" = "reorder_cols",
-                    "Reorder levels" = "reorder_levs",
-                    "Remove columns" = "remove", "Remove missing" = "na.remove",
+                    "Rename" = "rename", "Reorder/remove variables" = "reorg_cols",
+                    "Reorder/remove levels" = "reorg_levs",
+                    "Remove missing" = "na.remove",
                     "Subset" = "sub_filter")
 
 output$ui_Transform <- renderUI({
@@ -111,15 +129,14 @@ output$ui_Transform <- renderUI({
     ),
     conditionalPanel(condition = "input.tr_changeType == 'normalize'",
       uiOutput("uiTr_normalizer")
-#       selectInput("tr_normalizer", "Choose variable:", c("None" = "none", as.list(varnames())),
-#                   selected = "none")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'create'",
 	    returnTextInput("tr_transform", "Create (e.g., x = y - z):", '')
     ),
     conditionalPanel(condition = "input.tr_changeType == 'clip'",
     	HTML("<label>Paste from Excel:</label>"),
-	    tags$textarea(id="tr_copyAndPaste", rows=3, "")
+    	tags$textarea(class="form-control",
+    	              id="tr_copyAndPaste", rows=3, "")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'recode'",
 	    returnTextInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')
@@ -131,19 +148,16 @@ output$ui_Transform <- renderUI({
       returnTextInput("tr_subset", "Subset (e.g., price > 5000)", '')
     ),
     conditionalPanel(condition = "input.tr_changeType != ''",
-#       returnTextInput("tr_subset", "Subset (e.g., price > 5000)", ''),
 	    actionButton("tr_show_changes", "Show"),
 	    actionButton("tr_save_changes", "Save changes")
 	  ),
-    conditionalPanel(condition = "input.tr_changeType == 'reorder_cols'",
+    conditionalPanel(condition = "input.tr_changeType == 'reorg_cols'",
     	br(),
-    	HTML("<label>Reorder (drag-and-drop):</label>"),
-	    returnOrder("tr_reorder_cols", varnames())
+	    uiOutput("uiTr_reorg_cols")
     ),
-    conditionalPanel(condition = "input.tr_changeType == 'reorder_levs'",
+    conditionalPanel(condition = "input.tr_changeType == 'reorg_levs'",
     	br(),
-    	HTML("<label>Reorder (drag-and-drop):</label>"),
-	    uiOutput("uiTr_reorder_levs")
+	    uiOutput("uiTr_reorg_levs")
     )
   	),
 		# helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
@@ -166,11 +180,11 @@ transform_main <- reactive({
  		dat <- select_(dat, .dots = input$tr_columns)
 	}
 
-	if(input$tr_changeType == 'reorder_cols') {
-    if(is.null(input$tr_reorder_cols)) {
+	if(input$tr_changeType == 'reorg_cols') {
+    if(is.null(input$tr_reorg_cols)) {
       ordVars <- colnames(dat)
  	  } else {
-   	  ordVars <- input$tr_reorder_cols
+   	  ordVars <- input$tr_reorg_cols
     }
  	  return(dat[,ordVars, drop = FALSE])
   }
@@ -236,10 +250,11 @@ transform_main <- reactive({
 		if(!input$tr_changeType %in% c("", "sub_filter", "create", "clip")) return()
 	}
 
-	if(!is.null(input$tr_columns) & input$tr_changeType == 'reorder_levs') {
-    if(!is.null(input$tr_reorder_levs)) {
+	if(!is.null(input$tr_columns) & input$tr_changeType == 'reorg_levs') {
+    if(!is.null(input$tr_reorg_levs)) {
     	isFct <- "factor" == getdata_class()[input$tr_columns[1]]
-		  if(isFct) dat[,input$tr_columns[1]] <- factor(dat[,input$tr_columns[1]], levels = input$tr_reorder_levs)
+		  if(isFct) dat[,input$tr_columns[1]] <-
+		  						factor(dat[,input$tr_columns[1]], levels = input$tr_reorg_levs)
     }
   }
 
@@ -388,9 +403,7 @@ observe({
 		if(is.null(dat)) return()
 		if(is.character(dat)) return(dat)
 
-		if(input$tr_changeType == 'remove') {
-	  	r_data[[input$dataset]][,colnames(dat)] <- list(NULL)
-	  } else if(input$tr_changeType == 'type') {
+	  if(input$tr_changeType == 'type') {
 	  	r_data[[input$dataset]][,colnames(dat)] <- dat
 		} else if(input$tr_changeType == 'na.remove') {
 	  	r_data[[input$dataset]] <- dat
@@ -403,8 +416,8 @@ observe({
                                                              "` to filter from dataset: ", input$dataset)
 		} else if(input$tr_changeType == 'rename') {
 			changedata_names(input$tr_columns, colnames(dat))
-		} else if(input$tr_changeType == 'reorder_cols') {
-	  	r_data[[input$dataset]] <- r_data[[input$dataset]][,input$tr_reorder_cols]
+		} else if(input$tr_changeType == 'reorg_cols') {
+	  	r_data[[input$dataset]] %<>% .[,input$tr_reorg_cols]
 	  } else {
 			changedata(dat, colnames(dat))
 		}

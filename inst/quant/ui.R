@@ -1,4 +1,5 @@
-shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", inverse = TRUE, collapsable = TRUE,
+shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant",
+        inverse = TRUE, collapsible = TRUE,
 
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
@@ -34,5 +35,7 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant", invers
     # do NOT remove withMathJax(), load-files breaks!
     # tabPanel("About", withMathJax(), uiOutput("help_about"))
     tabPanel("About", uiOutput("help_about"))
-  )
+  ),
+
+  tags$head(tags$link(rel="shortcut icon", href="imgs/icon.png"))
 ))

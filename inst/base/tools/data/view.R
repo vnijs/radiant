@@ -3,14 +3,17 @@
 #############################################
 output$uiView_vars <- renderUI({
   vars <- varnames()
-  selectInput("view_vars", "Select variables to show:", choices  = vars,
-    selected = state_init_multvar("view_vars",vars, vars),
-    multiple = TRUE, selectize = FALSE)
+  selectizeInput("view_vars", "Select variables to show:", choices  = vars,
+    selected = state_init_multvar("view_vars",vars, vars), multiple = TRUE,
+    options = list(placeholder = 'Select variables',
+                   plugins = list('remove_button', 'drag_drop')))
 })
 
+# multiple = TRUE, selectize = FALSE)
+
 output$uiView_subsbig <- renderUI({
-  list(
-    tags$textarea(id="view_subsbig_area", rows=3, "",
+  tagList(
+    tags$textarea(class="form-control", id="view_subsbig_area", rows=3, "",
                   state_init("view_subsbig_area",isolate(input$view_select))),
     actionButton("view_subsbig_action", "Submit command")
   )

@@ -53,9 +53,10 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
   help_choices <- help_init <- get(help_str)
   if(!help_on) help_init <- ""
   updateCheckboxGroupInput(session, help_str,
-                           label = "",
-                           choices = help_choices,
-                           selected = state_init_list(help_str, help_init, help_choices))
+    label = "",
+    choices = help_choices,
+    selected = state_init_list(help_str, help_init, help_choices),
+    inline = TRUE)
 }
 
 observe( help_switch(input$help_data_all, "help_data") )
@@ -75,7 +76,8 @@ output$help_base <- renderUI({
     sidebarPanel(
       wellPanel(
         checkboxGroupInput("help_data", "Data menu:", help_data,
-          selected = state_init_list("help_data","", help_data))
+          selected = state_init_list("help_data","", help_data),
+          inline = TRUE)
       ),
       wellPanel(
         helpText("Help is available on each page by clicking the ? icon on the bottom left of your screen.")
@@ -89,28 +91,32 @@ output$help_base <- renderUI({
 
 help_quant_ui <- tagList(
   wellPanel(
-    HTML("<label>Data menu: <a id='help_data_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_data_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Data menu: <i id='help_data_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_data_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_data", "", help_data,
-      selected = state_init_list("help_data","", help_data))
+      selected = state_init_list("help_data","", help_data),
+      inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Random menu: <a id='help_random_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_random_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Random menu: <i id='help_random_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_random_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_random", "", help_random,
-       selected = state_init_list("help_random","", help_random))
+       selected = state_init_list("help_random","", help_random),
+       inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Base menu: <a id='help_base_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_base_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Base menu: <i id='help_base_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_base_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_base_menu", "", help_base_menu,
-       selected = state_init_list("help_base_menu","", help_base_menu))
+       selected = state_init_list("help_base_menu","", help_base_menu),
+       inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Regression menu: <a id='help_regression_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_regression_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Regression menu: <i id='help_regression_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_regression_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_regression", "", help_regression,
-       selected = state_init_list("help_regression","", help_regression))
+       selected = state_init_list("help_regression","", help_regression),
+       inline = TRUE)
   )
 )
 
@@ -160,28 +166,32 @@ observe( help_switch(input$help_conjoint_none, "help_conjoint", help_on = FALSE)
 
 help_marketing_ui <- tagList(
   wellPanel(
-    HTML("<label>Maps menu: <a id='help_maps_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_maps_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Maps menu: <i id='help_maps_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_maps_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_maps", "", help_maps,
-      selected = state_init_list("help_maps","", help_maps))
+      selected = state_init_list("help_maps","", help_maps),
+      inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Factor menu: <a id='help_factor_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_factor_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Factor menu: <i id='help_factor_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_factor_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_factor", "", help_factor,
-      selected = state_init_list("help_factor","", help_factor))
+      selected = state_init_list("help_factor","", help_factor),
+      inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Cluster menu: <a id='help_cluster_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_cluster_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Cluster menu: <i id='help_cluster_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_cluster_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_cluster", "", help_cluster,
-      selected = state_init_list("help_cluster","", help_cluster))
+      selected = state_init_list("help_cluster","", help_cluster),
+      inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Conjoint menu: <a id='help_conjoint_all' title='Check all' href='#' class='action-button icon-ok'></a>
-    <a id='help_conjoint_none' title='Uncheck all' href='#' class='action-button icon-remove'></a></label>"),
+    HTML("<label>Conjoint menu: <i id='help_conjoint_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_conjoint_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_conjoint", "", help_conjoint,
-                       selected = state_init_list("help_conjoint","", help_conjoint))
+      selected = state_init_list("help_conjoint","", help_conjoint),
+      inline = TRUE)
   )
 )
 
