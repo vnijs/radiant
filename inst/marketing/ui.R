@@ -55,5 +55,7 @@ shinyUI(
     # do NOT remove withMathJax(), load-files breaks!
     # tabPanel("About", withMathJax(), uiOutput("help_about"))
     tabPanel("About", uiOutput("help_about"))
-  )
+  ),
+
+  tags$head(tags$link(rel="shortcut icon", href="imgs/icon.png"))
 ))
