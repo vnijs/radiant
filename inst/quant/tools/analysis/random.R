@@ -5,7 +5,6 @@ output$uiRnd_var <- renderUI({
   vars <- varnames()
 	isChar <- "character" == getdata_class()
  	vars <- vars[isChar]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "rnd_var", label = "Variable (select one):", choices = vars,
   	selected = state_singlevar("rnd_var",vars), multiple = FALSE)
 })
@@ -84,31 +83,36 @@ rnd_pop_correction <- c("Yes" = "yes", "No" = "no")
 output$ui_sampleSize <- renderUI({
   list(
   	wellPanel(
-		  radioButtons(inputId = "rnd_mean", label = "", rnd_mean,
-	  	  selected = state_init_list("rnd_mean","mean", rnd_mean)),
+      # radioButtons(inputId = "rnd_mean", label = "", rnd_mean,
+		  radioButtons(inputId = "rnd_mean", label = "", choices = rnd_mean,
+	  	  selected = state_init_list("rnd_mean","mean", rnd_mean),
+        inline = TRUE),
 		  conditionalPanel(condition = "input.rnd_mean == 'mean'",
-		    numericInput("rnd_mean_err", "Acceptable Error (units, e.g., $10):", min = 0,
-		  		value = state_init("rnd_mean_err",.2), step = .1),
+		    numericInput("rnd_mean_err", "Acceptable Error (e.g., $10):", min = 0,
+		  		value = state_init("rnd_mean_err", 2), step = .1),
 		    numericInput("rnd_mean_s", "Sample std. deviation:", min = 0,
-		  		value = state_init("rnd_mean_s",3), step = .1)
+		  		value = state_init("rnd_mean_s", 10), step = .1)
 	  	),
 		  conditionalPanel(condition = "input.rnd_mean != 'mean'",
-		  	numericInput("rnd_prop_err", "Acceptable Error (e.g., .03):", min = 0, max = 1,
-		  		value = state_init("rnd_prop_err",.1), step = .01),
+		  	numericInput("rnd_prop_err", "Acceptable Error (e.g., .03):", min = 0,
+          max = 1, value = state_init("rnd_prop_err", .1), step = .01),
 		    numericInput("rnd_prop_p", "Sample proportion:", min = 0, max = 1,
-		  		value = state_init("rnd_prop_p",.5), step = .05)
+		  		value = state_init("rnd_prop_p", .5), step = .05)
 	  	),
 	    numericInput("rnd_z", "Confidence level (z-value):", min = 0,
-	  		value = state_init("rnd_z",1.96), step = .1),
+	  		value = state_init("rnd_z", 1.96), step = .1),
 	    numericInput("rnd_incidence", "Incidence rate:", min = 0, max = 1,
-	  		value = state_init("rnd_incidence",1), step = .05),
+	  		value = state_init("rnd_incidence", 1), step = .05),
 	    numericInput("rnd_response", "Response rate:", min = 0, max = 1,
-	  		value = state_init("rnd_response",1), step = .05),
-		  radioButtons(inputId = "rnd_pop_correction", label = "Correct for population size:",
-		  	rnd_pop_correction, selected = state_init_list("rnd_pop_correction","no", rnd_pop_correction)),
+	  		value = state_init("rnd_response", 1), step = .05),
+      radioButtons(inputId = "rnd_pop_correction",
+        choices = rnd_pop_correction,
+        label = "Correct for population size:",
+        selected = state_init_list("rnd_pop_correction","no", rnd_pop_correction),
+        inline = TRUE),
 		  conditionalPanel(condition = "input.rnd_pop_correction == 'yes'",
 		    numericInput("rnd_pop_size", "Population size:", min = 1,
-		  		value = state_init("rnd_pop_size",10^6), step = 1000))
+		  		value = state_init("rnd_pop_size", 10^6), step = 1000))
 		),
 	 	helpAndReport('Sample size','sampleSize',inclRmd("../quant/tools/help/sampleSize.Rmd"))
  	)
@@ -195,23 +199,22 @@ output$ui_ctl <- renderUI({
     wellPanel(
       selectInput(inputId = "ctl_dist", label = "Distribution (select one):", choices = ctl_dist,
         selected = state_singlevar("ctl_dist", ctl_dist), multiple = FALSE),
-
       conditionalPanel(condition = "input.ctl_dist == 'runif'",
-        div(class="row-fluid",
-          div(class="span6",
+        div(class="row",
+          div(class="col-xs-6",
             numericInput("ctl_unif_min", "Min:", value = 0, min = -10, max = 0, step = 1)
           ),
-          div(class="span6",
+          div(class="col-xs-6",
             numericInput("ctl_unif_max", "Max:", value = 1, min = 1, max = 10, step = 1)
           )
         )
       ),
       conditionalPanel(condition = "input.ctl_dist == 'rnorm'",
-        div(class="row-fluid",
-          div(class="span6",
+        div(class="row",
+          div(class="col-xs-6",
             numericInput("ctl_norm_mean", "Mean:", value = 0)
           ),
-          div(class="span6",
+          div(class="col-xs-6",
             numericInput("ctl_norm_sd", "SD:", value = 1, min = 0.001)
           )
         )
@@ -220,25 +223,26 @@ output$ui_ctl <- renderUI({
         numericInput("ctl_expo_rate", "Rate:", value = 1, min = 1, step = 1)
       ),
       conditionalPanel(condition = "input.ctl_dist == 'binom'",
-        div(class="row-fluid",
-          div(class="span6",
+        div(class="row",
+          div(class="col-xs-6",
             numericInput("ctl_binom_size", "Size:", value = 1, min = 1, max = 100, step = 1)
           ),
-          div(class="span6",
+          div(class="col-xs-6",
             numericInput("ctl_binom_prob", "Prob:", value = 0.15, min = 0.01, max = 1, step = .05)
           )
         )
       ),
 
-      div(class="row-fluid",
-          div(class="span6",
+      div(class="row",
+          div(class="col-xs-6",
             numericInput("ctl_n", "Sample size:",  value = 50, min = 2, max = 500, step = 1)
           ),
-          div(class="span6",
+          div(class="col-xs-6",
             numericInput("ctl_m", "# of samples:",  value = 100, min = 2, max = 500, step = 1)
           )
       ),
-      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean"),
+      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean",
+                   inline = TRUE),
 		  actionButton("ctl_resample", "Resample")
 		),
 # 	 	helpAndReport('Central Limit Theorem','ctl',inclRmd("../quant/tools/help/ctl.Rmd"))
@@ -253,18 +257,28 @@ output$ctl <- renderUI({
 
 .ctl<- reactive({
 
-  if(input$ctl_dist %>% not_available) return()
+  if(input$ctl_dist %>% is.null) return("Please choose a distribution")
 
   # avoiding input errors
-  if(is.na(input$ctl_n) | input$ctl_n < 2) return("Please choose a sample size larger than 2.")
-  if(is.na(input$ctl_m) | input$ctl_m < 2) return("Please choose 2 or more samples.")
-  if(is.na(input$ctl_unif_min)) return("Please choose a minimum value for the uniform distribution.")
-  if(is.na(input$ctl_unif_max)) return("Please choose a maximum value for the uniform distribution.")
-  if(is.na(input$ctl_norm_mean)) return("Please choose a mean value for the normal distribution.")
-  if(is.na(input$ctl_norm_sd) | input$ctl_norm_sd < .001) return("Please choose a non-zero standard deviation for the normal distribution.")
-  if(is.na(input$ctl_expo_rate) | input$ctl_expo_rate < 1) return("Please choose a rate larger than 1 for the exponential distribution.")
-  if(is.na(input$ctl_binom_size) | input$ctl_binom_size < 1) return("Please choose a size parameter larger than 1 for the binomial distribution.")
-  if(is.na(input$ctl_binom_prob) | input$ctl_binom_prob < 0.01) return("Please choose a probability between 0 and 1 for the binomial distribution.")
+  # if(input$ctl_n %>% { is.na(.) | . < 2 })
+  if(is.na(input$ctl_n) | input$ctl_n < 2)
+    return("Please choose a sample size larger than 2.")
+  if(is.na(input$ctl_m) | input$ctl_m < 2)
+    return("Please choose 2 or more samples.")
+  if(is.na(input$ctl_unif_min))
+    return("Please choose a minimum value for the uniform distribution.")
+  if(is.na(input$ctl_unif_max))
+    return("Please choose a maximum value for the uniform distribution.")
+  if(is.na(input$ctl_norm_mean))
+    return("Please choose a mean value for the normal distribution.")
+  if(is.na(input$ctl_norm_sd) | input$ctl_norm_sd < .001)
+    return("Please choose a non-zero standard deviation for the normal distribution.")
+  if(is.na(input$ctl_expo_rate) | input$ctl_expo_rate < 1)
+    return("Please choose a rate larger than 1 for the exponential distribution.")
+  if(is.na(input$ctl_binom_size) | input$ctl_binom_size < 1)
+    return("Please choose a size parameter larger than 1 for the binomial distribution.")
+  if(is.na(input$ctl_binom_prob) | input$ctl_binom_prob < 0.01)
+    return("Please choose a probability between 0 and 1 for the binomial distribution.")
 
   # creating a dependency so a new set of draw is generated every time the button is pressed
   input$ctl_resample
@@ -284,21 +298,28 @@ ctl <- function(ctl_dist, ctl_n, ctl_m, ctl_stat) {
 
   n <- ctl_n; m <- ctl_m; dist <- ctl_dist
   if(ctl_dist == "runif") {
-    data <- matrix(runif(n*m, min=input$ctl_unif_min, max=input$ctl_unif_max), n, m)
+    data <- matrix(runif(n*m, min=input$ctl_unif_min, max=input$ctl_unif_max),
+                         n, m)
   } else if (ctl_dist == "rnorm") {
-    data <- matrix(rnorm(n*m, mean = input$ctl_norm_mean, sd = input$ctl_norm_sd), n, m)
+    data <- matrix(rnorm(n*m, mean = input$ctl_norm_mean,
+                         sd = input$ctl_norm_sd), n, m)
   } else if (ctl_dist == "expo") {
     data <- matrix(rexp(n*m, rate = input$ctl_expo_rate), n, m)
   } else if (ctl_dist == "binom") {
-    data <- matrix(rbinom(n*m, size = input$ctl_binom_size, prob=input$ctl_binom_prob), n, m)
+    data <- matrix(rbinom(n*m, size = input$ctl_binom_size,
+                          prob=input$ctl_binom_prob), n, m)
   }
+
   data
+
 }
 
 summary_ctl <- function(result = .ctl())
-    cat("See the Plots tab for output")
+  cat("See the Plots tab for output")
 
 plots_ctl <- function(result = .ctl()) {
+
+  if(result %>% is.character) return(result)
 
   ctl_stat <- input$ctl_stat
   if(ctl_stat == "Sum") {
@@ -318,12 +339,17 @@ plots_ctl <- function(result = .ctl()) {
   bwdm <- diff(range(datam, na.rm = TRUE)) / 10
 
   plots <- list()
-  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) + geom_histogram(binwidth = bwd1)
-  plots[[2]] <- ggplot(datam, aes_string(x=sample_m)) + geom_histogram(binwidth = bwdm)
-  plots[[3]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_histogram(binwidth = bw)
-  plots[[4]] <- ggplot(sstat, aes_string(x=ctl_stat)) + geom_density(alpha=.3, fill = "green") +
-      stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]), sd = sd(sstat[,1])), color = "blue") +
-      labs(y = "") + theme(axis.text.y = element_blank())
+  plots[[1]] <- ggplot(data1, aes_string(x="Sample_1")) +
+                  geom_histogram(binwidth = bwd1)
+  plots[[2]] <- ggplot(datam, aes_string(x=sample_m)) +
+                  geom_histogram(binwidth = bwdm)
+  plots[[3]] <- ggplot(sstat, aes_string(x=ctl_stat)) +
+                  geom_histogram(binwidth = bw)
+  plots[[4]] <- ggplot(sstat, aes_string(x=ctl_stat)) +
+                  geom_density(alpha=.3, fill = "green") +
+                  stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]),
+                                sd = sd(sstat[,1])), color = "blue") +
+                                labs(y = "") + theme(axis.text.y = element_blank())
 
   withProgress(message = 'Making plots', value = 0, {
     do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))

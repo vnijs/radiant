@@ -47,7 +47,8 @@ viz_multiple <- c("Single" = "single", "Multiple" = "multiple")
 output$ui_Visualize <- renderUI({
   list(wellPanel(
     radioButtons("viz_multiple", "Number of plots:", viz_multiple,
-                 state_init_list("viz_multiple","single", viz_multiple)),
+                 state_init_list("viz_multiple","single", viz_multiple),
+                 inline = TRUE),
     uiOutput("uiVizvars1"),
     uiOutput("uiVizvars2"),
     conditionalPanel(condition = "input.viz_multiple == 'single'",
@@ -61,11 +62,11 @@ output$ui_Visualize <- renderUI({
       checkboxInput('viz_jitter', 'Jitter', value = state_init("viz_jitter", FALSE))
     ),
     returnTextInput("viz_select", "Subset (e.g., price > 5000)", state_init("viz_select")),
-    div(class="row-fluid",
-        div(class="span6",
+    div(class="row",
+        div(class="col-xs-6",
             numericInput("viz_plot_height", label = "Plot height:", min = 100, step = 50,
                          value = state_init("viz_plot_height", r_data$plotHeight))),
-        div(class="span6",
+        div(class="col-xs-6",
             numericInput("viz_plot_width", label = "Plot width:", min = 100, step = 50,
                          value = state_init("viz_plot_width", r_data$plotWidth)))
     )

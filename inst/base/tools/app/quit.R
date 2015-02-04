@@ -5,21 +5,21 @@ output$savequit <- renderUI({
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        HTML("<label>Save app state:</label>"),
-        downloadButton('downloadStateQuit', 'Save')
-      ),
+        downloadButton('downloadStateQuit', 'Save state')),
       wellPanel(
-        HTML("<label>Reset app state:</label>"),
-        HTML("<button id='resetState' type='button' class='btn action-button' onClick='window.location.reload()'>Reset</button></br>"),
-        checkboxInput('showInput', 'Show input', FALSE), br(),
-        checkboxInput('showState', 'Show state', FALSE)
-      ),
+        tags$button(id = 'resetState', type = "button",
+                    class = "btn btn-default action-button shiny-bound-input",
+                    onclick = "window.location.reload();",
+                    "Reset state")),
       wellPanel(
         tags$button(id = 'quitApp', type = "button",
-                    class = "btn action-button",
+                    class = "btn btn-default action-button shiny-bound-input",
                     onclick = "window.close();",
-                    "Quit")
-      ),
+                    "Quit")),
+      wellPanel(
+        checkboxInput('showInput', 'Show input', FALSE),
+        checkboxInput('showState', 'Show state', FALSE)),
+
       helpModal('State','stateHelp',inclMD("../base/tools/help/state.md"))
     ),
     mainPanel(
@@ -34,7 +34,7 @@ output$savequit <- renderUI({
 })
 
 output$downloadStateQuit <- downloadHandler(
-  filename = function() { paste0("RadiantState-",Sys.Date(),".rsf") },
+  filename = function() { paste0("RadiantState-",Sys.Date(),".rda") },
   content = function(file) {
     saveState(file)
   }

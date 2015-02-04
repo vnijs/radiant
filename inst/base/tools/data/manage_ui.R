@@ -22,13 +22,14 @@ output$ui_Manage <- renderUI({
       radioButtons(inputId = "dataType", label = "Load data:",
                    c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard",
                      "examples" = "examples", "state" = "state"),
-                     selected = "rda"),
+                     selected = "rda", inline = TRUE),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
           checkboxInput('man_str_as_factor', 'String as Factor', TRUE),
-          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',')
+          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',',
+                       inline = TRUE)
         ),
         uiOutput("ui_fileUpload")
       ),
@@ -46,7 +47,7 @@ output$ui_Manage <- renderUI({
     wellPanel(
       radioButtons(inputId = "saveAs", label = "Save data:",
                    c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                     "state" = "state"), selected = "rda"),
+                     "state" = "state"), selected = "rda", inline = TRUE),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         actionButton('saveClipData', 'Copy data')
@@ -89,8 +90,9 @@ output$dataDescriptionHTML <- renderUI({
 
 output$dataDescriptionMD <- renderUI({
   tagList(
-    "<label>Add data description:</label>" %>% HTML,
-    tags$textarea(id="man_data_descr",
+    "<label>Add data description:</label><br>" %>% HTML,
+    tags$textarea(class="form-control",
+                  id="man_data_descr",
                   rows="15",
                   style="width:650px;",
                   descr_out(
@@ -144,7 +146,7 @@ observe({
                        label = "Save data:",
                        c("rda" = "rda", "csv" = "csv",
                          "clipboard" = "clipboard", "state" = "state"),
-                       selected = "rda")
+                       selected = "rda", inline = TRUE)
   })
 })
 
@@ -229,7 +231,7 @@ observe({
                                                "clipboard" = "clipboard",
                                                "examples" = "examples",
                                                "state" = "state"),
-                       selected = "rda")
+                       selected = "rda", inline = TRUE)
 
     updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = r_data$datasetlist, selected = 'xls_data')
