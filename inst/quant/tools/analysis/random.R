@@ -253,7 +253,7 @@ output$ctl <- renderUI({
 
 .ctl<- reactive({
 
-  if(input$ctl_dist %>% not_available) return()
+  if(input$ctl_dist %>% is.null) return()
 
   # avoiding input errors
   if(is.na(input$ctl_n) | input$ctl_n < 2) return("Please choose a sample size larger than 2.")
