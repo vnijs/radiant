@@ -34,14 +34,16 @@ output$uiPmap_pref <- renderUI({
  	if(length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
 
   selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,
-   	selected = state_multvar("pmap_pref",vars), multiple = TRUE, selectize = FALSE)
+   	selected = state_multvar("pmap_pref",vars),
+   	multiple = TRUE, selectize = FALSE)
 })
 
 output$uiPmap_plot <- renderUI({
 	plot_list <- c("Brands" = "brand", "Attributes" = "attr")
   if(!is.null(input$pmap_pref)) plot_list <- c(plot_list, c("Preferences" = "pref"))
 	checkboxGroupInput("pmap_plot", "", plot_list,
-   	selected = state_init_list("pmap_plot","", plot_list))
+   	selected = state_init_list("pmap_plot","", plot_list),
+   	inline = TRUE)
 })
 
 pmap_dim_number <- c("2-dims" = 2, "3-dims" = 3)
@@ -52,15 +54,18 @@ output$ui_pmap <- renderUI({
 	  	uiOutput("uiPmap_brand"),
 	  	uiOutput("uiPmap_attr"),
 	  	uiOutput("uiPmap_pref"),
+		  radioButtons(inputId = "pmap_dim_number", label = "", pmap_dim_number,
+		   	selected = state_init_list("pmap_dim_number",2, pmap_dim_number),
+		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Plots'",
 		  	uiOutput("uiPmap_plot"),
-	 	    div(class="row-fluid",
-		    	div(class="span6", numericInput("pmap_scaling", "Arrow scaling:", state_init("pmap_scaling",2.1), .5, 4, .1)),
-		      div(class="span6", numericInput("pmap_fontsz", "Font size:", state_init("pmap_fontsz",1.3), .5, 4, .1))
+	 	    div(class="row",
+		    	div(class="col-xs-6", numericInput("pmap_scaling", "Arrow scale:",
+		    	    state_init("pmap_scaling",2.1), .5, 4, .1)),
+		      div(class="col-xs-6", numericInput("pmap_fontsz", "Font size:",
+		          state_init("pmap_fontsz",1.3), .5, 4, .1))
 		    )
 	    ),
-		  radioButtons(inputId = "pmap_dim_number", label = "", pmap_dim_number,
-		   	selected = state_init_list("pmap_dim_number",2, pmap_dim_number)),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Summary'",
 	    	numericInput("pmap_cutoff", label = "Loadings cutoff:", min = 0, max = 1,
 	    		state_init("pmap_cutoff",0), step = .05),

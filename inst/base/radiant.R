@@ -294,8 +294,8 @@ statTabPanel2 <- function(menu, tool, tool_ui, output_panels,
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        HTML(paste("<label><strong>Menu:",menu,"</strong></label>")),
-        HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
+        HTML(paste("<label><strong>Menu:",menu,"</strong></label><br>")),
+        HTML(paste("<label><strong>Tool:",tool,"</strong></label><br>")),
         if(!is.null(data))
           HTML(paste("<label><strong>Data:",data,"</strong></label>"))
       ),
@@ -316,8 +316,8 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
   sidebarLayout(
     sidebarPanel(
       wellPanel(
-        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label>")),
-        HTML(paste("<label><strong>Tool:",tool,"</strong></label>")),
+        HTML(paste("<label><strong>Menu:",menu_name,"</strong></label><br>")),
+        HTML(paste("<label><strong>Tool:",tool,"</strong></label><br>")),
         if(!tool %in% c("Central Limit Theorem", "Sample size", "Create profiles"))
 	        HTML(paste("<label><strong>Data:",input$dataset,"</strong></label>"))
       ),

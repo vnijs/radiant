@@ -9,6 +9,10 @@ output$uiVizvars1 <- renderUI({
     selectize = input$viz_multiple == 'single')
 })
 
+# selectInput(inputId = "vizvars1", label = "X-variable", choices = letters[1:5],
+#             multiple = TRUE, selectize = FALSE) %>%
+# sub("form-group","form-group form-control", .)
+
 output$uiVizvars2 <- renderUI({
   vars <- varnames()
   selectizeInput(inputId = "vizvars2", label = "Y-variable",

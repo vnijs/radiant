@@ -28,7 +28,8 @@ output$ui_hierCluster <- renderUI({
 	     	selected = state_init_list("hc_meth","ward.D", hc_method), multiple = FALSE),
 	    conditionalPanel(condition = "input.tabs_hierCluster == 'Plots'",
 		    radioButtons(inputId = "hc_plots", label = "", hc_plots,
-	 	    	selected = state_init_list("hc_plots","dendo", hc_plots)),
+	 	    	selected = state_init_list("hc_plots","dendo", hc_plots),
+	 	    	inline = TRUE),
 	    	numericInput("hc_cutoff", "Plot cutoff:", min = 0, max = 1,
 	    		value = state_init('hc_cutoff',0), step = .05))
   	),
