@@ -7,6 +7,7 @@ output$data_ui_and_tabs <- renderUI({
   list(
     includeCSS("../base/www/style.css"),
     includeScript("../base/www/js/jquery-ui.custom.min.js"),
+    # includeScript("../base/www/js/select_add_class.js"),
     sidebarLayout(
       sidebarPanel(
         # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo

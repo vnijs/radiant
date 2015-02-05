@@ -236,13 +236,15 @@ output$ui_regression <- renderUI({
 	    uiOutput("uiReg_var1"),
 	    uiOutput("uiReg_var2"),
 		  radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
-	    	selected = state_init_list("reg_interactions","none", reg_interactions)),
+	    	selected = state_init_list("reg_interactions","none", reg_interactions),
+	    	inline = TRUE),
 		  conditionalPanel(condition = "input.reg_interactions != 'none'",
 				uiOutput("uiReg_intsel")
 			),
 		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
    	    radioButtons(inputId = "reg_predict_buttons", label = "Prediction:", reg_pred_buttons,
-	      	selected = state_init_list("reg_predict_buttons","dataframe",reg_pred_buttons)),
+	      	selected = state_init_list("reg_predict_buttons","dataframe",reg_pred_buttons),
+	      	inline = TRUE),
 
         conditionalPanel(condition = "input.reg_predict_buttons == 'cmd'",
           returnTextInput("reg_predict", "Predict (e.g., carat = seq(.5,1,.05))",
@@ -254,6 +256,18 @@ output$ui_regression <- renderUI({
         ),
 		    uiOutput("uiReg_var3"),
 		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
+
+
+
+# help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
+#                "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.Rmd")
+
+# 		        checkboxGroupInput("help_data", "", help_data,
+#       selected = state_init_list("help_data","", help_data),
+#       inline = TRUE)
+
+
+
         checkboxInput(inputId = "reg_rmse", label = "RMSE",
 	    		value = state_init('reg_rmse',FALSE)),
         checkboxInput(inputId = "reg_sumsquares", label = "Sum of squares",
@@ -262,14 +276,19 @@ output$ui_regression <- renderUI({
 	    		value = state_init('reg_vif',FALSE)),
         checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
       		value = state_init('reg_rmse',FALSE)),
-		    conditionalPanel(condition = "input.reg_confint == true | input.reg_predict_data != 'none' | input.reg_predict != ''",
-           sliderInput('reg_conf_level',"", min = 0.70, max = 0.99,
-                       value = state_init('reg_conf_level',.95), step = 0.01)
-		    ),
         checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
      		  value = state_init('reg_standardize',FALSE)),
         checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
-      		value = state_init('reg_stepwise',FALSE))
+      		value = state_init('reg_stepwise',FALSE)),
+
+
+
+		    conditionalPanel(condition = "input.reg_confint == true |
+		                     input.reg_predict_data != 'none' |
+		                     input.reg_predict != ''",
+           sliderInput('reg_conf_level',"Adjust confidence level:", min = 0.70, max = 0.99,
+                       value = state_init('reg_conf_level',.95), step = 0.01)
+		    )
 			),
 		  actionButton("saveres", "Save residuals")
 	  ),

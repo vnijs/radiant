@@ -37,9 +37,10 @@ output$uiMds_dis <- renderUI({
 
 output$uiMds_rev_dim <- renderUI({
 	rev_list <- list()
-	rev_list[paste("Dimension",1:input$mds_dim_number)] <- 1:input$mds_dim_number
+	rev_list[paste("Dim",1:input$mds_dim_number)] <- 1:input$mds_dim_number
 	checkboxGroupInput("mds_rev_dim", "Reverse:", rev_list,
-   	selected = state_init_list("mds_rev_dim","", rev_list))
+   	selected = state_init_list("mds_rev_dim","", rev_list),
+   	inline = TRUE)
 })
 
 mds_dim_number <- c("2-dims" = 2, "3-dims" = 3)
@@ -52,9 +53,11 @@ output$ui_mds <- renderUI({
 	  	uiOutput("uiMds_id2"),
 	  	uiOutput("uiMds_dis"),
 		  radioButtons(inputId = "mds_non_metric", label = "", mds_non_metric,
-		   	selected = state_init_list("mds_non_metric", "metric", mds_non_metric)),
+		   	selected = state_init_list("mds_non_metric", "metric", mds_non_metric),
+		   	inline = TRUE),
 		  radioButtons(inputId = "mds_dim_number", label = "", mds_dim_number,
-		   	selected = state_init_list("mds_dim_number",2, mds_dim_number)),
+		   	selected = state_init_list("mds_dim_number",2, mds_dim_number),
+		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_mds == 'Plots'",
 	 	 		numericInput("mds_fontsz", "Font size:", state_init("mds_fontsz",1.3), .5, 4, .1),
 		  	uiOutput("uiMds_rev_dim")

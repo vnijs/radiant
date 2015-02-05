@@ -16,7 +16,7 @@ label {
 }
 
 .form-group {
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 }
 
 .nav-tabs {
@@ -28,10 +28,10 @@ label {
   margin-bottom: 0px;
 }
 
-.radio-inline:first-child, .checkbox-inline:first-child {
+/*.radio-inline:first-child, .checkbox-inline:first-child {
   margin-right: 0;
   margin-left: 10px;
-}
+}*/
 
 .modal-dialog {
   width: 800px;
@@ -55,6 +55,10 @@ pre {
 .alignright {
   float: right;
 }
+
+/*select {
+  max-width: 200px;
+}*/
 
 /*#viz_plot_width, #viz_plot_height, #pmap_scaling, #pmap_fontsz,
 #ctl_m, #ctl_n, #ctl_unif_min, #ctl_unif_max, #ctl_norm_mean,

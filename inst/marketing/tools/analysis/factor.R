@@ -65,8 +65,9 @@ preFactor <- function(dataset, preFactor_vars) {
     if(is(scmat, 'try-error')) {
     	pre_r2 <- err_mess
     } else {
-    	pre_r2 <- 1 - (1 / diag(scmat))
-    	colnames(pre_r2) <- 'Rsq'
+    	pre_r2 <- {1 - (1 / diag(scmat))} %>%
+    							data.frame %>%
+    							set_colnames('Rsq')
     }
   } else {
   	pre_r2 <- err_mess
@@ -146,19 +147,21 @@ output$ui_fullFactor <- renderUI({
       uiOutput("uiFactor_vars"),
       selectInput("fac_method", label = "Method:", choices = fac_method,
       	selected = state_init_list("fac_method","PCA", fac_method)),
-      numericInput("fac_number", label = "Number of factors:", min = 1,
-      	value = state_init('fac_number',1)),
-      conditionalPanel(condition = "input.tabs_fullFactor != 'Plots'",
-  	    HTML("<label>Format loadings:</label>"),
-  			div(class="row-fluid",
-  	    	div(class="span6", numericInput("fac_cutoff", label = "", min = 0, max = 1,
-            value = state_init('fac_cutoff',0), step = .05) ),
-          div(class="span6", checkboxInput("fac_sort", "Sort",
-          	value = state_init('fac_sort',FALSE)))
-  	    )
+			div(class="row",
+ 	    	div(class="col-xs-6", numericInput("fac_number",
+ 	    	    label = "# of factors:", min = 1,
+ 	    	    value = state_init('fac_number',1))),
+	    	div(class="col-xs-6", numericInput("fac_cutoff",
+	    	    label = "Cutt-off",
+	    	    min = 0, max = 1, value = state_init('fac_cutoff',0),
+	    	    step = .05))
   	  ),
+  	  conditionalPanel(condition = "input.tabs_fullFactor == 'Summary'",
+        checkboxInput("fac_sort", "Sort", value = state_init('fac_sort',FALSE))
+      ),
       radioButtons("fac_rotation", label = "Rotation:", fac_rotation,
-      	selected = state_init_list("fac_rotation","varimax", fac_rotation)),
+      	selected = state_init_list("fac_rotation","varimax", fac_rotation),
+      	inline = TRUE),
       actionButton("fac_savescores", "Save scores")
   	),
 		helpAndReport('Factor','fullFactor',inclMD("tools/help/fullFactor.md"))
