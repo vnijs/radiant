@@ -1,5 +1,5 @@
-if(packageVersion('shiny') > "0.10.2.2")
-  warning("Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11.\nCopy-and-paste the code below to install the required packages.\n\n\ndetach('package:shiny', unload=TRUE)\nremove.packages('shiny')\noptions(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\ninstall.packages(new.packages(), dependencies = TRUE)")
+# if(packageVersion('shiny') > "0.10.2.2")
+#   warning("Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11.\nCopy-and-paste the code below to install the required packages.\n\n\ndetach('package:shiny', unload=TRUE)\nremove.packages('shiny')\noptions(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\ninstall.packages(new.packages(), dependencies = TRUE)")
 
 # for debugging
 # options(warn=0)
@@ -10,7 +10,7 @@ if(packageVersion('shiny') > "0.10.2.2")
 # load/attach packages
 pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
           "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
-          "knitr", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
+          "knitr", "rpivotTable", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
           "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
 
 if(Sys.getenv('SHINY_PORT') == "") {

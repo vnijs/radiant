@@ -19,6 +19,7 @@ Depends:
 		markdown (>= 0.7.4),
 		knitr (>= 1.8),
 		rmarkdown (>= 0.4.2),
+    rpivotTable (>= 0.1.2.6),
 		testthat (>= 0.9.1),
 		lubridate (>= 1.3.3),
 		pryr (>= 0.1),

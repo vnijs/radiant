@@ -30,9 +30,6 @@ loadClipboardData <- function(objname = "xls_data", ret = "") {
     dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
   } else if (Sys.info()["sysname"] == "Darwin") {
     dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
-  } else {
-    ret <- c("### Loading data through the clipboard is not currently supported online.")
-    dat <- try(log("a"), silent = TRUE)   # create try-error
   }
 
   if(is(dat, 'try-error')) {
@@ -49,12 +46,13 @@ loadClipboardData <- function(objname = "xls_data", ret = "") {
 saveClipboardData <- function() {
   os_type <- .Platform$OS.type
   if (os_type == 'windows') {
-    write.table(getdata(), "clipboard", sep="\t", row.names=FALSE)
+    write.table(getdata(), "clipboard", sep="\t",
+                row.names=FALSE)
   } else if (Sys.info()["sysname"] == "Darwin") {
-    write.table(getdata(), file = pipe("pbcopy"), row.names = FALSE,
-                sep = '\t')
+    write.table(getdata(), file = pipe("pbcopy"),
+                row.names = FALSE, sep = '\t')
   } else {
-    print("### Saving data through the clipboard is not currently supported online.")
+    print("### Saving data through the clipboard is currently only supported on Windows and Mac.")
   }
 }
 

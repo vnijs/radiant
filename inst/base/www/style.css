@@ -7,9 +7,20 @@
   max-width: 300px;
 }
 
-.navbar {
+.nav-tabs {
+  margin-bottom: 10px;
+}
+
+.checkbox {
+  margin-top: 0px;
   margin-bottom: 0px;
 }
+
+/*
+.navbar {
+  margin-bottom: 10px;
+}
+
 
 label {
   margin-bottom: 5px;
@@ -19,14 +30,8 @@ label {
   margin-bottom: 5px;
 }
 
-.nav-tabs {
-  margin-bottom: 10px;
-}
 
-.checkbox {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
+*/
 
 /*.radio-inline:first-child, .checkbox-inline:first-child {
   margin-right: 0;
