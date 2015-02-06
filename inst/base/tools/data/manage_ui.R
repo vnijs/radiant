@@ -4,7 +4,7 @@
 
 output$ui_fileUpload <- renderUI({
 
-  if(is.null(input$dataType)) return()
+  if(input$dataType %>% is.null) return()
   if(input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c('text/csv','text/comma-separated-values',
@@ -13,6 +13,28 @@ output$ui_fileUpload <- renderUI({
   } else if(input$dataType == "rda") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c(".rda",".rds",".rdata"))
+  }
+})
+
+output$ui_clipboard_load <- renderUI({
+  if(running_local) {
+    actionButton('loadClipData', 'Paste data')
+  } else {
+    HTML("<label>Not supported on shiny-server</label>")
+    # tags$textarea(class="form-control",
+    #   id="load_cdata", rows="5"
+    # )
+  }
+})
+
+output$ui_clipboard_save <- renderUI({
+  if(running_local) {
+    actionButton('saveClipData', 'Copy data')
+  } else {
+    HTML("<label>Not supported on shiny-server</label>")
+    # tags$textarea(class="form-control",
+    #   id="save_cdata", rows="5"
+    # )
   }
 })
 
@@ -34,7 +56,8 @@ output$ui_Manage <- renderUI({
         uiOutput("ui_fileUpload")
       ),
       conditionalPanel(condition = "input.dataType == 'clipboard'",
-        actionButton('loadClipData', 'Paste data')
+        # actionButton('loadClipData', 'Paste data')
+        uiOutput("ui_clipboard_load")
       ),
       conditionalPanel(condition = "input.dataType == 'examples'",
         actionButton('loadExampleData', 'Load examples')
@@ -50,7 +73,8 @@ output$ui_Manage <- renderUI({
                      "state" = "state"), selected = "rda", inline = TRUE),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
-        actionButton('saveClipData', 'Copy data')
+        # actionButton('saveClipData', 'Copy data')
+        uiOutput("ui_clipboard_save")
       ),
       conditionalPanel(condition = "input.saveAs != 'clipboard' &&
                                     input.saveAs != 'state'",

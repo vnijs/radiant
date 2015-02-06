@@ -45,7 +45,8 @@ visualize('diamonds', 'price', 'carat', '', 'single', '.', '.', 'clarity', FALSE
 "
 
 knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
-               fig.path = "~/radiant_temp/rmd/figure/")
+               fig.path = "~/radiant_figures/")
+               # fig.path = "~/radiant_temp/rmd/figure/")
 knitr::opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
@@ -58,14 +59,14 @@ output$report <- renderUI({
                   value = state_init("manualPaste", FALSE)),
     fileInput("loadRmd", "", multiple=TRUE),
 
-    div(class="row-fluid",
-      div(class="span6",
+    div(class="row",
+      div(class="col-xs-6",
         aceEditor("rmd_report", mode="markdown", wordWrap = TRUE,
                   height = "600px",
                   selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
                   hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
                   )),
-      div(class="span6", htmlOutput("rmd_knitDoc"))
+      div(class="col-xs-6", htmlOutput("rmd_knitDoc"))
     )
   )
 })
