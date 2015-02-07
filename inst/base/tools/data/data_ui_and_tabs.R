@@ -6,7 +6,7 @@
 output$data_ui_and_tabs <- renderUI({
   list(
     includeCSS("../base/www/style.css"),
-    includeScript("../base/www/js/jquery-ui.custom.min.js"),
+    # includeScript("../base/www/js/jquery-ui.custom.min.js"),
     # includeScript("../base/www/js/select_add_class.js"),
     sidebarLayout(
       sidebarPanel(
@@ -47,7 +47,7 @@ output$tabs_data <- renderUI({
              plotOutput("visualize", width = "100%", height = "100%")),
     tabPanel("Explore", verbatimTextOutput("expl_summary"),
              plotOutput("expl_plots", width = "100%", height = "100%")),
-    # tabPanel("Pivot"),
+    # tabPanel("Pivot", dataTableOutput("pivotDataTable")),
     tabPanel("Pivot", rpivotTableOutput("pivotData")),
     tabPanel("Merge", htmlOutput("mergePossible"),
              htmlOutput("mergeData1"), htmlOutput("mergeData2")),
