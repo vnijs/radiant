@@ -1,12 +1,6 @@
 .Rapp.history
 .Rhistory
-.dropbox
 .Rproj.user
 
-radiant-sync/
-
 inst/quant/data/data_rady/
-dev_branch/quant/data/data_rady/
-
 inst/marketing/data/data_rady/
-dev_branch/marketing/data/data_rady/
