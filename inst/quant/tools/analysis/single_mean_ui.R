@@ -97,11 +97,25 @@ output$single_mean <- renderUI({
 	do.call(single_mean, sm_inputs())
 })
 
+class(letters)
+x <- list()
+x$a = 1
+x$b = 2
+y <- list()
+y$a = 0
+y$b = 2
+
+same <- unlist(x) == unlist(y)
+x[same] <- NULL
+x
+
 
 observe({
   if(input$single_mean_report %>% not_pressed) return()
   isolate({
-		update_report(inp = sm_inputs(), fun_name = "single_mean",
+    sm_args_rep <- sm_inputs()
+    sm_args_rep$data_filter %<>% gsub("\\n","", .)
+		update_report(inp = sm_args_rep, fun_name = "single_mean",
 		              outputs = c("summary", "plot"))
   })
 })

@@ -169,8 +169,10 @@ update_report <- function(inp, fun_name, pre_cmd = "result <- ",
   outputs = c("summary", "plot"),
   figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
 
-  cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)),
-                collapse="\n")
+  cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L))) %>%
+          gsub("\\n","", .)
+
+                # collapse="\n")
 
   for(i in outputs)
     cmd <- paste0(cmd, "\n", i, "(result)")
