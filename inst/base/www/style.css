@@ -16,20 +16,23 @@
   margin-bottom: 0px;
 }
 
+.form-group {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+th, td {
+  text-align: left;
+}
+
 /*
 .navbar {
   margin-bottom: 10px;
 }
 
-
 label {
   margin-bottom: 5px;
 }
-
-.form-group {
-  margin-bottom: 5px;
-}
-
 
 */
 

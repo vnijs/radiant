@@ -80,7 +80,7 @@ summary.single_prop <- function(result) {
 	res$ns <- result$ns
 	res$n <- result$n
 	names(res) <- c("prop","chisq.value","p.value","df", ci_perc[1], ci_perc[2],
-									"n","ns")
+									"ns","n")
 	if (res$p.value < .001) res$p.value <- "< .001"
 
 	print(res, row.names = FALSE)
