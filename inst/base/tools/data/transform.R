@@ -144,9 +144,9 @@ output$ui_Transform <- renderUI({
     conditionalPanel(condition = "input.tr_changeType == 'rename'",
 	   	returnTextInput("tr_rename", "Rename (separate by ','):", '')
     ),
-    conditionalPanel(condition = "input.tr_changeType == 'sub_filter'",
-      returnTextInput("tr_subset", "Subset (e.g., price > 5000)", '')
-    ),
+    # conditionalPanel(condition = "input.tr_changeType == 'sub_filter'",
+    #   returnTextInput("tr_subset", "Subset (e.g., price > 5000)", '')
+    # ),
     conditionalPanel(condition = "input.tr_changeType != ''",
 	    actionButton("tr_show_changes", "Show"),
 	    actionButton("tr_save_changes", "Save changes")
@@ -155,12 +155,12 @@ output$ui_Transform <- renderUI({
     	br(),
 	    uiOutput("uiTr_reorg_cols")
     ),
-    conditionalPanel(condition = "input.tr_changeType == 'reorg_levs'",
-    	br(),
+    conditionalPanel(condition = "input.tr_changeType == 'reorg_levs'", br(),
 	    uiOutput("uiTr_reorg_levs")
-    )
+    ),
+	  textInput("tr_dataset", "Save changes to:", input$dataset)
   	),
-		# helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
+
 		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
 
 		# Reporting option not yet available for transform
@@ -200,17 +200,9 @@ transform_main <- reactive({
   }
 
 	if(input$tr_changeType == 'sub_filter') {
-	  if(input$tr_subset != '') {
-	    selcom <- input$tr_subset
-    	seldat <- try(do.call(subset, list(dat,parse(text = selcom))), silent = TRUE)
-
-    	if(!is(seldat, 'try-error')) {
-      	if(is.data.frame(seldat)) {
-        	return(seldat)
-      	}
-    	}
-  	}
-  }
+		if(input$show_filter == FALSE)
+			updateCheckboxInput(session = session, inputId = "show_filter", value = TRUE)
+	}
 
 	if(!is.null(input$tr_columns)) {
 		if(!all(input$tr_columns %in% colnames(dat))) return()
@@ -218,13 +210,13 @@ transform_main <- reactive({
     vars <- colnames(dat)
 
 		if(input$tr_transfunction != 'none') {
-#       dat_tr <- try(dat %>% mutate_each_(funs(input$tr_transfunction), vars), silent = TRUE)
+			# dat_tr <- try(dat %>% mutate_each_(funs(input$tr_transfunction), vars), silent = TRUE)
       # if(is(dat_tr, 'try-error')) dat_tr <- dat * NA
-#       if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
+			# if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
 
       fun <- get(input$tr_transfunction)
       dat_tr <- dat %>% mutate_each_(funs(fun), vars)
-#       dat_tr <- dat %>% mutate_each_(input$tr_transfunction, vars)
+			# dat_tr <- dat %>% mutate_each_(input$tr_transfunction, vars)
 
   		cn <- c(vars,paste(input$tr_transfunction,vars, sep="_"))
 			dat <- cbind(dat,dat_tr)
@@ -232,7 +224,7 @@ transform_main <- reactive({
 		}
 		if(input$tr_typefunction != 'none') {
       fun <- get(input$tr_typefunction)
-#       dat <- mutate_each_(dat,input$tr_typefunction, vars)
+			# dat <- mutate_each_(dat,input$tr_typefunction, vars)
       dat <- mutate_each_(dat,funs(fun), vars)
 		}
     if(!is.null(input$tr_normalizer) && input$tr_normalizer != 'none') {
@@ -344,8 +336,6 @@ output$transform_summary <- renderPrint({
 	if(is.null(dat)) return(invisible())
 	if(is.character(dat)) return(dat)
 
-	# lapply(dat, class)
-
   dat_class <- getdata_class_fun(dat)
 
 	isFct <- "factor" == dat_class
@@ -400,42 +390,51 @@ observe({
 	if(is.null(input$tr_save_changes) || input$tr_save_changes == 0) return()
 	isolate({
 		dat <- transform_main()
-		if(is.null(dat)) return()
-		if(is.character(dat)) return(dat)
+		if(dat %>% is.null) return()
+		if(dat %>% is.character) return(dat)
+
+		# saving to a new dataset if specified
+		dataset <- input$tr_dataset
+		if(r_data[[dataset]] %>% is.null) {
+			r_data[[dataset]] <- getdata()
+			r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
+			r_data[['datasetlist']] %<>%
+				c(dataset,.) %>%
+				unique
+		}
 
 	  if(input$tr_changeType == 'type') {
-	  	r_data[[input$dataset]][,colnames(dat)] <- dat
+	  	r_data[[dataset]][,colnames(dat)] <- dat
 		} else if(input$tr_changeType == 'na.remove') {
-	  	r_data[[input$dataset]] <- dat
+	  	r_data[[dataset]] <- dat
 		} else if(input$tr_changeType == 'sub_filter') {
-	  	r_data[['datasetlist']] %>%  c(paste0(input$dataset,"_filter"),.) -> newdatasetlist
-	  	r_data[[newdatasetlist[1]]] <- dat
-	  	r_data[['datasetlist']] <- newdatasetlist
-	    r_data[[paste0(newdatasetlist[1],"_descr")]] <- paste0(r_data[[paste0(input$dataset,"_descr")]],
-                                                             "\n\n### Subset\n\nCommand used: `", input$tr_subset,
-                                                             "` to filter from dataset: ", input$dataset)
+	  	r_data[[dataset]] <- dat
+	    r_data[[paste0(dataset,"_descr")]] %<>%
+	    	paste0(., "\n\n### Subset\n\nCommand used: `", input$data_filter,
+	    	       		"` to filter from dataset: ", input$dataset)
 		} else if(input$tr_changeType == 'rename') {
-			changedata_names(input$tr_columns, colnames(dat))
+  		r_data[[dataset]] %<>%
+  			rename_(.dots = setNames(input$tr_columns, colnames(dat)))
 		} else if(input$tr_changeType == 'reorg_cols') {
-	  	r_data[[input$dataset]] %<>% .[,input$tr_reorg_cols]
+	  	# r_data[[dataset]] %<>% .[,input$tr_reorg_cols]
+	  	r_data[[dataset]] %<>% select_(.dots = input$tr_reorg_cols)
 	  } else {
-			changedata(dat, colnames(dat))
+			changedata(dat, colnames(dat), dataset = dataset)
 		}
 
 		# reset input values once the changes have been applied
-	 	updateTextInput(session = session, inputId = "tr_transform", label = "Create (e.g., y = x - z):", '')
-	 	updateTextInput(session = session, inputId = "tr_recode", label = "Recode (e.g., lo:20 = 1):", '')
-	 	updateTextInput(session = session, inputId = "tr_rename", label = "Rename (separate by ','):", value = '')
-	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", label = "", '')
-	 	updateTextInput(session = session, inputId = "tr_subset", label = "Subset (e.g., price > 5000)", '')
-#     updateSelectInput(session = session, inputId = "tr_normalizer", choices = as.list(varnames()),
-#                       selected = "none")
-		updateSelectInput(session = session, inputId = "tr_transfunction", choices = trans_options,
-                      selected = "none")
+		updateTextInput(session = session, inputId = "tr_transform", value = "")
+	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
+	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
+	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
+	 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
 
-    isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
-    vars <- c("None" = "none", varnames()[isNum])
-    updateSelectInput(session = session, inputId = "tr_normalizer", label = "Normalizing variable:", choices = vars,
-                      selected = "none")
+		updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
+		updateSelectInput(session = session, inputId = "tr_changeType", selected = "none")
+    updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
+
+    if(dataset != input$dataset)
+			updateSelectInput(session = session, inputId = "dataset", select = dataset)
+
   })
 })

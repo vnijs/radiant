@@ -93,17 +93,34 @@ saveStateOnRefresh <- function(session = session) {
 ################################################################
 # functions used across tools in radiant
 ################################################################
-changedata <- function(new_col, new_col_name = "") {
-	if(r_data[[input$dataset]] %>% nrow == new_col %>% nrow &&
+changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
+	if(r_data[[dataset]] %>% nrow == new_col %>% nrow &&
      new_col_name[1] != "")
-    r_data[[input$dataset]][,new_col_name] <- new_col
+    r_data[[dataset]][,new_col_name] <- new_col
 }
 
 changedata_names <- function(oldnames, newnames)
   r_data[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
 
 getdata <- reactive({
-	r_data[[input$dataset]]
+
+  if(input$data_filter %>% is_empty) return(r_data[[input$dataset]])
+
+  selcom <- gsub("\\s","", input$data_filter)
+  if(selcom != "") {
+    seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
+
+    if(is(seldat, 'try-error')) {
+      isolate(r_data$error <- attr(seldat,"condition")$message)
+    } else {
+      isolate(r_data$error <- "")
+      return(seldat)
+    }
+  } else {
+    isolate(r_data$error <- "")
+  }
+
+  r_data[[input$dataset]]
 })
 
 getdata_class <- reactive({
@@ -117,6 +134,16 @@ getdata_class_fun <- function(dat) {
 	  gsub("POSIXct","date", .) %>%
 	  gsub("POSIXt","date", .)
 }
+
+groupable_vars <- reactive({
+  # isGroupable <- getdata_class() %in% c("factor","integer","character")
+    # select(which(isGroupable)) %>%
+  getdata() %>%
+    summarise_each(funs(n_distinct)) %>%
+    is_less_than(10) %>%
+    which  %>%
+    varnames()[.]
+})
 
 varnames <- reactive({
   getdata_class() %>% names %>%
@@ -339,9 +366,17 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
 # binding for a text input that updates when the return key is pressed
 returnTextInput <- function(inputId, label, value = "") {
   tagList(
-    includeScript("../base/www/js/returnTextInputBinding.js"),
     tags$label(label, `for` = inputId),
-    tags$input(id = inputId, type = "text", value = value, class = "returnTextInput form-control")
+    tags$input(id = inputId, type = "text", value = value,
+               class = "returnTextInput form-control")
+  )
+}
+
+returnTextAreaInput <- function(inputId, label, value = "") {
+  tagList(
+    tags$label(label, `for` = inputId),br(),
+    tags$textarea(id=inputId, type = "text", value = value, rows="3",
+                  class="returnTextArea form-control")
   )
 }
 

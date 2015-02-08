@@ -334,7 +334,7 @@ observe({
 
 output$uiDatasets <- renderUI({
   # Drop-down selection of data set
-  list(wellPanel(
+  tagList(
     selectInput(inputId = "dataset", label = "Datasets:", choices = r_data$datasetlist,
       selected = state_init("dataset"), multiple = FALSE),
     conditionalPanel(condition = "input.datatabs == 'Manage'",
@@ -347,7 +347,7 @@ output$uiDatasets <- renderUI({
         uiOutput("uiRename")
       )
     )
-  ))
+  )
 })
 
 output$uiRename <- renderUI({

@@ -66,26 +66,74 @@ sshh <- function(...) {
 #' @return Data.frame with the specified columns selected
 #'
 #' @export
-getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = NULL) {
 
-  # filt <- ifelse(filt %>% is.null, f(...), filter())
-  clean <- ifelse(na.rm, na.omit, f(...))
+getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = "") {
+
+  # dat <- mtcars
+  # filt <- "mpg > 20\n"
+  # filt %<>% gsub("\\s","", .)
+  # dat %>% { if(filt == "") . else filter_(.,filt) }
+  # filt <- ""
+  # dat %>% { if(filt == "") . else filter_(.,filt) }
+  # dat[1,1] <- NA
+  # na.rm <- FALSE
+  # dat %>% { if(na.rm) na.omit(.) else .}
+  # na.rm <- TRUE
+  # dat %>% { if(na.rm) na.omit(.) else .}
+
+  filt %<>% gsub("\\s","", .)
+
   if(exists("session") && exists("r_env")) {
     # cat("Dataset", dataset, "loaded from the radiant environment (r_env)\n")
-    select_(r_env$r_data[[dataset]], .dots = vars) %>% clean
+    # select_(r_env$r_data[[dataset]], .dots = vars) %>% clean
+    select_(getdata(), .dots = vars) %>%
+      { if(na.rm) na.omit(.) else .}
   } else if(exists("r_env")) {
-    cat("The requested dataset cannot be loaded from r_env. To make data from Radiant accesible in R(studio), stop the application using Quit > Quit in the navigation bar.\n") %>% stop %>% return
+    cat("The requested dataset cannot be loaded from r_env. To make data from Radiant accesible in R(studio), stop the application using Quit > Quit in the navigation bar.\n") %>%
+      stop %>% return
   } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
     if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
-    select_(r_data[[dataset]], .dots = vars) %>% clean
+    select_(r_data[[dataset]], .dots = vars) %>%
+      { if(na.rm) na.omit(.) else .} %>%
+      { if(filt == "") . else filter_(.,filt) }
   } else if(exists(dataset)) {
     cat("Dataset", dataset, "loaded from global environment\n")
-    select_(get(dataset), .dots = vars) %>% clean
+    select_(get(dataset), .dots = vars) %>%
+      { if(na.rm) na.omit(.) else .} %>%
+      { if(filt == "") . else filter_(.,filt) }
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
       stop %>% return
   }
 }
+
+# test
+# rm(list = ls())
+# library(dplyr)
+# library(magrittr)
+# running_local <- TRUE
+# mtcars_ <- mtcars
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# r_data <- list()
+# r_data$mtcars_ <- mtcars_
+# r_data$mtcars_[5:20,2] <- NA
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# getdata_exp("mtcars_", c("cyl","mpg"), filt = "mpg > 20")
+# rm(mtcars_)
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# getdata_exp("mtcars_", c("cyl","mpg"), filt = "mpg > 20")
+# r_env <- new.env()
+# session <- ""
+# r_env$r_data <- r_data
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# rm(r_data)
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# rm(r_env)
+# rm(session)
+# getdata_exp("mtcars_", c("cyl","mpg"))
+# getdata_exp("mycars", c("cyl","mpg"))
+# getdata_exp("mtcars", c("cyl","mpg"), filt = "mpg > 20")
+# end test
 
 #' Make a .bat launcher for Windows on the desktop
 #'
@@ -136,23 +184,3 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
 # win_launcher()
 
 
-# test
-# rm(list = ls())
-# library(dplyr)
-# mtcars_ <- mtcars
-# getdata_exp("mtcars_", c("cyl","mpg"))
-# r_data <- list()
-# r_data$mtcars_ <- mtcars_
-# r_data$mtcars_[5:20,2] <- NA
-# getdata_exp("mtcars_", c("cyl","mpg"))
-# rm(mtcars_)
-# getdata_exp("mtcars_", c("cyl","mpg"))
-# r_env <- new.env()
-# r_env$r_data <- r_data
-# getdata_exp("mtcars_", c("cyl","mpg"))
-# rm(r_data)
-# getdata_exp("mtcars_", c("cyl","mpg"))
-# rm(r_env)
-# getdata_exp("mtcars_", c("cyl","mpg"))
-# getdata_exp("mycars", c("cyl","mpg"))
-# end test

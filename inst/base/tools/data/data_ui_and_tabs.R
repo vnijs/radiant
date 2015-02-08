@@ -2,16 +2,40 @@
 # Shiny interface for data functions
 #######################################
 
+output$ui_data_filter <- renderUI({
+
+  value <- ""
+  if(input$show_filter %>% is_empty(empty = FALSE) == FALSE)
+    value = state_init("data_filter",value)
+
+  returnTextAreaInput("data_filter", label = "",
+                      value = state_init("data_filter",value))
+})
+
+output$uiView_err <- renderUI({
+  if(r_data$error %>% is_empty) return()
+  helpText(r_data$error)
+})
+
 # data ui and tabs
 output$data_ui_and_tabs <- renderUI({
   list(
     includeCSS("../base/www/style.css"),
-    # includeScript("../base/www/js/jquery-ui.custom.min.js"),
-    # includeScript("../base/www/js/select_add_class.js"),
+    includeScript("../base/www/js/jquery-ui.custom.min.js"),
+    includeScript("../base/www/js/returnTextInputBinding.js"),
+    includeScript("../base/www/js/returnTextAreaBinding.js"),
     sidebarLayout(
       sidebarPanel(
         # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
-        uiOutput("uiDatasets"),
+        wellPanel(
+          uiOutput("uiDatasets"),
+          conditionalPanel("input.datatabs != 'Manage'",
+            checkboxInput('show_filter', 'Filter (e.g., price > 5000)',
+                          value = state_init("show_filter",FALSE)),
+            conditionalPanel("input.show_filter == true",
+              uiOutput("ui_data_filter"),
+              uiOutput("uiView_err")))
+        ),
         conditionalPanel("input.datatabs == 'Manage'",
                          uiOutput("ui_Manage")),
         conditionalPanel("input.datatabs == 'View'",
@@ -26,7 +50,7 @@ output$data_ui_and_tabs <- renderUI({
                          uiOutput("ui_Merge")),
         conditionalPanel("input.datatabs == 'Transform'",
                          uiOutput("ui_Transform"))),
-      # mainPanel(id = "datatabs",
+        #   conditionalPanel("input.datatabs != 'Manage'",
       mainPanel(
         uiOutput("tabs_data")
       )
@@ -47,7 +71,6 @@ output$tabs_data <- renderUI({
              plotOutput("visualize", width = "100%", height = "100%")),
     tabPanel("Explore", verbatimTextOutput("expl_summary"),
              plotOutput("expl_plots", width = "100%", height = "100%")),
-    # tabPanel("Pivot", dataTableOutput("pivotDataTable")),
     tabPanel("Pivot", rpivotTableOutput("pivotData")),
     tabPanel("Merge", htmlOutput("mergePossible"),
              htmlOutput("mergeData1"), htmlOutput("mergeData2")),

@@ -18,13 +18,14 @@
 #'
 #' @export
 single_mean <- function(dataset, sm_var,
+                        data_filter = "",
                         sm_comp_value = 0,
                         sm_alternative = "two.sided",
                         sm_sig_level = .95,
                         sm_plots = "hist") {
                         # sm_plots = c("hist","simulate")) {
 
-	dat <- getdata_exp(dataset, sm_var)
+	dat <- getdata_exp(dataset, sm_var, filt = data_filter)
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res
@@ -52,7 +53,8 @@ summary.single_mean <- function(result) {
 
   cat("Single mean test\n")
 	cat("Data     :", result$dataset, "\n")
-	# cat("Filter   :", result$xtra$filter, "\n")
+	if(result$data_filter != "")
+		cat("Filter   :", gsub("\\n","",result$data_filter), "\n")
 	cat("Variable :", result$sm_var, "\n")
 
 	hyp_symbol <- c("two.sided" = "not equal to",
@@ -69,8 +71,8 @@ summary.single_mean <- function(result) {
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
 
-	result$res$n <- nrow(result$dat)
 	result$res$sd <- sd(result$dat[,result$sm_var])
+	result$res$n <- nrow(result$dat)
 	res <- round(result$res, 3) 	# restrict to 3 decimal places
 	names(res)[1:6] <- c("mean","t.value","p.value","df", ci_perc[1], ci_perc[2])
 	if (res$p.value < .001) res$p.value <- "< .001"
