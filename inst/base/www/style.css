@@ -1,5 +1,5 @@
 .well {
-  padding: 12px;
+  padding: 8px;
   margin-bottom: 5px;
 }
 
@@ -17,22 +17,15 @@
 }
 
 .form-group {
-  margin-top: 0px;
+  margin-top: 5px;
   margin-bottom: 0px;
 }
+
 
 th, td {
   text-align: left;
 }
 
-/*.shiny-input-checkboxgroup,
-.shiny-input-container,
-.shiny-input-container-inline,
-.shiny-bound-input {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-*/
 /*
 .navbar {
   margin-bottom: 10px;
@@ -41,7 +34,6 @@ th, td {
 label {
   margin-bottom: 5px;
 }
-
 */
 
 /*.radio-inline:first-child, .checkbox-inline:first-child {

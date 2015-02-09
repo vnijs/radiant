@@ -109,7 +109,7 @@ output$ui_regression <- renderUI({
         ),
 		    uiOutput("uiReg_var3"),
 
-        checkboxGroupInput("reg_check", "", reg_check,
+        checkboxGroupInput("reg_check", NULL, reg_check,
           selected = state_init_list("reg_check","", reg_check), inline = TRUE),
         br(),
         checkboxInput(inputId = "reg_rmse", label = "RMSE",
@@ -208,6 +208,12 @@ regression <- function(dataset, reg_var1, reg_var2,
 		mod <- lm(formula, data = dat)
 	}
 
+	### Check if variables were dropped?
+  # if (nzchar(mess <- naprint(x$na.action)))
+  #   cat("  (", mess, ")\n", sep = "")
+
+
+
 	# specifying plot heights
 	nrVars <- length(as.character(attr(mod$terms,'variables'))[-1])
 
@@ -234,14 +240,11 @@ summary_regression <- function(result = .regression()) {
 
 	if(class(result$mod) != 'lm') return(result)
 
-	# rounding to avoid scientific notation for the coefficients
-  #	res <- summary(format(result, scientific = FALSE))
-  #	res$coefficients <- format(res$coefficients, scientific = FALSE)
-	sig_stars <- function(pval) {
-	  sapply(pval, function(x) x < c(.001,.01, .05, .1)) %>%
-	    colSums %>% add(1) %>%
-	    c("",".","*", "**", "***")[.]
-	}
+	# sig_stars <- function(pval) {
+	#   sapply(pval, function(x) x < c(.001,.01, .05, .1)) %>%
+	#     colSums %>% add(1) %>%
+	#     c("",".","*", "**", "***")[.]
+	# }
 
 	reg_coeff <- tidy(result$mod)
 	reg_coeff$` ` <- sig_stars(reg_coeff$p.value)
@@ -252,14 +255,31 @@ summary_regression <- function(result = .regression()) {
 
 	reg_fit <- glance(result$mod) %>% round(3)
 	if(reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
-	reg_fit
+	# reg_fit
 
 	reg_aug <- augment(result$mod)
-	reg_aug[1:10,]
+	# reg_aug[1:10,]
 
-	# res <- summary(result$mod)
- # 	res$coefficients <- round(res$coefficients,3)
-	# .print.summary.lm(res, dataset = result$dataset, dv = result$reg_var1, std_c = result$reg_standardize, digits = 3)
+  # cat(paste("Data:",dataset,"\n"))
+  # cat(paste("Dependent variable:",dv,"\n"))
+
+  # if(std_c == TRUE) {
+  #   cat("Standardized coefficients:\n")
+  # } else {
+  #   cat("Coefficients:\n")
+  # }
+
+  # if (!is.null(x$fstatistic)) {
+  #   cat("R-squared: ", formatC(x$r.squared, digits = digits))
+  #   cat(", Adjusted R-squared: ", formatC(x$adj.r.squared, digits = digits),
+  #       "\nF-statistic:", formatC(x$fstatistic[1L], digits = digits), "on", x$fstatistic[2L],
+  #       "and", x$fstatistic[3L], "DF,  p-value:", format.pval(pf(x$fstatistic[1L], x$fstatistic[2L], x$fstatistic[3L], lower.tail = FALSE),  digits = digits)
+  #   )
+  #   cat(paste0("\nNr obs: ",length(x$residuals)))
+  #   cat("\n\n")
+  # }
+
+
 
 	# if(reg_outlier) print(outlierTest(result), digits = 3)
 
@@ -423,42 +443,6 @@ summary_regression <- function(result = .regression()) {
 	}
 }
 
-
-.print.summary.lm <- function (x, dataset = "", dv = "", std_c = FALSE, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
-
-  # adapted from getAnywhere(print.summary.lm)
-	# cat(paste("Dependent variable:",input$reg_var1,"\n"))
-  cat(paste("Data:",dataset,"\n"))
-  cat(paste("Dependent variable:",dv,"\n"))
-
-  if(std_c == TRUE) {
-    cat("Standardized coefficients:\n")
-  } else {
-    cat("Coefficients:\n")
-  }
-  coefs <- x$coefficients
-  if (!is.null(aliased <- x$aliased) && any(aliased)) {
-    cn <- names(aliased)
-    coefs <- matrix(NA, length(aliased), 4, dimnames = list(cn, colnames(coefs)))
-    coefs[!aliased, ] <- x$coefficients
-  }
-  printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", ...)
-	# printCoefmat(coefs, digits = digits, signif.stars = signif.stars, na.print = "NA", scientific = FALSE, ...)
-
-  cat("\n")
-  if (nzchar(mess <- naprint(x$na.action)))
-    cat("  (", mess, ")\n", sep = "")
-  if (!is.null(x$fstatistic)) {
-    cat("R-squared: ", formatC(x$r.squared, digits = digits))
-    cat(", Adjusted R-squared: ", formatC(x$adj.r.squared, digits = digits),
-        "\nF-statistic:", formatC(x$fstatistic[1L], digits = digits), "on", x$fstatistic[2L],
-        "and", x$fstatistic[3L], "DF,  p-value:", format.pval(pf(x$fstatistic[1L], x$fstatistic[2L], x$fstatistic[3L], lower.tail = FALSE),  digits = digits)
-    )
-    cat(paste0("\nNr obs: ",length(x$residuals)))
-    cat("\n\n")
-  }
-}
-
 # main functions called from radiant.R
 r_plots <- list("None" = "", "Histograms" = "histlist", "Correlations" = "correlations", "Scatter" = "scatterlist", "Dashboard" = "dashboard",
 		# "Residual vs predictor" = "resid_vs_predictorlist", "Leverage plots" = "leverage_plots", "Coefficient plot" = "coef")
@@ -589,14 +573,14 @@ observe({
 	})
 })
 
-# list of function arguments
 reg_args <- as.list(formals(regression))
-reg_args$dataset <- "diamonds"
-reg_args$reg_var1 <- "price"
-reg_args$reg_var2 <- "carat"
 
+# list of function arguments
+# reg_args$dataset <- "diamonds"
+# reg_args$reg_var1 <- "price"
+# reg_args$reg_var2 <- "carat"
 # rm(r_env)
-result <- do.call(regression, reg_args)
+# result <- do.call(regression, reg_args)
 
 # list of function inputs selected by user
 reg_inputs <- reactive({
@@ -615,13 +599,13 @@ reg_inputs <- reactive({
 	if(input$reg_var2 %>% not_available)
 		return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
-	result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_predict, input$reg_predict_cmd, input$reg_predict_data, input$reg_standardize,
-    input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
-    input$reg_plots, input$reg_line, input$reg_loess)
+	# result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
+	# 	input$reg_interactions, input$reg_predict, input$reg_predict_cmd, input$reg_predict_data, input$reg_standardize,
+ #    input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
+ #    input$reg_plots, input$reg_line, input$reg_loess)
 
-	result
-	# do.call(regression, reg_inputs())
+	# result
+	do.call(regression, reg_inputs())
 })
 
 observe({
