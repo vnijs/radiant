@@ -3,15 +3,15 @@
 #######################################
 output$uiVizvars1 <- renderUI({
   vars <- varnames()
-  selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
-    selected = state_multvar("vizvars1",vars),
-    multiple = input$viz_multiple == 'multiple',
-    selectize = input$viz_multiple == 'single')
+  if(input$viz_multiple == 'multiple') {
+    selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
+      selected = state_multvar("vizvars1",vars),
+      multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
+  } else {
+    selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
+      selected = state_multvar("vizvars1",vars), multiple = FALSE, selectize = TRUE)
+  }
 })
-
-# selectInput(inputId = "vizvars1", label = "X-variable", choices = letters[1:5],
-#             multiple = TRUE, selectize = FALSE) %>%
-# sub("form-group","form-group form-control", .)
 
 output$uiVizvars2 <- renderUI({
   vars <- varnames()
@@ -47,6 +47,7 @@ output$uiViz_facet_col <- renderUI({
 })
 
 viz_multiple <- c("Single" = "single", "Multiple" = "multiple")
+viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 
 output$ui_Visualize <- renderUI({
   list(wellPanel(
@@ -61,9 +62,9 @@ output$ui_Visualize <- renderUI({
     ),
     conditionalPanel(condition = "input.vizvars2 != 'None'",
       uiOutput("uiViz_color"),
-      checkboxInput('viz_line', 'Line', value = state_init("viz_line", FALSE)),
-      checkboxInput('viz_loess', 'Loess', value = state_init("viz_loess", FALSE)),
-      checkboxInput('viz_jitter', 'Jitter', value = state_init("viz_jitter", FALSE))
+      checkboxGroupInput("viz_check", "", viz_check,
+        selected = state_init_list("viz_check","", viz_check),
+        inline = TRUE)
     ),
     div(class="row",
         div(class="col-xs-6",
@@ -128,23 +129,21 @@ output$visualize <- renderPlot({
   if(input$vizvars1 %>% not_available) return()
 
   visualize(input$dataset, input$vizvars1, input$vizvars2, input$viz_multiple,
-            input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_line, input$viz_loess,
-            input$viz_jitter)
+            input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_check)
 })
 
 observe({
   if(is.null(input$visualizeReport) || input$visualizeReport == 0) return()
   isolate({
     inp <- list(input$dataset, input$vizvars1, input$vizvars2, input$viz_multiple,
-                input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_line,
-                input$viz_loess, input$viz_jitter)
+                input$viz_facet_row, input$viz_facet_col, input$viz_color, input$viz_check)
     updateReportViz(inp,"visualize", round(7 * viz_plot_width()/650,2),
                     round(7 * viz_plot_height()/650,2))
   })
 })
 
 visualize <- function(dataset, vizvars1, vizvars2, viz_multiple, viz_facet_row,
-                      viz_facet_col, viz_color, viz_line, viz_loess, viz_jitter) {
+                      viz_facet_col, viz_color, viz_check) {
 
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   # dat <- r_data[[dataset]]
@@ -191,20 +190,20 @@ visualize <- function(dataset, vizvars1, vizvars2, viz_multiple, viz_facet_row,
         }
 
         if(!(is.factor(dat[,i]) & is.factor(dat[,j]))) {
-          if (viz_jitter) plots[[i]] <- plots[[i]] + geom_jitter()
+          if ("jitter" %in% viz_check) plots[[i]] <- plots[[i]] + geom_jitter()
         }
 
         if(!is.factor(dat[,i]) & !is.factor(dat[,j])) {
-          if (!is.null(viz_color) && viz_color != 'None') plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
-          if (viz_line) plots[[i]] <- plots[[i]] +
-            geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
-          if (viz_loess) plots[[i]] <- plots[[i]] + geom_smooth(span = 1, size = .75, linetype = "dotdash")
-          if (viz_jitter) plots[[i]] <- plots[[i]] + geom_jitter()
+          if (!is.null(viz_color) && viz_color != 'None')
+            plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
+          if ("line" %in% viz_check)
+            plots[[i]] <- plots[[i]] + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+          if ("loess" %in% viz_check) plots[[i]] <- plots[[i]] + geom_smooth(span = 1, size = .75, linetype = "dotdash")
+          if ("jitter" %in% viz_check) plots[[i]] <- plots[[i]] + geom_jitter()
         }
       }
     }
   }
 
-  # suppressWarnings(suppressMessages(do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))))
   sshh(do.call(grid.arrange, c(plots, list(ncol = length(plots) %>% min(2)))))
 }

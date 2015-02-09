@@ -1,10 +1,9 @@
 # UI-elements for transform
 output$uiTr_columns <- renderUI({
   vars <- varnames()
-  selectizeInput("tr_columns", "Select variable(s):", choices  = vars,
-    selected = state_init_multvar("tr_columns", NULL, vars), multiple = TRUE,
-    options = list(placeholder = 'Select variable(s)',
-                   plugins = list('remove_button', 'drag_drop')))
+  selectInput("tr_columns", "Select variable(s):", choices  = vars,
+    selected = state_init_multvar("tr_columns", NULL, vars),
+    multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
 output$uiTr_reorg_cols <- renderUI({
@@ -39,7 +38,7 @@ output$uiTr_reorg_levs <- renderUI({
 st <- function(x) {
 	if(is.factor(x)) return(rescale(x))
 	if(is.numeric(x)) return(as.numeric(scale(x)))
-	# if(is.numeric(x)) return(scale(x))
+	x
 }
 
 # center variable

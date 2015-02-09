@@ -17,9 +17,10 @@ init_state <- function(r_data) {
   r_data$plotHeight <- 600
   r_data$plotWidth <- 600
 
-  # Datasets can change over time (i.e. the changedata function). Therefore,
+  # From Joe Cheng
+  # "Datasets can change over time (i.e. the changedata function). Therefore,
   # the data need to be a reactive value so the other reactive functions
-  # and outputs that depend on these datasets will know when they are changed.
+  # and outputs that depend on these datasets will know when they are changed."
   robj <- load("../base/data/data_init/diamonds.rda")
   df <- get(robj)
   r_data[["diamonds"]] <- df
@@ -106,11 +107,7 @@ if (exists("r_state") && exists("r_data")) {
 
 if(running_local) {
   # reference to radiant environment that can be accessed by exported functions
+  # does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")
 }
 
-observe({
-  # reset r_state on dataset change
-  if(is.null(r_state$dataset) || is.null(input$dataset)) return()
-  if(r_state$dataset != input$dataset) r_state <<- list()
-})

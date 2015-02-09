@@ -8,6 +8,13 @@
 # created by shinyServer
 ################################################################################
 
+
+observe({
+  # reset r_state on dataset change
+  if(is.null(r_state$dataset) || is.null(input$dataset)) return()
+  if(r_state$dataset != input$dataset) r_state <<- list()
+})
+
 #' Set initial selection for shiny input (e.g., selectInput for multiple = FALSE)
 state_singlevar <- function(inputvar, vars)
   vars[vars == r_state[[inputvar]]]
@@ -104,7 +111,12 @@ changedata_names <- function(oldnames, newnames)
 
 getdata <- reactive({
 
-  if(input$data_filter %>% is_empty) return(r_data[[input$dataset]])
+  if(input$data_filter %>% is_empty | input$show_filter == FALSE) return(r_data[[input$dataset]])
+  # if(input$show_filter == FALSE) {
+    # r_state$data_filter <- input$data_filter
+    # updateTextInput(session = session, inputId = "data_filter", value = "")
+    # return(r_data[[input$dataset]])
+  # }
 
   selcom <- gsub("\\s","", input$data_filter)
   if(selcom != "") {
@@ -136,12 +148,10 @@ getdata_class_fun <- function(dat) {
 }
 
 groupable_vars <- reactive({
-  # isGroupable <- getdata_class() %in% c("factor","integer","character")
-    # select(which(isGroupable)) %>%
   getdata() %>%
     summarise_each(funs(n_distinct)) %>%
-    is_less_than(10) %>%
-    which  %>%
+    { . < 10 } %>%
+    which(.) %>%
     varnames()[.]
 })
 
@@ -149,6 +159,15 @@ varnames <- reactive({
   getdata_class() %>% names %>%
     set_names(., paste0(., " {", getdata_class(), "}"))
 })
+
+# cleaning up the arguments for data_filter passed to report
+clean_args <- function(rep_args) {
+  if(rep_args$data_filter == "")
+    rep_args$data_filter  <- NULL
+  else
+    rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  rep_args
+}
 
 # check if a variable is null or not in the data
 not_available <- function(x)
@@ -372,11 +391,11 @@ returnTextInput <- function(inputId, label, value = "") {
   )
 }
 
-returnTextAreaInput <- function(inputId, label, value = "") {
+returnTextAreaInput <- function(inputId, label = "", value = "") {
   tagList(
     tags$label(label, `for` = inputId),br(),
-    tags$textarea(id=inputId, type = "text", value = value, rows="3",
-                  class="returnTextArea form-control")
+    tags$textarea(id=inputId, type = "text", rows="2",
+                  class="returnTextArea form-control", value)
   )
 }
 

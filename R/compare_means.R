@@ -5,6 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cm_var1 A numeric variable or factor selected for comparison
 #' @param cm_var2 One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1
+#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param cm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param cm_sig_level Span of the confidence interval
 #' @param cm_adjust Adjustment for multiple comparisons (none or bonferroni)
@@ -20,14 +21,25 @@
 #'
 #' @export
 compare_means <- function(dataset, cm_var1, cm_var2,
+                          data_filter = "",
                           cm_paired = "independent",
                           cm_alternative = "two.sided",
                           cm_sig_level = .95,
                           cm_adjust = "none",
                           cm_plots = "bar") {
 
+# dataset <- "diamonds"
+# cm_var1 <- "price"
+# cm_var2 <- "table"
+# cm_paired = "independent"
+# cm_alternative = "two.sided"
+# cm_sig_level = .95
+# cm_adjust = "none"
+# cm_plots = "bar"
+
 	vars <- c(cm_var1, cm_var2)
-	dat <- getdata_exp(dataset, vars)
+	# dat <- getdata_exp(dataset, vars)
+	dat <- getdata_exp(dataset, vars, filt = data_filter)
 
 	if(dat[,cm_var1] %>% is.factor) {
 		colnames(dat) <- c("variable","values")
@@ -36,11 +48,10 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	}
 
 	# check variances in the data
-  if(summarise_each(dat, funs(var(., na.rm = TRUE))) %>% min %>% equals(0))
-		return("Test could not be calculated. Please select another variable.")
+  if(dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
+  	return("Test could not be calculated. Please select another variable.")
 
-	# resetting option to independent if the number of observations
-	# is unequal
+	# resetting option to independent if the number of observations is unequal
   if(cm_paired == "paired")
     if(summary(dat$variable) %>% { max(.) != min(.) })
       cm_paired <- "independent (obs. per level unequal)"
@@ -85,11 +96,9 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 # library(tidyr)
 # library(magrittr)
 # library(ggplot2)
-# load("~/Desktop/convenience.rda")
-# result <- compare_means("convenience","Convenience","Price",cm_alternative = "greater")
-# summary(result)
+# source("~/gh/radiant_dev/R/radiant.R")
+# rm(r_env)
 # result <- compare_means("diamonds","cut","price",cm_alternative = "greater")
-# result
 # summary(result)
 # load("~/Desktop/PairwiseBrand.rda")
 # PairwiseBrand
@@ -117,6 +126,8 @@ summary.compare_means <- function(result) {
   }
 
 	cat("Data     :", result$dataset, "\n")
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
 	cat("Variables:", result$vars, "\n")
 	cat("Samples  :", result$cm_paired, "\n\n")
 

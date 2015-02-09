@@ -23,7 +23,6 @@ output$ui_cm_var1 <- renderUI({
                 "integer" == getdata_class() |
                 "factor" == getdata_class()
   vars <- varnames()[isNumOrFct]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "cm_var1",
               label = "Select a factor or numeric variable:",
               choices = vars,
@@ -35,7 +34,6 @@ output$ui_cm_var2 <- renderUI({
   if(input$cm_var1 %>% not_available) return()
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   if(input$cm_var1 %in% vars) {
     # when cm_var1 is numeric comparisons for multiple variables are possible
     vars <- vars[-which(vars == input$cm_var1)]
@@ -129,7 +127,7 @@ output$compare_means <- renderUI({
 observe({
   if(input$compare_means_report %>% not_pressed) return()
   isolate({
-    update_report(inp = cm_inputs(), fun_name = "compare_means",
+    update_report(inp = cm_inputs() %>% clean_args, fun_name = "compare_means",
                   outputs = c("summary", "plot"),
                   fig.height = round(7 * cm_plot_height()/650))
   })

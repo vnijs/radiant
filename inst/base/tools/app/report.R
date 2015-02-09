@@ -169,10 +169,7 @@ update_report <- function(inp, fun_name, pre_cmd = "result <- ",
   outputs = c("summary", "plot"),
   figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
 
-  cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L))) %>%
-          gsub("\\n","", .)
-
-                # collapse="\n")
+  cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)))
 
   for(i in outputs)
     cmd <- paste0(cmd, "\n", i, "(result)")
@@ -264,7 +261,7 @@ summary(reg)
 "
 
 output$rcode <- renderUI({
-  div(class="row-fluid", div(class="span6",
+  div(class="row", div(class="col-xs-6",
     aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example),
               hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
               ),
@@ -273,7 +270,7 @@ output$rcode <- renderUI({
     fileInput('loadCode', 'Load R-code', multiple=FALSE)
     #, fileInput('sourceCode', 'Source R-code', multiple=TRUE)
   ),
-  div(class="span6", htmlOutput("rCodeEval"))
+  div(class="col-xs-6", htmlOutput("rCodeEval"))
   )
 })
 

@@ -4,6 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sm_var The variable selected for the mean comparison
+#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param sm_comp_value Population value to compare the sample mean with
 #' @param sm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sm_sig_level Span of the confidence interval
@@ -23,7 +24,6 @@ single_mean <- function(dataset, sm_var,
                         sm_alternative = "two.sided",
                         sm_sig_level = .95,
                         sm_plots = "hist") {
-                        # sm_plots = c("hist","simulate")) {
 
 	dat <- getdata_exp(dataset, sm_var, filt = data_filter)
 
@@ -53,8 +53,8 @@ summary.single_mean <- function(result) {
 
   cat("Single mean test\n")
 	cat("Data     :", result$dataset, "\n")
-	if(result$data_filter != "")
-		cat("Filter   :", gsub("\\n","",result$data_filter), "\n")
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
 	cat("Variable :", result$sm_var, "\n")
 
 	hyp_symbol <- c("two.sided" = "not equal to",
@@ -73,7 +73,7 @@ summary.single_mean <- function(result) {
 
 	result$res$sd <- sd(result$dat[,result$sm_var])
 	result$res$n <- nrow(result$dat)
-	res <- round(result$res, 3) 	# restrict to 3 decimal places
+	res <- round(result$res, 3) 	# restrict to 3 decimals
 	names(res)[1:6] <- c("mean","t.value","p.value","df", ci_perc[1], ci_perc[2])
 	if (res$p.value < .001) res$p.value <- "< .001"
 

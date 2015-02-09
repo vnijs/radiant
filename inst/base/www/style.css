@@ -25,6 +25,14 @@ th, td {
   text-align: left;
 }
 
+/*.shiny-input-checkboxgroup,
+.shiny-input-container,
+.shiny-input-container-inline,
+.shiny-bound-input {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+*/
 /*
 .navbar {
   margin-bottom: 10px;
