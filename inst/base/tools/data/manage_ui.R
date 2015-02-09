@@ -50,7 +50,7 @@ output$ui_Manage <- renderUI({
         conditionalPanel(condition = "input.dataType == 'csv'",
           checkboxInput('header', 'Header', TRUE),
           checkboxInput('man_str_as_factor', 'String as Factor', TRUE),
-          radioButtons('sep', '', c(Comma=',', Semicolon=';', Tab='\t'), ',',
+          radioButtons('sep', NULL, c(Comma=',', Semicolon=';', Tab='\t'), ',',
                        inline = TRUE)
         ),
         uiOutput("ui_fileUpload")
@@ -81,7 +81,7 @@ output$ui_Manage <- renderUI({
         downloadButton('downloadData', 'Save')
       ),
       conditionalPanel(condition = "input.saveAs == 'state'",
-        HTML("<label>Save current app state:</label>"),
+        HTML("<label>Save current app state:</label><br/>"),
         downloadButton('downloadState', 'Save')
       )
     ),
@@ -130,9 +130,9 @@ output$dataDescriptionMD <- renderUI({
 # removing datasets
 output$uiRemoveDataset <- renderUI({
   # Drop-down selection of data set to remove
-  selectInput(inputId = "removeDataset", label = "",
+  selectInput(inputId = "removeDataset", label = NULL,
     choices = r_data$datasetlist, selected = NULL, multiple = TRUE,
-    selectize = FALSE
+    size = length(r_data$datasetlist), selectize = FALSE
   )
 })
 

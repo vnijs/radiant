@@ -48,16 +48,11 @@ output$correlation <- renderUI({
 	if(length(input$cor_var) < 2) return(rt)
 
 	do.call(correlation, cor_inputs())
-	# correlation(input$dataset, input$cor_var, input$data_filter, input$show_filter,
-	#             input$cor_type, input$cor_cutoff)
 })
 
 observe({
 	if(input$correlationReport %>% not_pressed) return()
-  # if(is.null(input$correlationReport) || input$correlationReport == 0) return()
   isolate({
-		# inp <- list(input$dataset, input$cor_var, input$data_filter, input$show_filter,
-		#             input$cor_type, input$cor_cutoff) %>% clean_args
 		updateReport(cor_inputs() %>% clean_args, "correlation", round(7 * cor_plotWidth()/650,2), round(7 * cor_plotHeight()/650,2))
   })
 })
@@ -83,7 +78,7 @@ correlation <- function(dataset, cor_var,
 # list of function arguments
 cor_args <- as.list(formals(correlation))
 
-# list of funcorion inputs selecored by user
+# list of functions inputs selecored by user
 cor_inputs <- reactive({
   # loop needed because reacorive values don't allow single bracket indexing
   for(i in names(cor_args))
@@ -130,8 +125,8 @@ summary_correlation <- function(result = .correlation()) {
 			cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
 	}
 	cat("Variables:", paste0(result$cor_var, collapse=", "), "\n")
-	cat("Null hyp.: variables x and variable y are not correlated\n")
-	cat("Alt. hyp.: variables x and variable y are correlated\n\n")
+	cat("Null hyp.: variables x and y are not correlated\n")
+	cat("Alt. hyp.: variables x and y are correlated\n\n")
 
 	cat("Correlation matrix:\n")
   print(cr, quote = FALSE)

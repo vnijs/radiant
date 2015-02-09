@@ -62,7 +62,7 @@ output$ui_Visualize <- renderUI({
     ),
     conditionalPanel(condition = "input.vizvars2 != 'None'",
       uiOutput("uiViz_color"),
-      checkboxGroupInput("viz_check", "", viz_check,
+      checkboxGroupInput("viz_check", NULL, viz_check,
         selected = state_init_list("viz_check","", viz_check),
         inline = TRUE)
     ),

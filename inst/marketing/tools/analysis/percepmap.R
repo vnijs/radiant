@@ -41,7 +41,7 @@ output$uiPmap_pref <- renderUI({
 output$uiPmap_plot <- renderUI({
 	plot_list <- c("Brands" = "brand", "Attributes" = "attr")
   if(!is.null(input$pmap_pref)) plot_list <- c(plot_list, c("Preferences" = "pref"))
-	checkboxGroupInput("pmap_plot", "", plot_list,
+	checkboxGroupInput("pmap_plot", NULL, plot_list,
    	selected = state_init_list("pmap_plot","", plot_list),
    	inline = TRUE)
 })
@@ -54,7 +54,7 @@ output$ui_pmap <- renderUI({
 	  	uiOutput("uiPmap_brand"),
 	  	uiOutput("uiPmap_attr"),
 	  	uiOutput("uiPmap_pref"),
-		  radioButtons(inputId = "pmap_dim_number", label = "", pmap_dim_number,
+		  radioButtons(inputId = "pmap_dim_number", label = NULL, pmap_dim_number,
 		   	selected = state_init_list("pmap_dim_number",2, pmap_dim_number),
 		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Plots'",

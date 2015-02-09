@@ -112,12 +112,6 @@ changedata_names <- function(oldnames, newnames)
 getdata <- reactive({
 
   if(input$data_filter %>% is_empty | input$show_filter == FALSE) return(r_data[[input$dataset]])
-  # if(input$show_filter == FALSE) {
-    # r_state$data_filter <- input$data_filter
-    # updateTextInput(session = session, inputId = "data_filter", value = "")
-    # return(r_data[[input$dataset]])
-  # }
-
   selcom <- gsub("\\s","", input$data_filter)
   if(selcom != "") {
     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
@@ -391,7 +385,7 @@ returnTextInput <- function(inputId, label, value = "") {
   )
 }
 
-returnTextAreaInput <- function(inputId, label = "", value = "") {
+returnTextAreaInput <- function(inputId, label = NULL, value = "") {
   tagList(
     tags$label(label, `for` = inputId),br(),
     tags$textarea(id=inputId, type = "text", rows="2",

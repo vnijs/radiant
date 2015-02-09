@@ -84,7 +84,7 @@ output$ui_sampleSize <- renderUI({
   list(
   	wellPanel(
       # radioButtons(inputId = "rnd_mean", label = "", rnd_mean,
-		  radioButtons(inputId = "rnd_mean", label = "", choices = rnd_mean,
+		  radioButtons(inputId = "rnd_mean", label = NULL, choices = rnd_mean,
 	  	  selected = state_init_list("rnd_mean","mean", rnd_mean),
         inline = TRUE),
 		  conditionalPanel(condition = "input.rnd_mean == 'mean'",
@@ -241,7 +241,7 @@ output$ui_ctl <- renderUI({
             numericInput("ctl_m", "# of samples:",  value = 100, min = 2, max = 500, step = 1)
           )
       ),
-      radioButtons("ctl_stat", label = "", choices = ctl_stat, selected = "Mean",
+      radioButtons("ctl_stat", label = NULL, choices = ctl_stat, selected = "Mean",
                    inline = TRUE),
 		  actionButton("ctl_resample", "Resample")
 		),
