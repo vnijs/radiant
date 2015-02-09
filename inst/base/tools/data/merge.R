@@ -18,7 +18,8 @@ output$uiMerge_vars <- renderUI({
   if(length(vars) == 0) return()
   vars <- vars1[vars1 %in% vars]  # need variable labels from varnames()
   selectInput("merge_vars", "Select merge-by variables:", choices  = vars,
-    selected = state_multvar("merge_vars",vars), multiple = TRUE, selectize = FALSE)
+    selected = state_multvar("merge_vars",vars),
+    multiple = TRUE, size = length(vars), selectize = FALSE)
 })
 
 merge_type <- c('inner_join','left_join','semi_join','anti_join')

@@ -22,169 +22,17 @@
 #   geom_hline(aes(yintercept=0))+
 #   facet_wrap(~usertype,scales='free_y')
 
-###############################
-# Correlation
-###############################
-
-cor_type <- c("Pearson" = "pearson", "Spearman" = "spearman", "Kendall" = "kendall")
-output$uiCor_var <- renderUI({
-	# isNumFac <- "numeric" == getdata_class() | "integer" == getdata_class() |
-	# 						"factor" == getdata_class()
-	isChar <- "character" == getdata_class()
-	vars <- varnames()[!isChar]
-  if(length(vars) == 0) return()
-  selectInput(inputId = "cor_var", label = "Select variables:", choices = vars,
- 		selected = state_multvar("cor_var",vars), multiple = TRUE, selectize = FALSE)
-  # selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars,
-  # 	selected = state_singlevar("reg_var1",vars), multiple = FALSE)
-})
-
-output$ui_correlation <- renderUI({
-  list(
-  	wellPanel(
-	    uiOutput("uiCor_var"),
-		  # selectInput(inputId = "cor_var", label = "Select variables:", choices = varnames(),
-  	  	# selected = state_multvar("cor_var",varnames()), multiple = TRUE, selectize = FALSE),
-		  selectInput(inputId = "cor_type", label = "Method", choices = cor_type,
-  	  	selected = state_init_list("cor_type","pearson", cor_type), multiple = FALSE),
-     	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
-    		value = state_init('cor_cutoff',0), step = 0.05)
-	  ),
-	 	helpAndReport('Correlation','correlation',inclMD("../quant/tools/help/correlation.md"))
-	)
-})
-
-cor_plotWidth <- function() {
-	result <- .correlation()
-	ifelse(is.list(result), return(result$plotWidth), return(650))
-}
-
-cor_plotHeight <- function() {
-	result <- .correlation()
-	ifelse(is.list(result), return(result$plotHeight), return(650))
-}
-
-output$correlation <- renderUI({
-	# create inputs and outputs - function in radiant.R
-  statTabPanel("Regression","Correlation",".correlation","correlation", "cor_plotWidth", "cor_plotHeight")
-})
-
-.correlation <- reactive({
-	"Please select two or more variables.\n\n" %>%
-		suggest_data("diamonds") -> rt
-
-	if(input$cor_var %>% not_available) return(rt)
-	if(length(input$cor_var) < 2) return(rt)
-
-	correlation(input$dataset, input$cor_var, input$cor_type, input$cor_cutoff)
-})
-
-observe({
-	if(input$correlationReport %>% not_pressed) return()
-  # if(is.null(input$correlationReport) || input$correlationReport == 0) return()
-  isolate({
-		inp <- list(input$dataset, input$cor_var, input$cor_type, input$cor_cutoff)
-		updateReport(inp,"correlation", round(7 * cor_plotWidth()/650,2), round(7 * cor_plotHeight()/650,2))
-  })
-})
-
-correlation <- function(dataset, cor_var,
-                        cor_type = "pearson",
-                        cor_cutoff = 0) {
-
-	# could also use data.matrix as the last step in the chain
-	# but it seems to be about 25% slower based on system time
-	select_(r_data[[dataset]], .dots = cor_var) %>%
-		na.omit %>%
-		mutate_each(funs(as.numeric)) -> dat
-
-	nc <- ncol(dat)
-	plotHeight <- 150 * nc
-	plotWidth <- 150 * nc
-
-  environment() %>% as.list %>% set_class(c("correlation",class(.)))
-}
-
-# library(ggplot2)
-# library(psych)
-# r_data <- list()
-# dataset <- "diamonds"
-# r_data$diamonds <- diamonds[1:100,1:5]
-# cor_var <- colnames(diamonds)[1:5]
-# result <- correlation("diamonds",cor_var)
-# summary_correlation(result)
-# plots_correlation(result)
-
-# system.time(
-# 	for(i in 1:100) {
-# 		print(i)
-# 		correlation("diamonds",colnames(diamonds))
-# 	}
-# )
-
-summary_correlation <- function(result = .correlation()) {
-
-	dat <- result$dat
-
-	# calculate the correlation matrix with p-values using the psych package
-	cmat <- corr.test(dat, method = result$cor_type)
-
-	cr <- format(round(cmat$r,2))
-  cr[abs(cmat$r) < result$cor_cutoff] <- ""
-	ltmat <- lower.tri(cr)
-  cr[!ltmat] <- ""
-
-	cp <- format(round(cmat$p,2))
-  cp[abs(cmat$r) < result$cor_cutoff] <- ""
-  cp[!ltmat] <- ""
-
-	cat("Correlation matrix:\n")
-  print(cr, quote = FALSE)
-	cat("\np-values:\n")
-  print(cp, quote = FALSE)
-}
-
-
-plots_correlation <- function(result = .correlation()) {
-
-	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
-	panel.plot <- function(x, y) {
-	    usr <- par("usr"); on.exit(par(usr))
-	    par(usr = c(0, 1, 0, 1))
-	    ct <- cor.test(x,y, method = result$cor_type)
-	    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
-	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-	                  symbols = c("***", "**", "*", ".", " "))
-	    r <- ct$estimate
-	    rt <- format(r, digits=2)[1]
-	    cex <- 0.5/strwidth(rt)
-
-	    text(.5, .5, rt, cex=cex * abs(r))
-	    text(.8, .8, sig, cex=cex, col='blue')
-	}
-	panel.smooth <- function (x, y) {
-    points(x, y)
-    # uncomment below if you want linear and loess lines
-    # in the scatter plot matrix
-		# abline(lm(y~x), col="red")
-		# lines(stats::lowess(y~x), col="blue")
-	}
-	pairs(result$dat, lower.panel=panel.smooth, upper.panel=panel.plot)
-}
-
 ################################################################
 # Regression
 ################################################################
 output$uiReg_var1 <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "reg_var1", label = "Dependent variable:", choices = vars,
   	selected = state_singlevar("reg_var1",vars), multiple = FALSE)
 })
 
 output$uiReg_var2 <- renderUI({
-  # if(is.null(input$reg_var1)) return()
 	notChar <- "character" != getdata_class()
   vars <- varnames()[notChar]
   if(length(vars) > 0 ) vars <- vars[-which(vars == input$reg_var1)]
@@ -192,12 +40,11 @@ output$uiReg_var2 <- renderUI({
     # the reference to reg_var2 below should help ensure that variables
     # remain selected even if the dv changes
   	selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars),
-  	multiple = TRUE, selectize = FALSE)
+  	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
 output$uiReg_var3 <- renderUI({
 	if(input$reg_var2 %>% not_available) return()
-  # if(is.null(input$reg_var2)) return()
   vars <- varnames()
  	vars <- vars[which(vars %in% input$reg_var2)]
 
@@ -216,14 +63,19 @@ output$uiReg_var3 <- renderUI({
 output$uiReg_intsel <- renderUI({
   vars <- input$reg_var2
 	if(vars %>% not_available || length(vars) < 2) return()
-  # if(is.null(vars) || length(vars) < 2) return()
- 	choices <- reg_int_vec(vars,input$reg_interactions)
+ 	choices <- reg_int_vec(vars, input$reg_interactions)
 	selectInput("reg_intsel", label = "", choices = choices,
   	selected = state_multvar("reg_intsel", vars), multiple = TRUE, selectize = FALSE)
 })
 
-reg_interactions <- c("None" = "none", "All 2-way" = "2way", "All 3-way" = "3way")
-reg_pred_buttons <- c("Data" = "dataframe","Command" = "cmd")
+reg_interactions <- c("None" = "none", "2-way" = "2way", "3-way" = "3way")
+# reg_predict_cmd <- c("Data" = "dataframe","Command" = "cmd")
+reg_predict <- c("None" = "none", "Data" = "data","Command" = "cmd")
+reg_check <- c("RMSE" = "rmse", "Sum of squares" = "sumsquares",
+               "VIF" = "vif", "Confidence intervals" = "confint",
+               "Standardized coefficients" = "standardize",
+               "Stepwise selection" = "stepwise")
+
 output$ui_regression <- renderUI({
   list(
   	wellPanel(
@@ -242,32 +94,24 @@ output$ui_regression <- renderUI({
 				uiOutput("uiReg_intsel")
 			),
 		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
-   	    radioButtons(inputId = "reg_predict_buttons", label = "Prediction:", reg_pred_buttons,
-	      	selected = state_init_list("reg_predict_buttons","dataframe",reg_pred_buttons),
+   	    radioButtons(inputId = "reg_predict", label = "Prediction:", reg_predict,
+	      	selected = state_init_list("reg_predict","dataframe",reg_predict),
 	      	inline = TRUE),
 
-        conditionalPanel(condition = "input.reg_predict_buttons == 'cmd'",
-          returnTextInput("reg_predict", "Predict (e.g., carat = seq(.5,1,.05))",
-	    		  value = state_init('reg_predict',''))
+        conditionalPanel(condition = "input.reg_predict == 'cmd'",
+          returnTextInput("reg_predict_cmd", "Predict (e.g., carat = seq(.5,1,.05))",
+	    		  value = state_init('reg_predict_cmd',''))
         ),
-        conditionalPanel(condition = "input.reg_predict_buttons == 'dataframe'",
-          selectInput(inputId = "reg_predict_data", label = "Predict for profiles:", choices = c("None" = "none",r_data$datasetlist),
-            selected = state_init("reg_predict_data"), multiple = FALSE)
+        conditionalPanel(condition = "input.reg_predict == 'data'",
+          selectizeInput(inputId = "reg_predict_data", label = "Predict for profiles:",
+                      choices = c("None" = "none",r_data$datasetlist),
+                      selected = state_init("reg_predict_data"), multiple = FALSE)
         ),
 		    uiOutput("uiReg_var3"),
-		    # checkboxInput(inputId = "reg_outlier", label = "Outlier test", value = FALSE),
 
-
-
-# help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
-#                "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.Rmd")
-
-# 		        checkboxGroupInput("help_data", "", help_data,
-#       selected = state_init_list("help_data","", help_data),
-#       inline = TRUE)
-
-
-
+        checkboxGroupInput("reg_check", "", reg_check,
+          selected = state_init_list("reg_check","", reg_check), inline = TRUE),
+        br(),
         checkboxInput(inputId = "reg_rmse", label = "RMSE",
 	    		value = state_init('reg_rmse',FALSE)),
         checkboxInput(inputId = "reg_sumsquares", label = "Sum of squares",
@@ -275,13 +119,11 @@ output$ui_regression <- renderUI({
   	    checkboxInput(inputId = "reg_vif", label = "VIF",
 	    		value = state_init('reg_vif',FALSE)),
         checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
-      		value = state_init('reg_rmse',FALSE)),
+      		value = state_init('reg_confint',FALSE)),
         checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
      		  value = state_init('reg_standardize',FALSE)),
         checkboxInput(inputId = "reg_stepwise", label = "Select variables step-wise",
       		value = state_init('reg_stepwise',FALSE)),
-
-
 
 		    conditionalPanel(condition = "input.reg_confint == true |
 		                     input.reg_predict_data != 'none' |
@@ -312,57 +154,36 @@ output$regression <- renderUI({
   statTabPanel("Regression","Linear (OLS)",".regression","regression", "reg_plotWidth", "reg_plotHeight")
 })
 
-.regression <- reactive({
-	# if(is.null(input$reg_standardize)) return("")
-	if(input$reg_var1 %>% not_available)
-		return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
+# regression <- function(dataset, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
+#                        reg_predict, reg_predict_cmd, reg_predict_data, reg_standardize, reg_sumsquares,
+#                        reg_confint, reg_conf_level, reg_rmse, reg_vif, reg_stepwise, reg_plots, reg_line,
+#                        reg_loess) {
 
-	if(input$reg_var2 %>% not_available)
-		return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
+# reg_var1 = reg_dep_var
+# reg_var2 = reg_indep_var
+# reg_var3 = reg_test_var
+# reg_interactions = reg_intsel
+# reg_int_var = reg_interactions
 
-	result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data, input$reg_standardize,
-    input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
-    input$reg_plots, input$reg_line, input$reg_loess)
-
-	# specifying plot heights
-	nrVars <- length(as.character(attr(result$terms,'variables'))[-1])
-
-	result$plotHeight <- 650
-	result$plotWidth <- 650
-
-	if(input$reg_plots == 'histlist') result$plotHeight <- 325 * ceiling(nrVars / 2)
-
-	if(input$reg_plots == 'dashboard') result$plotHeight <- 630 + 375
-
-	if(input$reg_plots == 'correlations') {
-		result$plotHeight <- 150 * nrVars
-		result$plotWidth <- 150 * nrVars
-	}
-
-	if(input$reg_plots %in% c('scatterlist','leverage_plots','resid_vs_predictorlist')) {
-		result$plotHeight <- 325 * ceiling((nrVars-1) / 2)
-	}
-
-	result
-})
-
-observe({
-  if(is.null(input$regressionReport) || input$regressionReport == 0) return()
-  isolate({
-		inp <- list(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-			input$reg_interactions, input$reg_predict_buttons, input$reg_predict, input$reg_predict_data,
-      input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse,
-      input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
-      input$reg_loess)
-		updateReport(inp,"regression", round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
-  })
-})
-
-regression <- function(dataset, reg_var1, reg_var2, reg_var3, reg_intsel, reg_interactions,
-                       reg_predict_buttons, reg_predict, reg_predict_data, reg_standardize, reg_sumsquares,
-                       reg_confint, reg_conf_level, reg_rmse, reg_vif, reg_stepwise, reg_plots, reg_line,
-                       reg_loess) {
+regression <- function(dataset, reg_var1, reg_var2,
+                       data_filter = "",
+                       show_filter = FALSE, 		# remove when recode is complete
+                       reg_var3 = "",
+                       reg_intsel = "",
+                       reg_interactions = "none",
+                       reg_predict = "none",
+                       reg_predict_cmd = "",
+                       reg_predict_data = "",
+                       reg_standardize = FALSE,
+                       reg_sumsquares = FALSE,
+                       reg_confint = FALSE,
+                       reg_conf_level = .95,
+                       reg_rmse = FALSE,
+                       reg_vif = FALSE,
+                       reg_stepwise = FALSE,
+                       reg_plots = "",
+                       reg_line = FALSE,
+                       reg_loess = FALSE) {
 
 	vars <- reg_var2
 
@@ -371,61 +192,78 @@ regression <- function(dataset, reg_var1, reg_var2, reg_var3, reg_intsel, reg_in
 		vars <- c(vars,reg_intsel)
 	}
 
-	dat <- r_data[[dataset]]
+	# dat <- r_data[[dataset]]
+  # dat <- select_(values[["mtcars"]], .dots = c(reg_dep_var, reg_indep_var))
+	dat <- getdata_exp(dataset, c(reg_var1, reg_var2), filt = data_filter)
+
 	if(reg_standardize) dat <- mutate_each(dat,funs(reg_standardize_fun))
 
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
 	if(reg_stepwise) {
-		mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat),
-		            scope = list(upper = formula), direction = 'both')
-		# not sure what the k = log ... setting was for. AIC vs BIC?
-		# mod <- step(lm(as.formula(paste(reg_var1, "~ 1")), data = dat),
-		#             k = log(nrow(dat)), scope = list(upper = formula),
-		#             direction = 'both')
+    # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
+		mod <- lm(paste(reg_dep_var, "~ 1") %>% as.formula, data = dat) %>%
+      step(., k = 2, scope = list(upper = formula), direction = 'both')
 	} else {
 		mod <- lm(formula, data = dat)
 	}
 
-	mod$reg_predict_buttons <- reg_predict_buttons
-	mod$reg_predict <- reg_predict
-	mod$reg_predict_data <- reg_predict_data
-	mod$reg_sumsquares <- reg_sumsquares
-	mod$reg_confint <- reg_confint
-	mod$reg_conf_level <- reg_conf_level
-	mod$reg_rmse <- reg_rmse
-	mod$reg_vif <- reg_vif
-	mod$reg_var1 <- reg_var1
-	mod$reg_var2 <- reg_var2
-	mod$reg_var3 <- reg_var3
-	mod$reg_stepwise <- reg_stepwise
-	mod$reg_plots <- reg_plots
-	mod$reg_interactions <- reg_interactions
-	mod$reg_intsel <- reg_intsel
-	mod$reg_standardize <- reg_standardize
-	mod$reg_line <- reg_line
-	mod$reg_loess <- reg_loess
-	mod$dataset <- dataset
+	# specifying plot heights
+	nrVars <- length(as.character(attr(mod$terms,'variables'))[-1])
 
-	return(mod)
+	plotHeight <- 650
+	plotWidth <- 650
+
+	if(reg_plots == 'histlist') plotHeight <- 325 * ceiling(nrVars / 2)
+
+	if(reg_plots == 'dashboard') plotHeight <- 630 + 375
+
+	if(reg_plots == 'correlations') {
+		plotHeight <- 150 * nrVars
+		plotWidth <- 150 * nrVars
+	}
+
+	if(reg_plots %in% c('scatterlist','leverage_plots','resid_vs_predictorlist'))
+		plotHeight <- 325 * ceiling((nrVars-1) / 2)
+
+  environment() %>% as.list %>% set_class(c("regression",class(.)))
 }
 
 # summary_regression <- reactive({ .summary_regression() })
 summary_regression <- function(result = .regression()) {
 
-	if(class(result) != 'lm') return(result)
+	if(class(result$mod) != 'lm') return(result)
 
 	# rounding to avoid scientific notation for the coefficients
   #	res <- summary(format(result, scientific = FALSE))
   #	res$coefficients <- format(res$coefficients, scientific = FALSE)
-	res <- summary(result)
- 	res$coefficients <- round(res$coefficients,3)
-	.print.summary.lm(res, dataset = result$dataset, dv = result$reg_var1, std_c = result$reg_standardize, digits = 3)
-  # print(res, digits = 3)
+	sig_stars <- function(pval) {
+	  sapply(pval, function(x) x < c(.001,.01, .05, .1)) %>%
+	    colSums %>% add(1) %>%
+	    c("",".","*", "**", "***")[.]
+	}
+
+	reg_coeff <- tidy(result$mod)
+	reg_coeff$` ` <- sig_stars(reg_coeff$p.value)
+	reg_coeff[,c(2:5)] %<>% round(3)
+	reg_coeff$p.value[reg_coeff$p.value < .001] <- "< .001"
+	colnames(reg_coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
+	print(reg_coeff, row.names=FALSE)
+
+	reg_fit <- glance(result$mod) %>% round(3)
+	if(reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
+	reg_fit
+
+	reg_aug <- augment(result$mod)
+	reg_aug[1:10,]
+
+	# res <- summary(result$mod)
+ # 	res$coefficients <- round(res$coefficients,3)
+	# .print.summary.lm(res, dataset = result$dataset, dv = result$reg_var1, std_c = result$reg_standardize, digits = 3)
 
 	# if(reg_outlier) print(outlierTest(result), digits = 3)
 
-  if(result$reg_predict != '' || result$reg_predict_data != "none") {
+  if(result$reg_predict_cmd != '' || result$reg_predict_data != "none") {
 
     # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
     # as starting point
@@ -434,9 +272,9 @@ summary_regression <- function(result = .regression()) {
           standardized coefficients box and try again.")
     } else {
 
-      if(result$reg_predict_buttons == "cmd") {
-     		reg_predict <- gsub("\"","\'", result$reg_predict)
-        nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
+      if(result$reg_predict == "cmd") {
+     		reg_predict_cmd <- gsub("\"","\'", result$reg_predict_cmd)
+        nval <- try(eval(parse(text = paste0("data.frame(",reg_predict_cmd,")"))), silent = TRUE)
       } else {
         nval <- r_data[[result$reg_predict_data]]
         vars <- as.character(attr(result$terms,'variables'))[-1]
@@ -444,7 +282,7 @@ summary_regression <- function(result = .regression()) {
       }
 
       if(is(nval, 'try-error')) {
-        if(result$reg_predict_buttons == "cmd") {
+        if(result$reg_predict == "cmd") {
           cat("The expression entered does not seem to be correct. Please try again.\n")
           cat("Examples are shown in the helpfile.\n")
         } else {
@@ -481,7 +319,7 @@ summary_regression <- function(result = .regression()) {
           if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
             cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
           } else {
-            if(result$reg_predict_buttons == "cmd" & result$reg_predict == "") {
+            if(result$reg_predict == "cmd" & result$reg_predict_cmd == "") {
               pred <- try(log("a"), silent=TRUE)
             } else {
               newdat[names(nval)] <- list(NULL)
@@ -491,7 +329,7 @@ summary_regression <- function(result = .regression()) {
             }
 
             if(!is(pred, 'try-error')) {
-            	if(result$reg_predict_buttons == "dataframe") {
+            	if(result$reg_predict == "dataframe") {
               	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
               } else {
               	cat("Predicted values for:\n")
@@ -585,6 +423,7 @@ summary_regression <- function(result = .regression()) {
 	}
 }
 
+
 .print.summary.lm <- function (x, dataset = "", dv = "", std_c = FALSE, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...) {
 
   # adapted from getAnywhere(print.summary.lm)
@@ -627,10 +466,10 @@ r_plots <- list("None" = "", "Histograms" = "histlist", "Correlations" = "correl
 
 plots_regression <- function(result = .regression()) {
 
-	if(class(result) != 'lm') return(result)
-	mod <- ggplot2::fortify(result)
+	if(class(result$mod) != 'lm') return(result)
+	mod <- ggplot2::fortify(result$mod)
 
-	vars <- as.character(attr(result$terms,'variables'))[-1]
+	vars <- as.character(attr(result$mod$terms,'variables'))[-1]
 	reg_var1 <- vars[1]
 	reg_var2 <- vars[-1]
 
@@ -749,6 +588,55 @@ observe({
 		saveRegResiduals(result)
 	})
 })
+
+# list of function arguments
+reg_args <- as.list(formals(regression))
+reg_args$dataset <- "diamonds"
+reg_args$reg_var1 <- "price"
+reg_args$reg_var2 <- "carat"
+
+# rm(r_env)
+result <- do.call(regression, reg_args)
+
+# list of function inputs selected by user
+reg_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(reg_args))
+    reg_args[[i]] <- input[[i]]
+  if(!input$show_filter) reg_args$data_filter = ""
+  reg_args
+})
+
+
+.regression <- reactive({
+	if(input$reg_var1 %>% not_available)
+		return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
+
+	if(input$reg_var2 %>% not_available)
+		return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
+
+	result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
+		input$reg_interactions, input$reg_predict, input$reg_predict_cmd, input$reg_predict_data, input$reg_standardize,
+    input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
+    input$reg_plots, input$reg_line, input$reg_loess)
+
+	result
+	# do.call(regression, reg_inputs())
+})
+
+observe({
+  if(input$regressionReport %>% not_pressed) return()
+  isolate({
+		# inp <- list(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
+		# 	input$reg_interactions, input$reg_predict, input$reg_predict_cmd, input$reg_predict_data,
+  #     input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse,
+  #     input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
+  #     input$reg_loess)
+		updateReport(reg_inputs() %>% clean_args, "regression",
+		             round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
+  })
+})
+
 
 ################################################################
 # Additional functions for regression

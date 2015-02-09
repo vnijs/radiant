@@ -2,16 +2,6 @@
 # Shiny interface for data functions
 #######################################
 
-output$ui_data_filter <- renderUI({
-
-  value <- ""
-  if(input$show_filter %>% is_empty(empty = FALSE) == FALSE)
-    value = state_init("data_filter",value)
-
-  returnTextAreaInput("data_filter", label = "",
-                      value = state_init("data_filter",value))
-})
-
 output$uiView_err <- renderUI({
   if(r_data$error %>% is_empty) return()
   helpText(r_data$error)
@@ -33,7 +23,8 @@ output$data_ui_and_tabs <- renderUI({
             checkboxInput('show_filter', 'Filter (e.g., price > 5000)',
                           value = state_init("show_filter",FALSE)),
             conditionalPanel("input.show_filter == true",
-              uiOutput("ui_data_filter"),
+              returnTextAreaInput("data_filter", label = "",
+                                  value = state_init("data_filter")),
               uiOutput("uiView_err")))
         ),
         conditionalPanel("input.datatabs == 'Manage'",

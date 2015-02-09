@@ -14,13 +14,13 @@ sm_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for(i in names(sm_args))
     sm_args[[i]] <- input[[i]]
+  if(!input$show_filter) sm_args$data_filter = ""
   sm_args
 })
 
 output$ui_sm_var <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "sm_var", label = "Variable (select one):",
               choices = vars,
               selected = state_singlevar("sm_var",vars), multiple = FALSE)
@@ -100,13 +100,7 @@ output$single_mean <- renderUI({
 observe({
   if(input$single_mean_report %>% not_pressed) return()
   isolate({
-    sm_args_rep <- sm_inputs()
-    if(sm_args_rep$data_filter == "")
-      sm_args_rep$data_filter  <- NULL
-    else
-      sm_args_rep$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
-
-		update_report(inp = sm_args_rep, fun_name = "single_mean",
+		update_report(inp = sm_inputs() %>% clean_args, fun_name = "single_mean",
 		              outputs = c("summary", "plot"))
   })
 })

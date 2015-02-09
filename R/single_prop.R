@@ -4,6 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sp_var The variable selected for the proportion comparison
+#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param sp_comp_value Population value to compare the sample proportion to
 #' @param sp_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sp_sig_level Span of the confidence interval
@@ -18,12 +19,14 @@
 #'
 #' @export
 single_prop <- function(dataset, sp_var, sp_levels,
+                        data_filter = "",
                         sp_comp_value = 0.5,
                         sp_alternative = "two.sided",
                         sp_sig_level = .95,
                         sp_plots = "hist") {
 
-	dat <- getdata_exp(dataset, sp_var)
+	dat <- getdata_exp(dataset, sp_var, filt = data_filter)
+
 	levs <- levels(dat[,sp_var])
 	if(sp_levels %in% levs && levs[1] != sp_levels) {
 		dat[,sp_var] %<>% as.character %>% as.factor %>% relevel(sp_levels)
@@ -31,7 +34,7 @@ single_prop <- function(dataset, sp_var, sp_levels,
 	}
 	n <- nrow(dat)
 	ns <- sum(dat == sp_levels)
-	# binom.test for exact
+	# use binom.test for exact
 	prop.test(ns, n, p = sp_comp_value, alternative = sp_alternative,
 	           conf.level = sp_sig_level, correct = FALSE) %>% tidy -> res
 
@@ -58,6 +61,8 @@ summary.single_prop <- function(result) {
 
   cat("Single proportion test\n")
 	cat("Data     :", result$dataset, "\n")
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
 	cat("Variable :", result$sp_var, "\n")
 
 	hyp_symbol <- c("two.sided" = "not equal to",

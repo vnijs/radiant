@@ -6,7 +6,6 @@
 sp_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 sp_plots <- c("Histogram" = "hist", "Simulate" = "simulate")
 
-
 # list of function arguments
 sp_args <- as.list(formals(single_prop))
 
@@ -106,7 +105,7 @@ output$single_prop <- renderUI({
 observe({
   if(input$single_prop_report %>% not_pressed) return()
   isolate({
-		update_report(inp = sp_inputs(), fun_name = "single_prop",
+		update_report(inp = sp_inputs() %>% clean_args, fun_name = "single_prop",
 		              outputs = c("summary", "plot"))
   })
 })

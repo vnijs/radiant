@@ -3,11 +3,9 @@ output$uiExpl_columns <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
   if(length(vars) == 0) return()
-
-  selectizeInput("expl_columns", label = "Select columns(s):", choices = as.list(vars),
+  selectInput("expl_columns", label = "Select columns(s):", choices = vars,
     selected = state_multvar("expl_columns",vars), multiple = TRUE,
-    options = list(placeholder = 'Select column(s)', plugins = list('remove_button', 'drag_drop'))
-  )
+    size = min(8, length(vars)), selectize = FALSE)
 })
 
 output$uiExpl_byvar <- renderUI({
@@ -80,15 +78,13 @@ cv <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
 
 explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_show_tab, expl_show_viz) {
 
-  # dat <- r_data[[dataset]]
   dat <- getdata()
 
   if(is.null(expl_byvar)) {
     dat %<>% select_(.dots = expl_columns)
     isNum <- sapply(dat, is.numeric)
     if(sum(isNum) > 0) {
-
-    select(dat, which(isNum)) %>%
+      select(dat, which(isNum)) %>%
       gather_("variable", "values", expl_columns) %>%
       group_by(variable) %>%
       summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),

@@ -7,9 +7,6 @@
 #' @export
 radiant <- function(app = c("marketing", "quant", "base")) {
 
-#   if(packageVersion('shiny') > "0.10.2.2")
-#     warning("Radiant currently does not support Shiny 0.11. To use Radiant please remove Shiny 0.11.\nCopy-and-paste the code below to install the required packages.\n\n\ndetach('package:shiny', unload=TRUE)\nremove.packages('shiny')\noptions(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\ninstall.packages(new.packages(), dependencies = TRUE)")
-
   addResourcePath("imgs", system.file("base/www/imgs/", package="radiant"))
   addResourcePath("figures", system.file("base/tools/help/figures/", package="radiant"))
   if(app[1] == "marketing") {
@@ -85,21 +82,20 @@ getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = "") {
 
   if(exists("session") && exists("r_env")) {
     # cat("Dataset", dataset, "loaded from the radiant environment (r_env)\n")
-    # select_(r_env$r_data[[dataset]], .dots = vars) %>% clean
     select_(getdata(), .dots = vars) %>%
-      { if(na.rm) na.omit(.) else .}
+      { if(na.rm) na.omit(.) else . }
   } else if(exists("r_env")) {
     cat("The requested dataset cannot be loaded from r_env. To make data from Radiant accesible in R(studio), stop the application using Quit > Quit in the navigation bar.\n") %>%
       stop %>% return
   } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
     if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
     select_(r_data[[dataset]], .dots = vars) %>%
-      { if(na.rm) na.omit(.) else .} %>%
+      { if(na.rm) na.omit(.) else . } %>%
       { if(filt == "") . else filter_(.,filt) }
   } else if(exists(dataset)) {
     cat("Dataset", dataset, "loaded from global environment\n")
     select_(get(dataset), .dots = vars) %>%
-      { if(na.rm) na.omit(.) else .} %>%
+      { if(na.rm) na.omit(.) else . } %>%
       { if(filt == "") . else filter_(.,filt) }
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
