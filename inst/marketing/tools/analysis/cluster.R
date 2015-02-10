@@ -176,8 +176,9 @@ output$ui_kmeansCluster <- renderUI({
 	    numericInput("km_nrClus", "Number of clusters:", min = 2,
 	    	value = state_init('km_nrClus',2)),
 
-      downloadButton("km_save_clusmeans", "Save cluster means"),
-	    actionButton("km_saveclus", 				"Save cluster membership")
+			HTML("<label>Save:</label>"), br(),
+      downloadButton("km_save_clusmeans", "Means"),
+	    actionButton("km_saveclus", "Membership")
   	),
 		helpAndReport('Kmeans cluster analysis','kmeansCluster',inclMD("tools/help/kmeansClustering.md"))
 	)
@@ -219,7 +220,7 @@ observe({
 
 		# extra command to save cluster membership
  		xcmd <- paste0("saveClusters(result)")
-		updateReport(km_input %>% clean_args, "kmeansCluster",
+		updateReport(km_inputs() %>% clean_args, "kmeansCluster",
 		             round(7 * kmeans_plotWidth()/650,2),
 		             round(7 * kmeans_plotHeight()/650,2),
 		             xcmd = xcmd)
@@ -235,8 +236,8 @@ kmeansCluster <- function(dataset, km_vars,
                           km_seed = 1234,
                           km_nrClus = 2) {
 
-
 	dat <- getdata_exp(dataset, km_vars, filt = data_filter)
+	dats <- dat %>% scale
 
 	if(km_hcinit) {
 		hinit <- hierCluster(dataset, km_vars, data_filter = data_filter,
@@ -244,18 +245,13 @@ kmeansCluster <- function(dataset, km_vars,
 		                     hc_meth = km_meth)
 
 		cvar <- cutree(hinit$hc_out, k = km_nrClus)
-		# cluscenters <- as.matrix(aggregate(dat,list(clusmem),mean)[-1])
-
-		dat %>% scale %>% data.frame %>%
-		mutate(cvar = cvar) %>%
-		group_by(cvar) %>%
-		summarise_each(funs(mean)) -> cluscenters
-
-		km_out <- kmeans(dat, centers = cluscenters, iter.max = 500)
+		cluscenters <- as.matrix(aggregate(dats, list(cvar),mean)[-1])
+		km_out <- kmeans(dats, centers = cluscenters, iter.max = 500)
 	} else {
 		set.seed(km_seed)
-		km_out <- kmeans(dat, centers = km_nrClus, nstart = 10, iter.max = 500)
+		km_out <- kmeans(dats, centers = km_nrClus, nstart = 10, iter.max = 500)
 	}
+	rm(dats) 	# don't need scaled version anymore
 
 	nrVars <- length(km_vars)
 	plotHeight <- 325 * (1 + floor((nrVars - 1) / 2))
@@ -263,10 +259,6 @@ kmeansCluster <- function(dataset, km_vars,
 
 	environment() %>% as.list %>% set_class(c("kmeansCluster",class(.)))
 }
-
-# r_data <- list()
-# r_data$mtcars <- mtcars
-# kmeansCluster("mtcars", c("mpg","cyl"))
 
 # list of function arguments
 km_args <- as.list(formals(kmeansCluster))
@@ -295,7 +287,18 @@ summary_kmeansCluster <- function(result = .kmeansCluster(), savemeans = FALSE) 
 		as.data.frame -> cmeans
 		if(savemeans) return(cmeans)
 
-	cat("Kmeans clustering with", nrClus, "clusters of sizes", paste0(result$km_out$size, collapse=", "),"\n\n")
+	cat("K-means cluster analysis\n")
+	cat("Data        :", result$dataset, "\n")
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter      :", gsub("\\n","", result$data_filter), "\n")
+	cat("Variables   :", paste0(result$km_vars, collapse=", "), "\n")
+	if(result$km_hcinit) {
+		cat("Method      :", result$km_meth, "\n")
+		cat("Distance    :", result$km_dist, "\n")
+	}
+	cat("Observations:", result$dat %>% nrow, "\n")
+	cat("Generated   :", nrClus, "clusters of sizes", paste0(result$km_out$size, collapse=", "),"\n\n")
+
 	cat("Cluster means:\n")
 	print(cmeans)
 
@@ -317,20 +320,19 @@ summary_kmeansCluster <- function(result = .kmeansCluster(), savemeans = FALSE) 
 }
 
 plots_kmeansCluster <- function(result = .kmeansCluster()) {
-	dat <- result$dat
-	dat$clusvar <- as.factor(result$km_out$cluster)
+	result$dat$clusvar <- as.factor(result$km_out$cluster)
 
 	plots <- list()
 	for(var in result$km_vars) {
-		plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=2.5, alpha=.3) +
+		plots[[var]] <- ggplot(result$dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=2.5, alpha=.3) +
 				labs(y = "") + theme(axis.text.y = element_blank())
 	}
 	sshh( do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))) )
 }
 
-saveClusters <- function(cluster, km_nrClus) {
-	data.frame(as.factor(cluster)) %>%
-	changedata(., paste0("kclus",km_nrClus))
+saveClusters <- function(result) {
+	data.frame(as.factor(result$cluster)) %>%
+	changedata(., paste0("kclus",result$km_nrClus))
 }
 
 # save cluster membership when action button is pressed
@@ -339,6 +341,7 @@ observe({
 	isolate({
 		result <- .kmeansCluster()
 		if(is.character(result)) return()
-		saveClusters(result$km_out$cluster, result$km_nrClus)
+		saveClusters(list(cluster = result$km_out$cluster,
+		             			km_nrClus = result$km_nrClus))
 	})
 })
