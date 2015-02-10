@@ -175,7 +175,7 @@ observe({
 })
 
 output$downloadData <- downloadHandler(
-  filename = function() { paste(input$dataset,'.',input$saveAs, sep='') },
+  filename = function() { paste0(input$dataset,'.',input$saveAs) },
   content = function(file) {
 
     ext <- input$saveAs

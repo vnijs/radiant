@@ -16,7 +16,7 @@ output$ui_correlation <- renderUI({
   list(
   	wellPanel(
 	    uiOutput("uiCor_var"),
-		  selectInput(inputId = "cor_type", label = "Method", choices = cor_type,
+		  selectInput(inputId = "cor_type", label = "Method:", choices = cor_type,
   	  	selected = state_init_list("cor_type","pearson", cor_type), multiple = FALSE),
      	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
     		value = state_init('cor_cutoff',0), step = 0.05)

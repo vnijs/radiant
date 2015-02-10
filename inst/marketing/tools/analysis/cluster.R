@@ -5,9 +5,9 @@ output$uiHc_vars <- renderUI({
 
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
 	vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "hc_vars", label = "Variables:", choices = vars,
-   	selected = state_multvar("hc_vars",vars), multiple = TRUE, selectize = FALSE)
+   	selected = state_multvar("hc_vars",vars),
+	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
 hc_method <- list("Ward's" = "ward.D", "Single" = "single", "Complete" = "complete", "Average" = "average",
@@ -23,9 +23,10 @@ output$ui_hierCluster <- renderUI({
   	wellPanel(
 	    uiOutput("uiHc_vars"),
 	    selectInput("hc_dist", label = "Distance measure:", choices = hc_dist_method,
-	     	selected = state_init_list("hc_dist","sq.euclidean", hc_dist_method), multiple = FALSE),
+	     	selected = state_init_list("hc_dist","sq.euclidean", hc_dist_method),
+	     	multiple = FALSE),
 	    selectInput("hc_meth", label = "Method:", choices = hc_method,
-	     	selected = state_init_list("hc_meth","ward.D", hc_method), multiple = FALSE),
+	     	selected = state_init_list("hc_meth", "ward.D", hc_method), multiple = FALSE),
 	    conditionalPanel(condition = "input.tabs_hierCluster == 'Plots'",
 		    radioButtons(inputId = "hc_plots", label = NULL, hc_plots,
 	 	    	selected = state_init_list("hc_plots","dendo", hc_plots),
@@ -43,66 +44,80 @@ output$hierCluster <- renderUI({
 })
 
 .hierCluster <- reactive({
-
 	if(input$hc_vars %>% not_available)
 		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
 
-	hierCluster(input$dataset, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
-		input$hc_cutoff)
+	do.call(hierCluster, hc_inputs())
 })
 
 observe({
   if(input$hierClusterReport %>% not_pressed) return()
   isolate({
-
-		inp <- list(input$dataset, input$hc_vars, input$hc_dist, input$hc_meth, input$hc_plots,
-			input$hc_cutoff)
-		updateReport(inp,"hierCluster")
+		updateReport(hc_inputs() %>% clean_args,"hierCluster")
   })
 })
 
-hierCluster <- function(dataset, hc_vars, hc_dist, hc_meth, hc_plots, hc_cutoff) {
+hierCluster <- function(dataset, hc_vars,
+                        data_filter = "",
+                        show_filter = FALSE, 		# remove when recode is complete
+                        hc_dist = "sq.euclidian",
+                        hc_meth = "ward.D",
+                        hc_plots = "dendo",
+                        hc_cutoff = 0) {
 
-	dat <- na.omit( r_data[[dataset]][,hc_vars] ) 	# omitting missing values
-	dat <- scale(dat) 															# standardizing the data
+	getdata_exp(dataset, hc_vars, filt = data_filter) %>%
+	  scale %>%
+	  { if(hc_dist == "sq.euclidian") {
+				dist(., method = "euclidean")^2
+			} else {
+				dist(., method = hc_dist)
+			}
+		} %>% hclust(d = ., method = hc_meth) -> hc_out
 
-	if(hc_dist == "sq.euclidian") {
-		dist.data <- dist(dat, method = "euclidean")^2
-	} else {
-		dist.data <- dist(dat, method = hc_dist)
-	}
-
-	res <- hclust(d = dist.data, method = hc_meth)
-
-	res$hc_vars <- hc_vars
-	res$hc_plots <- hc_plots
-	res$hc_cutoff <- hc_cutoff
-
-	return(res)
+	environment() %>% as.list %>% set_class(c("hierCluster",class(.)))
 }
+
+# list of function arguments
+hc_args <- as.list(formals(hierCluster))
+
+# list of function inputs selected by user
+hc_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(hc_args))
+    hc_args[[i]] <- input[[i]]
+  if(!input$show_filter) hc_args$data_filter = ""
+  hc_args
+})
 
 # main functions called from radiant.R
 summary_hierCluster <- function(result = .hierCluster()) {
-	cat("Variables used:\n",result$hc_vars,"\n")
-	print(result)
-	cat("Note: The main output from this analysis is shown in the Plots tab.")
+
+	cat("Hierarchical cluster analysis\n")
+	cat("Data        :", result$dataset, "\n")
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter      :", gsub("\\n","", result$data_filter), "\n")
+	cat("Variables   :", paste0(result$hc_vars, collapse=", "), "\n")
+	cat("Method      :", result$hc_meth, "\n")
+	cat("Distance    :", result$hc_dist, "\n")
+	cat("Observations:", length(result$hc_out$order), "\n")
+	cat("Note        : The main output from this analysis are the plots in the Plots tab.")
+	# print(result$hc_out)
 }
 
 plots_hierCluster <- function(result = .hierCluster()) {
 
-	max_height <- max(result$height)
-	result$height <- result$height / max_height
+	result$hc_out$height %>% { . / max(.) } -> height
 
 	if(result$hc_plots == "dendo") {
-
-		dend <- as.dendrogram(result)
-		if(result$hc_cutoff == 0) {
-			plot(dend, main = "Dendrogram", xlab = '', ylab = 'Heterogeneity')
-		} else {
-			plot(dend, ylim = c(result$hc_cutoff,1), leaflab='none', main = "Cutoff Dendrogram",
-				ylab = 'Heterogeneity')
+		as.dendrogram(result$hc_out) %>%
+		{
+			if(result$hc_cutoff == 0) {
+				plot(., main = "Dendrogram", xlab = '', ylab = 'Heterogeneity')
+			} else {
+				plot(., ylim = c(result$hc_cutoff,1), leaflab='none',
+				     main = "Cutoff Dendrogram", ylab = 'Heterogeneity')
+			}
 		}
-
 	} else {
 		height <- rev(result$height[result$height > result$hc_cutoff])
 		nr_of_clusters <- 1:length(height)
@@ -135,9 +150,9 @@ output$uiKm_vars <- renderUI({
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars,
-	  selected = state_init_multvar("km_vars",input$hc_vars, vars), multiple = TRUE, selectize = FALSE)
+	  selected = state_init_multvar("km_vars",input$hc_vars, vars),
+	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
 output$ui_kmeansCluster <- renderUI({
@@ -160,11 +175,20 @@ output$ui_kmeansCluster <- renderUI({
 		  ),
 	    numericInput("km_nrClus", "Number of clusters:", min = 2,
 	    	value = state_init('km_nrClus',2)),
-	    actionButton("km_saveclus", "Save cluster membership")
+
+      downloadButton("km_save_clusmeans", "Save cluster means"),
+	    actionButton("km_saveclus", 				"Save cluster membership")
   	),
 		helpAndReport('Kmeans cluster analysis','kmeansCluster',inclMD("tools/help/kmeansClustering.md"))
 	)
 })
+
+output$km_save_clusmeans <- downloadHandler(
+  filename = function() { "cluster_kmeans.csv" },
+  content = function(file) {
+  	summary_kmeansCluster(savemeans = TRUE) %>% write.csv(., file = file)
+  }
+)
 
 kmeans_plotWidth <- function() {
 	result <- .kmeansCluster()
@@ -180,73 +204,104 @@ output$kmeansCluster <- renderUI({
   statTabPanel("Cluster","K-means",".kmeansCluster", "kmeansCluster", "kmeans_plotWidth", "kmeans_plotHeight")
 })
 
+
 .kmeansCluster <- reactive({
 
-	if(input$km_vars %>% not_available) return("This analysis requires variables of type numeric or integer.\nIf none are availble please select another dataset.")
-	kmeansCluster(input$dataset, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
-		input$km_nrClus)
+	if(input$km_vars %>% not_available)
+		return("This analysis requires variables of type numeric or integer.\nIf none are availble please select another dataset.")
+
+	do.call(kmeansCluster, km_inputs())
 })
 
 observe({
   if(input$kmeansClusterReport %>% not_pressed) return()
   isolate({
-	  inp <- list(input$dataset, input$km_vars, input$km_hcinit, input$km_dist, input$km_meth, input$km_seed,
-			input$km_nrClus)
 
 		# extra command to save cluster membership
  		xcmd <- paste0("saveClusters(result)")
-		updateReport(inp,"kmeansCluster", round(7 * kmeans_plotWidth()/650,2), round(7 * kmeans_plotHeight()/650,2), xcmd = xcmd)
+		updateReport(km_input %>% clean_args, "kmeansCluster",
+		             round(7 * kmeans_plotWidth()/650,2),
+		             round(7 * kmeans_plotHeight()/650,2),
+		             xcmd = xcmd)
   })
 })
 
-kmeansCluster <- function(dataset, km_vars, km_hcinit, km_dist, km_meth, km_seed, km_nrClus) {
+kmeansCluster <- function(dataset, km_vars,
+                        	data_filter = "",
+                        	show_filter = FALSE, 		# remove when recode is complete
+                          km_hcinit = TRUE,
+                          km_dist = "sq.euclidian",
+                          km_meth = "ward.D",
+                          km_seed = 1234,
+                          km_nrClus = 2) {
 
-	dat <- na.omit( r_data[[dataset]][,km_vars] ) 					# omitting missing values
-	dat <- scale(dat)
+
+	dat <- getdata_exp(dataset, km_vars, filt = data_filter)
 
 	if(km_hcinit) {
-		hinit <- hierCluster(dataset, km_vars, km_dist, km_meth, "", 0)
-		clusmem <- cutree(hinit, k = km_nrClus)
-		cluscenters <- as.matrix(aggregate(dat,list(clusmem),mean)[-1])
-		km_res <- kmeans(na.omit(object = data.frame(dat)), centers = cluscenters, iter.max = 500)
+		hinit <- hierCluster(dataset, km_vars, data_filter = data_filter,
+		                     show_filter = show_filter, hc_dist = km_dist,
+		                     hc_meth = km_meth)
+
+		cvar <- cutree(hinit$hc_out, k = km_nrClus)
+		# cluscenters <- as.matrix(aggregate(dat,list(clusmem),mean)[-1])
+
+		dat %>% scale %>% data.frame %>%
+		mutate(cvar = cvar) %>%
+		group_by(cvar) %>%
+		summarise_each(funs(mean)) -> cluscenters
+
+		km_out <- kmeans(dat, centers = cluscenters, iter.max = 500)
 	} else {
 		set.seed(km_seed)
-		km_res <- kmeans(na.omit(object = data.frame(dat)), centers = km_nrClus, nstart = 10,
-			iter.max = 500)
+		km_out <- kmeans(dat, centers = km_nrClus, nstart = 10, iter.max = 500)
 	}
 
 	nrVars <- length(km_vars)
-	km_res$plotHeight <- 325 * (1 + floor((nrVars - 1) / 2))
-	km_res$plotWidth <- 325 * min(nrVars,2)
+	plotHeight <- 325 * (1 + floor((nrVars - 1) / 2))
+	plotWidth <- 325 * min(nrVars,2)
 
-	km_res$dataset <- dataset
-	km_res$km_vars <- km_vars
-	km_res$km_nrClus <- km_nrClus
-
-	km_res
+	environment() %>% as.list %>% set_class(c("kmeansCluster",class(.)))
 }
 
-summary_kmeansCluster <- function(result = .kmeansCluster()) {
+# r_data <- list()
+# r_data$mtcars <- mtcars
+# kmeansCluster("mtcars", c("mpg","cyl"))
 
-	# print cluster means
+# list of function arguments
+km_args <- as.list(formals(kmeansCluster))
+
+# list of function inputs selected by user
+km_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(km_args))
+    km_args[[i]] <- input[[i]]
+  if(!input$show_filter) km_args$data_filter = ""
+  km_args
+})
+
+
+summary_kmeansCluster <- function(result = .kmeansCluster(), savemeans = FALSE) {
+
 	nrClus <- result$km_nrClus
-	cat("Kmeans clustering with", nrClus, "clusters of sizes", paste0(result$size, collapse=", "),"\n\n")
-	cat("Cluster means:\n")
 	clusNames <- paste("Cluster",1:nrClus)
-	select_(r_data[[result$dataset]], .dots = result$km_vars) %>%
-		na.omit %>%
-		mutate(cvar = result$cluster) %>%
+	result$dat %>%
+		mutate(cvar = result$km_out$cluster) %>%
 		group_by(cvar) %>%
 		summarise_each(funs(mean)) %>%
 		select(-cvar) %>%
 		round(3) %>%
 		set_rownames(clusNames) %>%
-		as.data.frame %>%
-		print
+		as.data.frame -> cmeans
+		if(savemeans) return(cmeans)
+
+	cat("Kmeans clustering with", nrClus, "clusters of sizes", paste0(result$km_out$size, collapse=", "),"\n\n")
+	cat("Cluster means:\n")
+	print(cmeans)
 
 	# percentage of within cluster variance accounted for by each cluster
 	cat("\nPercentage of within cluster variance accounted for by each cluster:\n")
-	(100 * result$withinss / result$tot.withinss) %>%
+	(100 * result$km_out$withinss / result$km_out$tot.withinss) %>%
 		round(2) %>%
 		sprintf("%.2f",.) %>%
 		paste0(.,"%") %>%
@@ -256,27 +311,26 @@ summary_kmeansCluster <- function(result = .kmeansCluster()) {
 		print
 
 	# percentage of between cluster variance versus the total higher is better
-	(100 * result$betweenss / result$totss) %>% sprintf("%.2f",.) %>%
+	(100 * result$km_out$betweenss / result$km_out$totss) %>% sprintf("%.2f",.) %>%
 		paste0("\nBetween cluster variance accounts for ", . , "% of the\ntotal variance in the data (higher is better).") %>%
 		cat
 }
 
 plots_kmeansCluster <- function(result = .kmeansCluster()) {
-	dat <- na.omit( r_data[[result$dataset]][,result$km_vars, drop = FALSE] ) 					# omitting missing values
-	dat$clusvar <- as.factor(result$cluster)
+	dat <- result$dat
+	dat$clusvar <- as.factor(result$km_out$cluster)
 
 	plots <- list()
 	for(var in result$km_vars) {
-		# plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=1.5, alpha=.3) +
 		plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clusvar')) + geom_density(adjust=2.5, alpha=.3) +
 				labs(y = "") + theme(axis.text.y = element_blank())
 	}
-	do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2))))
+	sshh( do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))) )
 }
 
-saveClusters <- function(result = .kmeansCluster()) {
-	clusmem <- data.frame(as.factor(result$cluster))
-	changedata(clusmem, paste0("kclus",result$km_nrClus))
+saveClusters <- function(cluster, km_nrClus) {
+	data.frame(as.factor(cluster)) %>%
+	changedata(., paste0("kclus",km_nrClus))
 }
 
 # save cluster membership when action button is pressed
@@ -285,6 +339,6 @@ observe({
 	isolate({
 		result <- .kmeansCluster()
 		if(is.character(result)) return()
-		saveClusters(result)
+		saveClusters(result$km_out$cluster, result$km_nrClus)
 	})
 })
