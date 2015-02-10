@@ -16,3 +16,7 @@ if(length(to_inp) != 0)
 # load pkgs as defined in global.R - order is important!
 if(exists("pkgs"))
 	sapply(pkgs, require, lib.loc = local_dir, character.only=TRUE)
+
+require(rpivotTable)
+# devtools::install_github('rstudio/shiny@v0.11.1-rc')
+# devtools::install_github(c("ramnathv/htmlwidgets", "smartinsightsfromdata/rpivotTable"))
