@@ -236,8 +236,8 @@ regression <- function(dataset, reg_var1, reg_var2,
 # library(dplyr)
 # library(magrittr)
 # library(ggplot2)
-# install.packages('dplyr')
-# install.packages('purrr')
+# # install.packages('dplyr')
+# # install.packages('purrr')
 # library(broom)
 # library(devtools)
 # library(gridExtra)
@@ -510,22 +510,22 @@ reg_int_vec <- function(reg_vars, nway) {
 }
 
 vif_regression <- function(result = .regression()) {
-	if(result$reg_vif) {
-		if(length(result$reg_var2) > 1) {
+	if(length(result$reg_var2) > 1) {
 
-  	 	VIF <- try(vif(result$mod))
-      if(is(VIF, 'try-error')) {
-        cat("Insufficient number of independent variables selected to calculate VIF scores\n")
-      } else {
-	  	  cat("Variance Inflation Factors\n")
-      	if(!is.null(dim(VIF))) VIF <- VIF[,'GVIF'] # needed when factors are included
-        VIF <- data.frame("VIF" = VIF, "Rsq" = 1 - 1/VIF)
-	  	  VIF <- VIF[order(VIF$VIF, decreasing=T),]
-	  	  ifelse(nrow(VIF) < 8, return(VIF %>% t), return(VIF))
-      }
-		} else {
-	  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
-		}
+	 	# VIF <- try(vif(result$mod))
+   #  if(is(VIF, 'try-error')) {
+   #    cat("Insufficient number of independent variables selected to calculate VIF scores\n")
+   #  } else {
+  	  cat("Variance Inflation Factors\n")
+      vif(result$mod) %>%
+        { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+        data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
+        round(3) %>%
+        .[order(.$VIF, decreasing=T),] %>%
+        { if(nrow(.) < 8) t(.) else . }
+    # }
+	} else {
+  	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
 	}
 }
 
