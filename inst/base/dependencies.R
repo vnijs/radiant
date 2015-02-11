@@ -19,7 +19,8 @@ if(exists("pkgs"))
 
 require(rpivotTable)
 
-# options(repos = c(CRAN = "http://cran.rstudio.com"))
+options(repos = c(CRAN = "http://cran.rstudio.com"))
 # install.packages(devtools)
 # devtools::install_github('rstudio/shiny@v0.11.1-rc')
 # devtools::install_github(c("ramnathv/htmlwidgets", "smartinsightsfromdata/rpivotTable"))
+# shiny::runApp("~/gh/radiant_dev/inst/marketing")
