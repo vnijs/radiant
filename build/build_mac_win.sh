@@ -34,13 +34,13 @@ git push
 cd ../radiant_dev
 
 
-cd /Users/vnijs/gh/radiant_dev/
-git add --all .
-# from http://stackoverflow.com/questions/4654437/how-to-set-current-date-as-git-commit-message
-git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
-git push
+# cd /Users/vnijs/gh/radiant_dev/
+# git add --all .
+# git commit -m "Fix for clipboard on server"
+# git push
 
-ssh ubu
-exit
-cd gh/radiant_dev
-git pull
+# ssh ubu
+# cd radiant
+# git pull
+# sudo restart shiny-server
+# exit
