@@ -31,7 +31,13 @@ output$ui_clipboard_save <- renderUI({
   if(running_local) {
     actionButton('saveClipData', 'Copy data')
   } else {
-    HTML("<label>Not supported on shiny-server</label>")
+    tagList(
+      "<label>Add data description:</label><br>" %>% HTML,
+      tags$textarea(class="form-control", id="save_cdata",
+        rows="5",
+        capture.output(write.table(getdata(), file = "", row.names = FALSE, sep = "\t")) %>%
+          paste(collapse = "\n"))
+    )
   }
 })
 
