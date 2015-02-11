@@ -40,3 +40,7 @@ git add --all .
 git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
 git push
 
+ssh ubu
+exit
+cd gh/radiant_dev
+git pull
