@@ -54,7 +54,7 @@ saveClipboardData <- function() {
     write.table(getdata(), file = pipe("pbcopy"),
                 row.names = FALSE, sep = '\t')
   } else {
-    print("### Saving data through the clipboard is currently only supported on Windows and Mac. You can save your data to csv format to use it in Excel.")
+    print("### Saving data through the clipboard is currently only supported on Windows and Mac. You can save your data to csv format to use it in a spreadsheet.")
   }
 }
 
