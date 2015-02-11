@@ -21,25 +21,17 @@
   margin-bottom: 0px;
 }
 
+.radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
+    margin-left: 0;
+}
+
+.radio-inline, .checkbox-inline {
+    margin-right: 10px;
+}
 
 th, td {
   text-align: left;
 }
-
-/*
-.navbar {
-  margin-bottom: 10px;
-}
-
-label {
-  margin-bottom: 5px;
-}
-*/
-
-/*.radio-inline:first-child, .checkbox-inline:first-child {
-  margin-right: 0;
-  margin-left: 10px;
-}*/
 
 .modal-dialog {
   width: 800px;
@@ -64,36 +56,12 @@ pre {
   float: right;
 }
 
-/*select {
-  max-width: 200px;
-}*/
-
-/*#viz_plot_width, #viz_plot_height, #pmap_scaling, #pmap_fontsz,
-#ctl_m, #ctl_n, #ctl_unif_min, #ctl_unif_max, #ctl_norm_mean,
-#ctl_norm_sd, #ctl_expo_rate, #ctl_binom_size, #ctl_binom_prob {
-  max-width: 60px;
-}
-*/
 /*
-.radio, .checkbox {
-  padding-left: 0px;
-  align: left;
-}
-*/
-
-/*.radio-inline {
- margin-left: 0;
-  margin-right: 0px;
-}
-
-.radio-inline:last-child {
-  margin-right: 0;
-}
-*/
-
-/*.radio {
-  margin-top: 10px;
+.navbar {
   margin-bottom: 10px;
 }
-*/
 
+label {
+  margin-bottom: 5px;
+}
+*/
