@@ -33,3 +33,10 @@ git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
 git push
 cd ../radiant_dev
 
+
+cd /Users/vnijs/gh/radiant_dev/
+git add --all .
+# from http://stackoverflow.com/questions/4654437/how-to-set-current-date-as-git-commit-message
+git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
+git push
+

@@ -30,6 +30,8 @@ loadClipboardData <- function(objname = "xls_data", ret = "") {
     dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
   } else if (Sys.info()["sysname"] == "Darwin") {
     dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
+  } else {
+    dat <- read.table(header = TRUE, text = input$load_cdata)
   }
 
   if(is(dat, 'try-error')) {
@@ -52,7 +54,7 @@ saveClipboardData <- function() {
     write.table(getdata(), file = pipe("pbcopy"),
                 row.names = FALSE, sep = '\t')
   } else {
-    print("### Saving data through the clipboard is currently only supported on Windows and Mac.")
+    print("### Saving data through the clipboard is currently only supported on Windows and Mac. You can save your data to csv format to use it in Excel.")
   }
 }
 

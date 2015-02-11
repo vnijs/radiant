@@ -235,6 +235,17 @@ regression <- function(dataset, reg_var1, reg_var2,
   environment() %>% as.list %>% set_class(c("regression",class(.)))
 }
 
+# list of function arguments
+# library(dplyr)
+# library(magrittr)
+# library(ggplot2)
+# install.packages('dplyr')
+# reg_args <- list()
+# reg_args$dataset <- "diamonds"
+# reg_args$reg_var1 <- "price"
+# reg_args$reg_var2 <- "carat"
+# result <- do.call(regression, reg_args)
+
 # summary_regression <- reactive({ .summary_regression() })
 summary_regression <- function(result = .regression()) {
 
@@ -574,13 +585,6 @@ observe({
 })
 
 reg_args <- as.list(formals(regression))
-
-# list of function arguments
-# reg_args$dataset <- "diamonds"
-# reg_args$reg_var1 <- "price"
-# reg_args$reg_var2 <- "carat"
-# rm(r_env)
-# result <- do.call(regression, reg_args)
 
 # list of function inputs selected by user
 reg_inputs <- reactive({

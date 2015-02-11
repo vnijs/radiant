@@ -20,10 +20,10 @@ output$ui_clipboard_load <- renderUI({
   if(running_local) {
     actionButton('loadClipData', 'Paste data')
   } else {
-    HTML("<label>Not supported on shiny-server</label>")
-    # tags$textarea(class="form-control",
-    #   id="load_cdata", rows="5"
-    # )
+    tagList(tags$textarea(class="form-control",
+      id="load_cdata", rows="5"
+    ),
+    actionButton('loadClipData', 'Paste data'))
   }
 })
 
@@ -32,9 +32,6 @@ output$ui_clipboard_save <- renderUI({
     actionButton('saveClipData', 'Copy data')
   } else {
     HTML("<label>Not supported on shiny-server</label>")
-    # tags$textarea(class="form-control",
-    #   id="save_cdata", rows="5"
-    # )
   }
 })
 
@@ -115,21 +112,14 @@ output$dataDescriptionHTML <- renderUI({
 output$dataDescriptionMD <- renderUI({
   tagList(
     "<label>Add data description:</label><br>" %>% HTML,
-    tags$textarea(class="form-control",
-                  id="man_data_descr",
-                  rows="15",
-                  style="width:650px;",
-                  descr_out(
-                    r_data[[paste0(input$dataset,"_descr")]],
-                    'md'
-                  )
-    )
+    tags$textarea(class="form-control", id="man_data_descr",
+                  rows="15", style="width:650px;",
+                  descr_out(r_data[[paste0(input$dataset,"_descr")]], 'md'))
   )
 })
 
 # removing datasets
 output$uiRemoveDataset <- renderUI({
-  # Drop-down selection of data set to remove
   selectInput(inputId = "removeDataset", label = NULL,
     choices = r_data$datasetlist, selected = NULL, multiple = TRUE,
     size = length(r_data$datasetlist), selectize = FALSE
@@ -141,9 +131,8 @@ observe({
   if(is.null(input$removeDataButton) || input$removeDataButton == 0) return()
   isolate({
 
-    # only remove datasets if 1 or more were selected
-    # without this line all files would be removed when the removeDataButton
-    # is pressed
+    # only remove datasets if 1 or more were selected - without this line
+    # all files would be removed when the removeDataButton is pressed
     if(is.null(input$removeDataset)) return()
     datasets <- r_data[['datasetlist']]
     if(length(datasets) > 1) {  # have to leave at least one dataset
@@ -168,9 +157,8 @@ observe({
     saveClipboardData()
     updateRadioButtons(session = session, inputId = "saveAs",
                        label = "Save data:",
-                       c("rda" = "rda", "csv" = "csv",
-                         "clipboard" = "clipboard", "state" = "state"),
-                       selected = "rda", inline = TRUE)
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
+                         "state" = "state"), selected = "rda", inline = TRUE)
   })
 })
 
@@ -247,22 +235,18 @@ observe({
 
 observe({
   # 'reading' data from clipboard
-  if(is.null(input$loadClipData) || input$loadClipData == 0) return()
+  if(input$loadClipData %>% not_pressed) return()
   isolate({
     loadClipboardData()
     updateRadioButtons(session = session, inputId = "dataType",
-                       label = "Load data:", c("rda" = "rda", "csv" = "csv",
-                                               "clipboard" = "clipboard",
-                                               "examples" = "examples",
-                                               "state" = "state"),
+                       label = "Load data:",
+                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
+                         "examples" = "examples", "state" = "state"),
                        selected = "rda", inline = TRUE)
-
     updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = r_data$datasetlist, selected = 'xls_data')
   })
 })
-
-
 
 #######################################
 # Load previous state
