@@ -33,14 +33,3 @@ git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
 git push
 cd ../radiant_dev
 
-
-# cd /Users/vnijs/gh/radiant_dev/
-# git add --all .
-# git commit -m "Fix for clipboard on server"
-# git push
-
-# ssh ubu
-# cd radiant
-# git pull
-# sudo restart shiny-server
-# exit
