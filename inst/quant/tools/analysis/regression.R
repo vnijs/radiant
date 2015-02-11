@@ -442,10 +442,10 @@ saveRegResiduals <- function(result = .regression()) {
 
 # save residuals
 observe({
-	if(is.null(input$saveres) || input$saveres == 0) return()
+	if(input$saveres %>% not_pressed) return()
 	isolate({
 		result <- .regression()
-		if(is.character(result)) return()
+		if(result %>% is.character) return()
 		saveRegResiduals(result)
 	})
 })
@@ -469,23 +469,12 @@ reg_inputs <- reactive({
 	if(input$reg_var2 %>% not_available)
 		return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
-	# result <- regression(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-	# 	input$reg_interactions, input$reg_predict, input$reg_predict_cmd, input$reg_predict_data, input$reg_standardize,
- #    input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse, input$reg_vif, input$reg_stepwise,
- #    input$reg_plots, input$reg_line, input$reg_loess)
-
-	# result
 	do.call(regression, reg_inputs())
 })
 
 observe({
   if(input$regressionReport %>% not_pressed) return()
   isolate({
-		# inp <- list(input$dataset, input$reg_var1, input$reg_var2, input$reg_var3, input$reg_intsel,
-		# 	input$reg_interactions, input$reg_predict, input$reg_predict_cmd, input$reg_predict_data,
-  #     input$reg_standardize, input$reg_sumsquares, input$reg_confint, input$reg_conf_level, input$reg_rmse,
-  #     input$reg_vif, input$reg_stepwise, input$reg_plots, input$reg_line,
-  #     input$reg_loess)
 		updateReport(reg_inputs() %>% clean_args, "regression",
 		             round(7 * reg_plotWidth()/650,2), round(7 * reg_plotHeight()/650,2))
   })
