@@ -8,7 +8,8 @@
 pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
           "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
           "knitr", "rpivotTable", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
-          "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce")
+          "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce",
+          "purrr", "rpivotTable")
 
 if(Sys.getenv('SHINY_PORT') == "") {
 

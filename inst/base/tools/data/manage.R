@@ -24,14 +24,14 @@ upload_error_handler <- function(objname, ret) {
   r_data[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
 }
 
-loadClipboardData <- function(objname = "xls_data", ret = "") {
+loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep = "\t") {
 
   if (.Platform$OS.type == 'windows') {
-    dat <- try(read.table("clipboard", header = TRUE, sep = '\t'), silent = TRUE)
+    dat <- try(read.table("clipboard", header = header, sep = sep), silent = TRUE)
   } else if (Sys.info()["sysname"] == "Darwin") {
-    dat <- try(read.table(pipe("pbpaste"), header = TRUE, sep = '\t'), silent = TRUE)
+    dat <- try(read.table(pipe("pbpaste"), header = header, sep = sep), silent = TRUE)
   } else {
-    dat <- read.table(header = TRUE, text = input$load_cdata)
+    dat <- try(read.table(text = input$load_cdata, header = header, sep = sep), silent = TRUE)
   }
 
   if(is(dat, 'try-error')) {
