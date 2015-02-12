@@ -112,12 +112,6 @@ output$ui_regression <- renderUI({
         checkboxGroupInput("reg_check", NULL, reg_check,
           selected = state_init_list("reg_check","", reg_check), inline = TRUE),
         br(),
-        checkboxInput(inputId = "reg_rmse", label = "RMSE",
-	    		value = state_init('reg_rmse',FALSE)),
-        checkboxInput(inputId = "reg_sumsquares", label = "Sum of squares",
-	    		value = state_init('reg_sumsquares',FALSE)), br(),
-  	    checkboxInput(inputId = "reg_vif", label = "VIF",
-	    		value = state_init('reg_vif',FALSE)),
         checkboxInput(inputId = "reg_confint", label = "Confidence intervals",
       		value = state_init('reg_confint',FALSE)),
         checkboxInput(inputId = "reg_standardize", label = "Standardized coefficients",
@@ -173,11 +167,11 @@ regression <- function(dataset, reg_var1, reg_var2,
                        reg_predict_cmd = "",
                        reg_predict_data = "",
                        reg_check = "",
-                       reg_standardize = FALSE,
-                       reg_sumsquares = FALSE,
-                       reg_confint = FALSE,
-                       reg_conf_level = .95,
-                       reg_stepwise = FALSE,
+                       # reg_standardize = FALSE,
+                       # reg_sumsquares = FALSE,
+                       # reg_confint = FALSE,
+                       # reg_conf_level = .95,
+                       # reg_stepwise = FALSE,
                        reg_plots = "",
                        reg_line = FALSE,
                        reg_loess = FALSE) {
@@ -193,7 +187,8 @@ regression <- function(dataset, reg_var1, reg_var2,
   # dat <- select_(values[["mtcars"]], .dots = c(reg_dep_var, reg_indep_var))
 	dat <- getdata_exp(dataset, c(reg_var1, reg_var2), filt = data_filter)
 
-	if(reg_standardize) dat <- mutate_each(dat,funs(reg_standardize_fun))
+	if("standardize" %in% reg_check)
+    dat %<>% mutate_each(funs(reg_standardize_fun))
 
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
@@ -208,8 +203,6 @@ regression <- function(dataset, reg_var1, reg_var2,
 	### Check if variables were dropped?
   # if (nzchar(mess <- naprint(x$na.action)))
   #   cat("  (", mess, ")\n", sep = "")
-
-
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(mod$terms,'variables'))[-1])
@@ -292,7 +285,7 @@ summary_regression <- function(result = .regression()) {
     cat("Prediction error (RMSE): ", ., "\n\n")
   }
 
-  if(result$reg_sumsquares) {
+  if("sumsquares" %in% result$reg_check) {
     atab <- anova(result)
     nr_rows <- dim(atab)[1]
     df_reg <- sum(atab$Df[-nr_rows])
@@ -485,45 +478,30 @@ observe({
 # Additional functions for regression
 ################################################################
 reg_standardize_fun <- function(x) {
-	if(is.numeric(x)) return(scale(x))
-  x
+  if(x %>% is.numeric) scale(x) else x
 }
 
 reg_int_vec <- function(reg_vars, nway) {
-	n <- length(reg_vars)
-	iway <- c()
-	for(i in 1:(n-1)) {
-		for(j in (i+1):n) {
-			iway <- c(iway, paste(reg_vars[i],reg_vars[j],sep=":"))
-		}
-	}
-	if(n >= 3 && nway == '3way') {
-		for(i in 1:(n-2)) {
-			for(j in (i+1):(n-1)) {
-				for(k in (j+1):n) {
-					iway <- c(iway, paste(reg_vars[i],reg_vars[j],reg_vars[k],sep=":"))
-				}
-			}
-		}
-	}
-	iway
+  int_vec <- c()
+  for(i in 2:nway) {
+    int_vec %<>% c(., combn(reg_vars, i) %>% apply( 2, paste, collapse = ":" ))
+  }
+  int_vec
 }
+
+# reg_vars <- letter[1:5]
+# reg_int_vec(reg_vars,2)
+# reg_int_vec(reg_vars,3)
 
 vif_regression <- function(result = .regression()) {
 	if(length(result$reg_var2) > 1) {
-
-	 	# VIF <- try(vif(result$mod))
-   #  if(is(VIF, 'try-error')) {
-   #    cat("Insufficient number of independent variables selected to calculate VIF scores\n")
-   #  } else {
-  	  cat("Variance Inflation Factors\n")
-      vif(result$mod) %>%
-        { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
-        data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
-        round(3) %>%
-        .[order(.$VIF, decreasing=T),] %>%
-        { if(nrow(.) < 8) t(.) else . }
-    # }
+	  cat("Variance Inflation Factors\n")
+    vif(result$mod) %>%
+      { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+      data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
+      round(3) %>%
+      .[order(.$VIF, decreasing=T),] %>%
+      { if(nrow(.) < 8) t(.) else . }
 	} else {
   	cat("Insufficient number of independent variables selected to calculate VIF scores\n")
 	}
