@@ -24,3 +24,7 @@ require(rpivotTable)
 # devtools::install_github('rstudio/shiny@v0.11.1-rc')
 # devtools::install_github(c("ramnathv/htmlwidgets", "smartinsightsfromdata/rpivotTable"))
 # shiny::runApp("~/gh/radiant_dev/inst/marketing")
+
+# avoid .DS_Store files in git
+# find . -name .DS_Store -print0 | xargs -0 git rm --ignore-unmatch
+# http://stackoverflow.com/questions/18393498/gitignore-all-the-ds-store-files-in-every-folder-and-subfolder
