@@ -32,4 +32,3 @@ git add --all .
 git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
 git push
 cd ../radiant_dev
-
