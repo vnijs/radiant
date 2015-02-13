@@ -35,7 +35,6 @@
 # reg_var3 = reg_test_var
 # reg_interactions = reg_intsel
 # reg_int_var = reg_interactions
-
 regression <- function(dataset, reg_var1, reg_var2,
                        data_filter = "",
                        show_filter = FALSE, 		# remove when recode is complete
@@ -51,26 +50,34 @@ regression <- function(dataset, reg_var1, reg_var2,
                        reg_line = FALSE,
                        reg_loess = FALSE) {
 
-
 	# dataset = "mtcars"
 	# reg_var1 = "mpg"
-	# reg_var2 = c("cyl","disp")
+	# reg_var2 = c("cyl","disp","cyl")
 	# reg_var3 = "cyl"
+	# reg_interactions = 2
+	# reg_intsel = c("cyl:disp","blue:gold")
+	# reg_intsel = c("cyl:disp")
 	# dat = mtcars
+	# data_filter = ""
 
 	vars <- reg_var2
 
 	# adding interaction terms as needed
-	if(reg_interactions != 'none' && !is.null(reg_intsel) && length(vars) > 1) {
-		vars <- c(vars,reg_intsel)
+	# if(reg_interactions != 'none' && !is.null(reg_intsel) && length(vars) > 1) {
+	if(reg_interactions != 'none' &&
+	  reg_intsel != "" &&
+	  length(vars) > 1) {
+		if({reg_intsel %>% strsplit(":") %>% unlist} %in% reg_var2 %>% all) {
+			vars <- c(vars,reg_intsel)
+	 	} else{
+	 		return(cat("Interaction terms contain variables not selected as main effects"))
+	 	}
 	}
 
-	# dat <- r_data[[dataset]]
-  # dat <- select_(values[["mtcars"]], .dots = c(reg_dep_var, reg_indep_var))
 	dat <- getdata_exp(dataset, c(reg_var1, reg_var2), filt = data_filter)
 
 	if("standardize" %in% reg_check)
-    dat %<>% mutate_each(funs(reg_standardize_fun))
+    dat[,sapply(dat, is.numeric)] %<>% mutate_each(funs(scale))
 
 	formula <- paste(reg_var1, "~", paste(vars, collapse = " + "))
 
@@ -81,10 +88,6 @@ regression <- function(dataset, reg_var1, reg_var2,
 	} else {
 		mod <- lm(formula, data = dat)
 	}
-
-	### Check if variables were dropped?
-  # if (nzchar(mess <- naprint(x$na.action)))
-  #   cat("  (", mess, ")\n", sep = "")
 
 	# specifying plot heights
 	nrVars <- length(as.character(attr(mod$terms,'variables'))[-1])
@@ -107,23 +110,45 @@ regression <- function(dataset, reg_var1, reg_var2,
   environment() %>% as.list %>% set_class(c("regression",class(.)))
 }
 
+# x1 <- rnorm( 100 )
+# x2 <- 2 * x1
+# x3 <- as.factor(c(rep(1,50),rep(0,50)))
+# x4 <- as.factor(c(rep(1,50),rep(0,50)))
+# y <- rnorm( 100 )
+
+# reg <- lm(y ~ x2 + x3 + x4)
+# reg
+# alias(reg)
+# reg$coeff %>% is.na %>% any
+
+# vif( lm( y ~ x1 + x2 ) )
+# x <- alias( lm( y ~ x1 + x2 ) )
+# str(x)
+
+
+
 # list of function arguments
 # install.packages('dplyr')
 # devtools::install_github('hadley/purrr')
+# install.packages('broom')
+# install.packages('gridExtra')
 # library(dplyr)
 # library(magrittr)
 # library(ggplot2)
 # library(broom)
 # library(devtools)
 # library(gridExtra)
-# source("~/gh/radiant_dev/R/radiant.R")
-reg_args <- list()
-reg_args$dataset <- "diamonds"
-reg_args$reg_var1 <- "price"
-reg_args$reg_var2 <- c("carat","color")
-reg_args$reg_var3 <- "color"
-reg_args$reg_plots <- "dashboard"
-result <- do.call(regression, reg_args)
+# library(car)
+# ?vif
+# source("/Users/vnijs/gh/radiant_dev/R/radiant.R")
+# source("/Users/vnijs/gh/radiant_dev/inst/base/radiant.R")
+# reg_args <- list()
+# reg_args$dataset <- "diamonds"
+# reg_args$reg_var1 <- "price"
+# reg_args$reg_var2 <- c("carat","color")
+# reg_args$reg_var3 <- "color"
+# reg_args$reg_plots <- "dashboard"
+# result <- do.call(regression, reg_args)
 # summary_regression(result)
 # plots_regression(result)
 # str(result)
@@ -171,6 +196,7 @@ summary_regression <- function(result = .regression()) {
 
   if("sumsquares" %in% result$reg_check) {
     atab <- anova(result$mod)
+    atab %>% format(scientific = FALSE)
     nr_rows <- dim(atab)[1]
     df_reg <- sum(atab$Df[-nr_rows])
     df_err <- sum(atab$Df[nr_rows])
@@ -190,86 +216,202 @@ summary_regression <- function(result = .regression()) {
   }
 
   if("vif" %in% result$reg_check) {
-    vif_regression(result) %>% print
+		if(result$mod$coeff %>% is.na %>% any) {
+			cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+		} else {
+    	vif_regression(result) %>% print
+		}
     cat("\n")
   }
 
+  # if(result$reg_predict != '' || result$reg_predict_data != "none") {
+  if(result$reg_predict != "none") {
+
+    # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
+    # as starting point
+    if("standardize" %in% result$reg_check) {
+      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the
+          standardized coefficients box and try again.")
+    } else {
+
+      if(result$reg_predict == "cmd") {
+     		reg_predict <- gsub("\"","\'", result$reg_predict)
+        nval <- try(eval(parse(text = paste0("data.frame(",reg_predict,")"))), silent = TRUE)
+      } else {
+        nval <- r_data[[result$reg_predict_data]]
+        vars <- as.character(attr(result$mod$terms,'variables'))[-1]
+        nval <- try(select_(nval, .dots = vars[-1]), silent = TRUE)
+      }
+
+      if(is(nval, 'try-error')) {
+        if(result$reg_predict == "cmd") {
+          cat("The expression entered does not seem to be correct. Please try again.\n")
+          cat("Examples are shown in the helpfile.\n")
+        } else {
+          cat("The profiles to predict do not contain all variables that are in the model.\n")
+          cat("Add variables to the profiles data as needed.\n\n")
+          ivars <- vars[-1]
+          cat("Model variables: ")
+          cat(ivars,"\n")
+          cat("Profile variables to be added: ")
+          nval_names <- names(r_data[[result$reg_predict_data]])
+          cat(ivars[!ivars %in% nval_names])
+        }
+      } else {
+
+        dat <- ggplot2::fortify(result$mod)
+        vars <- as.character(attr(result$mod$terms,'variables'))[-1]
+        reg_dep_var <- vars[1]
+        reg_indep_var <- vars[-1]
+        dat <- dat[,reg_indep_var, drop = FALSE]
+
+        isFct <- sapply(dat, is.factor)
+        isNum <- sapply(dat, is.numeric)
+
+        if(sum(isNum) + sum(isFct) < dim(dat)[2]) {
+          cat("The model includes data-types that cannot be used for\nprediction at this point\n")
+        } else {
+
+          newdat <- ""
+          if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+          # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+          if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+
+          # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+          if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
+            cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
+          } else {
+            if(result$reg_predict == "cmd" & result$reg_predict_cmd == "") {
+              pred <- try(log("a"), silent=TRUE)
+            } else {
+              newdat[names(nval)] <- list(NULL)
+              nnd <- data.frame(newdat[-1],nval)
+              pred <- try(predict(result, nnd,interval = 'prediction', level = result$reg_conf_level), silent = TRUE)
+              # pred <- try(predict(result, nnd,interval = 'prediction', level = as.numeric(reg_conf_level)), silent = TRUE)
+            }
+
+            if(!is(pred, 'try-error')) {
+            	if(result$reg_predict == "data") {
+              	cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
+              } else {
+              	cat("Predicted values for:\n")
+              }
+
+            	pred <- data.frame(pred,pred[,3]-pred[,1])
+              cl_split <- function(x) 100*(1-x)/2
+            	cl_split(result$reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
+            	(100 - cl_split(result$reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
+            	colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
+
+            	nnd <- data.frame(nnd, pred, check.names = FALSE)
+
+            	# putting the predictions into the clipboard
+            	os_type <- .Platform$OS.type
+            	if (os_type == 'windows') {
+            	  write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+            	} else {
+            	  write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+            	}
+
+            	nnd %>% print(., row.names = FALSE)
+              cat("\n")
+            } else {
+              cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
   if("confint" %in% result$reg_check) {
 
-    cl_split <- function(x) 100*(1-x)/2
-    cl_split(result$reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
-    (100 - cl_split(result$reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
+		if(result$mod$coeff %>% is.na %>% any) {
+			cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+		} else {
+	    cl_split <- function(x) 100*(1-x)/2
+	    cl_split(result$reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
+	    (100 - cl_split(result$reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
 
-    cat("Coefficient confidence intervals:\n")
-    confint(result$mod, level = result$reg_conf_level) %>%
-      data.frame %>%
-      magrittr::set_colnames(c("Low","High")) %>%
-      cbind(select(reg_coeff,2),.) %>%
-      round(3) -> ci_tab
+	    cat("Coefficient confidence intervals:\n")
+	    confint(result$mod, level = result$reg_conf_level) %>%
+	      data.frame %>%
+	      magrittr::set_colnames(c("Low","High")) %>%
+	      cbind(select(reg_coeff,2),.) %>%
+	      round(3) -> ci_tab
 
-    ci_tab$dat$`+/-` <- ci_tab$High - ci_tab$coefficient
-    ci_tab %>%
-      magrittr::set_colnames(c("coeficient",cl_low,cl_high, "+/-")) %>%
-      print
-    cat("\n")
+	    ci_tab$`+/-` <- (ci_tab$High - ci_tab$coefficient)
+	    ci_tab %>%
+	      magrittr::set_colnames(c("coefficient",cl_low,cl_high, "+/-")) %>%
+	      print
+	    cat("\n")
+  	}
 	}
-
 
 	if(!result$reg_var3 %>% is_empty) {
 		if("stepwise" %in% result$reg_check) {
 	  	cat("Model comparisons not conducted when Stepwise has been selected.\n")
 	  } else {
-	  	# dat <- result$dat
-			# if("standardize" %in% result$reg_check) dat <- data.frame(lapply(dat,reg_standardize_fun))
 
 				sub_formula <- ". ~ 1"
 				vars <- result$reg_var2
 
-			 	# if(result$reg_interactions != 'none' && !is.null(result$reg_intsel) && length(vars) > 1) {
-				# 	vars <- c(vars,result$reg_intsel)
-				# }
+				if(result$reg_interactions != 'none' &&
+					  result$reg_intsel != "" &&
+					  length(vars) > 1) {
 
+						if({result$reg_intsel %>% strsplit(":") %>% unlist} %in% result$reg_var3 %>% any) {
+	 						cat("Interaction terms contain variables specified for testing.\nRelevant interaction terms are include in the requested test.\n\n")
+
+# vars <- c("carat", "clarity", "cut")
+# result$reg_intsel <-  c("carat:clarity", "carat:cut", "clarity:cut")
+# result$reg_var3 <-  c("carat")
+
+							for(i in result$reg_var3) {
+								ind <- grep(i,result$reg_intsel)
+								result$reg_var3 <- c(result$reg_var3, result$reg_intsel[ind])
+							}
+							result$reg_var3 <- unique(result$reg_var3)
+	 					}
+			 			vars <- c(vars,result$reg_intsel)
+				}
 				not_selected <- setdiff(vars,result$reg_var3)
 				if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
 
-				update(result$mod, sub_formula, data = result$dat) %>%
-				anova(., result$mod, test='F') -> sub_mod
+				sub_mod <- update(result$mod, sub_formula, data = result$dat) %>%
+				anova(., result$mod, test='F')
+
+				if(sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
+
 				if(sub_mod[,"Pr(>F)"][2] < .001) sub_mod[,"Pr(>F)"][2] <- "< .001"
 
-				tss <- sub_mod$RSS[2] + sub_mod[,"Sum of Sq"][2]
-				tss
-				# sub_r2 <- (sub_mod$RSS / sub_mod[,"Sum of Sq"][2]) %>% round(3)
-				sub_r2 <- (sub_mod$RSS / tss) %>% round(3)
-				sub_r2
-				1 - 1/sub_r2
-
-				result$dat[,result$reg_var1] %>%
-				sum((. - mean(.))^2)
-				sum(result$dat[,result$reg_var1]^2)
-
-				str(sub_mod)
 				cat(attr(sub_mod,"heading")[2])
-				cat("R-squared, Model 1 vs 2:", )
-  			cat("F-statistic:", sub_mod$F[2] %>% round(3), paste0("df(", sub_mod$Res.Df[1], ",", sub_mod$Res.Df[2], "), p.value"), sub_mod[,"Pr(>F)"][2])
-
-
-      # test_regression(result)
-      # NA's shown
-      # print(format(test_regression(result), scientific = FALSE))
+				result$dat[,result$reg_var1] %>%
+				{ sum((. - mean(.))^2) } %>%
+				{1 - (sub_mod$RSS / .)} %>%
+				round(3) %>%
+				cat("\nR-squared, Model 1 vs 2:", .)
+  			cat("\nF-statistic:", sub_mod$F[2] %>% round(3), paste0("df(", sub_mod$Res.Df[1], ",", sub_mod$Res.Df[2], "), p.value"), sub_mod[,"Pr(>F)"][2])
 	  }
 	}
-
-
-
-
 }
 
 plots_regression <- function(result = .regression()) {
 
 	if(class(result$mod) != 'lm') return(result)
-	mod <- ggplot2::fortify(result$mod)
 
-  # reg_aug <- augment(result$mod)
+	if({result$reg_intsel %>% strsplit(":") %>% unlist} %in% result$reg_var2 %>% all) {
+			# nothing
+ 	} else {
+	 		return(cat("Interaction terms contain variables not selected as main effects"))
+ 	}
+
+	mod <- ggplot2::fortify(result$mod)
+	# mod[1:10,]
+  # mod <- augment(result$mod)
+  # mod[1:10,]
 
 	vars <- as.character(attr(result$mod$terms,'variables'))[-1]
 	reg_var1 <- vars[1]
@@ -384,14 +526,10 @@ saveRegResiduals <- function(result = .regression()) {
 	changedata(resid, 'residuals')
 }
 
-reg_standardize_fun <- function(x) {
-  if(x %>% is.numeric) scale(x) else x
-}
-
 reg_int_vec <- function(reg_vars, nway) {
   int_vec <- c()
   for(i in 2:nway) {
-    int_vec %<>% c(., combn(reg_vars, i) %>% apply( 2, paste, collapse = ":" ))
+    int_vec %<>% {c(., combn(reg_vars, i) %>% apply( 2, paste, collapse = ":" ))}
   }
   int_vec
 }
@@ -415,6 +553,7 @@ vif_regression <- function(result = .regression()) {
   	return("VIF")
 	}
 }
+
 
 # test_regression <- function(result = .regression()) {
 # 	# dat <- r_data[[result$dataset]]

@@ -1,5 +1,5 @@
 
-reg_interactions <- c("None" = "none", "2-way" = "2way", "3-way" = "3way")
+reg_interactions <- c("None" = "none", "2-way" = 2, "3-way" = 3)
 reg_predict <- c("None" = "none", "Data" = "data","Command" = "cmd")
 reg_check <- c("RMSE" = "rmse", "Sum of squares" = "sumsquares",
                "VIF" = "vif", "Confidence intervals" = "confint",
@@ -28,7 +28,8 @@ output$uiReg_var2 <- renderUI({
   selectInput(inputId = "reg_var2", label = "Independent variables:", choices = vars,
     # the reference to reg_var2 below should help ensure that variables
     # remain selected even if the dv changes
-  	selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars),
+  	# selected = state_init_multvar("reg_var2", isolate(input$reg_var2),vars),
+  	selected = state_init_multvar("reg_var2", "",vars),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -54,9 +55,9 @@ output$uiReg_intsel <- renderUI({
 	if(vars %>% not_available || length(vars) < 2) return()
  	choices <- reg_int_vec(vars, input$reg_interactions)
 	selectInput("reg_intsel", label = NULL, choices = choices,
-  	selected = state_multvar("reg_intsel", vars), multiple = TRUE, selectize = FALSE)
+  	selected = state_multvar("reg_intsel", choices),
+  	multiple = TRUE, selectize = FALSE)
 })
-
 
 output$ui_regression <- renderUI({
   tagList(
@@ -84,7 +85,8 @@ output$ui_regression <- renderUI({
 	      	inline = TRUE),
 
         conditionalPanel(condition = "input.reg_predict == 'cmd'",
-          returnTextInput("reg_predict_cmd", "Predict (e.g., carat = seq(.5,1,.05))",
+          # returnTextInput("reg_predict_cmd", "Predict (e.g., carat = seq(.5,1,.05))",
+          returnTextAreaInput("reg_predict_cmd", "Predict (e.g., carat = seq(.5,1,.05))",
 	    		  value = state_init('reg_predict_cmd',''))
         ),
         conditionalPanel(condition = "input.reg_predict == 'data'",

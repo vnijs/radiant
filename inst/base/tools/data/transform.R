@@ -130,7 +130,8 @@ output$ui_Transform <- renderUI({
       uiOutput("uiTr_normalizer")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'create'",
-	    returnTextInput("tr_transform", "Create (e.g., x = y - z):", '')
+	    # returnTextInput("tr_transform", "Create (e.g., x = y - z):", '')
+	    returnTextAreaInput("tr_transform", "Create (e.g., x = y - z):", '')
     ),
     conditionalPanel(condition = "input.tr_changeType == 'clip'",
     	HTML("<label>Paste from Excel:</label>"),
@@ -138,7 +139,8 @@ output$ui_Transform <- renderUI({
     	              id="tr_copyAndPaste", rows=3, "")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'recode'",
-	    returnTextInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')
+	    # returnTextInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')
+	    returnTextAreaInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')
     ),
     conditionalPanel(condition = "input.tr_changeType == 'rename'",
 	   	returnTextInput("tr_rename", "Rename (separate by ','):", '')
@@ -424,6 +426,7 @@ observe({
 		# reset input values once the changes have been applied
 		updateTextInput(session = session, inputId = "tr_transform", value = "")
 	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
+	 	updateTextInput(session = session, inputId = "tr_create", value = "")
 	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
 	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
 	 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
