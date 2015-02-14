@@ -2,12 +2,11 @@
 # functions to set initial values and take information from r_state
 # when available
 #
-# Note: puting functions in R/radiant.R produces
+# Note: putting functions in R/radiant.R produces
 # Error in eval(expr, envir, enclos) : object 'r_state' not found
 # because exported functions cannot access variables in the environment
 # created by shinyServer
 ################################################################################
-
 
 observe({
   # reset r_state on dataset change
@@ -15,52 +14,66 @@ observe({
   if(r_state$dataset != input$dataset) r_state <<- list()
 })
 
-#' Set initial selection for shiny input (e.g., selectInput for multiple = FALSE)
+## Can't get this working in R/radiant.R
+## Error in checkboxGroupInput("help_data", NULL, help_data, selected = state_init_list("help_data",  :
+##  could not find function "state_init_list"functions
+
+
+#' Set initial selection for shiny input (e.g., selectInput with multiple = FALSE)
+#' Will return an empty vector if no element in vars is available in state
+#' @export
 state_singlevar <- function(inputvar, vars)
   vars[vars == r_state[[inputvar]]]
-  # ifelse(exists("r_state"), vars[vars == r_state[[inputvar]]], c())
 
-#' Set initial selection for shiny input (e.g., selectInput for multiple = TRUE)
+# r_state <- list()
+# state_singlevar("test",letters[1:5])
+# r_state$test <- "a"
+# state_singlevar("test",letters[1:5])
+
+
+#' Set initial selection for shiny input (e.g., selectInput with multiple = TRUE)
+#' Will return an empty vector if no elements in vars are available in state
+#' @export
 state_multvar <- function(inputvar, vars)
   vars[vars %in% r_state[[inputvar]]]
 
-  # adding the following condition causes an error in Visualize and others
-  # ifelse(exists("r_state"), vars[vars %in% r_state[[inputvar]]], c())
-  # Error in ifelse(exists("r_state"), vars[vars %in% r_state[[inputvar]]],  :
-  # replacement has length zero
+# r_state <- list()
+# state_multvar("test",letters[1:5])
+# r_state$test <- "a"
+# state_multvar("test",letters[1:5])
+# r_state$test <- c("a","b")
+# state_multvar("test",letters[1:5])
 
-#' Set initial value for shiny input
-state_init <- function(inputvar, init = "") {
-  # if(!exists("r_state")) return(init)
-  ifelse(r_state[[inputvar]] %>% is.null, return(init),
-         return(r_state[[inputvar]]))
-}
+#' Set initial value for shiny input (e.g., radio button or checkbox)
+#' @export
+state_init <- function(inputvar, init = "")
+  if(r_state[[inputvar]] %>% is.null) init else r_state[[inputvar]]
 
-
+# library(dplyr)
 # r_state <- list()
 # state_init("test")
 # state_init("test",0)
-# r_state$test <- 8
+# r_state$test <- c("a","b")
 # state_init("test",0)
 
 #' Set initial value for shiny input from a list of values
-state_init_list <- function(inputvar, init, vals) {
-  ifelse(r_state[[inputvar]] %>% is.null, return(init),
-         return(state_singlevar(inputvar, vals)))
-}
+#' @export
+state_init_list <- function(inputvar, init, vals)
+  if(r_state[[inputvar]] %>% is.null) init else state_singlevar(inputvar, vals)
 
 # r_state <- list()
 # state_init_list("test",1,1:10)
 # r_state$test <- 8
 # state_init_list("test",1,1:10)
+# state_init_list("test",1,1:5)
 
-#' Set initial values for variable selection from a prior analysis
-state_init_multvar <- function(inputvar, pre_inputvar, vals) {
-  # Data > View does not select all variables unless you use return
-  # inside ifelse
-  ifelse(r_state[[inputvar]] %>% is.null, return(vals[vals %in% pre_inputvar]),
-         return(state_multvar(inputvar, vals)))
-
+#' Set initial values for variable selection (e.g., selection used in another analysis)
+#' @export
+state_init_multvar <- function(inputvar, pre, vals) {
+  if(r_state[[inputvar]] %>% is.null)
+    vals[vals %in% pre]
+  else
+    state_multvar(inputvar, vals)
 }
 
 # r_state <- list()
