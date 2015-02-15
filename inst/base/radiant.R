@@ -32,7 +32,6 @@ state_init <- function(inputvar, init = "")
 
 #' Set initial value for shiny input from a list of values
 #' @export
-# state_init_list <- function(inputvar, vals, init = character(0)) {
 state_single <- function(inputvar, vals, init = character(0)) {
   if(r_state[[inputvar]] %>% is.null)
     init
@@ -42,26 +41,13 @@ state_single <- function(inputvar, vals, init = character(0)) {
 
 # library(dplyr)
 # r_state <- list()
-# state_init_list("test",1,1:10)
+# state_single("test",1,1:10)
 # r_state$test <- 8
-# state_init_list("test",1,1:10)
-# state_init_list("test",1,1:5)
-
-# #' Lookup selection for shiny input (e.g., selectInput with multiple = FALSE)
-# #' Return character(0) if no element in vars is available in r_state
-# #' @export
-# state_singlevar <- function(inputvar, vars)
-#   state_init_list(inputvar, vars, init = character(0))
-
-# state_singvar tests
-# r_state <- list()
-# state_init_list("test",letters[1:5])
-# r_state$test <- "a"
-# state_init_list("test",letters[1:5])
+# state_single("test",1,1:10)
+# state_single("test",1,1:5)
 
 #' Set initial values for variable selection (e.g., selection used in another analysis)
 #' @export
-# state_init_multvar <- function(inputvar, vals, init = character(0)) {
 state_multiple <- function(inputvar, vals, init = character(0)) {
   if(r_state[[inputvar]] %>% is.null)
     # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
@@ -70,6 +56,8 @@ state_multiple <- function(inputvar, vals, init = character(0)) {
     vals[vals %in% r_state[[inputvar]]]
 }
 
+#########################################################
+# remove deprecated functions below
 state_init_multvar <- function(inputvar, init, vals)
   state_multiple(inputvar, vals, init)
 
@@ -78,36 +66,8 @@ state_init_list <- function(inputvar, init, vals)
 
 state_multvar <- state_multiple
 state_singlevar <- state_single
-
-# if(length(init) == 0) print("here")
-
-# #' Lookup selection for shiny input (e.g., selectInput with multiple = TRUE)
-# #' Will return character(0) if elements in vars are not available in state
-# #' @export
-# state_multvar <- function(inputvar, vars)
-#   vars[vars %in% r_state[[inputvar]]]
-
-
-# tests previously used for state_multvar
-# r_state <- list()
-# state_init_multvar("test",letters[1:5])
-# r_state$test <- "a"
-# state_init_multvar("test",letters[1:5])
-# r_state$test <- c("a","b")
-# state_init_multvar("test",letters[1:5])
-
-
-# r_state <- list()
-# state_multvar("test",letters[1:5])
-# r_state$test <- "a"
-# state_multvar("test",letters[1:5])
-# r_state$test <- c("a","b")
-# state_multvar("test",letters[1:5])
-
-# r_state <- list()
-# state_init_multvar("test",letters[1:5],letters)
-# r_state$test <- letters[6:10]
-# state_init_multvar("test",letters[1:5],letters)
+# remove deprecated functions above
+#########################################################
 
 ################################################################################
 # function to save app state on refresh or crash
@@ -197,16 +157,16 @@ varnames <- reactive({
 
 # cleaning up the arguments for data_filter passed to report
 clean_args <- function(rep_args, rep_default = list()) {
-  # if(rep_args$data_filter == "")
-  #   rep_args$data_filter  <- NULL
-  # else
-  #   rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  if(rep_args$data_filter == "")
+    rep_args$data_filter  <- NULL
+  else
+    rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
 
-  # if(length(rep_default) == 0) rep_default[names(rep_args)] <- ""
+  if(length(rep_default) == 0) rep_default[names(rep_args)] <- ""
 
   # removing default arguments before sending to report feature
-  # for(i in names(rep_args))
-  #   if(rep_args[[i]][1] == rep_default[[i]]) rep_args[[i]] <- NULL
+  for(i in names(rep_args))
+    if(rep_args[[i]][1] == rep_default[[i]]) rep_args[[i]] <- NULL
   rep_args
 }
 

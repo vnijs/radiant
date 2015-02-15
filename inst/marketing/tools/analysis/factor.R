@@ -285,17 +285,12 @@ plots_fullFactor <- function(result = .fullFactor()) {
 	do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
 }
 
-saveFactorScores <- function(result = .fullFactor()) {
-	facscores <- data.frame(result$scores)
-	changedata(facscores, paste0("fac",1:ncol(facscores)))
-}
-
 # save factor scores when action button is pressed
 observe({
-	if(is.null(input$fac_savescores) || input$fac_savescores == 0) return()
+	if(input$fac_savescores %>% not_pressed) return()
 	isolate({
 		result <- .fullFactor()
 		if(is.character(result)) return()
-		saveFactorScores(result)
+		data.frame(result$scores) %>% changedata(paste0("fac",1:ncol(.)))
 	})
 })
