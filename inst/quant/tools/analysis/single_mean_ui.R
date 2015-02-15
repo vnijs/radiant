@@ -23,7 +23,7 @@ output$ui_sm_var <- renderUI({
   vars <- varnames()[isNum]
   selectInput(inputId = "sm_var", label = "Variable (select one):",
               choices = vars,
-              selected = state_singlevar("sm_var",vars), multiple = FALSE)
+              selected = state_single("sm_var",vars), multiple = FALSE)
 })
 
 output$ui_single_mean <- renderUI({
@@ -32,13 +32,13 @@ output$ui_single_mean <- renderUI({
       conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
                 choices = sm_plots,
-                selected = state_init_list("sm_plots", sm_args$sm_plots, sm_plots),
+                selected = state_single("sm_plots", sm_plots, sm_args$sm_plots),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))),
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
-        selected = state_init_list("sm_alternative",sm_args$sm_alternative, sm_alt),
+        selected = state_single("sm_alternative", sm_alt, sm_args$sm_alternative),
   	  	multiple = FALSE),
     	sliderInput('sm_sig_level',"Significance level:", min = 0.85, max = 0.99,
     		value = state_init('sm_sig_level',sm_args$sm_sig_level), step = 0.01),

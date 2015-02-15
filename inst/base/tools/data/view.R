@@ -4,7 +4,7 @@
 output$uiView_vars <- renderUI({
   vars <- varnames()
   selectInput("view_vars", "Select variables to show:", choices  = vars,
-    selected = state_init_multvar("view_vars",vars, vars), multiple = TRUE,
+    selected = state_multiple("view_vars",vars, vars), multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars)))
 })
 

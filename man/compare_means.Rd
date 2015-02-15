@@ -4,9 +4,9 @@
 \alias{compare_means}
 \title{Compare means for two or more variables}
 \usage{
-compare_means(dataset, cm_var1, cm_var2, cm_paired = "independent",
-  cm_alternative = "two.sided", cm_sig_level = 0.95, cm_adjust = "none",
-  cm_plots = "bar")
+compare_means(dataset, cm_var1, cm_var2, data_filter = "",
+  cm_paired = "independent", cm_alternative = "two.sided",
+  cm_sig_level = 0.95, cm_adjust = "none", cm_plots = "bar")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -14,6 +14,8 @@ compare_means(dataset, cm_var1, cm_var2, cm_paired = "independent",
 \item{cm_var1}{A numeric variable or factor selected for comparison}
 
 \item{cm_var2}{One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1}
+
+\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{cm_alternative}{The alternative hypothesis (two.sided, greater or less)}
 

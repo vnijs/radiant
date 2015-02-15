@@ -4,7 +4,7 @@
 \alias{getdata_exp}
 \title{Get data for analysis functions exported by Radiant}
 \usage{
-getdata_exp(dataset, vars, na.rm = TRUE, filt = NULL)
+getdata_exp(dataset, vars = "", na.rm = TRUE, filt = "")
 }
 \arguments{
 \item{dataset}{Name of the data.frame}

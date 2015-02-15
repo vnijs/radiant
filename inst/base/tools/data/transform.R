@@ -2,14 +2,14 @@
 output$uiTr_columns <- renderUI({
   vars <- varnames()
   selectInput("tr_columns", "Select variable(s):", choices  = vars,
-    selected = state_init_multvar("tr_columns", NULL, vars),
+    selected = state_multiple("tr_columns", vars),
     multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
 output$uiTr_reorg_cols <- renderUI({
   vars <- varnames()
   selectizeInput("tr_reorg_cols", "Reorder/remove variables", choices  = vars,
-    selected = state_init_multvar("tr_reorg_cols", vars, vars), multiple = TRUE,
+    selected = vars, multiple = TRUE,
     options = list(placeholder = 'Select variable(s)',
                    plugins = list('remove_button', 'drag_drop')))
 })
@@ -29,7 +29,7 @@ output$uiTr_reorg_levs <- renderUI({
   if(!isFct) return()
 	getdata()[,fctCol] %>% levels -> levs
   selectizeInput("tr_reorg_levs", "Reorder/remove levels", choices  = levs,
-    selected = state_init_multvar("tr_reorg_levs", levs, levs), multiple = TRUE,
+    selected = levs, multiple = TRUE,
     options = list(placeholder = 'Select level(s)',
                    plugins = list('remove_button', 'drag_drop')))
 })

@@ -22,6 +22,6 @@ summary(result)
 \seealso{
 \code{\link{single_mean}} to generate the results
 
-\code{\link{plots.single_mean}} to plot results
+\code{\link{plot.single_mean}} to plot results
 }
 
