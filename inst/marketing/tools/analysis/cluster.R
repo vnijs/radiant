@@ -6,7 +6,7 @@ output$uiHc_vars <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
 	vars <- varnames()[isNum]
   selectInput(inputId = "hc_vars", label = "Variables:", choices = vars,
-   	selected = state_multvar("hc_vars",vars),
+   	selected = state_multiple("hc_vars", vars),
 	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
@@ -23,13 +23,13 @@ output$ui_hierCluster <- renderUI({
   	wellPanel(
 	    uiOutput("uiHc_vars"),
 	    selectInput("hc_dist", label = "Distance measure:", choices = hc_dist_method,
-	     	selected = state_init_list("hc_dist","sq.euclidean", hc_dist_method),
+	     	selected = state_single("hc_dist", hc_dist_method, "sq.euclidean"),
 	     	multiple = FALSE),
 	    selectInput("hc_meth", label = "Method:", choices = hc_method,
-	     	selected = state_init_list("hc_meth", "ward.D", hc_method), multiple = FALSE),
+	     	selected = state_single("hc_meth", hc_method, "ward.D"), multiple = FALSE),
 	    conditionalPanel(condition = "input.tabs_hierCluster == 'Plots'",
 		    radioButtons(inputId = "hc_plots", label = NULL, hc_plots,
-	 	    	selected = state_init_list("hc_plots","dendo", hc_plots),
+	 	    	selected = state_single("hc_plots", hc_plots, "dendo"),
 	 	    	inline = TRUE),
 	    	numericInput("hc_cutoff", "Plot cutoff:", min = 0, max = 1,
 	    		value = state_init('hc_cutoff',0), step = .05))
@@ -101,12 +101,11 @@ summary_hierCluster <- function(result = .hierCluster()) {
 	cat("Distance    :", result$hc_dist, "\n")
 	cat("Observations:", length(result$hc_out$order), "\n")
 	cat("Note        : The main output from this analysis are the plots in the Plots tab.")
-	# print(result$hc_out)
 }
 
 plots_hierCluster <- function(result = .hierCluster()) {
 
-	result$hc_out$height %>% { . / max(.) } -> height
+	result$hc_out$height %<>% { . / max(.) }
 
 	if(result$hc_plots == "dendo") {
 		as.dendrogram(result$hc_out) %>%
@@ -119,12 +118,21 @@ plots_hierCluster <- function(result = .hierCluster()) {
 			}
 		}
 	} else {
-		height <- rev(result$height[result$height > result$hc_cutoff])
+		height <- rev(result$hc_out$height[result$hc_out$height > result$hc_cutoff])
 		nr_of_clusters <- 1:length(height)
-		plot(nr_of_clusters,height, main = "Scree plot", xlab = "Nr of clusters",
+		plot(nr_of_clusters, height, main = "Scree plot", xlab = "Nr of clusters",
 			ylab = "Heterogeneity", type = 'b')
 	}
 }
+
+# library(dplyr)
+# library(magrittr)
+# source("~/gh/radiant_dev/R/radiant.R")
+# data <- "mtcars"
+# hc_vars <- c("cyl", "mpg")
+# hc_plots <- "dendo"
+# result <- hierCluster(data, hc_vars, hc_plots = hc_plots)
+# plots_hierCluster(result)
 
 # Could use ggplot2 for dendrogram
 # library(ggplot2)
@@ -151,7 +159,7 @@ output$uiKm_vars <- renderUI({
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars,
-	  selected = state_init_multvar("km_vars",input$hc_vars, vars),
+	  selected = state_multiple("km_vars", vars, input$hc_vars),
 	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
@@ -164,9 +172,9 @@ output$ui_kmeansCluster <- renderUI({
 	  	conditionalPanel(condition = "input.km_hcinit == true",
 	  		wellPanel(
 		  		selectInput("km_dist", label = "Distance measure:", choices = hc_dist_method,
-			     	selected = state_init_list("km_dist","sq.euclidian", hc_dist_method), multiple = FALSE),
+			     	selected = state_single("km_dist", hc_dist_method, "sq.euclidian"), multiple = FALSE),
 	  			selectInput("km_meth", label = "Method:", choices = hc_method,
-			     	selected = state_init_list("km_meth","ward.D", hc_method), multiple = FALSE)
+			     	selected = state_single("km_meth", hc_method, "ward.D"), multiple = FALSE)
 	  		)
 	  	),
 	  	conditionalPanel(condition = "input.km_hcinit == false",

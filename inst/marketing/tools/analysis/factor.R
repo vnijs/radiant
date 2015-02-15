@@ -7,7 +7,8 @@ output$uiPreFactor_vars <- renderUI({
  	vars <- varnames()[isNum]
   # if(length(vars) == 0) return()
   selectInput(inputId = "preFactor_vars", label = "Variables:", choices = vars,
-  	selected = state_multvar("preFactor_vars",vars), multiple = TRUE, selectize = FALSE)
+  	selected = state_multiple("preFactor_vars",vars),
+  	multiple = TRUE, size = min(15, length(vars)), selectize = FALSE)
 })
 
 output$ui_preFactor <- renderUI({
@@ -132,9 +133,9 @@ output$uiFactor_vars <- renderUI({
 
  	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   selectInput(inputId = "factor_vars", label = "Variables:", choices = vars,
-  	selected = state_init_multvar("factor_vars",input$preFactor_vars, vars), multiple = TRUE, selectize = FALSE)
+  	selected = state_multiple("factor_vars", vars, input$preFactor_vars),
+  	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
 fac_method <- c('Principal components' = 'PCA', 'Maximum Likelihood' = "maxlik")
@@ -146,21 +147,20 @@ output$ui_fullFactor <- renderUI({
     wellPanel(
       uiOutput("uiFactor_vars"),
       selectInput("fac_method", label = "Method:", choices = fac_method,
-      	selected = state_init_list("fac_method","PCA", fac_method)),
+      	selected = state_single("fac_method", fac_method, "PCA")),
 			div(class="row",
  	    	div(class="col-xs-6", numericInput("fac_number",
  	    	    label = "# of factors:", min = 1,
  	    	    value = state_init('fac_number',1))),
 	    	div(class="col-xs-6", numericInput("fac_cutoff",
-	    	    label = "Cutt-off",
-	    	    min = 0, max = 1, value = state_init('fac_cutoff',0),
-	    	    step = .05))
+	    	    label = "Cutt-off", min = 0, max = 1,
+	    	    value = state_init('fac_cutoff',0), step = .05))
   	  ),
   	  conditionalPanel(condition = "input.tabs_fullFactor == 'Summary'",
         checkboxInput("fac_sort", "Sort", value = state_init('fac_sort',FALSE))
       ),
       radioButtons("fac_rotation", label = "Rotation:", fac_rotation,
-      	selected = state_init_list("fac_rotation","varimax", fac_rotation),
+      	selected = state_single("fac_rotation", fac_rotation, "varimax"),
       	inline = TRUE),
       actionButton("fac_savescores", "Save scores")
   	),

@@ -4,13 +4,15 @@
 \alias{single_mean}
 \title{Compare a sample mean to a population mean}
 \usage{
-single_mean(dataset, sm_var, sm_comp_value = 0,
+single_mean(dataset, sm_var, data_filter = "", sm_comp_value = 0,
   sm_alternative = "two.sided", sm_sig_level = 0.95, sm_plots = "hist")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
 \item{sm_var}{The variable selected for the mean comparison}
+
+\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{sm_comp_value}{Population value to compare the sample mean with}
 
@@ -33,6 +35,6 @@ single_mean("diamonds","price")
 \seealso{
 \code{\link{summary.single_mean}} to summarize results
 
-\code{\link{plots.single_mean}} to plot results
+\code{\link{plot.single_mean}} to plot results
 }
 

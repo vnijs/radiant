@@ -8,6 +8,7 @@
 #' @param sm_comp_value Population value to compare the sample mean with
 #' @param sm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sm_sig_level Span of the confidence interval
+#' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" show the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis.
 #'
 #' @return A list with all variables defined in the function as an object of class single_mean
 #'
@@ -15,7 +16,7 @@
 #' single_mean("diamonds","price")
 #'
 #' @seealso \code{\link{summary.single_mean}} to summarize results
-#' @seealso \code{\link{plots.single_mean}} to plot results
+#' @seealso \code{\link{plot.single_mean}} to plot results
 #'
 #' @export
 single_mean <- function(dataset, sm_var,
@@ -46,7 +47,7 @@ single_mean <- function(dataset, sm_var,
 #' summary(result)
 #'
 #' @seealso \code{\link{single_mean}} to generate the results
-#' @seealso \code{\link{plots.single_mean}} to plot results
+#' @seealso \code{\link{plot.single_mean}} to plot results
 #'
 #' @export
 summary.single_mean <- function(result) {
@@ -87,7 +88,7 @@ summary.single_mean <- function(result) {
 #' @param result Return value from \code{\link{single_mean}}
 #'
 #' @examples
-#' result <- single_mean("diamonds","price")
+#' result <- single_mean("diamonds","price", sm_comp_value = 3500, sm_plots = c("hist", "simulate"))
 #' plot(result)
 #'
 #' @seealso \code{\link{single_mean}} to generate the result

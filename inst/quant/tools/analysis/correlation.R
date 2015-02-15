@@ -8,7 +8,7 @@ output$uiCor_var <- renderUI({
 	vars <- varnames()[!isChar]
   if(length(vars) == 0) return()
   selectInput(inputId = "cor_var", label = "Select variables:", choices = vars,
- 		selected = state_multvar("cor_var",vars),
+ 		selected = state_multiple("cor_var",vars),
  		multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -17,7 +17,7 @@ output$ui_correlation <- renderUI({
   	wellPanel(
 	    uiOutput("uiCor_var"),
 		  selectInput(inputId = "cor_type", label = "Method:", choices = cor_type,
-  	  	selected = state_init_list("cor_type","pearson", cor_type), multiple = FALSE),
+  	  	selected = state_single("cor_type", cor_type, "pearson"), multiple = FALSE),
      	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
     		value = state_init('cor_cutoff',0), step = 0.05)
 	  ),

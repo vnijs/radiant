@@ -63,45 +63,69 @@ sshh <- function(...) {
 #' @return Data.frame with the specified columns selected
 #'
 #' @export
-
-getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = "") {
-
-  # dat <- mtcars
-  # filt <- "mpg > 20\n"
-  # filt %<>% gsub("\\s","", .)
-  # dat %>% { if(filt == "") . else filter_(.,filt) }
-  # filt <- ""
-  # dat %>% { if(filt == "") . else filter_(.,filt) }
-  # dat[1,1] <- NA
-  # na.rm <- FALSE
-  # dat %>% { if(na.rm) na.omit(.) else .}
-  # na.rm <- TRUE
-  # dat %>% { if(na.rm) na.omit(.) else .}
+getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "") {
 
   filt %<>% gsub("\\s","", .)
 
-  if(exists("session") && exists("r_env")) {
-    # cat("Dataset", dataset, "loaded from the radiant environment (r_env)\n")
-    select_(getdata(), .dots = vars) %>%
-      { if(na.rm) na.omit(.) else . }
-  } else if(exists("r_env")) {
-    cat("The requested dataset cannot be loaded from r_env. To make data from Radiant accesible in R(studio), stop the application using Quit > Quit in the navigation bar.\n") %>%
-      stop %>% return
-  } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-    if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
-    select_(r_data[[dataset]], .dots = vars) %>%
-      { if(na.rm) na.omit(.) else . } %>%
-      { if(filt == "") . else filter_(.,filt) }
-  } else if(exists(dataset)) {
-    cat("Dataset", dataset, "loaded from global environment\n")
-    select_(get(dataset), .dots = vars) %>%
-      { if(na.rm) na.omit(.) else . } %>%
-      { if(filt == "") . else filter_(.,filt) }
-  } else {
-    paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
-      stop %>% return
-  }
+  { if(exists("r_env")) {
+      r_env$r_data[[dataset]]
+    } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
+      if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
+      r_data[[dataset]]
+    } else if(exists(dataset)) {
+      cat("Dataset", dataset, "loaded from global environment\n")
+      get(dataset)
+    } else {
+      paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+        stop %>% return
+    }
+  } %>% { if(filt == "") . else filter_(., filt) } %>%
+        { if(vars[1] == "") . else select_(., .dots = vars) } %>%
+        { if(na.rm) na.omit(.) else . }
 }
+
+# getdata_exp <- function(dataset, vars, na.rm = TRUE, filt = "") {
+
+#   # dat <- mtcars
+#   # filt <- "mpg > 20\n"
+#   # filt %<>% gsub("\\s","", .)
+#   # dat %>% { if(filt == "") . else filter_(.,filt) }
+#   # filt <- ""
+#   # dat %>% { if(filt == "") . else filter_(.,filt) }
+#   # dat[1,1] <- NA
+#   # na.rm <- FALSE
+#   # dat %>% { if(na.rm) na.omit(.) else .}
+#   # na.rm <- TRUE
+#   # dat %>% { if(na.rm) na.omit(.) else .}
+
+#   filt %<>% gsub("\\s","", .)
+
+# #   if(exists("session") && exists("r_env")) {
+# #   if(exists("r_env") && !is.null(r_env$session)) {
+#   if(exists("r_env")) {
+#     # cat("Dataset", dataset, "loaded from the radiant environment (r_env)\n")
+# #     select_(getdata(), .dots = vars) %>%
+# #     select_(r_data[[dataset]], .dots = vars) %>%
+#     select_(diamonds[1:1000,], .dots = vars) %>%
+#       { if(na.rm) na.omit(.) else . }
+# #   } else if(exists("r_env")) {
+# #     cat("The requested dataset cannot be loaded from r_env. To make data from Radiant accesible in R(studio), stop the application using Quit > Quit in the navigation bar.\n") %>%
+# #       stop %>% return
+#   } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
+#     if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
+#     select_(r_data[[dataset]], .dots = vars) %>%
+#       { if(na.rm) na.omit(.) else . } %>%
+#       { if(filt == "") . else filter_(.,filt) }
+#   } else if(exists(dataset)) {
+#     cat("Dataset", dataset, "loaded from global environment\n")
+#     select_(get(dataset), .dots = vars) %>%
+#       { if(na.rm) na.omit(.) else . } %>%
+#       { if(filt == "") . else filter_(.,filt) }
+#   } else {
+#     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+#       stop %>% return
+#   }
+# }
 
 # test
 # rm(list = ls())

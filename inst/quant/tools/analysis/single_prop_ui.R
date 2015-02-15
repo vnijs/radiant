@@ -22,7 +22,7 @@ output$ui_sp_var <- renderUI({
   vars <- varnames()[isFct]
   selectInput(inputId = "sp_var", label = "Variable (select one):",
               choices = vars,
-              selected = state_singlevar("sp_var",vars), multiple = FALSE)
+              selected = state_single("sp_var",vars), multiple = FALSE)
 })
 
 output$ui_sp_levels <- renderUI({
@@ -33,7 +33,7 @@ output$ui_sp_levels <- renderUI({
   }
   selectInput(inputId = "sp_levels", label = "Choose level:",
               choices = levs,
-              selected = state_singlevar("sp_levels",levs), multiple = FALSE)
+              selected = state_single("sp_levels",levs), multiple = FALSE)
 })
 
 output$ui_single_prop <- renderUI({
@@ -42,17 +42,17 @@ output$ui_single_prop <- renderUI({
       conditionalPanel(condition = "input.tabs_single_prop == 'Plot'",
         selectizeInput(inputId = "sp_plots", label = "Select plots:",
                 choices = sp_plots,
-                selected = state_init_list("sp_plots", sp_args$sp_plots, sp_plots),
+                selected = state_single("sp_plots", sp_plots, sp_args$sp_plots),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))),
  	   	uiOutput("ui_sp_var"),
       uiOutput("ui_sp_levels"),
    	  selectInput(inputId = "sp_alternative", label = "Alternative hypothesis:",
   	  	choices = sp_alt,
-        selected = state_init_list("sp_alternative",sp_args$sp_alternative, sp_alt),
+        selected = state_single("sp_alternative", sp_alt, sp_args$sp_alternative),
   	  	multiple = FALSE),
     	sliderInput('sp_sig_level',"Significance level:", min = 0.85, max = 0.99,
-    		value = state_init('sp_sig_level',sp_args$sp_sig_level), step = 0.01),
+    		value = state_init('sp_sig_level', sp_args$sp_sig_level), step = 0.01),
       numericInput("sp_comp_value", "Comparison value:",
                    state_init('sp_comp_value', sp_args$sp_comp_value),
                    min = 0.01, max = 0.99, step = 0.01)),
