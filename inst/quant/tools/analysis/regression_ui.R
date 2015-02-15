@@ -181,16 +181,6 @@ output$regression <- renderUI({
 
 })
 
-# save residuals
-observe({
-	if(input$saveres %>% not_pressed) return()
-	isolate({
-		result <- .regression()
-		if(result %>% is.character) return()
-		data.frame(result$mod$residuals) %>% changedata(., 'residuals')
-	})
-})
-
 .regression <- reactive({
 	if(input$reg_dep_var %>% not_available)
 		return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
@@ -211,4 +201,13 @@ observe({
 		              fig.width = round(7 * reg_plot_width()/650,2),
 		              fig.height = round(7 * reg_plot_height()/500,2))
   })
+})
+
+observe({
+	if(input$saveres %>% not_pressed) return()
+	isolate({
+		result <- .regression()
+		if(result %>% is.character) return()
+		data.frame(result$mod$residuals) %>% changedata('residuals')
+	})
 })
