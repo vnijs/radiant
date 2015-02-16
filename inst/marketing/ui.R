@@ -38,7 +38,7 @@ shinyUI(
   ),
 
   navbarMenu("Conjoint",
-    tabPanel("Create profiles", uiOutput("conjointProfiles")),
+    tabPanel("Create profiles", uiOutput("conjoint_profiles")),
     tabPanel("Conjoint", uiOutput("conjoint"))
   ),
 

@@ -19,6 +19,8 @@ single_mean(dataset, sm_var, data_filter = "", sm_comp_value = 0,
 \item{sm_alternative}{The alternative hypothesis (two.sided, greater or less)}
 
 \item{sm_sig_level}{Span of the confidence interval}
+
+\item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" show the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis.}
 }
 \value{
 A list with all variables defined in the function as an object of class single_mean
