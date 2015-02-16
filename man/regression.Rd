@@ -51,7 +51,7 @@ Linear regression using OLS
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
-regression("diamonds", "price", c("carat","clarity"))
+result <- regression("diamonds", "price", c("carat","clarity"))
 }
 \seealso{
 \code{\link{summary.regression}} to summarize results

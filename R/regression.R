@@ -21,7 +21,7 @@
 #' @return A list with all variables defined in the function as an object of class regression
 #'
 #' @examples
-#' regression("diamonds", "price", c("carat","clarity"))
+#' result <- regression("diamonds", "price", c("carat","clarity"))
 #'
 #' @seealso \code{\link{summary.regression}} to summarize results
 #' @seealso \code{\link{plot.regression}} to plot results

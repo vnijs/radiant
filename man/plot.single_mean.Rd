@@ -16,7 +16,7 @@ Plot results from the single_mean function. This is a method of class single_mea
 See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 }
 \examples{
-result <- single_mean("diamonds","price")
+result <- single_mean("diamonds","price", sm_comp_value = 3500, sm_plots = c("hist", "simulate"))
 plot(result)
 }
 \seealso{
