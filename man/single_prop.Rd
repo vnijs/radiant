@@ -4,7 +4,7 @@
 \alias{single_prop}
 \title{Compare a sample proportion to a population proportion}
 \usage{
-single_prop(dataset, sp_var, sp_levels, data_filter = "",
+single_prop(dataset, sp_var, data_filter = "", sp_levels = "",
   sp_comp_value = 0.5, sp_alternative = "two.sided", sp_sig_level = 0.95,
   sp_plots = "hist")
 }
@@ -14,6 +14,8 @@ single_prop(dataset, sp_var, sp_levels, data_filter = "",
 \item{sp_var}{The variable selected for the proportion comparison}
 
 \item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{sp_levels}{The factor level selected for the proportion comparison}
 
 \item{sp_comp_value}{Population value to compare the sample proportion to}
 

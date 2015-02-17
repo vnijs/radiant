@@ -18,19 +18,21 @@ sp_inputs <- reactive({
 })
 
 output$ui_sp_var <- renderUI({
-  isFct <- "factor" == getdata_class()
-  vars <- varnames()[isFct]
+  # isFct <- "factor" == getdata_class()
+  # vars <- varnames()[isFct]
+  # vars <- two_level_vars()
+  vars <- groupable_vars()
   selectInput(inputId = "sp_var", label = "Variable (select one):",
               choices = vars,
               selected = state_single("sp_var",vars), multiple = FALSE)
 })
 
 output$ui_sp_levels <- renderUI({
-  if(input$sp_var %>% not_available) {
+  if(input$sp_var %>% not_available)
     levs <- c()
-  } else {
-    levs <- getdata()[1,input$sp_var] %>% levels
-  }
+  else
+    levs <- getdata()[1,input$sp_var] %>% as.factor %>% levels
+
   selectInput(inputId = "sp_levels", label = "Choose level:",
               choices = levs,
               selected = state_single("sp_levels",levs), multiple = FALSE)
