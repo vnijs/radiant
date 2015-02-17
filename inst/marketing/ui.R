@@ -14,6 +14,7 @@ shinyUI(
     tabPanel("Single mean", uiOutput("single_mean")),
     tabPanel("Compare means", uiOutput("compare_means")),
     tabPanel("Single proportion", uiOutput("single_prop")),
+    tabPanel("Compare proportions", uiOutput("compare_props")),
     tabPanel("Cross-tabs", uiOutput("crosstab"))
   ),
 

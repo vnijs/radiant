@@ -5,6 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sp_var The variable selected for the proportion comparison
 #' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param sp_levels The factor level selected for the proportion comparison
 #' @param sp_comp_value Population value to compare the sample proportion to
 #' @param sp_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sp_sig_level Span of the confidence interval
@@ -18,20 +19,24 @@
 #' @seealso \code{\link{plots.single_prop}} to plot results
 #'
 #' @export
-single_prop <- function(dataset, sp_var, sp_levels,
+single_prop <- function(dataset, sp_var,
                         data_filter = "",
+                        sp_levels = "",
                         sp_comp_value = 0.5,
                         sp_alternative = "two.sided",
                         sp_sig_level = .95,
                         sp_plots = "hist") {
 
-	dat <- getdata_exp(dataset, sp_var, filt = data_filter)
+	dat <- getdata_exp(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
 
 	levs <- levels(dat[,sp_var])
-	if(sp_levels %in% levs && levs[1] != sp_levels) {
-		dat[,sp_var] %<>% as.character %>% as.factor %>% relevel(sp_levels)
-		levs <- levels(dat[,sp_var])
+	if(sp_levels != "") {
+		if(sp_levels %in% levs && levs[1] != sp_levels) {
+			dat[,sp_var] %<>% as.character %>% as.factor %>% relevel(sp_levels)
+			levs <- levels(dat[,sp_var])
+		}
 	}
+
 	n <- nrow(dat)
 	ns <- sum(dat == sp_levels)
 	# use binom.test for exact

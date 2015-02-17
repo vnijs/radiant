@@ -105,6 +105,20 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 # result <- compare_means("PairwiseBrand","BrandA","BrandB",cm_alternative = "less")
 # summary(result)
 
+# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+# dataset <- "titanic"
+# data_filter = ""
+# cm_var1 <- "pclass"
+# cm_var2 <- "age"
+# cm_alternative = "two.sided"
+# cm_sig_level = .95
+# cm_adjust = "none"
+# cm_plots = "bar"
+# result <- compare_means(dataset, cm_var1, cm_var2)
+# summary(result)
+
+
+
 #' Summarize method for output from compare_means
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
@@ -145,8 +159,7 @@ summary.compare_means <- function(result) {
 	mod <- result$res
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
-	mod$diff <- means[mod$group1 %>% as.character] -
-							means[mod$group2 %>% as.character]
+	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(3)
 	mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
 	mod$` ` <- sig_stars(mod$p.value)
 	mod$p.value <- round(mod$p.value,3)

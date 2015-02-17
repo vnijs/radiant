@@ -145,7 +145,15 @@ getdata_class_fun <- function(dat) {
 groupable_vars <- reactive({
   getdata() %>%
     summarise_each(funs(n_distinct)) %>%
-    { . < 10 } %>%
+    { . < 15 } %>%
+    which(.) %>%
+    varnames()[.]
+})
+
+two_level_vars <- reactive({
+  getdata() %>%
+    summarise_each(funs(n_distinct)) %>%
+    { . == 2 } %>%
     which(.) %>%
     varnames()[.]
 })

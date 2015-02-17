@@ -2,7 +2,7 @@
 output$uiExpl_columns <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectInput("expl_columns", label = "Select columns(s):", choices = vars,
     selected = state_multvar("expl_columns",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
@@ -10,7 +10,7 @@ output$uiExpl_columns <- renderUI({
 
 output$uiExpl_byvar <- renderUI({
   vars <- groupable_vars()
-  if(length(vars) == 0) return()
+  # if(length(vars) == 0) return()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multvar("expl_byvar",vars), multiple = TRUE,
     options = list(placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
