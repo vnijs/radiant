@@ -159,5 +159,6 @@ plots_correlation <- function(result = .correlation()) {
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	pairs(result$dat, lower.panel=panel.smooth, upper.panel=panel.plot)
+	# result %>% { if(result %>% class == "list") .$dat else result } %>%
+	result$dat %>% pairs(lower.panel=panel.smooth, upper.panel=panel.plot)
 }

@@ -208,6 +208,6 @@ observe({
 	isolate({
 		result <- .regression()
 		if(result %>% is.character) return()
-		data.frame(result$mod$residuals) %>% changedata('residuals')
+		result$mod$residuals %>% data.frame %>% changedata('residuals')
 	})
 })
