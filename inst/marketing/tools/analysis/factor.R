@@ -160,7 +160,7 @@ output$ui_fullFactor <- renderUI({
         checkboxInput("fac_sort", "Sort", value = state_init('fac_sort',FALSE))
       ),
       radioButtons("fac_rotation", label = "Rotation:", fac_rotation,
-      	selected = state_single("fac_rotation", fac_rotation, "varimax"),
+      	selected = state_init("fac_rotation", "varimax"),
       	inline = TRUE),
       actionButton("fac_savescores", "Save scores")
   	),

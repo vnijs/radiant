@@ -5,11 +5,11 @@ output$uiVizvars1 <- renderUI({
   vars <- varnames()
   if(input$viz_multiple == 'multiple') {
     selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
-      selected = state_multvar("vizvars1",vars),
+      selected = state_multiple("vizvars1",vars),
       multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
   } else {
     selectInput(inputId = "vizvars1", label = "X-variable", choices = vars,
-      selected = state_multvar("vizvars1",vars), multiple = FALSE, selectize = TRUE)
+      selected = state_multiple("vizvars1",vars), multiple = FALSE, selectize = TRUE)
   }
 })
 
@@ -17,7 +17,7 @@ output$uiVizvars2 <- renderUI({
   vars <- varnames()
   selectizeInput(inputId = "vizvars2", label = "Y-variable",
                  choices = c("None" = "None", vars),
-                 selected = state_init_list("vizvars2","None", vars),
+                 selected = state_single("vizvars2", vars, "None"),
                  multiple = FALSE)
 })
 
@@ -25,7 +25,7 @@ output$uiViz_color <- renderUI({
   if(is.null(input$vizvars2)) return() 	# can't have an XY plot without an X
   vars <- c("None" = "None", varnames())
   selectizeInput("viz_color", "Color", vars,
-                 selected = state_init_list("viz_color","None", vars),
+                 selected = state_single("viz_color", vars, "None"),
                  multiple = FALSE)
 })
 
@@ -33,7 +33,7 @@ output$uiViz_facet_row <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
   selectizeInput("viz_facet_row", "Facet row", vars,
-                 selected = state_init_list("viz_facet_row", ".", vars),
+                 selected = state_single("viz_facet_row", vars, "."),
                  multiple = FALSE)
 })
 
@@ -42,7 +42,7 @@ output$uiViz_facet_col <- renderUI({
   isFct <- "factor" == getdata_class()
   vars <- c("None" = ".", varnames()[isFct])
   selectizeInput("viz_facet_col", 'Facet column', vars,
-                 selected = state_init_list("viz_facet_col", ".", vars),
+                 selected = state_single("viz_facet_col", vars, "."),
                  multiple = FALSE)
 })
 
@@ -52,7 +52,7 @@ viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 output$ui_Visualize <- renderUI({
   list(wellPanel(
     radioButtons("viz_multiple", "Number of plots:", viz_multiple,
-                 state_init_list("viz_multiple","single", viz_multiple),
+                 state_init("viz_multiple", "single"),
                  inline = TRUE),
     uiOutput("uiVizvars1"),
     uiOutput("uiVizvars2"),
@@ -63,7 +63,7 @@ output$ui_Visualize <- renderUI({
     conditionalPanel(condition = "input.vizvars2 != 'None'",
       uiOutput("uiViz_color"),
       checkboxGroupInput("viz_check", NULL, viz_check,
-        selected = state_init_list("viz_check","", viz_check),
+        selected = state_init("viz_check"),
         inline = TRUE)
     ),
     div(class="row",

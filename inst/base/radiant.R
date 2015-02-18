@@ -58,14 +58,15 @@ state_multiple <- function(inputvar, vals, init = character(0)) {
 
 #########################################################
 # remove deprecated functions below
-state_init_multvar <- function(inputvar, init, vals)
-  state_multiple(inputvar, vals, init)
+# state_init_multvar <- function(inputvar, init, vals)
+#   state_multiple(inputvar, vals, init)
 
-state_init_list <- function(inputvar, init, vals)
-  state_single(inputvar, vals, init)
+# state_multiple <- state_multiple
+# state_single <- state_single
 
-state_multvar <- state_multiple
-state_singlevar <- state_single
+# state_init_list <- function(inputvar, init, vals)
+#   state_single(inputvar, vals, init)
+
 # remove deprecated functions above
 #########################################################
 
@@ -145,7 +146,7 @@ getdata_class_fun <- function(dat) {
 groupable_vars <- reactive({
   getdata() %>%
     summarise_each(funs(n_distinct)) %>%
-    { . < 15 } %>%
+    { . < 10 } %>%
     which(.) %>%
     varnames()[.]
 })

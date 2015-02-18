@@ -6,7 +6,7 @@ output$uiRnd_var <- renderUI({
 	isChar <- "character" == getdata_class()
  	vars <- vars[isChar]
   selectInput(inputId = "rnd_var", label = "Variable (select one):", choices = vars,
-  	selected = state_singlevar("rnd_var",vars), multiple = FALSE)
+  	selected = state_single("rnd_var",vars), multiple = FALSE)
 })
 
 output$ui_random <- renderUI({
@@ -85,7 +85,7 @@ output$ui_sampleSize <- renderUI({
   	wellPanel(
       # radioButtons(inputId = "rnd_mean", label = "", rnd_mean,
 		  radioButtons(inputId = "rnd_mean", label = NULL, choices = rnd_mean,
-	  	  selected = state_init_list("rnd_mean","mean", rnd_mean),
+	  	  selected = state_init("rnd_mean", "mean"),
         inline = TRUE),
 		  conditionalPanel(condition = "input.rnd_mean == 'mean'",
 		    numericInput("rnd_mean_err", "Acceptable Error (e.g., $10):", min = 0,
@@ -108,7 +108,7 @@ output$ui_sampleSize <- renderUI({
       radioButtons(inputId = "rnd_pop_correction",
         choices = rnd_pop_correction,
         label = "Correct for population size:",
-        selected = state_init_list("rnd_pop_correction","no", rnd_pop_correction),
+        selected = state_init("rnd_pop_correction", "no"),
         inline = TRUE),
 		  conditionalPanel(condition = "input.rnd_pop_correction == 'yes'",
 		    numericInput("rnd_pop_size", "Population size:", min = 1,
@@ -198,7 +198,7 @@ output$ui_ctl <- renderUI({
   list(
     wellPanel(
       selectInput(inputId = "ctl_dist", label = "Distribution (select one):", choices = ctl_dist,
-        selected = state_singlevar("ctl_dist", ctl_dist), multiple = FALSE),
+        selected = state_single("ctl_dist", ctl_dist), multiple = FALSE),
       conditionalPanel(condition = "input.ctl_dist == 'runif'",
         div(class="row",
           div(class="col-xs-6",

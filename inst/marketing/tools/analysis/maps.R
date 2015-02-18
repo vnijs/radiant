@@ -8,7 +8,7 @@ output$uiMds_id1 <- renderUI({
   vars <- varnames()[isLabel]
   # if(length(vars) == 0) return(HTML('<label>This dataset has no variables of type character.</label>'))
   selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars,
-   	selected = state_singlevar("mds_id1",vars), multiple = FALSE)
+   	selected = state_single("mds_id1",vars), multiple = FALSE)
 })
 
 output$uiMds_id2 <- renderUI({
@@ -21,7 +21,7 @@ output$uiMds_id2 <- renderUI({
   if(length(vars) > 0) vars <- vars[-which(vars == input$mds_id1)]
   # if(length(vars) == 0) return(HTML('<label>This dataset has only one variable of type character.</label>'))
   selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
-   	selected = state_singlevar("mds_id2",vars), multiple = FALSE)
+   	selected = state_single("mds_id2",vars), multiple = FALSE)
 })
 
 output$uiMds_dis <- renderUI({
@@ -32,14 +32,14 @@ output$uiMds_dis <- renderUI({
  	vars <- varnames()[isNum]
   # if(length(vars) == 0) return()
   selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
-   	selected = state_singlevar("mds_dis",vars), multiple = FALSE)
+   	selected = state_single("mds_dis",vars), multiple = FALSE)
 })
 
 output$uiMds_rev_dim <- renderUI({
 	rev_list <- list()
 	rev_list[paste("Dim",1:input$mds_dim_number)] <- 1:input$mds_dim_number
 	checkboxGroupInput("mds_rev_dim", "Reverse:", rev_list,
-   	selected = state_init_list("mds_rev_dim","", rev_list),
+   	selected = state_init("mds_rev_dim"),
    	inline = TRUE)
 })
 
@@ -53,10 +53,10 @@ output$ui_mds <- renderUI({
 	  	uiOutput("uiMds_id2"),
 	  	uiOutput("uiMds_dis"),
 		  radioButtons(inputId = "mds_non_metric", label = NULL, mds_non_metric,
-		   	selected = state_init_list("mds_non_metric", "metric", mds_non_metric),
+		   	selected = state_init("mds_non_metric", "metric"),
 		   	inline = TRUE),
 		  radioButtons(inputId = "mds_dim_number", label = NULL, mds_dim_number,
-		   	selected = state_init_list("mds_dim_number",2, mds_dim_number),
+		   	selected = state_init("mds_dim_number", 2),
 		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_mds == 'Plots'",
 	 	 		numericInput("mds_fontsz", "Font size:", state_init("mds_fontsz",1.3), .5, 4, .1),

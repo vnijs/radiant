@@ -66,15 +66,15 @@ output$ui_compare_props <- renderUI({
                     choices = cp_alt,
                     selected = state_single("cp_alternative", cp_alt,
                                                cp_args$cp_alternative)),
-        sliderInput('cp_sig_level',"Significance level:", min = 0.85, max = 0.99,
-          value = state_init('cp_sig_level',cp_args$cp_sig_level), step = 0.01),
+        sliderInput("cp_sig_level","Significance level:", min = 0.85, max = 0.99,
+          value = state_init("cp_sig_level",cp_args$cp_sig_level), step = 0.01),
         radioButtons(inputId = "cp_adjust", label = "Multiple comp. adjustment:", cp_adjust,
-          selected = state_single("cp_adjust", cp_adjust, cp_args$cp_adjust),
+          selected = state_init("cp_adjust", cp_args$cp_adjust),
           inline = TRUE)
       )
     ),
-    help_and_report(modal_title = 'Compare proportions',
-                    fun_name = 'compare_props',
+    help_and_report(modal_title = "Compare proportions",
+                    fun_name = "compare_props",
                     help_file = inclMD("../quant/tools/help/compare_props.md"))
   )
 })

@@ -387,6 +387,7 @@ plot.regression <- function(result) {
  	}
 
 	model <- ggplot2::fortify(result$model)
+  model$.actual <- model[,result$reg_dep_var]
 
 	vars <- as.character(attr(result$model$terms,'variables'))[-1]
 	reg_dep_var <- vars[1]
