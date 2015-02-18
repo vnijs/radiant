@@ -65,7 +65,7 @@ output$ui_reg_interactions <- renderUI({
 	if(input$reg_indep_var %>% not_available) return()
  	sel <- ""
  	if(length(input$reg_indep_var) > 1)
- 		sel <- state_init("reg_interactions", "")
+ 		sel <- state_init("reg_interactions")
 
   radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
   	selected = sel, inline = TRUE)
@@ -107,7 +107,7 @@ output$ui_regression <- renderUI({
 	    uiOutput("ui_reg_indep_var"),
 			uiOutput("ui_reg_interactions"),
 		  # radioButtons(inputId = "reg_interactions", label = "Interactions:", reg_interactions,
-	   #  	selected = state_init("reg_interactions", ""),
+	   #  	selected = state_init("reg_interactions"),
 	   #  	inline = TRUE),
 		  conditionalPanel(condition = "input.reg_interactions != ''",
 				uiOutput("ui_reg_int_var")

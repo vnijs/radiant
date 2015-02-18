@@ -3,7 +3,7 @@
 #   vars <- varnames()
 #   if(length(vars) == 0) return()
 #   selectizeInput("fil_columns", label = "Select columns(s):", choices = as.list(vars),
-#     selected = state_multvar("fil_columns",vars), multiple = TRUE,
+#     selected = state_multiple("fil_columns",vars), multiple = TRUE,
 #     options = list(placeholder = 'Select column(s)', plugins = list('remove_button', 'drag_drop'))
 #   )
 # })

@@ -70,17 +70,17 @@ output$ui_compare_means <- renderUI({
                     selected = state_single("cm_alternative", cm_alt,
                                                cm_args$cm_alternative)),
         sliderInput('cm_sig_level',"Significance level:", min = 0.85, max = 0.99,
-          value = state_init('cm_sig_level',cm_args$cm_sig_level), step = 0.01),
+          value = state_init("cm_sig_level",cm_args$cm_sig_level), step = 0.01),
         radioButtons(inputId = "cm_paired", label = "Sample type:", cm_paired,
-          selected = state_single("cm_paired", cm_paired, cm_args$cm_paired),
+          selected = state_init("cm_paired", cm_args$cm_paired),
           inline = TRUE),
         radioButtons(inputId = "cm_adjust", label = "Multiple comp. adjustment:", cm_adjust,
-          selected = state_single("cm_adjust", cm_adjust, cm_args$cm_adjust),
+          selected = state_init("cm_adjust", cm_args$cm_adjust),
           inline = TRUE)
       )
     ),
-    help_and_report(modal_title = 'Compare means',
-                    fun_name = 'compare_means',
+    help_and_report(modal_title = "Compare means",
+                    fun_name = "compare_means",
                     help_file = inclMD("../quant/tools/help/compare_means.md"))
   )
 })

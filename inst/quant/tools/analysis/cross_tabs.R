@@ -8,7 +8,7 @@ output$uiCt_var1 <- renderUI({
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
   selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
-  	selected = state_singlevar("ct_var1",vars), multiple = FALSE)
+  	selected = state_single("ct_var1",vars), multiple = FALSE)
 })
 
 output$uiCt_var2 <- renderUI({
@@ -16,7 +16,7 @@ output$uiCt_var2 <- renderUI({
   vars <- varnames()[isFct]
   if(length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
-  	selected = state_singlevar("ct_var2",vars), multiple = FALSE)
+  	selected = state_single("ct_var2",vars), multiple = FALSE)
 })
 
 output$ui_crosstab <- renderUI({
@@ -25,18 +25,18 @@ output$ui_crosstab <- renderUI({
 	    uiOutput("uiCt_var1"),
 	    uiOutput("uiCt_var2"),
 		  checkboxInput("ct_observed", label = "Observed values",
-	     	value = state_init('ct_observed',TRUE)),
+	     	value = state_init("ct_observed",TRUE)),
 		  checkboxInput("ct_expected", label = "Expected values",
-	     	value = state_init('ct_expected',FALSE)),
+	     	value = state_init("ct_expected",FALSE)),
 	    conditionalPanel(condition = "input.tabs_crosstab == 'Summary'",
 			  checkboxInput("ct_contrib", label = "Contribution to chisquare value",
-	     	value = state_init('ct_contrib',FALSE))),
+	     	value = state_init("ct_contrib",FALSE))),
 		  checkboxInput("ct_std_residuals", label = "Deviation (standarized)",
-	     	value = state_init('ct_std_residuals',FALSE)),
+	     	value = state_init("ct_std_residuals",FALSE)),
 		  checkboxInput("ct_deviation", label = "Deviation (percentage)",
-	     	value = state_init('ct_deviation',FALSE))
+	     	value = state_init("ct_deviation",FALSE))
 		),
-	 	helpAndReport('Cross-tabs','crosstab',inclMD("../quant/tools/help/crossTabs.md"))
+	 	helpAndReport("Cross-tabs","crosstab",inclMD("../quant/tools/help/crossTabs.md"))
   )
 })
 

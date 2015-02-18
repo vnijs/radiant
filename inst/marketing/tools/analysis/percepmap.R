@@ -7,7 +7,7 @@ output$uiPmap_brand <- renderUI({
   vars <- varnames()[isLabel]
   # if(length(vars) == 0) return()
  	selectInput(inputId = "pmap_brand", label = "Brand:", choices = vars,
-   	selected = state_singlevar("pmap_brand",vars), multiple = FALSE)
+   	selected = state_single("pmap_brand",vars), multiple = FALSE)
 })
 
 output$uiPmap_attr <- renderUI({
@@ -20,7 +20,7 @@ output$uiPmap_attr <- renderUI({
  	vars <- varnames()[isNum]
   # if(length(vars) == 0) return()
   selectInput(inputId = "pmap_attr", label = "Attributes:", choices = vars,
-   	selected = state_multvar("pmap_attr",vars), multiple = TRUE, selectize = FALSE)
+   	selected = state_multiple("pmap_attr",vars), multiple = TRUE, selectize = FALSE)
 })
 
 output$uiPmap_pref <- renderUI({
@@ -34,7 +34,7 @@ output$uiPmap_pref <- renderUI({
  	if(length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
 
   selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,
-   	selected = state_multvar("pmap_pref",vars),
+   	selected = state_multiple("pmap_pref",vars),
    	multiple = TRUE, selectize = FALSE)
 })
 
@@ -42,7 +42,7 @@ output$uiPmap_plot <- renderUI({
 	plot_list <- c("Brands" = "brand", "Attributes" = "attr")
   if(!is.null(input$pmap_pref)) plot_list <- c(plot_list, c("Preferences" = "pref"))
 	checkboxGroupInput("pmap_plot", NULL, plot_list,
-   	selected = state_init_list("pmap_plot","", plot_list),
+   	selected = state_init("pmap_plot"),
    	inline = TRUE)
 })
 
@@ -55,7 +55,7 @@ output$ui_pmap <- renderUI({
 	  	uiOutput("uiPmap_attr"),
 	  	uiOutput("uiPmap_pref"),
 		  radioButtons(inputId = "pmap_dim_number", label = NULL, pmap_dim_number,
-		   	selected = state_init_list("pmap_dim_number",2, pmap_dim_number),
+		   	selected = state_init("pmap_dim_number",2),
 		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Plots'",
 		  	uiOutput("uiPmap_plot"),
