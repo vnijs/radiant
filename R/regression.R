@@ -41,6 +41,12 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
                        reg_coef_int = FALSE,
                        reg_lines = "") {
 
+
+# dataset = "diamonds"
+# reg_dep_var = "price"
+# reg_indep_var = "color"
+# reg_check = "standardize"
+
 	vars <- reg_indep_var
 
 	# adding interaction terms as needed
@@ -57,20 +63,22 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 
 	dat <- getdata_exp(dataset, c(reg_dep_var, reg_indep_var), filt = data_filter)
 
-	if("standardize" %in% reg_check)
-    dat[,sapply(dat, is.numeric)] %<>% mutate_each(funs(scale))
+	if("standardize" %in% reg_check) {
+    isNum <- sapply(dat, is.numeric)
+    if(sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+  }
 
 	formula <- paste(reg_dep_var, "~", paste(vars, collapse = " + "))
 
 	if("stepwise" %in% reg_check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-		mod <- lm(paste(reg_dep_var, "~ 1") %>% as.formula, data = dat) %>%
+		model <- lm(paste(reg_dep_var, "~ 1") %>% as.formula, data = dat) %>%
       step(., k = 2, scope = list(upper = formula), direction = 'both')
 	} else {
-		mod <- lm(formula, data = dat)
+		model <- lm(formula, data = dat)
 	}
 
-  reg_coeff <- tidy(mod)
+  reg_coeff <- tidy(model)
   reg_coeff$` ` <- sig_stars(reg_coeff$p.value)
   reg_coeff[,c(2:5)] %<>% round(3)
   reg_coeff$p.value[reg_coeff$p.value < .001] <- "< .001"
@@ -83,14 +91,14 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   }
 
   if("confint" %in% reg_check || "coef" %in% reg_plots) {
-    if(mod$coeff %>% is.na %>% any) {
+    if(model$coeff %>% is.na %>% any) {
       reg_plots <- ""
     } else {
       cl_split <- function(x) 100*(1-x)/2
       cl_split(reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
       (100 - cl_split(reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
 
-      confint(mod, level = reg_conf_level) %>%
+      confint(model, level = reg_conf_level) %>%
         data.frame %>%
         magrittr::set_colnames(c("Low","High")) %>%
         cbind(select(reg_coeff,2),.) %>%
@@ -100,15 +108,14 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   }
 
 	# specifying plot heights
-	nrVars <- length(as.character(attr(mod$terms,'variables'))[-1])
+	nrVars <- length(as.character(attr(model$terms,'variables'))[-1])
 	plot_height <- 500
 	plot_width <- 650
 
 	if(reg_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
 	if(reg_plots == 'dashboard') plot_height <- 1.5 * plot_height
 	if(reg_plots == 'correlations') { plot_height <- 150 * nrVars; plot_width <- 150 * nrVars }
-  # if(reg_plots == 'coef') plot_height <- 400 + 50 * nrVars
-  if(reg_plots == 'coef') plot_height <- 300 + 20 * length(mod$coefficients)
+  if(reg_plots == 'coef') plot_height <- 300 + 20 * length(model$coefficients)
 	if(reg_plots %in% c('scatter','leverage','resid_pred'))
 		plot_height <- (plot_height/2) * ceiling((nrVars-1) / 2)
 
@@ -131,7 +138,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #' @export
 summary.regression <- function(result) {
 
-	if(class(result$mod) != 'lm') return(result)
+	if(class(result$model) != 'lm') return(result)
 
   cat("Linear regression (OLS)\n")
   cat("Data     :", result$dataset, "\n")
@@ -146,7 +153,7 @@ summary.regression <- function(result) {
   # cat("Alt. hyp.: variables x and y are correlated\n\n")
 	print(result$reg_coeff, row.names=FALSE)
 
-	reg_fit <- glance(result$mod) %>% round(3)
+	reg_fit <- glance(result$model) %>% round(3)
 	if(reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
@@ -155,12 +162,12 @@ summary.regression <- function(result) {
   cat("\n\n")
 
   if("rmse" %in% result$reg_check) {
-    mean(result$mod$residual^2, na.rm=TRUE) %>% sqrt %>%
+    mean(result$model$residual^2, na.rm=TRUE) %>% sqrt %>%
     cat("Prediction error (RMSE): ", ., "\n\n")
   }
 
   if("sumsquares" %in% result$reg_check) {
-    atab <- anova(result$mod)
+    atab <- anova(result$model)
     atab %>% format(scientific = FALSE)
     nr_rows <- dim(atab)[1]
     df_reg <- sum(atab$Df[-nr_rows])
@@ -181,12 +188,12 @@ summary.regression <- function(result) {
   }
 
   if("vif" %in% result$reg_check) {
-		if(result$mod$coeff %>% is.na %>% any) {
+		if(result$model$coeff %>% is.na %>% any) {
 			cat("The set of independent variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
 		} else {
       if(length(result$reg_indep_var) > 1) {
         cat("Variance Inflation Factors\n")
-        vif(result$mod) %>%
+        vif(result$model) %>%
           { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(3) %>%
@@ -217,7 +224,7 @@ summary.regression <- function(result) {
       } else {
         nval <- getdata_exp(result$reg_predict_data)
         nval_names <- names(nval)
-        vars <- as.character(attr(result$mod$terms,'variables'))[-1]
+        vars <- as.character(attr(result$model$terms,'variables'))[-1]
         nval <- try(select_(nval, .dots = vars[-1]), silent = TRUE)
       }
 
@@ -237,8 +244,8 @@ summary.regression <- function(result) {
         }
       } else {
 
-        dat <- ggplot2::fortify(result$mod)
-        vars <- as.character(attr(result$mod$terms,'variables'))[-1]
+        dat <- ggplot2::fortify(result$model)
+        vars <- as.character(attr(result$model$terms,'variables'))[-1]
         reg_dep_var <- vars[1]
         reg_indep_var <- vars[-1]
         dat <- dat[,reg_indep_var, drop = FALSE]
@@ -260,7 +267,7 @@ summary.regression <- function(result) {
           } else {
             newdat[names(nval)] <- list(NULL)
             nnd <- data.frame(newdat[-1],nval)
-            pred <- try(predict(result$mod, nnd, interval = 'prediction', level = result$reg_conf_level), silent = TRUE)
+            pred <- try(predict(result$model, nnd, interval = 'prediction', level = result$reg_conf_level), silent = TRUE)
 
             if(!is(pred, 'try-error')) {
             	if(result$reg_predict == "data") {
@@ -297,7 +304,7 @@ summary.regression <- function(result) {
   }
 
   if("confint" %in% result$reg_check) {
-    if(result$mod$coeff %>% is.na %>% any) {
+    if(result$model$coeff %>% is.na %>% any) {
       cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
       result$ci_tab$`+/-` <- (result$ci_tab$High - result$ci_tab$coefficient)
@@ -335,8 +342,8 @@ summary.regression <- function(result) {
 				not_selected <- setdiff(vars,result$reg_test_var)
 				if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
 
-				sub_mod <- update(result$mod, sub_formula, data = result$dat) %>%
-				             anova(., result$mod, test='F')
+				sub_mod <- update(result$model, sub_formula, data = result$dat) %>%
+				             anova(., result$model, test='F')
 
 				if(sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
 				if(sub_mod[,"Pr(>F)"][2] < .001) sub_mod[,"Pr(>F)"][2] <- "< .001"
@@ -370,7 +377,7 @@ summary.regression <- function(result) {
 #' @export
 plot.regression <- function(result) {
 
-	if(class(result$mod) != 'lm') return(result)
+	if(class(result$model) != 'lm') return(result)
 
 	if({result$reg_int_var %>% strsplit(":") %>% unlist} %in% result$reg_indep_var %>% all) {
 		# nothing
@@ -379,59 +386,53 @@ plot.regression <- function(result) {
     reg_int_var <- ""
  	}
 
-	mod <- ggplot2::fortify(result$mod)
+	model <- ggplot2::fortify(result$model)
 
-	vars <- as.character(attr(result$mod$terms,'variables'))[-1]
+	vars <- as.character(attr(result$model$terms,'variables'))[-1]
 	reg_dep_var <- vars[1]
 	reg_indep_var <- vars[-1]
 
-	dat <- mod[,vars, drop = FALSE]
+	# dat <- model[,vars, drop = FALSE]
 
 	if(result$reg_plots == "")
 		return(plot(x = 1, type = 'n', main="Please select a plot from the Regression plots dropdown menu.", axes = FALSE, xlab = "", ylab = ""))
 
 	if(result$reg_plots == "hist") {
 		plots <- list()
-		for(i in vars) plots[[i]] <- ggplot(dat, aes_string(x = i)) + geom_histogram()
+		for(i in vars) plots[[i]] <- ggplot(result$dat, aes_string(x = i)) + geom_histogram()
 	}
 
 	if(result$reg_plots == "correlations") {
-		datlist <- list()
-		datlist$dat <- dat
-		return(plots_correlation(datlist))
+		return(plots_correlation(result))
 	}
 
 	if(result$reg_plots == "dashboard") {
 
 		plots <- list()
-		df <- data.frame(cbind(mod$.fitted,mod[1]))
-		colnames(df) <- c("x","y")
-		p <- ggplot(df, aes(x=x, y=y)) + geom_point() + labs(list(title = "Actual vs Fitted", x = "Fitted values", y = "Actual values"))
-    if("line" %in% result$reg_lines) p <- p + geom_abline(linetype = 'dotdash')
-    if("loess" %in% result$reg_lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
-    plots[[1]] <- p
+		# df <- data.frame(cbind(model$.fitted,model[1]))
+		# colnames(df) <- c("x","y")
+		plots[[1]] <- ggplot(model, aes(x=.fitted, y=.actual)) + geom_point() + labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual"))
+    if("line" %in% result$reg_lines) plots[[1]] <- plots[[1]] + geom_abline(linetype = 'dotdash')
+    if("loess" %in% result$reg_lines) plots[[1]] <- plots[[1]] + geom_smooth(size = .75, linetype = "dotdash")
 
-		p <- qplot(.fitted, .resid, data = mod) + labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
-    if("line" %in% result$reg_lines) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
-    if("loess" %in% result$reg_lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
-    plots[[2]] <- p
+		plots[[2]] <- qplot(.fitted, .resid, data = model) + labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
+    if("line" %in% result$reg_lines) plots[[2]] <- plots[[2]] + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+    if("loess" %in% result$reg_lines) plots[[2]] <- plots[[2]] + geom_smooth(size = .75, linetype = "dotdash")
 
-		p <- qplot(y=.resid, x=seq_along(.resid), data = mod, geom="line") +
+		plots[[3]] <- qplot(y=.resid, x=seq_along(.resid), data = model, geom="line") +
 			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
-    if("line" %in% result$reg_lines) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
-    if("loess" %in% result$reg_lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
-    plots[[3]] <- p
+    if("line" %in% result$reg_lines) plots[[3]] <- plots[[3]] + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+    if("loess" %in% result$reg_lines) plots[[3]] <- plots[[3]] + geom_smooth(size = .75, linetype = "dotdash")
 
-		p <- qplot(sample =.stdresid, data = mod, stat = "qq") +
+		plots[[4]] <- qplot(sample =.stdresid, data = model, stat = "qq") +
 			labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
-    if("line" %in% result$reg_lines) p <- p + geom_abline(linetype = 'dotdash')
-    plots[[4]] <- p
+    if("line" %in% result$reg_lines) plots[[4]] <- plots[[4]] + geom_abline(linetype = 'dotdash')
 
-  	plots[[5]] <- ggplot(mod, aes(x = .resid)) + geom_histogram() +
+  	plots[[5]] <- ggplot(model, aes(x = .resid)) + geom_histogram() +
       labs(list(title = "Histogram of residuals", x = "Residuals"))
 
-    plots[[6]] <- ggplot(mod, aes(x=.resid)) + geom_density(alpha=.3, fill = "green") +
-      stat_function(fun = dnorm, args = list(mean = mean(mod[,'.resid']), sd = sd(mod[,'.resid'])), color = "blue") +
+    plots[[6]] <- ggplot(model, aes(x=.resid)) + geom_density(alpha=.3, fill = "green") +
+      stat_function(fun = dnorm, args = list(mean = mean(model[,'.resid']), sd = sd(model[,'.resid'])), color = "blue") +
   		labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
 
 	}
@@ -439,10 +440,10 @@ plot.regression <- function(result) {
 	if(result$reg_plots == "scatter") {
 		plots <- list()
 		for(i in reg_indep_var) {
-			if('factor' %in% class(dat[,i])) {
-				plots[[i]] <- ggplot(dat, aes_string(x=i, y=reg_dep_var, fill=i)) + geom_boxplot(alpha = .3)
+			if('factor' %in% class(result$dat[,i])) {
+				plots[[i]] <- ggplot(result$dat, aes_string(x=i, y=reg_dep_var, fill=i)) + geom_boxplot(alpha = .7)
 			} else {
-				p <- ggplot(dat, aes_string(x=i, y=reg_dep_var)) + geom_point()
+				p <- ggplot(result$dat, aes_string(x=i, y=reg_dep_var)) + geom_point()
         if("line" %in% result$reg_lines) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
 				            linetype = "dashed", colour = 'black')
         if("loess" %in% result$reg_lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
@@ -453,13 +454,11 @@ plot.regression <- function(result) {
 
 	if(result$reg_plots == "resid_pred") {
 		plots <- list()
-		residuals <- mod$.resid
-		rdat <- cbind(residuals,dat[,reg_indep_var])
-		rdat <- data.frame(rdat)
+		rdat <- cbind(model$.resid,result$dat[,reg_indep_var]) %>% data.frame
 		colnames(rdat) <- c('residuals',reg_indep_var)
 		for(i in reg_indep_var) {
-			if('factor' %in% class(dat[,i])) {
-				plots[[i]] <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_boxplot(fill = 'blue', alpha = .3)
+			if('factor' %in% class(result$dat[,i])) {
+				plots[[i]] <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_boxplot(fill = 'blue', alpha = .7)
 			} else {
 				p <- ggplot(rdat, aes_string(x=i, y="residuals")) + geom_point()
         if("line" %in% result$reg_lines) p <- p + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75,
@@ -471,7 +470,7 @@ plot.regression <- function(result) {
 	}
 
 	if(result$reg_plots == "leverage") {
-		return(leveragePlots(result$mod, main = "", ask=FALSE, id.n = 1, layout = c(ceiling(length(reg_indep_var)/2),2)))
+		return(leveragePlots(result$model, main = "", ask=FALSE, id.n = 1, layout = c(ceiling(length(reg_indep_var)/2),2)))
 	}
 
   if(result$reg_plots == "coef") {

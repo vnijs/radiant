@@ -36,17 +36,21 @@ output$uiTr_reorg_levs <- renderUI({
 
 # standardize variable
 st <- function(x) {
-	if(is.factor(x)) return(rescale(x))
-	if(is.numeric(x)) return(as.numeric(scale(x)))
-	x
+	# if(is.factor(x)) return(rescale(x))
+	# if(is.numeric(x)) return(as.numeric(scale(x)))
+	if(x %>% is.numeric) scale(x) else x
 }
 
 # center variable
 cent <- function(x) {
-	if(is.factor(x)) return(rescale(x))
-	if(is.numeric(x)) return(x - mean(x, na.rm = TRUE))
-	x
+	# if(is.factor(x)) return(rescale(x))
+	if(x %>% is.numeric) { x - mean(x, na.rm = TRUE) } else x
 }
+
+# cent(mtcars$mpg) %>% sd
+# st(mtcars$mpg) %>% sd
+# cent(mtcars$mpg) %>% mean
+# st(mtcars$mpg) %>% mean
 
 # median split
 msp <- function(x) cut(x, breaks = quantile(x,c(0,.5,1)),
@@ -386,6 +390,26 @@ output$transform_summary <- renderPrint({
 		cat("\n")
 	}
 })
+
+
+# observe({
+# 		# reset to original value when type is change
+# 		if(input$tr_changeType %>% is_empty('none')) return()
+# 		isolate({
+# 			# reset input values once the changes have been applied
+# 			updateTextInput(session = session, inputId = "tr_transform", value = "")
+# 		 	updateTextInput(session = session, inputId = "tr_recode", value = "")
+# 		 	updateTextInput(session = session, inputId = "tr_create", value = "")
+# 		 	updateTextInput(session = session, inputId = "tr_rename", value = "")
+# 		 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
+# 		 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
+# 			updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
+# 	    updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
+
+# 		})
+
+# })
+
 
 observe({
 	if(is.null(input$tr_save_changes) || input$tr_save_changes == 0) return()
