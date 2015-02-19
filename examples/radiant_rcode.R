@@ -29,3 +29,17 @@ plot(result)
 # should produce an error because no dataset with that name exists
 result <- try(compare_means("no_dat", "cyl", "mpg"), silent = TRUE)
 if(is(result, 'try-error')) print("Error produced as expected")
+
+# regression
+result <- regression("diamonds", "price", c("carat","clarity"), reg_plot = c("coef"))
+summary(result)
+plot(result)
+result <- regression("diamonds", "price", c("carat","clarity"), reg_plot = c("dashboard"))
+plot(result)
+?regression
+
+
+
+
+
+
