@@ -1,7 +1,31 @@
-################################################################
-# Generalized Linear Models
-################################################################
+#' Generalized linear models (GLM)
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+#'
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param glm_dep_var The dependent variable in the regression
+#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param glm_indep_var Independent variables in the regression
+#' @param glm_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
+#' @param glm_int_var Interaction term to include in the model
+#' @param glm_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.
+#' @param glm_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
+#' @param glm_predict_cmd Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predicitions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was likely invalid. Try entering the same expression in the R(studio) console to debug the command
+#' @param glm_predict_data Generate predictions by specifying the name of a dataset (e.g., "diamonds"). The dataset must have all columns used in model estimation
+#' @param glm_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the regression model
+#' @param glm_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default)
+#' @param glm_plots Regression plots to produce for the specified regression model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix of all variables in the data. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
+#' @param glm_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
 
+#' @return A list with all variables defined in the function as an object of class glm_reg
+#'
+#' @examples
+#' result <- glm_reg("titanic", "survived", c("pclass","sex"))
+#'
+#' @seealso \code{\link{summary.glm_reg}} to summarize results
+#' @seealso \code{\link{plot.glm_reg}} to plot results
+#'
+#' @export
 glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                 data_filter = "",
                 glm_test_var = "",
@@ -119,6 +143,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 # summary(result)
 # plot(result)
 
+#' @export
 summary.glm_reg <- function(result) {
 
 	if(class(result$model)[1] != 'glm') return(result)
@@ -149,7 +174,7 @@ summary.glm_reg <- function(result) {
 
   cat("\nPseudo R-squared:", glm_fit$r2)
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
-  cat(paste0("\nChi-statistic: ", with(glm_fit, null.deviance - deviance), " df(",
+  cat(paste0("\nChi-statistic: ", with(glm_fit, null.deviance - deviance) %>% round(3), " df(",
          with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
   cat("Nr obs: ", nrow(result$dat), "\n\n")
 
@@ -178,6 +203,25 @@ summary.glm_reg <- function(result) {
     }
   }
 
+  if("vif" %in% result$glm_check) {
+    if(result$model$coeff %>% is.na %>% any) {
+      cat("The set of independent variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+    } else {
+      if(length(result$glm_indep_var) > 1) {
+        cat("Variance Inflation Factors\n")
+        vif(result$model) %>%
+          { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+          data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
+          round(3) %>%
+          .[order(.$VIF, decreasing=T),] %>%
+          { if(nrow(.) < 8) t(.) else . } %>% print
+      } else {
+        cat("Insufficient number of independent variables selected to calculate\nmulti-collinearity diagnostics")
+      }
+    }
+    cat("\n")
+  }
+
 	if(result$glm_test_var != "") {
 		sub_formula <- ". ~ 1"
 		vars <- result$glm_indep_var
@@ -199,6 +243,7 @@ summary.glm_reg <- function(result) {
 	}
 }
 
+#' @export
 plot.glm_reg <- function(result) {
 
 	if(class(result$model)[1] != 'glm') return(result)

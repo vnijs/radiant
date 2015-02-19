@@ -37,6 +37,7 @@ output$ui_reg_dep_var <- renderUI({
 output$ui_reg_indep_var <- renderUI({
 	notChar <- "character" != getdata_class()
   vars <- varnames()[notChar]
+  if(input$reg_dep_var %>% not_available) vars <- character(0)
   if(length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]
   selectInput(inputId = "reg_indep_var", label = "Independent variables:", choices = vars,
     # the reference to reg_indep_var below should help ensure that variables
@@ -48,15 +49,19 @@ output$ui_reg_indep_var <- renderUI({
 
 output$ui_reg_test_var <- renderUI({
 	if(input$reg_indep_var %>% not_available) return()
-  vars <- varnames()
- 	vars <- vars[which(vars %in% input$reg_indep_var)]
+  # vars <- varnames()
+ 	# vars <- vars[which(vars %in% input$reg_indep_var)]
+  # vars <- varnames() %>% .[which(. %in% c("a","b"))]
+    # vars <- c(vars,input$reg_int_var)
+  vars <- input$reg_indep_var
 
   # adding interaction terms as needed
 	if(!is.null(input$reg_int_var) && input$reg_interactions != '')
-		vars <- c(vars,input$reg_int_var)
+		vars <- c(input$reg_indep_var, input$reg_int_var)
 
-  selectizeInput(inputId = "reg_test_var", label = "Variables to test:", choices = vars,
-  	selected = state_multiple("reg_test_var", vars), multiple = TRUE,
+  selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
+    choices = vars, selected = state_multiple("reg_test_var", vars),
+    multiple = TRUE,
     options = list(placeholder = 'None', plugins = list('remove_button'))
   )
 })
@@ -72,20 +77,21 @@ output$ui_reg_interactions <- renderUI({
  })
 
 # create vector of possible interaction terms to select
-reg_int_vec <- function(reg_vars, nway) {
-  if(nway == "") return(character(0))
-  int_vec <- c()
-  for(i in 2:nway) {
-    int_vec %<>% {c(., combn(reg_vars, i) %>% apply( 2, paste, collapse = ":" ))}
-  }
-  int_vec
-}
+
+# int_vec <- function(reg_vars, nway) {
+#   if(nway == "") return(character(0))
+#   int_vec <- c()
+#   for(i in 2:nway) {
+#     int_vec %<>% {c(., combn(reg_vars, i) %>% apply( 2, paste, collapse = ":" ))}
+#   }
+#   int_vec
+# }
 
 output$ui_reg_int_var <- renderUI({
 	if(input$reg_interactions %>% is_empty) return()
   vars <- input$reg_indep_var
 	if(vars %>% not_available || length(vars) < 2) return()
- 	choices <- reg_int_vec(vars, input$reg_interactions)
+ 	choices <- int_vec(vars, input$reg_interactions)
 	selectInput("reg_int_var", label = NULL, choices = choices,
   	selected = state_multiple("reg_int_var", choices),
   	multiple = TRUE, selectize = FALSE)
@@ -137,17 +143,13 @@ output$ui_regression <- renderUI({
  					             max = 0.99, value = state_init("reg_conf_level",.95),
  					             step = 0.01)
 		  ), br(),
-		  actionButton("saveres", "Save residuals")
+		  actionButton("reg_saveres", "Save residuals")
 	  ),
   	help_and_report(modal_title = "Linear regression (OLS)",
   	                fun_name = "regression",
   	                help_file = inclRmd("../quant/tools/help/regression.Rmd"))
 	)
 })
-
-# conditionalPanel(condition = "input.reg_confint == true | input.reg_predict != 'none'",
-# conditionalPanel(condition = "input.reg_predict != 'none'",
-# conditionalPanel(condition = "input.reg_check.contains('confint')",
 
 reg_plot_width <- function() {
 	.regression() %>%
@@ -204,10 +206,10 @@ observe({
 })
 
 observe({
-	if(input$saveres %>% not_pressed) return()
+	if(input$reg_saveres %>% not_pressed) return()
 	isolate({
 		result <- .regression()
 		if(result %>% is.character) return()
-		result$mod$residuals %>% data.frame %>% changedata('residuals')
+		result$model$residuals %>% data.frame %>% changedata("residuals")
 	})
 })
