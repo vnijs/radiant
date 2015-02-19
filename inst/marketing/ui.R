@@ -20,7 +20,8 @@ shinyUI(
 
   navbarMenu("Regression",
     tabPanel("Correlation", uiOutput("correlation")),
-    tabPanel("Linear (OLS)", uiOutput("regression"))
+    tabPanel("Linear (OLS)", uiOutput("regression")),
+    tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
   navbarMenu("Maps",

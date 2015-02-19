@@ -1,115 +1,197 @@
-# glm_link <- c("Logit" = "logit", "Probit" = "probit")
-# glm_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
-# glm_predict <- c("None" = "", "Data" = "data","Command" = "cmd")
-# glm_check <- c("VIF" = "vif", "Confidence intervals" = "confint",
-#                "Standardized coefficients" = "standardize",
-#                "Stepwise selection" = "stepwise")
-
-# glm_int_vec <- reg_int_vec
-
-# # list of function arguments
-# glm_args <- as.list(formals(glm_reg))
-
-# # list of function inputs selected by user
-# glm_inputs <- reactive({
-#   # loop needed because reactive values don't allow single bracket indexing
-#   for(i in names(glm_args))
-#     glm_args[[i]] <- input[[i]]
-#   if(!input$show_filter) glm_args$data_filter = ""
-#   glm_args
-# })
+glm_link <- c("Logit" = "logit", "Probit" = "probit")
+glm_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
+glm_predict <- c("None" = "", "Data" = "data","Command" = "cmd")
+glm_check <- c("VIF" = "vif", "Confidence intervals" = "confint", "Odds" = "odds",
+               "Standardized coefficients" = "standardize",
+               "Stepwise selection" = "stepwise")
+glm_plots <- list("None" = "", "Histograms" = "hist",
+                  "Scatter" = "scatter", "Dashboard" = "dashboard",
+                  "Coefficient plot" = "coef")
 
 
-# # ################################################################
-# # # Generalized Linear Models
-# # ################################################################
+# list of function arguments
+glm_args <- as.list(formals(glm_reg))
 
-# output$uiGlm_var1 <- renderUI({
-# 	isFct <- "factor" == getdata_class()
-#  	vars <- varnames()[isFct]
-#  	if(length(vars) == 0) return()
-#   selectInput(inputId = "glm_var1", label = "Dependent variable:", choices = vars,
-#    	selected = names(vars[vars == values$glm_var1]), multiple = FALSE)
-# })
+# list of function inputs selected by user
+glm_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(glm_args))
+    glm_args[[i]] <- input[[i]]
+  if(!input$show_filter) glm_args$data_filter = ""
+  glm_args
+})
 
-# output$uiGlm_var2 <- renderUI({
-# 	vars <- varnames()
-#  	vars <- vars[-which(vars == input$glm_var1)]
-#   if(length(vars) == 0) return()
-#   selectInput(inputId = "glm_var2", label = "Independent variables:", choices = vars,
-#    	selected = names(vars[vars %in% values$glm_var2]), multiple = TRUE)
-# })
+output$ui_glm_dep_var <- renderUI({
+ 	vars <- two_level_vars()
+  selectInput(inputId = "glm_dep_var", label = "Dependent variable:", choices = vars,
+  	selected = state_single("glm_dep_var",vars), multiple = FALSE)
+})
 
-# output$uiGlm_var3 <- renderUI({
-#   vars <- input$glm_var2
-#   if(is.null(vars)) return()
-# 	if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
-#   selectInput(inputId = "glm_var3", label = "Variables to test:", choices = vars,
-#    	selected = values$glm_var2, multiple = TRUE)
-# })
+output$ui_glm_indep_var <- renderUI({
+	notChar <- "character" != getdata_class()
+  vars <- varnames()[notChar]
+  if(input$glm_dep_var %>% not_available) vars <- character(0)
+  if(length(vars) > 0 ) vars <- vars[-which(vars == input$glm_dep_var)]
+  selectInput(inputId = "glm_indep_var", label = "Independent variables:", choices = vars,
+  	selected = state_multiple("glm_indep_var", vars),
+  	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
+})
 
-# output$uiGlm_intsel <- renderUI({
-#   vars <- input$glm_var2
-#   if(is.null(vars) || length(vars) < 2) return()
-#  	if(vars %in% varnames()) vars <- glm_int_vec(vars,input$glm_interactions)
+output$ui_glm_test_var <- renderUI({
+	if(input$glm_indep_var %>% not_available) return()
 
-# 	selectInput("glm_intsel", label = "", choices = vars,
-#    	selected = values$glm_intsel, multiple = TRUE)
-# })
+ 	vars <- input$glm_indep_var
+	if(!is.null(input$glm_int_var) && input$glm_interactions != '')
+		vars <- c(vars,input$glm_int_var)
 
-# ui_glmreg <- function() {
-#   list(wellPanel(
-#     radioButtons(inputId = "glm_linkfunc", label = "", glm_linkfunc,
-#     	selected = values$glm_linkfunc),
-#     # radioButtons(inputId = "glm_glmtype", label = "", c("GLM" = "glm", "Bayes GLM" = "bayesglm"), selected = "GLM"),
-#     uiOutput("uiGlm_var1"),
-#     uiOutput("uiGlm_var2"),
-#  	  checkboxInput(inputId = "glm_standardize", label = "Standardized coefficients",
-#  	  	value = values$glm_standardize),
-#     radioButtons(inputId = "glm_interactions", label = "Interactions:", glm_interactions,
-#     	selected = values$glm_interactions),
-#     conditionalPanel(condition = "input.glm_interactions != 'none'",
-#   		uiOutput("uiGlm_intsel")
-#   	),
-#     conditionalPanel(condition = "input.analysistabs == 'Summary'",
-# 	    uiOutput("uiGlm_var3")
-#   	),
-#     conditionalPanel(condition = "input.analysistabs == 'Plots'",
-#       selectInput("glm_plots", "Plots:", choices = g_plots,
-#       	selected = values$glm_plots, multiple = FALSE)
-#     actionButton("saveglmres", "Save residuals")
-#   	),
-# 		helpModal('Generalized Linear Models (GLM)','glmreg',includeHTML("tools/help/glmreg.html"))
-# 	)
-# }
+  selectizeInput(inputId = "glm_test_var", label = "Variables to test:",
+    choices = vars, selected = state_multiple("glm_test_var", vars),
+    multiple = TRUE,
+    options = list(placeholder = 'None', plugins = list('remove_button'))
+  )
+})
 
-# # # analysis reactive
-# # .glmreg <- reactive({
+output$ui_glm_interactions <- renderUI({
+	if(input$glm_indep_var %>% not_available) return()
+ 	sel <- ""
+ 	if(length(input$glm_indep_var) > 1)
+ 		sel <- state_init("glm_interactions")
 
-# # 	ret_text <- "This analysis requires a dependent variable of type factor\nand one or more independent variables.\nPlease select another dataset."
-# # 	if(is.null(input$glm_var1)) return(ret_text)
-# # 	vars <- input$glm_var2
-# # 	if(is.null(vars)) return("Please select one or more independent variables.")
-# # 	if(is.null(inChecker(c(input$glm_var1, vars)))) return(ret_text)
+  radioButtons(inputId = "glm_interactions", label = "Interactions:", glm_interactions,
+  	selected = sel, inline = TRUE)
+ })
 
-# # 		# call function
+# create vector of possible interaction terms
+int_vec <- function(vars, nway) {
+  if(nway == "") return(character(0))
+  int_vec <- c()
+  for(i in 2:nway) {
+    int_vec %<>% {c(., combn(vars, i) %>% apply( 2, paste, collapse = ":" ))}
+  }
+  int_vec
+}
 
-# # })
+output$ui_glm_int_var <- renderUI({
+	if(input$glm_interactions %>% is_empty) return()
+  vars <- input$glm_indep_var
+	if(vars %>% not_available || length(vars) < 2) return()
+ 	choices <- int_vec(vars, input$glm_interactions)
+	selectInput("glm_int_var", label = NULL, choices = choices,
+  	selected = state_multiple("glm_int_var", choices),
+  	multiple = TRUE, selectize = FALSE)
+})
 
-# observe({
-#   if(input$save_glm_res %>% not_pressed) return()
-#   isolate({
-#     result <- .glm()
-#     if(result %>% is.character) return()
-#     result$mod$residuals %>% data.frame %>% changedata('residuals')
-#   })
-# })
+output$ui_glm_reg <- renderUI({
+  tagList(
+  	wellPanel(
+    	radioButtons(inputId = "glm_link", label = NULL, glm_link,
+    		selected = state_init("glm_link","logit"), inline = TRUE),
+		  conditionalPanel(condition = "input.tabs_regression == 'Plot'",
+		    selectInput("glm_plots", "GLM plots:", choices = glm_plots,
+			  	selected = state_single("glm_plots", glm_plots)),
+		  	conditionalPanel(condition = "input.glm_plots == 'coef'",
+        	checkboxInput("glm_coef_int", "Include intercept", state_init("glm_coef_int", FALSE))
+        )
+		  ),
+	    uiOutput("ui_glm_dep_var"),
+	    uiOutput("ui_glm_indep_var"),
+			# uiOutput("ui_glm_interactions"),
+		 #  conditionalPanel(condition = "input.glm_interactions != ''",
+			# 	uiOutput("ui_glm_int_var")
+			# ),
+		  conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
+   	    radioButtons(inputId = "glm_predict", label = "Prediction:", glm_predict,
+	      	selected = state_init("glm_predict", ""),
+	      	inline = TRUE),
 
-# # # save residuals
-# # observe({
-# # 	if(is.null(input$saveglmres) || input$saveglmres == 0) return()
-# # 	isolate({
-# # 		if(is.character(glmreg())) return()
-# # 		changedata(data.frame(residuals(glmreg())), "residuals")
-# #  	})
-# # })
+        conditionalPanel(condition = "input.glm_predict == 'cmd'",
+          returnTextAreaInput("glm_predict_cmd", "Prediction command:",
+	    		  value = state_init("glm_predict_cmd"))
+        ),
+        conditionalPanel(condition = "input.glm_predict == 'data'",
+          selectizeInput(inputId = "glm_predict_data", label = "Predict for profiles:",
+                      choices = c("None" = "",r_data$datasetlist),
+                      selected = state_init("glm_predict_data"), multiple = FALSE)
+        ),
+		    uiOutput("ui_glm_test_var"),
+        checkboxGroupInput("glm_check", NULL, glm_check,
+          selected = state_init("glm_check"), inline = TRUE)
+			),
+	    conditionalPanel(condition = "input.glm_predict != '' |
+	                     input.glm_check.indexOf('confint') >= 0 |
+	                     input.glm_plots == 'coef'",
+ 					 sliderInput("glm_conf_level", "Adjust confidence level:", min = 0.70,
+ 					             max = 0.99, value = state_init("glm_conf_level",.95),
+ 					             step = 0.01)
+		  ), br(),
+		  actionButton("glm_saveres", "Save residuals")
+	  ),
+  	help_and_report(modal_title = "GLM",
+  	                fun_name = "glm_reg",
+  	                help_file = inclRmd("../quant/tools/help/glm_reg.md"))
+	)
+})
+
+glm_plot_width <- function() {
+	.glm_reg() %>%
+  { if(class(.)[1] == "character") 650 else .$plot_width }
+}
+
+glm_plot_height <- function() {
+  .glm_reg() %>%
+  { if(class(.)[1] == "character") 500 else .$plot_height }
+}
+
+# output is called from the main radiant ui.R
+output$glm_reg <- renderUI({
+
+		register_print_output("summary_glm_reg", ".glm_reg")
+		register_plot_output("plot_glm_reg", ".glm_reg",
+                         height_fun = "glm_plot_height",
+                         width_fun = "glm_plot_width")
+
+		# two separate tabs
+		glm_output_panels <- tabsetPanel(
+	    id = "tabs_glm_reg",
+	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg")),
+	    tabPanel("Plot", plotOutput("plot_glm_reg", width = "100%", height = "100%"))
+	  )
+
+		statTabPanel2(menu = "Regression",
+		              tool = "GLM",
+		              tool_ui = "ui_glm_reg",
+		             	output_panels = glm_output_panels)
+
+})
+
+.glm_reg <- reactive({
+	if(input$glm_dep_var %>% not_available)
+		return("This analysis requires a dependent variable with two levels and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("titanic"))
+
+	if(input$glm_indep_var %>% not_available)
+		return("Please select one or more independent variables.\n\n" %>% suggest_data("titanic"))
+
+	do.call(glm_reg, glm_inputs())
+})
+
+
+observe({
+  if(input$glm_reg_report %>% not_pressed) return()
+  isolate({
+		outputs <- c("summary","plot")
+  	if(reg_inputs()$glm_plots == "") outputs = c("summary")
+		update_report(inp = clean_args(glm_inputs(), reg_args), fun_name = "glm_reg",
+		              outputs = outputs,
+		              fig.width = round(7 * reg_plot_width()/650,2),
+		              fig.height = round(7 * reg_plot_height()/500,2))
+  })
+})
+
+observe({
+	if(input$glm_saveres %>% not_pressed) return()
+	isolate({
+		result <- .glm_reg()
+		if(result %>% is.character) return()
+		result$model$residuals %>% data.frame %>% changedata("residuals")
+	})
+})
