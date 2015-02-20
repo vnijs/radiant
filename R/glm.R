@@ -28,6 +28,7 @@
 #' @export
 glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                 data_filter = "",
+                glm_levels = "",
                 glm_test_var = "",
                 # glm_int_var = "",
                 # glm_interactions = "",
@@ -38,13 +39,13 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                 glm_check = "",
                 glm_conf_level = .95,
                 glm_plots = "",
-                glm_coef_int = FALSE,
-                glm_lines = "") {
+                glm_coef_int = FALSE) {
 
 # load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
 # dataset <- "titanic"
 # data_filter <- ""
 # glm_dep_var <- "survived"
+# glm_levels <- ""
 # glm_indep_var <- "pclass"
 # glm_link <- "logit"
 # glm_check <- "confint"
@@ -53,6 +54,22 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 
 	vars <- glm_indep_var
 	dat <- getdata_exp(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
+
+  # levs <- levels(dat[,glm_dep_var])
+  # if(glm_levels != "") {
+  #   if(glm_levels %in% levs && levs[1] != glm_levels) {
+  #     dat[,glm_dep_var] %<>% as.character %>% as.factor %>% relevel(glm_levels)
+  #     levs <- levels(dat[,glm_dep_var])
+  #   }
+  # }
+  # glm_levels <- levels(dat[,glm_dep_var])[1]
+
+  if(glm_levels == "")
+    glm_levels <- dat[,glm_dep_var] %>% as.character %>% as.factor %>% levels(.) %>% .[1]
+
+  # transformation
+  glm_dv <- dat[,glm_dep_var]
+  dat[,glm_dep_var] <- dat[,glm_dep_var] == glm_levels
 
 	# if(input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
 
@@ -108,7 +125,13 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 	plot_height <- 500
 	plot_width <- 650
 
-	if(glm_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
+  # if(glm_plots %in% c('hist','scatter')) plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
+  if(glm_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
+  if(glm_plots == 'scatter') plot_height <- 300 * nrVars
+  # if(glm_plots == 'scatter') {
+  #   plot_height <- 300 * nrVars
+  #   plot_width <- 450
+  # }
   if(glm_plots == 'coef') plot_height <- 300 + 20 * length(model$coefficients)
 
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
@@ -122,21 +145,31 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 # options(max.print = 100)
 # source("~/gh/radiant_dev/R/radiant.R")
 # load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+
 # titanic.est <- titanic %>%
 #   filter(!age=='NA') %>%
 #   mutate(age.f=cut(age,breaks=c(0,20,30,40,50,60,100)))
 
 # dataset <- "titanic.est"
 # data_filter <- ""
-# glm_dep_var <- "survived"
 # glm_indep_var <- c("pclass","sex","age.f")
 # glm_link <- "logit"
-# # glm_check <- "confint"
+# glm_check <- "confint"
 # glm_check <- "odds"
 # glm_conf_level = .95
 # glm_plots = "dashboard"
 # glm_coef_int = TRUE
-# glm_test_var = "age.f"
+# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_test_var = glm_test_var)
+# result <- glm_reg(dataset, glm_dep_var, glm_indep_var)
+
+# dataset <- "titanic"
+# glm_dep_var <- "survived"
+# glm_indep_var <- c("pclass","sex","age")
+# glm_test_var <- "age"
+# glm_link <- "logit"
+# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_link = glm_link, glm_test_var = glm_test_var)
+# result <- glm_reg(dataset = "titanic", glm_dep_var = "survived", glm_indep_var = c("pclass", "sex", "age"), glm_levels = "Yes", glm_test_var = "pclass")
+# summary(result)
 
 # result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_check = glm_check, glm_plots = glm_plots,
 #                   glm_coef_int = glm_coef_int, glm_test_var = glm_test_var)
@@ -154,6 +187,7 @@ summary.glm_reg <- function(result) {
   if(result$data_filter %>% gsub("\\s","",.) != "")
     cat("\nFilter       :", gsub("\\n","", result$data_filter))
   cat("\nDependent variable   :", result$glm_dep_var)
+  cat("\nLevel                :", result$glm_levels, "in", result$glm_dep_var)
   cat("\nIndependent variables:", paste0(result$glm_indep_var, collapse=", "))
   if("standardize" %in% result$glm_check)
  		cat("\nStandardized coefficients shown")
@@ -174,7 +208,7 @@ summary.glm_reg <- function(result) {
 
   cat("\nPseudo R-squared:", glm_fit$r2)
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
-  cat(paste0("\nChi-statistic: ", with(glm_fit, null.deviance - deviance) %>% round(3), " df(",
+  cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(3), " df(",
          with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
   cat("Nr obs: ", nrow(result$dat), "\n\n")
 
@@ -222,21 +256,24 @@ summary.glm_reg <- function(result) {
     cat("\n")
   }
 
-	if(result$glm_test_var != "") {
-		sub_formula <- ". ~ 1"
+	if(result$glm_test_var[1] != "") {
+    sub_formula <- paste(result$glm_dep_var, "~ 1")
 		vars <- result$glm_indep_var
 
 		# if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
 
 		not_selected <- setdiff(vars, result$glm_test_var)
-		if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
-		glm_sub <- update(result$model, sub_formula, data = result$dat)
+		# if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
+    if(length(not_selected) > 0) sub_formula <- paste(result$glm_dep_var, "~", paste(not_selected, collapse = " + "))
+    #### glm_sub NOT working when called from radiant!!
+		# glm_sub <- update(result$model, sub_formula, data = result$dat)
+    glm_sub <- glm(sub_formula, family = binomial(link = result$glm_link), data = result$dat)
 		glm_sub_fit <- glance(glm_sub)
 		glm_sub <- anova(glm_sub, result$model, test='Chi')
 
 		# pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
 		glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
-		glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if(. <- .001) "< .001" else round(.3) }
+		glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if(. < .001) "< .001" else round(.3) }
 		cat(attr(glm_sub,"heading")[2])
 		cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
 		cat(paste0("\nChi-statistic: ", glm_sub$Deviance[2] %>% round(3), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
@@ -257,18 +294,24 @@ plot.glm_reg <- function(result) {
 
 	model <- ggplot2::fortify(result$model)
 	model$.fitted <- predict(result$model, type = 'response')
-	model$.actual <- as.numeric(model[,1])
+	# model$.actual <- as.numeric(model[,1])
+  model$.actual <- as.numeric(result$glm_dv)
 	model$.actual <- model$.actual - max(model$.actual) + 1 	# adjustment in case max > 1
 
-	vars <- as.character(attr(result$model$terms,'variables'))[-1]
-	glm_dep_var <- vars[1]
-	glm_indep_var <- vars[-1]
+	# vars <- as.character(attr(result$model$terms,'variables'))[-1]
+	# glm_dep_var <- vars[1]
+	# glm_indep_var <- vars[-1]
+  glm_dep_var <- result$glm_dep_var
+  glm_indep_var <- result$glm_indep_var
+
+  result$dat[,glm_dep_var] <- result$glm_dv
+
+  vars <- c(result$glm_dep_var, result$glm_indep_var)
 	nrCol <- 2
 	plots <- list()
 
 	if(result$glm_plots == "hist") {
 
-		plots <- list()
 		for(i in vars) plots[[i]] <- ggplot(result$dat, aes_string(x = i)) + geom_histogram()
 
 	} else if(result$glm_plots == "coef") {
@@ -282,11 +325,10 @@ plot.glm_reg <- function(result) {
   } else if (result$glm_plots == "scatter") {
 		for(i in glm_indep_var) {
 			if('factor' %in% class(result$dat[,i])) {
-				# plots[[i]] <- ggplot(result$dat, aes_string(x=i, y=glm_dep_var, fill=i)) + geom_boxplot(alpha = .3)
         plots[[i]] <- ggplot(result$dat, aes_string(x=i, fill=glm_dep_var)) + geom_bar(position = "fill", alpha=.7) +
               labs(list(y = ""))
 			} else {
-				plots[[i]] <- ggplot(result$dat, aes_string(x=i, y=glm_dep_var, fill=i)) + geom_boxplot(alpha = .3)
+        plots[[i]] <- ggplot(result$dat, aes_string(x=glm_dep_var, y=i, fill=glm_dep_var)) + geom_boxplot(alpha = .7)
 			}
 		}
 		nrCol <- 1
@@ -308,7 +350,7 @@ plot.glm_reg <- function(result) {
   		labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
 	}
 
-	if(exists("plots")) sshh( do.call(grid.arrange, c(plots, list(ncol = nrCol))) )
+	if(length(plots) > 0) sshh( do.call(grid.arrange, c(plots, list(ncol = nrCol))) )
 }
 
 
