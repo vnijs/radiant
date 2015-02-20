@@ -129,8 +129,8 @@ output$ui_glm_reg <- renderUI({
         checkboxGroupInput("glm_check", NULL, glm_check,
           selected = state_init("glm_check"), inline = TRUE)
 			),
-	    conditionalPanel(condition = "input.glm_predict != '' |
-	                     input.glm_check.indexOf('confint') >= 0 |
+	    # conditionalPanel(condition = "input.glm_predict != '' |
+	    conditionalPanel(condition = "input.glm_check.indexOf('confint') >= 0 |
 	                     input.glm_plots == 'coef'",
  					 sliderInput("glm_conf_level", "Adjust confidence level:", min = 0.70,
  					             max = 0.99, value = state_init("glm_conf_level",.95),
