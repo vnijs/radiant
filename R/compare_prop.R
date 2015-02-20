@@ -43,7 +43,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 
 	levs <- levels(dat[,cp_var2])
 	if(cp_levels != "") {
-		levs <- levels(dat[,cp_var2])
+		# levs <- levels(dat[,cp_var2])
 		if(cp_levels %in% levs && levs[1] != cp_levels) {
 			dat[,cp_var2] %<>% as.character %>% as.factor %>% relevel(cp_levels)
 			levs <- levels(dat[,cp_var2])
@@ -145,7 +145,8 @@ summary.compare_props <- function(result) {
 	cat("Data     :", result$dataset, "\n")
 	if(result$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variables:", result$vars, "\n\n")
+	cat("Variables:", result$vars, "\n")
+	cat("Level    :", result$cp_levels, "in", result$cp_var2, "\n\n")
 
   result$dat_summary[,-1] %<>% round(3)
   print(result$dat_summary %>% as.data.frame, row.names = FALSE)

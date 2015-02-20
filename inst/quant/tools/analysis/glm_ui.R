@@ -81,12 +81,23 @@ output$ui_glm_int_var <- renderUI({
   	multiple = TRUE, selectize = FALSE)
 })
 
+output$ui_glm_levels <- renderUI({
+  if(input$glm_dep_var %>% not_available)
+    levs <- c()
+  else
+    levs <- getdata()[1,input$glm_dep_var] %>% as.factor %>% levels
+
+  selectInput(inputId = "glm_levels", label = "Choose level:",
+              choices = levs,
+              selected = state_single("glm_levels",levs), multiple = FALSE)
+})
+
 output$ui_glm_reg <- renderUI({
   tagList(
   	wellPanel(
     	radioButtons(inputId = "glm_link", label = NULL, glm_link,
     		selected = state_init("glm_link","logit"), inline = TRUE),
-		  conditionalPanel(condition = "input.tabs_regression == 'Plot'",
+		  conditionalPanel(condition = "input.tabs_glm_reg == 'Plot'",
 		    selectInput("glm_plots", "GLM plots:", choices = glm_plots,
 			  	selected = state_single("glm_plots", glm_plots)),
 		  	conditionalPanel(condition = "input.glm_plots == 'coef'",
@@ -94,6 +105,7 @@ output$ui_glm_reg <- renderUI({
         )
 		  ),
 	    uiOutput("ui_glm_dep_var"),
+      uiOutput("ui_glm_levels"),
 	    uiOutput("ui_glm_indep_var"),
 			# uiOutput("ui_glm_interactions"),
 		 #  conditionalPanel(condition = "input.glm_interactions != ''",
@@ -128,7 +140,7 @@ output$ui_glm_reg <- renderUI({
 	  ),
   	help_and_report(modal_title = "GLM",
   	                fun_name = "glm_reg",
-  	                help_file = inclRmd("../quant/tools/help/glm_reg.md"))
+  	                help_file = inclMD("../quant/tools/help/glm_reg.md"))
 	)
 })
 
@@ -179,11 +191,11 @@ observe({
   if(input$glm_reg_report %>% not_pressed) return()
   isolate({
 		outputs <- c("summary","plot")
-  	if(reg_inputs()$glm_plots == "") outputs = c("summary")
-		update_report(inp = clean_args(glm_inputs(), reg_args), fun_name = "glm_reg",
+  	if(glm_inputs()$glm_plots == "") outputs = c("summary")
+		update_report(inp = clean_args(glm_inputs(), glm_args), fun_name = "glm_reg",
 		              outputs = outputs,
-		              fig.width = round(7 * reg_plot_width()/650,2),
-		              fig.height = round(7 * reg_plot_height()/500,2))
+		              fig.width = round(7 * glm_plot_width()/650,2),
+		              fig.height = round(7 * glm_plot_height()/500,2))
   })
 })
 

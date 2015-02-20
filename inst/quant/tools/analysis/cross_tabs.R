@@ -4,16 +4,17 @@ base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than"
 ###############################
 # Cross-tabs
 ###############################
-output$uiCt_var1 <- renderUI({
+output$ui_ct_var1 <- renderUI({
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
   selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
   	selected = state_single("ct_var1",vars), multiple = FALSE)
 })
 
-output$uiCt_var2 <- renderUI({
+output$ui_ct_var2 <- renderUI({
 	isFct <- "factor" == getdata_class()
   vars <- varnames()[isFct]
+  if(input$ct_var1 %>% not_available) vars <- character(0)
   if(length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
   	selected = state_single("ct_var2",vars), multiple = FALSE)
@@ -22,14 +23,14 @@ output$uiCt_var2 <- renderUI({
 output$ui_crosstab <- renderUI({
   list(
   	wellPanel(
-	    uiOutput("uiCt_var1"),
-	    uiOutput("uiCt_var2"),
+	    uiOutput("ui_ct_var1"),
+	    uiOutput("ui_ct_var2"),
 		  checkboxInput("ct_observed", label = "Observed values",
 	     	value = state_init("ct_observed",TRUE)),
 		  checkboxInput("ct_expected", label = "Expected values",
 	     	value = state_init("ct_expected",FALSE)),
 	    conditionalPanel(condition = "input.tabs_crosstab == 'Summary'",
-			  checkboxInput("ct_contrib", label = "Contribution to chisquare value",
+			  checkboxInput("ct_contrib", label = "Difference (o - e)^2 / e",
 	     	value = state_init("ct_contrib",FALSE))),
 		  checkboxInput("ct_std_residuals", label = "Deviation (standarized)",
 	     	value = state_init("ct_std_residuals",FALSE)),
@@ -40,15 +41,11 @@ output$ui_crosstab <- renderUI({
   )
 })
 
-ct_plotWidth <- function() {
-	result <- .crosstab()
-	ifelse(is.list(result), return(result$plotWidth), return(650))
-}
+ct_plotWidth <- function()
+	.crosstab() %>% { if(is.list(.)) .$plotWidth else 650 }
 
-ct_plotHeight <- function() {
-	result <- .crosstab()
-	ifelse(is.list(result), return(result$plotHeight), return(650))
-}
+ct_plotHeight <- function()
+	.crosstab() %>% { if(is.list(.)) .$plotHeight else 650 }
 
 output$crosstab <- renderUI({
 	# for input-output
@@ -85,7 +82,7 @@ crosstab <- function(dataset, ct_var1, ct_var2,
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
 	cst <- suppressWarnings( chisq.test(tab, correct = FALSE) )
 
-	# dat no longer needed
+	# dat not needed in summary or plot
 	rm(dat)
 
 	# adding the % deviation table
@@ -98,7 +95,6 @@ crosstab <- function(dataset, ct_var1, ct_var2,
 	plotHeight = 400 * nrPlot
 
   environment() %>% as.list %>% set_class(c("crosstab",class(.)))
-
 }
 
 # test
@@ -239,13 +235,9 @@ plots_crosstab <- function(result = .crosstab()) {
 		plots[['stacked']] <-
 		ggplot(tab, aes_string(x = result$ct_var1, y = "values", fill = result$ct_var2)) +
          			geom_bar(stat="identity", position = "fill", alpha = .7) +
-         			labs(list(title = paste("Expected values for ",result$ct_var2," versus ",result$ct_var1, sep = ""),
+         			labs(list(title = paste("Observed values for ",result$ct_var2," versus ",result$ct_var1, sep = ""),
 							x = "", y = "", fill = result$ct_var2))
 	}
-
-	# plots[['observed']] <- ggplot(result$dat, aes_string(x = ct_var1, fill = ct_var2)) + geom_histogram(position = "dodge", alpha=.3) +
-	# 	labs(list(title = paste("Crosstab of ",ct_var2," versus ",ct_var1, sep = ""),
-	# 			x = '', y = "Count", fill = ct_var2))
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }
