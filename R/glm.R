@@ -137,14 +137,47 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
 }
 
-# library(broom)
-# library(dplyr)
-# library(tidyr)
-# library(magrittr)
-# library(ggplot2)
-# options(max.print = 100)
-# source("~/gh/radiant_dev/R/radiant.R")
-# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+library(ggplot2)
+library(broom)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+options(max.print = 300)
+source("~/gh/radiant_dev/R/radiant.R")
+load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+
+
+glm_plots <- "prob"
+glm_prob_vars <- "pclass"
+
+dat <- ggplot2::fortify(result$model)
+vars <- as.character(attr(result$model$terms,'variables'))[-1]
+glm_dep_var <- vars[1]
+glm_indep_var <- vars[-1]
+dat <- dat[,glm_indep_var, drop = FALSE]
+nval <- levels(dat[,glm_prob_vars]) %>% data.frame %>% set_colnames(glm_prob_vars)
+
+isFct <- sapply(dat, is.factor)
+isNum <- sapply(dat, is.numeric)
+
+newdat <- ""
+if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+# from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+newdat
+
+
+newdat[names(nval)] <- list(NULL)
+nnd <- data.frame(newdat[-1],nval)
+nnd
+
+# pred <- try(predict(result$model, nnd, type = 'response', se.fit = TRUE), silent = TRUE)
+pred <- predict(result$model, nnd, type = 'response')
+nnd <- data.frame(nnd, pred, check.names = FALSE)
+
+
+
+
 
 # titanic.est <- titanic %>%
 #   filter(!age=='NA') %>%
@@ -167,8 +200,12 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 # glm_indep_var <- c("pclass","sex","age")
 # glm_test_var <- "age"
 # glm_link <- "logit"
+# glm_predict <- "cmd"
+# glm_predict_cmd <- "pclass = '1st'"
 # result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_link = glm_link, glm_test_var = glm_test_var)
 # result <- glm_reg(dataset = "titanic", glm_dep_var = "survived", glm_indep_var = c("pclass", "sex", "age"), glm_levels = "Yes", glm_test_var = "pclass")
+# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_predict = glm_predict,
+#                   glm_predict_cmd = glm_predict_cmd)
 # summary(result)
 
 # result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_check = glm_check, glm_plots = glm_plots,
@@ -278,6 +315,103 @@ summary.glm_reg <- function(result) {
 		cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
 		cat(paste0("\nChi-statistic: ", glm_sub$Deviance[2] %>% round(3), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
 	}
+
+  if(result$glm_predict != "") {
+
+    # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression
+    # as starting point
+    if("standardize" %in% result$glm_check) {
+      cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again")
+    } else if (result$glm_predict == "cmd" && result$glm_predict_cmd == "") {
+      cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predicitions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was likely invalid. Try entering\nthe same expression in the R(studio) console to debug the command")
+    } else if (result$glm_predict == "data" && result$glm_predict_data == "") {
+      cat("Please select a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant")
+    } else {
+
+      if(result$glm_predict == "cmd") {
+        glm_predict_cmd <- gsub("\"","\'", result$glm_predict_cmd)
+        nval <- try(eval(parse(text = paste0("data.frame(", glm_predict_cmd ,")"))), silent = TRUE)
+      } else {
+        nval <- getdata_exp(result$glm_predict_data)
+        nval_names <- names(nval)
+        vars <- as.character(attr(result$model$terms,'variables'))[-1]
+        nval <- try(select_(nval, .dots = vars[-1]), silent = TRUE)
+      }
+
+      if(is(nval, 'try-error')) {
+        if(result$glm_predict == "cmd") {
+          cat("The expression entered does not seem to be correct. Please try again.\n")
+          cat("Examples are shown in the helpfile.\n")
+        } else {
+          cat("The profiles to predict do not contain all variables that are in the model.\n")
+          cat("Add variables to the profiles data as needed.\n\n")
+          ivars <- vars[-1]
+          cat("Model variables: ")
+          cat(ivars,"\n")
+          cat("Profile variables to be added: ")
+          # nval_names <- names(r_data[[result$glm_predict_data]])
+          cat(ivars[!ivars %in% nval_names])
+        }
+      } else {
+
+        dat <- ggplot2::fortify(result$model)
+        vars <- as.character(attr(result$model$terms,'variables'))[-1]
+        glm_dep_var <- vars[1]
+        glm_indep_var <- vars[-1]
+        dat <- dat[,glm_indep_var, drop = FALSE]
+
+        isFct <- sapply(dat, is.factor)
+        isNum <- sapply(dat, is.numeric)
+
+        if(sum(isNum) + sum(isFct) < dim(dat)[2]) {
+          cat("The model includes data-types that cannot be used for\nprediction at this point\n")
+        } else {
+          newdat <- ""
+          if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+          # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+          if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+
+          # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
+          if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
+            cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
+          } else {
+            newdat[names(nval)] <- list(NULL)
+            nnd <- data.frame(newdat[-1],nval)
+            # pred <- try(predict(result$model, nnd, type = 'response', se.fit = TRUE), silent = TRUE)
+            pred <- try(predict(result$model, nnd, type = 'response'), silent = TRUE)
+
+            if(!is(pred, 'try-error')) {
+              if(result$glm_predict == "data") {
+                cat(paste0("Predicted values for profiles from dataset: ",result$glm_predict_data,"\n"))
+              } else {
+                cat("Predicted values for:\n")
+              }
+
+              # pred %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
+              # cl_split <- function(x) 100*(1-x)/2
+              # cl_split(result$glm_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
+              # (100 - cl_split(result$glm_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
+              # colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
+              nnd <- data.frame(nnd, pred, check.names = FALSE)
+
+              # pushing predictions into the clipboard
+              os_type <- .Platform$OS.type
+              if (os_type == 'windows') {
+                write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+              } else {
+                write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+              }
+
+              nnd %>% print(., row.names = FALSE)
+              cat("\n")
+            } else {
+              cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 #' @export
