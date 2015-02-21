@@ -6,7 +6,7 @@ glm_check <- c("VIF" = "vif", "Confidence intervals" = "confint", "Odds" = "odds
                "Stepwise selection" = "stepwise")
 glm_plots <- list("None" = "", "Histograms" = "hist",
                   "Scatter" = "scatter", "Dashboard" = "dashboard",
-                  "Coefficient plot" = "coef")
+                  "Coefficient plot" = "coef", "Probability plot" = "prob")
 
 
 # list of function arguments
@@ -92,6 +92,13 @@ output$ui_glm_levels <- renderUI({
               selected = state_single("glm_levels",levs), multiple = FALSE)
 })
 
+output$ui_glm_prob_plot <- renderUI({
+  # if(r_data[['glm_pred_list']] %>% not_available) return()
+  selectInput(inputId = "glm_prob_plot", label = "Choose predictions:",
+              choices = r_data[['glm_pred_list']], multiple = FALSE)
+              # choices = c("a","b","c"), multiple = FALSE)
+})
+
 output$ui_glm_reg <- renderUI({
   tagList(
   	wellPanel(
@@ -101,14 +108,16 @@ output$ui_glm_reg <- renderUI({
 		    selectInput("glm_plots", "GLM plots:", choices = glm_plots,
 			  	selected = state_single("glm_plots", glm_plots)),
 		  	conditionalPanel(condition = "input.glm_plots == 'coef'",
-        	checkboxInput("glm_coef_int", "Include intercept", state_init("glm_coef_int", FALSE))
+        	checkboxInput("glm_coef_int", "Include intercept", state_init("glm_coef_int", FALSE))),
+        conditionalPanel(condition = "input.glm_plots == 'prob'",
+          uiOutput("ui_glm_prob_plot")
         )
 		  ),
 	    uiOutput("ui_glm_dep_var"),
       uiOutput("ui_glm_levels"),
 	    uiOutput("ui_glm_indep_var"),
 			# uiOutput("ui_glm_interactions"),
-		 #  conditionalPanel(condition = "input.glm_interactions != ''",
+		  # conditionalPanel(condition = "input.glm_interactions != ''",
 			# 	uiOutput("ui_glm_int_var")
 			# ),
 		  conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
@@ -125,6 +134,9 @@ output$ui_glm_reg <- renderUI({
                       choices = c("None" = "",r_data$datasetlist),
                       selected = state_init("glm_predict_data"), multiple = FALSE)
         ),
+        # conditionalPanel(condition = "input.glm_predict == 'data' | input.glm_predict == 'cmd'",
+        #   textInput("glm_predict_out", "Save predictions to:", paste0(input$dataset,"_pred"))
+        # ),
 		    uiOutput("ui_glm_test_var"),
         checkboxGroupInput("glm_check", NULL, glm_check,
           selected = state_init("glm_check"), inline = TRUE)
@@ -136,7 +148,12 @@ output$ui_glm_reg <- renderUI({
  					             max = 0.99, value = state_init("glm_conf_level",.95),
  					             step = 0.01)
 		  ), br(),
-		  actionButton("glm_saveres", "Save residuals")
+      HTML("<label>Save:</label>"), br(),
+		  actionButton("glm_saveres", "Residuals"),
+      downloadButton("glm_savepred", "Predictions")
+      # conditionalPanel(condition = "input.glm_predict != ''",
+      #   downloadButton("glm_savepred", "Pred")
+      # )
 	  ),
   	help_and_report(modal_title = "GLM",
   	                fun_name = "glm_reg",
@@ -165,7 +182,7 @@ output$glm_reg <- renderUI({
 		# two separate tabs
 		glm_output_panels <- tabsetPanel(
 	    id = "tabs_glm_reg",
-	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg")),
+	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg"), plotOutput("predict_glm_reg")),
 	    tabPanel("Plot", plotOutput("plot_glm_reg", width = "100%", height = "100%"))
 	  )
 
@@ -200,10 +217,27 @@ observe({
 })
 
 observe({
-	if(input$glm_saveres %>% not_pressed) return()
-	isolate({
-		result <- .glm_reg()
-		if(result %>% is.character) return()
-		result$model$residuals %>% data.frame %>% changedata("residuals")
-	})
+  if(input$glm_saveres %>% not_pressed) return()
+  isolate({
+    result <- .glm_reg()
+    if(result %>% is.character) return()
+    result$model$residuals %>% data.frame %>% changedata("glm_residuals")
+  })
 })
+
+output$glm_savepred <- downloadHandler(
+  filename = function() { "glm_savepred.csv" },
+  content = function(file) {
+    summary.glm_reg(.glm_reg(), savepred = TRUE) %>%
+      write.csv(., file = file, row.names = FALSE)
+  }
+)
+
+# observe({
+#   if(input$glm_savepred %>% not_pressed) return()
+#   isolate({
+#     result <- .glm_reg()
+#     if(result %>% is.character) return()
+#     result$model$residuals %>% data.frame %>% changedata("residuals")
+#   })
+# })

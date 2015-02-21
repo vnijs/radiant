@@ -185,23 +185,6 @@ update_report <- function(inp, fun_name, pre_cmd = "result <- ",
   update_report_fun(cmd)
 }
 
-updateReportViz <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = "") {
-
-  # update_report should be able to handel this function - deprecate when tested
-  cmd <- sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L))
-  if(xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
-  cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
-  update_report_fun(cmd)
-}
-
-updateReportMerge <- function(inp, fun_name) {
-
-  # update_report should be able to handel this function - deprecate when tested
-  cmd <- sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L))
-  cmd <- paste0("\n```{r }\n",cmd,"\n```\n")
-  update_report_fun(cmd)
-}
-
 update_report_fun <- function(cmd) {
 
   if(!is.null(input$manualPaste) && input$manualPaste) {

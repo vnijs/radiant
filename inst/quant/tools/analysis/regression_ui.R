@@ -143,7 +143,9 @@ output$ui_regression <- renderUI({
  					             max = 0.99, value = state_init("reg_conf_level",.95),
  					             step = 0.01)
 		  ), br(),
-		  actionButton("reg_saveres", "Save residuals")
+      HTML("<label>Save:</label>"), br(),
+      actionButton("reg_saveres", "Residuals"),
+      downloadButton("reg_savepred", "Predictions")
 	  ),
   	help_and_report(modal_title = "Linear regression (OLS)",
   	                fun_name = "regression",
@@ -213,3 +215,11 @@ observe({
 		result$model$residuals %>% data.frame %>% changedata("residuals")
 	})
 })
+
+output$reg_savepred <- downloadHandler(
+  filename = function() { "reg_savepred.csv" },
+  content = function(file) {
+    summary.regression(.regression(), savepred = TRUE) %>%
+      write.csv(., file = file, row.names = FALSE)
+  }
+)

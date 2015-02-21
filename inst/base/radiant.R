@@ -187,7 +187,7 @@ not_available <- function(x)
 not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
 
 # check if string variable is defined
-is_empty <- function(x, empty = "") ifelse(is.null(x) || x == "", TRUE, FALSE)
+is_empty <- function(x, empty = "") ifelse(is.null(x) || x == empty, TRUE, FALSE)
 
 # check for duplicate entries
 has_duplicates <- function(x)
@@ -221,13 +221,15 @@ suggest_data <- function(text = "", dat = "diamonds")
 # functions used to create Shiny in and outputs
 ################################################################
 plotWidth <- function() {
-	ifelse(is.null(input$viz_plot_width), return(r_data$plotWidth),
-		return(input$viz_plot_width))
+  if(input$viz_plot_width %>% not_available) r_data$plotWidth else input$viz_plot_width
+	# ifelse(is.null(input$viz_plot_width), return(r_data$plotWidth),
+	# 	return(input$viz_plot_width))
 }
 
 plotHeight <- function() {
-	ifelse(is.null(input$viz_plot_height), return(r_data$plotHeight),
-		return(input$viz_plot_height))
+  if(input$viz_plot_height %>% not_available) r_data$plotHeight else input$viz_plot_height
+	# ifelse(is.null(input$viz_plot_height), return(r_data$plotHeight),
+	# 	return(input$viz_plot_height))
 }
 
 twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
