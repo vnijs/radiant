@@ -136,7 +136,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #' @seealso \code{\link{plot.regression}} to plot results
 #'
 #' @export
-summary.regression <- function(result) {
+summary.regression <- function(result, savepred = FALSE) {
 
 	if(class(result$model) != 'lm') return(result)
 
@@ -220,7 +220,8 @@ summary.regression <- function(result) {
 
       if(result$reg_predict == "cmd") {
      		reg_predict_cmd <- gsub("\"","\'", result$reg_predict_cmd)
-        nval <- try(eval(parse(text = paste0("data.frame(", reg_predict_cmd ,")"))), silent = TRUE)
+        # nval <- try(eval(parse(text = paste0("data.frame(", reg_predict_cmd ,")"))), silent = TRUE)
+        nval <- try(eval(parse(text = paste0("with(result$dat, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
       } else {
         nval <- getdata_exp(result$reg_predict_data)
         nval_names <- names(nval)
@@ -283,14 +284,18 @@ summary.regression <- function(result) {
             	colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
 
             	nnd <- data.frame(nnd, pred, check.names = FALSE)
+              if(savepred) return(nnd)
 
             	# pushing predictions into the clipboard
-            	os_type <- .Platform$OS.type
-            	if (os_type == 'windows') {
-            	  write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
-            	} else {
-            	  write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-            	}
+              if(running_local) {
+                os_type <- .Platform$OS.type
+                if (os_type == 'windows') {
+                  write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+                } else {
+                  write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+                }
+                cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
+              }
 
             	nnd %>% print(., row.names = FALSE)
               cat("\n")

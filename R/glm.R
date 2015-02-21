@@ -4,23 +4,24 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param glm_dep_var The dependent variable in the regression
+#' @param glm_levels The level in the dependent variable to use as success
 #' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param glm_indep_var Independent variables in the regression
 #' @param glm_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
-#' @param glm_int_var Interaction term to include in the model
-#' @param glm_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.
+#' @param glm_int_var Interaction term to include in the model (not yet in Radiant)
+#' @param glm_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not yet in Radiant)
 #' @param glm_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
-#' @param glm_predict_cmd Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predicitions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was likely invalid. Try entering the same expression in the R(studio) console to debug the command
+#' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predicitions for the different levels of factor `pclass`.
 #' @param glm_predict_data Generate predictions by specifying the name of a dataset (e.g., "diamonds"). The dataset must have all columns used in model estimation
 #' @param glm_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the regression model
-#' @param glm_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default)
-#' @param glm_plots Regression plots to produce for the specified regression model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix of all variables in the data. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
+#' @param glm_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default) for the coefficients and odds
+#' @param glm_plots Regression plots to produce for the specified regression model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of four plots that can be used to evaluate model fit visually. "coef" for a coefficient plot.
 #' @param glm_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
-
+#'
 #' @return A list with all variables defined in the function as an object of class glm_reg
 #'
 #' @examples
-#' result <- glm_reg("titanic", "survived", c("pclass","sex"))
+#' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 #'
 #' @seealso \code{\link{summary.glm_reg}} to summarize results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
@@ -36,6 +37,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                 glm_predict = "",
                 glm_predict_cmd = "",
                 glm_predict_data = "",
+                glm_predict_out = "",
                 glm_check = "",
                 glm_conf_level = .95,
                 glm_plots = "",
@@ -137,46 +139,41 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
 }
 
-library(ggplot2)
-library(broom)
-library(dplyr)
-library(magrittr)
-library(tidyr)
-options(max.print = 300)
-source("~/gh/radiant_dev/R/radiant.R")
-load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+# library(ggplot2)
+# library(broom)
+# library(dplyr)
+# library(magrittr)
+# library(tidyr)
+# options(max.print = 300)
+# source("~/gh/radiant_dev/R/radiant.R")
+# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+
+# with(titanic, expand.grid(survived = levels(survived), sex = levels(sex), age = 1:10))
+
+# glm_plots <- "prob"
+# glm_prob_vars <- "pclass"
+
+# dat <- ggplot2::fortify(result$model)
+# vars <- as.character(attr(result$model$terms,'variables'))[-1]
+# glm_dep_var <- vars[1]
+# glm_indep_var <- vars[-1]
+# dat <- dat[,glm_indep_var, drop = FALSE]
+# nval <- levels(dat[,glm_prob_vars]) %>% data.frame %>% set_colnames(glm_prob_vars)
+
+# isFct <- sapply(dat, is.factor)
+# isNum <- sapply(dat, is.numeric)
+
+# newdat <- ""
+# if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+# # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+# if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+# newdat
 
 
-glm_plots <- "prob"
-glm_prob_vars <- "pclass"
-
-dat <- ggplot2::fortify(result$model)
-vars <- as.character(attr(result$model$terms,'variables'))[-1]
-glm_dep_var <- vars[1]
-glm_indep_var <- vars[-1]
-dat <- dat[,glm_indep_var, drop = FALSE]
-nval <- levels(dat[,glm_prob_vars]) %>% data.frame %>% set_colnames(glm_prob_vars)
-
-isFct <- sapply(dat, is.factor)
-isNum <- sapply(dat, is.numeric)
-
-newdat <- ""
-if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
-# from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
-if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
-newdat
-
-
-newdat[names(nval)] <- list(NULL)
-nnd <- data.frame(newdat[-1],nval)
-nnd
-
-# pred <- try(predict(result$model, nnd, type = 'response', se.fit = TRUE), silent = TRUE)
-pred <- predict(result$model, nnd, type = 'response')
-nnd <- data.frame(nnd, pred, check.names = FALSE)
-
-
-
+# newdat[names(nval)] <- list(NULL)
+# nnd <- data.frame(newdat[-1],nval)
+# pred <- predict(result$model, nnd, type = 'response')
+# nnd <- data.frame(nnd, pred, check.names = FALSE)
 
 
 # titanic.est <- titanic %>%
@@ -195,26 +192,21 @@ nnd <- data.frame(nnd, pred, check.names = FALSE)
 # result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_test_var = glm_test_var)
 # result <- glm_reg(dataset, glm_dep_var, glm_indep_var)
 
-# dataset <- "titanic"
-# glm_dep_var <- "survived"
-# glm_indep_var <- c("pclass","sex","age")
-# glm_test_var <- "age"
-# glm_link <- "logit"
-# glm_predict <- "cmd"
-# glm_predict_cmd <- "pclass = '1st'"
-# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_link = glm_link, glm_test_var = glm_test_var)
-# result <- glm_reg(dataset = "titanic", glm_dep_var = "survived", glm_indep_var = c("pclass", "sex", "age"), glm_levels = "Yes", glm_test_var = "pclass")
-# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_predict = glm_predict,
-#                   glm_predict_cmd = glm_predict_cmd)
-# summary(result)
-
-# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_check = glm_check, glm_plots = glm_plots,
-#                   glm_coef_int = glm_coef_int, glm_test_var = glm_test_var)
-# summary(result)
-# plot(result)
-
+#' Summarize results from the glm regression. This is a method of class glm_reg and can be called as summary or summary.glm_reg
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+#'
+#' @param result Return value from \code{\link{glm_reg}}
+#'
+#' @examples
+#' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
+#' summary(result)
+#'
+#' @seealso \code{\link{glm_reg}} to generate the results
+#' @seealso \code{\link{plot.glm_reg}} to plot results
+#'
 #' @export
-summary.glm_reg <- function(result) {
+summary.glm_reg <- function(result, savepred = FALSE) {
 
 	if(class(result$model)[1] != 'glm') return(result)
 
@@ -323,14 +315,16 @@ summary.glm_reg <- function(result) {
     if("standardize" %in% result$glm_check) {
       cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again")
     } else if (result$glm_predict == "cmd" && result$glm_predict_cmd == "") {
-      cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predicitions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was likely invalid. Try entering\nthe same expression in the R(studio) console to debug the command")
+      cat("Please specify a command to generate predictions. For example,\npclass = levels(pclass) would produce predicitions for the different levels of factor pclass. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was invalid.")
     } else if (result$glm_predict == "data" && result$glm_predict_data == "") {
       cat("Please select a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant")
     } else {
 
       if(result$glm_predict == "cmd") {
+        # glm_predict_cmd <- "survived = levels(survived)"
         glm_predict_cmd <- gsub("\"","\'", result$glm_predict_cmd)
-        nval <- try(eval(parse(text = paste0("data.frame(", glm_predict_cmd ,")"))), silent = TRUE)
+        # nval <- try(eval(parse(text = paste0("data.frame(", glm_predict_cmd ,")"))), silent = TRUE)
+        nval <- try(eval(parse(text = paste0("with(result$dat, expand.grid(", glm_predict_cmd ,"))"))), silent = TRUE)
       } else {
         nval <- getdata_exp(result$glm_predict_data)
         nval_names <- names(nval)
@@ -371,7 +365,6 @@ summary.glm_reg <- function(result) {
           # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
           if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
 
-          # if(sum(names(nval) %in% names(newdat)) < length(nval)) {
           if(sum(names(nval) %in% names(newdat)) < length(names(nval))) {
             cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n")
           } else {
@@ -387,20 +380,30 @@ summary.glm_reg <- function(result) {
                 cat("Predicted values for:\n")
               }
 
-              # pred %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
-              # cl_split <- function(x) 100*(1-x)/2
-              # cl_split(result$glm_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
-              # (100 - cl_split(result$glm_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
-              # colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
               nnd <- data.frame(nnd, pred, check.names = FALSE)
+              if(savepred) return(nnd)
 
               # pushing predictions into the clipboard
-              os_type <- .Platform$OS.type
-              if (os_type == 'windows') {
-                write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
-              } else {
-                write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+              if(running_local) {
+                os_type <- .Platform$OS.type
+                if (os_type == 'windows') {
+                  write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
+                } else {
+                  write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+                }
+                cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
               }
+
+              # if(result$glm_predict_out != "") {
+              #   r_data[[result$glm_predict_out]] <- nnd
+              #   # r_data[[paste0(result$glm_predict_out,"_descr")]] <- ""
+              #   r_data[['datasetlist']] %<>%
+              #     c(result$glm_predict_out,.) %>%
+              #     unique
+              #   r_data[['glm_pred_list']] %<>%
+              #     c(result$glm_predict_out,.) %>%
+              #     unique
+              # }
 
               nnd %>% print(., row.names = FALSE)
               cat("\n")
@@ -414,32 +417,40 @@ summary.glm_reg <- function(result) {
   }
 }
 
+
+#' Plot results from the glm_reg function. This is a method of class glm_reg and can be called as plot or plot.glm_reg
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+#'
+#' @param result Return value from \code{\link{glm_reg}}
+#'
+#' @examples
+#' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes", glm_plots = "coef")
+#' plot(result)
+#'
+#' @seealso \code{\link{glm_reg}} to generate the results
+#' @seealso \code{\link{plot.glm_reg}} to plot results
+#'
 #' @export
 plot.glm_reg <- function(result) {
 
 	if(class(result$model)[1] != 'glm') return(result)
 
 	# if({result$reg_int_var %>% strsplit(":") %>% unlist} %in% result$reg_indep_var %>% all) {
-	# 	# nothing
- # 	} else {
- #    cat("Interaction terms contain variables not selected as\nmain effects. Removing interactions from the estimation")
- #    reg_int_var <- ""
- # 	}
+	#	# nothing
+  #	} else {
+  #    cat("Interaction terms contain variables not selected as\nmain effects. Removing interactions from the estimation")
+  #   reg_int_var <- ""
+  #	}
 
 	model <- ggplot2::fortify(result$model)
 	model$.fitted <- predict(result$model, type = 'response')
-	# model$.actual <- as.numeric(model[,1])
   model$.actual <- as.numeric(result$glm_dv)
 	model$.actual <- model$.actual - max(model$.actual) + 1 	# adjustment in case max > 1
 
-	# vars <- as.character(attr(result$model$terms,'variables'))[-1]
-	# glm_dep_var <- vars[1]
-	# glm_indep_var <- vars[-1]
   glm_dep_var <- result$glm_dep_var
   glm_indep_var <- result$glm_indep_var
-
   result$dat[,glm_dep_var] <- result$glm_dv
-
   vars <- c(result$glm_dep_var, result$glm_indep_var)
 	nrCol <- 2
 	plots <- list()
@@ -455,6 +466,16 @@ plot.glm_reg <- function(result) {
 	    	geom_pointrange(aes(x = variable, y = coefficient, ymin = Low, ymax = High)) +
 	      geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip()
 	      return(p)
+
+  } else if(result$glm_plots == "prob") {
+
+    p <- r_data[[result$glm_]]
+
+
+      e(variable = rownames(.)) %>% ggplot() +
+        geom_pointrange(aes(x = variable, y = coefficient, ymin = Low, ymax = High)) +
+        geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip()
+        return(p)
 
   } else if (result$glm_plots == "scatter") {
 		for(i in glm_indep_var) {
@@ -486,5 +507,3 @@ plot.glm_reg <- function(result) {
 
 	if(length(plots) > 0) sshh( do.call(grid.arrange, c(plots, list(ncol = nrCol))) )
 }
-
-
