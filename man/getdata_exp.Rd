@@ -7,13 +7,13 @@
 getdata_exp(dataset, vars = "", na.rm = TRUE, filt = "")
 }
 \arguments{
-\item{dataset}{Name of the data.frame}
+\item{dataset}{Name of the dataframe}
 
-\item{vars}{Variables to extract from the data.frame}
+\item{vars}{Variables to extract from the dataframe}
 
 \item{na.rm}{Remove rows with missing values (default is TRUE)}
 
-\item{filt}{Filter to apply to the data (default is NULL)}
+\item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
 }
 \value{
 Data.frame with the specified columns selected

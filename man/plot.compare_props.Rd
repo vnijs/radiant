@@ -13,7 +13,7 @@ Plot results from the compare_props function. This is a method of class compare_
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 }
 \examples{
-result <- compare_props("titanic", "pclass", "survived", cp_plots = "props")
+result <- compare_props("titanic", "pclass", "survived", cp_plots = c("props","counts"))
 plot(result)
 }
 \seealso{

@@ -2,12 +2,12 @@
 % Please edit documentation in R/radiant.R
 \name{sshh}
 \alias{sshh}
-\title{Avoid warnings and messages. Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+\title{Do not show warnings and messages to user (e.g., for ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 \usage{
 sshh(...)
 }
 \description{
-Avoid warnings and messages. Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+Do not show warnings and messages to user (e.g., for ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
 }
 \examples{
 sshh( library(dplyr) )
