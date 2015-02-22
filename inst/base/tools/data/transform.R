@@ -65,13 +65,35 @@ sq <- function(x) x^2
 inv <- function(x) 1/x
 normalize <- function(x,y) x/y
 
-# as character needed here in case x is a factor
-d_mdy <- function(x) as.character(x) %>% mdy %>% as.Date
-d_dmy <- function(x) as.character(x) %>% dmy %>% as.Date
-d_ymd <- function(x) as.character(x) %>% ymd %>% as.Date
+# use as.character in case x is a factor
+d_mdy <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% mdy %>% as.Date
+d_dmy <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% dmy %>% as.Date
+d_ymd <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% ymd %>% as.Date
+
+# test
+# dat <- read.table(header = TRUE, text = "date	days
+# 1/1/10	1
+# 1/2/10	2
+# 1/3/10	3
+# 1/4/10	4
+# 1/5/10	5
+# 1/6/10	6
+# 1/7/10	7
+# 1/8/10	8
+# 1/9/10	9
+# 1/10/10	10")
+# sapply(dat,class)
+# library(lubridate)
+# dat$date %>% d_mdy %T>% print %>% class
+# dat$date %>% as.character
+# dat$date %>% d_mdy %T>% print %>% class
+# dat$date %>% as.factor
+# dat$date %>% d_dmy %T>% print %>% class
+# dat$date %>% as.character
+# dat$date %>% d_dmy %T>% print %>% class
 
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
-d_ymd_hms <- function(x) as.character(x) %>% ymd_hms
+d_ymd_hms <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% ymd_hms
 
 as_int <- function(x) {
 	if(x %>% is.factor) {
@@ -345,7 +367,7 @@ output$transform_summary <- renderPrint({
 
 	isFct <- "factor" == dat_class
 	isNum <- "numeric" == dat_class | "integer" == dat_class
-	isDate <- "date" == dat_class
+	isDate <- "date" == dat_class | "Date" == dat_class
 	isChar <- "character" == dat_class
 	isLogic <- "logical" == dat_class
 
@@ -391,26 +413,6 @@ output$transform_summary <- renderPrint({
 	}
 })
 
-
-# observe({
-# 		# reset to original value when type is change
-# 		if(input$tr_changeType %>% is_empty('none')) return()
-# 		isolate({
-# 			# reset input values once the changes have been applied
-# 			updateTextInput(session = session, inputId = "tr_transform", value = "")
-# 		 	updateTextInput(session = session, inputId = "tr_recode", value = "")
-# 		 	updateTextInput(session = session, inputId = "tr_create", value = "")
-# 		 	updateTextInput(session = session, inputId = "tr_rename", value = "")
-# 		 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
-# 		 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
-# 			updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
-# 	    updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
-
-# 		})
-
-# })
-
-
 observe({
 	if(is.null(input$tr_save_changes) || input$tr_save_changes == 0) return()
 	isolate({
@@ -448,19 +450,27 @@ observe({
 		}
 
 		# reset input values once the changes have been applied
-		updateTextInput(session = session, inputId = "tr_transform", value = "")
-	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
-	 	updateTextInput(session = session, inputId = "tr_create", value = "")
-	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
-	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
-	 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
-
-		updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
 		updateSelectInput(session = session, inputId = "tr_changeType", selected = "none")
-    updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
 
     if(dataset != input$dataset)
 			updateSelectInput(session = session, inputId = "dataset", select = dataset)
 
   })
 })
+
+observe({
+	# reset to original value when type is changed
+	input$tr_changeType
+	isolate({
+		updateTextInput(session = session, inputId = "tr_transform", value = "")
+	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
+	 	updateTextInput(session = session, inputId = "tr_create", value = "")
+	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
+	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
+	 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
+		updateSelectInput(session = session, inputId = "tr_typefunction", selected = "none")
+		updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
+	  updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
+	})
+})
+

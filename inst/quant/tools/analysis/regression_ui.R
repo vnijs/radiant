@@ -219,7 +219,7 @@ observe({
 output$reg_savepred <- downloadHandler(
   filename = function() { "reg_savepred.csv" },
   content = function(file) {
-    summary.regression(.regression(), savepred = TRUE) %>%
+    summary(.regression(), savepred = TRUE) %>%
       write.csv(., file = file, row.names = FALSE)
   }
 )

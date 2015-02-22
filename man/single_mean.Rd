@@ -12,7 +12,7 @@ single_mean(dataset, sm_var, data_filter = "", sm_comp_value = 0,
 
 \item{sm_var}{The variable selected for the mean comparison}
 
-\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{sm_comp_value}{Population value to compare the sample mean with}
 

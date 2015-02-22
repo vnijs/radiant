@@ -5,7 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cp_var1 A grouping variable to creates slips in the data for comparisons
 #' @param cp_var2 The variable to calculate proportions for
-#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param cp_levels The factor level selected for the proportion comparison
 #' @param cp_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param cp_sig_level Span of the confidence interval
@@ -18,7 +18,8 @@
 #' result <- compare_props("titanic", "pclass", "survived")
 #'
 #' @seealso \code{\link{summary.compare_props}} to summarize results
-#' @seealso \code{\link{plots.compare_props}} to plot results
+#' @seealso \code{\link{plot.compare_props}} to plot results
+#'
 #' @export
 compare_props <- function(dataset, cp_var1, cp_var2,
                          data_filter = "",
@@ -133,6 +134,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{plot.compare_props}} to plot results
+#'
 #' @export
 summary.compare_props <- function(result) {
 

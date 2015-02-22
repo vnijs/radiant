@@ -13,7 +13,7 @@ single_prop(dataset, sp_var, data_filter = "", sp_levels = "",
 
 \item{sp_var}{The variable selected for the proportion comparison}
 
-\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{sp_levels}{The factor level selected for the proportion comparison}
 
@@ -38,6 +38,6 @@ single_prop("diamond","cut","IF")
 \seealso{
 \code{\link{summary.single_prop}} to summarize results
 
-\code{\link{plots.single_prop}} to plot results
+\code{\link{plot.single_prop}} to plot results
 }
 

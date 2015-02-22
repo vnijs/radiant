@@ -15,7 +15,7 @@ compare_props(dataset, cp_var1, cp_var2, data_filter = "", cp_levels = "",
 
 \item{cp_var2}{The variable to calculate proportions for}
 
-\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{cp_levels}{The factor level selected for the proportion comparison}
 
@@ -42,6 +42,6 @@ result <- compare_props("titanic", "pclass", "survived")
 \seealso{
 \code{\link{summary.compare_props}} to summarize results
 
-\code{\link{plots.compare_props}} to plot results
+\code{\link{plot.compare_props}} to plot results
 }
 

@@ -114,7 +114,7 @@ output$ui_sampleSize <- renderUI({
 		    numericInput("rnd_pop_size", "Population size:", min = 1,
 		  		value = state_init("rnd_pop_size", 10^6), step = 1000))
 		),
-	 	helpAndReport('Sample size','sampleSize',inclRmd("../quant/tools/help/sampleSize.Rmd"))
+	 	helpAndReport('Sample size','sampleSize',inclRmd("../quant/tools/help/sample_size.Rmd"))
  	)
 })
 

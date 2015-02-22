@@ -56,6 +56,7 @@ output$tabs_data <- renderUI({
                        uiOutput("dataDescriptionHTML")),
       conditionalPanel("input.man_add_descr == true",
                        uiOutput("dataDescriptionMD"))),
+    # tabPanel("View", DT::dataTableOutput("dataviewer")),
     tabPanel("View", dataTableOutput("dataviewer")),
     tabPanel("Visualize",
              plotOutput("visualize", width = "100%", height = "100%")),

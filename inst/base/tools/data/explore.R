@@ -17,9 +17,9 @@ output$uiExpl_byvar <- renderUI({
   )
 })
 
-expl_functions <- list("N" = "length", "Mean" = "mean", "Median" = "median", "25%" = "p25", "75%" = "p75",
-                        "Max" = "max", "Min" = "min", "Std. dev" = "sd", "Std. err" = "serr", "cv" = "cv", "Skew" = "skew",
-                        "Kurtosis" = "kurtosi", "# missing" = "nmissing")
+expl_functions <- list("n" = "length", "mean" = "r_mean", "median" = "r_median", "min" = "r_min", "max" = "r_max",
+                       "25%" = "p25", "75%" = "p75", "sd" = "r_sd", "se" = "serr", "cv" = "cv", "skew" = "skew",
+                        "kurtosis" = "kurtosi", "# missing" = "nmissing")
 
 output$uiExpl_function <- renderUI({
   if(is.null(input$expl_byvar)) return()
@@ -75,9 +75,19 @@ p25 <- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 p75 <- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
 serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
 cv <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
+r_mean <- function(x) mean(x, na.rm = TRUE)
+r_median <- function(x) median(x, na.rm = TRUE)
+r_min <- function(x) min(x, na.rm = TRUE)
+r_max <- function(x) max(x, na.rm = TRUE)
+r_sd <- function(x) sd(x, na.rm = TRUE)
 
-explore <- function(dataset, expl_columns, expl_byvar, expl_function, expl_show_tab, expl_show_viz) {
+explore <- function(dataset, expl_columns,
+                    expl_byvar = c(),
+                    expl_function = c(),
+                    expl_show_tab = TRUE,
+                    expl_show_viz = FALSE) {
 
+  # move to getdata_exp when exported
   dat <- getdata()
 
   if(is.null(expl_byvar)) {
@@ -192,33 +202,3 @@ output$expl_plots <- renderPlot({
   if(!input$expl_show_viz || is.null(input$expl_byvar)) return()
   .plots_explore()
 }, width = expl_plot_width, height = expl_plot_height)
-
-#######################################
-### When Explore is moved to dplyr
-#######################################
-
-# require(devtools)
-# install_github("assertthat")
-# install_github("dplyr")
-
-# require(assertthat)
-# require(dplyr)
-
-# filter(hflights, Month == 1, DayofMonth == 1, Dest == "DFW")
-# head(select(hflights, Year:DayOfWeek))
-# summarise(hflights, delay = mean(ArrDelay, na.rm = TRUE), n = length(ArrDelay))
-
-# by_dest <- group_by(hflights, Dest)
-# filter(by_dest, ArrDelay == max(ArrDelay))
-
-# res <- summarise(group_by(hflights, Dest), arr = mean(ArrDelay, na.rm = TRUE))
-
-# by_day <- group_by(hflights, Year, Month, DayofMonth)
-# by_month <- summarise(by_day, delayed = sum(ArrDelay > 0, na.rm = TRUE))
-# by_month
-# summarise(summarise(by_month, delayed = sum(delayed)), delayed = sum(delayed))
-# summarise(by_month, delayed = sum(delayed))
-
-# by_dest <- group_by(hflights, Dest)
-# filter(by_dest, ArrDelay == max(ArrDelay))
-# summarise(group_by(hflights, Dest), arr = mean(ArrDelay, na.rm = TRUE))

@@ -4,7 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param reg_dep_var The dependent variable in the regression
-#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param reg_indep_var Independent variables in the regression
 #' @param reg_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
 #' @param reg_int_var Interaction term to include in the model
@@ -134,6 +134,8 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #'
 #' @seealso \code{\link{regression}} to generate the results
 #' @seealso \code{\link{plot.regression}} to plot results
+#'
+#' @importFrom car vif
 #'
 #' @export
 summary.regression <- function(result, savepred = FALSE) {
@@ -379,6 +381,8 @@ summary.regression <- function(result, savepred = FALSE) {
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results
 #'
+#' @importFrom car leveragePlots
+#'
 #' @export
 plot.regression <- function(result) {
 
@@ -409,7 +413,7 @@ plot.regression <- function(result) {
 	}
 
 	if(result$reg_plots == "correlations") {
-		return(plots_correlation(result))
+		return(plot.correlation(result))
 	}
 
 	if(result$reg_plots == "dashboard") {

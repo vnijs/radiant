@@ -203,7 +203,7 @@ observe({
 			input$fac_sort, input$fac_rotation)
 
 		# extra command to save factor scores
-		xcmd <- paste0("saveFactorScores(result)")
+		xcmd <- paste0("save_factors(result)")
 
 		# updateReport(inp,"fullFactor", xcmd = xcmd)
 		updateReport(inp,"fullFactor", round(7 * fac_plotWidth()/650,2), round(7 * fac_plotHeight()/650,2), xcmd = xcmd)
@@ -285,12 +285,19 @@ plots_fullFactor <- function(result = .fullFactor()) {
 	do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
 }
 
+# this function should be exported so it can be called externally
+# should not use changedata (reactive)
+save_factors <- function(result) {
+	data.frame(result$scores) %>% changedata(paste0("fac",1:ncol(.)))
+}
+
 # save factor scores when action button is pressed
 observe({
 	if(input$fac_savescores %>% not_pressed) return()
 	isolate({
 		result <- .fullFactor()
 		if(is.character(result)) return()
-		data.frame(result$scores) %>% changedata(paste0("fac",1:ncol(.)))
+		save_factors(result)
+		# data.frame(result$scores) %>% changedata(paste0("fac",1:ncol(.)))
 	})
 })

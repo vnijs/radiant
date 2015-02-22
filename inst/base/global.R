@@ -5,11 +5,15 @@
 # options(shiny.error=recover)
 
 # load/attach packages
-pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
-          "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
-          "knitr", "rpivotTable", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
-          "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce",
-          "purrr", "rpivotTable")
+# pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
+#           "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
+#           "knitr", "rpivotTable", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
+#           "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce",
+#           "purrr", "rpivotTable")
+
+pkgs <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud", "AlgDesign",
+          "knitr", "rpivotTable", "lubridate", "ggplot2", "shiny", "magrittr",
+          "tidyr", "dplyr", "broom", "shinyAce", "rpivotTable")
 
 if(Sys.getenv('SHINY_PORT') == "") {
 

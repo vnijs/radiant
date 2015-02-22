@@ -17,7 +17,7 @@ regression(dataset, reg_dep_var, reg_indep_var, data_filter = "",
 
 \item{reg_indep_var}{Independent variables in the regression}
 
-\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{reg_test_var}{Variables to evaluate in model comparison (i.e., a competing models F-test)}
 
