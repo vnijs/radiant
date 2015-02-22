@@ -25,6 +25,7 @@ Imports:
 		broom (>= 0.3.6),
 		tidyr (>= 0.2.0),
 		pryr (>= 0.1),
+		htmlwidgets,
 Suggests:
 		rmarkdown (>= 0.4.2),
 		ggvis (>= 0.4),
