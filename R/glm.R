@@ -3,22 +3,22 @@
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param glm_dep_var The dependent variable in the regression
-#' @param glm_levels The level in the dependent variable to use as success
-#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param glm_dep_var The dependent variable in the logit (probit) model
 #' @param glm_indep_var Independent variables in the regression
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param glm_levels The level in the dependent variable defined as _success_
 #' @param glm_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
-#' @param glm_int_var Interaction term to include in the model (not yet in Radiant)
-#' @param glm_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not yet in Radiant)
+#' @param glm_int_var Interaction term to include in the model (not implement)
+#' @param glm_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not implemented)
 #' @param glm_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
-#' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predicitions for the different levels of factor `pclass`.
-#' @param glm_predict_data Generate predictions by specifying the name of a dataset (e.g., "diamonds"). The dataset must have all columns used in model estimation
-#' @param glm_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the regression model
-#' @param glm_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default) for the coefficients and odds
-#' @param glm_plots Regression plots to produce for the specified regression model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of four plots that can be used to evaluate model fit visually. "coef" for a coefficient plot.
-#' @param glm_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
+#' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`.
+#' @param glm_predict_data Generate predictions by specifying the name of a dataframe (e.g., "titanic"). The dataset must have all columns used in estimation
+#' @param glm_check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the model
+#' @param glm_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default) for coefficients and odds
+#' @param glm_plots Plots to produce for the specified GLM model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of four plots that can be used to evaluate model fit visually. "coef" for a coefficient plot.
+#' @param glm_coef_int Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default
 #'
-#' @return A list with all variables defined in the function as an object of class glm_reg
+#' @return A list with all variables defined in the glm_reg as an object of class glm_reg
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
@@ -139,60 +139,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
 }
 
-# library(ggplot2)
-# library(broom)
-# library(dplyr)
-# library(magrittr)
-# library(tidyr)
-# options(max.print = 300)
-# source("~/gh/radiant_dev/R/radiant.R")
-# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
-
-# with(titanic, expand.grid(survived = levels(survived), sex = levels(sex), age = 1:10))
-
-# glm_plots <- "prob"
-# glm_prob_vars <- "pclass"
-
-# dat <- ggplot2::fortify(result$model)
-# vars <- as.character(attr(result$model$terms,'variables'))[-1]
-# glm_dep_var <- vars[1]
-# glm_indep_var <- vars[-1]
-# dat <- dat[,glm_indep_var, drop = FALSE]
-# nval <- levels(dat[,glm_prob_vars]) %>% data.frame %>% set_colnames(glm_prob_vars)
-
-# isFct <- sapply(dat, is.factor)
-# isNum <- sapply(dat, is.numeric)
-
-# newdat <- ""
-# if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
-# # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
-# if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
-# newdat
-
-
-# newdat[names(nval)] <- list(NULL)
-# nnd <- data.frame(newdat[-1],nval)
-# pred <- predict(result$model, nnd, type = 'response')
-# nnd <- data.frame(nnd, pred, check.names = FALSE)
-
-
-# titanic.est <- titanic %>%
-#   filter(!age=='NA') %>%
-#   mutate(age.f=cut(age,breaks=c(0,20,30,40,50,60,100)))
-
-# dataset <- "titanic.est"
-# data_filter <- ""
-# glm_indep_var <- c("pclass","sex","age.f")
-# glm_link <- "logit"
-# glm_check <- "confint"
-# glm_check <- "odds"
-# glm_conf_level = .95
-# glm_plots = "dashboard"
-# glm_coef_int = TRUE
-# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_test_var = glm_test_var)
-# result <- glm_reg(dataset, glm_dep_var, glm_indep_var)
-
-#' Summarize results from the glm regression. This is a method of class glm_reg and can be called as summary or summary.glm_reg
+#' Summary method for glm_reg
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
 #'
@@ -202,7 +149,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 #' summary(result)
 #'
-#' @seealso \code{\link{glm_reg}} to generate the results
+#' @seealso \code{\link{glm_reg}} to generate results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
 #'
 #' @importFrom car vif
@@ -420,17 +367,17 @@ summary.glm_reg <- function(result, savepred = FALSE) {
 }
 
 
-#' Plot results from the glm_reg function. This is a method of class glm_reg and can be called as plot or plot.glm_reg
+#' Plot method for glm_reg
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{glm_reg}}
+#' @param result The selected plot type
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes", glm_plots = "coef")
 #' plot(result)
 #'
-#' @seealso \code{\link{glm_reg}} to generate the results
+#' @seealso \code{\link{glm_reg}} to generate results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
 #'
 #' @export
@@ -468,16 +415,6 @@ plot.glm_reg <- function(result) {
 	    	geom_pointrange(aes(x = variable, y = coefficient, ymin = Low, ymax = High)) +
 	      geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip()
 	      return(p)
-
-  } else if(result$glm_plots == "prob") {
-
-    p <- r_data[[result$glm_]]
-
-
-      e(variable = rownames(.)) %>% ggplot() +
-        geom_pointrange(aes(x = variable, y = coefficient, ymin = Low, ymax = High)) +
-        geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip()
-        return(p)
 
   } else if (result$glm_plots == "scatter") {
 		for(i in glm_indep_var) {

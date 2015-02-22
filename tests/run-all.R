@@ -147,3 +147,57 @@ mac_launcher("base")
 mac_launcher("quant")
 mac_launcher()
 win_launcher()
+
+
+# library(ggplot2)
+# library(broom)
+# library(dplyr)
+# library(magrittr)
+# library(tidyr)
+# options(max.print = 300)
+# source("~/gh/radiant_dev/R/radiant.R")
+# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
+
+# with(titanic, expand.grid(survived = levels(survived), sex = levels(sex), age = 1:10))
+
+# glm_plots <- "prob"
+# glm_prob_vars <- "pclass"
+
+# dat <- ggplot2::fortify(result$model)
+# vars <- as.character(attr(result$model$terms,'variables'))[-1]
+# glm_dep_var <- vars[1]
+# glm_indep_var <- vars[-1]
+# dat <- dat[,glm_indep_var, drop = FALSE]
+# nval <- levels(dat[,glm_prob_vars]) %>% data.frame %>% set_colnames(glm_prob_vars)
+
+# isFct <- sapply(dat, is.factor)
+# isNum <- sapply(dat, is.numeric)
+
+# newdat <- ""
+# if(sum(isNum) > 0)  newdat <- data.frame(newdat,t(colMeans(dat[,isNum, drop = FALSE])))
+# # from http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
+# if(sum(isFct) > 0)  newdat <- data.frame(newdat,t(apply(dat[,isFct, drop = FALSE],2,function(x) names(which.max(table(x))))))
+# newdat
+
+
+# newdat[names(nval)] <- list(NULL)
+# nnd <- data.frame(newdat[-1],nval)
+# pred <- predict(result$model, nnd, type = 'response')
+# nnd <- data.frame(nnd, pred, check.names = FALSE)
+
+
+# titanic.est <- titanic %>%
+#   filter(!age=='NA') %>%
+#   mutate(age.f=cut(age,breaks=c(0,20,30,40,50,60,100)))
+
+# dataset <- "titanic.est"
+# data_filter <- ""
+# glm_indep_var <- c("pclass","sex","age.f")
+# glm_link <- "logit"
+# glm_check <- "confint"
+# glm_check <- "odds"
+# glm_conf_level = .95
+# glm_plots = "dashboard"
+# glm_coef_int = TRUE
+# result <- glm_reg(dataset, glm_dep_var, glm_indep_var, glm_test_var = glm_test_var)
+# result <- glm_reg(dataset, glm_dep_var, glm_indep_var)

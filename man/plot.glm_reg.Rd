@@ -2,15 +2,15 @@
 % Please edit documentation in R/glm.R
 \name{plot.glm_reg}
 \alias{plot.glm_reg}
-\title{Plot results from the glm_reg function. This is a method of class glm_reg and can be called as plot or plot.glm_reg}
+\title{Plot method for glm_reg}
 \usage{
 \method{plot}{glm_reg}(result)
 }
 \arguments{
-\item{result}{Return value from \code{\link{glm_reg}}}
+\item{result}{The selected plot type}
 }
 \description{
-Plot results from the glm_reg function. This is a method of class glm_reg and can be called as plot or plot.glm_reg
+Plot method for glm_reg
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
@@ -20,7 +20,7 @@ result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes", 
 plot(result)
 }
 \seealso{
-\code{\link{glm_reg}} to generate the results
+\code{\link{glm_reg}} to generate results
 
 \code{\link{plot.glm_reg}} to plot results
 }
