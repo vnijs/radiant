@@ -7,11 +7,27 @@ dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.1/
 dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.1/
 dirwin=../radiant_miniCRAN/bin/windows/contrib/3.1/
 
+# removing all files in miniCRAN
+# rm $dirsource/*
+# rm $dirmac/*
+# rm $dirmac_mav/*
+# rm $dirwin/*
+
 # delete older version of radiant
 rm $dirsource/radiant*
 rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
+
+rm $dirsource/shinyAce*
+rm $dirmac/shinyAce*
+rm $dirmac_mav/shinyAce*
+rm $dirwin/shinyAce*
+
+rm $dirsource/rpivotTable*
+rm $dirmac/rpivotTable*
+rm $dirmac_mav/rpivotTable*
+rm $dirwin/rpivotTable*
 
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1
