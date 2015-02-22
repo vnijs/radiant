@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{radiant}
 \alias{radiant}
-\title{Launch the Radiant app in a browser}
+\title{Launch Radiant in the default browser}
 \usage{
 radiant(app = c("marketing", "quant", "base"))
 }
@@ -10,7 +10,7 @@ radiant(app = c("marketing", "quant", "base"))
 \item{app}{Choose the app to run. Either "base", "quant", or "marketing". "marketing" is the default}
 }
 \description{
-Launch the Radiant app in a browser
+Launch Radiant in the default browser
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant} for documentation and tutorials

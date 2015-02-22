@@ -2,17 +2,17 @@
 % Please edit documentation in R/radiant.R
 \name{mac_launcher}
 \alias{mac_launcher}
-\title{Make a .command launcher for Mac on the desktop}
+\title{Create a .command launcher for Windows}
 \usage{
 mac_launcher(app = c("marketing", "quant", "base"))
 }
 \arguments{
-\item{app}{App to install ('marketing', 'quant', or 'base'). Default is 'marketing'}
+\item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
 \value{
-On a mac a file named 'radiant.command' will be put on the desktop. Double-click the file to launch the Radiant app selected
+On Mac a file `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
 }
 \description{
-Make a .command launcher for Mac on the desktop
+Create a .command launcher for Windows
 }
 
