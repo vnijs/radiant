@@ -82,7 +82,6 @@ output$ui_viz_axes <- renderUI({
     inline = TRUE)
 })
 
-
 output$ui_Visualize <- renderUI({
   tagList(
     wellPanel(

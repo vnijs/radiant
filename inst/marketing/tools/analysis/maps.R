@@ -143,7 +143,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 	set.seed(1234)
 
 	###############################################
-	# Try metaMDS ?
+	# Try metaMDS - requires vegan
 	###############################################
 	# co.mds <- suppressWarnings(metaMDS(co.dist.mat, k = nr.dim, trymax = 500))
 	# if(co.mds$converged == FALSE) return("The MDS algorithm did not converge. Please try again.")
@@ -153,6 +153,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis, mds_rev_dim,
 
 	if(mds_non_metric == "metric") {
 		co.mds$points <- cmdscale(co.dist.mat, k = nr.dim)
+		cmdscale
 		# Using R^2
 		# co.mds$stress <- sqrt(1 - cor(dist(co.mds$points),co.dist.mat)^2) * 100
 		# Using standard Kruskal formula for metric MDS

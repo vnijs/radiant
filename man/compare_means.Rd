@@ -15,7 +15,7 @@ compare_means(dataset, cm_var1, cm_var2, data_filter = "",
 
 \item{cm_var2}{One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1}
 
-\item{data_filter}{Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{cm_alternative}{The alternative hypothesis (two.sided, greater or less)}
 
@@ -40,6 +40,6 @@ compare_means("diamonds","price",c("carats","table"))
 \seealso{
 \code{\link{summary.compare_means}} to summarize results
 
-\code{\link{plots.compare_means}} to plot results
+\code{\link{plot.compare_means}} to plot results
 }
 

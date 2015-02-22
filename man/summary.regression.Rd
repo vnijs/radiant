@@ -4,7 +4,7 @@
 \alias{summary.regression}
 \title{Summarize results from the regression. This is a method of class regression and can be called as summary or summary.regression}
 \usage{
-\method{summary}{regression}(result)
+\method{summary}{regression}(result, savepred = FALSE)
 }
 \arguments{
 \item{result}{Return value from \code{\link{regression}}}

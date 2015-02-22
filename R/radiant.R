@@ -176,7 +176,6 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   cat(launch_string,file=paste0(filepath,"radiant.bat"),sep="\n")
 }
 
-
 #' Make a .command launcher for Mac on the desktop
 #'
 #' @param app App to install ('marketing', 'quant', or 'base'). Default is 'marketing'
@@ -202,5 +201,3 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
 # mac_launcher("quant")
 # mac_launcher()
 # win_launcher()
-
-

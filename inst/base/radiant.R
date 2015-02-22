@@ -16,7 +16,7 @@ observe({
 
 ## Can't get this working in R/radiant.R
 ## Error in checkboxGroupInput("help_data", NULL, help_data, selected = state_init_list("help_data",  :
-##  could not find function "state_init_list"functions
+##  could not find function "state_init"
 
 #' Set initial value for shiny input (e.g., radio button or checkbox)
 #' @export
@@ -55,20 +55,6 @@ state_multiple <- function(inputvar, vals, init = character(0)) {
   else
     vals[vals %in% r_state[[inputvar]]]
 }
-
-#########################################################
-# remove deprecated functions below
-# state_init_multvar <- function(inputvar, init, vals)
-#   state_multiple(inputvar, vals, init)
-
-# state_multiple <- state_multiple
-# state_single <- state_single
-
-# state_init_list <- function(inputvar, init, vals)
-#   state_single(inputvar, vals, init)
-
-# remove deprecated functions above
-#########################################################
 
 ################################################################################
 # function to save app state on refresh or crash
@@ -220,52 +206,43 @@ suggest_data <- function(text = "", dat = "diamonds")
 ################################################################
 # functions used to create Shiny in and outputs
 ################################################################
-plotWidth <- function() {
+plotWidth <- function()
   if(input$viz_plot_width %>% not_available) r_data$plotWidth else input$viz_plot_width
-	# ifelse(is.null(input$viz_plot_width), return(r_data$plotWidth),
-	# 	return(input$viz_plot_width))
-}
 
-plotHeight <- function() {
+plotHeight <- function()
   if(input$viz_plot_height %>% not_available) r_data$plotHeight else input$viz_plot_height
-	# ifelse(is.null(input$viz_plot_height), return(r_data$plotHeight),
-	# 	return(input$viz_plot_height))
-}
+
 
 twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
-
   #
   # to be deprecated if register_..._output functions work as expected
   #
+  if(isolate(input$nav_radiant) != fun_name) return()
 
-	if(isolate(input$nav_radiant) != fun_name) return()
+  sum_name <- paste0("summary_", fun_label)
+  plot_name <- paste0("plots_", fun_label)
 
-	sum_name <- paste0("summary_", fun_label)
-	plot_name <- paste0("plots_", fun_label)
+  # Generate output for the summary tab
+  output[[sum_name]] <- renderPrint({
 
-	# Generate output for the summary tab
-	output[[sum_name]] <- renderPrint({
+    result <- get(rfun_label)()
+    # when no analysis was conducted (e.g., no variables selected)
+    if(is.character(result)) return(cat(result,"\n"))
+    get(sum_name)()
+  })
 
-		result <- get(rfun_label)()
-		# when no analysis was conducted (e.g., no variables selected)
-		if(is.character(result)) return(cat(result,"\n"))
-
-		get(sum_name)()
-	})
-
-	# Generate output for the plots tab
-	output[[plot_name]] <- renderPlot({
-
-		result <- get(rfun_label)()
-		# when no analysis was conducted (e.g., no variables selected)
-		if(is.character(result))
-			return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
+  # Generate output for the plots tab
+  output[[plot_name]] <- renderPlot({
+    result <- get(rfun_label)()
+    # when no analysis was conducted (e.g., no variables selected)
+    if(is.character(result))
+      return(plot(x = 1, type = 'n', main=result, axes = FALSE, xlab = "", ylab = ""))
 
     withProgress(message = 'Making plot', value = 0, {
       get(plot_name)()
     })
 
-	}, width=get(widthFun), height=get(heightFun))
+  }, width=get(widthFun), height=get(heightFun))
 
   return(tabsetPanel(
     id = paste0("tabs_",fun_label),
@@ -273,33 +250,6 @@ twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
     tabPanel("Plots", plotOutput(plot_name, height = "100%"))
   ))
 }
-
-onePanel <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
-
-  #
-  # to be deprecated if register_..._output functions work as expected
-  #
-
-	if(isolate(input$nav_radiant) != fun_name) return()
-
-	main_name <- paste0("main_", fun_label)
-
-	# Generate output for the summary tab
-	output[[main_name]] <- renderPrint({
-
-		result <- get(rfun_label)()
-		# when no analysis was conducted (e.g., no variables selected)
-		if(is.character(result)) return(cat(result,"\n"))
-
-		get(main_name)()
-	})
-
-  return(tabsetPanel(
-    id = paste0("tabs_",fun_label),
-    tabPanel("Main", verbatimTextOutput(main_name))
-  ))
-}
-
 
 # fun_name is a string of the main function name
 # rfun_name is a string of the reactive wrapper that calls the main function
@@ -370,6 +320,11 @@ statTabPanel2 <- function(menu, tool, tool_ui, output_panels,
 statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
                          widthFun = "plotWidth", heightFun = "plotHeight",
                          mpan = "twoPanels") {
+
+  #
+  # to be deprecated in favor of statTabPanel2
+  #
+
   tool <- isolate(input$nav_radiant)
   sidebarLayout(
     sidebarPanel(
@@ -388,7 +343,6 @@ statTabPanel <- function(menu_name, fun_name, rfun_label, fun_label,
     )
   )
 }
-
 
 ################################################################
 # various other functions
@@ -412,35 +366,38 @@ returnTextAreaInput <- function(inputId, label = NULL, value = "") {
 }
 
 # create html for sortable list of variables or factor levels
-html_list <- function(vars, id) {
-  hl <- paste0("<ul id=\'",id,"\' class='stab'>")
-  for(i in vars) hl <- paste0(hl, "<li class='ui-state-default stab'><span class='label'>",i,"</span></li>")
-  paste0(hl, "</ul>")
-}
+# html_list <- function(vars, id) {
+#   hl <- paste0("<ul id=\'",id,"\' class='stab'>")
+#   for(i in vars) hl <- paste0(hl, "<li class='ui-state-default stab'><span class='label'>",i,"</span></li>")
+#   paste0(hl, "</ul>")
+# }
 
 # binding for a sortable list of variables or factor levels
-returnOrder <- function(inputId, vars) {
-  tagList(
-    includeScript("../base/www/js/sort.js"),
-    includeCSS("../base/www/sort.css"),
-    HTML(html_list(vars, inputId)),
-    tags$script(paste0("$(function() {$( '#",inputId,"' ).sortable({placeholder: 'ui-state-highlight'}); $( '#",inputId,"' ).disableSelection(); });"))
-  )
-}
+# returnOrder <- function(inputId, vars) {
+#   tagList(
+#     includeScript("../base/www/js/sort.js"),
+#     includeCSS("../base/www/sort.css"),
+#     HTML(html_list(vars, inputId)),
+#     tags$script(paste0("$(function() {$( '#",inputId,"' ).sortable({placeholder: 'ui-state-highlight'}); $( '#",inputId,"' ).disableSelection(); });"))
+#   )
+# }
 
 # binding to a bootstrap popover, function by Joe Cheng https://gist.github.com/jcheng5/5913297
-helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'),
-  trigger=c('click', 'hover', 'focus', 'manual')) {
+# helpPopup <- function(title, content, placement=c('right', 'top', 'left', 'bottom'),
+#   trigger=c('click', 'hover', 'focus', 'manual')) {
 
-  tagList(
-    singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
-    tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
-      `data-placement` = match.arg(placement, several.ok=TRUE)[1],
-      `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="glyphicon-question-sign"))
-  )
-}
+#   tagList(
+#     singleton(tags$head(tags$script("$(function() { $(\"[data-toggle='popover']\").popover(); })"))),
+#     tags$a(href = "#", `data-toggle` = "popover", title = title, `data-content` = content,
+#       `data-placement` = match.arg(placement, several.ok=TRUE)[1],
+#       `data-trigger` = match.arg(trigger, several.ok=TRUE)[1], tags$i(class="glyphicon-question-sign"))
+#   )
+# }
 
 helpModal <- function(modal_title, link, help_file) {
+  #
+  # to be deprecated in favor of ... help_and_report
+  #
   sprintf("<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
             <div class='modal-dialog'>
               <div class='modal-content'>
@@ -458,6 +415,9 @@ helpModal <- function(modal_title, link, help_file) {
 }
 
 helpAndReport <- function(title, link, content) {
+  #
+  # to be deprecated in favor of ... help_and_report
+  #
   sprintf("<div class='modal fade' id='%sHelp' tabindex='-1' role='dialog' aria-labelledby='%sHelp_label' aria-hidden='true'>
             <div class='modal-dialog'>
               <div class='modal-content'>
@@ -478,6 +438,9 @@ helpAndReport <- function(title, link, content) {
 }
 
 help_and_report <- function(modal_title, fun_name, help_file) {
+#
+# try adding withMardown() back in - make sure to add withMarkdown to static UI
+#
   sprintf("<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
             <div class='modal-dialog'>
               <div class='modal-content'>
@@ -498,14 +461,19 @@ help_and_report <- function(modal_title, fun_name, help_file) {
 }
 
 # function to render .md files to html
+#
+# to be deprecated when all help files are in html
+#
 inclMD <- function(path) {
   markdown::markdownToHTML(path, fragment.only = TRUE, options = c(""),
                            stylesheet="../base/www/empty.css")
 }
 
-# function to render .Rmd files to html
-# does not embed image or add css
+# function to render .Rmd files to html - does not embed image or add css
 inclRmd <- function(path) {
+#
+# to be deprecated when all help files are in html
+#
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, options = "",
                    stylesheet = "../base/www/empty.css")

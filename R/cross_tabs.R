@@ -1,80 +1,33 @@
-# alternative hypothesis options
-base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
-
-###############################
-# Cross-tabs
-###############################
-output$ui_ct_var1 <- renderUI({
-	isFct <- "factor" == getdata_class()
-  vars <- varnames()[isFct]
-  selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
-  	selected = state_single("ct_var1",vars), multiple = FALSE)
-})
-
-output$ui_ct_var2 <- renderUI({
-	isFct <- "factor" == getdata_class()
-  vars <- varnames()[isFct]
-  if(input$ct_var1 %>% not_available) vars <- character(0)
-  if(length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
-  selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
-  	selected = state_single("ct_var2",vars), multiple = FALSE)
-})
-
-output$ui_crosstab <- renderUI({
-  list(
-  	wellPanel(
-	    uiOutput("ui_ct_var1"),
-	    uiOutput("ui_ct_var2"),
-		  checkboxInput("ct_observed", label = "Observed values",
-	     	value = state_init("ct_observed",TRUE)),
-		  checkboxInput("ct_expected", label = "Expected values",
-	     	value = state_init("ct_expected",FALSE)),
-	    conditionalPanel(condition = "input.tabs_crosstab == 'Summary'",
-			  checkboxInput("ct_contrib", label = "Difference (o - e)^2 / e",
-	     	value = state_init("ct_contrib",FALSE))),
-		  checkboxInput("ct_std_residuals", label = "Deviation (standarized)",
-	     	value = state_init("ct_std_residuals",FALSE)),
-		  checkboxInput("ct_deviation", label = "Deviation (percentage)",
-	     	value = state_init("ct_deviation",FALSE))
-		),
-	 	helpAndReport("Cross-tabs","crosstab",inclMD("../quant/tools/help/crossTabs.md"))
-  )
-})
-
-ct_plotWidth <- function()
-	.crosstab() %>% { if(is.list(.)) .$plotWidth else 650 }
-
-ct_plotHeight <- function()
-	.crosstab() %>% { if(is.list(.)) .$plotHeight else 650 }
-
-output$crosstab <- renderUI({
-	# for input-output
-  statTabPanel("Base", "Cross-tabs",".crosstab","crosstab", "ct_plotWidth", "ct_plotHeight")
-})
-
-.crosstab <- reactive({
-	if(input$ct_var2 %>% not_available)
-		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
-
-	do.call(crosstab, ct_inputs())
-})
-
-observe({
-  if(input$crosstabReport %>% not_pressed) return()
-  isolate({
-		updateReport(ct_inputs() %>% clean_args, "crosstab",
-		             round(7 * ct_plotWidth()/650,2), round(7 * ct_plotHeight()/650,2))
-  })
-})
-
-crosstab <- function(dataset, ct_var1, ct_var2,
-                     data_filter = "",
-                     show_filter = FALSE,
-                     ct_observed = TRUE,
-                     ct_expected = FALSE,
-                     ct_deviation = FALSE,
-                     ct_std_residuals = FALSE,
-                     ct_contrib = FALSE) {
+#' Evaluate associations between categorical variables
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+#'
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param ct_var1 A categorical variable
+#' @param ct_var2 Another categorical variable
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param ct_observed Show the observed frequencies table for variables `ct_var1` and `ct_var2`
+#' @param ct_expected Show the expected frequencies table (i.e., frequencies if the null hypothesis holds)
+#' @param ct_contrib Show the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e)
+#' @param ct_std_residuals Show standardized differences between the observed and expected frequencies
+#' @param ct_deviation Show the percentage difference between the observed and expected frequencies
+#'
+#' @return A list with all variables defined in the function as an object of class compare_props
+#'
+#' @examples
+#' result <- compare_props("titanic", "pclass", "survived")
+#'
+#' @seealso \code{\link{summary.compare_props}} to summarize results
+#' @seealso \code{\link{plot.compare_props}} to plot results
+#'
+#' @export
+cross_tabs <- function(dataset, ct_var1, ct_var2,
+                     	data_filter = "",
+                     	ct_observed = TRUE,
+                     	ct_expected = FALSE,
+                     	ct_contrib = FALSE,
+                     	ct_std_residuals = FALSE,
+                     	ct_deviation = FALSE) {
 
 	dat <- getdata_exp(dataset, c(ct_var1, ct_var2), filt = data_filter)
 
@@ -91,46 +44,46 @@ crosstab <- function(dataset, ct_var1, ct_var2,
 	cst$deviation <- (o-e) / e
 
 	nrPlot <- sum(c(ct_observed, ct_expected, ct_deviation, ct_std_residuals))
-	plotWidth = 650
-	plotHeight = 400 * nrPlot
+	plot_width = 650
+	plot_height = 400 * nrPlot
 
-  environment() %>% as.list %>% set_class(c("crosstab",class(.)))
+  environment() %>% as.list %>% set_class(c("cross_tabs",class(.)))
 }
 
 # test
+# library(broom)
+# library(tidyr)
+# library(dplyr)
 # source("~/gh/radiant_dev/R/radiant.R")
-# result <- crosstab("diamonds","cut","clarity")
+# result <- cross_tabs("diamonds","cut","clarity")
 
-# list of function arguments
-ct_args <- as.list(formals(crosstab))
-
-# list of function inputs selected by user
-ct_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(ct_args))
-    ct_args[[i]] <- input[[i]]
-  if(!input$show_filter) ct_args$data_filter = ""
-  ct_args
-})
-
-summary_crosstab <- function(result = .crosstab()) {
+#' Summarize method for output from the cross_tabs function. This is a method of class cross_tabs and can be called as summary or summary.cross_tabs
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+#'
+#' @examples
+#' result <- cross_tabs("titanic", "pclass", "survived")
+#' summary(result)
+#'
+#' @seealso \code{\link{cross_tabs}} to calculate results
+#' @seealso \code{\link{plot.cross_tabs}} to plot results
+#'
+#' @export
+summary.cross_tabs <- function(result) {
 
   cat("Cross-tabs\n")
 	cat("Data     :", result$dataset, "\n")
-	if(result$show_filter) {
-		if(result$data_filter %>% gsub("\\s","",.) != "")
-			cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	}
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
 	cat("Variables:", paste0(c(result$ct_var1, result$ct_var2), collapse=", "), "\n")
 	cat("Null hyp.: there is no association between", result$ct_var1, "and", result$ct_var2, "\n")
-	cat("Alt. hyp.: there is an association between", result$ct_var1, "and", result$ct_var2, "\n\n")
+	cat("Alt. hyp.: there is an association between", result$ct_var1, "and", result$ct_var2, "\n")
 
 	result$cst$observed %>% rownames %>% c(., "Total") -> rnames
 	result$cst$observed %>% colnames %>% c(., "Total") -> cnames
 
 	if(result$ct_observed) {
-		cat("Observed values:\n")
-
+		cat("\nObserved values:\n")
 		result$cst$observed %>%
 			rbind(colSums(.)) %>%
 			set_rownames(rnames) %>%
@@ -138,10 +91,8 @@ summary_crosstab <- function(result = .crosstab()) {
 			set_colnames(cnames) %>%
 			print
 	}
-
 	if(result$ct_expected) {
 		cat("\nExpected values:\n")
-
 		result$cst$expected %>%
 			rbind(colSums(.)) %>%
 			set_rownames(rnames) %>%
@@ -149,11 +100,17 @@ summary_crosstab <- function(result = .crosstab()) {
 			set_colnames(cnames) %>%
 			round(2) %>%
 			print
-
 	}
 	if(result$ct_contrib) {
 		cat("\nContribution to chisquare value:\n")
-		print((result$cst$observed - result$cst$expected)^2 / result$cst$expected, digits = 2)
+		# print((result$cst$observed - result$cst$expected)^2 / result$cst$expected, digits = 2)
+		((result$cst$observed - result$cst$expected)^2 / result$cst$expected) %>%
+			rbind(colSums(.)) %>%
+			set_rownames(rnames) %>%
+			cbind(rowSums(.)) %>%
+			set_colnames(cnames) %>%
+			round(2) %>%
+			print
 	}
 	if(result$ct_std_residuals) {
 		cat("\nDeviation (standardized):\n")
@@ -176,11 +133,26 @@ summary_crosstab <- function(result = .crosstab()) {
 	# 	print(prop.table(result$table, 2), digits = 2) # column percentages
 	# }
 
-	print(result$cst)
+	result$cst %>% tidy %>% round(3) -> res
+	if(res$p.value < .001) res$p.value  <- "< .001"
+	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")
+
 	cat(paste(sprintf("%.1f",100 * (sum(result$cst$expected < 5) / length(result$cst$expected))),"% of cells have expected values below 5\n\n"), sep = "")
 }
 
-plots_crosstab <- function(result = .crosstab()) {
+#' Plot results from the cross_tabs function. This is a method of class cross_tabs and can be called as plot or plot.cross_tabs
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+#'
+#' @examples
+#' result <- cross_tabs("titanic", "pclass", "survived", cp_plots = "props")
+#' plot(result)
+#'
+#' @seealso \code{\link{cross_tabs}} to calculate results
+#' @seealso \code{\link{summary.cross_tabs}} to summarize results
+#'
+#' @export
+plot.cross_tabs <- function(result) {
 
 	gather_table <- function(tab) {
 		tab %>%

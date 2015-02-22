@@ -22,6 +22,6 @@ summary(result)
 \seealso{
 \code{\link{single_prop}} to generate the results
 
-\code{\link{plots.single_prop}} to plot results
+\code{\link{plot.single_prop}} to plot results
 }
 

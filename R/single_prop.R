@@ -4,7 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sp_var The variable selected for the proportion comparison
-#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param sp_levels The factor level selected for the proportion comparison
 #' @param sp_comp_value Population value to compare the sample proportion to
 #' @param sp_alternative The alternative hypothesis (two.sided, greater or less)
@@ -16,7 +16,7 @@
 #' single_prop("diamond","cut","IF")
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize results
-#' @seealso \code{\link{plots.single_prop}} to plot results
+#' @seealso \code{\link{plot.single_prop}} to plot results
 #'
 #' @export
 single_prop <- function(dataset, sp_var,
@@ -59,7 +59,7 @@ single_prop <- function(dataset, sp_var,
 #' summary(result)
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
-#' @seealso \code{\link{plots.single_prop}} to plot results
+#' @seealso \code{\link{plot.single_prop}} to plot results
 #'
 #' @export
 summary.single_prop <- function(result) {

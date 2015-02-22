@@ -5,7 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param glm_dep_var The dependent variable in the regression
 #' @param glm_levels The level in the dependent variable to use as success
-#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param glm_indep_var Independent variables in the regression
 #' @param glm_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
 #' @param glm_int_var Interaction term to include in the model (not yet in Radiant)
@@ -204,6 +204,8 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 #'
 #' @seealso \code{\link{glm_reg}} to generate the results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
+#'
+#' @importFrom car vif
 #'
 #' @export
 summary.glm_reg <- function(result, savepred = FALSE) {

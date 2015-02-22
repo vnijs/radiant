@@ -1,6 +1,10 @@
 ################################################################
 # Conjoint regression
 ################################################################
+#' Conjoint analysis
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+#'
 #' @export
 conjoint <- function(dataset, ca_var1, ca_var2,
                      data_filter = "",
@@ -18,7 +22,9 @@ conjoint <- function(dataset, ca_var1, ca_var2,
 		dat[,ca_var1] <- abs(ca_dep - max(ca_dep)) + 1
 	}
 
-	model <- lm(formula, data = dat) %>% tidy
+	# model <- lm(formula, data = dat) %>% tidy
+	lm_mod <- lm(formula, data = dat)
+	model <- lm_mod %>% tidy
 
 	nrVars <- length(ca_var2)
 	plot_height <- plot_width <- 500
@@ -40,6 +46,12 @@ conjoint <- function(dataset, ca_var1, ca_var2,
 # result <- conjoint(dataset, ca_var1, ca_var2)
 # summary_conjoint(result)
 
+#' Summary for conjoint analysis
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+#'
+#' @importFrom car vif
+#'
 #' @export
 summary.conjoint <- function(result) {
 
@@ -71,7 +83,7 @@ summary.conjoint <- function(result) {
 
     if(length(result$ca_var2) > 1) {
       cat("Variance Inflation Factors\n")
-      vif(result$model) %>%
+      vif(result$lm_mod) %>%
         { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
         data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
         round(3) %>%
@@ -81,19 +93,12 @@ summary.conjoint <- function(result) {
       cat("Insufficient number of attributes selected to calculate\nmulti-collinearity diagnostics")
     }
 	}
-
-		# if(length(result$ca_var2) > 1) {
-	 #  	cat("Variance Inflation Factors\n")
-	 #  	# from vif_regression
-	 #  	VIF <- vif(result)
-	 #  	if(!is.null(dim(VIF))) VIF <- VIF[,'GVIF'] # needed when factors are included
-	 #  	VIF <- sort(VIF, decreasing = TRUE)
-	 #  	ifelse(length(VIF) < 8, return(VIF), return(data.frame(VIF)))
-		# } else {
-	 #  	cat("Insufficient number of attributes/levels selected to calculate VIF scores\n")
-		# }
 }
 
+#' Plot for conjoint analysis
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+#'
 #' @export
 plot.conjoint <- function(result) {
 
@@ -187,22 +192,6 @@ ca_the_table <- function(model, dat, ca_var2) {
 
 	list('PW' = PW.df, 'IW' = IW, 'plot_ylim' = plot_ylim)
 }
-
-# vif.conjoint <- function(result = .conjoint()) {
-# 	if(result$ca_vif) {
-# 		if(length(result$ca_var2) > 1) {
-# 	  	cat("Variance Inflation Factors\n")
-
-# 	  	# from vif_regression
-# 	  	VIF <- vif(result)
-# 	  	if(!is.null(dim(VIF))) VIF <- VIF[,'GVIF'] # needed when factors are included
-# 	  	VIF <- sort(VIF, decreasing = TRUE)
-# 	  	ifelse(length(VIF) < 8, return(VIF), return(data.frame(VIF)))
-# 		} else {
-# 	  	cat("Insufficient number of attributes/levels selected to calculate VIF scores\n")
-# 		}
-# 	}
-# }
 
 # code for 'exploded logistic regression' when ranking data is provided
 # require(MASS)

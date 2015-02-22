@@ -4,7 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sm_var The variable selected for the mean comparison
-#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param sm_comp_value Population value to compare the sample mean with
 #' @param sm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param sm_sig_level Span of the confidence interval

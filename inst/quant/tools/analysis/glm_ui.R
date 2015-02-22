@@ -228,7 +228,7 @@ observe({
 output$glm_savepred <- downloadHandler(
   filename = function() { "glm_savepred.csv" },
   content = function(file) {
-    summary.glm_reg(.glm_reg(), savepred = TRUE) %>%
+    summary(.glm_reg(), savepred = TRUE) %>%
       write.csv(., file = file, row.names = FALSE)
   }
 )

@@ -227,7 +227,7 @@ observe({
   isolate({
 
 		# extra command to save cluster membership
- 		xcmd <- paste0("saveClusters(result)")
+ 		xcmd <- paste0("save_clusters(result)")
 		updateReport(km_inputs() %>% clean_args, "kmeansCluster",
 		             round(7 * kmeans_plotWidth()/650,2),
 		             round(7 * kmeans_plotHeight()/650,2),
@@ -338,8 +338,10 @@ plots_kmeansCluster <- function(result = .kmeansCluster()) {
 	sshh( do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))) )
 }
 
-saveClusters <- function(result) {
-	data.frame(as.factor(result$cluster)) %>%
+# this function should be exported so it can be called externally
+# should not use changedata (reactive)
+save_clusters <- function(result) {
+	data.frame(as.factor(result$km_out$cluster)) %>%
 	changedata(., paste0("kclus",result$km_nrClus))
 }
 
@@ -349,7 +351,6 @@ observe({
 	isolate({
 		result <- .kmeansCluster()
 		if(is.character(result)) return()
-		saveClusters(list(cluster = result$km_out$cluster,
-		             			km_nrClus = result$km_nrClus))
+		save_clusters(result)
 	})
 })

@@ -4,7 +4,7 @@ descr_out <- function(descr, ret_type = 'html') {
 
   # if there is a data description and we want html output
   if(ret_type == 'html')
-    descr <- markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
+    descr <- markdown::markdownToHTML(text = descr, stylesheet="../base/www/empty.css")
 
   descr
 }

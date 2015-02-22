@@ -5,7 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cm_var1 A numeric variable or factor selected for comparison
 #' @param cm_var2 One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1
-#' @param data_filter Expression intered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param cm_alternative The alternative hypothesis (two.sided, greater or less)
 #' @param cm_sig_level Span of the confidence interval
 #' @param cm_adjust Adjustment for multiple comparisons (none or bonferroni)
@@ -17,7 +17,7 @@
 #' compare_means("diamonds","price",c("carats","table"))
 #'
 #' @seealso \code{\link{summary.compare_means}} to summarize results
-#' @seealso \code{\link{plots.compare_means}} to plot results
+#' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
 compare_means <- function(dataset, cm_var1, cm_var2,

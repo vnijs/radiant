@@ -10,7 +10,7 @@ output$ui_conjoint_profiles <- renderUI({
 		# helpAndReport('Conjoint profiles','conjoint_profiles',inclMD("tools/help/conjoint_profiles.md"))
   	help_and_report(modal_title = "Conjoint profiles",
   	                fun_name = "conjoint_profiles",
-  	                help_file = inclMD("tools/help/conjoint_profiles.md"))
+  	                help_file = inclMD("../marketing/tools/help/conjoint_profiles.md"))
 	)
 })
 
@@ -40,8 +40,6 @@ output$conjoint_profiles <- renderUI({
 observe({
   if(input$conjoint_profiles_report %>% not_pressed) return()
   isolate({
-		# inp <- list(r_data[['ca_attr']])
-		# updateReport(inp,"conjoint_profiles")
 		update_report(inp = list(r_data[['ca_attr']]), fun_name = "conjoint_profiles",
 		              outputs = "summary")
   })
@@ -104,7 +102,7 @@ summary.conjoint_profiles <- function(result) {
 	print(result$full[,cn], row.names = FALSE)
 }
 
-conjointFFD <-function(dat, trial = 50, rseed = 172110) {
+conjointFFD <- function(dat, trial = 50, rseed = 172110) {
 
 	experiment <- expand.grid(dat)
 
@@ -120,8 +118,7 @@ conjointFFD <-function(dat, trial = 50, rseed = 172110) {
 
 	for (i in min_profiles:max_profiles) {
 		set.seed(rseed) 		# need to be in the look
-		design <- optFederov(data = experiment, nTrials=i,
-		                     maxIteration=1000)
+		design <- AlgDesign::optFederov(data = experiment, nTrials=i, maxIteration=1000)
 		cor_mat <- cor(data.matrix(design$design))
 		# cat('\nEvaluating the',i,'profile design\n\n')
 		# print(as.dist(cor_mat), digits = 1)
