@@ -2,17 +2,17 @@
 % Please edit documentation in R/radiant.R
 \name{win_launcher}
 \alias{win_launcher}
-\title{Make a .bat launcher for Windows on the desktop}
+\title{Create a .bat launcher for Windows}
 \usage{
 win_launcher(app = c("marketing", "quant", "base"))
 }
 \arguments{
-\item{app}{App to install ('marketing', 'quant', or 'base'). Default is 'marketing'}
+\item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
 \value{
-On a windows machine a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the Radiant app selected
+On Windows a file `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
 }
 \description{
-Make a .bat launcher for Windows on the desktop
+Create a .bat launcher for Windows
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/glm.R
 \name{summary.glm_reg}
 \alias{summary.glm_reg}
-\title{Summarize results from the glm regression. This is a method of class glm_reg and can be called as summary or summary.glm_reg}
+\title{Summary method for glm_reg}
 \usage{
 \method{summary}{glm_reg}(result, savepred = FALSE)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{glm_reg}}}
 }
 \description{
-Summarize results from the glm regression. This is a method of class glm_reg and can be called as summary or summary.glm_reg
+Summary method for glm_reg
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
@@ -20,7 +20,7 @@ result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 summary(result)
 }
 \seealso{
-\code{\link{glm_reg}} to generate the results
+\code{\link{glm_reg}} to generate results
 
 \code{\link{plot.glm_reg}} to plot results
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{sig_stars}
 \alias{sig_stars}
-\title{Add '***' to a data.frame based on the p.values}
+\title{Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values}
 \usage{
 sig_stars(pval)
 }
@@ -13,7 +13,7 @@ sig_stars(pval)
 A list with all variables defined in the function
 }
 \description{
-Add '***' to a data.frame based on the p.values
+Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
 }
 \examples{
 sig_stars(c(.0009, .049, .009, .4, .09))

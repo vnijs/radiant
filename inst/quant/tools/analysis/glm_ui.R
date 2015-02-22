@@ -6,7 +6,7 @@ glm_check <- c("VIF" = "vif", "Confidence intervals" = "confint", "Odds" = "odds
                "Stepwise selection" = "stepwise")
 glm_plots <- list("None" = "", "Histograms" = "hist",
                   "Scatter" = "scatter", "Dashboard" = "dashboard",
-                  "Coefficient plot" = "coef", "Probability plot" = "prob")
+                  "Coefficient plot" = "coef")
 
 
 # list of function arguments
@@ -92,12 +92,12 @@ output$ui_glm_levels <- renderUI({
               selected = state_single("glm_levels",levs), multiple = FALSE)
 })
 
-output$ui_glm_prob_plot <- renderUI({
-  # if(r_data[['glm_pred_list']] %>% not_available) return()
-  selectInput(inputId = "glm_prob_plot", label = "Choose predictions:",
-              choices = r_data[['glm_pred_list']], multiple = FALSE)
-              # choices = c("a","b","c"), multiple = FALSE)
-})
+# output$ui_glm_prob_plot <- renderUI({
+#   # if(r_data[['glm_pred_list']] %>% not_available) return()
+#   selectInput(inputId = "glm_prob_plot", label = "Choose predictions:",
+#               choices = r_data[['glm_pred_list']], multiple = FALSE)
+#               # choices = c("a","b","c"), multiple = FALSE)
+# })
 
 output$ui_glm_reg <- renderUI({
   tagList(
@@ -108,10 +108,7 @@ output$ui_glm_reg <- renderUI({
 		    selectInput("glm_plots", "GLM plots:", choices = glm_plots,
 			  	selected = state_single("glm_plots", glm_plots)),
 		  	conditionalPanel(condition = "input.glm_plots == 'coef'",
-        	checkboxInput("glm_coef_int", "Include intercept", state_init("glm_coef_int", FALSE))),
-        conditionalPanel(condition = "input.glm_plots == 'prob'",
-          uiOutput("ui_glm_prob_plot")
-        )
+        	checkboxInput("glm_coef_int", "Include intercept", state_init("glm_coef_int", FALSE)))
 		  ),
 	    uiOutput("ui_glm_dep_var"),
       uiOutput("ui_glm_levels"),
