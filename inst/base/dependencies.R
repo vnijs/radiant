@@ -2,7 +2,7 @@
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-# setting the url for the miniCRAN, using XRAN as in yihui/xran :)
+# setting the url for the miniCRAN, using XRAN as in yihui/xran
 options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
 
 # udpate old-packages
@@ -20,8 +20,9 @@ if(exists("pkgs"))
 require(rpivotTable)
 
 # options(repos = c(CRAN = "http://cran.rstudio.com"))
+# install.packages('shiny')
+
 # install.packages(devtools)
-# devtools::install_github('rstudio/shiny@v0.11.1-rc')
 # devtools::install_github(c("ramnathv/htmlwidgets", "smartinsightsfromdata/rpivotTable"))
 # shiny::runApp("~/gh/radiant_dev/inst/marketing")
 

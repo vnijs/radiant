@@ -37,14 +37,15 @@ help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visuali
 output$help_data <- reactive(append_help("help_data", "../base/tools/help/"))
 
 help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "random.md",
-                 "Sample size" = "sampleSize.Rmd")
+                 "Sample size" = "sample_size.Rmd")
 output$help_random <- reactive(append_help("help_random", "../quant/tools/help/", Rmd = TRUE))
 
 help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
-                    "Cross-tabs" = "crossTabs.md")
+                    "Single proportion" = "single_prop.md", "Compare proportions" = "compare_props.md",
+                    "Cross-tabs" = "cross_tabs.md")
 output$help_base_menu <- reactive(append_help("help_base_menu", "../quant/tools/help/"))
 
-help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd")
+help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.md")
 output$help_regression <- reactive(append_help("help_regression", "../quant/tools/help/", Rmd = TRUE))
 
 
@@ -52,7 +53,8 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
   if(is.null(help_all) || help_all == 0) return()
   help_choices <- help_init <- get(help_str)
   init <- ""
-  if(help_on) init <- state_init(help_str, help_init)
+  # if(help_on) init <- state_init(help_str, help_init)
+  if(help_on) init <- help_init
   updateCheckboxGroupInput(session, help_str,
     label = NULL,
     choices = help_choices,
@@ -154,7 +156,7 @@ output$help_cluster <- reactive(append_help("help_cluster", "../marketing/tools/
 observe( help_switch(input$help_cluster_all, "help_cluster") )
 observe( help_switch(input$help_cluster_none, "help_cluster", help_on = FALSE) )
 
-help_conjoint <- c("Conjoint" = "conjoint.md")
+help_conjoint <- c("Conjoint" = "conjoint.md", "Conjoint profiles" = "conjoint_profiles.md")
 output$help_conjoint <- reactive(append_help("help_conjoint", "../marketing/tools/help/"))
 observe( help_switch(input$help_conjoint_all, "help_conjoint") )
 observe( help_switch(input$help_conjoint_none, "help_conjoint", help_on = FALSE) )
