@@ -4,10 +4,6 @@
 		{
 			"follow_symlinks": true,
 			"path": "."
-		},
-		{
-			"follow_symlinks": true,
-			"path": "/Users/vnijs/Desktop/GitHub/radiant_miniCRAN"
 		}
 	]
 }

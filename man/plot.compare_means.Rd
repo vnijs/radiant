@@ -2,18 +2,18 @@
 % Please edit documentation in R/compare_means.R
 \name{plot.compare_means}
 \alias{plot.compare_means}
-\title{Plot results from the compare_means function. This is a method of class compare_means and can be called as plot or plot.compare_means}
+\title{Plot method for output from compare_means}
 \usage{
 \method{plot}{compare_means}(result)
 }
 \description{
-Plot results from the compare_means function. This is a method of class compare_means and can be called as plot or plot.compare_means
+Plot method for output from compare_means
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 }
 \examples{
-result <- compare_means("diamonds","price",c("carats","table"))
+result <- compare_means("diamonds","cut","price", cm_plots = "box")
 plot(result)
 }
 \seealso{

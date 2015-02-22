@@ -4,14 +4,39 @@
 \alias{conjoint}
 \title{Conjoint analysis}
 \usage{
-conjoint(dataset, ca_var1, ca_var2, data_filter = "", show_filter = FALSE,
-  ca_rev = FALSE, ca_vif = FALSE, ca_plots = "pw",
-  ca_scale_plot = FALSE)
+conjoint(dataset, ca_var1, ca_var2, data_filter = "", ca_rev = FALSE,
+  ca_vif = FALSE, ca_plots = "pw", ca_scale_plot = FALSE)
+}
+\arguments{
+\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+
+\item{ca_var1}{The dependent variable (e.g., profile ratings)}
+
+\item{ca_var2}{Independent variables in the regression}
+
+\item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{ca_rev}{Reverse the values of the dependent variable (`ca_var1`)}
+
+\item{ca_vif}{Shows multicollinearity diagnostics.}
+
+\item{ca_plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
+}
+\value{
+A list with all variables defined in the function as an object of class conjoint
 }
 \description{
 Conjoint analysis
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+}
+\examples{
+result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
+}
+\seealso{
+\code{\link{summary.conjoint}} to summarize results
+
+\code{\link{plot.conjoint}} to plot results
 }
 

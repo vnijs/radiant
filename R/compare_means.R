@@ -4,17 +4,17 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cm_var1 A numeric variable or factor selected for comparison
-#' @param cm_var2 One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1
+#' @param cm_var2 One or more numeric variables for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of cm_var1
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param cm_alternative The alternative hypothesis (two.sided, greater or less)
+#' @param cm_alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param cm_sig_level Span of the confidence interval
-#' @param cm_adjust Adjustment for multiple comparisons (none or bonferroni)
-#' @param cm_plots One or more plots of mean values (bar, box, or density plot)
+#' @param cm_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
+#' @param cm_plots One or more plots ("bar", "box", or "density")
 #'
-#' @return A list with all variables defined in the function as an object of class compare_means
+#' @return A list of all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' compare_means("diamonds","price",c("carats","table"))
+#' result <- compare_means("diamonds","cut","price")
 #'
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #' @seealso \code{\link{plot.compare_means}} to plot results
@@ -27,15 +27,6 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                           cm_sig_level = .95,
                           cm_adjust = "none",
                           cm_plots = "bar") {
-
-# dataset <- "diamonds"
-# cm_var1 <- "price"
-# cm_var2 <- "table"
-# cm_paired = "independent"
-# cm_alternative = "two.sided"
-# cm_sig_level = .95
-# cm_adjust = "none"
-# cm_plots = "bar"
 
 	vars <- c(cm_var1, cm_var2)
 	# dat <- getdata_exp(dataset, vars)
@@ -91,40 +82,12 @@ compare_means <- function(dataset, cm_var1, cm_var2,
   environment() %>% as.list %>% set_class(c("compare_means",class(.)))
 }
 
-# library(broom)
-# library(dplyr)
-# library(tidyr)
-# library(magrittr)
-# library(ggplot2)
-# source("~/gh/radiant_dev/R/radiant.R")
-# rm(r_env)
-# result <- compare_means("diamonds","cut","price",cm_alternative = "greater")
-# summary(result)
-# load("~/Desktop/PairwiseBrand.rda")
-# PairwiseBrand
-# result <- compare_means("PairwiseBrand","BrandA","BrandB",cm_alternative = "less")
-# summary(result)
-
-# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
-# dataset <- "titanic"
-# data_filter = ""
-# cm_var1 <- "pclass"
-# cm_var2 <- "age"
-# cm_alternative = "two.sided"
-# cm_sig_level = .95
-# cm_adjust = "none"
-# cm_plots = "bar"
-# result <- compare_means(dataset, cm_var1, cm_var2)
-# summary(result)
-
-
-
 #' Summarize method for output from compare_means
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @examples
-#' result <- compare_means("diamonds","price",c("carats","table"))
+#' result <- compare_means("diamonds","cut","price")
 #' summary(result)
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
@@ -168,12 +131,12 @@ summary.compare_means <- function(result) {
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 
-#' Plot results from the compare_means function. This is a method of class compare_means and can be called as plot or plot.compare_means
+#' Plot method for output from compare_means
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @examples
-#' result <- compare_means("diamonds","price",c("carats","table"))
+#' result <- compare_means("diamonds","cut","price", cm_plots = "box")
 #' plot(result)
 #'
 #' @seealso \code{\link{compare_means}} to calculate results

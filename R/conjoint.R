@@ -1,14 +1,26 @@
-################################################################
-# Conjoint regression
-################################################################
 #' Conjoint analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#'
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param ca_var1 The dependent variable (e.g., profile ratings)
+#' @param ca_var2 Independent variables in the regression
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param ca_rev Reverse the values of the dependent variable (`ca_var1`)
+#' @param ca_vif Shows multicollinearity diagnostics.
+#' @param ca_plots Show either the part-worth ("pw") or importance-weights ("iw") plot
+#'
+#' @return A list with all variables defined in the function as an object of class conjoint
+#'
+#' @examples
+#' result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
+#'
+#' @seealso \code{\link{summary.conjoint}} to summarize results
+#' @seealso \code{\link{plot.conjoint}} to plot results
 #'
 #' @export
 conjoint <- function(dataset, ca_var1, ca_var2,
                      data_filter = "",
-                     show_filter = FALSE,
                      ca_rev = FALSE,
                      ca_vif = FALSE,
                      ca_plots = "pw",
@@ -22,7 +34,6 @@ conjoint <- function(dataset, ca_var1, ca_var2,
 		dat[,ca_var1] <- abs(ca_dep - max(ca_dep)) + 1
 	}
 
-	# model <- lm(formula, data = dat) %>% tidy
 	lm_mod <- lm(formula, data = dat)
 	model <- lm_mod %>% tidy
 
@@ -38,17 +49,16 @@ conjoint <- function(dataset, ca_var1, ca_var2,
 	environment() %>% as.list %>% set_class(c("conjoint",class(.)))
 }
 
-# dat <- mtcars
-# dat$vs <- as.factor(mtcars$vs)
-# dataset = "dat"
-# ca_var1 = "mpg"
-# ca_var2 = "vs"
-# result <- conjoint(dataset, ca_var1, ca_var2)
-# summary_conjoint(result)
-
-#' Summary for conjoint analysis
+#' Summary method for conjoint output
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#'
+#' @examples
+#' result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
+#' summary(result)
+#'
+#' @seealso \code{\link{conjoint}} to generate results
+#' @seealso \code{\link{plot.conjoint}} to plot results
 #'
 #' @importFrom car vif
 #'
@@ -95,9 +105,16 @@ summary.conjoint <- function(result) {
 	}
 }
 
-#' Plot for conjoint analysis
+#' Plot method for conjoint output
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#'
+#' @examples
+#' result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
+#' plot(result)
+#'
+#' @seealso \code{\link{conjoint}} to generate results
+#' @seealso \code{\link{summary.conjoint}} to summarize results
 #'
 #' @export
 plot.conjoint <- function(result) {
