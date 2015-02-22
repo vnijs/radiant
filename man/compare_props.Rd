@@ -11,7 +11,7 @@ compare_props(dataset, cp_var1, cp_var2, data_filter = "", cp_levels = "",
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{cp_var1}{A grouping variable to creates slips in the data for comparisons}
+\item{cp_var1}{A grouping variable to split the data for comparisons}
 
 \item{cp_var2}{The variable to calculate proportions for}
 
@@ -19,16 +19,16 @@ compare_props(dataset, cp_var1, cp_var2, data_filter = "", cp_levels = "",
 
 \item{cp_levels}{The factor level selected for the proportion comparison}
 
-\item{cp_alternative}{The alternative hypothesis (two.sided, greater or less)}
+\item{cp_alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
 
 \item{cp_sig_level}{Span of the confidence interval}
 
-\item{cp_adjust}{Adjustment for multiple comparisons (none or bonferroni)}
+\item{cp_adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
 \item{cp_plots}{One or more plots of proportions or counts ("props" or "counts")}
 }
 \value{
-A list with all variables defined in the function as an object of class compare_props
+A list of all variables defined in the function as an object of class compare_props
 }
 \description{
 Compare proportions across groups

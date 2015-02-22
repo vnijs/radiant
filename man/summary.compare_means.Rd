@@ -13,7 +13,7 @@ Summarize method for output from compare_means
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 }
 \examples{
-result <- compare_means("diamonds","price",c("carats","table"))
+result <- compare_means("diamonds","cut","price")
 summary(result)
 }
 \seealso{

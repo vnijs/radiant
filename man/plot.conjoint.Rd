@@ -2,14 +2,23 @@
 % Please edit documentation in R/conjoint.R
 \name{plot.conjoint}
 \alias{plot.conjoint}
-\title{Plot for conjoint analysis}
+\title{Plot method for conjoint output}
 \usage{
 \method{plot}{conjoint}(result)
 }
 \description{
-Plot for conjoint analysis
+Plot method for conjoint output
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/conjoint.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+}
+\examples{
+result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
+plot(result)
+}
+\seealso{
+\code{\link{conjoint}} to generate results
+
+\code{\link{summary.conjoint}} to summarize results
 }
 

@@ -13,20 +13,20 @@ compare_means(dataset, cm_var1, cm_var2, data_filter = "",
 
 \item{cm_var1}{A numeric variable or factor selected for comparison}
 
-\item{cm_var2}{One or more numeric variable for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across the factor levels of cm_var1}
+\item{cm_var2}{One or more numeric variables for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of cm_var1}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
-\item{cm_alternative}{The alternative hypothesis (two.sided, greater or less)}
+\item{cm_alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
 
 \item{cm_sig_level}{Span of the confidence interval}
 
-\item{cm_adjust}{Adjustment for multiple comparisons (none or bonferroni)}
+\item{cm_adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
-\item{cm_plots}{One or more plots of mean values (bar, box, or density plot)}
+\item{cm_plots}{One or more plots ("bar", "box", or "density")}
 }
 \value{
-A list with all variables defined in the function as an object of class compare_means
+A list of all variables defined in the function as an object of class compare_means
 }
 \description{
 Compare means for two or more variables
@@ -35,7 +35,7 @@ Compare means for two or more variables
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 }
 \examples{
-compare_means("diamonds","price",c("carats","table"))
+result <- compare_means("diamonds","cut","price")
 }
 \seealso{
 \code{\link{summary.compare_means}} to summarize results

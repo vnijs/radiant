@@ -3,22 +3,24 @@
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param cp_var1 A grouping variable to creates slips in the data for comparisons
+#' @param cp_var1 A grouping variable to split the data for comparisons
 #' @param cp_var2 The variable to calculate proportions for
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param cp_levels The factor level selected for the proportion comparison
-#' @param cp_alternative The alternative hypothesis (two.sided, greater or less)
+#' @param cp_alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param cp_sig_level Span of the confidence interval
-#' @param cp_adjust Adjustment for multiple comparisons (none or bonferroni)
+#' @param cp_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param cp_plots One or more plots of proportions or counts ("props" or "counts")
 #'
-#' @return A list with all variables defined in the function as an object of class compare_props
+#' @return A list of all variables defined in the function as an object of class compare_props
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
 #'
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #' @seealso \code{\link{plot.compare_props}} to plot results
+#'
+#' @importFrom tidyr spread_
 #'
 #' @export
 compare_props <- function(dataset, cp_var1, cp_var2,
@@ -28,16 +30,6 @@ compare_props <- function(dataset, cp_var1, cp_var2,
                          cp_sig_level = .95,
                          cp_adjust = "none",
                          cp_plots = "props") {
-
-# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
-# dataset <- "titanic"
-# data_filter = ""
-# cp_var1 <- "pclass"
-# cp_var2 <- "survived"
-# cp_alternative = "two.sided"
-# cp_sig_level = .95
-# cp_adjust = "none"
-# cp_plots = "bar"
 
 	vars <- c(cp_var1, cp_var2)
 	dat <- getdata_exp(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
@@ -103,28 +95,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
   environment() %>% as.list %>% set_class(c("compare_props",class(.)))
 }
 
-# library(broom)
-# library(dplyr)
-# library(tidyr)
-# library(magrittr)
-# library(ggplot2)
-# source("~/gh/radiant_dev/R/radiant.R")
-# rm(r_env)
-
-# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
-# dataset <- "titanic"
-# data_filter = ""
-# cp_var1 <- "pclass"
-# cp_var2 <- "survived"
-# cp_alternative = "two.sided"
-# cp_sig_level = .95
-# cp_adjust = "none"
-# cp_plots = c("props","counts")
-# result <- compare_props(dataset, cp_var1, cp_var2, cp_plots = cp_plots)
-# summary.compare_props(result)
-# plot.compare_props(result)
-
-#' Summarize method for output from the compare_props function. This is a method of class compare_props and can be called as summary or summary.compare_props
+#' Summary method for output from compare_props
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
@@ -177,7 +148,7 @@ summary.compare_props <- function(result) {
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @examples
-#' result <- compare_props("titanic", "pclass", "survived", cp_plots = "props")
+#' result <- compare_props("titanic", "pclass", "survived", cp_plots = c("props","counts"))
 #' plot(result)
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
