@@ -4,27 +4,27 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param glm_dep_var The dependent variable in the logit (probit) model
-#' @param glm_indep_var Independent variables in the regression
+#' @param glm_indep_var Independent variables in the model
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param glm_levels The level in the dependent variable defined as _success_
-#' @param glm_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
+#' @param glm_test_var Variables to evaluate in model comparison (i.e., a competing models Chi-squared test)
 #' @param glm_int_var Interaction term to include in the model (not implement)
-#' @param glm_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not implemented)
-#' @param glm_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
-#' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`.
-#' @param glm_predict_data Generate predictions by specifying the name of a dataframe (e.g., "titanic"). The dataset must have all columns used in estimation
-#' @param glm_check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the model
-#' @param glm_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default) for coefficients and odds
-#' @param glm_plots Plots to produce for the specified GLM model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of four plots that can be used to evaluate model fit visually. "coef" for a coefficient plot.
+#' @param glm_interactions Should interactions be considered? Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not implemented)
+#' @param glm_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate predictions select ("cmd")
+#' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
+#' @param glm_predict_data Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation
+#' @param glm_check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
+#' @param glm_conf_level Confidence level to use for coefficient and odds confidence intervals (.95 is the default)
+#' @param glm_plots Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot
 #' @param glm_coef_int Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default
 #'
-#' @return A list with all variables defined in the glm_reg as an object of class glm_reg
+#' @return A list with all variables defined in glm_reg as an object of class glm_reg
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 #'
-#' @seealso \code{\link{summary.glm_reg}} to summarize results
-#' @seealso \code{\link{plot.glm_reg}} to plot results
+#' @seealso \code{\link{summary.glm_reg}} to summarize the results
+#' @seealso \code{\link{plot.glm_reg}} to plot the results
 #'
 #' @export
 glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
@@ -42,17 +42,6 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                 glm_conf_level = .95,
                 glm_plots = "",
                 glm_coef_int = FALSE) {
-
-# load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
-# dataset <- "titanic"
-# data_filter <- ""
-# glm_dep_var <- "survived"
-# glm_levels <- ""
-# glm_indep_var <- "pclass"
-# glm_link <- "logit"
-# glm_check <- "confint"
-# glm_conf_level = .95
-# glm_plots = "coef"
 
 	vars <- glm_indep_var
 	dat <- getdata_exp(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
@@ -127,13 +116,8 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 	plot_height <- 500
 	plot_width <- 650
 
-  # if(glm_plots %in% c('hist','scatter')) plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
   if(glm_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
   if(glm_plots == 'scatter') plot_height <- 300 * nrVars
-  # if(glm_plots == 'scatter') {
-  #   plot_height <- 300 * nrVars
-  #   plot_width <- 450
-  # }
   if(glm_plots == 'coef') plot_height <- 300 + 20 * length(model$coefficients)
 
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
@@ -149,8 +133,8 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 #' summary(result)
 #'
-#' @seealso \code{\link{glm_reg}} to generate results
-#' @seealso \code{\link{plot.glm_reg}} to plot results
+#' @seealso \code{\link{glm_reg}} to generate the results
+#' @seealso \code{\link{plot.glm_reg}} to plot the results
 #'
 #' @importFrom car vif
 #'
@@ -170,11 +154,8 @@ summary.glm_reg <- function(result, savepred = FALSE) {
   if("standardize" %in% result$glm_check)
  		cat("\nStandardized coefficients shown")
  	cat("\n\n")
-  # cat("Null hyp.: variables x and y are not correlated\n")
-  # cat("Alt. hyp.: variables x and y are correlated\n\n")
 	print(result$glm_coeff, row.names=FALSE)
 
-	# summary(result$model)
 	glm_fit <- glance(result$model)
 
 	# pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
@@ -204,7 +185,7 @@ summary.glm_reg <- function(result, savepred = FALSE) {
 
   if("odds" %in% result$glm_check) {
     if(result$model$coeff %>% is.na %>% any) {
-      cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+      cat("There is perfect multi-collinearity in the set of selected independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
     	result$odds_tab
       result$odds_tab$`+/-` <- (result$odds_tab$High - result$odds_tab$Low)
@@ -241,9 +222,8 @@ summary.glm_reg <- function(result, savepred = FALSE) {
 		# if(!is.null(input$glm_intsel) && input$glm_interactions != 'none') vars <- c(vars,input$glm_intsel)
 
 		not_selected <- setdiff(vars, result$glm_test_var)
-		# if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
     if(length(not_selected) > 0) sub_formula <- paste(result$glm_dep_var, "~", paste(not_selected, collapse = " + "))
-    #### glm_sub NOT working when called from radiant!!
+    #### update with glm_sub NOT working when called from radiant - strange
 		# glm_sub <- update(result$model, sub_formula, data = result$dat)
     glm_sub <- glm(sub_formula, family = binomial(link = result$glm_link), data = result$dat)
 		glm_sub_fit <- glance(glm_sub)
@@ -264,15 +244,13 @@ summary.glm_reg <- function(result, savepred = FALSE) {
     if("standardize" %in% result$glm_check) {
       cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again")
     } else if (result$glm_predict == "cmd" && result$glm_predict_cmd == "") {
-      cat("Please specify a command to generate predictions. For example,\npclass = levels(pclass) would produce predicitions for the different levels of factor pclass. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was invalid.")
+      cat("Please specify a command to generate predictions. For example,\npclass = levels(pclass) would produce predictions for the different levels of factor pclass. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was invalid.")
     } else if (result$glm_predict == "data" && result$glm_predict_data == "") {
       cat("Please select a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant")
     } else {
 
       if(result$glm_predict == "cmd") {
-        # glm_predict_cmd <- "survived = levels(survived)"
         glm_predict_cmd <- gsub("\"","\'", result$glm_predict_cmd)
-        # nval <- try(eval(parse(text = paste0("data.frame(", glm_predict_cmd ,")"))), silent = TRUE)
         nval <- try(eval(parse(text = paste0("with(result$dat, expand.grid(", glm_predict_cmd ,"))"))), silent = TRUE)
       } else {
         nval <- getdata_exp(result$glm_predict_data)
@@ -284,7 +262,7 @@ summary.glm_reg <- function(result, savepred = FALSE) {
       if(is(nval, 'try-error')) {
         if(result$glm_predict == "cmd") {
           cat("The expression entered does not seem to be correct. Please try again.\n")
-          cat("Examples are shown in the helpfile.\n")
+          cat("Examples are shown in the help file.\n")
         } else {
           cat("The profiles to predict do not contain all variables that are in the model.\n")
           cat("Add variables to the profiles data as needed.\n\n")
@@ -292,7 +270,6 @@ summary.glm_reg <- function(result, savepred = FALSE) {
           cat("Model variables: ")
           cat(ivars,"\n")
           cat("Profile variables to be added: ")
-          # nval_names <- names(r_data[[result$glm_predict_data]])
           cat(ivars[!ivars %in% nval_names])
         }
       } else {
@@ -371,7 +348,7 @@ summary.glm_reg <- function(result, savepred = FALSE) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
 #'
-#' @param result The selected plot type
+#' @param result Return value from \code{\link{glm_reg}}
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes", glm_plots = "coef")

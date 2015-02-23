@@ -7,7 +7,7 @@
 \method{plot}{glm_reg}(result)
 }
 \arguments{
-\item{result}{The selected plot type}
+\item{result}{Return value from \code{\link{glm_reg}}}
 }
 \description{
 Plot method for glm_reg

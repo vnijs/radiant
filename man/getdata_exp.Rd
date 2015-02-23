@@ -4,7 +4,7 @@
 \alias{getdata_exp}
 \title{Get data for analysis functions exported by Radiant}
 \usage{
-getdata_exp(dataset, vars = "", na.rm = TRUE, filt = "")
+getdata_exp(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
 }
 \arguments{
 \item{dataset}{Name of the dataframe}
@@ -14,9 +14,11 @@ getdata_exp(dataset, vars = "", na.rm = TRUE, filt = "")
 \item{na.rm}{Remove rows with missing values (default is TRUE)}
 
 \item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
+
+\item{slice}{Select a slice of the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is ""). Not in Radiant GUI}
 }
 \value{
-Data.frame with the specified columns selected
+Data.frame with specified columns and rows
 }
 \description{
 Get data for analysis functions exported by Radiant

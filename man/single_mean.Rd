@@ -14,16 +14,16 @@ single_mean(dataset, sm_var, data_filter = "", sm_comp_value = 0,
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
-\item{sm_comp_value}{Population value to compare the sample mean with}
+\item{sm_comp_value}{Population value to compare to the sample mean}
 
-\item{sm_alternative}{The alternative hypothesis (two.sided, greater or less)}
+\item{sm_alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
 
-\item{sm_sig_level}{Span of the confidence interval}
+\item{sm_sig_level}{Span for the confidence interval}
 
-\item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" show the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis.}
+\item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 }
 \value{
-A list with all variables defined in the function as an object of class single_mean
+A list of variables defined in sing_mean as an object of class single_mean
 }
 \description{
 Compare a sample mean to a population mean

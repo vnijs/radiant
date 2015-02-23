@@ -18,7 +18,7 @@ radiant <- function(app = c("marketing", "quant", "base")) {
   runApp(system.file(app[1], package='radiant'))
 }
 
-#' Alias to set the class for an object. In radiant this is organized per analysis function (e.g., single_mean)
+#' Alias used to set the class for output from an analysis function in R/ (e.g., single_mean)
 #'
 #' @examples
 #' foo <- function(x) x^2 %>% set_class(c("foo", class(.)))
@@ -28,9 +28,9 @@ set_class <- `class<-`
 
 #' Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
 #'
-#' @param p.value Vector of p.values from an analysis
+#' @param p.value Vector of p.values
 #'
-#' @return A list with all variables defined in the function
+#' @return A vector of stars
 #'
 #' @examples
 #' sig_stars(c(.0009, .049, .009, .4, .09))
@@ -42,7 +42,7 @@ sig_stars <- function(pval) {
     c("",".","*", "**", "***")[.]
 }
 
-#' Do not show warnings and messages to user (e.g., for ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+#' Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
 #'
 #' @examples
 #' sshh( library(dplyr) )
@@ -59,18 +59,19 @@ sshh <- function(...) {
 #' @param vars Variables to extract from the dataframe
 #' @param na.rm Remove rows with missing values (default is TRUE)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
+#' @param slice Select a slice of the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is ""). Not in Radiant GUI
 #'
-#' @return Data.frame with the specified columns selected
+#' @return Data.frame with specified columns and rows
 #'
 #' @export
-getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "") {
+getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 
   filt %<>% gsub("\\s","", .)
 
   { if(exists("r_env")) {
       r_env$r_data[[dataset]]
     } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-      if(running_local) cat("Dataset", dataset, "loaded from r_data list\n")
+      if(exists("running_local")) { if(running_local) cat("Dataset", dataset, "loaded from r_data list\n") }
       r_data[[dataset]]
     } else if(exists(dataset)) {
       cat("Dataset", dataset, "loaded from global environment\n")
@@ -80,20 +81,20 @@ getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "") {
         stop %>% return
     }
   } %>% { if(filt == "") . else filter_(., filt) } %>%
+        { if(slice == "") . else slice_(., slice) } %>%
         { if(vars[1] == "") . else select_(., .dots = vars) } %>%
-        { if(na.rm) na.omit(.) else . }
+        { if(na.rm) { if(anyNA(.)) na.omit(.) else . } }
 }
 
-#' Create a .bat launcher for Windows
+#' Create a launcher for Windows (.bat)
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
-#' @return On Windows a file `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @return On Windows a file named `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
 #'
 #' @export
 win_launcher <- function(app = c("marketing", "quant", "base")) {
 
-  # return("This function is for Windows only. For mac download launcher icons from http://mostly-harmless.github.io/radiant/index.html")
   if(.Platform$OS.type != 'windows')
     return("This function is for Windows only. For Mac use the mac_launcher() function")
 
@@ -105,11 +106,11 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   cat(launch_string,file=paste0(filepath,"radiant.bat"),sep="\n")
 }
 
-#' Create a .command launcher for Windows
+#' Create a launcher for Windows (.command)
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
-#' @return On Mac a file `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @return On Mac a file named `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
 #'
 #' @export
 mac_launcher <- function(app = c("marketing", "quant", "base")) {

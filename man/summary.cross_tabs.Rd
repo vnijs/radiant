@@ -2,18 +2,18 @@
 % Please edit documentation in R/cross_tabs.R
 \name{summary.cross_tabs}
 \alias{summary.cross_tabs}
-\title{Summarize method for output from the cross_tabs function. This is a method of class cross_tabs and can be called as summary or summary.cross_tabs}
+\title{Summary method for the cross_tabs function}
 \usage{
 \method{summary}{cross_tabs}(result)
 }
 \description{
-Summarize method for output from the cross_tabs function. This is a method of class cross_tabs and can be called as summary or summary.cross_tabs
+Summary method for the cross_tabs function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 }
 \examples{
-result <- cross_tabs("titanic", "pclass", "survived")
+result <- cross_tabs("newspaper", "Income", "Newspaper")
 summary(result)
 }
 \seealso{

@@ -6,17 +6,17 @@
 #' @param sp_var The variable selected for the proportion comparison
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param sp_levels The factor level selected for the proportion comparison
-#' @param sp_comp_value Population value to compare the sample proportion to
-#' @param sp_alternative The alternative hypothesis (two.sided, greater or less)
+#' @param sp_comp_value Population value to compare to the sample proportion
+#' @param sp_alternative The alternative hypothesis ("two.sided", "greater", or "less")
 #' @param sp_sig_level Span of the confidence interval
 #'
-#' @return A list with all variables defined in the function as an object of class single_prop
+#' @return A list of variables used in single_prop as an object of class single_prop
 #'
 #' @examples
 #' single_prop("diamond","cut","IF")
 #'
-#' @seealso \code{\link{summary.single_prop}} to summarize results
-#' @seealso \code{\link{plot.single_prop}} to plot results
+#' @seealso \code{\link{summary.single_prop}} to summarize the results
+#' @seealso \code{\link{plot.single_prop}} to plot the results
 #'
 #' @export
 single_prop <- function(dataset, sp_var,
@@ -48,7 +48,7 @@ single_prop <- function(dataset, sp_var,
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }
 
-#' Summarize results from the single_prop function. This is a method of class single_prop and can be called as summary or summary.single_prop
+#' Summary method for single_prop
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
@@ -59,7 +59,7 @@ single_prop <- function(dataset, sp_var,
 #' summary(result)
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
-#' @seealso \code{\link{plot.single_prop}} to plot results
+#' @seealso \code{\link{plot.single_prop}} to plot the results
 #'
 #' @export
 summary.single_prop <- function(result) {
@@ -96,7 +96,7 @@ summary.single_prop <- function(result) {
 	print(res, row.names = FALSE)
 }
 
-#' Plot results from the single_prop function. This is a method of class single_prop and can be called as plot or plot.single_prop
+#' Plot method for single_prop
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
@@ -107,7 +107,7 @@ summary.single_prop <- function(result) {
 #' plot(result)
 #'
 #' @seealso \code{\link{single_prop}} to generate the result
-#' @seealso \code{\link{summary.single_prop}} to summarize results
+#' @seealso \code{\link{summary.single_prop}} to summarize the results
 #'
 #' @export
 plot.single_prop <- function(result) {
@@ -152,31 +152,3 @@ plot.single_prop <- function(result) {
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }
-
-# rm(list = ls())
-# library(ggplot2)
-# library(dplyr)
-# library(broom)
-# dataset <- "diamonds"
-# single_prop("diamonds","clarity","VS")
-
-# diamonds[1:10,"clarity"] %>% as.character %>% as.factor
-# lapply(diamonds,class)
-# x <- diamonds[,"clarity"] %>% as.character %>% as.factor
-# class(x)
-# diamonds$x
-
-# %>% relevel(sp_levels)
-
-# dat <- diamonds
-# sp_var <- "clarity"
-# sp_levels <- "VVS2"
-
-# dat[,sp_var] %>% as.factor %>% relevel(sp_levels)
-# dat[,sp_var] %>% as.character %>% as.factor %>% relevel(sp_levels)
-
-# sp_levels <- "Fair"
-# sp_comp_value = 0.05
-# sp_alternative = "less"
-# sp_sig_level = .95
-# sp_plots = "hist"

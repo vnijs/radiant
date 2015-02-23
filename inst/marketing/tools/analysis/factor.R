@@ -17,7 +17,7 @@ output$ui_preFactor <- renderUI({
   	wellPanel(
 	  	uiOutput("uiPreFactor_vars")
 	  ),
- 		helpAndReport('Pre-factor','preFactor',inclMD("tools/help/preFactor.md"))
+ 		helpAndReport('Pre-factor','preFactor',inclMD("tools/help/pre_factor.md"))
  	)
 })
 
@@ -164,7 +164,7 @@ output$ui_fullFactor <- renderUI({
       	inline = TRUE),
       actionButton("fac_savescores", "Save scores")
   	),
-		helpAndReport('Factor','fullFactor',inclMD("tools/help/fullFactor.md"))
+		helpAndReport('Factor','fullFactor',inclMD("tools/help/full_factor.md"))
 	)
 })
 

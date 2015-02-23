@@ -21,28 +21,28 @@ regression(dataset, reg_dep_var, reg_indep_var, data_filter = "",
 
 \item{reg_test_var}{Variables to evaluate in model comparison (i.e., a competing models F-test)}
 
-\item{reg_int_var}{Interaction term to include in the model}
+\item{reg_int_var}{Interaction terms to include in the model}
 
 \item{reg_interactions}{Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.}
 
 \item{reg_predict}{Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")}
 
-\item{reg_predict_cmd}{Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predicitions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was likely invalid. Try entering the same expression in the R(studio) console to debug the command}
+\item{reg_predict_cmd}{Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predictions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was invalid}
 
-\item{reg_predict_data}{Generate predictions by specifying the name of a dataset (e.g., "diamonds"). The dataset must have all columns used in model estimation}
+\item{reg_predict_data}{Generate predictions by specifying the name of a data.frame (e.g., "diamonds"). The dataset must have all columns used in the estimated model}
 
-\item{reg_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the regression model}
+\item{reg_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation}
 
-\item{reg_conf_level}{Confidence level to use to estimate the confidence intervals (.95 is the default)}
+\item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
-\item{reg_plots}{Regression plots to produce for the specified regression model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix of all variables in the data. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable}
+\item{reg_plots}{Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable}
 
 \item{reg_coef_int}{Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default}
 
-\item{reg_lines}{Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial refression fit line. To include both use c("line","loess")}
+\item{reg_lines}{Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")}
 }
 \value{
-A list with all variables defined in the function as an object of class regression
+A list of all variables used in regression as an object of class regression
 }
 \description{
 Linear regression using OLS

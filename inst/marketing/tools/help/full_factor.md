@@ -38,5 +38,3 @@ The final step is to generate the factor scores. You can think of these scores a
 If you want more practice open the 'shopping' data set and see if you can reproduce the results shown in the screen capture of the Summary tab below. Use Pre-factor to determine if the correct number of factors were selected. Do you agree? Why (not)?
 
 ![facfull shopping - summary](figures_marketing/facfull_shopping_summary.png)
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

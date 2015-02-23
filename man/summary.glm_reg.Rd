@@ -20,8 +20,8 @@ result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 summary(result)
 }
 \seealso{
-\code{\link{glm_reg}} to generate results
+\code{\link{glm_reg}} to generate the results
 
-\code{\link{plot.glm_reg}} to plot results
+\code{\link{plot.glm_reg}} to plot the results
 }
 
