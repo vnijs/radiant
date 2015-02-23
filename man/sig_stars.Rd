@@ -7,10 +7,10 @@
 sig_stars(pval)
 }
 \arguments{
-\item{p.value}{Vector of p.values from an analysis}
+\item{p.value}{Vector of p.values}
 }
 \value{
-A list with all variables defined in the function
+A vector of stars
 }
 \description{
 Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values

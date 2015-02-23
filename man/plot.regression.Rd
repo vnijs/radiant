@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.R
 \name{plot.regression}
 \alias{plot.regression}
-\title{Plot results from the regression function. This is a method of class regression and can be called as plot or plot.regression}
+\title{Plot method for regression}
 \usage{
 \method{plot}{regression}(result)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{regression}}}
 }
 \description{
-Plot results from the regression function. This is a method of class regression and can be called as plot or plot.regression
+Plot method for regression
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant

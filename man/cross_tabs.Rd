@@ -19,16 +19,16 @@ cross_tabs(dataset, ct_var1, ct_var2, data_filter = "", ct_observed = TRUE,
 
 \item{ct_observed}{Show the observed frequencies table for variables `ct_var1` and `ct_var2`}
 
-\item{ct_expected}{Show the expected frequencies table (i.e., frequencies if the null hypothesis holds)}
+\item{ct_expected}{Show the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds)}
 
 \item{ct_contrib}{Show the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e)}
 
-\item{ct_std_residuals}{Show standardized differences between the observed and expected frequencies}
+\item{ct_std_residuals}{Show standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e))}
 
-\item{ct_deviation}{Show the percentage difference between the observed and expected frequencies}
+\item{ct_deviation}{Show the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)}
 }
 \value{
-A list with all variables defined in the function as an object of class compare_props
+A list of all variables used in cross_tabs as an object of class cross_tabs
 }
 \description{
 Evaluate associations between categorical variables
@@ -37,11 +37,11 @@ Evaluate associations between categorical variables
 See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 }
 \examples{
-result <- compare_props("titanic", "pclass", "survived")
+result <- cross_tabs("newspaper", "Income", "Newspaper")
 }
 \seealso{
-\code{\link{summary.compare_props}} to summarize results
+\code{\link{summary.cross_tabs}} to summarize results
 
-\code{\link{plot.compare_props}} to plot results
+\code{\link{plot.cross_tabs}} to plot results
 }
 

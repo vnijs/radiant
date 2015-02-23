@@ -16,7 +16,7 @@ visualize(dataset, viz_vars1, viz_vars2 = "none", data_filter = "",
 
 \item{viz_vars2}{Variable to display along the Y-axis of the plot (default = "none")}
 
-\item{data_filter}{Expression to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+\item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
 \item{viz_type}{Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
 
@@ -26,9 +26,9 @@ visualize(dataset, viz_vars1, viz_vars2 = "none", data_filter = "",
 
 \item{viz_color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
 
-\item{viz_bins}{Number of bins used for a histogram (not used in Radiant at this time)}
+\item{viz_bins}{Number of bins used for a histogram (not accessible in Radiant)}
 
-\item{viz_smooth}{Adjust the flexibility of the loess line for scatter plots (not used in Radiant at this time)}
+\item{viz_smooth}{Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)}
 
 \item{viz_check}{Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot}
 

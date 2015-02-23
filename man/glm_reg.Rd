@@ -15,34 +15,34 @@ glm_reg(dataset, glm_dep_var, glm_indep_var, data_filter = "",
 
 \item{glm_dep_var}{The dependent variable in the logit (probit) model}
 
-\item{glm_indep_var}{Independent variables in the regression}
+\item{glm_indep_var}{Independent variables in the model}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{glm_levels}{The level in the dependent variable defined as _success_}
 
-\item{glm_test_var}{Variables to evaluate in model comparison (i.e., a competing models F-test)}
+\item{glm_test_var}{Variables to evaluate in model comparison (i.e., a competing models Chi-squared test)}
 
-\item{glm_predict}{Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")}
+\item{glm_predict}{Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate predictions select ("cmd")}
 
-\item{glm_predict_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`.}
+\item{glm_predict_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
 
-\item{glm_predict_data}{Generate predictions by specifying the name of a dataframe (e.g., "titanic"). The dataset must have all columns used in estimation}
+\item{glm_predict_data}{Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation}
 
-\item{glm_check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the model}
+\item{glm_check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
 
-\item{glm_conf_level}{Confidence level to use to estimate the confidence intervals (.95 is the default) for coefficients and odds}
+\item{glm_conf_level}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
 
-\item{glm_plots}{Plots to produce for the specified GLM model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of four plots that can be used to evaluate model fit visually. "coef" for a coefficient plot.}
+\item{glm_plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
 
 \item{glm_coef_int}{Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default}
 
 \item{glm_int_var}{Interaction term to include in the model (not implement)}
 
-\item{glm_interactions}{Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not implemented)}
+\item{glm_interactions}{Should interactions be considered? Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not implemented)}
 }
 \value{
-A list with all variables defined in the glm_reg as an object of class glm_reg
+A list with all variables defined in glm_reg as an object of class glm_reg
 }
 \description{
 Generalized linear models (GLM)
@@ -54,8 +54,8 @@ See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example
 result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 }
 \seealso{
-\code{\link{summary.glm_reg}} to summarize results
+\code{\link{summary.glm_reg}} to summarize the results
 
-\code{\link{plot.glm_reg}} to plot results
+\code{\link{plot.glm_reg}} to plot the results
 }
 
