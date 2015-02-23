@@ -10,16 +10,16 @@ merge_data(dataset, merge_data, merge_vars = "", merge_type = "inner_join",
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{merge_data}{Dataset name (string) to merge with dataset. This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{merge_data}{Dataset name (string) to merge with `dataset`. This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{merge_vars}{Variables to use to merge/join `dataset` and `merge_data`}
+\item{merge_vars}{Variables used to merge/join `dataset` and `merge_data`}
 
-\item{merge_type}{The join types from the dplyr package are provided. `inner_join` returns all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combinations of the matches are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all combinations of the matches are returned. `semi_join` returns all rows from x where there are matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping just columns from x}
+\item{merge_type}{The main join types from the dplyr package are provided. `inner_join` returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `semi_join` returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping only columns from x}
 
 \item{merge_name}{Name for the merged dataset}
 }
 \value{
-If (reactive) list `r_data` exists the merged dataset is entered into that list as `merge_name`. Else the merged dataset will be returned as `merge_name`
+If (reactive) list `r_data` exists the merged dataset added as `merge_name`. Else the merged dataset will be returned as `merge_name`
 }
 \description{
 Merge datasets using dplyr's join functions

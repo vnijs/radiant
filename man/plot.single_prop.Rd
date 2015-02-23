@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_prop.R
 \name{plot.single_prop}
 \alias{plot.single_prop}
-\title{Plot results from the single_prop function. This is a method of class single_prop and can be called as plot or plot.single_prop}
+\title{Plot method for single_prop}
 \usage{
 \method{plot}{single_prop}(result)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{single_prop}}}
 }
 \description{
-Plot results from the single_prop function. This is a method of class single_prop and can be called as plot or plot.single_prop
+Plot method for single_prop
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
@@ -22,6 +22,6 @@ plot(result)
 \seealso{
 \code{\link{single_prop}} to generate the result
 
-\code{\link{summary.single_prop}} to summarize results
+\code{\link{summary.single_prop}} to summarize the results
 }
 
