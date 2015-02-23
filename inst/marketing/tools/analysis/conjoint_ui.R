@@ -25,7 +25,8 @@ output$ui_ca_var2 <- renderUI({
 	isFct <- "factor" == getdata_class()
  	vars <- varnames()[isFct]
   selectInput(inputId = "ca_var2", label = "Attributes:", choices = vars,
-  	selected = state_multiple("ca_var2", vars), multiple = TRUE, selectize = FALSE)
+  	selected = state_multiple("ca_var2", vars), multiple = TRUE,
+  	size = min(10, length(vars)), selectize = FALSE)
 })
 
 ca_plots <- list("Part-worths" = "pw", "Importance-weights" = "iw")
@@ -38,7 +39,7 @@ output$ui_conjoint <- renderUI({
 		  checkboxInput("ca_rev", label = "Reverse evaluation scores",
 		  	value = state_init('ca_rev',FALSE)),
 	    conditionalPanel(condition = "input.tabs_conjoint == 'Summary'",
-		    checkboxInput(inputId = "ca_vif", label = "Calculate VIF-values",
+		    checkboxInput(inputId = "ca_vif", label = "VIF",
 			  	value = state_init('ca_vif',FALSE)),
 		  	downloadButton('downloadPWs', 'Save PWs')
 	  	),

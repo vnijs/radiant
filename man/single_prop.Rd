@@ -17,14 +17,14 @@ single_prop(dataset, sp_var, data_filter = "", sp_levels = "",
 
 \item{sp_levels}{The factor level selected for the proportion comparison}
 
-\item{sp_comp_value}{Population value to compare the sample proportion to}
+\item{sp_comp_value}{Population value to compare to the sample proportion}
 
-\item{sp_alternative}{The alternative hypothesis (two.sided, greater or less)}
+\item{sp_alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
 
 \item{sp_sig_level}{Span of the confidence interval}
 }
 \value{
-A list with all variables defined in the function as an object of class single_prop
+A list of variables used in single_prop as an object of class single_prop
 }
 \description{
 Compare a sample proportion to a population proportion
@@ -36,8 +36,8 @@ See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an
 single_prop("diamond","cut","IF")
 }
 \seealso{
-\code{\link{summary.single_prop}} to summarize results
+\code{\link{summary.single_prop}} to summarize the results
 
-\code{\link{plot.single_prop}} to plot results
+\code{\link{plot.single_prop}} to plot the results
 }
 

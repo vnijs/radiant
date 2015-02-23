@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_mean.R
 \name{summary.single_mean}
 \alias{summary.single_mean}
-\title{Summarize results from the single_mean function. This is a method of class single_mean and can be called as summary or summary.single_mean}
+\title{Summary method for single_mean}
 \usage{
 \method{summary}{single_mean}(result)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{single_mean}}}
 }
 \description{
-Summarize results from the single_mean function. This is a method of class single_mean and can be called as summary or summary.single_mean
+Summary method for single_mean
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant

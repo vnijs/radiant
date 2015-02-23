@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_prop.R
 \name{summary.single_prop}
 \alias{summary.single_prop}
-\title{Summarize results from the single_prop function. This is a method of class single_prop and can be called as summary or summary.single_prop}
+\title{Summary method for single_prop}
 \usage{
 \method{summary}{single_prop}(result)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{single_prop}}}
 }
 \description{
-Summarize results from the single_prop function. This is a method of class single_prop and can be called as summary or summary.single_prop
+Summary method for single_prop
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
@@ -22,6 +22,6 @@ summary(result)
 \seealso{
 \code{\link{single_prop}} to generate the results
 
-\code{\link{plot.single_prop}} to plot results
+\code{\link{plot.single_prop}} to plot the results
 }
 

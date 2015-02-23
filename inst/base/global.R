@@ -5,15 +5,11 @@
 # options(shiny.error=recover)
 
 # load/attach packages
-# pkgs <- c("car", "gridExtra", "GPArotation", "psych", "vegan", "RColorBrewer",
-#           "wordcloud", "AlgDesign", "brew", "reshape2", "plyr", "markdown",
-#           "knitr", "rpivotTable", "rmarkdown", "testthat", "lubridate", "ggplot2", "pryr",
-#           "shiny", "magrittr", "tidyr", "dplyr", "ggvis", "broom", "shinyAce",
-#           "purrr", "rpivotTable")
-
-pkgs <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud", "AlgDesign",
-          "knitr", "rpivotTable", "lubridate", "ggplot2", "shiny", "magrittr",
-          "tidyr", "dplyr", "broom", "shinyAce", "rpivotTable")
+pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud", "AlgDesign",
+               "knitr", "lubridate", "ggplot2", "shiny", "pryr", "shiny", "magrittr", "tidyr",
+               "dplyr", "broom", "htmlwidgets")
+pkgs_gh <- c("shinyAce","rpivotTable")
+pkgs <- c(pkgs_cran, pkgs_gh)
 
 if(Sys.getenv('SHINY_PORT') == "") {
 
@@ -42,8 +38,11 @@ if(Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize=5*1024^2)
 
   # load packages in order set by variable pkgs
-  sapply(pkgs, require, lib.loc = Sys.getenv("R_LIBS_USER"),
-         character.only=TRUE)
+  # sapply(pkgs, require, lib.loc = Sys.getenv("R_LIBS_USER"),
+  #        character.only=TRUE)
+
+  # used the line above before - the next line should work as well however - test
+  source("../base/dependencies.R", local = TRUE)
  }
 
 # adding the figures path to avoid making a copy of all figures in www/figures

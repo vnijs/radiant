@@ -2,18 +2,18 @@
 % Please edit documentation in R/cross_tabs.R
 \name{plot.cross_tabs}
 \alias{plot.cross_tabs}
-\title{Plot results from the cross_tabs function. This is a method of class cross_tabs and can be called as plot or plot.cross_tabs}
+\title{Plot method for the cross_tabs function}
 \usage{
 \method{plot}{cross_tabs}(result)
 }
 \description{
-Plot results from the cross_tabs function. This is a method of class cross_tabs and can be called as plot or plot.cross_tabs
+Plot method for the cross_tabs function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 }
 \examples{
-result <- cross_tabs("titanic", "pclass", "survived", cp_plots = "props")
+result <- cross_tabs("newspaper", "Income", "Newspaper", ct_expected = TRUE)
 plot(result)
 }
 \seealso{

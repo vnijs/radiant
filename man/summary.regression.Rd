@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.R
 \name{summary.regression}
 \alias{summary.regression}
-\title{Summarize results from the regression. This is a method of class regression and can be called as summary or summary.regression}
+\title{Summary method for regression}
 \usage{
 \method{summary}{regression}(result, savepred = FALSE)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{regression}}}
 }
 \description{
-Summarize results from the regression. This is a method of class regression and can be called as summary or summary.regression
+Summary method for regression
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant

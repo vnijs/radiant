@@ -7,18 +7,18 @@
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param reg_indep_var Independent variables in the regression
 #' @param reg_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
-#' @param reg_int_var Interaction term to include in the model
+#' @param reg_int_var Interaction terms to include in the model
 #' @param reg_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.
 #' @param reg_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
-#' @param reg_predict_cmd Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predicitions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was likely invalid. Try entering the same expression in the R(studio) console to debug the command
-#' @param reg_predict_data Generate predictions by specifying the name of a dataset (e.g., "diamonds"). The dataset must have all columns used in model estimation
-#' @param reg_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to use standardized coefficient estimates. "stepwise" to apply step-wise selection of variables to estimate the regression model
-#' @param reg_conf_level Confidence level to use to estimate the confidence intervals (.95 is the default)
-#' @param reg_plots Regression plots to produce for the specified regression model. Specify "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix of all variables in the data. "scatter" to show scatter plots (or box plots for factors) for all independent variables with the dependent variable. "dashboard" a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
+#' @param reg_predict_cmd Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predictions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was invalid
+#' @param reg_predict_data Generate predictions by specifying the name of a data.frame (e.g., "diamonds"). The dataset must have all columns used in the estimated model
+#' @param reg_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
+#' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
+#' @param reg_plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
 #' @param reg_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
-#' @param reg_lines Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial refression fit line. To include both use c("line","loess")
+#' @param reg_lines Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")
 
-#' @return A list with all variables defined in the function as an object of class regression
+#' @return A list of all variables used in regression as an object of class regression
 #'
 #' @examples
 #' result <- regression("diamonds", "price", c("carat","clarity"))
@@ -40,12 +40,6 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
                        reg_plots = "",
                        reg_coef_int = FALSE,
                        reg_lines = "") {
-
-
-# dataset = "diamonds"
-# reg_dep_var = "price"
-# reg_indep_var = "color"
-# reg_check = "standardize"
 
 	vars <- reg_indep_var
 
@@ -122,7 +116,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   environment() %>% as.list %>% set_class(c("regression",class(.)))
 }
 
-#' Summarize results from the regression. This is a method of class regression and can be called as summary or summary.regression
+#' Summary method for regression
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
@@ -215,7 +209,7 @@ summary.regression <- function(result, savepred = FALSE) {
     if("standardize" %in% result$reg_check) {
       cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again")
     } else if ( result$reg_predict == "cmd" && result$reg_predict_cmd == "") {
-      cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predicitions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was likely invalid. Try entering\nthe same expression in the R(studio) console to debug the command")
+      cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was likely invalid. Try entering\nthe same expression in the R(studio) console to debug the command")
     } else if ( result$reg_predict == "data" && result$reg_predict_data == "") {
       cat("Please select a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant")
     } else {
@@ -368,7 +362,7 @@ summary.regression <- function(result, savepred = FALSE) {
 	}
 }
 
-#' Plot results from the regression function. This is a method of class regression and can be called as plot or plot.regression
+#' Plot method for regression
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
@@ -402,8 +396,6 @@ plot.regression <- function(result) {
 	reg_dep_var <- vars[1]
 	reg_indep_var <- vars[-1]
 
-	# dat <- model[,vars, drop = FALSE]
-
 	if(result$reg_plots == "")
 		return(plot(x = 1, type = 'n', main="Please select a plot from the Regression plots dropdown menu.", axes = FALSE, xlab = "", ylab = ""))
 
@@ -419,8 +411,6 @@ plot.regression <- function(result) {
 	if(result$reg_plots == "dashboard") {
 
 		plots <- list()
-		# df <- data.frame(cbind(model$.fitted,model[1]))
-		# colnames(df) <- c("x","y")
 		plots[[1]] <- ggplot(model, aes(x=.fitted, y=.actual)) + geom_point() + labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual"))
     if("line" %in% result$reg_lines) plots[[1]] <- plots[[1]] + geom_abline(linetype = 'dotdash')
     if("loess" %in% result$reg_lines) plots[[1]] <- plots[[1]] + geom_smooth(size = .75, linetype = "dotdash")

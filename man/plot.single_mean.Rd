@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_mean.R
 \name{plot.single_mean}
 \alias{plot.single_mean}
-\title{Plot results from the single_mean function. This is a method of class single_mean and can be called as plot or plot.single_mean}
+\title{Plot method for single_mean}
 \usage{
 \method{plot}{single_mean}(result)
 }
@@ -10,7 +10,7 @@
 \item{result}{Return value from \code{\link{single_mean}}}
 }
 \description{
-Plot results from the single_mean function. This is a method of class single_mean and can be called as plot or plot.single_mean
+Plot method for single_mean
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
