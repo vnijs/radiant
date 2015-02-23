@@ -117,4 +117,4 @@ Choose `Remove missing` from the `Transformation type` dropdown to eliminate all
 | x & y	      |     | x AND y                   |
 
 
-Choose `Filter` from the `Transformation type` dropdown to select (or omit) specific sets of rows from the data. You should see the number of observations in the data summary change (i.e., the value of n changes). Press `Save changes` to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
+</br>Choose `Filter` from the `Transformation type` dropdown to select (or omit) specific sets of rows from the data. You should see the number of observations in the data summary change (i.e., the value of n changes). Press `Save changes` to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.

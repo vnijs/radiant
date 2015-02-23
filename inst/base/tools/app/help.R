@@ -149,12 +149,12 @@ output$help_maps <- reactive(append_help("help_maps", "../marketing/tools/help/"
 observe( help_switch(input$help_maps_all, "help_maps") )
 observe( help_switch(input$help_maps_none, "help_maps", help_on = FALSE) )
 
-help_factor <- c("Pre-factor" = "preFactor.md", "Factor" = "fullFactor.md")
+help_factor <- c("Pre-factor" = "pre_factor.md", "Factor" = "full_factor.md")
 output$help_factor <- reactive(append_help("help_factor", "../marketing/tools/help/"))
 observe( help_switch(input$help_factor_all, "help_factor") )
 observe( help_switch(input$help_factor_none, "help_factor", help_on = FALSE) )
 
-help_cluster <- c("Hierarchical" = "hcclustering.md", "Kmeans" = "kmeansClustering.md")
+help_cluster <- c("Hierarchical" = "hclus.md", "Kmeans" = "kclus.md")
 output$help_cluster <- reactive(append_help("help_cluster", "../marketing/tools/help/"))
 observe( help_switch(input$help_cluster_all, "help_cluster") )
 observe( help_switch(input$help_cluster_none, "help_cluster", help_on = FALSE) )
