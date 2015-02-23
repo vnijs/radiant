@@ -43,5 +43,3 @@ In the summary tab we see there is a significant association between these two v
 For a more detailed view of the association we go to the Plots tab. Select the 'Deviation (standardized)' plot. The ‘Uninvolved’ segment has more men than we would expect under the null of no-association. If we are willing to use an alpha value of .10 we could also state that the ‘Cosmetics’ segment is composed of more women than we would expect under the null of no-association. In sum, in these data men are more likely to be in the 'Uninvolved brushers' segment and women are more likely to be in the 'Cosmetic brushers' segment.
 
 ![kmeans shopping - crosstab plots](figures_marketing/kmeans_toothpaste_crosstab_plots.png)
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

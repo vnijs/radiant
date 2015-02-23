@@ -1,5 +1,5 @@
 price = c("$10","$13","$16")
 sight = c("Staggered","Not Staggered")
-comfort = c("Average seat without cupholder","Average seat with cupholder","Large seat with cupholder")
-audio.visual = c("Small screen with plain sound","Large screen with plain sound","Large screen with digital sound")
+comfort = c("Average seat, no cupholder","Average seat, cupholder","Large seat, cupholder")
+audio.visual = c("Small screen, plain sound","Large screen, plain sound","Large screen, digital sound")
 food = c("No food","Hot dogs and popcorn","Gourmet food")

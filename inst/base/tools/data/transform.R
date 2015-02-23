@@ -38,19 +38,14 @@ output$uiTr_reorg_levs <- renderUI({
 st <- function(x) {
 	# if(is.factor(x)) return(rescale(x))
 	# if(is.numeric(x)) return(as.numeric(scale(x)))
-	if(x %>% is.numeric) scale(x) else x
+	if(is.numeric(x)) scale(x) else x
 }
 
 # center variable
 cent <- function(x) {
 	# if(is.factor(x)) return(rescale(x))
-	if(x %>% is.numeric) { x - mean(x, na.rm = TRUE) } else x
+	if(is.numeric(x)) { x - mean(x, na.rm = TRUE) } else x
 }
-
-# cent(mtcars$mpg) %>% sd
-# st(mtcars$mpg) %>% sd
-# cent(mtcars$mpg) %>% mean
-# st(mtcars$mpg) %>% mean
 
 # median split
 msp <- function(x) cut(x, breaks = quantile(x,c(0,.5,1)),
@@ -66,9 +61,9 @@ inv <- function(x) 1/x
 normalize <- function(x,y) x/y
 
 # use as.character in case x is a factor
-d_mdy <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% mdy %>% as.Date
-d_dmy <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% dmy %>% as.Date
-d_ymd <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% ymd %>% as.Date
+d_mdy <- function(x) { if(is.factor(x)) as.character(x) else x } %>% mdy %>% as.Date
+d_dmy <- function(x) { if(is.factor(x)) as.character(x) else x } %>% dmy %>% as.Date
+d_ymd <- function(x) { if(is.factor(x)) as.character(x) else x } %>% ymd %>% as.Date
 
 # test
 # dat <- read.table(header = TRUE, text = "date	days
@@ -96,7 +91,7 @@ d_ymd <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% ymd %>% 
 d_ymd_hms <- function(x) { if(x %>% is.factor) as.character(x) else x } %>% ymd_hms
 
 as_int <- function(x) {
-	if(x %>% is.factor) {
+	if(is.factor(x)) {
 		levels(x) %>% .[x] %>% as.integer
 	} else {
 		as.integer(x)
@@ -104,7 +99,7 @@ as_int <- function(x) {
 }
 
 as_num <- function(x) {
-	if(x %>% is.factor) {
+	if(is.factor(x)) {
 		levels(x) %>% .[x] %>% as.numeric
 	} else {
     as.numeric(x)
@@ -138,7 +133,7 @@ trans_types <- list("None" = "none", "Type" = "type", "Change" = "change",
                     "Rename" = "rename", "Reorder/remove variables" = "reorg_cols",
                     "Reorder/remove levels" = "reorg_levs",
                     "Remove missing" = "na.remove",
-                    "Subset" = "sub_filter")
+                    "Filter" = "sub_filter")
 
 output$ui_Transform <- renderUI({
 

@@ -18,10 +18,9 @@ observe({
 ## Error in checkboxGroupInput("help_data", NULL, help_data, selected = state_init_list("help_data",  :
 ##  could not find function "state_init"
 
-#' Set initial value for shiny input (e.g., radio button or checkbox)
-#' @export
+# Set initial value for shiny input (e.g., radio button or checkbox)
 state_init <- function(inputvar, init = "")
-  if(r_state[[inputvar]] %>% is.null) init else r_state[[inputvar]]
+  if(is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
 
 # library(dplyr)
 # r_state <- list()
@@ -30,14 +29,9 @@ state_init <- function(inputvar, init = "")
 # r_state$test <- c("a","b")
 # state_init("test",0)
 
-#' Set initial value for shiny input from a list of values
-#' @export
-state_single <- function(inputvar, vals, init = character(0)) {
-  if(r_state[[inputvar]] %>% is.null)
-    init
-  else
-    vals[vals == r_state[[inputvar]]]
-}
+# Set initial value for shiny input from a list of values
+state_single <- function(inputvar, vals, init = character(0))
+  if(is.null(r_state[[inputvar]])) init else vals[vals == r_state[[inputvar]]]
 
 # library(dplyr)
 # r_state <- list()
@@ -46,10 +40,9 @@ state_single <- function(inputvar, vals, init = character(0)) {
 # state_single("test",1,1:10)
 # state_single("test",1,1:5)
 
-#' Set initial values for variable selection (e.g., selection used in another analysis)
-#' @export
+# Set initial values for variable selection (e.g., selection used in another analysis)
 state_multiple <- function(inputvar, vals, init = character(0)) {
-  if(r_state[[inputvar]] %>% is.null)
+  if(is.null(r_state[[inputvar]]))
     # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
     vals[vals %in% init]
   else
@@ -61,24 +54,13 @@ state_multiple <- function(inputvar, vals, init = character(0)) {
 ################################################################################
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
-    # print("Session ended")
     isolate({
-      # if(input$resetState %>% not_pressed &&
-      #    input$quitApp %>% not_pressed &&
       if(not_pressed(input$resetState) &&
          not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
 
-        # RadiantInputs <- r_state
-        # LiveInputs <- reactiveValuesToList(input)
-        # RadiantInputs[names(LiveInputs)] <- LiveInputs
-
-        # assign(paste0("RadiantInputs",ip), reactiveValuesToList(input),
-        assign(ip_inputs, reactiveValuesToList(input),
-               envir = .GlobalEnv)
-        # assign(paste0("RadiantValues",ip), reactiveValuesToList(r_data),
-        assign(ip_data, reactiveValuesToList(r_data),
-               envir = .GlobalEnv)
+        assign(ip_inputs, reactiveValuesToList(input), envir = .GlobalEnv)
+        assign(ip_data, reactiveValuesToList(r_data), envir = .GlobalEnv)
         assign(ip_dump, now(), envir = .GlobalEnv)
       }
     })
@@ -89,7 +71,7 @@ saveStateOnRefresh <- function(session = session) {
 # functions used across tools in radiant
 ################################################################
 changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
-	if(r_data[[dataset]] %>% nrow == new_col %>% nrow &&
+	if(nrow(r_data[[dataset]]) == new_col %>% nrow &&
      new_col_name[1] != "")
     r_data[[dataset]][,new_col_name] <- new_col
 }
@@ -126,7 +108,8 @@ getdata_class_fun <- function(dat) {
   sapply(dat, function(x) class(x)[1]) %>%
 	  gsub("ordered","factor", .) %>%
 	  gsub("POSIXct","date", .) %>%
-	  gsub("POSIXt","date", .)
+    gsub("POSIXct","date", .) %>%
+	  gsub("Date","date", .)
 }
 
 groupable_vars <- reactive({
@@ -167,29 +150,28 @@ clean_args <- function(rep_args, rep_default = list()) {
 
 # check if a variable is null or not in the data
 not_available <- function(x)
-  ifelse(any(is.null(x)) || (sum(x %in% varnames()) < length(x)), TRUE, FALSE)
+  if(any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
 
 # check if a button was NOT pressed
-not_pressed <- function(x) ifelse(is.null(x) || x == 0, TRUE, FALSE)
+not_pressed <- function(x) if(is.null(x) || x == 0) TRUE else FALSE
 
 # check if string variable is defined
-is_empty <- function(x, empty = "") ifelse(is.null(x) || x == empty, TRUE, FALSE)
+is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
 
 # check for duplicate entries
-has_duplicates <- function(x)
-  ifelse(length(x %>% unique) < length(x), TRUE, FALSE)
+has_duplicates2 <- function(x)
+  if(length(unique(x)) < length(x)) TRUE else FALSE
 
 # is x some type of date variable
 is_date <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 
 # convert a date variable to character for printing
-d2c <- function(x) if(x %>% is_date) { x %>% as.character } else { x }
+d2c <- function(x) if(is_date(x)) as.character(x) else x
 
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
 
-  if(is.character(dat) && length(dat) == 1) dat <- r_data[[dat]]
-  dat %>%
+  { if(is.character(dat) && length(dat) == 1) r_data[[dat]] else dat } %>%
     slice(1:min(nshow,nrow(.))) %>%
     mutate_each(funs(d2c)) %>%
     xtable::xtable(.) %>%
@@ -405,7 +387,9 @@ helpModal <- function(modal_title, link, help_file) {
                   <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                   <h4 class='modal-title' id='%s_label'>%s</h4>
                   </div>
-                <div class='modal-body'>%s</div>
+                <div class='modal-body'>%s<br>
+                  &copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a>
+                </div>
               </div>
             </div>
            </div>
@@ -424,8 +408,10 @@ helpAndReport <- function(title, link, content) {
                 <div class='modal-header'>
                   <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                   <h4 class='modal-title' id='%sHelp_label'>%s</h4>
-                  </div>
-                <div class='modal-body'>%s</div>
+                </div>
+                <div class='modal-body'>%s<br>
+                  &copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a>
+                </div>
               </div>
             </div>
            </div>
@@ -448,7 +434,9 @@ help_and_report <- function(modal_title, fun_name, help_file) {
                   <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                   <h4 class='modal-title' id='%s_help_label'>%s</h4>
                   </div>
-                <div class='modal-body'>%s</div>
+                <div class='modal-body'>%s<br>
+                  &copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a>
+                </div>
               </div>
             </div>
            </div>

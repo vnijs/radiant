@@ -28,5 +28,3 @@ In the plot we see that all cells contribute to the association between income a
 In other words, there are significantly fewer low income respondents that read WSJ and significantly more high income respondents that read WSJ than would be expected if the null hypothesis of no-association were true. Furthermore, there are significantly more low income respondents that read USA today and significantly fewer high income respondents that read USA Today than would be expected if the null hypothesis of no-association were true.
 
 Note: The data description for the goals2 dataset has information on how rows or columns in a cross-tab can be collapsed when some of the expected values are below 5.
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

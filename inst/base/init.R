@@ -3,13 +3,8 @@
 # when available
 ################################################################################
 
+# getting ip doesn't work - use shiny-resume when complete
 ip <- ifelse(running_local, "", session$request$REMOTE_ADDR)
-
-# observe({
-#   qs <- parseQueryString(session$clientData$url_search)
-#   if(!is.null(qs$id) && qs$id != "")
-#     ip <<- qs$id
-# })
 
 init_state <- function(r_data) {
 
@@ -87,7 +82,7 @@ check_state_dump_times <- function() {
 }
 
 if(!running_local) {
-  # are there any state files dumped more than 3 minutes ago?
+  # are there any state files dumped more than 1 minute ago?
   check_state_dump_times()
 }
 

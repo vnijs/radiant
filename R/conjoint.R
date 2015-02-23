@@ -67,10 +67,8 @@ summary.conjoint <- function(result) {
 
 	cat("Conjoint analysis\n")
   cat("Data     :", result$dataset, "\n")
-	if(result$show_filter) {
-		if(result$data_filter %>% gsub("\\s","",.) != "")
-			cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	}
+	if(result$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
   cat("Dependent variable   :", result$ca_var1, "\n")
   cat("Independent variables:", paste0(result$ca_var2, collapse=", "), "\n\n")
 

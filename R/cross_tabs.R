@@ -7,18 +7,18 @@
 #' @param ct_var2 Another categorical variable
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param ct_observed Show the observed frequencies table for variables `ct_var1` and `ct_var2`
-#' @param ct_expected Show the expected frequencies table (i.e., frequencies if the null hypothesis holds)
+#' @param ct_expected Show the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds)
 #' @param ct_contrib Show the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e)
-#' @param ct_std_residuals Show standardized differences between the observed and expected frequencies
-#' @param ct_deviation Show the percentage difference between the observed and expected frequencies
+#' @param ct_std_residuals Show standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e))
+#' @param ct_deviation Show the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
 #'
-#' @return A list with all variables defined in the function as an object of class compare_props
+#' @return A list of all variables used in cross_tabs as an object of class cross_tabs
 #'
 #' @examples
-#' result <- compare_props("titanic", "pclass", "survived")
+#' result <- cross_tabs("newspaper", "Income", "Newspaper")
 #'
-#' @seealso \code{\link{summary.compare_props}} to summarize results
-#' @seealso \code{\link{plot.compare_props}} to plot results
+#' @seealso \code{\link{summary.cross_tabs}} to summarize results
+#' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
 cross_tabs <- function(dataset, ct_var1, ct_var2,
@@ -39,9 +39,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 	rm(dat)
 
 	# adding the % deviation table
-	o <- cst$observed
-	e <- cst$expected
-	cst$deviation <- (o-e) / e
+	cst$deviation <- with(cst, (observed-expected) / expected)
 
 	nrPlot <- sum(c(ct_observed, ct_expected, ct_deviation, ct_std_residuals))
 	plot_width = 650
@@ -50,19 +48,12 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
   environment() %>% as.list %>% set_class(c("cross_tabs",class(.)))
 }
 
-# test
-# library(broom)
-# library(tidyr)
-# library(dplyr)
-# source("~/gh/radiant_dev/R/radiant.R")
-# result <- cross_tabs("diamonds","cut","clarity")
-
-#' Summarize method for output from the cross_tabs function. This is a method of class cross_tabs and can be called as summary or summary.cross_tabs
+#' Summary method for the cross_tabs function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 #'
 #' @examples
-#' result <- cross_tabs("titanic", "pclass", "survived")
+#' result <- cross_tabs("newspaper", "Income", "Newspaper")
 #' summary(result)
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
@@ -140,12 +131,12 @@ summary.cross_tabs <- function(result) {
 	cat(paste(sprintf("%.1f",100 * (sum(result$cst$expected < 5) / length(result$cst$expected))),"% of cells have expected values below 5\n\n"), sep = "")
 }
 
-#' Plot results from the cross_tabs function. This is a method of class cross_tabs and can be called as plot or plot.cross_tabs
+#' Plot method for the cross_tabs function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 #'
 #' @examples
-#' result <- cross_tabs("titanic", "pclass", "survived", cp_plots = "props")
+#' result <- cross_tabs("newspaper", "Income", "Newspaper", ct_expected = TRUE)
 #' plot(result)
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
@@ -156,9 +147,9 @@ plot.cross_tabs <- function(result) {
 
 	gather_table <- function(tab) {
 		tab %>%
-			data.frame %>%
+			data.frame(., check.names = FALSE) %>%
 			mutate(rnames = rownames(.)) %>%
-			gather_("variable", "values")
+			{ suppressMessages( gather_(., "variable", "values") ) }
 	}
 
 	plots <- list()
@@ -189,7 +180,6 @@ plot.cross_tabs <- function(result) {
   	tab <- gather_table(result$cst$expected)
 		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
-
 		plots[['expected']] <- ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
          			geom_bar(stat="identity", position = "fill", alpha = .7) +
          			labs(list(title = paste("Expected values for ",result$ct_var2," versus ",result$ct_var1, sep = ""),

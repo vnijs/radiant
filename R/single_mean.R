@@ -5,12 +5,12 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sm_var The variable selected for the mean comparison
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param sm_comp_value Population value to compare the sample mean with
-#' @param sm_alternative The alternative hypothesis (two.sided, greater or less)
-#' @param sm_sig_level Span of the confidence interval
-#' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" show the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis.
+#' @param sm_comp_value Population value to compare to the sample mean
+#' @param sm_alternative The alternative hypothesis ("two.sided", "greater", or "less")
+#' @param sm_sig_level Span for the confidence interval
+#' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #'
-#' @return A list with all variables defined in the function as an object of class single_mean
+#' @return A list of variables defined in sing_mean as an object of class single_mean
 #'
 #' @examples
 #' single_mean("diamonds","price")
@@ -36,7 +36,7 @@ single_mean <- function(dataset, sm_var,
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
 
-#' Summarize results from the single_mean function. This is a method of class single_mean and can be called as summary or summary.single_mean
+#' Summary method for single_mean
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
@@ -81,7 +81,7 @@ summary.single_mean <- function(result) {
 	print(res, row.names = FALSE)
 }
 
-#' Plot results from the single_mean function. This is a method of class single_mean and can be called as plot or plot.single_mean
+#' Plot method for single_mean
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
@@ -149,59 +149,3 @@ plot.single_mean <- function(result) {
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
 }
-
-# test
-# library(gridExtra)
-# library(ggplot2)
-# library(dplyr)
-# diamonds <- diamonds[1:100,]
-# result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"))
-# summary(result)
-# result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"),
-#                       sm_alternative = "less")
-# plot(result)
-# result <- single_mean("diamonds","price", sm_plots = c("hist","simulate"),
-#                       sm_alternative = "greater")
-# plot(result)
-# end test
-
-# bootstrap using dplyr and broom NOT WORKING
-# library(broom)
-# select(mtcars, mpg) %>% bootstrap(10)
-# mtcars %>% bootstrap(10) %>% summarize(mean(mpg))
-# boot <- bootstrap(mtcars,10)
-
-# mtcars %>%
-# 	group_by(vs) %>%
-# 	summarize(mean = mean(mpg))
-
-# mtcars %>%
-# 	bootstrap(10) %>%
-# 	summarize(mean = mean(mpg))
-
-# bootstrap(mtcars, 5) %>% summarize(min(mpg))
-
-# select(mtcars,mpg) %>% sample(., length(.), replace = TRUE) %>% summarize(mean = mean(mpg))
-
-# don't use the suggestion below. seems much slower than a simple loop
-# library(broom)
-# library(ggplot2)
-# library(dplyr)
-
-# nruns <- 1000
-
-# system.time(
-# 	simdat1 <- select(diamonds,price) %>% bootstrap(nruns) %>% do(data.frame(mean = mean(.$price)))
-# )
-
-# system.time({
-# 	simdat2 <- matrix(0, nrow = nruns)
-# 	for(i in 1:nrow(simdat)) {
-# 		simdat2[i] <- diamonds$price %>%
-# 									 sample(., length(.), replace = TRUE) %>%
-# 									 mean
-# 	}
-# })
-
-# simdat1
-# simdat2[1:10]

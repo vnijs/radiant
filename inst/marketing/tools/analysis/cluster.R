@@ -34,7 +34,7 @@ output$ui_hierCluster <- renderUI({
 	    	numericInput("hc_cutoff", "Plot cutoff:", min = 0, max = 1,
 	    		value = state_init('hc_cutoff',0), step = .05))
   	),
-		helpAndReport('Hierarchical cluster analysis','hierCluster',inclMD("tools/help/hcclustering.md"))
+		helpAndReport('Hierarchical cluster analysis','hierCluster',inclMD("tools/help/hclus.md"))
 	)
 })
 
@@ -188,7 +188,7 @@ output$ui_kmeansCluster <- renderUI({
       downloadButton("km_save_clusmeans", "Means"),
 	    actionButton("km_saveclus", "Membership")
   	),
-		helpAndReport('Kmeans cluster analysis','kmeansCluster',inclMD("tools/help/kmeansClustering.md"))
+		helpAndReport('Kmeans cluster analysis','kmeansCluster',inclMD("tools/help/kclus.md"))
 	)
 })
 
