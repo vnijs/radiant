@@ -2,7 +2,7 @@
 # Other elements in help menu
 #######################################
 output$help_videos <- renderUI({
-  "../base/tools/app/videos_quant.Rmd" %>% inclRmd %>% HTML
+  "../base/tools/app/videos.Rmd" %>% inclRmd %>% HTML
 })
 
 output$help_about <- renderUI({
@@ -12,7 +12,7 @@ output$help_about <- renderUI({
 #######################################
 # Main function of help menu
 #######################################
-help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
+# help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
 
 append_help <- function(help_str, help_path, Rmd = FALSE) {
   if(length(input[[help_str]]) == 0) return()
@@ -28,8 +28,11 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
   mathjax_script <- ifelse(Rmd, "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
                            "")
   mathjax_script <- ifelse(Rmd, paste(mathjax_script,"\n","<script>MathJax.Hub.Typeset();</script>"), "")
+
+  cc <- "&copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>"
   # mathjax_script <- ""
-  paste(all_help,"\n",mathjax_script) %>% help2html
+  # paste(all_help,"\n",mathjax_script,"\n",cc) %>% help2html
+  paste(all_help,"\n",mathjax_script,"\n",cc) %>% HTML
 }
 
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
@@ -45,7 +48,7 @@ help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare
                     "Cross-tabs" = "cross_tabs.md")
 output$help_base_menu <- reactive(append_help("help_base_menu", "../quant/tools/help/"))
 
-help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.md")
+help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.Rmd")
 output$help_regression <- reactive(append_help("help_regression", "../quant/tools/help/", Rmd = TRUE))
 
 

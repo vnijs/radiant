@@ -5,13 +5,13 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param viz_vars1 One or more variables to display along the X-axis of the plot
 #' @param viz_vars2 Variable to display along the Y-axis of the plot (default = "none")
-#' @param data_filter Expression to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param viz_type Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
 #' @param viz_facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param viz_facet_col Create horizontally arranged subplots for each level of the selected factor variable
 #' @param viz_color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour
-#' @param viz_bins Number of bins used for a histogram (not used in Radiant at this time)
-#' @param viz_smooth Adjust the flexibility of the loess line for scatter plots (not used in Radiant at this time)
+#' @param viz_bins Number of bins used for a histogram (not accessible in Radiant)
+#' @param viz_smooth Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)
 #' @param viz_check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
 #' @param viz_axes Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")
 #'
@@ -144,11 +144,3 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
   sshh(do.call(grid.arrange, c(plots, list(ncol = length(plots) %>% min(2)))))
 
 }
-
-# test
-# library(gridExtra)
-# library(ggplot2)
-# dat <- diamonds[1:1000,]
-# viz_vars1 <- c("price","carat","cut")
-# viz_type <- "hist"
-# visualize("diamonds", viz_vars1, viz_type = "hist")

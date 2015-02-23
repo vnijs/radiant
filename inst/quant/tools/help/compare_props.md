@@ -18,5 +18,3 @@ Because the p-values are smaller than the conventional level of significance (i.
 In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of the survival proportion with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the proportions across passenger classes. We can also choose to plot the data using a bar-chart of the survival counts.
 
 ![Plot](figures_quant/plot_compare_props.png)
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

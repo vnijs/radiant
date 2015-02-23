@@ -1,18 +1,12 @@
 > Visualize data
 
-#### Number of plots
+#### Filter
 
-Start by experimenting with different selections for the X-variable for a single plot (click the Single radio button). This will produce a simple histogram for the X-variable. Then try adding a Y-variable to create a scatter plot (or a box-plot if one of the variables is categorical). Facet row and Facet column can be used to split the data into different parts and then create a separate plot for each subset of the data (either a histogram or a scatter/box plot depending on whether a Y-variable has been selected).
+Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for Data > View for details.
 
-If you have both and X and a Y-variable selected you will see a drop-down Color. Here you can select a variable to create a type of heat-map where the colors are linked to the value of the select Color variable.
+#### Plot-type
 
-Select the Multiple radio button to quickly create multiple plots. For example, with `diamonds` data loaded, choose None for the Y-variable and all variables as X-variables (use CTRL-A or CMD-A). This will create histograms for all variables in your data set.
-
-To create multiple scatter/box plots select the Multiple radio button and then, with Diamonds data loaded, choose price as the Y-variable and all others as X-variables. This will produce a set of scatter and box plots. You can select a Color variable but Facet row and Facet column are not available when the Multiple radio-button has been selected.
-
-#### Line, Loess, and Jitter
-
-To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values, checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter simply adds a small random value to each data point so they do not overlap completely in the plot(s).
+Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the `diamonds` data loaded select `Histogram` and all (X) variables (use CTRL-A or CMD-A). This will create histograms for all variables in your dataset. Scatter plots are used to show the relationship, or lack thereof, between two variables. Select a variable to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and a numeric variable (Y-axis). Box-plot are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
 
 #### Box plots
 
@@ -24,15 +18,27 @@ In sum:
 
 You may have to read the two bullets a few times before it sinks in. The plot below should help to explain the structure of the box plot.
 
-![Box plot illustration](figures/boxplot.png)
+![Box-plot](figures/boxplot.png)
 [Source](http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg)
 
-#### Subset
+#### Sub-plots and heat-maps
 
-Use Subset to select (or omit) specific sets of rows from the data. You can use > and < signs and even combine filter commands. For example, x > 3 & y == 2 would select only those rows for which the variable x has values larger than 3 __and__ for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen.
+`Facet row` and `Facet column` can be used to split the data into different groups and create separate plots for each group.
+
+If you select a scatter or line plot a `Color` drop-down will be shown. Selecting a `Color` variable will create a type of heat-map where the colors are linked to the values of the `Color` variable. Selecting a categorical variable from the `Color` dropdown for a line plot will split the data into groups and will show a line of a different color for each group.
+
+#### Line, Loess, and Jitter
+
+To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values, checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter simply adds a small random value to each data point so they do not overlap completely in the plot(s).
+
+#### Axis scale
+
+The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data > Transform). Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the `Log X` and/or `Log Y` boxes.
+
+#### Flip axes
+
+To switch the variable on the X- and Y-axis check the `Flip` box.
 
 #### Plot height and Width
 
 To make plots bigger or smaller adjust the values in the height and width boxes on the bottom left.
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>

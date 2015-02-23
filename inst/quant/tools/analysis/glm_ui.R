@@ -154,7 +154,7 @@ output$ui_glm_reg <- renderUI({
 	  ),
   	help_and_report(modal_title = "GLM",
   	                fun_name = "glm_reg",
-  	                help_file = inclMD("../quant/tools/help/glm_reg.md"))
+  	                help_file = inclRmd("../quant/tools/help/glm_reg.Rmd"))
 	)
 })
 

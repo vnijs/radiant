@@ -1,8 +1,8 @@
-> Generate an efficient set of product profiles and analyze responses from a conjoint survey
+> Analyze responses from a conjoint survey
 
 To setup a conjoint study from scratch we need to determine the attributes and attributes levels that should be included. Once that has been done we would typically need to generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected.
 
-Once data is available from respondents we would analyze their evaluations of the profiles in the conjoint survey to determine the Part Worths (PW) and Importance Weights (IW).
+Once data is available from respondents we analyze their evaluations to determine Part Worths (PW) and Importance Weights (IW).
 
 #### Example: Carpet cleaner
 
@@ -17,43 +17,31 @@ A respondent was presented 18 product profiles for a carpet cleaning product des
 
 Design characteristics:
 
-![conjoint carpet cleaner design](figures_marketing/conjoint_carpet_design.png)
+![conjoint design](figures_marketing/conjoint_carpet_design.png)
 
-Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108).  The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank of 1) to least preferred (rank of 18).  The first five columns represent the five attributes and the last column is the respondent’s ranking.
+Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108). The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank 1) to least preferred (rank 18).  The first five columns represent the five attributes and the last column is the respondent's ranking.
 
-1. Compute the correlation matrix for the attribute variables. Display the correlation matrix.  What do you notice in the correlation matrix?  What does this say about the particular set of 18 profiles that was presented to the respondent?
+a. Compute the correlation matrix for the attribute variables. Display the correlation matrix.  What do you notice in the correlation matrix? What does this say about the particular set of 18 profiles that was presented to the respondent?
 
-	The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In other words, the fractional factorial design is such that all attributes are uncorrelated (i.e., orthogonal).
+*	The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In the fractional factorial design profiles are deliberately selected such that all attributes are uncorrelated (i.e., orthogonal).
 
-2. Estimate a conjoint regression using the ranking as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.
+![conjoint correlations](figures_marketing/conjoint_corr_mat.png)
 
-3. Calculate the predicted utilities for the following options: (2 points)
-	* Package A, K2R, $1.19, no Good Housekeeping seal, no money back guarantee
-	* Package C, Bissell, $1.19, no Good Housekeeping seal with money back guarantee
-	* Package B, Bissell, $1.59, Good Housekeeping seal with money back guarantee.
+b. Estimate a conjoint regression using the ranking as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.
 
-	* Package A, K2R, $1.19, no GHKS, no MBG
+![conjoint summary](figures_marketing/conjoint_summary.png)
+![conjoint plot](figures_marketing/conjoint_plot.png)
 
-	Predicted Utility based on PWs:
-	6.5 + 0 + 0 + 0 + 0 + 0 = 6.5
+c. Calculate the predicted utilities for the following options:
 
-	* Package C, Bissell, $1.19, no GHKS, with MBG
+* Package A, K2R, $1.19, no GHKS, no MBG
+	- Predicted Utility based on PWs: 6.5 + 0 + 0 + 0 + 0 + 0 = 6.5
+* Package C, Bissell, $1.19, no GHKS, with MBG
+	- Predicted Utility based on PWs: 6.5 + 4.5 + 1.5 + 0 + 4.5 = 17
+* Package B, Bissell, $1.59, with GHKS, with MBG
+	- Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 - 7.67 + 1.5 + 4.5 = 14.33
 
-	Predicted Utility based on PWs:
-	6.5 + 4.5 + 1.5 + 0 + 4.5 = 17
+d. What is the highest predicted utility that can be obtained? What are the characteristics of that option?
 
-	* Package B, Bissell, $1.59, with GHKS, with MBG
-
-	Predicted Utility based on PWs:
-	6.5 + 8.0 + 1.5 - 7.67 + 1.5 + 4.5 = 14.33
-
-4.	What is the highest predicted utility that can be obtained?  What are the characteristics of that option? (2 points)
-
-	The highest predicted utility option is the following:
-	Package B, Bissell, $1.19, with GHKS, with MBG
-
-	Predicted Utility based on PWs:
-	6.5 + 8.0 + 1.5 + 0 + 1.5 + 4.5 = 22
-
-
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="imgs/80x15.png" /></a>
+*	The option with the highest (predicted) utility is: Package B, Bissell, $1.19, with GHKS, with MBG
+*	Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 + 0 + 1.5 + 4.5 = 22
