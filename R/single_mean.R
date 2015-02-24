@@ -10,7 +10,7 @@
 #' @param sm_sig_level Span for the confidence interval
 #' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #'
-#' @return A list of variables defined in sing_mean as an object of class single_mean
+#' @return A list of variables defined in single_mean as an object of class single_mean
 #'
 #' @examples
 #' single_mean("diamonds","price")
@@ -127,11 +127,11 @@ plot.single_mean <- function(result) {
 		ci_perc <- {if(result$sm_alternative == 'two.sided') {
 									{(1-result$sm_sig_level)/2}  %>% c(., 1 - .)
 								} else if(result$sm_alternative == 'less') {
-									{1-result$sm_sig_level}
+									1-result$sm_sig_level
 								} else {
 									result$sm_sig_level
 								}} %>%
-									quantile(simdat[,result$sm_var], probs = . )
+									quantile(simdat[,result$sm_var], probs = .)
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 

@@ -17,15 +17,17 @@ ct_inputs <- reactive({
 # Cross-tabs
 ###############################
 output$ui_ct_var1 <- renderUI({
-	isFct <- "factor" == getdata_class()
-  vars <- varnames()[isFct]
+	# isFct <- "factor" == getdata_class()
+  # vars <- varnames()[isFct]
+	vars <- groupable_vars()
   selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
   	selected = state_single("ct_var1",vars), multiple = FALSE)
 })
 
 output$ui_ct_var2 <- renderUI({
-	isFct <- "factor" == getdata_class()
-  vars <- varnames()[isFct]
+	# isFct <- "factor" == getdata_class()
+ #  vars <- varnames()[isFct]
+	vars <- groupable_vars()
   if(input$ct_var1 %>% not_available) vars <- character(0)
   if(length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
@@ -37,16 +39,16 @@ output$ui_cross_tabs <- renderUI({
   	wellPanel(
 	    uiOutput("ui_ct_var1"),
 	    uiOutput("ui_ct_var2"),
-		  checkboxInput("ct_observed", label = "Observed values",
+		  checkboxInput("ct_observed", label = "Observed",
 	     	value = state_init("ct_observed",TRUE)),
-		  checkboxInput("ct_expected", label = "Expected values",
+		  checkboxInput("ct_expected", label = "Expected",
 	     	value = state_init("ct_expected",FALSE)),
 	    conditionalPanel(condition = "input.tabs_cross_tabs == 'Summary'",
-			  checkboxInput("ct_contrib", label = "Difference (o - e)^2 / e",
+			  checkboxInput("ct_contrib", label =     "Chi-squared    (o-e)^2/e",
 	     	value = state_init("ct_contrib",FALSE))),
-		  checkboxInput("ct_std_residuals", label = "Deviation (standarized)",
+		  checkboxInput("ct_std_residuals", label = "Deviation std. (o-e)/sqrt(e)",
 	     	value = state_init("ct_std_residuals",FALSE)),
-		  checkboxInput("ct_deviation", label = "Deviation (percentage)",
+		  checkboxInput("ct_deviation", label =     "Deviation %    (o-e)/e",
 	     	value = state_init("ct_deviation",FALSE))
 		),
   	help_and_report(modal_title = "Cross-tabs",
@@ -56,10 +58,10 @@ output$ui_cross_tabs <- renderUI({
 })
 
 ct_plot_width <- function()
-	.cross_tabs() %>% { if(is.list(.)) .$plot_width else 650 }
+	.cross_tabs() %>% { if (is.list(.)) .$plot_width else 650 }
 
 ct_plot_height <- function()
-	.cross_tabs() %>% { if(is.list(.)) .$plot_height else 650 }
+	.cross_tabs() %>% { if (is.list(.)) .$plot_height else 650 }
 
 # output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
@@ -89,6 +91,12 @@ output$cross_tabs <- renderUI({
 
 	do.call(cross_tabs, ct_inputs())
 })
+
+# .summary_cross_tabs <- reactive({
+	# this won't work but should give you the idea
+	# do.call(summary.cross_tabs, .cross_tabs(), ct_s_inputs())
+# })
+
 
 observe({
   if(input$cross_tabs_report %>% not_pressed) return()

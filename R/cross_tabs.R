@@ -22,12 +22,12 @@
 #'
 #' @export
 cross_tabs <- function(dataset, ct_var1, ct_var2,
-                     	data_filter = "",
-                     	ct_observed = TRUE,
-                     	ct_expected = FALSE,
-                     	ct_contrib = FALSE,
-                     	ct_std_residuals = FALSE,
-                     	ct_deviation = FALSE) {
+                     	data_filter = "") {
+                     	# ct_observed = TRUE,
+                     	# ct_expected = FALSE,
+                     	# ct_contrib = FALSE,
+                     	# ct_std_residuals = FALSE,
+                     	# ct_deviation = FALSE) {
 
 	dat <- getdata_exp(dataset, c(ct_var1, ct_var2), filt = data_filter)
 
@@ -62,6 +62,16 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 #' @export
 summary.cross_tabs <- function(result) {
 
+# Use: summary.cross_tabs <- function(result, ...)? What about in the register_plot_... and register_summar_... functions?
+
+
+
+                     	# ct_observed = TRUE,
+                     	# ct_expected = FALSE,
+                     	# ct_contrib = FALSE,
+                     	# ct_std_residuals = FALSE,
+                     	# ct_deviation = FALSE) {
+
   cat("Cross-tabs\n")
 	cat("Data     :", result$dataset, "\n")
 	if(result$data_filter %>% gsub("\\s","",.) != "")
@@ -74,7 +84,7 @@ summary.cross_tabs <- function(result) {
 	result$cst$observed %>% colnames %>% c(., "Total") -> cnames
 
 	if(result$ct_observed) {
-		cat("\nObserved values:\n")
+		cat("\nObserved:\n")
 		result$cst$observed %>%
 			rbind(colSums(.)) %>%
 			set_rownames(rnames) %>%
@@ -83,7 +93,7 @@ summary.cross_tabs <- function(result) {
 			print
 	}
 	if(result$ct_expected) {
-		cat("\nExpected values:\n")
+		cat("\nExpected:\n")
 		result$cst$expected %>%
 			rbind(colSums(.)) %>%
 			set_rownames(rnames) %>%
@@ -93,7 +103,7 @@ summary.cross_tabs <- function(result) {
 			print
 	}
 	if(result$ct_contrib) {
-		cat("\nContribution to chisquare value:\n")
+		cat("\nContribution to chi-squared:\n")
 		# print((result$cst$observed - result$cst$expected)^2 / result$cst$expected, digits = 2)
 		((result$cst$observed - result$cst$expected)^2 / result$cst$expected) %>%
 			rbind(colSums(.)) %>%
@@ -104,11 +114,11 @@ summary.cross_tabs <- function(result) {
 			print
 	}
 	if(result$ct_std_residuals) {
-		cat("\nDeviation (standardized):\n")
+		cat("\nDeviation standardized:\n")
 		print(round(result$cst$residuals, 2)) 	# these seem to be the correct std.residuals
 	}
 	if(result$ct_deviation) {
-		cat("\nDeviation (percentage):\n")
+		cat("\nDeviation %:\n")
 		print(round(result$cst$deviation, 2)) 	# % deviation
 	}
 	# if(result$ct_cellperc) {
@@ -162,7 +172,7 @@ plot.cross_tabs <- function(result) {
      					geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
      					geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
      					geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
-         			labs(list(title = paste("Deviation (standardized) for ",result$ct_var2," versus ",result$ct_var1, sep = ""), x = result$ct_var1))
+         			labs(list(title = paste("Deviation standardized for ",result$ct_var2," versus ",result$ct_var1, sep = ""), x = result$ct_var1))
 	}
 
 	if(result$ct_deviation) {
@@ -171,7 +181,7 @@ plot.cross_tabs <- function(result) {
 		colnames(tab)[1:2] <- c(result$ct_var1, result$ct_var2)
 		plots[['deviation']] <- ggplot(tab, aes_string(x = result$ct_var1, y = "values", fill = result$ct_var2)) +
          			geom_bar(stat="identity", position = "dodge", alpha = .7) + ylim(-1,1) +
-         			labs(list(title = paste("Deviation (percentage) for ",result$ct_var2," versus ",result$ct_var1, sep = ""), x = result$ct_var1))
+         			labs(list(title = paste("Deviation % for ",result$ct_var2," versus ",result$ct_var1, sep = ""), x = result$ct_var1))
 	}
 
 	if(result$ct_expected) {
@@ -182,7 +192,7 @@ plot.cross_tabs <- function(result) {
 		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
 		plots[['expected']] <- ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
          			geom_bar(stat="identity", position = "fill", alpha = .7) +
-         			labs(list(title = paste("Expected values for ",result$ct_var2," versus ",result$ct_var1, sep = ""),
+         			labs(list(title = paste("Expected frequencies for ",result$ct_var2," versus ",result$ct_var1, sep = ""),
 							x = "", y = "", fill = result$ct_var2))
 	}
 
@@ -197,7 +207,7 @@ plot.cross_tabs <- function(result) {
 		plots[['stacked']] <-
 		ggplot(tab, aes_string(x = result$ct_var1, y = "values", fill = result$ct_var2)) +
          			geom_bar(stat="identity", position = "fill", alpha = .7) +
-         			labs(list(title = paste("Observed values for ",result$ct_var2," versus ",result$ct_var1, sep = ""),
+         			labs(list(title = paste("Observed frequencies for ",result$ct_var2," versus ",result$ct_var1, sep = ""),
 							x = "", y = "", fill = result$ct_var2))
 	}
 

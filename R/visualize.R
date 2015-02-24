@@ -53,17 +53,13 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
         plots[[i]] <- plots[[i]] + geom_histogram(binwidth = bw)
       }
     }
-  }
-
-  if (viz_type == "density") {
+  } else if (viz_type == "density") {
     for (i in viz_vars1) {
       plots[[i]] <- ggplot(dat, aes_string(x=i)) +
                     geom_density(adjust=viz_smooth, fill = "green", alpha=.3)
                     # + labs(list(y = "", x = ""))
     }
-  }
-
-  if (viz_type == "scatter") {
+  } else if (viz_type == "scatter") {
     itt <- 1
     for (i in viz_vars1) {
       for (j in viz_vars2) {
@@ -71,9 +67,7 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
         itt <- itt + 1
       }
     }
-  }
-
-  if (viz_type == "line") {
+  } else if (viz_type == "line") {
     itt <- 1
     for (i in viz_vars1) {
       for (j in viz_vars2) {
@@ -88,9 +82,7 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
         }
       }
     }
-  }
-
-  if (viz_type == "bar") {
+  } else if (viz_type == "bar") {
     itt <- 1
     for (i in viz_vars1) {
       for (j in viz_vars2) {
@@ -98,9 +90,7 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
         itt <- itt + 1
       }
     }
-  }
-
-  if (viz_type == "box") {
+  } else if (viz_type == "box") {
     itt <- 1
     for (i in viz_vars1) {
       dat[,i] %<>% as.factor
@@ -141,6 +131,6 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
     for (i in 1:length(plots))
       plots[[i]] <- plots[[i]] + scale_x_continuous(trans = "log")
 
-  sshh(do.call(grid.arrange, c(plots, list(ncol = length(plots) %>% min(2)))))
+  sshh(do.call(grid.arrange, c(plots, list(ncol = min(length(plots), 2)))))
 
 }
