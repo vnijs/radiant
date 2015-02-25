@@ -23,11 +23,6 @@
 #' @export
 cross_tabs <- function(dataset, ct_var1, ct_var2,
                      	data_filter = "") {
-                     	# ct_observed = TRUE,
-                     	# ct_expected = FALSE,
-                     	# ct_contrib = FALSE,
-                     	# ct_std_residuals = FALSE,
-                     	# ct_deviation = FALSE) {
 
 	dat <- getdata_exp(dataset, c(ct_var1, ct_var2), filt = data_filter)
 
@@ -41,9 +36,12 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 	# adding the % deviation table
 	cst$deviation <- with(cst, (observed-expected) / expected)
 
-	nrPlot <- sum(c(ct_observed, ct_expected, ct_deviation, ct_std_residuals))
-	plot_width = 650
-	plot_height = 400 * nrPlot
+	# nrPlot <- sum(c(ct_observed, ct_expected, ct_deviation, ct_std_residuals))
+	# nrPlot <- sum(c(ct_expected, ct_deviation, ct_std_residuals))
+	# plot_width = 650
+	# plot_height = 400 * nrPlot
+
+	time_main <- now()
 
   environment() %>% as.list %>% set_class(c("cross_tabs",class(.)))
 }
@@ -60,18 +58,29 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
-summary.cross_tabs <- function(result) {
-
-# Use: summary.cross_tabs <- function(result, ...)? What about in the register_plot_... and register_summar_... functions?
 
 
+# rm(r_env)
+# result <- cross_tabs("newspaper","Income","Newspaper")
+# result
 
-                     	# ct_observed = TRUE,
-                     	# ct_expected = FALSE,
-                     	# ct_contrib = FALSE,
-                     	# ct_std_residuals = FALSE,
-                     	# ct_deviation = FALSE) {
+# ct_observed <- TRUE
+# summary(result, ct_observed = TRUE)
+# plot(result)
 
+
+# f(result, ct_observed = ct_observed)
+# f <- function(result, ...) {
+# 	print(list(...))
+# 	print()
+#   names(list(...)) %>% print
+# }
+
+
+summary.cross_tabs <- function(result, ct_check = "") {
+
+  cat("Time - main",result$time_main,"\n")
+  cat("Time - summary",now(),"\n")
   cat("Cross-tabs\n")
 	cat("Data     :", result$dataset, "\n")
 	if(result$data_filter %>% gsub("\\s","",.) != "")
@@ -83,7 +92,8 @@ summary.cross_tabs <- function(result) {
 	result$cst$observed %>% rownames %>% c(., "Total") -> rnames
 	result$cst$observed %>% colnames %>% c(., "Total") -> cnames
 
-	if(result$ct_observed) {
+	# if(result$ct_observed) {
+	if("observed" %in% ct_check) {
 		cat("\nObserved:\n")
 		result$cst$observed %>%
 			rbind(colSums(.)) %>%
@@ -92,7 +102,7 @@ summary.cross_tabs <- function(result) {
 			set_colnames(cnames) %>%
 			print
 	}
-	if(result$ct_expected) {
+	if("expected" %in% ct_check) {
 		cat("\nExpected:\n")
 		result$cst$expected %>%
 			rbind(colSums(.)) %>%
@@ -102,7 +112,8 @@ summary.cross_tabs <- function(result) {
 			round(2) %>%
 			print
 	}
-	if(result$ct_contrib) {
+	# if(result$ct_contrib) {
+	if("chi" %in% ct_check) {
 		cat("\nContribution to chi-squared:\n")
 		# print((result$cst$observed - result$cst$expected)^2 / result$cst$expected, digits = 2)
 		((result$cst$observed - result$cst$expected)^2 / result$cst$expected) %>%
@@ -113,11 +124,13 @@ summary.cross_tabs <- function(result) {
 			round(2) %>%
 			print
 	}
-	if(result$ct_std_residuals) {
+	# if(result$ct_std_residuals) {
+	if("dev_std" %in% ct_check) {
 		cat("\nDeviation standardized:\n")
 		print(round(result$cst$residuals, 2)) 	# these seem to be the correct std.residuals
 	}
-	if(result$ct_deviation) {
+	# if(result$ct_deviation) {
+	if("dev_perc" %in% ct_check) {
 		cat("\nDeviation %:\n")
 		print(round(result$cst$deviation, 2)) 	# % deviation
 	}
@@ -153,7 +166,7 @@ summary.cross_tabs <- function(result) {
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #'
 #' @export
-plot.cross_tabs <- function(result) {
+plot.cross_tabs <- function(result, ct_check = "") {
 
 	gather_table <- function(tab) {
 		tab %>%
@@ -163,7 +176,10 @@ plot.cross_tabs <- function(result) {
 	}
 
 	plots <- list()
-	if(result$ct_std_residuals) {
+
+
+	# if(result$ct_std_residuals) {
+	if("dev_std" %in% ct_check) {
 
 		tab <- gather_table(result$cst$residuals)
 		colnames(tab)[1:2] <- c(result$ct_var1, result$ct_var2)
@@ -175,7 +191,8 @@ plot.cross_tabs <- function(result) {
          			labs(list(title = paste("Deviation standardized for ",result$ct_var2," versus ",result$ct_var1, sep = ""), x = result$ct_var1))
 	}
 
-	if(result$ct_deviation) {
+	# if(result$ct_deviation) {
+	if("dev_perc" %in% ct_check) {
 
 		tab <- gather_table(result$cst$deviation)
 		colnames(tab)[1:2] <- c(result$ct_var1, result$ct_var2)
@@ -184,7 +201,12 @@ plot.cross_tabs <- function(result) {
          			labs(list(title = paste("Deviation % for ",result$ct_var2," versus ",result$ct_var1, sep = ""), x = result$ct_var1))
 	}
 
-	if(result$ct_expected) {
+	if("chi" %in% ct_check) {
+		plot(1:10)
+	}
+
+	# if(result$ct_expected) {
+	if("expected" %in% ct_check) {
 
 		fact_names <- result$cst$expected %>% dimnames %>% as.list
   	tab <- gather_table(result$cst$expected)
@@ -196,7 +218,8 @@ plot.cross_tabs <- function(result) {
 							x = "", y = "", fill = result$ct_var2))
 	}
 
-	if(result$ct_observed) {
+	# if(result$ct_observed) {
+	if("observed" %in% ct_check) {
 
 		fact_names <- result$cst$observed %>% dimnames %>% as.list
   	tab <- gather_table(result$cst$observed)

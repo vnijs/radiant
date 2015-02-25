@@ -251,6 +251,39 @@ register_print_output <- function(fun_name, rfun_name, out_name = fun_name) {
   })
 }
 
+register_print_output2 <- function(fun_name, rfun_name, out_name = fun_name) {
+
+  # Generate output for the summary tab
+  output[[out_name]] <- renderPrint({
+    get(rfun_name)()
+  })
+}
+
+register_plot_output2 <- function(fun_name, rfun_name,
+                                 out_name = fun_name,
+                                 width_fun = "plotWidth",
+                                 height_fun = "plotHeight") {
+
+  # Generate output for the plots tab
+  output[[out_name]] <- renderPlot({
+
+    # needs to be inside output
+    # result <- get(rfun_name)()
+
+    # when no analysis was conducted (e.g., no variables selected)
+    # if(is.character(result))
+    #   return(plot(x = 1, type = 'n', main=result,
+    #          axes = FALSE, xlab = "", ylab = ""))
+
+    withProgress(message = 'Making plot', value = 0, {
+      get(rfun_name)()
+      # plot(result)
+    })
+  }, width=get(width_fun), height=get(height_fun))
+
+}
+
+
 # fun_name is a string of the main function name
 # rfun_name is a string of the reactive wrapper that calls the main function
 # out_name is the name of the output, set to fun_name by default

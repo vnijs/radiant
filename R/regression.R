@@ -149,7 +149,7 @@ summary.regression <- function(result, savepred = FALSE) {
 
 	if(class(result$model) != 'lm') return(result)
 
-  cat("Time",now(),"\n")
+  # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
   cat("Data     :", result$dataset, "\n")
   if(result$data_filter %>% gsub("\\s","",.) != "")
