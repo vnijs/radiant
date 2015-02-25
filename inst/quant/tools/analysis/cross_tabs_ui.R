@@ -1,5 +1,13 @@
 # alternative hypothesis options
 base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
+# ct_check <- c("ct_observed" = "ct_observed", "ct_expected" = "ct_expected",
+#               "ct_contrib" = "ct_contrib", "ct_std_residuals" = "ct_std_residuals",
+#               "ct_deviation" = "ct_deviation")
+
+ct_check <- c("Observed" = "observed", "Expected" = "expected",
+              "Chi-squared (o-e)^2/e" = "chi",
+              "Deviation std. (o-e)/sqrt(e)" = "dev_std",
+              "Deviation % (o-e)/e" = "dev_perc")
 
 # list of function arguments
 ct_args <- as.list(formals(cross_tabs))
@@ -39,17 +47,8 @@ output$ui_cross_tabs <- renderUI({
   	wellPanel(
 	    uiOutput("ui_ct_var1"),
 	    uiOutput("ui_ct_var2"),
-		  checkboxInput("ct_observed", label = "Observed",
-	     	value = state_init("ct_observed",TRUE)),
-		  checkboxInput("ct_expected", label = "Expected",
-	     	value = state_init("ct_expected",FALSE)),
-	    conditionalPanel(condition = "input.tabs_cross_tabs == 'Summary'",
-			  checkboxInput("ct_contrib", label =     "Chi-squared    (o-e)^2/e",
-	     	value = state_init("ct_contrib",FALSE))),
-		  checkboxInput("ct_std_residuals", label = "Deviation std. (o-e)/sqrt(e)",
-	     	value = state_init("ct_std_residuals",FALSE)),
-		  checkboxInput("ct_deviation", label =     "Deviation %    (o-e)/e",
-	     	value = state_init("ct_deviation",FALSE))
+      checkboxGroupInput("ct_check", NULL, ct_check,
+        selected = state_init("ct_check"), inline = FALSE)
 		),
   	help_and_report(modal_title = "Cross-tabs",
   	                fun_name = "cross_tabs",
@@ -57,17 +56,27 @@ output$ui_cross_tabs <- renderUI({
   )
 })
 
-ct_plot_width <- function()
-	.cross_tabs() %>% { if (is.list(.)) .$plot_width else 650 }
 
+ct_plots <- reactive({
+	list(plot_width = 650, plot_height = 400 * length(input$ct_check))
+})
+
+ct_plot_width <- function()
+	ct_plots() %>% { if (is.list(.)) .$plot_width else 650 }
+
+	# .cross_tabs() %>% { if (is.list(.)) .$plot_width else 650 }
 ct_plot_height <- function()
-	.cross_tabs() %>% { if (is.list(.)) .$plot_height else 650 }
+	ct_plots() %>% { if (is.list(.)) .$plot_height else 650 }
+
+	# .cross_tabs() %>% { if (is.list(.)) .$plot_height else 650 }
 
 # output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
 
-		register_print_output("summary_cross_tabs", ".cross_tabs")
-		register_plot_output("plot_cross_tabs", ".cross_tabs",
+		# register_print_output("summary_cross_tabs", ".cross_tabs")
+		register_print_output2("summary_cross_tabs", ".summary_cross_tabs")
+		# register_plot_output("plot_cross_tabs", ".cross_tabs",
+		register_plot_output2("plot_cross_tabs", ".plot_cross_tabs",
                          height_fun = "ct_plot_height",
                          width_fun = "ct_plot_width")
 
@@ -92,10 +101,14 @@ output$cross_tabs <- renderUI({
 	do.call(cross_tabs, ct_inputs())
 })
 
-# .summary_cross_tabs <- reactive({
-	# this won't work but should give you the idea
-	# do.call(summary.cross_tabs, .cross_tabs(), ct_s_inputs())
-# })
+.summary_cross_tabs <- reactive({
+	do.call(summary.cross_tabs, list(result = .cross_tabs(), ct_check = input$ct_check))
+})
+
+.plot_cross_tabs <- reactive({
+	do.call(plot.cross_tabs, list(result = .cross_tabs(), ct_check = input$ct_check))
+})
+
 
 
 observe({

@@ -23,8 +23,8 @@ single_mean <- function(dataset, sm_var,
                         data_filter = "",
                         sm_comp_value = 0,
                         sm_alternative = "two.sided",
-                        sm_sig_level = .95,
-                        sm_plots = "hist") {
+                        sm_sig_level = .95) {
+                        # sm_plots = "hist") {
 
 	dat <- getdata_exp(dataset, sm_var, filt = data_filter)
 
@@ -32,6 +32,8 @@ single_mean <- function(dataset, sm_var,
 	       conf.level = sm_sig_level) %>% tidy -> res
 
 	plot_height <- 400 * length(sm_plots)
+
+	# time_main <- now()
 
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
@@ -52,6 +54,8 @@ single_mean <- function(dataset, sm_var,
 #' @export
 summary.single_mean <- function(result) {
 
+  cat("Time - main",result$time_main,"\n")
+  cat("Time - summary",now(),"\n")
   cat("Single mean test\n")
 	cat("Data     :", result$dataset, "\n")
 	if(result$data_filter %>% gsub("\\s","",.) != "")
@@ -95,7 +99,7 @@ summary.single_mean <- function(result) {
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
 #' @export
-plot.single_mean <- function(result) {
+plot.single_mean <- function(result, ...) {
 
  	plots <- list()
 
