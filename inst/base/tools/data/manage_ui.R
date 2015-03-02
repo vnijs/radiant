@@ -35,7 +35,7 @@ output$ui_clipboard_save <- renderUI({
       "<label>Add data description:</label><br>" %>% HTML,
       tags$textarea(class="form-control", id="save_cdata",
         rows="5",
-        capture.output(write.table(getdata(), file = "", row.names = FALSE, sep = "\t")) %>%
+        capture.output(write.table(.getdata(), file = "", row.names = FALSE, sep = "\t")) %>%
           paste(collapse = "\n"))
     )
   }
@@ -44,6 +44,7 @@ output$ui_clipboard_save <- renderUI({
 output$ui_Manage <- renderUI({
   list(
     wellPanel(
+      # shinyFilesButton('file', 'File select', 'Please select a file', FALSE),
       radioButtons(inputId = "dataType", label = "Load data:",
                    c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard",
                      "examples" = "examples", "state" = "state"),
@@ -178,16 +179,16 @@ output$downloadData <- downloadHandler(
     if(ext == 'rda') {
       if(!is.null(input$man_data_descr) && input$man_data_descr != "") {
         # save data description
-        dat <- getdata()
+        dat <- .getdata()
         attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
         assign(robj, dat)
         save(list = robj, file = file)
       } else {
-        assign(robj, getdata())
+        assign(robj, .getdata())
         save(list = robj, file = file)
       }
     } else if(ext == 'csv') {
-      assign(robj, getdata())
+      assign(robj, .getdata())
       write.csv(get(robj), file)
     }
   }
@@ -349,8 +350,8 @@ output$uiRename <- renderUI({
 
 output$htmlDataExample <- renderText({
 
-  # dat <- getdata()
-  if(r_data[[input$dataset]] %>% is.null) return()
+  # dat <- .getdata()
+  if(is.null(.getdata())) return()
 
   # Show only the first 10 (or 30) rows
   r_data[[paste0(input$dataset,"_descr")]] %>%

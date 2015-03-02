@@ -125,7 +125,7 @@ microbenchmark(
 )
 
 
-getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
+getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 
   if(exists("r_env")) {
       r_env$r_data[[dataset]]
@@ -142,7 +142,7 @@ getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
 }
 
 reg1 <- function(dataset) {
-	getdata_exp(dataset) %>%
+	getdata(dataset) %>%
 	lm(mpg ~ cyl + vs, data = .)
 }
 
@@ -162,12 +162,12 @@ microbenchmark(times = 1000,
 )
 
 
-getdata_exp <- function(dataset) {
+getdata <- function(dataset) {
   get(dataset)
 }
 
 reg1 <- function(dataset) {
-	getdata_exp(dataset) %>%
+	getdata(dataset) %>%
 	lm(mpg ~ cyl + vs, data = .)
 }
 
@@ -181,7 +181,7 @@ reg1(dataset)
 reg2(dat)
 
 reg1 <- function(dataset) {
-	getdata_exp(dataset) %>%
+	getdata(dataset) %>%
 	lm(price ~ carat + color, data = .)
 }
 
@@ -203,12 +203,12 @@ microbenchmark(times = 100,
 r_env <- new.env()
 r_env$diamonds <- diamonds
 
-getdata_exp <- function(dataset) {
+getdata <- function(dataset) {
   r_env$dataset
 }
 
 reg1 <- function(dataset) {
-	getdata_exp(dataset) %>%
+	getdata(dataset) %>%
 	lm(mpg ~ cyl + vs, data = .)
 }
 
@@ -227,7 +227,7 @@ microbenchmark(times = 100,
 )
 
 reg1 <- function(dataset) {
-	local_dat <- getdata_exp(dataset)
+	local_dat <- getdata(dataset)
 	lm(price ~ carat + color, data = local_dat)
 }
 
@@ -246,7 +246,7 @@ microbenchmark(times = 100,
   reg2(dat)
 )
 
-getdata_exp_full <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
+getdata_full <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 
 	filt %<>% gsub("\\s","", .)
 
@@ -268,7 +268,7 @@ getdata_exp_full <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice 
 	      { if(na.rm) na.omit(.) else . }
 }
 
-getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
+getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 
 	filt %<>% gsub("\\s","", .)
 
@@ -310,7 +310,7 @@ reg3 <- function(dat)
 	lm(price ~ carat + color, data = dat)
 
 reg4 <- function(dataset)
-	lm(price ~ carat + color, data = getdata_exp(dataset))
+	lm(price ~ carat + color, data = getdata(dataset))
 
 reg1(dataset)
 reg2(dataset)
@@ -326,7 +326,7 @@ microbenchmark(times = 100,
 
 
 library(lineprof)
-prof <- lineprof(getdata_exp("dat"))
+prof <- lineprof(getdata("dat"))
 shine(prof)
 
 
@@ -358,7 +358,7 @@ reg3 <- function(dat, vars) {
 }
 
 reg4 <- function(dataset, vars) {
-	dat <- getdata_exp(dataset, vars)
+	dat <- getdata(dataset, vars)
 	lm(price ~ carat + color, data = dat)
 }
 

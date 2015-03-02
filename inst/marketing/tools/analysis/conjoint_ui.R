@@ -90,7 +90,6 @@ output$conjoint <- renderUI({
 	if(input$ca_var2 %>% not_available)
 		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
-	# conjoint(input$dataset, input$ca_var1, input$ca_var2, input$ca_rev, input$ca_vif, input$ca_plots, input$ca_scale_plot)
 	do.call(conjoint, ca_inputs())
 
 })

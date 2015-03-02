@@ -29,8 +29,8 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                           cm_plots = "bar") {
 
 	vars <- c(cm_var1, cm_var2)
-	# dat <- getdata_exp(dataset, vars)
-	dat <- getdata_exp(dataset, vars, filt = data_filter)
+	# dat <- getdata(dataset, vars)
+	dat <- getdata(dataset, vars, filt = data_filter)
 
 	if(dat[,cm_var1] %>% is.factor) {
 		colnames(dat) <- c("variable","values")

@@ -49,39 +49,40 @@ ip_dump <- paste0("RadiantDumpTime",ip)
 # check_state_dump_times()
 #### end test section
 
-state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
-  if(!require(sendmailR))
-    install.packages("sendmailR", repos = "http://cran.rstudio.com")
-  library(sendmailR)
+if(!running_local) {
 
-  from <- '<vincent.nijs@gmail.com>'
-  to <- '<vincent.nijs@gmail.com>'
-  body <- paste0(body,collapse="\n")
-  sendmail(from, to, subject, body,
-           control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
-}
+  state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
+    if(!require(sendmailR))
+      install.packages("sendmailR", repos = "http://cran.rstudio.com")
+    library(sendmailR)
 
-check_state_dump_times <- function() {
+    from <- '<vincent.nijs@gmail.com>'
+    to <- '<vincent.nijs@gmail.com>'
+    body <- paste0(body,collapse="\n")
+    sendmail(from, to, subject, body,
+             control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
+  }
 
-  dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
-  for (i in dump_times) {
-    dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
-    body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-    if (dump_time > 1) {
-      sub("RadiantDumpTime","",i) %>%
-        paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
-        rm(list = ., envir = .GlobalEnv)
-      body_part2 <- c("\n\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-      state_email(c(body_part1,body_part2))
-    } else {
-      state_email(c(body_part1, "\n\nDump times:\n",
-                    dump_times,dump_time, "\n\nFull ls():\n",
-                    ls(envir = .GlobalEnv)))
+  check_state_dump_times <- function() {
+
+    dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
+    for (i in dump_times) {
+      dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
+      body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+      if (dump_time > 1) {
+        sub("RadiantDumpTime","",i) %>%
+          paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
+          rm(list = ., envir = .GlobalEnv)
+        body_part2 <- c("\n\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+        state_email(c(body_part1,body_part2))
+      } else {
+        state_email(c(body_part1, "\n\nDump times:\n",
+                      dump_times,dump_time, "\n\nFull ls():\n",
+                      ls(envir = .GlobalEnv)))
+      }
     }
   }
-}
 
-if(!running_local) {
   # are there any state files dumped more than 1 minute ago?
   check_state_dump_times()
 }
@@ -104,5 +105,32 @@ if(running_local) {
   # reference to radiant environment that can be accessed by exported functions
   # does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")
-}
 
+  # add any data.frame in global environment to r_data
+  # should not affect memory usage ... at least until
+  # dat <- diamonds
+  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% { names(.[.]) }
+  # df_list
+
+  for(df in df_list) {
+    isolate({
+      r_data[[df]] <- get(df, envir = .GlobalEnv)
+      attr(r_data[[df]],'description')
+      r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>% { if(is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
+      r_data$datasetlist %<>% c(df, .) %>% unique
+      rm(list = df, envir = .GlobalEnv)
+    })
+  }
+  # get("init_state")
+  # r_data %>% names
+
+  # library(shiny)
+  # rv <- reactiveValues()
+  # is.reactivevalues(rv)
+  # rv$diamonds <- diamonds
+
+  # library(pryr)
+  # object_size(rv, diamonds)
+  # object_size(rv)
+  # object_size(diamonds)
+}

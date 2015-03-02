@@ -154,7 +154,7 @@ output$help_factor <- reactive(append_help("help_factor", "../marketing/tools/he
 observe( help_switch(input$help_factor_all, "help_factor") )
 observe( help_switch(input$help_factor_none, "help_factor", help_on = FALSE) )
 
-help_cluster <- c("Hierarchical" = "hclus.md", "Kmeans" = "kclus.md")
+help_cluster <- c("Hierarchical" = "hier_clus.md", "Kmeans" = "kmeans_clus.md")
 output$help_cluster <- reactive(append_help("help_cluster", "../marketing/tools/help/"))
 observe( help_switch(input$help_cluster_all, "help_cluster") )
 observe( help_switch(input$help_cluster_none, "help_cluster", help_on = FALSE) )

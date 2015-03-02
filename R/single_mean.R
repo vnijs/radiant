@@ -8,7 +8,6 @@
 #' @param sm_comp_value Population value to compare to the sample mean
 #' @param sm_alternative The alternative hypothesis ("two.sided", "greater", or "less")
 #' @param sm_sig_level Span for the confidence interval
-#' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #'
 #' @return A list of variables defined in single_mean as an object of class single_mean
 #'
@@ -24,14 +23,11 @@ single_mean <- function(dataset, sm_var,
                         sm_comp_value = 0,
                         sm_alternative = "two.sided",
                         sm_sig_level = .95) {
-                        # sm_plots = "hist") {
 
-	dat <- getdata_exp(dataset, sm_var, filt = data_filter)
+	dat <- getdata(dataset, sm_var, filt = data_filter)
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res
-
-	plot_height <- 400 * length(sm_plots)
 
 	# time_main <- now()
 
@@ -54,8 +50,8 @@ single_mean <- function(dataset, sm_var,
 #' @export
 summary.single_mean <- function(result) {
 
-  cat("Time - main",result$time_main,"\n")
-  cat("Time - summary",now(),"\n")
+  # cat("Time - main",result$time_main,"\n")
+  # cat("Time - summary",now(),"\n")
   cat("Single mean test\n")
 	cat("Data     :", result$dataset, "\n")
 	if(result$data_filter %>% gsub("\\s","",.) != "")
@@ -90,23 +86,24 @@ summary.single_mean <- function(result) {
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
 #' @param result Return value from \code{\link{single_mean}}
+#' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #'
 #' @examples
-#' result <- single_mean("diamonds","price", sm_comp_value = 3500, sm_plots = c("hist", "simulate"))
-#' plot(result)
+#' result <- single_mean("diamonds","price", sm_comp_value = 3500)
+#' plot(result, sm_plots = c("hist", "simulate"))
 #'
 #' @seealso \code{\link{single_mean}} to generate the result
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
 #' @export
-plot.single_mean <- function(result, ...) {
+plot.single_mean <- function(result, sm_plots = "hist") {
 
  	plots <- list()
 
-	if("hist" %in% result$sm_plots) {
+	if("hist" %in% sm_plots) {
 		bw <- result$dat %>% range(na.rm = TRUE) %>% diff %>% divide_by(10)
 
-		plots[[which("hist" == result$sm_plots)]] <-
+		plots[[which("hist" == sm_plots)]] <-
 			ggplot(result$dat, aes_string(x=result$sm_var)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = result$sm_comp_value, color = 'red',
@@ -116,7 +113,7 @@ plot.single_mean <- function(result, ...) {
 				geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
 				           color = 'black', linetype = 'longdash', size = .5)
 	}
-	if("simulate" %in% result$sm_plots) {
+	if("simulate" %in% sm_plots) {
 
 		simdat <- matrix(0, nrow = 1000)
 		for(i in 1:nrow(simdat)) {
@@ -139,7 +136,7 @@ plot.single_mean <- function(result, ...) {
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
-		plots[[which("simulate" == result$sm_plots)]] <-
+		plots[[which("simulate" == sm_plots)]] <-
 			ggplot(simdat, aes_string(x=result$sm_var)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = result$sm_comp_value, color = 'red',

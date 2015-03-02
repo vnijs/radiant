@@ -70,16 +70,18 @@ saveStateOnRefresh <- function(session = session) {
 ################################################################
 # functions used across tools in radiant
 ################################################################
-changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
+.changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
 	if(nrow(r_data[[dataset]]) == new_col %>% nrow &&
      new_col_name[1] != "")
     r_data[[dataset]][,new_col_name] <- new_col
 }
 
-changedata_names <- function(oldnames, newnames)
-  r_data[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
+# .changedata <- changedata
 
-getdata <- reactive({
+# changedata_names <- function(oldnames, newnames)
+#   r_data[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
+
+.getdata <- reactive({
 
   if(input$data_filter %>% is_empty | input$show_filter == FALSE) return(r_data[[input$dataset]])
   selcom <- gsub("\\s","", input$data_filter)
@@ -99,6 +101,8 @@ getdata <- reactive({
   r_data[[input$dataset]]
 })
 
+# .getdata <- getdata
+
 getdata_class <- reactive({
   # r_data[[input$dataset]][1,,drop = FALSE] %>% getdata_class_fun
   r_data[[input$dataset]] %>% getdata_class_fun
@@ -113,7 +117,7 @@ getdata_class_fun <- function(dat) {
 }
 
 groupable_vars <- reactive({
-  getdata() %>%
+  .getdata() %>%
     summarise_each(funs(n_distinct)) %>%
     { . < 10 } %>%
     which(.) %>%
@@ -121,7 +125,7 @@ groupable_vars <- reactive({
 })
 
 two_level_vars <- reactive({
-  getdata() %>%
+  .getdata() %>%
     summarise_each(funs(n_distinct)) %>%
     { . == 2 } %>%
     which(.) %>%
@@ -135,10 +139,12 @@ varnames <- reactive({
 
 # cleaning up the arguments for data_filter passed to report
 clean_args <- function(rep_args, rep_default = list()) {
-  if(rep_args$data_filter == "")
-    rep_args$data_filter  <- NULL
-  else
-    rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  if(!is.null(rep_args$data_filter)) {
+    if(rep_args$data_filter == "")
+      rep_args$data_filter  <- NULL
+    else
+      rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+  }
 
   if(length(rep_default) == 0) rep_default[names(rep_args)] <- ""
 
@@ -148,7 +154,7 @@ clean_args <- function(rep_args, rep_default = list()) {
   rep_args
 }
 
-# check if a variable is null or not in the data
+# check if a variable is null or not in the selected data.frame
 not_available <- function(x)
   if(any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
 
@@ -170,7 +176,6 @@ d2c <- function(x) if(is_date(x)) as.character(x) else x
 
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
-
   { if(is.character(dat) && length(dat) == 1) r_data[[dat]] else dat } %>%
     slice(1:min(nshow,nrow(.))) %>%
     mutate_each(funs(d2c)) %>%
@@ -188,12 +193,15 @@ suggest_data <- function(text = "", dat = "diamonds")
 ################################################################
 # functions used to create Shiny in and outputs
 ################################################################
-plotWidth <- function()
+plot_width <- function()
   if(input$viz_plot_width %>% not_available) r_data$plotWidth else input$viz_plot_width
 
-plotHeight <- function()
+plotWidth <- plot_width
+
+plot_height <- function()
   if(input$viz_plot_height %>% not_available) r_data$plotHeight else input$viz_plot_height
 
+plotHeight <- plot_height
 
 twoPanels <- function(fun_name, rfun_label, fun_label, widthFun, heightFun) {
   #
@@ -255,42 +263,39 @@ register_print_output2 <- function(fun_name, rfun_name, out_name = fun_name) {
 
   # Generate output for the summary tab
   output[[out_name]] <- renderPrint({
-    get(rfun_name)()
+    # when no analysis was conducted (e.g., no variables selected)
+    get(rfun_name)() %>%
+    { if(is.character(.)) cat(.,"\n") else . } %>% rm
+
   })
 }
 
 register_plot_output2 <- function(fun_name, rfun_name,
                                  out_name = fun_name,
-                                 width_fun = "plotWidth",
-                                 height_fun = "plotHeight") {
+                                 width_fun = "plot_width",
+                                 height_fun = "plot_height") {
 
   # Generate output for the plots tab
   output[[out_name]] <- renderPlot({
 
-    # needs to be inside output
-    # result <- get(rfun_name)()
-
     # when no analysis was conducted (e.g., no variables selected)
-    # if(is.character(result))
-    #   return(plot(x = 1, type = 'n', main=result,
-    #          axes = FALSE, xlab = "", ylab = ""))
-
-    withProgress(message = 'Making plot', value = 0, {
-      get(rfun_name)()
-      # plot(result)
-    })
+    get(rfun_name)() %>%
+    { if(is.character(.)) {
+        plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
+      } else {
+        withProgress(message = 'Making plot', value = 0, { . })
+      }
+    }
   }, width=get(width_fun), height=get(height_fun))
-
 }
-
 
 # fun_name is a string of the main function name
 # rfun_name is a string of the reactive wrapper that calls the main function
 # out_name is the name of the output, set to fun_name by default
 register_plot_output <- function(fun_name, rfun_name,
                                  out_name = fun_name,
-                                 width_fun = "plotWidth",
-                                 height_fun = "plotHeight") {
+                                 width_fun = "plot_width",
+                                 height_fun = "plot_height") {
 
   # Generate output for the plots tab
   output[[out_name]] <- renderPlot({

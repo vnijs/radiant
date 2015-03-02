@@ -44,7 +44,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                 glm_coef_int = FALSE) {
 
 	vars <- glm_indep_var
-	dat <- getdata_exp(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
+	dat <- getdata(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
 
   # levs <- levels(dat[,glm_dep_var])
   # if(glm_levels != "") {
@@ -253,7 +253,7 @@ summary.glm_reg <- function(result, savepred = FALSE) {
         glm_predict_cmd <- gsub("\"","\'", result$glm_predict_cmd)
         nval <- try(eval(parse(text = paste0("with(result$dat, expand.grid(", glm_predict_cmd ,"))"))), silent = TRUE)
       } else {
-        nval <- getdata_exp(result$glm_predict_data)
+        nval <- getdata(result$glm_predict_data)
         nval_names <- names(nval)
         vars <- as.character(attr(result$model$terms,'variables'))[-1]
         nval <- try(select_(nval, .dots = vars[-1]), silent = TRUE)

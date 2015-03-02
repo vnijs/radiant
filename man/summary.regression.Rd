@@ -4,10 +4,17 @@
 \alias{summary.regression}
 \title{Summary method for regression}
 \usage{
-\method{summary}{regression}(result, savepred = FALSE)
+\method{summary}{regression}(result, reg_sum_check = "",
+  reg_conf_level = 0.95, reg_test_var = "")
 }
 \arguments{
 \item{result}{Return value from \code{\link{regression}}}
+
+\item{reg_sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
+
+\item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
+
+\item{reg_test_var}{Variables to evaluate in model comparison (i.e., a competing models F-test)}
 }
 \description{
 Summary method for regression
@@ -17,7 +24,9 @@ See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an 
 }
 \examples{
 result <- regression("diamonds", "price", c("carat","clarity"))
-summary(result)
+summary(result, reg_sum_check = c("rmse","sumsquares","vif","confint"), reg_test_var = "clarity")
+result <- regression("shopping", "v1", c("v2","v3"))
+summary(result, reg_test_var = "v2")
 }
 \seealso{
 \code{\link{regression}} to generate the results

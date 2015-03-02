@@ -31,7 +31,7 @@ output$ui_single_mean <- renderUI({
       conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
           choices = sm_plots,
-          selected = state_single("sm_plots", sm_plots, sm_args$sm_plots),
+          selected = state_single("sm_plots", sm_plots, "hist"),
           multiple = TRUE,
           options = list(plugins = list('remove_button', 'drag_drop')))),
  	   	uiOutput("ui_sm_var"),
@@ -50,14 +50,21 @@ output$ui_single_mean <- renderUI({
  	)
 })
 
+sm_plot <- reactive({
+  list(plot_width = 650, plot_height = 400 * length(input$sm_plots))
+})
+
+sm_plot_width <- function()
+  sm_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+
 sm_plot_height <- function()
-  .single_mean() %>% { if(is.list(.)) .$plot_height else 400 }
+  sm_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
 # output is called from the main radiant ui.R
 output$single_mean <- renderUI({
 
-		register_print_output("summary_single_mean", ".single_mean")
-		register_plot_output("plot_single_mean", ".single_mean",
+		register_print_output2("summary_single_mean", ".summary_single_mean")
+		register_plot_output2("plot_single_mean", ".plot_single_mean",
                          height_fun = "sm_plot_height")
 
 		# two separate tabs
@@ -82,20 +89,48 @@ output$single_mean <- renderUI({
 })
 
 .single_mean <- reactive({
+	do.call(single_mean, sm_inputs())
+})
+
+.summary_single_mean <- reactive({
 
   if(not_available(input$sm_var))
     return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
 
   if(is.na(input$sm_comp_value))
-  	return("Please choose a comparison value")
+    return("Please choose a comparison value")
 
-	do.call(single_mean, sm_inputs())
+  summary(.single_mean())
+})
+
+.plot_single_mean <- reactive({
+
+  if(not_available(input$sm_var))
+    return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
+
+  if(is.na(input$sm_comp_value))
+    return("Please choose a comparison value")
+
+  plot(.single_mean(), sm_plots = input$sm_plots)
 })
 
 observe({
-  if(input$single_mean_report %>% not_pressed) return()
+  if(not_pressed(input$single_mean_report)) return()
   isolate({
-		update_report(inp = clean_args(sm_inputs(), sm_args), fun_name = "single_mean",
-		              outputs = c("summary", "plot"))
+    outputs <- c("summary","plot")
+    inp_out <- list(sm_plots = input$sm_plots) %>% list("",.)
+    figs <- TRUE
+    if(length(input$sm_plots) == 0) {
+      figs <- FALSE
+      outputs <- c("summary")
+      inp_out <- list("","")
+    }
+    update_report2(inp_main = clean_args(sm_inputs(), sm_args),
+                  fun_name = "single_mean",
+                  inp_out = inp_out,
+                  outputs = outputs,
+                  figs = figs,
+                  fig.width = round(7 * sm_plot_width()/650,2),
+                  fig.height = round(7 * sm_plot_height()/650,2))
   })
 })
