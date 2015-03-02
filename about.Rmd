@@ -40,7 +40,7 @@ Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](
 
 ### Radiant code
 
-Version 0.1.6 (1/28/2015) Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+Version 0.1.50 (3/2/2015) Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 ### Package dependencies
 
