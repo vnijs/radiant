@@ -32,11 +32,7 @@ You can call functions for visualization and analysis in your R-code and access 
 
 As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R) for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean`, `single_prop`, and `compare_means` functions.
 
-Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, executing the code above will produce the following error:
-
-```r
-Error in .getReactiveEnvironment()\$currentContext() : Operation not allowed without an active reactive context. (You tried to do something that can only be done from inside a reactive expression or observer.)
-```
+Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, calling analysis functions may produce an error if the data cannot be found.
 
 ## Documentation
 

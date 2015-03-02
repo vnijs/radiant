@@ -16,7 +16,18 @@ r_data$shopping
 changedata("shopping", vars = 1:20, var_names = "x")
 getdata("shopping")
 
+options(repos = c(CRAN = "http://cran.rstudio.com"))
+install.packages('RCurl')
+library(RCurl)
+# getURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/data_rady/shopping.rda?raw=true")
 
+browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/data_rady/shopping.rda?raw=true")
+
+?packages:radiant
+help(package = "radiant")
+
+
+?cat
 
 
 

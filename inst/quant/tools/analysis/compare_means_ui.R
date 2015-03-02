@@ -58,7 +58,7 @@ output$ui_compare_means <- renderUI({
       conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
         selectizeInput(inputId = "cm_plots", label = "Select plots:",
                 choices = cm_plots,
-                selected = state_single("cm_plots", cm_plots, cm_args$cm_plots),
+                selected = state_single("cm_plots", cm_plots, "bar"),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))
       ),
@@ -85,16 +85,21 @@ output$ui_compare_means <- renderUI({
   )
 })
 
-cm_plot_height <- function() {
-  result <- .compare_means()
-  ifelse(!"character" %in% class(result), result$plot_height, 650)
-}
+cm_plot <- reactive({
+  list(plot_width = 650, plot_height = 400 * length(input$cm_plots))
+})
+
+cm_plot_width <- function()
+  cm_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+
+cm_plot_height <- function()
+  cm_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
 # output is called from the main radiant ui.R
 output$compare_means <- renderUI({
 
-    register_print_output("summary_compare_means", ".compare_means", )
-    register_plot_output("plot_compare_means", ".compare_means",
+    register_print_output2("summary_compare_means", ".summary_compare_means", )
+    register_plot_output2("plot_compare_means", ".plot_compare_means",
                          height_fun = "cm_plot_height")
 
     # two separate tabs
@@ -111,8 +116,12 @@ output$compare_means <- renderUI({
 })
 
 .compare_means <- reactive({
+  do.call(compare_means, cm_inputs())
+})
 
-  if(input$cm_var2 %>% not_available)
+.summary_compare_means <- reactive({
+
+  if(not_available(input$cm_var2))
     return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
   # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
   if(length(input$cm_var2) > 1 && getdata_class()[input$cm_var1] == 'factor')
@@ -120,14 +129,48 @@ output$compare_means <- renderUI({
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if(input$cm_var1 %in% input$cm_var2) return(" ")
 
-  do.call(compare_means, cm_inputs())
+  summary(.compare_means())
+})
+
+.plot_compare_means <- reactive({
+
+  if(not_available(input$cm_var2))
+    return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
+  # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
+  if(length(input$cm_var2) > 1 && getdata_class()[input$cm_var1] == 'factor')
+    return(" ")
+  # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
+  if(input$cm_var1 %in% input$cm_var2) return(" ")
+
+  plot(.compare_means(), cm_plots = input$cm_plots)
 })
 
 observe({
-  if(input$compare_means_report %>% not_pressed) return()
+  if(not_pressed(input$compare_means_report)) return()
   isolate({
-    update_report(inp = cm_inputs() %>% clean_args, fun_name = "compare_means",
-                  outputs = c("summary", "plot"),
-                  fig.height = round(7 * cm_plot_height()/650))
+    outputs <- c("summary","plot")
+    inp_out <- list(cm_plots = input$cm_plots) %>% list("",.)
+    figs <- TRUE
+    if(length(input$cm_plots) == 0) {
+      figs <- FALSE
+      outputs <- c("summary")
+      inp_out <- list("","")
+    }
+    update_report2(inp_main = clean_args(cm_inputs(), cm_args),
+                  fun_name = "compare_means",
+                  inp_out = inp_out,
+                  outputs = outputs,
+                  figs = figs,
+                  fig.width = round(7 * cm_plot_width()/650,2),
+                  fig.height = round(7 * cm_plot_height()/650,2))
   })
 })
+
+# observe({
+#   if(input$compare_means_report %>% not_pressed) return()
+#   isolate({
+#     update_report(inp = cm_inputs() %>% clean_args, fun_name = "compare_means",
+#                   outputs = c("summary", "plot"),
+#                   fig.height = round(7 * cm_plot_height()/650))
+#   })
+# })

@@ -62,6 +62,7 @@ saveStateOnRefresh <- function(session = session) {
         assign(ip_inputs, reactiveValuesToList(input), envir = .GlobalEnv)
         assign(ip_data, reactiveValuesToList(r_data), envir = .GlobalEnv)
         assign(ip_dump, now(), envir = .GlobalEnv)
+        if(running_local) rm(r_env, envir = .GlobalEnv)
       }
     })
   })

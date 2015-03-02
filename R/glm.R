@@ -311,13 +311,14 @@ summary.glm_reg <- function(result, savepred = FALSE) {
 
               # pushing predictions into the clipboard
               if(running_local) {
-                os_type <- .Platform$OS.type
-                if (os_type == 'windows') {
+                os_type <- Sys.info()["sysname"]
+                if (os_type == 'Windows') {
                   write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
-                } else {
+                } else if (os_type == 'Debian') {
                   write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
                 }
-                cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
+                if (os_type != 'Linux')
+                  cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
               }
 
               # if(result$glm_predict_out != "") {
