@@ -1,3 +1,6 @@
+# reg_show_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.
+# reg_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
+
 #' Linear regression using OLS
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
@@ -8,8 +11,6 @@
 #' @param reg_indep_var Independent variables in the regression
 #' @param reg_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
 #' @param reg_int_var Interaction terms to include in the model
-#' @param reg_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.
-#' @param reg_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
 #' @param reg_predict_cmd Generate predictions using a command. For example, carat = seq(.5, 1.5, .1) would produce predictions for values of carat starting at .5, increasing to 1.5 in increments of .1. Make sure to press Enter after you finish entering the command. If no results are shown the command was invalid
 #' @param reg_predict_data Generate predictions by specifying the name of a data.frame (e.g., "diamonds"). The dataset must have all columns used in the estimated model
 #' @param reg_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
@@ -31,7 +32,6 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
                        data_filter = "",
                        reg_test_var = "",
                        reg_int_var = "",
-                       reg_interactions = "",
                        reg_predict = "",
                        reg_predict_cmd = "",
                        reg_predict_data = "",
@@ -44,8 +44,8 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 	vars <- reg_indep_var
 
 	# adding interaction terms as needed
-	if(reg_interactions != "" &&
-	  reg_int_var != "" &&
+	if(reg_int_var != "" &&
+	  # reg_show_interactions != "" &&
 	  length(vars) > 1) {
 		if({reg_int_var %>% strsplit(":") %>% unlist} %in% reg_indep_var %>% all) {
 			vars <- c(vars,reg_int_var)
@@ -121,6 +121,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param result Return value from \code{\link{regression}}
+#' @param savepred Save predicted values to csv (TRUE, FALSE). The default is FALSE
 #'
 #' @examples
 #' result <- regression("diamonds", "price", c("carat","clarity"))
@@ -134,8 +135,21 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #' @export
 summary.regression <- function(result, savepred = FALSE) {
 
+                       # reg_predict = "",        -- predict should probably be its's own method like predict for lm and glm
+                       # reg_predict_cmd = "",
+                       # reg_predict_data = "",
+
+                       # reg_test_var = "",
+                       # reg_check = "",          -- some do require recalc and some do not, these should be split
+                       # reg_conf_level = .95,
+
+                       # reg_plots = "",          -- not relevant for summary but is for plot
+                       # reg_coef_int = FALSE,    -- not relevant for summary but is for plot
+                       # reg_lines = "") {
+
 	if(class(result$model) != 'lm') return(result)
 
+  # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
   cat("Data     :", result$dataset, "\n")
   if(result$data_filter %>% gsub("\\s","",.) != "")
@@ -305,7 +319,8 @@ summary.regression <- function(result, savepred = FALSE) {
   }
 
   if("confint" %in% result$reg_check) {
-    if(result$model$coeff %>% is.na %>% any) {
+    # if(result$model$coeff %>% is.na %>% any) {
+    if(anyNA(result$model$coeff)) {
       cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
       result$ci_tab$`+/-` <- (result$ci_tab$High - result$ci_tab$coefficient)
@@ -317,7 +332,7 @@ summary.regression <- function(result, savepred = FALSE) {
   }
 
 	# if(!result$reg_test_var %>% is_empty) {
-  if(!result$reg_test_var == "") {
+  if(!result$reg_test_var[1] == "") {
 		if("stepwise" %in% result$reg_check) {
 	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
 	  } else {
@@ -325,8 +340,8 @@ summary.regression <- function(result, savepred = FALSE) {
 				sub_formula <- ". ~ 1"
 				vars <- result$reg_indep_var
 
-				if(result$reg_interactions != "" &&
-					  result$reg_int_var != "" &&
+				if(result$reg_int_var != "" &&
+					  # result$reg_show_interactions != "" &&
 					  length(vars) > 1) {
 
 						if({result$reg_int_var %>% strsplit(":") %>% unlist} %in% result$reg_test_var %>% any) {

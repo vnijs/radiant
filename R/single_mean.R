@@ -10,7 +10,7 @@
 #' @param sm_sig_level Span for the confidence interval
 #' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #'
-#' @return A list of variables defined in sing_mean as an object of class single_mean
+#' @return A list of variables defined in single_mean as an object of class single_mean
 #'
 #' @examples
 #' single_mean("diamonds","price")
@@ -23,8 +23,8 @@ single_mean <- function(dataset, sm_var,
                         data_filter = "",
                         sm_comp_value = 0,
                         sm_alternative = "two.sided",
-                        sm_sig_level = .95,
-                        sm_plots = "hist") {
+                        sm_sig_level = .95) {
+                        # sm_plots = "hist") {
 
 	dat <- getdata_exp(dataset, sm_var, filt = data_filter)
 
@@ -32,6 +32,8 @@ single_mean <- function(dataset, sm_var,
 	       conf.level = sm_sig_level) %>% tidy -> res
 
 	plot_height <- 400 * length(sm_plots)
+
+	# time_main <- now()
 
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
@@ -52,6 +54,8 @@ single_mean <- function(dataset, sm_var,
 #' @export
 summary.single_mean <- function(result) {
 
+  cat("Time - main",result$time_main,"\n")
+  cat("Time - summary",now(),"\n")
   cat("Single mean test\n")
 	cat("Data     :", result$dataset, "\n")
 	if(result$data_filter %>% gsub("\\s","",.) != "")
@@ -95,7 +99,7 @@ summary.single_mean <- function(result) {
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
 #' @export
-plot.single_mean <- function(result) {
+plot.single_mean <- function(result, ...) {
 
  	plots <- list()
 
@@ -127,11 +131,11 @@ plot.single_mean <- function(result) {
 		ci_perc <- {if(result$sm_alternative == 'two.sided') {
 									{(1-result$sm_sig_level)/2}  %>% c(., 1 - .)
 								} else if(result$sm_alternative == 'less') {
-									{1-result$sm_sig_level}
+									1-result$sm_sig_level
 								} else {
 									result$sm_sig_level
 								}} %>%
-									quantile(simdat[,result$sm_var], probs = . )
+									quantile(simdat[,result$sm_var], probs = .)
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
