@@ -106,11 +106,8 @@ output$compare_props <- renderUI({
 
 .compare_props <- reactive({
 
-  if(input$cp_var1 %>% not_available)
-    return("This analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are noavailable please select another dataset")
-
-  if(input$cp_var2 %>% not_available)
-    return("This analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are noavailable please select another dataset")
+  if(not_available(input$cp_var1) || not_available(input$cp_var2))
+    return("\nThis analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are not available please select another dataset")
 
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
   if(input$cp_var1 %in% input$cp_var2) return(" ")

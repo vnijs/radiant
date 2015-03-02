@@ -3,7 +3,7 @@
 ###############################
 
 # alternative hypothesis options
-sm_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
+sm_alt <- c("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 sm_plots <- c("Histogram" = "hist", "Simulate" = "simulate")
 
 # list of function arguments
@@ -22,8 +22,7 @@ output$ui_sm_var <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
   selectInput(inputId = "sm_var", label = "Variable (select one):",
-              choices = vars,
-              selected = state_single("sm_var",vars), multiple = FALSE)
+    choices = vars, selected = state_single("sm_var",vars), multiple = FALSE)
 })
 
 output$ui_single_mean <- renderUI({
@@ -31,10 +30,10 @@ output$ui_single_mean <- renderUI({
   	wellPanel(
       conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
-                choices = sm_plots,
-                selected = state_single("sm_plots", sm_plots, sm_args$sm_plots),
-                multiple = TRUE,
-                options = list(plugins = list('remove_button', 'drag_drop')))),
+          choices = sm_plots,
+          selected = state_single("sm_plots", sm_plots, sm_args$sm_plots),
+          multiple = TRUE,
+          options = list(plugins = list('remove_button', 'drag_drop')))),
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
@@ -43,20 +42,16 @@ output$ui_single_mean <- renderUI({
     	sliderInput('sm_sig_level',"Significance level:", min = 0.85, max = 0.99,
     		value = state_init('sm_sig_level',sm_args$sm_sig_level), step = 0.01),
     	numericInput("sm_comp_value", "Comparison value:",
-    	             state_init('sm_comp_value',sm_args$sm_comp_value))
+    	  state_init('sm_comp_value',sm_args$sm_comp_value))
   	),
-  	help_and_report(modal_title = 'Single mean',
-  	                fun_name = 'single_mean',
+  	help_and_report(modal_title = 'Single mean', fun_name = 'single_mean',
   	                help_file = inclMD("../quant/tools/help/single_mean.md")
     )
  	)
 })
 
-
-sm_plot_height <- function() {
-  result <- .single_mean()
-  ifelse(!"character" %in% class(result), result$plot_height, 400)
-}
+sm_plot_height <- function()
+  .single_mean() %>% { if(is.list(.)) .$plot_height else 400 }
 
 # output is called from the main radiant ui.R
 output$single_mean <- renderUI({
@@ -88,11 +83,11 @@ output$single_mean <- renderUI({
 
 .single_mean <- reactive({
 
-  if(input$sm_var %>% not_available)
+  if(not_available(input$sm_var))
     return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
 
-  if(input$sm_comp_value %>% is.na)
-  	return("Please choose a comparison value.")
+  if(is.na(input$sm_comp_value))
+  	return("Please choose a comparison value")
 
 	do.call(single_mean, sm_inputs())
 })
@@ -100,7 +95,7 @@ output$single_mean <- renderUI({
 observe({
   if(input$single_mean_report %>% not_pressed) return()
   isolate({
-		update_report(inp = sm_inputs() %>% clean_args, fun_name = "single_mean",
+		update_report(inp = clean_args(sm_inputs(), sm_args), fun_name = "single_mean",
 		              outputs = c("summary", "plot"))
   })
 })

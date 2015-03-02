@@ -62,6 +62,6 @@ To see the effects for age type `age = seq(0,100, 20)` in the **Prediction comma
     3rd male 100 0.009
 ```
 
-For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities using the following command: `pclass = levels(pclass), sex = levels(sex), age = seq(0,100, 20)`. There are too many numbers to easily interpret in table from so we save the predictions back into Radiant and generate the following plot in the Visualize tab:
+For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities using the following command: `pclass = levels(pclass), sex = levels(sex), age = seq(0,100, 20)`. There are too many numbers to easily interpret in table form so we save the predictions back into Radiant and generate the following plot in the Data > Visualize tab:
 
 ![Probability](figures_quant/prob_glm_reg.png)
