@@ -1,0 +1,8 @@
+---
+title: Factor > Factor
+---
+
+***
+
+```{r child='app/kmeans_clus.md'}
+```

@@ -1,0 +1,8 @@
+---
+title: Data > Merge
+---
+
+***
+
+```{r child='app/merge.md'}
+```

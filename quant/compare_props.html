@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Base &gt; Compare proportions</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/radiant/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/radiant/index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/base/manage.html">Manage</a></li>
+             <li><a href="/radiant/base/view.html">View</a></li>
+             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
+             <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
+             <li><a href="/radiant/base/merge.html">Merge</a></li>
+             <li><a href="/radiant/base/transform.html">Transform</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
+             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+        <li><a href="/radiant/programming.html">Programming</a></li>
+        <li><a href="/radiant/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Base &gt; Compare proportions</h1>
+</div>
+
+
+<hr />
+<blockquote>
+<p>Compare proportions for two or more groups in the data</p>
+</blockquote>
+<p>The compare proportions test is used to evaluate if the frequency of occurrence of some event, behavior, intention, etc. differs across groups. We can perform either a one-tailed test (i.e., less-than or greater-than) or two-tailed test (see <code>Alternative hypothesis</code>). A one-tailed test is useful if we want to evaluate if the available data suggest that, for example, the proportion of dropped calls is larger (or smaller) for one wireless provider compared to others.</p>
+<div id="example" class="section level4">
+<h4>Example</h4>
+<p>We will use a dataset that describes the survival status of individual passengers on the Titanic. The principal source for data about Titanic passengers is the Encyclopedia Titanic. One of the original sources is Eaton &amp; Haas (1994) Titanic: Triumph and Tragedy, Patrick Stephens Ltd, which includes a passenger list created by many researchers and edited by Michael A. Findlay. Lets focus on two variables in the database:</p>
+<ul>
+<li>survived = a factor with levels <code>Yes</code> and <code>No</code></li>
+<li>pclass = Passenger Class (1st, 2nd, 3rd). This is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower</li>
+</ul>
+<p>Suppose we want to test if the proportion of people that survived the sinking of the Titanic differs across passenger classes. To test this hypothesis we select <code>pclass</code> as the grouping variable and calculate proportions for <code>survived</code>. Radiant will do a pair-wise comparison of survival probabilities across the three passenger class levels. Unless we have an explicit hypothesis for the direction of the effect we should use a two-sided test. Our first alternative hypothesis would be ‘The proportion of survivors is different for 1st vs 2nd class passengers’.</p>
+<p><img src="figures_quant/summary_compare_props.png" alt="Summary" /></p>
+<p>Because the p-values are smaller than the conventional level of significance (i.e. &lt; 0.05) for each pair-wise comparison we can reject the null hypothesis that the proportions are equal based on the available data. The results suggest that 1st class passengers were more likely to survive the sinking than either the 2nd or 3rd class passengers. In turn, the 2nd class passengers were more likely to survive than those in 3rd class.</p>
+<p>In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of the survival proportion with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the proportions across passenger classes. We can also choose to plot the data using a bar-chart of the survival counts.</p>
+<p><img src="figures_quant/plot_compare_props.png" alt="Plot" /></p>
+</div>
+
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

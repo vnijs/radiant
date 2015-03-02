@@ -1,0 +1,8 @@
+---
+title: Maps > Attributes
+---
+
+***
+
+```{r child='app/percepmap.md'}
+```

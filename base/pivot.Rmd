@@ -1,0 +1,8 @@
+---
+title: Data > Pivot
+---
+
+***
+
+```{r child='app/pivot.md'}
+```

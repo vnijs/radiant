@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Regression &gt; GLM</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/radiant/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/radiant/index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/base/manage.html">Manage</a></li>
+             <li><a href="/radiant/base/view.html">View</a></li>
+             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
+             <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
+             <li><a href="/radiant/base/merge.html">Merge</a></li>
+             <li><a href="/radiant/base/transform.html">Transform</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
+             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+        <li><a href="/radiant/programming.html">Programming</a></li>
+        <li><a href="/radiant/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Regression &gt; GLM</h1>
+</div>
+
+
+<hr />
+<blockquote>
+<p>Estimate a Logit (Probit) model</p>
+</blockquote>
+<div id="functionality" class="section level4">
+<h4>Functionality</h4>
+<p>Start by selecting a binary dependent variable and one or more independents variables. Use <code>Prediction</code> to calculate predicted probabilities from a model estimates. Either choose a dataframe for prediction (“Data”) or specify a command (“Command”). If you choose to enter a command you must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., <code>age</code> must be one of the selected independent variables to predict survival probability for a 90 year old passenger).</p>
+<ul>
+<li>To predict the survival probability for a passenger in 3rd class use <code>pclass = &quot;3rd&quot;</code> and press enter</li>
+<li>To predict the survival probability for passengers aged between 0 and 90 at 10 year intervals type <code>age = seq(0, 90, 10)</code> and press enter</li>
+<li>To predict the survival probability for passengers per class and gender type <code>pclass = levels(pclass), sex = levels(sex)</code> and press enter</li>
+</ul>
+<p>We can test if two or more variables together add significantly to the fit of a model. This function can be very useful to test if the overall influence of a variable of type <code>factor</code> is significant.</p>
+<p>Various additional outputs and options can be selected:</p>
+<ul>
+<li>VIF: Variance Inflation Factors and Rsq. These are measures of multi-collinearity for the independent variables</li>
+<li>Standardized coefficients: Coefficients may be hard to compare if the independent variables are measured on different scales and variances. By standardizing the data before estimation we can see which variables <em>move-the-needle</em> most</li>
+<li>Step-wise: A data-mining approach to select the best fitting model</li>
+</ul>
+</div>
+<div id="example" class="section level4">
+<h4>Example</h4>
+<p>We will use a dataset that describes the survival status of individual passengers on the Titanic. The principal source for data about Titanic passengers is the Encyclopedia Titanic. One of the original sources is Eaton &amp; Haas (1994) Titanic: Triumph and Tragedy, Patrick Stephens Ltd, which includes a passenger list created by many researchers and edited by Michael A. Findlay. Suppose we want to investigate which factors are most strongly associated with the chance of surviving the sinking of the Titanic. Lets focus on four variables in the database:</p>
+<ul>
+<li>survived = a factor with levels <code>Yes</code> and <code>No</code></li>
+<li>pclass = Passenger Class (1st, 2nd, 3rd). This is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower</li>
+<li>sex = Sex (female, male)</li>
+<li>age = Age in years</li>
+</ul>
+<p>Select <code>survived</code> as the dependent variable with <code>Yes</code> in <strong>Choose level</strong>. Select <code>pclass</code>, <code>sex</code> and <code>age</code> as the independent variables. In the screenshot below we see that each of the coefficients is statistically significant (p.value &lt; .05) and that the model has some predictive power (Chi-squared statistic &lt; .05). The <code>vif</code> measure suggest that multi-collinearity is not a concern in this model. Unfortunately the coefficients from a logit of probit model can be difficult to interpret. If we click the <code>Odds</code> checkbox we see that the odds of survival for 2nd and 3rd class passengers were significantly lower for 2nd and 3rd class passengers compared to first class passenger. The odds for males were also lower than for females. While the effect of age is statically significant, for each year difference in age the odds of survival are not as strongly affected (see also the standardized coefficient).</p>
+<p><img src="figures_quant/summary_glm_reg.png" alt="Summary" /></p>
+<p>In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.</p>
+<p><img src="figures_quant/plot_glm_reg.png" alt="Plot" /></p>
+<p>Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how the survival probabilities changes across passenger classes type <code>pclass = levels(pclass)</code> in the <strong>Prediction command</strong> box and press Enter. For males of average age in the sample the survival probability was close to 50%. For 3rd class passengers this probability was closer to 10%.</p>
+<pre class="r"><code>    age  sex pclass  pred
+ 29.881 male    1st 0.499
+ 29.881 male    2nd 0.217
+ 29.881 male    3rd 0.092</code></pre>
+<p>To see the effects of gender type <code>sex = levels(sex)</code> in the <strong>Prediction command</strong> box and press Enter. For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 10%.</p>
+<pre class="r"><code>    age pclass    sex  pred
+ 29.881    3rd female 0.551
+ 29.881    3rd   male 0.092</code></pre>
+<p>To see the effects for age type <code>age = seq(0,100, 20)</code> in the <strong>Prediction command</strong> box. For male infants in 3rd class the survival probability was around 20%. For males in 3rd class, 60 years of age, the probability drops to around 3%. For oldest males on board the model predicts a survival probability close to 0%.</p>
+<pre class="r"><code> pclass  sex age  pred
+    3rd male   0 0.220
+    3rd male  20 0.124
+    3rd male  40 0.067
+    3rd male  60 0.035
+    3rd male  80 0.018
+    3rd male 100 0.009</code></pre>
+<p>For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities using the following command: <code>pclass = levels(pclass), sex = levels(sex), age = seq(0,100, 20)</code>. There are too many numbers to easily interpret in table form so we save the predictions back into Radiant and generate the following plot in the Data &gt; Visualize tab:</p>
+<p><img src="figures_quant/prob_glm_reg.png" alt="Probability" /></p>
+</div>
+
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

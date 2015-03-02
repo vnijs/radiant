@@ -1,0 +1,8 @@
+---
+title: Base > Compare means
+---
+
+***
+
+```{r child='app/compare_means.md'}
+```

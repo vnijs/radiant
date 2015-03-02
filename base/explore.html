@@ -109,6 +109,7 @@ img {
              <li><a href="/radiant/base/view.html">View</a></li>
              <li><a href="/radiant/base/visualize.html">Visualize</a></li>
              <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
              <li><a href="/radiant/base/merge.html">Merge</a></li>
              <li><a href="/radiant/base/transform.html">Transform</a></li>
           </ul>
@@ -120,17 +121,19 @@ img {
              <li class="dropdown-header">Random</li>
              <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
           </ul>
         </li>
 
@@ -140,35 +143,38 @@ img {
              <li class="dropdown-header">Random</li>
              <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
              <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/preFactor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/fullFactor.html">Factor</a></li>
+             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hcclustering.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeansClustering.html">K-means</a></li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Conjoint</li>
-             <li><a href="/radiant/marketing/conjoint.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
+        <li><a href="/radiant/programming.html">Programming</a></li>
         <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -182,13 +188,13 @@ img {
 
 <hr />
 <blockquote>
-<p>Summarize and plot the data</p>
+<p>Summarize and explore your data</p>
 </blockquote>
-<p>Create various summary statistics for one or more variables in your data. The most powerful feature in Explore is that you can easy describe the data <em>by</em> some other variable and create corresponding plots.</p>
-<p>If we select price from the diamonds dataset we can see the number of observations (n), the mean, the median, etc. etc. However, the mean price per clarity level of the diamond can also be easily provided by choosing clarity as the Group by variable.</p>
-<div id="subset" class="section level3">
-<h3>Subset</h3>
-<p>Choose ‘Subset’ from the ‘Transformation type’ dropdown to select (or omit) specific sets of rows from the data. You can use &gt; and &lt; signs and even combine filter commands. For example, x &gt; 3 &amp; y == 2 would select only those rows for which the variable x has values larger than 3 <strong>and</strong> for which y has values equal to 2. Type your filter statement in the Subset box and press enter to see the result on screen. You should see the number of observations in the data summary change (i.e., the value of n changes).</p>
+<p>Generate summary statistics for one or more variables in your data. The most powerful feature in Explore is that you can easy describe the data <em>by</em> one or more other variables and create corresponding plots.</p>
+<p>For example, if we select <code>price</code> from the <code>diamonds</code> dataset we can see the number of observations (n), the mean, the median, etc. etc. However, the mean price for each clarity level of the diamond can also be easily provided by choosing <code>clarity</code> as the Group by variable.</p>
+<div id="filter" class="section level4">
+<h4>Filter</h4>
+<p>Use the <code>Filter</code> box to select (or omit) specific sets of rows from the data. See the helpfile for Data &gt; View for details.</p>
 </div>
 
 

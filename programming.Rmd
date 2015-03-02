@@ -1,0 +1,134 @@
+---
+title: Programming with Radiant
+---
+
+```{r echo = FALSE}
+knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
+suppressMessages(library(radiant))
+load("~/gh/radiant_dev/inst/quant/data/data_examples/salary.rda")
+load("~/gh/radiant_dev/inst/marketing/data/data_rady/shopping.rda")
+load("/Users/vnijs/Desktop/GitHub/radiant_dev/inst/base/data/data_init/diamonds.rda")
+```
+
+An important goal or Radiant is provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/) (see `R > Report`). Reproducible research. Most pages have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press `Update` to render the report to HTML.
+
+You can also use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an rmarkdown document (_work in progress_).
+
+If you close Radiant using `Quit > Quit` after launching it from Rstudio or Rgui you can can paste the commands below into the command console to get the same output as in the browser GUI.
+
+```{r}
+result <- single_mean("diamonds","price")
+summary(result)
+plot(result)
+```
+
+You can call functions for visualization (see below) and access help from the console using `?visualize`
+
+```{r}
+visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price", viz_type = "scatter", viz_facet_row = "clarity", viz_color = "clarity")
+```
+
+As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R) for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for all tools listed in the `Base` and `Regression` menus.
+
+## Programming
+
+If you have not yet installed Radiant enter the commands below in the R(studio) console:
+
+```r
+options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
+install.packages('radiant')
+library('radiant')
+```
+
+This will load the library and the required packages. To see the index of functions currently available from the Radiant package using the `help(package = "radiant")` command
+
+Lets start by comparing the mean of a variable to a (population) value using the built-in `mtcars` dataset. This functionality if in the Radiant menu `Base > Single mean`. The analysis is conducted in function `single_mean`. Calling the `summary` method on the result object will show tabular output. Calling `plot` on the same result will produce plots to help evaluate the hypothesis.
+
+```{r}
+result <- single_mean("mtcars", "mpg", sm_comp_value = 20, sm_alternative = "greater")
+summary(result)
+plot(result, sm_plots = c("hist","simulate"))
+```
+
+To compare the mean price of diamonds across different levels of clarity we can call the `compare_means` function:
+
+```{r}
+result <- compare_means("diamonds", "clarity", "price")
+summary(result)
+plot(result, cm_plots = c("bar","density"))
+```
+
+These dataset are available automatically (after loading the radiant library). We can also load data through Radiant's web-interface and then access the data from the console after closing the app. Start radiant using the command below and then use `examples > Load examples` from the `	Data > Manage`. Then close the app using `Quit > Quit`.
+
+```r
+radiant()
+```
+
+We can now use the `compare_means` function to evaluate salary data for professors of different ranks using:
+
+```{r}
+result <- compare_means("salary", "rank", "salary")
+summary(result)
+plot(result)
+```
+
+We can also run regressions and get output that would require many lines of code to produce from scratch:
+
+```{r}
+result <- regression("diamonds", "price", c("carat","clarity"))
+summary(result, reg_sum_check = "confint")
+predict(result, reg_predict_cmd = "carat = 1:10")
+plot(result, reg_plots = "coef")
+```
+```{r fig.height=8}
+plot(result, reg_plots = "dashboard")
+```
+
+As a final example, imagine that you wanted segment a sample of respondents based on their toothpaste attitudes. Below code you would need to write to produce the required results using functions from the Radiant package. To get help on writting code for cluster analysis try `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`.
+
+```{r}
+# set working directory to your Desktop
+setwd("~/Desktop") # or setwd("~/Documents/Desktop")
+
+# get the data from the link below and save it to your desktop
+browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/data_rady/shopping.rda?raw=true")
+
+# load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
+load("shopping.rda")
+
+# load the radiant library
+library(radiant)
+
+# start with hierarchical clustering, view help
+# run hierarchical cluster analysis on the shopping data, variables v1 through v6
+result <- hier_clus("shopping", c("v1:v6"))
+
+# summary - not much here - plots are more important
+summary(result)
+
+# check the help file on how to plot results from hierarchical cluster analysis
+# default plots - looks like there is a big jump in the overall within-cluster
+# heterogeneity in the step from 3 to 2 segments
+plot(result)
+
+# show the dendrogram with cutoff at 0
+plot(result, hc_plots = "dendro", hc_cutoff = 0)
+
+# plots created above suggest 3 clusters may be  most appropriate
+# use kmeans to create the clusters
+# generate output and save clustermembership to the datafile
+result <- kmeans_clus("shopping",
+                      km_vars = c("v1", "v2", "v3", "v4", "v5", "v6"),
+                      km_nr_clus = 3)
+summary(result)
+plot(result)
+save_membership(result)
+```
+
+See if you can reproduce this output in the radiant web-interface. Start radiant using `radiant()`.
+
+
+
+
+
+

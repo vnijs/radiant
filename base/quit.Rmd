@@ -1,0 +1,8 @@
+---
+title: Data > Quit
+---
+
+***
+
+```{r child='app/quit.md'}
+```

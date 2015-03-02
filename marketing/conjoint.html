@@ -109,6 +109,7 @@ img {
              <li><a href="/radiant/base/view.html">View</a></li>
              <li><a href="/radiant/base/visualize.html">Visualize</a></li>
              <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
              <li><a href="/radiant/base/merge.html">Merge</a></li>
              <li><a href="/radiant/base/transform.html">Transform</a></li>
           </ul>
@@ -120,17 +121,19 @@ img {
              <li class="dropdown-header">Random</li>
              <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
           </ul>
         </li>
 
@@ -140,35 +143,38 @@ img {
              <li class="dropdown-header">Random</li>
              <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
              <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/preFactor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/fullFactor.html">Factor</a></li>
+             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hcclustering.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeansClustering.html">K-means</a></li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Conjoint</li>
-             <li><a href="/radiant/marketing/conjoint.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
+        <li><a href="/radiant/programming.html">Programming</a></li>
         <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -182,12 +188,12 @@ img {
 
 <hr />
 <blockquote>
-<p>Generate an efficient set of product profiles and analyze responses from a conjoint survey</p>
+<p>Analyze responses from a conjoint survey</p>
 </blockquote>
 <p>To setup a conjoint study from scratch we need to determine the attributes and attributes levels that should be included. Once that has been done we would typically need to generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected.</p>
-<p>Once data is available from respondents we would analyze their evaluations of the profiles in the conjoint survey to determine the Part Worths (PW) and Importance Weights (IW).</p>
-<div id="example-carpet-cleaner" class="section level3">
-<h3>Example: Carpet cleaner</h3>
+<p>Once data is available from respondents we analyze their evaluations to determine Part Worths (PW) and Importance Weights (IW).</p>
+<div id="example-carpet-cleaner" class="section level4">
+<h4>Example: Carpet cleaner</h4>
 <p>A respondent was presented 18 product profiles for a carpet cleaning product described on five attributes in a conjoint study (dataset: carpet.rda is part of the example datasets). The attributes are:</p>
 <ul>
 <li>design = Package Design (A, B, C)</li>
@@ -198,32 +204,43 @@ img {
 <li>ranking = Respondent ranking of 18 attributes</li>
 </ul>
 <p>Design characteristics:</p>
-<p><img src="figures_marketing/conjoint_carpet_design.png" alt="conjoint carpet cleaner design" /></p>
-<p>Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108). The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank of 1) to least preferred (rank of 18). The first five columns represent the five attributes and the last column is the respondent’s ranking.</p>
-<ol style="list-style-type: decimal">
-<li><p>Compute the correlation matrix for the attribute variables. Display the correlation matrix. What do you notice in the correlation matrix? What does this say about the particular set of 18 profiles that was presented to the respondent?</p>
-<p>The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In other words, the fractional factorial design is such that all attributes are uncorrelated (i.e., orthogonal).</p></li>
-<li><p>Estimate a conjoint regression using the ranking as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.</p></li>
-<li>Calculate the predicted utilities for the following options: (2 points)
-<ul>
-<li>Package A, K2R, $1.19, no Good Housekeeping seal, no money back guarantee</li>
-<li>Package C, Bissell, $1.19, no Good Housekeeping seal with money back guarantee</li>
-<li><p>Package B, Bissell, $1.59, Good Housekeeping seal with money back guarantee.</p></li>
-<li><p>Package A, K2R, $1.19, no GHKS, no MBG</p></li>
-</ul>
-<p>Predicted Utility based on PWs: 6.5 + 0 + 0 + 0 + 0 + 0 = 6.5</p>
-<ul>
-<li>Package C, Bissell, $1.19, no GHKS, with MBG</li>
-</ul>
-<p>Predicted Utility based on PWs: 6.5 + 4.5 + 1.5 + 0 + 4.5 = 17</p>
-<ul>
-<li>Package B, Bissell, $1.59, with GHKS, with MBG</li>
-</ul>
-<p>Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 - 7.67 + 1.5 + 4.5 = 14.33</p></li>
-<li><p>What is the highest predicted utility that can be obtained? What are the characteristics of that option? (2 points)</p>
-<p>The highest predicted utility option is the following: Package B, Bissell, $1.19, with GHKS, with MBG</p>
-<p>Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 + 0 + 1.5 + 4.5 = 22</p></li>
+<p><img src="figures_marketing/conjoint_carpet_design.png" alt="conjoint design" /></p>
+<p>Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108). The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank 1) to least preferred (rank 18). The first five columns represent the five attributes and the last column is the respondent’s ranking.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Compute the correlation matrix for the attribute variables. Display the correlation matrix. What do you notice in the correlation matrix? What does this say about the particular set of 18 profiles that was presented to the respondent?</li>
 </ol>
+<ul>
+<li>The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In the fractional factorial design profiles are deliberately selected such that all attributes are uncorrelated (i.e., orthogonal).</li>
+</ul>
+<p><img src="figures_marketing/conjoint_corr_mat.png" alt="conjoint correlations" /></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Estimate a conjoint regression using the ranking as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.</li>
+</ol>
+<p><img src="figures_marketing/conjoint_summary.png" alt="conjoint summary" /> <img src="figures_marketing/conjoint_plot.png" alt="conjoint plot" /></p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Calculate the predicted utilities for the following options:</li>
+</ol>
+<ul>
+<li>Package A, K2R, $1.19, no GHKS, no MBG
+<ul>
+<li>Predicted Utility based on PWs: 6.5 + 0 + 0 + 0 + 0 + 0 = 6.5</li>
+</ul></li>
+<li>Package C, Bissell, $1.19, no GHKS, with MBG
+<ul>
+<li>Predicted Utility based on PWs: 6.5 + 4.5 + 1.5 + 0 + 4.5 = 17</li>
+</ul></li>
+<li>Package B, Bissell, $1.59, with GHKS, with MBG
+<ul>
+<li>Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 - 7.67 + 1.5 + 4.5 = 14.33</li>
+</ul></li>
+</ul>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>What is the highest predicted utility that can be obtained? What are the characteristics of that option?</li>
+</ol>
+<ul>
+<li>The option with the highest (predicted) utility is: Package B, Bissell, $1.19, with GHKS, with MBG</li>
+<li>Predicted Utility based on PWs: 6.5 + 8.0 + 1.5 + 0 + 1.5 + 4.5 = 22</li>
+</ul>
 </div>
 
 

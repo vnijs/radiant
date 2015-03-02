@@ -109,6 +109,7 @@ img {
              <li><a href="/radiant/base/view.html">View</a></li>
              <li><a href="/radiant/base/visualize.html">Visualize</a></li>
              <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
              <li><a href="/radiant/base/merge.html">Merge</a></li>
              <li><a href="/radiant/base/transform.html">Transform</a></li>
           </ul>
@@ -120,17 +121,19 @@ img {
              <li class="dropdown-header">Random</li>
              <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
           </ul>
         </li>
 
@@ -140,35 +143,38 @@ img {
              <li class="dropdown-header">Random</li>
              <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sampleSize.html">Sample size</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/crossTabs.html">Cross-tabs</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GlM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
              <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/preFactor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/fullFactor.html">Factor</a></li>
+             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hcclustering.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeansClustering.html">K-means</a></li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Conjoint</li>
-             <li><a href="/radiant/marketing/conjoint.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
+        <li><a href="/radiant/programming.html">Programming</a></li>
         <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -184,33 +190,33 @@ img {
 <p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis and classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
 <div id="installing-radiant" class="section level3">
 <h3>Installing Radiant</h3>
-<iframe width="640" height="375" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen>
+</iframe>
 </div>
 <div id="starting-and-stopping-radiant" class="section level3">
 <h3>Starting and stopping Radiant</h3>
-<iframe width="640" height="375" src="//www.youtube.com/embed/D71alRsGmBk" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="//www.youtube.com/embed/D71alRsGmBk" frameborder="0" allowfullscreen>
+</iframe>
 </div>
 <div id="getting-help" class="section level3">
 <h3>Getting help</h3>
-<iframe width="640" height="375" src="//www.youtube.com/embed/LFlCwapzAF0" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="//www.youtube.com/embed/LFlCwapzAF0" frameborder="0" allowfullscreen>
+</iframe>
 </div>
 <div id="getting-data-in-and-out-of-radiant" class="section level3">
 <h3>Getting data in and out of Radiant</h3>
-<iframe width="640" height="375" src="//www.youtube.com/embed/6AE1Wa74cJI" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="//www.youtube.com/embed/6AE1Wa74cJI" frameborder="0" allowfullscreen>
+</iframe>
 </div>
 <div id="generating-predictions-from-regression" class="section level3">
 <h3>Generating predictions from regression</h3>
-<iframe width="640" height="375" src="//www.youtube.com/embed/Xp1REGAewGU" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="//www.youtube.com/embed/Xp1REGAewGU" frameborder="0" allowfullscreen>
+</iframe>
 </div>
 <div id="creating-a-report" class="section level3">
 <h3>Creating a report</h3>
-<iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen>
+</iframe>
 <!--
 ### Selecting variables for fast and efficient analysis
 ### View data in table form
@@ -218,7 +224,6 @@ img {
 ### Explore data
 ### Transform data
 -->
-
 </div>
 <div id="radiant-code" class="section level3">
 <h3>Radiant code</h3>
@@ -226,13 +231,13 @@ img {
 </div>
 <div id="package-dependencies" class="section level3">
 <h3>Package dependencies</h3>
-<p>Package dependencies: car, gridExtra, GPArotation, psych, vegan, RColorBrewer, wordcloud, AlgDesign, brew, reshape2, plyr, markdown, knitr, rmarkdown, testthat, lubridate, ggplot2, pryr, shiny, magrittr, tidyr, dplyr, ggvis, broom, shinyAce</p>
+<p>Package dependencies: car, gridExtra, GPArotation, psych, wordcloud, AlgDesign, knitr, ggdendro, lubridate, ggplot2, pryr, shiny, magrittr, tidyr, dplyr, broom, htmlwidgets, shinyAce, rpivotTable, radiant</p>
 <p><details> <summary>Citing included packages</summary></p>
 <pre><code>
 To cite package &#39;radiant&#39; in publications use:
 
   &quot;Vincent Nijs&quot; (2015). radiant: Business analytics using R and
-  Shiny. R package version 0.1.11.
+  Shiny. R package version 0.1.50.
   https://github.com/mostly-harmless/radiant,
   http://mostly-harmless.github.io/radiant/
 
@@ -242,7 +247,7 @@ A BibTeX entry for LaTeX users is
     title = {radiant: Business analytics using R and Shiny},
     author = {&quot;Vincent Nijs&quot;},
     year = {2015},
-    note = {R package version 0.1.11},
+    note = {R package version 0.1.50},
     url = {https://github.com/mostly-harmless/radiant, http://mostly-harmless.github.io/radiant/},
   }
 
@@ -310,10 +315,10 @@ A BibTeX entry for LaTeX users is
 
 To cite the psych package in publications use:
 
-  Revelle, W. (2014) psych: Procedures for Personality and
+  Revelle, W. (2015) psych: Procedures for Personality and
   Psychological Research, Northwestern University, Evanston,
   Illinois, USA, http://CRAN.R-project.org/package=psych Version =
-  1.4.8.
+  1.5.1.
 
 A BibTeX entry for LaTeX users is
 
@@ -322,49 +327,9 @@ A BibTeX entry for LaTeX users is
     author = {William Revelle},
     organization = { Northwestern University},
     address = { Evanston, Illinois},
-    year = {2014},
-    note = {R package version 1.4.8},
-    url = {http://CRAN.R-project.org/package=psych},
-  }
-
-
-To cite package &#39;vegan&#39; in publications use:
-
-  Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre
-  Legendre, Peter R. Minchin, R. B. O&#39;Hara, Gavin L. Simpson,
-  Peter Solymos, M. Henry H. Stevens and Helene Wagner (2015).
-  vegan: Community Ecology Package. R package version 2.2-1.
-  http://CRAN.R-project.org/package=vegan
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {vegan: Community Ecology Package},
-    author = {Jari Oksanen and F. Guillaume Blanchet and Roeland Kindt and Pierre Legendre and Peter R. Minchin and R. B. O&#39;Hara and Gavin L. Simpson and Peter Solymos and M. Henry H. Stevens and Helene Wagner},
     year = {2015},
-    note = {R package version 2.2-1},
-    url = {http://CRAN.R-project.org/package=vegan},
-  }
-
-ATTENTION: This citation information has been auto-generated from
-the package DESCRIPTION file and may need manual editing, see
-&#39;help(&quot;citation&quot;)&#39;.
-
-
-To cite package &#39;RColorBrewer&#39; in publications use:
-
-  Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes. R
-  package version 1.1-2.
-  http://CRAN.R-project.org/package=RColorBrewer
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {RColorBrewer: ColorBrewer Palettes},
-    author = {Erich Neuwirth},
-    year = {2014},
-    note = {R package version 1.1-2},
-    url = {http://CRAN.R-project.org/package=RColorBrewer},
+    note = {R package version 1.5.1},
+    url = {http://CRAN.R-project.org/package=psych},
   }
 
 
@@ -409,92 +374,10 @@ the package DESCRIPTION file and may need manual editing, see
 &#39;help(&quot;citation&quot;)&#39;.
 
 
-To cite package &#39;brew&#39; in publications use:
-
-  Jeffrey Horner (2011). brew: Templating Framework for Report
-  Generation. R package version 1.0-6.
-  http://CRAN.R-project.org/package=brew
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {brew: Templating Framework for Report Generation},
-    author = {Jeffrey Horner},
-    year = {2011},
-    note = {R package version 1.0-6},
-    url = {http://CRAN.R-project.org/package=brew},
-  }
-
-ATTENTION: This citation information has been auto-generated from
-the package DESCRIPTION file and may need manual editing, see
-&#39;help(&quot;citation&quot;)&#39;.
-
-
-To cite reshape in publications use:
-
-  Hadley Wickham (2007). Reshaping Data with the reshape Package.
-  Journal of Statistical Software, 21(12), 1-20. URL
-  http://www.jstatsoft.org/v21/i12/.
-
-A BibTeX entry for LaTeX users is
-
-  @Article{,
-    title = {Reshaping Data with the {reshape} Package},
-    author = {Hadley Wickham},
-    journal = {Journal of Statistical Software},
-    year = {2007},
-    volume = {21},
-    number = {12},
-    pages = {1--20},
-    url = {http://www.jstatsoft.org/v21/i12/},
-  }
-
-
-To cite plyr in publications use:
-
-  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data
-  Analysis. Journal of Statistical Software, 40(1), 1-29. URL
-  http://www.jstatsoft.org/v40/i01/.
-
-A BibTeX entry for LaTeX users is
-
-  @Article{,
-    title = {The Split-Apply-Combine Strategy for Data Analysis},
-    author = {Hadley Wickham},
-    journal = {Journal of Statistical Software},
-    year = {2011},
-    volume = {40},
-    number = {1},
-    pages = {1--29},
-    url = {http://www.jstatsoft.org/v40/i01/},
-  }
-
-
-To cite package &#39;markdown&#39; in publications use:
-
-  JJ Allaire, Jeffrey Horner, Vicent Marti and Natacha Porte
-  (2014). markdown: Markdown rendering for R. R package version
-  0.7.4. http://CRAN.R-project.org/package=markdown
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {markdown: Markdown rendering for R},
-    author = {JJ Allaire and Jeffrey Horner and Vicent Marti and Natacha Porte},
-    year = {2014},
-    note = {R package version 0.7.4},
-    url = {http://CRAN.R-project.org/package=markdown},
-  }
-
-ATTENTION: This citation information has been auto-generated from
-the package DESCRIPTION file and may need manual editing, see
-&#39;help(&quot;citation&quot;)&#39;.
-
-
 To cite the &#39;knitr&#39; package in publications use:
 
-  Yihui Xie (2014). knitr: A General-Purpose Package for Dynamic
-  Report Generation in R. R package version 1.8.
+  Yihui Xie (2015). knitr: A General-Purpose Package for Dynamic
+  Report Generation in R. R package version 1.9.
 
   Yihui Xie (2013) Dynamic Documents with R and knitr. Chapman and
   Hall/CRC. ISBN 978-1482203530
@@ -505,47 +388,23 @@ To cite the &#39;knitr&#39; package in publications use:
   Research. Chapman and Hall/CRC. ISBN 978-1466561595
 
 
-To cite package &#39;rmarkdown&#39; in publications use:
+To cite package &#39;ggdendro&#39; in publications use:
 
-  JJ Allaire, Jonathan McPherson, Yihui Xie, Hadley Wickham, Joe
-  Cheng and Jeff Allen (2014). rmarkdown: Dynamic Documents for R.
-  R package version 0.4.2.
-  http://CRAN.R-project.org/package=rmarkdown
+  Andrie de Vries and Brian D. Ripley (2014). ggdendro: Tools for
+  extracting dendrogram and tree diagram plot data for use with
+  ggplot2. R package version 0.1-15.
+  http://CRAN.R-project.org/package=ggdendro
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {rmarkdown: Dynamic Documents for R},
-    author = {JJ Allaire and Jonathan McPherson and Yihui Xie and Hadley Wickham and Joe Cheng and Jeff Allen},
+    title = {ggdendro: Tools for extracting dendrogram and tree diagram plot data for
+use with ggplot2},
+    author = {Andrie {de Vries} and Brian D. Ripley},
     year = {2014},
-    note = {R package version 0.4.2},
-    url = {http://CRAN.R-project.org/package=rmarkdown},
+    note = {R package version 0.1-15},
+    url = {http://CRAN.R-project.org/package=ggdendro},
   }
-
-ATTENTION: This citation information has been auto-generated from
-the package DESCRIPTION file and may need manual editing, see
-&#39;help(&quot;citation&quot;)&#39;.
-
-
-To cite the testthat package in publications, use:
-
-  Hadley Wickham. testthat: Get Started with Testing. The R
-  Journal, vol. 3, no. 1, pp. 5--10, 2011
-
-A BibTeX entry for LaTeX users is
-
-  @Article{,
-    author = {Hadley Wickham},
-    title = {testthat: Get Started with Testing},
-    journal = {The R Journal},
-    year = {2011},
-    volume = {3},
-    pages = {5--10},
-    url = {http://journal.r-project.org/archive/2011-1/RJournal_2011-1_Wickham.pdf},
-  }
-
-As testthat is continually evolving, you may want to cite its
-version number. Find it with &#39;help(package=testthat)&#39;.
 
 
 To cite lubridate in publications use:
@@ -606,7 +465,7 @@ To cite package &#39;shiny&#39; in publications use:
 
   Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
   McPherson (2015). shiny: Web Application Framework for R. R
-  package version 0.11.0.9001. http://shiny.rstudio.com
+  package version 0.11.1. http://CRAN.R-project.org/package=shiny
 
 A BibTeX entry for LaTeX users is
 
@@ -614,8 +473,8 @@ A BibTeX entry for LaTeX users is
     title = {shiny: Web Application Framework for R},
     author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
     year = {2015},
-    note = {R package version 0.11.0.9001},
-    url = {http://shiny.rstudio.com},
+    note = {R package version 0.11.1},
+    url = {http://CRAN.R-project.org/package=shiny},
   }
 
 
@@ -674,19 +533,38 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package &#39;ggvis&#39; in publications use:
+To cite package &#39;broom&#39; in publications use:
 
-  RStudio and Inc. (2014). ggvis: Interactive grammar of graphics.
-  R package version 0.4. http://CRAN.R-project.org/package=ggvis
+  David Robinson (2015). broom: Convert Statistical Analysis
+  Objects into Tidy Data Frames. R package version 0.3.6.
+  http://CRAN.R-project.org/package=broom
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {ggvis: Interactive grammar of graphics},
-    author = {{RStudio} and {Inc.}},
+    title = {broom: Convert Statistical Analysis Objects into Tidy Data Frames},
+    author = {David Robinson},
+    year = {2015},
+    note = {R package version 0.3.6},
+    url = {http://CRAN.R-project.org/package=broom},
+  }
+
+
+To cite package &#39;htmlwidgets&#39; in publications use:
+
+  Ramnath Vaidyanathan, Joe Cheng, JJ Allaire, Yihui Xie and and
+  Kenton Russell (2014). htmlwidgets: HTML Widgets for R. R
+  package version 0.3.2.
+  http://CRAN.R-project.org/package=htmlwidgets
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {htmlwidgets: HTML Widgets for R},
+    author = {Ramnath Vaidyanathan and Joe Cheng and JJ Allaire and Yihui Xie and and Kenton Russell},
     year = {2014},
-    note = {R package version 0.4},
-    url = {http://CRAN.R-project.org/package=ggvis},
+    note = {R package version 0.3.2},
+    url = {http://CRAN.R-project.org/package=htmlwidgets},
   }
 
 ATTENTION: This citation information has been auto-generated from
@@ -694,40 +572,59 @@ the package DESCRIPTION file and may need manual editing, see
 &#39;help(&quot;citation&quot;)&#39;.
 
 
-To cite package &#39;broom&#39; in publications use:
-
-  David Robinson (2015). broom: Convert Statistical Analysis
-  Objects Into Tidy Data Frames. R package version 0.3.5.9000.
-  http://github.com/dgrtwo/broom
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {broom: Convert Statistical Analysis Objects Into Tidy Data Frames},
-    author = {David Robinson},
-    year = {2015},
-    note = {R package version 0.3.5.9000},
-    url = {http://github.com/dgrtwo/broom},
-  }
-
-
 To cite package &#39;shinyAce&#39; in publications use:
 
-  Trestle Technology and LLC. (2014). shinyAce: Ace editor
-  bindings for Shiny. R package version 0.2.0.
+  Trestle Technology and LLC. (2015). shinyAce: Ace editor
+  bindings for Shiny. R package version 0.2.1.
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
     title = {shinyAce: Ace editor bindings for Shiny},
     author = {Trestle Technology and {LLC.}},
-    year = {2014},
-    note = {R package version 0.2.0},
+    year = {2015},
+    note = {R package version 0.2.1},
   }
 
 ATTENTION: This citation information has been auto-generated from
 the package DESCRIPTION file and may need manual editing, see
 &#39;help(&quot;citation&quot;)&#39;.</code></pre>
+<pre><code>Warning in citation(i): no date field in DESCRIPTION file of package
+&#39;rpivotTable&#39;</code></pre>
+<pre><code>
+To cite package &#39;rpivotTable&#39; in publications use:
+
+  Nicolas kruchten and Enzo Martoglio (). rpivotTable: Interface
+  to pivottable library, to have a powerful pivot table on R &amp;
+  shiny. R package version 0.1.2.7.2.
+  https://github.com/smartinsightsfromdata/
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {rpivotTable: Interface to pivottable library, to have a powerful pivot table on R &amp; shiny},
+    author = {Nicolas kruchten and Enzo Martoglio},
+    note = {R package version 0.1.2.7.2},
+    url = {https://github.com/smartinsightsfromdata/},
+  }
+
+
+To cite package &#39;radiant&#39; in publications use:
+
+  &quot;Vincent Nijs&quot; (2015). radiant: Business analytics using R and
+  Shiny. R package version 0.1.50.
+  https://github.com/mostly-harmless/radiant,
+  http://mostly-harmless.github.io/radiant/
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {radiant: Business analytics using R and Shiny},
+    author = {&quot;Vincent Nijs&quot;},
+    year = {2015},
+    note = {R package version 0.1.50},
+    url = {https://github.com/mostly-harmless/radiant, http://mostly-harmless.github.io/radiant/},
+  }</code></pre>
 <p></details></p>
 </div>
 <div id="license" class="section level3">

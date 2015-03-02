@@ -1,0 +1,8 @@
+---
+title: Data > Visualize
+---
+
+***
+
+```{r child='app/visualize.md'}
+```

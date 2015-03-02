@@ -1,0 +1,8 @@
+---
+title: Data > Manage
+---
+
+***
+
+```{r child='app/manage.md'}
+```

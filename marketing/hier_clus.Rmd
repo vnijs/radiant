@@ -1,0 +1,8 @@
+---
+title: Cluster > Hierarchical
+---
+
+***
+
+```{r child='app/hier_clus.md'}
+```
