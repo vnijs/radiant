@@ -1,7 +1,7 @@
 Package: radiant
 Title: Business analytics using R and Shiny
-Version: 0.1.38
-Date: 2015-2-23
+Version: 0.1.50
+Date: 2015-3-1
 Authors@R: "Vincent Nijs <radiant@rady.ucsd.edu> [aut, cre]"
 Description: Business analytics using R and Shiny
 Depends:
@@ -22,6 +22,7 @@ Imports:
 		wordcloud (>= 2.5),
 		markdown (>= 0.7.4),
 		knitr (>= 1.8),
+		ggdendro (>= 0.1.15),
 		broom (>= 0.3.6),
 		tidyr (>= 0.2.0),
 		pryr (>= 0.1),

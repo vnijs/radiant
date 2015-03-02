@@ -31,7 +31,7 @@ output$ui_sp_levels <- renderUI({
   if(input$sp_var %>% not_available)
     levs <- c()
   else
-    levs <- getdata()[1,input$sp_var] %>% as.factor %>% levels
+    levs <- .getdata()[1,input$sp_var] %>% as.factor %>% levels
 
   selectInput(inputId = "sp_levels", label = "Choose level:",
               choices = levs,

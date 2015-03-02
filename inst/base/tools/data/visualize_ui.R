@@ -93,7 +93,8 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
-                       input.viz_type == 'line'",
+                                    input.viz_type == 'line' |
+                                    input.viz_type == 'box'",
         uiOutput("ui_viz_color"),
         checkboxGroupInput("viz_check", NULL, viz_check,
           selected = state_init("viz_check"),

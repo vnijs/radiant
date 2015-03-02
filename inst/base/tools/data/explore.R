@@ -87,8 +87,8 @@ explore <- function(dataset, expl_columns,
                     expl_show_tab = TRUE,
                     expl_show_viz = FALSE) {
 
-  # move to getdata_exp when exported
-  dat <- getdata()
+  # move to getdata when exported
+  dat <- .getdata()
 
   if(is.null(expl_byvar)) {
     dat %<>% select_(.dots = expl_columns)

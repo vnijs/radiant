@@ -33,7 +33,7 @@ output$random <- renderUI({
   if(input$rnd_var %>% not_available)
 	  return(rt)
 
-	rvar <- getdata()$rnd_var
+	rvar <- .getdata()$rnd_var
 	if(rvar %>% has_duplicates) return(rt)
 	if(input$rnd_sample_size %>% is.na) return("Please select a sample size of 1 or greater.")
 	random(input$dataset, input$rnd_var, input$rnd_sample_size)
