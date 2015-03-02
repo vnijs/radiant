@@ -488,15 +488,16 @@ predict.regression <- function(result,
     pred_df %>% print(., row.names = FALSE)
 
     # pushing predictions into the clipboard
-    if(running_local) {
-      os_type <- .Platform$OS.type
-      if (os_type == 'windows') {
+    # if(running_local) {
+      os_type <- Sys.info()["sysname"]
+      if (os_type == 'Windows') {
         write.table(pred_df, "clipboard", sep="\t", row.names=FALSE)
-      } else if (Sys.info()["sysname"] == "Darwin") {
+      } else if (os_type == "Darwin") {
         write.table(pred_df, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
       }
-      cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
-    }
+      if (os_type != "Linux")
+        cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
+    # }
 
   } else {
     cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")

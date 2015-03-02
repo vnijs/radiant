@@ -6,6 +6,9 @@
 \usage{
 \method{summary}{compare_means}(result)
 }
+\arguments{
+\item{result}{Return value from \code{\link{single_mean}}}
+}
 \description{
 Summarize method for output from compare_means
 }

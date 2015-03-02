@@ -75,7 +75,7 @@ getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
       r_data[[dataset]]
     } else if(exists(dataset)) {
       d_env <- pryr::where(dataset)
-      cat("Dataset", dataset, "loaded from", attr(d_env,"name"), "environment\n")
+      # cat("Dataset", dataset, "loaded from", attr(d_env,"name"), "environment\n")
       d_env[[dataset]]
     } else {
       paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%

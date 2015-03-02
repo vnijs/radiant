@@ -71,8 +71,6 @@ summary.hier_clus <- function(result) {
 #' @examples
 #' result <- hier_clus("shopping", hc_vars = c("v1:v6"))
 #' plot(result, hc_plots = c("diff", "scree"), hc_cutoff = .05)
-#' plot(result, hc_plots = c("diff", "dendro"), hc_cutoff = .05)
-#' plot(result, hc_plots = c("diff", "dendro"), hc_cutoff = 0)
 #' plot(result, hc_plots = "dendro", hc_cutoff = 0)
 #'
 #' @seealso \code{\link{summary.hier_clus}} to summarize results
@@ -114,13 +112,16 @@ plot.hier_clus <- function(result, hc_plots = c("scree","diff"), hc_cutoff = 0.0
 
 			if(hc_cutoff == 0) {
 				ggdendrogram(result$hc_out) + labs(list(title = paste("Dendrogram"), x = "",
-				  y = "Within cluster heterogeneity")) + theme_grey() -> plots[['dendro']]
+				  y = "Within cluster heterogeneity")) + theme_bw() +
+					theme(axis.text.x  = element_text(angle=90, size=6)) -> plots[['dendro']]
+
 			} else {
+				hc_cutoff = .02
 				result$hc_out %>% dendro_data(type="rectangle") %>%
 					segment %>% filter(y > hc_cutoff) %>% ggplot(.) +
 					geom_segment(aes(x=x, y=y, xend=xend, yend=yend))+
 					labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
-					theme_grey() + theme(axis.text.x = element_blank()) -> plots[['dendro']]
+					theme_bw() + theme(axis.text.x = element_blank()) -> plots[['dendro']]
 			}
 		} else {
 			as.dendrogram(result$hc_out) %>%
