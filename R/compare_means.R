@@ -9,7 +9,6 @@
 #' @param cm_alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param cm_sig_level Span of the confidence interval
 #' @param cm_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
-#' @param cm_plots One or more plots ("bar", "box", or "density")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_means
 #'
@@ -25,11 +24,9 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                           cm_paired = "independent",
                           cm_alternative = "two.sided",
                           cm_sig_level = .95,
-                          cm_adjust = "none",
-                          cm_plots = "bar") {
+                          cm_adjust = "none") {
 
 	vars <- c(cm_var1, cm_var2)
-	# dat <- getdata(dataset, vars)
 	dat <- getdata(dataset, vars, filt = data_filter)
 
 	if(dat[,cm_var1] %>% is.factor) {
@@ -65,8 +62,6 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	res[,c("group1","group2")] <- res[,c("group2","group1")]
 	##############################################
 
-	plot_height <- 400 * length(cm_plots)
-
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, n, conf.lev = .95)
 	 	se * qt(conf.lev/2 + .5, n-1)
@@ -85,6 +80,8 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 #' Summarize method for output from compare_means
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
+#'
+#' @param result Return value from \code{\link{single_mean}}
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
@@ -135,15 +132,19 @@ summary.compare_means <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
+#' @param result Return value from \code{\link{single_mean}}
+#' @param cm_plots One or more plots ("bar", "box", or "density")
+#'
 #' @examples
-#' result <- compare_means("diamonds","cut","price", cm_plots = "box")
-#' plot(result)
+#' result <- compare_means("diamonds","cut","price")
+#' summary(result)
+#' plot(result, cm_plots = c("bar","density"))
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #'
 #' @export
-plot.compare_means <- function(result) {
+plot.compare_means <- function(result, cm_plots = "bar") {
 
 	dat <- result$dat
 	var1 <- colnames(dat)[1]
@@ -151,10 +152,10 @@ plot.compare_means <- function(result) {
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	plots <- list()
-	if("bar" %in% result$cm_plots) {
+	if("bar" %in% cm_plots) {
 		colnames(result$dat_summary)[1] <- "variable"
 		# use of `which` allows the user to change the order of the plots shown
-		plots[[which("bar" == result$cm_plots)]] <- ggplot(result$dat_summary,
+		plots[[which("bar" == cm_plots)]] <- ggplot(result$dat_summary,
 	    aes_string(x="variable", y="mean", fill="variable")) +
 	    geom_bar(stat="identity")  +
 	 		geom_errorbar(width=.1, aes(ymin=mean-ci, ymax=mean+ci)) +
@@ -162,14 +163,14 @@ plot.compare_means <- function(result) {
 	}
 
 	# graphs on full data
-	if("box" %in% result$cm_plots) {
-		plots[[which("box" == result$cm_plots)]] <-
+	if("box" %in% cm_plots) {
+		plots[[which("box" == cm_plots)]] <-
 			ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) +
 				geom_boxplot(alpha=.7)
 	}
 
-	if("density" %in% result$cm_plots) {
-		plots[[which("density" == result$cm_plots)]] <-
+	if("density" %in% cm_plots) {
+		plots[[which("density" == cm_plots)]] <-
 			ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.7)
 	}
 

@@ -6,7 +6,7 @@
 \usage{
 compare_means(dataset, cm_var1, cm_var2, data_filter = "",
   cm_paired = "independent", cm_alternative = "two.sided",
-  cm_sig_level = 0.95, cm_adjust = "none", cm_plots = "bar")
+  cm_sig_level = 0.95, cm_adjust = "none")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -22,8 +22,6 @@ compare_means(dataset, cm_var1, cm_var2, data_filter = "",
 \item{cm_sig_level}{Span of the confidence interval}
 
 \item{cm_adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
-
-\item{cm_plots}{One or more plots ("bar", "box", or "density")}
 }
 \value{
 A list of all variables defined in the function as an object of class compare_means
