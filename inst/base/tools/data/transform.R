@@ -27,7 +27,7 @@ output$uiTr_reorg_levs <- renderUI({
   fctCol <- input$tr_columns[1]
 	isFct <- "factor" == getdata_class()[fctCol]
   if(!isFct) return()
-	getdata()[,fctCol] %>% levels -> levs
+	.getdata()[,fctCol] %>% levels -> levs
   selectizeInput("tr_reorg_levs", "Reorder/remove levels", choices  = levs,
     selected = levs, multiple = TRUE,
     options = list(placeholder = 'Select level(s)',
@@ -194,7 +194,7 @@ transform_main <- reactive({
 
 	if(is.null(input$tr_changeType)) return()
 
-	dat <- getdata()
+	dat <- .getdata()
 
   ##### Fix - show data snippet if changeType == 'none' and no columns selected #####
 	if(input$tr_changeType == "none") {
@@ -254,7 +254,7 @@ transform_main <- reactive({
       dat_class <- getdata_class_fun(dat)
       isNum <- "numeric" == dat_class | "integer" == dat_class
       if(length(isNum) == 0) return("Please select numerical variables to normalize")
-      dat_tr <- try(dplyr::select(dat,which(isNum)) / getdata()[,input$tr_normalizer], silent = TRUE)
+      dat_tr <- try(dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer], silent = TRUE)
       if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
      	cn <- c(vars,paste(vars[isNum],input$tr_normalizer, sep="_"))
 			dat <- cbind(dat,dat_tr)
@@ -313,7 +313,7 @@ transform_main <- reactive({
 			recom <- input$tr_transform
 			recom <- gsub("\"","\'", recom)
 
-			fullDat <- getdata()
+			fullDat <- .getdata()
 			newvar <- try(do.call(within, list(fullDat,parse(text = recom))), silent = TRUE)
 
 			if(!is(newvar, 'try-error')) {
@@ -418,7 +418,7 @@ observe({
 		# saving to a new dataset if specified
 		dataset <- input$tr_dataset
 		if(r_data[[dataset]] %>% is.null) {
-			r_data[[dataset]] <- getdata()
+			r_data[[dataset]] <- .getdata()
 			r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
 			r_data[['datasetlist']] %<>%
 				c(dataset,.) %>%
@@ -441,7 +441,7 @@ observe({
 	  	# r_data[[dataset]] %<>% .[,input$tr_reorg_cols]
 	  	r_data[[dataset]] %<>% select_(.dots = input$tr_reorg_cols)
 	  } else {
-			changedata(dat, colnames(dat), dataset = dataset)
+			.changedata(dat, colnames(dat), dataset = dataset)
 		}
 
 		# reset input values once the changes have been applied

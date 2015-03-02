@@ -163,19 +163,48 @@ updateReport <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = ""
 # update_report(inp = base_sm_list, fun_name = "single_mean", pre = "",
 #                outputs = c(), figs = FALSE)
 
-
 # updating the report when called
 update_report <- function(inp, fun_name, pre_cmd = "result <- ",
-  outputs = c("summary", "plot"),
-  figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
+                          outputs = c("summary", "plot"),
+                          figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
 
   cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)))
-
   for(i in outputs)
     cmd <- paste0(cmd, "\n", i, "(result)")
 
   if(xcmd != "")
     cmd <- paste0(cmd, "\n", xcmd)
+
+  if(figs)
+    cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
+  else
+    cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
+
+  update_report_fun(cmd)
+}
+
+update_report2 <- function(inp_main, fun_name, inp_out = list("",""), pre_cmd = "result <- ",
+                          outputs = c("summary", "plot"),
+                          figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
+
+  cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
+           sub("list", fun_name, .) %>%
+           paste0(pre_cmd, .)
+
+  lout <- length(outputs)
+  if(lout > 0) {
+    for(i in 1:lout) {
+      if(inp_out[i] != "") {
+        cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
+                 sub("list\\(", paste0(outputs[i], "\\(result, "), .) %>%
+                 paste0(cmd, "\n", .)
+      } else {
+        cmd <- paste0(cmd, "\n", outputs[i], "(result)")
+      }
+    }
+  }
+
+  if(xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
   if(figs)
     cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
@@ -213,6 +242,11 @@ update_report_fun <- function(cmd) {
 
   # move to the report panel
   updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  # updateTabsetPanel(session, "nav_radiant", selected = "Regression")
+  # updateTabsetPanel(session, "nav_radiant", selected = "GLM")
+  # updateTabsetPanel(session, "nav_radiant", selected = "Transform")
+  # updateTabsetPanel(session, "nav_radiant", selected = "Data")
+  # updateTabsetPanel(session, "datatabs", selected = "Transform")
 }
 
 
@@ -220,7 +254,7 @@ update_report_fun <- function(cmd) {
 # Run R-code within Radiant using the shinyAce editor
 ################################################################
 r_example <- "# to get the currently active data
-dat <- getdata()
+dat <- .getdata()
 
 # show the first observations
 head(dat)

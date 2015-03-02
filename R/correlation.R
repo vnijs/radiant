@@ -26,7 +26,7 @@ correlation <- function(dataset, cor_var,
 
 	# could use data.matrix as the last step in the chain but it seems to be
 	# about 25% slower on system time
-	getdata_exp(dataset, cor_var, filt = data_filter) %>%
+	getdata(dataset, cor_var, filt = data_filter) %>%
 		mutate_each(funs(as.numeric)) -> dat
 
 	plot_height <- plot_width <- 150 * ncol(dat)
@@ -92,7 +92,7 @@ summary.correlation <- function(result) {
   print(cp, quote = FALSE)
 }
 
-#' Plot results from the correlation function. This is a method of class correlation and can be called as plot or plot.correlation
+#' Plot method for the correlation function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'
@@ -128,5 +128,6 @@ plot.correlation <- function(result) {
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	result$dat %>% pairs(lower.panel=panel.smooth, upper.panel=panel.plot)
+	result$dat %>% { if(is.null(.)) result else . } %>%
+	pairs(lower.panel=panel.smooth, upper.panel=panel.plot)
 }

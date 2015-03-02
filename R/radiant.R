@@ -64,7 +64,7 @@ sshh <- function(...) {
 #' @return Data.frame with specified columns and rows
 #'
 #' @export
-getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
+getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 
   filt %<>% gsub("\\s","", .)
 
@@ -74,8 +74,9 @@ getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
       if(exists("running_local")) { if(running_local) cat("Dataset", dataset, "loaded from r_data list\n") }
       r_data[[dataset]]
     } else if(exists(dataset)) {
-      cat("Dataset", dataset, "loaded from global environment\n")
-      get(dataset)
+      d_env <- pryr::where(dataset)
+      cat("Dataset", dataset, "loaded from", attr(d_env,"name"), "environment\n")
+      d_env[[dataset]]
     } else {
       paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
         stop %>% return
@@ -84,6 +85,32 @@ getdata_exp <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
         { if(slice == "") . else slice_(., slice) } %>%
         { if(vars[1] == "") . else select_(., .dots = vars) } %>%
         { if(na.rm) { if(anyNA(.)) na.omit(.) else . } }
+}
+
+#' Change data function exported by Radiant
+#'
+#' @param dataset Name of the dataframe to change
+#' @param vars New variables to add to the data.frame
+#' @param names Names for the new variables to add to the data.frame
+#'
+#' @return None
+#'
+#' @export
+changedata <- function(dataset, vars = c(), var_names = names(vars)) {
+  if(exists("r_env")) {
+    cat("Dataset", dataset, "changed in r_env\n")
+    r_env$r_data[[dataset]][,var_names] <<- vars
+  } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
+    if(exists("running_local")) { if(running_local) cat("Dataset", dataset, "changed in r_data list\n") }
+    r_data[[dataset]][,var_names] <<- vars
+  } else if(exists(dataset)) {
+    d_env <- pryr::where(dataset)
+    cat("Dataset", dataset, "changed in", attr(d_env,"name"), "environment\n")
+    d_env[[dataset]][,var_names] <- vars
+  } else {
+    paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+      stop %>% return
+  }
 }
 
 #' Create a launcher for Windows (.bat)

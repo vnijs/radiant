@@ -32,7 +32,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
                          cp_plots = "props") {
 
 	vars <- c(cp_var1, cp_var2)
-	dat <- getdata_exp(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
+	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
 
 	levs <- levels(dat[,cp_var2])
 	if(cp_levels != "") {

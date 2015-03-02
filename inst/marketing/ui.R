@@ -35,8 +35,8 @@ shinyUI(
   ),
 
   navbarMenu("Cluster",
-    tabPanel("Hierarchical", uiOutput("hierCluster")),
-    tabPanel("K-means", uiOutput("kmeansCluster"))
+    tabPanel("Hierarchical", uiOutput("hier_clus")),
+    tabPanel("K-means", uiOutput("kmeans_clus"))
   ),
 
   navbarMenu("Conjoint",

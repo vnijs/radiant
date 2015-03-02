@@ -26,7 +26,7 @@ conjoint <- function(dataset, ca_var1, ca_var2,
                      ca_plots = "pw",
                      ca_scale_plot = FALSE) {
 
-	dat <- getdata_exp(dataset, c(ca_var1, ca_var2))
+	dat <- getdata(dataset, c(ca_var1, ca_var2))
 	formula <- paste(ca_var1, "~", paste(ca_var2, collapse = " + "))
 
 	if(ca_rev) {

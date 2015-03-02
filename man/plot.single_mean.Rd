@@ -4,10 +4,12 @@
 \alias{plot.single_mean}
 \title{Plot method for single_mean}
 \usage{
-\method{plot}{single_mean}(result)
+\method{plot}{single_mean}(result, sm_plots = "hist")
 }
 \arguments{
 \item{result}{Return value from \code{\link{single_mean}}}
+
+\item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 }
 \description{
 Plot method for single_mean
@@ -16,8 +18,8 @@ Plot method for single_mean
 See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 }
 \examples{
-result <- single_mean("diamonds","price", sm_comp_value = 3500, sm_plots = c("hist", "simulate"))
-plot(result)
+result <- single_mean("diamonds","price", sm_comp_value = 3500)
+plot(result, sm_plots = c("hist", "simulate"))
 }
 \seealso{
 \code{\link{single_mean}} to generate the result

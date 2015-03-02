@@ -2,12 +2,12 @@
 % Please edit documentation in R/correlation.R
 \name{plot.correlation}
 \alias{plot.correlation}
-\title{Plot results from the correlation function. This is a method of class correlation and can be called as plot or plot.correlation}
+\title{Plot method for the correlation function}
 \usage{
 \method{plot}{correlation}(result)
 }
 \description{
-Plot results from the correlation function. This is a method of class correlation and can be called as plot or plot.correlation
+Plot method for the correlation function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant

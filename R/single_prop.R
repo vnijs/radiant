@@ -27,7 +27,7 @@ single_prop <- function(dataset, sp_var,
                         sp_sig_level = .95,
                         sp_plots = "hist") {
 
-	dat <- getdata_exp(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
+	dat <- getdata(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
 
 	levs <- levels(dat[,sp_var])
 	if(sp_levels != "") {

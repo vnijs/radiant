@@ -20,7 +20,7 @@ output$ui_View <- renderUI({
 output$dataviewer <- renderDataTable({
 
   if(input$view_vars %>% not_available) return()
-  select_(getdata(), .dots = input$view_vars)
+  select_(.getdata(), .dots = input$view_vars)
 
 }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
@@ -31,7 +31,7 @@ output$dataviewer <- renderDataTable({
 # output$dataviewer <- DT::renderDataTable({
 
 #   if(input$view_vars %>% not_available) return()
-#   select_(getdata(), .dots = input$view_vars) %>%
+#   select_(.getdata(), .dots = input$view_vars) %>%
 #   DT::datatable(., server = TRUE)
 # })
 

@@ -23,10 +23,10 @@ merge_data <- function(dataset, merge_data,
   merge_fun <- get(merge_type)
 
   if(exists("r_data")) {
-    r_data[[merge_name]] <<- merge_fun(getdata_exp(dataset), getdata_exp(merge_data), by = merge_vars)
+    r_data[[merge_name]] <<- merge_fun(getdata(dataset), getdata(merge_data), by = merge_vars)
     r_data[[merge_name]] %>% print
     cat("Merged data added to r_data as", merge_name)
   } else {
-    merge_fun(getdata_exp(dataset), getdata_exp(merge_data), by = merge_vars)
+    merge_fun(getdata(dataset), getdata(merge_data), by = merge_vars)
   }
 }
