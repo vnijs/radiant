@@ -288,7 +288,7 @@ plots_fullFactor <- function(result = .fullFactor()) {
 # this function should be exported so it can be called externally
 # should not use changedata (reactive)
 save_factors <- function(result) {
-	data.frame(result$scores) %>% changedata(paste0("fac",1:ncol(.)))
+	data.frame(result$scores) %>% .changedata(paste0("fac",1:ncol(.)))
 }
 
 # save factor scores when action button is pressed

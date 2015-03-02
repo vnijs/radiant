@@ -1,7 +1,216 @@
+# test exported function changedata
+dat <- mtcars[1:10,]
+x <- 1:nrow(dat)
+changedata("dat", vars = x, var_names = "x")
+dat
+dat <- mtcars[1:10,]
+x <- data.frame(z = 1:nrow(dat), q = letters[1:nrow(dat)])
+names(x)
+changedata("dat", vars = x, var_names = c("z","q"))
+dat
+dat <- mtcars[1:10,]
+changedata("dat", vars = x)
+dat
+
+r_data$shopping
+changedata("shopping", vars = 1:20, var_names = "x")
+getdata("shopping")
+
+
+
+
+
+
+
 # list of function classs - run and scan for errors
 # todo: convert to testthat
 
+
+# library(dplyr)
+# library(magrittr)
+# source("~/gh/radiant_dev/R/radiant.R")
+# data <- "mtcars"
+# hc_vars <- c("cyl", "mpg")
+# hc_plots <- "dendo"
+# result <- hierCluster(data, hc_vars, hc_plots = hc_plots)
+# plots_hierCluster(result)
+
+# Could use ggplot2 for dendrogram
+# library(ggplot2)
+# library(ggdendro)
+# hc <- hclust(dist(USArrests))
+# hcdata <- dendro_data(hc, type="rectangle")
+# ggplot() +
+#     geom_segment(data=segment(hcdata), aes(x=x, y=y, xend=xend, yend=yend)) +
+#     geom_text(data=label(hcdata), aes(x=x, y=y, label=label, hjust=0), size=3) +
+#     coord_flip() + scale_y_reverse(expand=c(0.2, 0))
+
+# ### demonstrate plotting directly from object class hclust
+# ggdendrogram(hc, rotate=FALSE)
+# ggdendrogram(hc, rotate=TRUE)
+# ### demonstrate converting hclust to dendro using dendro_data first
+# hcdata <- dendro_data(hc)
+# ggdendrogram(hcdata, rotate=TRUE) + labs(title="Dendrogram in ggplot2")
+
+cat(file = stderr(), file = "", file = stdout())
+
+install.packages('rjson')
+devtools::install_github("sdwfrost/epiwidgets")
+library(epiwidgets)
+install.packages('ape')
+library(ape)
+
+treewidget(
+"(((Crotalus_oreganus_oreganus_cytochrome_b:0.00800,Crotalus_horridus_cytochrome_b:0.05866):0.04732,(Thamnophis_elegans_terrestris_cytochrome_b:0.00366,Thamnophis_atratus_cytochrome_b:0.00172):0.06255):0.00555,(Pituophis_catenifer_vertebralis_cytochrome_b:0.00552,Lampropeltis_getula_cytochrome_b:0.02035):0.05762,((Diadophis_punctatus_cytochrome_b:0.06486,Contia_tenuis_cytochrome_b:0.05342):0.01037,Hypsiglena_torquata_cytochrome_b:0.05346):0.00779);"
+)
+
+treewidget(
+  as.phylo(hclust(dist(USArrests), "ave"))
+)
+
+
+# cat(file = stderr(), file = "", file = stdout())
+
+library(shiny)
+rv <- reactiveValues()
+is.reactivevalues(rv)
+rv$diamonds <- diamonds
+
+library(pryr)
+object_size(rv, diamonds)
+object_size(rv)
+object_size(diamonds)
+
+isolate(rv$diamonds[1,1] <- NA)
+
+isolate(rv$diamonds[1:10,])
+
+sapply(mget(ls()), class) == 'data.frame'
+
+cat(file = stderr(), file = "", file = stdout())
+cat(file = stderr(), file = "", file = stdout())
+
+cat(file = stderr(), file = "", file = stdout())
+
+cat(file = stderr(), file = "", file = stdout())
+
+df_list <- sapply(mget(ls(), .GlobalEnv), is.data.frame)
+df_list[df_list]
+
+
+
+
+
+
+
+
+
+
+
+###############################################
+###############################################
+###############################################
+###############################################
+
+source("~/gh/radiant_dev/R/single_mean.R")
+
+input <- list()
+sm_plots <- "hist"
+
+result <- single_mean("mtcars", "mpg", sm_comp_value = 20, sm_alternative = "greater")
+summary(result)
+plot(result, sm_plots = "hist")
+
+
+
+    # outputs <- inp_out <- character(0)
+    # inp_out <- list(sm_plots = input$sm_plots) %>% c("",.)
+    inp_out <- c("","")
+    outputs <- c("summary","plot")
+    if(length(input$sm_plots) == 0) {
+      figs <- FALSE
+      outputs <- c("summary")
+    }
+
+  inp_out <- c("","")
+  inp_main <- as.list(formals(single_mean))
+  fun_name <- "single_mean"
+  pre_cmd <- "result <- "
+  outputs <- c("summary","plot")
+
+  cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
+           sub("list", fun_name, .) %>%
+           paste0(pre_cmd, .)
+
+  lout <- length(outputs)
+  if(lout > 0) {
+    for(i in 1:lout) {
+      if(inp_out[i] != "") {
+        cmd <- deparse(inp_out[i], control = c("keepNA"), width.cutoff = 500L) %>%
+                 sub("list\\(", paste0(outputs[i], "\\(result, "), .) %>%
+                 paste0(cmd, "\n", .)
+      } else {
+        cmd <- paste0(cmd, "\n")
+      }
+    }
+  }
+
+
+ # cmd <- paste0(cmd, "\n", sub("list\\(",paste0(outputs[i], "\\(result, "),
+        #               deparse(inp_out[i], control = c("keepNA"), width.cutoff = 500L)))
+
+
+    update_report2(inp_main = clean_args(sm_inputs(), sm_args),
+
+                  inp_out = inp_out,
+                  fun_name = "single_mean",
+                  outputs = outputs,
+                  figs = figs,
+                  fig.width = round(7 * sm_plot_width()/650,2),
+                  fig.height = round(7 * sm_plot_height()/650,2))
+  })
+})
+
+###############################################
+###############################################
+###############################################
+###############################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 setwd("~/Desktop/GitHub/radiant_dev/tests")
+load("radiant.rda")
+library(ggplot2)
+library(broom)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(lubridate)
+library(gridExtra)
+options(max.print = 300)
+source("~/gh/radiant_dev/R/radiant.R")
+rm(r_env)
+
+
 library(radiant)
 # unload(inst("radiant"))
 
@@ -84,29 +293,29 @@ foo(4)
 sig_stars(c(.0009, .049, .009, .4, .09))
 
 dat <- mtcars %>% mutate(cars = rownames(.)) %>% slice(1:10)
-getdata_exp("dat")
-getdata_exp("dat", filt = "mpg > 20")
-getdata_exp("dat", slice = "n()-20:n()")
+getdata("dat")
+getdata("dat", filt = "mpg > 20")
+getdata("dat", slice = "n()-20:n()")
 dat[1:10,1] <- NA
-getdata_exp("dat")
-getdata_exp("dat", na.rm = FALSE)
+getdata("dat")
+getdata("dat", na.rm = FALSE)
 
-getdata_exp("dat", c("cyl","mpg"))
+getdata("dat", c("cyl","mpg"))
 r_data$dat <- dat
 r_data$dat[5:20,2] <- NA
-getdata_exp("dat", c("cyl","mpg"))
-getdata_exp("dat", c("cyl","mpg"), filt = "vs == 1")
+getdata("dat", c("cyl","mpg"))
+getdata("dat", c("cyl","mpg"), filt = "vs == 1")
 
-getdata_exp("dat", c("cyl","mpg"), na.rm = FALSE, slice = "sample(1:10)")
-getdata_exp("dat", slice = "sample(1:10)")
-getdata_exp("dat", na.rm = FALSE, slice = "sample(n())[1:(n()/2)]")
+getdata("dat", c("cyl","mpg"), na.rm = FALSE, slice = "sample(1:10)")
+getdata("dat", slice = "sample(1:10)")
+getdata("dat", na.rm = FALSE, slice = "sample(n())[1:(n()/2)]")
 
 r_env <- new.env()
 r_env$r_data <- r_data
 r_env$r_data$dat$mpg <- 1
-getdata_exp("dat", c("cyl","mpg"))
+getdata("dat", c("cyl","mpg"))
 rm(r_env)
-getdata_exp("dat", c("cyl","mpg"))
+getdata("dat", c("cyl","mpg"))
 
 
 mac_launcher("base")
@@ -128,13 +337,13 @@ global_dir <- .libPaths()[2]
 
 
 
-# library(ggplot2)
-# library(broom)
-# library(dplyr)
-# library(magrittr)
-# library(tidyr)
-# options(max.print = 300)
-# source("~/gh/radiant_dev/R/radiant.R")
+library(ggplot2)
+library(broom)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+options(max.print = 300)
+source("~/gh/radiant_dev/R/radiant.R")
 # load("~/Desktop/GitHub/radiant_dev/inst/marketing/data/data_examples/titanic.rda")
 
 # with(titanic, expand.grid(survived = levels(survived), sex = levels(sex), age = 1:10))

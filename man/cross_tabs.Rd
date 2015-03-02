@@ -4,9 +4,7 @@
 \alias{cross_tabs}
 \title{Evaluate associations between categorical variables}
 \usage{
-cross_tabs(dataset, ct_var1, ct_var2, data_filter = "", ct_observed = TRUE,
-  ct_expected = FALSE, ct_contrib = FALSE, ct_std_residuals = FALSE,
-  ct_deviation = FALSE)
+cross_tabs(dataset, ct_var1, ct_var2, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -16,16 +14,6 @@ cross_tabs(dataset, ct_var1, ct_var2, data_filter = "", ct_observed = TRUE,
 \item{ct_var2}{Another categorical variable}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{ct_observed}{Show the observed frequencies table for variables `ct_var1` and `ct_var2`}
-
-\item{ct_expected}{Show the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds)}
-
-\item{ct_contrib}{Show the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e)}
-
-\item{ct_std_residuals}{Show standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e))}
-
-\item{ct_deviation}{Show the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)}
 }
 \value{
 A list of all variables used in cross_tabs as an object of class cross_tabs

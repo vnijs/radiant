@@ -3,5 +3,5 @@ output$ui_Pivot <- renderUI({
 })
 
 output$pivotData <- renderRpivotTable({
-  rpivotTable(data = getdata())
+  rpivotTable(data = .getdata())
 })

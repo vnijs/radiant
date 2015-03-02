@@ -39,7 +39,7 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
   if(viz_facet_row != ".") vars %<>% c(., viz_facet_row)
   if(viz_facet_col != ".") vars %<>% c(., viz_facet_col)
 
-  dat <- getdata_exp(dataset, vars, filt = data_filter)
+  dat <- getdata(dataset, vars, filt = data_filter)
 
   plots <- list()
 

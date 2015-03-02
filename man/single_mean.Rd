@@ -5,7 +5,7 @@
 \title{Compare a sample mean to a population mean}
 \usage{
 single_mean(dataset, sm_var, data_filter = "", sm_comp_value = 0,
-  sm_alternative = "two.sided", sm_sig_level = 0.95, sm_plots = "hist")
+  sm_alternative = "two.sided", sm_sig_level = 0.95)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -19,11 +19,9 @@ single_mean(dataset, sm_var, data_filter = "", sm_comp_value = 0,
 \item{sm_alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
 
 \item{sm_sig_level}{Span for the confidence interval}
-
-\item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 }
 \value{
-A list of variables defined in sing_mean as an object of class single_mean
+A list of variables defined in single_mean as an object of class single_mean
 }
 \description{
 Compare a sample mean to a population mean

@@ -4,7 +4,7 @@
 \alias{plot.cross_tabs}
 \title{Plot method for the cross_tabs function}
 \usage{
-\method{plot}{cross_tabs}(result)
+\method{plot}{cross_tabs}(result, ct_check = "")
 }
 \description{
 Plot method for the cross_tabs function

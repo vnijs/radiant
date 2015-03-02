@@ -85,7 +85,7 @@ output$ui_glm_levels <- renderUI({
   if(input$glm_dep_var %>% not_available)
     levs <- c()
   else
-    levs <- getdata()[1,input$glm_dep_var] %>% as.factor %>% levels
+    levs <- .getdata()[1,input$glm_dep_var] %>% as.factor %>% levels
 
   selectInput(inputId = "glm_levels", label = "Choose level:",
               choices = levs,
@@ -217,8 +217,8 @@ observe({
   if(input$glm_saveres %>% not_pressed) return()
   isolate({
     result <- .glm_reg()
-    if(result %>% is.character) return()
-    result$model$residuals %>% data.frame %>% changedata("glm_residuals")
+    if(is.character(result)) return()
+    data.frame(result$model$residuals) %>% changedata("glm_residuals")
   })
 })
 

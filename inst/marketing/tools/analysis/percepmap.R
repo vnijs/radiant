@@ -95,7 +95,7 @@ output$pmap <- renderUI({
 	if(c(input$pmap_brand, input$pmap_attr) %>% not_available)
 		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.")
 
-	brand <- getdata()[,input$pmap_brand]
+	brand <- .getdata()[,input$pmap_brand]
 	if(length(unique(brand)) < length(brand))
 		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
 
@@ -252,7 +252,7 @@ plots_pmap <- function(result = .pmap()) {
 
 savePmapFactorScores <- function(result = .pmap()) {
 	facscores <- data.frame(result$out$scores)
-	changedata(facscores, paste0("fac",1:ncol(facscores)))
+	.changedata(facscores, paste0("fac",1:ncol(facscores)))
 }
 
 # save factor scores when action button is pressed
