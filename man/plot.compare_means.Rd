@@ -4,7 +4,12 @@
 \alias{plot.compare_means}
 \title{Plot method for output from compare_means}
 \usage{
-\method{plot}{compare_means}(result)
+\method{plot}{compare_means}(result, cm_plots = "bar")
+}
+\arguments{
+\item{result}{Return value from \code{\link{single_mean}}}
+
+\item{cm_plots}{One or more plots ("bar", "box", or "density")}
 }
 \description{
 Plot method for output from compare_means
@@ -13,8 +18,9 @@ Plot method for output from compare_means
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 }
 \examples{
-result <- compare_means("diamonds","cut","price", cm_plots = "box")
-plot(result)
+result <- compare_means("diamonds","cut","price")
+summary(result)
+plot(result, cm_plots = c("bar","density"))
 }
 \seealso{
 \code{\link{compare_means}} to calculate results

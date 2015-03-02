@@ -217,11 +217,14 @@ update_report2 <- function(inp_main, fun_name, inp_out = list("",""), pre_cmd = 
 update_report_fun <- function(cmd) {
 
   if(!is.null(input$manualPaste) && input$manualPaste) {
-    os_type <- .Platform$OS.type
-    if (os_type == 'windows') {
+    os_type <- Sys.info()["sysname"]
+    if (os_type == 'Windows') {
       cat(cmd, file = "clipboard")
-    } else {
+    } else if (os_type == "Darwin") {
       cat(cmd, file = pipe("pbcopy"))
+    } else if (os_type == "Linux") {
+      cat("Clipboard not supported on linux")
+      # nothing yet
     }
     # by setting cmd to "" nothing is added to the report
     cmd <- ""
