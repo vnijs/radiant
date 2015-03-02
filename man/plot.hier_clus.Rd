@@ -23,8 +23,6 @@ See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an e
 \examples{
 result <- hier_clus("shopping", hc_vars = c("v1:v6"))
 plot(result, hc_plots = c("diff", "scree"), hc_cutoff = .05)
-plot(result, hc_plots = c("diff", "dendro"), hc_cutoff = .05)
-plot(result, hc_plots = c("diff", "dendro"), hc_cutoff = 0)
 plot(result, hc_plots = "dendro", hc_cutoff = 0)
 }
 \seealso{
