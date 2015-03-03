@@ -244,7 +244,7 @@ summary.glm_reg <- function(result, savepred = FALSE) {
     if("standardize" %in% result$glm_check) {
       cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again")
     } else if (result$glm_predict == "cmd" && result$glm_predict_cmd == "") {
-      cat("Please specify a command to generate predictions. For example,\npclass = levels(pclass) would produce predictions for the different levels of factor pclass. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was invalid.")
+      cat("Please specify a command to generate predictions. For example,\npclass = levels(pclass) would produce predictions for the different\nlevels of factor pclass. Make sure to press Enter after you\nfinish entering the command. If no results are shown the command\nwas invalid.")
     } else if (result$glm_predict == "data" && result$glm_predict_data == "") {
       cat("Please select a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant")
     } else {
@@ -314,7 +314,7 @@ summary.glm_reg <- function(result, savepred = FALSE) {
                 os_type <- Sys.info()["sysname"]
                 if (os_type == 'Windows') {
                   write.table(nnd, "clipboard", sep="\t", row.names=FALSE)
-                } else if (os_type == 'Debian') {
+                } else if (os_type == 'Darwin') {
                   write.table(nnd, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
                 }
                 if (os_type != 'Linux')
