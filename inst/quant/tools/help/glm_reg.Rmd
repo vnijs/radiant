@@ -38,7 +38,7 @@ Select `survived` as the dependent variable with `Yes` in **Choose level**. Sele
 
 In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.
 
-![Plot](figures_quant/summary_glm_reg.png)
+![Plot](figures_quant/plot_glm_reg.png)
 
 Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the `Command` radio button, type `pclass = levels(pclass)` in the **Prediction command** box, and press Enter.
 
