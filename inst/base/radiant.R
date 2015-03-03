@@ -9,12 +9,14 @@
 ################################################################################
 
 observe({
-  # reset r_state on dataset change
+  # reset r_state on dataset change ... when you are not on the
+  # Manage > Data tab
   if(is.null(r_state$dataset) || is.null(input$dataset)) return()
-  if(r_state$dataset != input$dataset) r_state <<- list()
+  if(input$datatabs != "Manage" || input$nav_radiant != "Data")
+    if(r_state$dataset != input$dataset) r_state <<- list()
 })
 
-## Can't get this working in R/radiant.R
+## Can't export the state_... function through R/radiant.R
 ## Error in checkboxGroupInput("help_data", NULL, help_data, selected = state_init_list("help_data",  :
 ##  could not find function "state_init"
 
@@ -175,11 +177,15 @@ is_date <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 # convert a date variable to character for printing
 d2c <- function(x) if(is_date(x)) as.character(x) else x
 
+# truncate character fields for show_data_snippet
+trunc_char <- function(x) if(is.character(x)) strtrim(x,10) else x
+
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
   { if(is.character(dat) && length(dat) == 1) r_data[[dat]] else dat } %>%
     slice(1:min(nshow,nrow(.))) %>%
     mutate_each(funs(d2c)) %>%
+    mutate_each(funs(trunc_char)) %>%
     xtable::xtable(.) %>%
     print(type='html',  print.results = FALSE) %>%
     paste0(title, .) %>%
