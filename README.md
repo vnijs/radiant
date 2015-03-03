@@ -1,4 +1,5 @@
-# Radiant: Business analytics using R and Shiny
+# Radiant --- Business analytics using R and Shiny
+
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
 
@@ -75,8 +76,6 @@ See also the [installing Radiant](https://www.youtube.com/watch?v=AtB2SsmzBsk) v
 
 You can also put a launcher on your Desktop to make it easy to start Radiant.
 
-<!-- For a mac you can download the [marketing](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_marketing.zip) or [quant](https://github.com/mostly-harmless/radiant/raw/master/launchers/mac/radiant_quant.zip) launcher to your Desktop and upzip the file. Double-click the `radiant_marketing.command` icon to launch Radiant in your default browser. -->
-
 On Windows you can create a launcher for Radiant on your Desktop by typing `win_launcher()` in the R-console. The function should create a new file called `radiant.bat` on your Desktop. Double click the .bat file and Radiant should start in your default browser.
 
 On a Mac you can create a launcher for Radiant on your Desktop by typing `mac_launcher()` in the R-console. The function should create a new file called `radiant.command` on your Desktop. Double click the .command file and Radiant should start in your default browser.
@@ -111,10 +110,11 @@ If you really don't want to install Radiant on your computer (yet) you can tryou
 
 ## License
 
-The Radiant tool is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
 
-As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
+Radiant is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation and videos on this site and the radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.
 
-If you are interested in using Radiant please send an email to radiant@rady.ucsd.edu
+As a summary, the AGPLv3 license requires, attribution, including copyright and license information in copies of the software, stating changes if the code is modified, and disclosure of all source code. Details are in the COPYING file.
+
+If you are interested in using Radiant please email me at radiant@rady.ucsd.edu
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>

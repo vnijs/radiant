@@ -20,7 +20,8 @@ shinyUI(navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant",
 
   navbarMenu("Regression",
     tabPanel("Correlation", uiOutput("correlation")),
-    tabPanel("Linear (OLS)", uiOutput("regression"))
+    tabPanel("Linear (OLS)", uiOutput("regression")),
+    tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
   navbarMenu("R",
