@@ -6,7 +6,7 @@ Use the `Filter` box to select (or omit) specific sets of rows from the data. Se
 
 #### Plot-type
 
-Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the `diamonds` data loaded select `Histogram` and all (X) variables (use CTRL-A or CMD-A). This will create histograms for all variables in your dataset. Scatter plots are used to show the relationship, or lack thereof, between two variables. Select a variable to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and a numeric variable (Y-axis). Box-plot are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
+Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the `diamonds` data loaded select `Histogram` and all (X) variables (use CTRL-A or CMD-A). This will create histograms for all variables in your dataset. Scatter plots are used to show the relationship, or lack thereof, between two variables. Select a variable to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and a numeric variable (Y-axis). Box-plots are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
 
 #### Box plots
 
@@ -16,7 +16,7 @@ In sum:
 1. The upper whisker extends from Q3 to min(max(data), Q3+1.5*IQR)
 2. The lower whisker extends from Q1 to max(min(data), Q1-1.5*IQR)
 
-You may have to read the two bullets a few times before it sinks in. The plot below should help to explain the structure of the box plot.
+You may have to read the two bullets above a few times before it sinks in. The plot below should help to explain the structure of the box plot.
 
 ![Box-plot](figures/boxplot.png)
 [Source](http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg)
@@ -29,11 +29,11 @@ If you select a scatter or line plot a `Color` drop-down will be shown. Selectin
 
 #### Line, Loess, and Jitter
 
-To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values, checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter simply adds a small random value to each data point so they do not overlap completely in the plot(s).
+To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter-ing simply adds a small random value to each data point so they do not overlap completely in the plot(s).
 
 #### Axis scale
 
-The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data > Transform). Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the `Log X` and/or `Log Y` boxes.
+The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data > Transform) and easier to estimate. Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the `Log X` and/or `Log Y` boxes.
 
 #### Flip axes
 

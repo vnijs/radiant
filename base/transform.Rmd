@@ -4,5 +4,5 @@ title: Data > Transform
 
 ***
 
-```{r child='app/transform.Rmd'}
+```{r child='app/transform.md'}
 ```

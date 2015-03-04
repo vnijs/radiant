@@ -175,6 +175,7 @@ img {
           </ul>
         </li>
         <li><a href="/radiant/programming.html">Programming</a></li>
+        <li><a href="/radiant/tutorials.html">Tutorials</a></li>
         <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -200,7 +201,7 @@ img {
 </div>
 <div id="browse-the-data" class="section level4">
 <h4>Browse the data</h4>
-<p>By default only 10 rows of are shown. You can change this setting through the <code>records per page</code> drop-down. Press the <code>Next</code> and <code>Previous</code> buttons at the bottom-right of the screen to <em>scroll</em> through the data pages.</p>
+<p>By default only 10 rows of are shown. You can change this setting through the <code>records per page</code> drop-down. Press the <code>Next</code> and <code>Previous</code> buttons at the bottom-right of the screen to <em>scroll</em> through the data.</p>
 </div>
 <div id="sort" class="section level4">
 <h4>Sort</h4>
@@ -208,7 +209,7 @@ img {
 </div>
 <div id="filter" class="section level4">
 <h4>Filter</h4>
-<p>There are several ways to select a subset of the data to view. The <code>Filter</code> box on the left (click the checkbox first) can be used with <code>&gt;</code> and <code>&lt;</code> signs and you can also combine subset commands. For example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>and</strong> for which <code>y</code> has values equal to 2. Note that in R <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expression that have an <strong>or</strong> condition. For example, to select rows where <code>Salary</code> is larger than $100,000 or smaller than $20,000 use <code>Salary &lt; 20000 | Salary &gt; 100000</code>. <code>|</code> is the symbol for <strong>or</strong>. The table below gives an overview of common operators. Type your statement in the <code>Filter</code> box and press enter to see the result on screen or an error below the box if the expression is invalid. It is important to note that filters are <em>presistent</em>. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press enter or (2) uncheck the <code>Filter</code> checkbox.</p>
+<p>There are several ways to select a subset of the data to view. The <code>Filter</code> box on the left (click the checkbox first) can be used with <code>&gt;</code> and <code>&lt;</code> signs and you can also combine subset commands. For example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>and</strong> for which <code>y</code> has values equal to 2. Note that in R <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expressions that have an <strong>or</strong> condition. For example, to select rows where <code>Salary</code> is larger than $100,000 or smaller than $20,000 use <code>Salary &lt; 20000 | Salary &gt; 100000</code>. <code>|</code> is the symbol for <strong>or</strong>. The table below gives an overview of common operators. Type your statement in the <code>Filter</code> box and press enter to see the result on screen or an error below the box if the expression is invalid. It is important to note that filters are <em>presistent</em>. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press enter or (2) uncheck the <code>Filter</code> checkbox.</p>
 <table>
 <thead>
 <tr class="header">
@@ -264,8 +265,8 @@ img {
 <div id="search" class="section level3">
 <h3>Search</h3>
 <p>For variables that have a limited number of different values (e.g., a factor) you can type a value in the text box below the column for one, or more, variables. For example, to filter on rows with Ideal cut, type <code>ideal</code> (or <code>Ideal</code>) in the box below that column. Matching in the filter fields is case-insensitive. In fact, typing <code>eal</code> would produce the same result because the search will match any part of a string.</p>
-<p>The search boxes have some special features that make them almost as powerful as the <code>Filter</code> box. For numerical or integer variables you can use <code>,</code> to indicate range. For example, to select <code>Price</code> values between $500 and $2000 dollars type <code>500,2000</code>. The range is inclusive of the values typed. The <code>,</code> can also be used as a substitute for <code>&gt;</code> or <code>&lt;</code> in the Subset box. For example, <code>0.32,</code> will show only diamonds with carat values larger than or equal to 0.32.</p>
-<p>If you want to get <em>really</em> fancy you can use the search box on the top right to search across all columns shown using regular expressions. For example, to find all rows that have an entry in any column ending with the number 72 type <code>72$</code> (i.e., the <code>$</code> sign is used to indicate the end of an entry). For all rows with entries that start with 60 use <code>^60</code> (i.e., the <code>^</code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn the basics of regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.</p>
+<p>The search boxes have some special features that make them almost as powerful as the <code>Filter</code> box. For numerical and integer variables you can use <code>,</code> to indicate range. For example, to select <code>Price</code> values between $500 and $2000 dollars type <code>500,2000</code>. The range is inclusive of the values typed. Further, <code>0.32,</code> will show only diamonds with carat values larger than or equal to 0.32.</p>
+<p>If you want to get <em>really</em> fancy you can use the search box on the top right to search across all columns using regular expressions. For example, to find all rows that have an entry in any column ending with the number 72 type <code>72$</code> (i.e., the <code>$</code> sign is used to indicate the end of an entry). For all rows with entries that start with 60 use <code>^60</code> (i.e., the <code>^</code> is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a <em>big</em> topic area. To learn the basics of regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.</p>
 </div>
 
 

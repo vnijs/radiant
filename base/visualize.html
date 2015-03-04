@@ -175,6 +175,7 @@ img {
           </ul>
         </li>
         <li><a href="/radiant/programming.html">Programming</a></li>
+        <li><a href="/radiant/tutorials.html">Tutorials</a></li>
         <li><a href="/radiant/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -196,13 +197,13 @@ img {
 </div>
 <div id="plot-type" class="section level4">
 <h4>Plot-type</h4>
-<p>Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the <code>diamonds</code> data loaded select <code>Histogram</code> and all (X) variables (use CTRL-A or CMD-A). This will create histograms for all variables in your dataset. Scatter plots are used to show the relationship, or lack thereof, between two variables. Select a variable to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and a numeric variable (Y-axis). Box-plot are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
+<p>Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the <code>diamonds</code> data loaded select <code>Histogram</code> and all (X) variables (use CTRL-A or CMD-A). This will create histograms for all variables in your dataset. Scatter plots are used to show the relationship, or lack thereof, between two variables. Select a variable to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and a numeric variable (Y-axis). Box-plots are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
 </div>
 <div id="box-plots" class="section level4">
 <h4>Box plots</h4>
 <p>The upper and lower “hinges” of the box correspond to the first and third quartiles (the 25th and 75th percentiles) in the data. The middle hinge is the median value of the data. The upper whisker extends from the upper hinge (i.e., the top of the box) to the highest value in the data that is within 1.5 x IQR of the upper hinge. IQR is the inter-quartile range, or distance, between the first and third quartiles. The lower whisker extends from the lower hinge to the lowest value in the data within 1.5 x IQR of the lower hinge. Data beyond the end of the whiskers could be outliers and are plotted as points (as suggested by Tukey).</p>
 <p>In sum: 1. The upper whisker extends from Q3 to min(max(data), Q3+1.5<em>IQR) 2. The lower whisker extends from Q1 to max(min(data), Q1-1.5</em>IQR)</p>
-<p>You may have to read the two bullets a few times before it sinks in. The plot below should help to explain the structure of the box plot.</p>
+<p>You may have to read the two bullets above a few times before it sinks in. The plot below should help to explain the structure of the box plot.</p>
 <p><img src="figures/boxplot.png" alt="Box-plot" /> <a href="http://en.wikipedia.org/wiki/File:Boxplot_vs_PDF.svg">Source</a></p>
 </div>
 <div id="sub-plots-and-heat-maps" class="section level4">
@@ -212,11 +213,11 @@ img {
 </div>
 <div id="line-loess-and-jitter" class="section level4">
 <h4>Line, Loess, and Jitter</h4>
-<p>To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values, checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter simply adds a small random value to each data point so they do not overlap completely in the plot(s).</p>
+<p>To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter-ing simply adds a small random value to each data point so they do not overlap completely in the plot(s).</p>
 </div>
 <div id="axis-scale" class="section level4">
 <h4>Axis scale</h4>
-<p>The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data &gt; Transform). Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the <code>Log X</code> and/or <code>Log Y</code> boxes.</p>
+<p>The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data &gt; Transform) and easier to estimate. Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the <code>Log X</code> and/or <code>Log Y</code> boxes.</p>
 </div>
 <div id="flip-axes" class="section level4">
 <h4>Flip axes</h4>

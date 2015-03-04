@@ -14,8 +14,8 @@ Hierarchical cluster analysis starts with many segments, as many as there are re
 
 ![Dendogram](figures_marketing/plot_hier_clus_dendro.png)
 
-Another plot that can be used to determine the number of segments is a scree-plot. This is a plot of the within-segment heterogeneity on the vertical axis and the number of segments on the horizontal axis. Again, Hierarchical cluster analysis starts with many segments and groups respondents together until only one segments is left. The scree plot is created in the Plot tab when the `Scree plot` radio button is selected.
+Another plot that can be used to determine the number of segments is a scree-plot. This is a plot of the within-segment heterogeneity on the vertical axis and the number of segments on the horizontal axis. Again, Hierarchical cluster analysis starts with many segments and groups respondents together until only one segments is left. The scree plot is created in the Plot tab by selecting `Scree` from the `Plot(s)` dropdown menu.
 
 ![Scree](figures_marketing/plot_hier_clus_scree.png)
 
-Reading the plot from left-to-right we see that within segment heterogeneity increases sharply when we move from 3 to 2 segments. This is also very clear from the Change in within-cluster heterogeneity plot. To avoid creating a heterogeneous segment we, again, choose 3 segments. Now that we have determined the appropriate number of segments to extract we will use K-means to generate the final cluster solution.
+Reading the plot from left-to-right we see that within segment heterogeneity increases sharply when we move from 3 to 2 segments. This is also very clear from the `Change in within-cluster heterogeneity` plot. To avoid creating a heterogeneous segment we, again, choose 3 segments. Now that we have determined the appropriate number of segments to extract we will use K-means to generate the final cluster solution.

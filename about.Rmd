@@ -4,43 +4,11 @@ title: Radiant -- Business analytics using R and Shiny
 
 ***
 
-Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis and classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
-
-### Installing Radiant
-
-<iframe width="640" height="375" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
-
-### Starting and stopping Radiant
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/D71alRsGmBk" frameborder="0" allowfullscreen></iframe>
-
-### Getting help
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/LFlCwapzAF0" frameborder="0" allowfullscreen></iframe>
-
-### Getting data in and out of Radiant
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/6AE1Wa74cJI" frameborder="0" allowfullscreen></iframe>
-
-### Generating predictions from regression
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/Xp1REGAewGU" frameborder="0" allowfullscreen></iframe>
-
-### Creating a report
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen></iframe>
-
-<!--
-### Selecting variables for fast and efficient analysis
-### View data in table form
-### Visualize data
-### Explore data
-### Transform data
--->
-
 ### Radiant code
 
-Version 0.1.50 (3/2/2015) Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
+`r sprintf("Version: %s, Date: %s", packageVersion("radiant"), packageDescription("radiant", fields = "Date"))`
+
+Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="\_blank">Rstudio</a>. Code available on <a href="https://github.com/mostly-harmless/radiant" target="_blank">GitHub</a>
 
 ### Package dependencies
 
@@ -53,7 +21,7 @@ Version 0.1.50 (3/2/2015) Built using <a href="http://www.rstudio.com/shiny/" ta
 `r sprintf("Package dependencies: %s", paste0(pkgs, collapse = ", "))`
 
 <details>
-<summary>Citing included packages</summary>
+<summary>Citing packages</summary>
 ```{r echo=FALSE, comment=NA}
   suppressMessages(library(dplyr))
   for(i in c("radiant",pkgs)) citation(i) %>% print
@@ -62,7 +30,5 @@ Version 0.1.50 (3/2/2015) Built using <a href="http://www.rstudio.com/shiny/" ta
 
 ### License
 
-The Radiant package is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="\_blank">CC-NC-SA</a>.
-
-As a summary, the AGPLv3 license requires, attribution, include copyright and license in copies of the software, state changes if you modify the code, and disclose all source code. Details are in the COPYING file.
-
+```{r child='sub/license.md'}
+```
