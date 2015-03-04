@@ -6,8 +6,8 @@ shinyUI(
 
   navbarMenu("Random",
     tabPanel("Central Limit Theorem", uiOutput("ctl")),
-    tabPanel("Sampling", uiOutput("random")),
-    tabPanel("Sample size", uiOutput("sampleSize"))
+    tabPanel("Sampling", uiOutput("sampling")),
+    tabPanel("Sample size", uiOutput("sample_size"))
   ),
 
   navbarMenu("Base",
@@ -54,7 +54,6 @@ shinyUI(
   navbarMenu("Help",
     tabPanel("Radiant help", uiOutput("help_marketing")),
     tabPanel("Radiant videos", uiOutput("help_videos")),
-    # do NOT remove withMathJax(), load-files breaks!
     # tabPanel("About", withMathJax(), uiOutput("help_about"))
     tabPanel("About", uiOutput("help_about"))
   ),
