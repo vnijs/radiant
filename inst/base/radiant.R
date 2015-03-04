@@ -168,7 +168,7 @@ not_pressed <- function(x) if(is.null(x) || x == 0) TRUE else FALSE
 is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
 
 # check for duplicate entries
-has_duplicates2 <- function(x)
+has_duplicates <- function(x)
   if(length(unique(x)) < length(x)) TRUE else FALSE
 
 # is x some type of date variable

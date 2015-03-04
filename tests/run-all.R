@@ -1,3 +1,8 @@
+# load("~/gh/radiant_dev/tests/r_data.rda")
+# source("~/gh/radiant_dev/R/radiant.R")
+# result <- sampling("rndnames","Names",10)
+# summary(result)
+
 # test exported function changedata
 dat <- mtcars[1:10,]
 x <- 1:nrow(dat)

@@ -183,7 +183,7 @@ output$ui_Transform <- renderUI({
 	  textInput("tr_dataset", "Save changes to:", input$dataset)
   	),
 
-		helpModal('Transform','transformHelp',inclRmd("../base/tools/help/transform.Rmd"))
+		helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
 
 		# Reporting option not yet available for transform
  		# helpAndReport('Explore','explore',inclRmd("tools/help/explore.Rmd"))
