@@ -39,7 +39,7 @@ help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visuali
                "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.md")
 output$help_data <- reactive(append_help("help_data", "../base/tools/help/"))
 
-help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "random.md",
+help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "sampling.md",
                  "Sample size" = "sample_size.Rmd")
 output$help_random <- reactive(append_help("help_random", "../quant/tools/help/", Rmd = TRUE))
 
