@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Radiant – Business analytics using R and Shiny</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/radiant/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/radiant/index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/base/manage.html">Manage</a></li>
+             <li><a href="/radiant/base/view.html">View</a></li>
+             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
+             <li><a href="/radiant/base/explore.html">Explore</a></li>
+             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
+             <li><a href="/radiant/base/merge.html">Merge</a></li>
+             <li><a href="/radiant/base/transform.html">Transform</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quant<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Random</li>
+             <li><a href="/radiant/quant/ctl.html">Central Limit Theorem</a></li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
+             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+        <li><a href="/radiant/programming.html">Programming</a></li>
+        <li><a href="/radiant/tutorials.html">Tutorials</a></li>
+        <li><a href="/radiant/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Radiant – Business analytics using R and Shiny</h1>
+</div>
+
+
+<hr />
+<p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
+<p>Version: 0.1.52, Date: 2015-3-3</p>
+<div id="key-features" class="section level2">
+<h2>Key features</h2>
+<ul>
+<li>Explore: Quickly and easily summarize and visualize your data</li>
+<li>Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes)</li>
+<li>Context: Data and examples focus on business applications</li>
+<li>Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a>. You will not lose your work if you accidentally leave the radiant page in your browser</li>
+<li>Cross-platform: It runs in a browser (e.g., Chrome or Firefow). No data will leave your computer when Radiant is running on your computer. When you have installed the app you can even run it without an internet connection.</li>
+</ul>
+</div>
+<div id="goal" class="section level2">
+<h2>Goal</h2>
+<p>Provide access to the power of R for business and marketing analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a> (see <code>R &gt; Report</code>). Reproducible research, with no programming required. Most pages have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press <code>Update</code> to render the report to HTML.</p>
+<p>You can also use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an rmarkdown document (<em>work in progress</em>).</p>
+<p>If you close Radiant using <code>Quit &gt; Quit</code> after launching it from Rstudio or Rgui you can can paste the commands below into the command console to get the same output as in the browser.</p>
+<pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;)
+summary(result)
+plot(result)</code></pre>
+<p>You can call functions for visualization and analysis in your R-code and access basic help from the console using:</p>
+<pre class="r"><code>?single_mean</code></pre>
+<p>As an example, you can compile the <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example. Note that this feature is a <em>work in progress</em> and will be expanded over time. It is currently available for the <code>single_mean</code>, <code>single_prop</code>, and <code>compare_means</code> functions.</p>
+<p>Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using <code>Quit &gt; Quit</code>, calling analysis functions may produce an error if the data cannot be found.</p>
+</div>
+<div id="documentation" class="section level2">
+<h2>Documentation</h2>
+<p>Documentation and tutorials for Radiant are available at <a href="http://mostly-harmless.github.io/radiant/" class="uri">http://mostly-harmless.github.io/radiant/</a> and through the help files in the Radiant interface (see the <code>?</code> icon on most pages and the Help menu in the navbar).</p>
+<p>To help you get started you can also take a look at this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
+</div>
+<div id="how-to-install-radiant" class="section level2">
+<h2>How-to install Radiant</h2>
+<ul>
+<li>Required: <a href="http://cran.cnr.berkeley.edu/">R</a>, version 3.1.2 or later</li>
+<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
+<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
+</ul>
+<p>You can install the <code>Radiant</code> package and all package dependencies from the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repo (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
+<pre class="r"><code>options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
+install.packages(&#39;radiant&#39;)</code></pre>
+<p>Once all packages are installed use the commands below to start the app:</p>
+<pre class="r"><code>library(&#39;radiant&#39;)
+radiant(&#39;marketing&#39;)</code></pre>
+<p><code>marketing</code> is the default app so you could also use the command <code>radiant()</code> to launch it. To start the <code>quant</code> app use:</p>
+<pre class="r"><code>library(&#39;radiant&#39;)
+radiant(&#39;quant&#39;)</code></pre>
+<p>See also the <a href="https://www.youtube.com/watch?v=AtB2SsmzBsk">installing Radiant</a> video.</p>
+<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen>
+</iframe>
+</div>
+<div id="creating-a-desktop-launcher" class="section level2">
+<h2>Creating a desktop launcher</h2>
+<p>You can also put a launcher on your Desktop to make it easy to start Radiant.</p>
+<p>On Windows you can create a launcher for Radiant on your Desktop by typing <code>win_launcher()</code> in the R-console. The function should create a new file called <code>radiant.bat</code> on your Desktop. Double click the .bat file and Radiant should start in your default browser.</p>
+<p>On a Mac you can create a launcher for Radiant on your Desktop by typing <code>mac_launcher()</code> in the R-console. The function should create a new file called <code>radiant.command</code> on your Desktop. Double click the .command file and Radiant should start in your default browser.</p>
+<p>Note that the first time you start Radiant several required packages will be installed, and this may take a few minute</p>
+<p>When you start Radiant a browser window will open and you will see the web application running. You should see data on diamond prices. To close the application click on <code>Quit</code> in the Navigation bar and then click the <code>Quit</code> button on the left of the screen. The Radiant process will stop and the browser window should close or gray-out.</p>
+</div>
+<div id="saving-and-loading-state" class="section level2">
+<h2>Saving and loading state</h2>
+<p>To save your analyses you can save the state of the app to a state file (Data &gt; Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that would like to replicate your analyses. As an example, load the state_file <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a> in the <code>examples</code> folder. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the changes. There is also a report in <code>R &gt; Report</code> created using the Radiant interface. The html file <a href="https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
+<p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit &gt; Reset to return to a clean/new state.</p>
+<p>Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit &gt; Quit to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists (i.e., <code>r_data</code> and <code>r_state</code>) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file in Rstudio it will be used when you start Radiant to recreate a previous state.</p>
+<p>See <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for an example.</p>
+<p><strong>Technical note</strong>: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> list is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$sm_comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
+<pre class="r"><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$sm_comp_value))</code></pre>
+</div>
+<div id="source-code" class="section level2">
+<h2>Source code</h2>
+<p>Three (related) apps are included in the inst/ directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools. The <code>quant</code> app focusses on basic quantitative analysis (e.g., comparing means, regression, etc.). The <code>marketing</code> app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc.</p>
+</div>
+<div id="online" class="section level2">
+<h2>Online</h2>
+<p>If you really don’t want to install Radiant on your computer (yet) you can tryout the app online at <a href="http://vnijs.rady.ucsd.edu:3838/marketing" class="uri">http://vnijs.rady.ucsd.edu:3838/marketing</a>. Note that this is a test server only!</p>
+</div>
+<div id="license" class="section level2">
+<h2>License</h2>
+<p>Radiant is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation and videos on this site and the radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.</p>
+<p>As a summary, the AGPLv3 license requires, attribution, including copyright and license information in copies of the software, stating changes if the code is modified, and disclosure of all source code. Details are in the COPYING file.</p>
+<p>If you are interested in using Radiant please email me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a></p>
+</div>
+
+
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+
+<script>
+
+// manage active state of menu based on current page
+$(document).ready(function () {
+
+    // active menu
+    href = window.location.pathname
+    href = href.substr(href.lastIndexOf('/') + 1)
+    $('a[href="' + href + '"]').parent().addClass('active');
+
+    // manage active menu header
+    if (href.startsWith('authoring_'))
+      $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+    else if (href.endsWith('_format.html'))
+      $('a[href="' + 'formats' + '"]').parent().addClass('active');
+    else if (href.startsWith('developer_'))
+      $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+});
+
+</script>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>
