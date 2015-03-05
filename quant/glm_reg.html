@@ -159,7 +159,7 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
              <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
@@ -221,11 +221,11 @@ img {
 <li>age = Age in years</li>
 </ul>
 <p>Select <code>survived</code> as the dependent variable with <code>Yes</code> in <strong>Choose level</strong>. Select <code>pclass</code>, <code>sex</code> and <code>age</code> as the independent variables. In the screenshot below we see that each of the coefficients is statistically significant (p.value &lt; .05) and that the model has some predictive power (Chi-squared statistic &lt; .05). The <code>vif</code> measure suggest that multi-collinearity is not a concern in this model. Unfortunately the coefficients from a logit of probit model can be difficult to interpret. If we click the <code>Odds</code> checkbox we see that the odds of survival for 2nd and 3rd class passengers were significantly lower for 2nd and 3rd class passengers compared to first class passenger. The odds for males were also lower than for females. While the effect of age is statically significant, for each extra year the odds of survival are not as strongly affected (see also the standardized coefficient).</p>
-<p><img src="figures_quant/summary_glm_reg.png" alt="Summary" /></p>
+<p><img src="figures_quant/glm_reg_summary.png" alt="Summary" /></p>
 <p>In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.</p>
-<p><img src="figures_quant/plot_glm_reg.png" alt="Plot" /></p>
+<p><img src="figures_quant/glm_reg_plot.png" alt="Plot" /></p>
 <p>Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the <code>Command</code> radio button, type <code>pclass = levels(pclass)</code> in the <strong>Prediction command</strong> box, and press Enter.</p>
-<p><img src="figures_quant/summary_glm_reg_pred.png" alt="Plot" /></p>
+<p><img src="figures_quant/glm_reg_summary_pred.png" alt="Plot" /></p>
 <p>For males of average age (approx. 30 in the sample) the survival probability was close to 50%. For 3rd class passengers this probability was closer to 9%.</p>
 <pre class="r"><code>    age  sex pclass  pred
  29.881 male    1st 0.499
@@ -244,7 +244,7 @@ img {
     3rd male  80 0.018
     3rd male 100 0.009</code></pre>
 <p>For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities using the following command: <code>pclass = levels(pclass), sex = levels(sex), age = seq(0,100, 20)</code>. There are too many numbers to easily interpret in table form so we save the predictions (you can use the <code>Prediction</code> button) and paste the table into Radiant through the Data &gt; Manage tab. Finally, generate the following plot in the Data &gt; Visualize tab:</p>
-<p><img src="figures_quant/viz_glm_reg_pred.png" alt="Probability" /></p>
+<p><img src="figures_quant/glm_reg_viz_pred.png" alt="Probability" /></p>
 </div>
 
 

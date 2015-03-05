@@ -4,5 +4,5 @@ title: Factor > Factor
 
 ***
 
-```{r child='app/kmeans_clus.md'}
+```{r child='app/full_factor.md'}
 ```

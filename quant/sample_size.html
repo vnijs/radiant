@@ -159,7 +159,7 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
              <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
@@ -196,9 +196,9 @@ img {
 <p>We would like to start an ISP and need to estimate the average Internet usage of households in one week for our business plan and model. How many households must we randomly select to be 95% sure that the sample mean is within 10 minute of the population mean? Assume that a previous survey of household usage has shown a standard deviation of 60.95 minutes.</p>
 <p><strong>Answer:</strong></p>
 <p>Since we are interested in estimating the average (or mean) internet usage in the population we select sample size calculation for <code>Mean</code>. In the screen shot below we entered 10 (minutes) as the Acceptable error and 60.95 as the estimate of the Sample standard deviation. The Confidence level is 95% so we choose a z-value of 1.96.</p>
-<p><img src="figures_quant/summary_sample_size_ex1a.png" alt="Example 1b" /></p>
+<p><img src="figures_quant/sample_size_ex1a.png" alt="Example 1b" /></p>
 <p>As you can see the required sample size is equal to 143, i.e., we need 143 valid responses from our target population to make an inference of the population average with the required Acceptable Error, Confidence level, and Sample standard deviation. This number assumes an Incidence and Response rate of 1 (or 100%). Suppose that only 75% of the household in out market have access to internet at home. In addition, suppose that the anticipated response rate is 20%. What would be the required number of household to contact?</p>
-<p><img src="figures_quant/summary_sample_size_ex1b.png" alt="Example 1a" /></p>
+<p><img src="figures_quant/sample_size_ex1b.png" alt="Example 1a" /></p>
 <p>In the screen shot above the incidence rate is set to 75% and response rate to 20%. The required number of valid responses is the same as before (143), however the number of contact requests is now equal to 143 / .75 / .2 = 953.</p>
 <p><a href="http://www.isixsigma.com/tools-templates/sampling-data/how-determine-sample-size-determining-sample-size/" target="_blank">Source</a></p>
 </div>
@@ -208,9 +208,9 @@ img {
 <p>Let’s say that the population size is 5000 and the initial estimate of the prevalence is 10% with an acceptable error of 4%.</p>
 <p><strong>Answer:</strong></p>
 <p>Because we want to estimate the proportion of people with HIV antibodies in the population of interest we select sample size calculation for a <code>Proportion</code>. In the screen shot below we entered 4% as the Acceptable error and 10% as the initial estimate of the proportion (p). The Confidence level is 95% so we choose a z-value of 1.96.</p>
-<p><img src="figures_quant/summary_sample_size_ex2a.png" alt="Example 2a" /></p>
+<p><img src="figures_quant/sample_size_ex2a.png" alt="Example 2a" /></p>
 <p>As you can see the required sample size is equal to 217, i.e., we need 217 valid responses to make an inference of the population proportion with the required Acceptable error and Confidence level. This number again assumes an Incidence and Response rate of 100%. The example suggests the population of interest has only 5000 people so it may be worthwhile to apply a correction for population size.</p>
-<p><img src="figures_quant/summary_sample_size_ex2b.png" alt="Example 2b" /></p>
+<p><img src="figures_quant/sample_size_ex2b.png" alt="Example 2b" /></p>
 <p>In the screen shot above we clicked <code>Yes</code> to apply the population correction and then entered 5000 as the population size. The required number of valid responses drops only slightly from 217 to 208.</p>
 <p>In general, the size of the population can be influential when the sample size we need (<span class="math"><em>n</em></span>) is large compared to the size of the total population (<span class="math"><em>N</em></span>). For example, if the population was only 250 people the adjusted sample size would have been 117 rather than 217.</p>
 <p><a href="http://bphc.hrsa.gov/policiesregulations/performancemeasures/patientsurvey/calculating.html" target="_blank">Source</a></p>

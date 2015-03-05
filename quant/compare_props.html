@@ -159,7 +159,7 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
              <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
@@ -200,10 +200,10 @@ img {
 <li>pclass = Passenger Class (1st, 2nd, 3rd). This is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower</li>
 </ul>
 <p>Suppose we want to test if the proportion of people that survived the sinking of the Titanic differs across passenger classes. To test this hypothesis we select <code>pclass</code> as the grouping variable and calculate proportions for <code>survived</code>. Radiant will do a pair-wise comparison of survival probabilities across the three passenger class levels. Unless we have an explicit hypothesis for the direction of the effect we should use a two-sided test. Our first alternative hypothesis would be ‘The proportion of survivors is different for 1st vs 2nd class passengers’.</p>
-<p><img src="figures_quant/summary_compare_props.png" alt="Summary" /></p>
+<p><img src="figures_quant/compare_props_summary.png" alt="Summary" /></p>
 <p>Because the p-values are smaller than the conventional level of significance (i.e. &lt; 0.05) for each pair-wise comparison we can reject the null hypothesis that the proportions are equal based on the available data. The results suggest that 1st class passengers were more likely to survive the sinking than either the 2nd or 3rd class passengers. In turn, the 2nd class passengers were more likely to survive than those in 3rd class.</p>
 <p>In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of the survival proportion with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the proportions across passenger classes. We can also choose to plot the data using a bar-chart of the survival counts.</p>
-<p><img src="figures_quant/plot_compare_props.png" alt="Plot" /></p>
+<p><img src="figures_quant/compare_props_plot.png" alt="Plot" /></p>
 </div>
 
 

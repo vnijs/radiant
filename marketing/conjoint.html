@@ -159,7 +159,7 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
              <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
@@ -192,7 +192,7 @@ img {
 <p>Analyze responses from a conjoint survey</p>
 </blockquote>
 <p>To setup a conjoint study from scratch we need to determine the attributes and attributes levels that should be included. Once that has been done we would typically need to generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected.</p>
-<p>Once data is available from respondents we analyze their evaluations to determine Part Worths (PW) and Importance Weights (IW).</p>
+<p>Once data is available from respondents their evaluations are analyzed to determine Part Worths (PW) and Importance Weights (IW).</p>
 <div id="example-carpet-cleaner" class="section level4">
 <h4>Example: Carpet cleaner</h4>
 <p>A respondent was presented 18 product profiles for a carpet cleaning product described on five attributes in a conjoint study (dataset: carpet.rda is part of the example datasets). The attributes are:</p>
@@ -215,7 +215,7 @@ img {
 </ul>
 <p><img src="figures_marketing/conjoint_corr_mat.png" alt="conjoint correlations" /></p>
 <ol start="2" style="list-style-type: lower-alpha">
-<li>Estimate a conjoint regression using the ranking as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.</li>
+<li>Estimate a conjoint regression using the respondent’s evaluations as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.</li>
 </ol>
 <p><img src="figures_marketing/conjoint_summary.png" alt="conjoint summary" /> <img src="figures_marketing/conjoint_plot.png" alt="conjoint plot" /></p>
 <ol start="3" style="list-style-type: lower-alpha">

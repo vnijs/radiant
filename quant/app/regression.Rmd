@@ -41,7 +41,7 @@ The catalog company is interested in redesigning their Customer Relationship Man
 
 Output from Radiant (Regression > Linear (OLS)) is provided below:
 
-![Regression 1 - summary](figures_quant/regression_ex1a.png)
+![Regression 1 - summary](figures_quant/regression_catalog_summary.png)
 
 The F-statistic suggests that the regression model as a whole explains a significant amount of variance in Sales. The calculated F-value is equal to 32.33 and has a very small p-value (< 0.001). The amount of variance in sales explained by the model is equal to 33.1%
 
@@ -264,7 +264,7 @@ $$
   \end{aligned}
 $$
 
-The general formula for an elasticity is 
+The general formula for an elasticity is
 
 $$
 	\frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t}

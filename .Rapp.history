@@ -570,30 +570,7 @@ ggdendrogram(result$hc_out) + labs(list(title = paste("Dendrogram"), x = "",#
                   y = "Within cluster heterogeneity")) + theme_bw() +#
                     theme(axis.text.x  = element_text(angle=90, size=6))
 ?cat
-library(knitr)
-?knit
-getwd()
 setwd("~/gh/radiant_gh-pages/")
-getwd()
-knitr::knit("sub/README_dev.Rmd")
-knitr::knit("sub/README_dev.Rmd")
-?file.copy
-setwd("~/gh/radiant_gh-pages/sub")
-knitr::knit("README_dev.Rmd")
-file.copy("README_dev.md","../../radiant_dev/README.md")
-file.copy("README_dev.md","../../radiant_dev/README.md",overwrite = TRUE)
 setwd("~/gh/radiant_gh-pages/")
-knitr::knit("README.Rmd")
-setwd("~/gh/radiant_gh-pages/sub")
-knitr::knit("README_dev.Rmd")
-file.copy("README_dev.md","../../radiant_dev/README.md",overwrite = TRUE)
-packageVersion("radiant")
-?packageVersion
-packageDescription("radiant", fields = c("Version"))
-packageDescription("radiant", fields = c("Version", "Date"))
-packageDescription("radiant", fields = "Date")
-setwd("~/gh/radiant_gh-pages/")
-file.copy("../radiant_dev/inst/marketing/data/data_rady/shopping.rda",
-"~/Desktop/shopping.rda",overwrite = TRUE)
-unlink("~/Desktop/shopping.rda")
-q()
+library(rmarkdown)
+system('make')

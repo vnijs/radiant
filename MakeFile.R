@@ -27,5 +27,3 @@ setwd('../')
 unlink("~/Desktop/shopping.rda")
 
 system('sh rsync_base2app.sh')
-
-# sprintf("Version: %s, Date: %s", packageVersion("radiant"), packageDescription("radiant", fields = "Date"))

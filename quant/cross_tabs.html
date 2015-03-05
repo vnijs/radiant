@@ -159,7 +159,7 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/percepmap.html">Attributes</a></li>
+             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
              <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
@@ -200,12 +200,12 @@ img {
 <li>Ha: There is a relationship between income level and newspaper choice</li>
 </ul>
 <p>If the null-hypothesis is rejected we can investigate which cell(s) contribute to the hypothesized association. In Radiant (Base &gt; Cross-tab) choose Income as the first factor and Newspaper as the second factor. First, compare the observed and expected frequencies. The expected frequencies are calculated using H0 (i.e., no association) as (Row total x Column Total) / Overall Total.</p>
-<p><img src="figures_quant/summary_cross_tabs.png" alt="cross-tab - summary" /></p>
+<p><img src="figures_quant/cross_tabs_summary.png" alt="Summary" /></p>
 <p>The (Pearson) chi-squared test evaluates if we can reject the null-hypothesis that the two variables are independent. It does so by comparing the observed frequencies (i.e., what we actually see in the data) to the expected frequencies (i.e., what we would expect to see if the two variables were independent). If there are big differences between the table of expected and observed frequencies the chi-square value will be <em>large</em>. The chi-square value for each cell is calculated as <code>(o - e)^2 / e</code>, where <code>o</code> is the observed frequency in a cell and <code>e</code> is the expected frequency in that cell if the null hypothesis holds. These values can be shown by clicking the <code>Chi-squared</code> check box. The overall chi-square value is obtained by summing across all cells, i.e., it is the sum of the values shown in the <em>Contribution to chi-square</em> table.</p>
 <p>In order to determine if the chi-square value can be considered <em>large</em> we first determine the degrees of freedom (df). In particular: df = (# rows - 1) x (# columns - 1). In a 2x2 table, we have (2-1) x (2-1) = 1 df. The output in the Summary tab shows the value of the chi-square statistic, the associated df, and the p-value associated with the test. We also see the contribution from each cells to the overall chi-square statistic.</p>
 <p>Remember to check the expected values: None of of the cells should have an expected count of less than 5. If necessary, <em>collapse</em> rows and/or columns. All expected frequencies are &gt; 5 therefore the chi-square statistic is unlikely to be biased. As usual we reject the null-hypothesis when the p-value is smaller 0.05. Since our p-value is very small (&lt; .001) we can reject the null-hypothesis (i.e., the data support the conclusion that there is an association between newspaper readership and income).</p>
 <p>In addition to the numerical output provided in the Summary tab we can evaluate the hypothesis visually (see Plots). We choose the same variables as before. However, we will plot the standardized deviations. This measure is calculated as (o-e)/sqrt(e), i.e., a score of how different the observed and expected frequencies in one cell in our table are. When a cell’s standardized deviation is greater than 1.96 (in absolute value) the cell has a significant deviation from the model of independence (or no association).</p>
-<p><img src="figures_quant/plot_cross_tabs.png" alt="cross-tab - plots" /></p>
+<p><img src="figures_quant/cross_tabs_plot.png" alt="Plot" /></p>
 <p>In the plot we see that all cells contribute to the association between income and readership as all standardized deviations are larger than 1.96 in absolute value (i.e., the bars extend beyond the outer dotted line in the plot).</p>
 <p>In other words, there seem to be fewer low income respondents that read WSJ and more high income respondents that read WSJ than would be expected if the null hypothesis of no-association were true. Furthermore, there are more low income respondents that read USA today and fewer high income respondents that read USA Today than would be expected if the null hypothesis of no-association were true.</p>
 <p>Note: The description for the <code>goals2</code> dataset has information on how rows or columns in a cross-tab can be collapsed when some of the expected values are below 5.</p>
