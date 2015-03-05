@@ -1,4 +1,5 @@
 setwd("~/gh/radiant_gh-pages/")
+# setwd('quant'); system('make')
 
 # install.packages('rmarkdown')
 # library(rmarkdown)

@@ -189,7 +189,7 @@ img {
 
 <hr />
 <p>Interactive business analytics using <a href="http://www.r-project.org/">R</a> and <a href="http[://www.rstudio.com/shiny/">Shiny</a>. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
-<p>Version: 0.1.52, Date: 2015-3-3</p>
+<p>Version: 0.1.55, Date: 2015-3-4</p>
 <div id="key-features" class="section level2">
 <h2>Key features</h2>
 <ul>
@@ -277,7 +277,7 @@ radiant(&#39;quant&#39;)</code></pre>
 <script type="text/javascript" src="libs/polyfill.js"></script>
 
 <!-- mathjax -->
-<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<!-- <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> -->
 
 <script>
 
@@ -312,6 +312,15 @@ $(document).ready(function () {
 
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
 </html>

@@ -124,6 +124,10 @@ result <- kmeans_clus("shopping",
 summary(result)
 plot(result)
 save_membership(result)
+
+# was the data really changed?
+getdata("shopping") %>% head
+
 ```
 
 See if you can reproduce this output in the radiant web-interface. Start radiant using `radiant()`.
