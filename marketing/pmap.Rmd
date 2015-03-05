@@ -4,5 +4,5 @@ title: Maps > Attributes
 
 ***
 
-```{r child='app/percepmap.md'}
+```{r child='app/pmap.md'}
 ```
