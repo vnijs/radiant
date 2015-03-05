@@ -106,12 +106,17 @@ changedata <- function(dataset, vars = c(), var_names = names(vars)) {
   } else if(exists(dataset)) {
     d_env <- pryr::where(dataset)
     cat("Dataset", dataset, "changed in", attr(d_env,"name"), "environment\n")
-    d_env[[dataset]][,var_names] <- vars
+    d_env[[dataset]][,var_names] <<- vars
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
       stop %>% return
   }
 }
+
+# adding variable when filter is active?
+# dat <- mtcars
+# dat$new <- NA
+# dat$new[1:10] <- 1:10
 
 #' Create a launcher for Windows (.bat)
 #'

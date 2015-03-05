@@ -154,6 +154,11 @@ output$ui_reg_int_var <- renderUI({
 # }
 
 output$ui_regression <- renderUI({
+#   cp_reg_conf_level <- "input.reg_predict == 'cmd' | input.reg_predict == 'data' |  (input.reg_sum_check !== undefined & input.reg_sum_check.indexOf('confint') >= 0) | input.reg_plots == 'coef'"
+#   cp_reg_conf_level <- "input.reg_predict == 'cmd' | input.reg_predict == 'data' |  try{input.reg_sum_check.indexOf('confint') >= 0}catch(e){false} | input.reg_plots == 'coef'"
+
+# cp_reg_conf_level <- "input.reg_predict == 'cmd' | input.reg_predict == 'data' |  (input.reg_sum_check !== undefined && input.reg_sum_check.indexOf('confint') >= 0) | input.reg_plots == 'coef'"
+
   tagList(
   	wellPanel(
 		  conditionalPanel(condition = "input.tabs_regression == 'Plot'",
@@ -201,7 +206,7 @@ output$ui_regression <- renderUI({
   			),
         conditionalPanel(condition = "input.reg_predict == 'cmd' |
                          input.reg_predict == 'data' |
-  	                     input.reg_sum_check.indexOf('confint') >= 0 |
+  	                     (input.reg_sum_check && input.reg_sum_check.indexOf('confint') >= 0) |
   	                     input.reg_plots == 'coef'",
    					 sliderInput("reg_conf_level", "Adjust confidence level:", min = 0.70,
    					             max = 0.99, value = state_init("reg_conf_level",.95),
@@ -282,6 +287,10 @@ output$regression <- renderUI({
 # }
 
 .regression <- reactive({
+
+  # if(not_available(input$reg_indep_var))
+  #   return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
+
 	do.call(regression, reg_inputs())
 })
 
@@ -401,8 +410,7 @@ observe({
 observe({
 	if(not_pressed(input$reg_saveres)) return()
 	isolate({
-		.regression() %>%
-    { if(is.list(.)) data.frame(.$model$residuals) %>% .changedata("residuals") }
+    .regression() %>% { if(is.list(.)) save_reg_resid(.) }
 	})
 })
 
