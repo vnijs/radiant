@@ -516,6 +516,8 @@ predict.regression <- function(result,
 #'
 #' @export
 save_reg_resid <- function(result) {
+  if(result$data_filter != "")
+    return("Please deactivate data filters before trying to save residuals")
   result$model$residuals %>%
   changedata(result$dataset, vars = ., var_names = "reg_residuals")
 }

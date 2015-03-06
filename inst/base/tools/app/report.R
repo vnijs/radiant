@@ -245,11 +245,15 @@ update_report_fun <- function(cmd) {
 
   # move to the report panel
   updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  # updateTabsetPanel(session, "nav_radiant", selected = "transform")
   # updateTabsetPanel(session, "nav_radiant", selected = "Regression")
   # updateTabsetPanel(session, "nav_radiant", selected = "GLM")
+  # updateTabsetPanel(session, "nav_radiant", selected = "GLM")
+  # updateTabsetPanel(session, "tabs_glm_reg", selected = "plot_glm_reg")
   # updateTabsetPanel(session, "nav_radiant", selected = "Transform")
   # updateTabsetPanel(session, "nav_radiant", selected = "Data")
   # updateTabsetPanel(session, "datatabs", selected = "Transform")
+  # updateTabsetPanel(session, "nav_radiant", selected = "Transform")
 }
 
 

@@ -32,7 +32,7 @@ Choose `Normalize` from the `Transformation type` drop-down standardize one or m
 
 #### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Save changes` to add it to the data.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press CTRL-return (or CMD-return on mac) to create the new variable and press `Save changes` to add it to the data.
 
 1. Create a new variable z that is the difference between variables x and y in the data
 
@@ -70,7 +70,7 @@ It is possible to manipulate your data in Excel and copy-and-paste a new variabl
 
 #### Recode
 
-To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` dropdown. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Click `Save changes` to add the new variable to the data. Some examples are given below.
+To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` dropdown. Provide one or more recode commands (separate the commands by a `;`) and press CTRL-return (or CMD-return on mac) to see the newly created variable. Click `Save changes` to add the new variable to the data. Some examples are given below.
 
 1. All values below 20 are set to 'Low' and all others to 'High'
 
@@ -84,13 +84,13 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
-4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode box`. Press return and `Save changes` to add the recoded variable to the data.
+4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode box`. Press CTRL-return (or CMD-return on mac) and `Save changes` to add the recoded variable to the data.
 
 	400 = NA
 
 #### Rename
 
-Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Save changes` to alter the variable names in the original data.
+Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press CTRL-return (or CMD-return on mac) to see the variables with their new names on screen and  press `Save changes` to alter the variable names in the original data.
 
 #### Remove columns
 
@@ -102,7 +102,7 @@ Choose `Remove missing` from the `Transformation type` dropdown to eliminate all
 
 #### Filter
 
- There are several ways to select a subset of the data to view. The `Filter` box on the left (click the checkbox first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators. Type your statement in the `Filter`  box and press enter to see the result on screen or an error below the box if the expression is invalid. It is important to note that filters are _presistent_. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press enter or (2) uncheck the `Filter` checkbox.
+ There are several ways to select a subset of the data to view. The `Filter` box on the left (click the checkbox first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators. Type your statement in the `Filter`  box and press CTRL-return (or CMD-return on mac) to see the result on screen or an error below the box if the expression is invalid. It is important to note that filters are _presistent_. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press CTRL-return (or CMD-return on mac) or (2) uncheck the `Filter` checkbox.
 
 
 | Operator    |     | Description               |

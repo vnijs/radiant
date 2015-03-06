@@ -193,6 +193,8 @@ save_kmeans <- function(result, file = "kmeans.csv")
 #'
 #' @export
 save_membership <- function(result) {
+	if(result$data_filter != "")
+    return("Please deactivate data filters before trying to save cluster membership")
 	as.factor(result$km_out$cluster) %>%
 	changedata(result$dataset, vars = ., var_names = paste0("kclus",result$km_nr_clus))
 }

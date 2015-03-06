@@ -64,21 +64,22 @@ observe({
     isolate({
       assign("r_state", reactiveValuesToList(input), envir = .GlobalEnv)
       assign("r_data", reactiveValuesToList(r_data), envir = .GlobalEnv)
-      stop_mess <- "\nStopping Radiant. State available as 'r_state' and 'r_data'.\n"
-      if(!is.null(input$rmd_report) && input$rmd_report != "") {
+      stop_message <- "\nStopping Radiant. State available as 'r_state' and 'r_data'.\n"
+      # if(!is.null(input$rmd_report) && input$rmd_report != "") {
+      if(!is_empty(input$rmd_report)) {
         os_type <- Sys.info()["sysname"]
         if (os_type == 'Windows') {
           cat(input$rmd_report, file = "clipboard")
-          stop_mess %<>% paste0(., "Report content was copied to the clipboard.\n")
+          stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
         } else if (os_type == "Darwin") {
           cat(input$rmd_report, file = pipe("pbcopy"))
-          stop_mess %<>% paste0(., "Report content was copied to the clipboard.\n")
+          stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
         } else if (os_type == "Linux") {
           # cat(input$rmd_report, file = pipe("pbcopy"))
         }
       }
       rm(r_env, envir = .GlobalEnv) # removing the reference to the shiny environment
-      stopApp(cat(stop_mess))
+      stopApp(cat(stop_message))
     })
   } else {
     stopApp("Stopped Radiant")

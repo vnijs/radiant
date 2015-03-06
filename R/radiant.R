@@ -113,6 +113,11 @@ changedata <- function(dataset, vars = c(), var_names = names(vars)) {
   }
 }
 
+# adding variable when filter is active?
+# dat <- mtcars
+# dat$new <- NA
+# dat$new[1:10] <- 1:10
+
 #' Create a launcher for Windows (.bat)
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"

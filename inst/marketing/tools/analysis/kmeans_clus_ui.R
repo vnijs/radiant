@@ -85,6 +85,10 @@ output$kmeans_clus <- renderUI({
 })
 
 .kmeans_clus <- reactive({
+
+  if(not_available(input$km_vars))
+		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
+
 	do.call(kmeans_clus, km_inputs())
 })
 

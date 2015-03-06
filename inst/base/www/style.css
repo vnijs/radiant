@@ -48,6 +48,11 @@ pre {
   white-space: pre;
 }
 
+#data_filter, #tr_transform, #tr_recode, #tr_rename,
+#glm_predict_cmd, #reg_predict_cmd {
+  max-width: 234px;
+}
+
 .alignleft {
   float: left;
 }

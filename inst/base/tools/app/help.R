@@ -144,7 +144,7 @@ output$help_quant <- renderUI({
 })
 
 
-help_maps <- c("(Dis)similarity" = "mds.md", "Attributes" = "percepmap.md")
+help_maps <- c("(Dis)similarity" = "mds.md", "Attributes" = "pmap.md")
 output$help_maps <- reactive(append_help("help_maps", "../marketing/tools/help/"))
 observe( help_switch(input$help_maps_all, "help_maps") )
 observe( help_switch(input$help_maps_none, "help_maps", help_on = FALSE) )
