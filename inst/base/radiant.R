@@ -92,13 +92,13 @@ saveStateOnRefresh <- function(session = session) {
     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
 
     if(is(seldat, 'try-error')) {
-      isolate(r_data$error <- attr(seldat,"condition")$message)
+      isolate(r_data$filter_error <- attr(seldat,"condition")$message)
     } else {
-      isolate(r_data$error <- "")
+      isolate(r_data$filter_error <- "")
       return(seldat)
     }
   } else {
-    isolate(r_data$error <- "")
+    isolate(r_data$filter_error <- "")
   }
 
   r_data[[input$dataset]]

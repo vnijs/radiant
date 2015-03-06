@@ -72,7 +72,7 @@ output$ui_pmap <- renderUI({
 		    actionButton("pmap_savescores", "Save scores")
 		  )
  		),
-		helpAndReport('Attribute based maps','pmap',inclMD("tools/help/percepmap.md"))
+		helpAndReport('Attribute based maps','pmap',inclMD("tools/help/pmap.md"))
 	)
 })
 

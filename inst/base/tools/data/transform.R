@@ -160,15 +160,11 @@ output$ui_Transform <- renderUI({
     	              id="tr_copyAndPaste", rows=3, "")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'recode'",
-	    # returnTextInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')
 	    returnTextAreaInput("tr_recode", "Recode (e.g., lo:20 = 1):", '')
     ),
     conditionalPanel(condition = "input.tr_changeType == 'rename'",
-	   	returnTextInput("tr_rename", "Rename (separate by ','):", '')
+	    returnTextAreaInput("tr_rename", "Rename (separate by , ):", '')
     ),
-    # conditionalPanel(condition = "input.tr_changeType == 'sub_filter'",
-    #   returnTextInput("tr_subset", "Subset (e.g., price > 5000)", '')
-    # ),
     conditionalPanel(condition = "input.tr_changeType != ''",
 	    actionButton("tr_show_changes", "Show"),
 	    actionButton("tr_save_changes", "Save changes")

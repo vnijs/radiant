@@ -2,9 +2,9 @@
 # Shiny interface for data functions
 #######################################
 
-output$uiView_err <- renderUI({
-  if(r_data$error %>% is_empty) return()
-  helpText(r_data$error)
+output$ui_filter_error <- renderUI({
+  if(is_empty(r_data$filter_error)) return()
+  helpText(r_data$filter_error)
 })
 
 # data ui and tabs
@@ -25,7 +25,7 @@ output$data_ui_and_tabs <- renderUI({
             conditionalPanel("input.show_filter == true",
               returnTextAreaInput("data_filter", label = "",
                                   value = state_init("data_filter")),
-              uiOutput("uiView_err")))
+              uiOutput("ui_filter_error")))
         ),
         conditionalPanel("input.datatabs == 'Manage'",
                          uiOutput("ui_Manage")),
@@ -50,6 +50,7 @@ output$data_ui_and_tabs <- renderUI({
 
 # data tabs
 output$tabs_data <- renderUI({
+  # tabsetPanel(
   tabsetPanel(id = "datatabs",
     tabPanel("Manage", htmlOutput("htmlDataExample"),
       conditionalPanel("input.man_add_descr == false",
