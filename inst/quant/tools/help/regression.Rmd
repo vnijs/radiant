@@ -172,9 +172,7 @@ All coefficients in this regression are highly significant.
 To illustrate the interpretation of coefficients in a regression model we start with the following equation:
 
 $$
-	\begin{equation}
   S_t = a + b P_t + c D_t + \epsilon_t
-	\end{equation}
 $$
 
 where $S_t$ is sales in units at time $t$, $P_t$ is the price in \$ at time $t$, $D_t$ is a dummy variable that indicates if a product is on display in a given week, and $\epsilon_t$ is the error term.
@@ -188,9 +186,7 @@ $$
 So $b$ is the marginal effect on sales of a \$1 change in price. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and the approach needed to determine the marginal effect is a little different. If we compare sales levels when $D = 1$ to sales levels when $D = 0$ we see that
 
 $$
-	\begin{equation}
   a + b P_t + c \times 1 - a + b P_t + c \times 0 = c
-	\end{equation}
 $$
 
 For a linear model $c$ is the marginal effect on sales when the product is on display.
@@ -200,9 +196,7 @@ For a linear model $c$ is the marginal effect on sales when the product is on di
 To illustrate the interpretation of coefficients in a semi-log regression model we start with the following equation:
 
 $$
-	\begin{equation}
   ln S_t = a + b P_t + c D_t + \epsilon_t
-	\end{equation}
 $$
 
 where $ln S_t$ is the (natural) log of sales at time $t$. For a continuous variable such as price we can again determine the effect of a \$1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to $P$. For the left-hand side of the equation we can use the chain-rule to get
@@ -240,9 +234,7 @@ For the semi-log model 100 $\times\:c$ is the percentage change in sales when th
 To illustrate the interpretation of coefficients in a log-log regression model we start with the following equation:
 
 $$
-  \begin{equation}
   ln S_t = a + b ln P_t + \epsilon_t
-  \end{equation}
 $$
 
 where $ln P_t$ is the (natural) log of sales at time $t$. Ignoring the error term for simplicity we can rewrite this model in its multiplicative form by taking the exponent on both sides:
@@ -264,13 +256,7 @@ $$
   \end{aligned}
 $$
 
-The general formula for an elasticity is
-
-$$
-	\frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t}
-$$
-
-Adding this information to the equation above we see that the coefficient $b$ estimated from a log-log regression can be directly interpreted as an elasticity:
+The general formula for an elasticity is $\frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t}$. Adding this information to the equation above we see that the coefficient $b$ estimated from a log-log regression can be directly interpreted as an elasticity:
 
 $$
   \frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t} = b \frac{S_t}{P_t} \frac{P_t}{S_t} = b
