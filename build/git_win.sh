@@ -5,7 +5,7 @@ cd ~/Desktop/GitHub
 #git clone git@github.com:trestletech/shinyAce.git
 cd radiant_dev
 git pull
-cd ../shinyAce
-git pull
-cd ../rpivotTable
-git pull
+#cd ../shinyAce
+#git pull
+#cd ../rpivotTable
+#git pull
