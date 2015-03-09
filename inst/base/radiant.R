@@ -187,7 +187,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
     mutate_each(funs(d2c)) %>%
     mutate_each(funs(trunc_char)) %>%
     xtable::xtable(.) %>%
-    print(type='html',  print.results = FALSE) %>%
+    print(type='html',  print.results = FALSE, include.rownames = FALSE) %>%
     paste0(title, .) %>%
     sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
     paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
@@ -462,16 +462,12 @@ helpAndReport <- function(title, link, content) {
            </div>
            <i title='Help' class='glyphicon glyphicon-question-sign alignleft' data-toggle='modal' data-target='#%sHelp'></i>
            <i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input alignright' href='#%sReport' id='%sReport'></i>
-           <div style='clear: both;'></div>
-           <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+           <div style='clear: both;'></div>",
           link, link, link, title, content, link, link, link) %>%
-  enc2utf8 %>% HTML
+  enc2utf8 %>% HTML %>% withMathJax()
 }
 
 help_and_report <- function(modal_title, fun_name, help_file) {
-#
-# try adding withMardown() back in - make sure to add withMarkdown to static UI
-#
   sprintf("<div class='modal fade' id='%s_help' tabindex='-1' role='dialog' aria-labelledby='%s_help_label' aria-hidden='true'>
             <div class='modal-dialog'>
               <div class='modal-content'>
@@ -487,10 +483,9 @@ help_and_report <- function(modal_title, fun_name, help_file) {
            </div>
            <i title='Help' class='glyphicon glyphicon-question-sign alignleft' data-toggle='modal' data-target='#%s_help'></i>
            <i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
-           <div style='clear: both;'></div>
-           <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+           <div style='clear: both;'></div>",
           fun_name, fun_name, fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
-  enc2utf8 %>% HTML
+  enc2utf8 %>% HTML %>% withMathJax()
 }
 
 # function to render .md files to html
