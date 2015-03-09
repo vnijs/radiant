@@ -1,6 +1,7 @@
 shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE,
         collapsible = TRUE,
 
+  withMathJax(),
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
   navbarMenu("R",

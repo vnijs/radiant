@@ -6,7 +6,7 @@ shinyUI(
 
   navbarMenu("Sample",
     tabPanel("Sampling", uiOutput("sampling")),
-    tabPanel("Sample size", uiOutput("sample_size"))
+    tabPanel("Sample size", withMathJax(), uiOutput("sample_size"))
   ),
 
   navbarMenu("Base",
@@ -53,7 +53,6 @@ shinyUI(
   navbarMenu("Help",
     tabPanel("Radiant help", uiOutput("help_marketing")),
     tabPanel("Radiant videos", uiOutput("help_videos")),
-    # tabPanel("About", withMathJax(), uiOutput("help_about"))
     tabPanel("About", uiOutput("help_about"))
   ),
 
