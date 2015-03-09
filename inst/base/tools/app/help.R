@@ -24,14 +24,8 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
                       inclMD(paste0(help_path,local_hd[i])),
                       sep="\n")
   }
-  # mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
-  mathjax_script <- ifelse(Rmd, "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-                           "")
-  mathjax_script <- ifelse(Rmd, paste(mathjax_script,"\n","<script>MathJax.Hub.Typeset();</script>"), "")
-
+  mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
   cc <- "&copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>"
-  # mathjax_script <- ""
-  # paste(all_help,"\n",mathjax_script,"\n",cc) %>% help2html
   paste(all_help,"\n",mathjax_script,"\n",cc) %>% HTML
 }
 
@@ -39,9 +33,8 @@ help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visuali
                "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.md")
 output$help_data <- reactive(append_help("help_data", "../base/tools/help/"))
 
-help_random <- c("Central Limit Theorem" = "ctl.md","Sampling" = "sampling.md",
-                 "Sample size" = "sample_size.Rmd")
-output$help_random <- reactive(append_help("help_random", "../quant/tools/help/", Rmd = TRUE))
+help_sample <- c("Sampling" = "sampling.md", "Sample size" = "sample_size.Rmd")
+output$help_sample <- reactive(append_help("help_sample", "../quant/tools/help/", Rmd = TRUE))
 
 help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
                     "Single proportion" = "single_prop.md", "Compare proportions" = "compare_props.md",
@@ -67,8 +60,8 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
 observe( help_switch(input$help_data_all, "help_data") )
 observe( help_switch(input$help_data_none, "help_data", help_on = FALSE) )
 
-observe( help_switch(input$help_random_all, "help_random") )
-observe( help_switch(input$help_random_none, "help_random", help_on = FALSE) )
+observe( help_switch(input$help_sample_all, "help_sample") )
+observe( help_switch(input$help_sample_none, "help_sample", help_on = FALSE) )
 
 observe( help_switch(input$help_base_all, "help_base_menu") )
 observe( help_switch(input$help_base_none, "help_base_menu", help_on = FALSE) )
@@ -101,10 +94,10 @@ help_quant_ui <- tagList(
       selected = state_init("help_data"), inline = TRUE)
   ),
   wellPanel(
-    HTML("<label>Random menu: <i id='help_random_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
-    <i id='help_random_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
-    checkboxGroupInput("help_random", NULL, help_random,
-       selected = state_init("help_random"), inline = TRUE)
+    HTML("<label>Sample menu: <i id='help_sample_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_sample_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
+    checkboxGroupInput("help_sample", NULL, help_sample,
+       selected = state_init("help_sample"), inline = TRUE)
   ),
   wellPanel(
     HTML("<label>Base menu: <i id='help_base_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
@@ -124,7 +117,7 @@ help_quant_main <- tagList(
   HTML("<h3>Select one or more help documents</h3>"),
   # HTML("<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
   htmlOutput("help_data"),
-  htmlOutput("help_random"),
+  htmlOutput("help_sample"),
   htmlOutput("help_base_menu"),
   htmlOutput("help_regression")
 )
