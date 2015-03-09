@@ -14,7 +14,7 @@ As you can see the required sample size is equal to 143, i.e., we need 143 valid
 
 ![Example 1a](figures_quant/sample_size_ex1b.png)
 
-In the screen shot above the incidence rate is set to 75% and response rate to 20%. The required number of valid responses is the same as before (143), however the number of contact requests is now equal to 143 / .75 / .2 = 953.
+In the screen shot above the incidence rate is set to 75% and response rate to 20%. The required number of valid responses is the same as before (143), however the number of contact requests is now equal to 143 / .75 / .2 = 954.
 
 <a href="http://www.isixsigma.com/tools-templates/sampling-data/how-determine-sample-size-determining-sample-size/" target="_blank">Source</a>
 

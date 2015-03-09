@@ -4,8 +4,7 @@ shinyUI(
 
   tabPanel("Data", uiOutput('data_ui_and_tabs')),
 
-  navbarMenu("Random",
-    tabPanel("Central Limit Theorem", uiOutput("ctl")),
+  navbarMenu("Sample",
     tabPanel("Sampling", uiOutput("sampling")),
     tabPanel("Sample size", uiOutput("sample_size"))
   ),

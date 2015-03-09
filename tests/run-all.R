@@ -1,3 +1,8 @@
+# library(dplyr)
+# source("~/gh/radiant_dev/R/radiant.R")
+# result <- sample_size()
+# summary(result)
+
 # load("~/gh/radiant_dev/tests/r_data.rda")
 # source("~/gh/radiant_dev/R/radiant.R")
 # result <- sampling("rndnames","Names",10)
