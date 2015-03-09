@@ -6,6 +6,7 @@
 #' @param smp_var The variable to sample from
 #' @param smp_sample_size Number of units to select
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param smp_print_full Print full sampling frame. Default is TRUE
 #'
 #' @return A list of variables defined in sampling as an object of class sampling
 #'
@@ -15,7 +16,8 @@
 #' @seealso \code{\link{summary.sampling}} to summarize results
 #' @export
 sampling <- function(dataset, smp_var, smp_sample_size,
-                     data_filter = "") {
+                     data_filter = "",
+                     smp_print_full = TRUE) {
 
   dat <- getdata(dataset, smp_var, filt = data_filter)
 
@@ -43,12 +45,16 @@ sampling <- function(dataset, smp_var, smp_sample_size,
 #'
 #' @export
 summary.sampling <- function(result) {
+  cat("Sampling (simple random)\n")
+  cat("Data       :", result$dataset, "\n")
+  if(result$data_filter %>% gsub("\\s","",.) != "")
+    cat("Filter     :", gsub("\\n","", result$data_filter), "\n")
+  cat("ID variable:", result$smp_var, "\n")
+  cat("Sample size:", result$smp_sample_size, "\n\n")
 
-  cat("Selected units:\n")
+  cat("Selected:\n")
 	print(result$seldat)
-	cat("\nAll units:\n")
-	print(result$dat)
-  # don't print more than 100 rows
-  # head(result$dat, n = 100)
-  print(result$dat)
+	cat("\nSampling frame (max 100 shown):\n")
+  if(result$smp_print_full)
+    head(result$dat, n = 100) %>% print
 }

@@ -35,17 +35,12 @@ output$uiTr_reorg_levs <- renderUI({
 })
 
 # standardize variable
-st <- function(x) {
-	# if(is.factor(x)) return(rescale(x))
-	# if(is.numeric(x)) return(as.numeric(scale(x)))
+st <- function(x)
 	if(is.numeric(x)) scale(x) else x
-}
 
 # center variable
-cent <- function(x) {
-	# if(is.factor(x)) return(rescale(x))
+cent <- function(x)
 	if(is.numeric(x)) { x - mean(x, na.rm = TRUE) } else x
-}
 
 # median split
 msp <- function(x) cut(x, breaks = quantile(x,c(0,.5,1)),
@@ -464,4 +459,3 @@ observe({
 	  updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
 	})
 })
-

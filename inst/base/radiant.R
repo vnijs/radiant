@@ -187,7 +187,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
     mutate_each(funs(d2c)) %>%
     mutate_each(funs(trunc_char)) %>%
     xtable::xtable(.) %>%
-    print(type='html',  print.results = FALSE) %>%
+    print(type='html',  print.results = FALSE, include.rownames = FALSE) %>%
     paste0(title, .) %>%
     sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
     paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%

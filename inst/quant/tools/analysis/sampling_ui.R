@@ -17,7 +17,7 @@ smp_inputs <- reactive({
 output$ui_smp_var <- renderUI({
 	isChar <- "character" == getdata_class()
   vars <- varnames()[isChar]
-  selectInput(inputId = "smp_var", label = "Variable (select one):",
+  selectInput(inputId = "smp_var", label = "ID variable:",
               choices = vars, selected = state_single("smp_var",vars),
               multiple = FALSE)
 })
@@ -42,7 +42,7 @@ output$sampling <- renderUI({
        tabPanel("Summary", verbatimTextOutput("summary_sampling"))
     )
 
-    statTabPanel2(menu = "Base",
+    statTabPanel2(menu = "Sample",
                   tool = "Sampling",
                   tool_ui = "ui_sampling",
                   output_panels = smp_output_panels)
@@ -67,10 +67,7 @@ output$sampling <- renderUI({
 observe({
   if(not_pressed(input$sampling_report)) return()
   isolate({
-    outputs <- c("summary")
     update_report2(inp_main = clean_args(smp_inputs(), smp_args),
-                  fun_name = "sampling",
-                  outputs = outputs,
-                  figs = FALSE)
+                  fun_name = "sampling", outputs = "summary", figs = FALSE)
   })
 })
