@@ -24,14 +24,8 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
                       inclMD(paste0(help_path,local_hd[i])),
                       sep="\n")
   }
-  # mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
-  mathjax_script <- ifelse(Rmd, "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-                           "")
-  mathjax_script <- ifelse(Rmd, paste(mathjax_script,"\n","<script>MathJax.Hub.Typeset();</script>"), "")
-
+  mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
   cc <- "&copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>"
-  # mathjax_script <- ""
-  # paste(all_help,"\n",mathjax_script,"\n",cc) %>% help2html
   paste(all_help,"\n",mathjax_script,"\n",cc) %>% HTML
 }
 
