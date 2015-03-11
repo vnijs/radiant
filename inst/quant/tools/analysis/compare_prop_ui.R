@@ -50,14 +50,16 @@ output$ui_cp_levels <- renderUI({
 
 output$ui_compare_props <- renderUI({
   tagList(
-    wellPanel(
-      conditionalPanel(condition = "input.tabs_compare_props == 'Plot'",
+    conditionalPanel(condition = "input.tabs_compare_props == 'Plot'",
+      wellPanel(
         selectizeInput(inputId = "cp_plots", label = "Select plots:",
                 choices = cp_plots,
-                selected = state_single("cp_plots", cp_plots, cp_args$cp_plots),
+                selected = state_single("cp_plots", cp_plots, "props"),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))
-      ),
+      )
+    ),
+    wellPanel(
       uiOutput("ui_cp_var1"),
       uiOutput("ui_cp_var2"),
       uiOutput("ui_cp_levels"),
@@ -79,16 +81,21 @@ output$ui_compare_props <- renderUI({
   )
 })
 
-cp_plot_height <- function() {
-  result <- .compare_props()
-  ifelse(!"character" %in% class(result), result$plot_height, 650)
-}
+cp_plot <- reactive({
+  list(plot_width = 650, plot_height = 400 * length(input$cp_plots))
+})
+
+cp_plot_width <- function()
+  cp_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+
+cp_plot_height <- function()
+  cp_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
 # output is called from the main radiant ui.R
 output$compare_props <- renderUI({
 
-    register_print_output("summary_compare_props", ".compare_props", )
-    register_plot_output("plot_compare_props", ".compare_props",
+    register_print_output2("summary_compare_props", ".summary_compare_props", )
+    register_plot_output2("plot_compare_props", ".plot_compare_props",
                          height_fun = "cp_plot_height")
 
     # two separate tabs
@@ -105,21 +112,48 @@ output$compare_props <- renderUI({
 })
 
 .compare_props <- reactive({
+  do.call(compare_props, cp_inputs())
+})
+
+.summary_compare_props <- reactive({
 
   if(not_available(input$cp_var1) || not_available(input$cp_var2))
-    return("\nThis analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are not available please select another dataset")
+    return("This analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are not available please select another dataset")
 
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
   if(input$cp_var1 %in% input$cp_var2) return(" ")
 
-  do.call(compare_props, cp_inputs())
+  summary(.compare_props())
+})
+
+.plot_compare_props <- reactive({
+
+  if(not_available(input$cp_var1) || not_available(input$cp_var2))
+    return("This analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are not available please select another dataset")
+
+  # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
+  if(input$cp_var1 %in% input$cp_var2) return(" ")
+
+  plot(.compare_props(), cp_plots = input$cp_plots)
 })
 
 observe({
-  if(input$compare_props_report %>% not_pressed) return()
+  if(not_pressed(input$compare_props_report)) return()
   isolate({
-    update_report(inp = cp_inputs() %>% clean_args, fun_name = "compare_props",
-                  outputs = c("summary", "plot"),
-                  fig.height = round(7 * cp_plot_height()/650))
+    outputs <- c("summary","plot")
+    inp_out <- list(cp_plots = input$cp_plots) %>% list("",.)
+    figs <- TRUE
+    if(length(input$cp_plots) == 0) {
+      figs <- FALSE
+      outputs <- c("summary")
+      inp_out <- list("","")
+    }
+    update_report2(inp_main = clean_args(cp_inputs(), cp_args),
+                  fun_name = "compare_props",
+                  inp_out = inp_out,
+                  outputs = outputs,
+                  figs = figs,
+                  fig.width = round(7 * cp_plot_width()/650,2),
+                  fig.height = round(7 * cp_plot_height()/650,2))
   })
 })

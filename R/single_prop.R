@@ -13,7 +13,7 @@
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
 #' @examples
-#' single_prop("diamond","cut","IF")
+#' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results
@@ -24,8 +24,7 @@ single_prop <- function(dataset, sp_var,
                         sp_levels = "",
                         sp_comp_value = 0.5,
                         sp_alternative = "two.sided",
-                        sp_sig_level = .95,
-                        sp_plots = "hist") {
+                        sp_sig_level = .95) {
 
 	dat <- getdata(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
 
@@ -43,8 +42,6 @@ single_prop <- function(dataset, sp_var,
 	prop.test(ns, n, p = sp_comp_value, alternative = sp_alternative,
 	           conf.level = sp_sig_level, correct = FALSE) %>% tidy -> res
 
-	plot_height <- 400 * length(sp_plots)
-
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }
 
@@ -55,7 +52,7 @@ single_prop <- function(dataset, sp_var,
 #' @param result Return value from \code{\link{single_prop}}
 #'
 #' @examples
-#' result <- single_prop("diamond","cut")
+#' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 #' summary(result)
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
@@ -101,27 +98,28 @@ summary.single_prop <- function(result) {
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
 #' @param result Return value from \code{\link{single_prop}}
+#' @param sp_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (sp_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #'
 #' @examples
-#' result <- single_prop("diamond","cut")
-#' plot(result)
+#' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
+#' plot(result, sp_plots = c("hist", "simulate"))
 #'
 #' @seealso \code{\link{single_prop}} to generate the result
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #'
 #' @export
-plot.single_prop <- function(result) {
+plot.single_prop <- function(result, sp_plots = "hist") {
 
 	lev_name <- result$levs[1]
 
  	plots <- list()
-	if("hist" %in% result$sp_plots) {
-		plots[[which("hist" == result$sp_plots)]] <-
+	if("hist" %in% sp_plots) {
+		plots[[which("hist" == sp_plots)]] <-
 			ggplot(result$dat, aes_string(x = result$sp_var, fill = result$sp_var)) +
 	 			geom_histogram(alpha=.7) +
 	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", result$sp_var))
 	}
-	if("simulate" %in% result$sp_plots) {
+	if("simulate" %in% sp_plots) {
 		simdat <- rbinom(1000, prob = result$sp_comp_value, result$n) %>%
 								divide_by(result$n) %>%
 							  data.frame %>%
@@ -138,7 +136,7 @@ plot.single_prop <- function(result) {
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
-		plots[[which("simulate" == result$sp_plots)]] <-
+		plots[[which("simulate" == sp_plots)]] <-
 			ggplot(simdat, aes_string(x=lev_name)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = result$sp_comp_value, color = 'red',

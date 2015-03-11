@@ -10,7 +10,6 @@
 #' @param cp_alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param cp_sig_level Span of the confidence interval
 #' @param cp_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
-#' @param cp_plots One or more plots of proportions or counts ("props" or "counts")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_props
 #'
@@ -28,8 +27,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
                          cp_levels = "",
                          cp_alternative = "two.sided",
                          cp_sig_level = .95,
-                         cp_adjust = "none",
-                         cp_plots = "props") {
+                         cp_adjust = "none") {
 
 	vars <- c(cp_var1, cp_var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
@@ -76,8 +74,6 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 	res[,c("group1","group2")] <- res[,c("group2","group1")]
 	##############################################
 
-	plot_height <- 400 * length(cp_plots)
-
 	# from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, conf.lev = .95)
 	 	se * qnorm(conf.lev/2 + .5, lower.tail = TRUE)
@@ -98,6 +94,8 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #' Summary method for output from compare_props
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#'
+#' @param result Return value from \code{\link{compare_props}}
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
@@ -147,16 +145,20 @@ summary.compare_props <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
+#' @param result Return value from \code{\link{compare_props}}
+#' @param cp_plots One or more plots of proportions or counts ("props" or "counts")
+#'
 #' @examples
-#' result <- compare_props("titanic", "pclass", "survived", cp_plots = c("props","counts"))
-#' plot(result)
+#' result <- compare_props("titanic", "pclass", "survived")
+#' plot(result, cp_plots = c("props","counts"))
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
 #' @export
-plot.compare_props <- function(result) {
+plot.compare_props <- function(result, cp_plots = "props") {
 
+	# cp_plots <- "props"
 	dat <- result$dat
 	var1 <- colnames(dat)[1]
 	var2 <- colnames(dat)[-1]
@@ -165,18 +167,18 @@ plot.compare_props <- function(result) {
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	plots <- list()
-	if("props" %in% result$cp_plots) {
+	if("props" %in% cp_plots) {
 		# use of `which` allows the user to change the order of the plots shown
-		plots[[which("props" == result$cp_plots)]] <-
+		plots[[which("props" == cp_plots)]] <-
 			ggplot(result$dat_summary, aes_string(x = var1, y = "p", fill = var1)) +
 			geom_bar(stat = "identity") +
 	 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
 	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue")
 	}
 
-	if("counts" %in% result$cp_plots) {
+	if("counts" %in% cp_plots) {
 		# use of `which` allows the user to change the order of the plots shown
-		plots[[which("counts" == result$cp_plots)]] <-
+		plots[[which("counts" == cp_plots)]] <-
 			ggplot(result$dat, aes_string(x = var1, fill = var2)) +
 			geom_bar(position = "dodge")
 	}

@@ -95,7 +95,9 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
     for (i in viz_vars1) {
       dat[,i] %<>% as.factor
       for (j in viz_vars2) {
-        plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) + geom_boxplot(alpha = .7)
+        plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) +
+                          geom_boxplot(alpha = .7) +
+                          theme(legend.position = "none")
         itt <- itt + 1
       }
     }

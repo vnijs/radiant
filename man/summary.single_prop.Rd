@@ -16,7 +16,7 @@ Summary method for single_prop
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
-result <- single_prop("diamond","cut")
+result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 summary(result)
 }
 \seealso{

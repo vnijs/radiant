@@ -32,5 +32,7 @@ summary(result, reg_test_var = "v2")
 \code{\link{regression}} to generate the results
 
 \code{\link{plot.regression}} to plot results
+
+\code{\link{predict.regression}} to generate predictions
 }
 
