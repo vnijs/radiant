@@ -1,17 +1,14 @@
-# reg_show_interactions Should interactions be considered. Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3.
-# reg_predict Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate values to predict select ("cmd")
-
 #' Linear regression using OLS
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param reg_dep_var The dependent variable in the regression
-#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param reg_indep_var Independent variables in the regression
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param reg_int_var Interaction terms to include in the model
 #' @param reg_check "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
-
+#'
 #' @return A list of all variables used in regression as an object of class regression
 #'
 #' @examples
@@ -19,6 +16,7 @@
 #'
 #' @seealso \code{\link{summary.regression}} to summarize results
 #' @seealso \code{\link{plot.regression}} to plot results
+#' @seealso \code{\link{predict.regression}} to generate predictions
 #'
 #' @export
 regression <- function(dataset, reg_dep_var, reg_indep_var,
@@ -26,27 +24,18 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
                        reg_int_var = "",
                        reg_check = "") {
 
-	vars <- reg_indep_var
+  dat <- getdata(dataset, c(reg_dep_var, reg_indep_var), filt = data_filter)
 
-	# adding interaction terms as needed
-	if(reg_int_var != "" &&
-	  length(vars) > 1) {
-		if({reg_int_var %>% strsplit(":") %>% unlist} %in% reg_indep_var %>% all) {
-			vars <- c(vars,reg_int_var)
-	 	} else{
-      cat("Interaction terms contain variables not selected as main effects.\nRemoving all interactions from the estimation")
-      reg_int_var <- ""
-	 	}
-	}
-
-	dat <- getdata(dataset, c(reg_dep_var, reg_indep_var), filt = data_filter)
+  vars <- ""
+  var_check(reg_indep_var, colnames(dat)[-1], reg_int_var) %>%
+    { vars <<- .$vars; reg_indep_var <<- .$indep_var; reg_int_var <<- .$int_var }
 
 	if("standardize" %in% reg_check) {
     isNum <- sapply(dat, is.numeric)
-    if(sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+    if(sum(isNum > 0)) dat[,isNum] %<>% data_frame %>% mutate_each(funs(scale))
   }
 
-	formula <- paste(reg_dep_var, "~", paste(vars, collapse = " + "))
+	formula <- paste(reg_dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
 
 	if("stepwise" %in% reg_check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
@@ -66,9 +55,11 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   if(sum(isFct) > 0) {
     for(i in names(select(dat,-1)[isFct]))
       reg_coeff$`  ` %<>% gsub(i, paste0(i," > "), .)
+
+    rm(i, isFct)
   }
 
-  # not needed elsewhere
+  # dat not needed elsewhere
   rm(dat)
 
   environment() %>% as.list %>% set_class(c("regression",class(.)))
@@ -91,6 +82,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #'
 #' @seealso \code{\link{regression}} to generate the results
 #' @seealso \code{\link{plot.regression}} to plot results
+#' @seealso \code{\link{predict.regression}} to generate predictions
 #'
 #' @importFrom car vif
 #'
@@ -100,7 +92,7 @@ summary.regression <- function(result,
                                reg_conf_level = .95,
                                reg_test_var = "") {
 
-	if(class(result$model) != 'lm') return(result)
+	if(class(result$model)[1] != 'lm') return(result)
 
   # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
@@ -131,7 +123,6 @@ summary.regression <- function(result,
 
   if("sumsquares" %in% reg_sum_check) {
     atab <- anova(result$model)
-    atab %>% format(scientific = FALSE)
     nr_rows <- dim(atab)[1]
     df_reg <- sum(atab$Df[-nr_rows])
     df_err <- sum(atab$Df[nr_rows])
@@ -140,13 +131,13 @@ summary.regression <- function(result,
     ss_reg <- sum(atab$`Sum Sq`[-nr_rows])
     ss_err <- sum(atab$`Sum Sq`[nr_rows])
     ss_tot <- ss_reg + ss_err
-    ssTable <- data.frame(matrix(nrow = 3, ncol = 2))
-    rownames(ssTable) <- c("Regression","Error","Total")
-    colnames(ssTable) <- c("df","SS")
-    ssTable$df <- c(df_reg,df_err,df_tot)
-    ssTable$SS <- c(ss_reg,ss_err,ss_tot)
+    ss_tab <- data.frame(matrix(nrow = 3, ncol = 2))
+    rownames(ss_tab) <- c("Regression","Error","Total")
+    colnames(ss_tab) <- c("df","SS")
+    ss_tab$df <- c(df_reg,df_err,df_tot)
+    ss_tab$SS <- c(ss_reg,ss_err,ss_tot)
     cat("Sum of squares:\n")
-    print(format(ssTable, scientific = FALSE))
+    format(ss_tab, scientific = FALSE) %>% print
     cat("\n")
   }
 
@@ -161,7 +152,8 @@ summary.regression <- function(result,
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(3) %>%
           .[order(.$VIF, decreasing=T),] %>%
-          { if(nrow(.) < 8) t(.) else . } %>% print
+          { if(nrow(.) < 8) t(.) else . } %>%
+          print
       } else {
         cat("Insufficient number of independent variables selected to calculate\nmulti-collinearity diagnostics")
       }
@@ -196,20 +188,12 @@ summary.regression <- function(result,
 	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
 	  } else {
 			sub_formula <- ". ~ 1"
+
 			vars <- result$reg_indep_var
-
       if(result$reg_int_var != "" && length(vars) > 1) {
-
-				if({result$reg_int_var %>% strsplit(":") %>% unlist} %in% result$reg_test_var %>% any) {
-						cat("Interaction terms contain variables specified for testing.\nRelevant interaction terms are include in the requested test.\n\n")
-
-					for(i in result$reg_test_var) {
-						ind <- grep(i,result$reg_int_var)
-						result$reg_test_var <- c(result$reg_test_var, result$reg_int_var[ind])
-					}
-					result$reg_test_var <- unique(result$reg_test_var)
-					}
-	 			vars <- c(vars,result$reg_int_var)
+        # updating reg_test_var if needed
+        reg_test_var <- test_check(reg_test_var, result$reg_int_var)
+	 	    vars <- c(vars,result$reg_int_var)
 			}
 
 			not_selected <- setdiff(vars,reg_test_var)
@@ -255,6 +239,7 @@ summary.regression <- function(result,
 #'
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results
+#' @seealso \code{\link{predict.regression}} to generate predictions
 #'
 #' @importFrom car leveragePlots
 #'
@@ -265,13 +250,13 @@ plot.regression <- function(result,
                             reg_conf_level = .95,
                             reg_coef_int = FALSE) {
 
-	if(class(result$model) != 'lm') return(result)
+	if(class(result$model)[1] != 'lm') return(result)
 
   if(reg_plots[1] == "")
     return(cat("Please select a regression plot from the drop-down menu"))
 
   # no plots if aliased coefficients present
-  if(anyNA(result$model$coeff)) reg_plots <- ""
+  if(anyNA(result$model$coeff)) reg_plots <- return("")
 
   # object_size(result$model, model)
 	model <- ggplot2::fortify(result$model)
@@ -283,7 +268,6 @@ plot.regression <- function(result,
   plots <- list()
 	if("hist" %in% reg_plots)
 		for(i in vars) plots[[paste0("hist",i)]] <- ggplot(model[,vars], aes_string(x = i)) + geom_histogram()
-
 
 	if("dashboard" %in% reg_plots) {
 
@@ -322,7 +306,9 @@ plot.regression <- function(result,
 	if("scatter" %in% reg_plots) {
 		for(i in reg_indep_var) {
 			if('factor' %in% class(model[,i])) {
-				plots[[paste0("scatter",i)]] <- ggplot(model, aes_string(x=i, y=reg_dep_var, fill=i)) + geom_boxplot(alpha = .7)
+				plots[[paste0("scatter",i)]] <- ggplot(model, aes_string(x=i, y=reg_dep_var, fill=i)) +
+                                          geom_boxplot(alpha = .7) +
+                                          theme(legend.position = "none")
 			} else {
 				p <- ggplot(model, aes_string(x=i, y=reg_dep_var)) + geom_point()
         if("line" %in% reg_lines) p <- p + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
@@ -335,7 +321,9 @@ plot.regression <- function(result,
 	if("resid_pred" %in% reg_plots) {
 		for(i in reg_indep_var) {
 			if('factor' %in% class(model[,i])) {
-				plots[[i]] <- ggplot(model, aes_string(x=i, y=".resid")) + geom_boxplot(fill = 'blue', alpha = .7) + ylab("residuals")
+				plots[[i]] <- ggplot(model, aes_string(x=i, y=".resid")) +
+                        geom_boxplot(fill = 'blue', alpha = .7) +
+                        ylab("residuals") + theme(legend.position = "none")
 			} else {
 				p <- ggplot(model, aes_string(x=i, y=".resid")) + geom_point(alpha = .5) + ylab("residuals")
         if("line" %in% reg_lines)
@@ -377,7 +365,6 @@ plot.regression <- function(result,
 
 	if(exists("plots"))
 		sshh( do.call(grid.arrange, c(plots, list(ncol = 2))) )
-
 }
 
 #' Predict method for regression
@@ -407,11 +394,11 @@ predict.regression <- function(result,
                                reg_conf_level = 0.95,
                                reg_save_pred = FALSE) {
 
-   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
+  # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% result$reg_check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (reg_predict_cmd == "" && reg_predict_data == "") {
-    return(cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press Enter after you finish entering the command.\nIf no results are shown the command was likely invalid\nAlternatively specify a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant"))
+    return(cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press CTRL-return (CMD-return on mac) after you finish entering the command.\nIf no results are shown the command was likely invalid\nAlternatively specify a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant"))
   }
 
   if (reg_predict_cmd != "" && reg_predict_data != "")
@@ -455,7 +442,6 @@ predict.regression <- function(result,
     pred_df <- getdata(reg_predict_data)
     pred_names <- names(pred_df)
     pred_df <- try(select_(pred_df, .dots = vars), silent = TRUE)
-    pred_df
     if(is(pred_df, 'try-error')) {
       cat("Model variables: ")
       cat(vars,"\n")
@@ -488,16 +474,14 @@ predict.regression <- function(result,
     pred_df %>% print(., row.names = FALSE)
 
     # pushing predictions into the clipboard
-    # if(running_local) {
-      os_type <- Sys.info()["sysname"]
-      if (os_type == 'Windows') {
-        write.table(pred_df, "clipboard", sep="\t", row.names=FALSE)
-      } else if (os_type == "Darwin") {
-        write.table(pred_df, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-      }
-      if (os_type != "Linux")
-        cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
-    # }
+    os_type <- Sys.info()["sysname"]
+    if (os_type == 'Windows') {
+      write.table(pred_df, "clipboard", sep="\t", row.names=FALSE)
+    } else if (os_type == "Darwin") {
+      write.table(pred_df, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+    }
+    if (os_type != "Linux")
+      cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
 
   } else {
     cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
@@ -519,6 +503,66 @@ save_reg_resid <- function(result) {
   if(result$data_filter != "")
     return("Please deactivate data filters before trying to save residuals")
   result$model$residuals %>%
-  changedata(result$dataset, vars = ., var_names = "reg_residuals")
+    changedata(result$dataset, vars = ., var_names = "reg_residuals")
 }
 
+#' Check if main effects for all interaction effects are included in the model
+#' If ':' is used to select a range _indep_var_ is updated
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#'
+#' @param indep_var List of independent variables provided to _regression_ or _glm_
+#' @param cn Column names for all independent variables in _dat_
+#' @param int_var Interaction terms specified
+#'
+#' @return 'vars' is a vector of right-hand side variables, possibly with interactions, 'indep_var' is the list of indepdent variables, and int_var are interaction terms
+#'
+#' @examples
+#' var_check("a:d", c("a","b","c","d"))
+#' var_check(c("a","b"), c("a","b"), "a:c")
+#'
+#' @export
+var_check <- function(indep_var, cn, int_var = "") {
+
+  # if : is used to select a range of variables reg_indep_var is updated
+  vars <- indep_var
+  if(length(vars) < length(cn)) vars <- indep_var <- cn
+
+  if(int_var != "" && length(vars) > 1) {
+    if({int_var %>% strsplit(":") %>% unlist} %in% vars %>% all) {
+      vars <- c(vars, int_var)
+    } else{
+      cat("Interaction terms contain variables not selected as main effects.\nRemoving all interactions from the estimation")
+      int_var <- ""
+    }
+  }
+
+  list(vars = vars, indep_var = indep_var, int_var = int_var)
+}
+
+#' Add interaction terms to list of test variables if needed
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#'
+#' @param test_var List of variables to use for testing for _regression_ or _glm_
+#' @param int_var Interaction terms specified
+#'
+#' @return 'test_var' is a vector of variables to test
+#'
+#' @examples
+#' test_check("a", c("a:b","b:c"))
+#'
+#' @export
+test_check <- function(test_var, int_var) {
+
+  if({int_var %>% strsplit(":") %>% unlist} %in% test_var %>% any) {
+    cat("Interaction terms contain variables specified for testing.\nRelevant interaction terms are included in the requested test.\n\n")
+
+    for(i in test_var) {
+      ind <- grep(i, int_var)
+      test_var <- c(test_var, int_var[ind])
+    }
+
+    test_var <- unique(test_var)
+  }
+  test_var
+}

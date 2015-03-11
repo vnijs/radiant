@@ -4,8 +4,7 @@
 \alias{correlation}
 \title{Calculate correlations for two or more variables}
 \usage{
-correlation(dataset, cor_var, data_filter = "", cor_type = "pearson",
-  cor_cutoff = 0)
+correlation(dataset, cor_var, data_filter = "", cor_type = "pearson")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -15,8 +14,6 @@ correlation(dataset, cor_var, data_filter = "", cor_type = "pearson",
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
 \item{cor_type}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
-
-\item{cor_cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
 }
 \value{
 A list with all variables defined in the function as an object of class compare_means
@@ -28,7 +25,8 @@ Calculate correlations for two or more variables
 See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 }
 \examples{
-correlation("diamonds",c("price","carat","clarity"))
+result <- correlation("diamonds",c("price","carat","clarity"))
+result <- correlation("diamonds",c("price:table"))
 }
 \seealso{
 \code{\link{summary.correlation}} to summarize results

@@ -38,5 +38,7 @@ plot(result, reg_plots = "resid_pred", reg_lines = "line")
 \code{\link{regression}} to generate the result
 
 \code{\link{summary.regression}} to summarize results
+
+\code{\link{predict.regression}} to generate predictions
 }
 

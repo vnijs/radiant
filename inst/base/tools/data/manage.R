@@ -40,10 +40,13 @@ loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on", lubridate::now())
     r_data[[objname]] <<- data.frame(dat, check.names = FALSE)
+    # r_data[[objname]] <<- tbl_df(dat, check.names = FALSE)
     r_data[[paste0(objname,"description")]] <<- ret
   }
   r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique
 }
+
+help(dplyr)
 
 saveClipboardData <- function() {
   os_type <- Sys.info()["sysname"]
@@ -91,6 +94,7 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
       }
     } else {
       r_data[[objname]] <<- as.data.frame(get(robjname))
+      # r_data[[objname]] <<- tbl_df(get(robjname))
       r_data[[paste0(objname,"_descr")]] <<- attr(r_data[[objname]], "description")
     }
   }
@@ -98,7 +102,7 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
   if(ext == 'csv') {
     r_data[[objname]] <<- read.csv(uFile, header=header,
                                   sep=sep,
-                                  stringsAsFactors=man_str_as_factor)
+                                  stringsAsFactors=man_str_as_factor) # %>% tbl_df
   }
 
   r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique

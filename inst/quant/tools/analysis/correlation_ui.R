@@ -30,8 +30,10 @@ output$ui_correlation <- renderUI({
 	    uiOutput("ui_cor_var"),
 		  selectInput(inputId = "cor_type", label = "Method:", choices = cor_type,
   	  	selected = state_single("cor_type", cor_type, "pearson"), multiple = FALSE),
-     	numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
-    		value = state_init('cor_cutoff',0), step = 0.05)
+		  conditionalPanel(condition = "input.tabs_correlation == 'Summary'",
+     		numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
+    			value = state_init("cor_cutoff",0), step = 0.05)
+     	)
 	  ),
   	help_and_report(modal_title = "Correlation",
   	                fun_name = "correlation",
@@ -39,19 +41,24 @@ output$ui_correlation <- renderUI({
 	)
 })
 
+cor_plot <- reactive({
+	length(input$cor_var) %>%
+  	{ list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .) }
+})
+
 cor_plot_width <- function()
-	.correlation() %>% { if(is.list(.)) .$plot_width else 650 }
+  cor_plot() %>% { if (is.list(.)) .$plot_width else 650 }
 
 cor_plot_height <- function()
-	.correlation() %>% { if(is.list(.)) .$plot_height else 650 }
+  cor_plot() %>% { if (is.list(.)) .$plot_height else 650 }
 
 # output is called from the main radiant ui.R
 output$correlation <- renderUI({
 
-		register_print_output("summary_correlation", ".correlation")
-		register_plot_output("plot_correlation", ".correlation",
-                         height_fun = "cor_plot_height",
-                         width_fun = "cor_plot_width")
+		register_print_output2("summary_correlation", ".summary_correlation")
+		register_plot_output2("plot_correlation", ".plot_correlation",
+                         	height_fun = "cor_plot_height",
+                         	width_fun = "cor_plot_width")
 
 		# two separate tabs
 		cor_output_panels <- tabsetPanel(
@@ -68,22 +75,39 @@ output$correlation <- renderUI({
 })
 
 .correlation <- reactive({
+	do.call(correlation, cor_inputs())
+})
+
+.summary_correlation <- reactive({
+
 	"Please select two or more variables.\n\n" %>%
 		suggest_data("diamonds") -> rt
 
 	if(input$cor_var %>% not_available) return(rt)
 	if(length(input$cor_var) < 2) return(rt)
 
-	do.call(correlation, cor_inputs())
+	summary(.correlation(), cor_cutoff = input$cor_cutoff)
+})
+
+.plot_correlation <- reactive({
+
+	"Please select two or more variables.\n\n" %>%
+		suggest_data("diamonds") -> rt
+
+	if(not_available(input$cor_var)) return(rt)
+	if(length(input$cor_var) < 2) return(rt)
+
+	plot(.correlation())
 })
 
 observe({
-	if(input$correlation_report %>% not_pressed) return()
+  if(not_pressed(input$correlation_report)) return()
   isolate({
-		outputs <- c("summary","plot")
-		update_report(inp = clean_args(cor_inputs(), cor_args), fun_name = "correlation",
-		              outputs = outputs,
-		              fig.width = round(7 * cor_plot_width()/650,2),
-		              fig.height = round(7 * cor_plot_height()/650,2))
+    inp_out <- list(cor_cutoff = input$cor_cutoff) %>% list(.,"")
+    update_report2(inp_main = clean_args(cor_inputs(), cor_args),
+                  fun_name = "correlation",
+                  inp_out = inp_out,
+                  fig.width = round(7 * cor_plot_width()/650,2),
+                  fig.height = round(7 * cor_plot_height()/650,2))
   })
 })

@@ -36,5 +36,7 @@ result <- regression("diamonds", "price", c("carat","clarity"))
 \code{\link{summary.regression}} to summarize results
 
 \code{\link{plot.regression}} to plot results
+
+\code{\link{predict.regression}} to generate predictions
 }
 

@@ -4,7 +4,14 @@
 \alias{plot.conjoint}
 \title{Plot method for conjoint output}
 \usage{
-\method{plot}{conjoint}(result)
+\method{plot}{conjoint}(result, ca_plots = "pw", ca_scale_plot = FALSE)
+}
+\arguments{
+\item{result}{Return value from \code{\link{conjoint}}}
+
+\item{ca_plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
+
+\item{ca_scale_plots}{Scale the axes of the part-worth plots to the same range}
 }
 \description{
 Plot method for conjoint output
@@ -13,8 +20,9 @@ Plot method for conjoint output
 See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
-plot(result)
+result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+plot(result, ca_scale_plot = TRUE)
+plot(result, ca_plots = "iw")
 }
 \seealso{
 \code{\link{conjoint}} to generate results
