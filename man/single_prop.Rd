@@ -5,8 +5,7 @@
 \title{Compare a sample proportion to a population proportion}
 \usage{
 single_prop(dataset, sp_var, data_filter = "", sp_levels = "",
-  sp_comp_value = 0.5, sp_alternative = "two.sided", sp_sig_level = 0.95,
-  sp_plots = "hist")
+  sp_comp_value = 0.5, sp_alternative = "two.sided", sp_sig_level = 0.95)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -33,7 +32,7 @@ Compare a sample proportion to a population proportion
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
-single_prop("diamond","cut","IF")
+result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 }
 \seealso{
 \code{\link{summary.single_prop}} to summarize the results

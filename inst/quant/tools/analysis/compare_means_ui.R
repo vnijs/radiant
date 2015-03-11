@@ -54,14 +54,16 @@ output$ui_cm_var2 <- renderUI({
 
 output$ui_compare_means <- renderUI({
   tagList(
-    wellPanel(
-      conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
+    conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
+      wellPanel(
         selectizeInput(inputId = "cm_plots", label = "Select plots:",
                 choices = cm_plots,
                 selected = state_single("cm_plots", cm_plots, "bar"),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))
-      ),
+      )
+    ),
+    wellPanel(
       uiOutput("ui_cm_var1"),
       uiOutput("ui_cm_var2"),
       conditionalPanel(condition = "input.tabs_compare_means == 'Summary'",
@@ -100,7 +102,7 @@ output$compare_means <- renderUI({
 
     register_print_output2("summary_compare_means", ".summary_compare_means", )
     register_plot_output2("plot_compare_means", ".plot_compare_means",
-                         height_fun = "cm_plot_height")
+                          height_fun = "cm_plot_height")
 
     # two separate tabs
     cm_output_panels <- tabsetPanel(

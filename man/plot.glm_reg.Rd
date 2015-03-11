@@ -4,10 +4,17 @@
 \alias{plot.glm_reg}
 \title{Plot method for glm_reg}
 \usage{
-\method{plot}{glm_reg}(result)
+\method{plot}{glm_reg}(result, glm_plots = "", glm_conf_level = 0.95,
+  glm_coef_int = FALSE)
 }
 \arguments{
 \item{result}{Return value from \code{\link{glm_reg}}}
+
+\item{glm_plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
+
+\item{glm_conf_level}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
+
+\item{glm_coef_int}{Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default}
 }
 \description{
 Plot method for glm_reg
@@ -16,12 +23,14 @@ Plot method for glm_reg
 See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
 }
 \examples{
-result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes", glm_plots = "coef")
-plot(result)
+result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
+plot(result, glm_plots = "coef")
 }
 \seealso{
 \code{\link{glm_reg}} to generate results
 
 \code{\link{plot.glm_reg}} to plot results
+
+\code{\link{predict.glm_reg}} to generate predictions
 }
 

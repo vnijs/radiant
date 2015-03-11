@@ -4,10 +4,12 @@
 \alias{plot.single_prop}
 \title{Plot method for single_prop}
 \usage{
-\method{plot}{single_prop}(result)
+\method{plot}{single_prop}(result, sp_plots = "hist")
 }
 \arguments{
 \item{result}{Return value from \code{\link{single_prop}}}
+
+\item{sp_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (sp_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 }
 \description{
 Plot method for single_prop
@@ -16,8 +18,8 @@ Plot method for single_prop
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
-result <- single_prop("diamond","cut")
-plot(result)
+result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
+plot(result, sp_plots = c("hist", "simulate"))
 }
 \seealso{
 \code{\link{single_prop}} to generate the result

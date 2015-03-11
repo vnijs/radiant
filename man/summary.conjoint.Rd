@@ -4,7 +4,12 @@
 \alias{summary.conjoint}
 \title{Summary method for conjoint output}
 \usage{
-\method{summary}{conjoint}(result)
+\method{summary}{conjoint}(result, ca_vif = FALSE)
+}
+\arguments{
+\item{result}{Return value from \code{\link{conjoint}}}
+
+\item{ca_vif}{Shows multicollinearity diagnostics.}
 }
 \description{
 Summary method for conjoint output
@@ -13,8 +18,8 @@ Summary method for conjoint output
 See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint(dataset = "mp3", ca_var1 = "Rating", ca_var2 = c("Memory", "Radio", "Size", "Price", "Shape"), ca_scale_plot = TRUE)
-summary(result)
+result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+summary(result, ca_vif = TRUE)
 }
 \seealso{
 \code{\link{conjoint}} to generate results

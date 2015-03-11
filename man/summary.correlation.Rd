@@ -2,19 +2,24 @@
 % Please edit documentation in R/correlation.R
 \name{summary.correlation}
 \alias{summary.correlation}
-\title{Summarize method for output from the correlation function. This is a method of class correlation and can be called as summary or summary.correlation}
+\title{Summarize method for the correlation function}
 \usage{
-\method{summary}{correlation}(result)
+\method{summary}{correlation}(result, cor_cutoff = 0)
+}
+\arguments{
+\item{result}{Return value from \code{\link{correlation}}}
+
+\item{cor_cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
 }
 \description{
-Summarize method for output from the correlation function. This is a method of class correlation and can be called as summary or summary.correlation
+Summarize method for the correlation function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 }
 \examples{
-result <- correlation("titanic", "pclass", "survived")
-summary(result)
+result <- correlation("diamonds",c("price","carat","clarity"))
+summary(result, cor_cutoff = .3)
 }
 \seealso{
 \code{\link{correlation}} to calculate results

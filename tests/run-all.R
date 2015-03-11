@@ -1,3 +1,33 @@
+
+# library(ggplot2)
+# library(psych)
+# r_data <- list()
+# dataset <- "diamonds"
+# cor_var <- colnames(diamonds)[1:5]
+# r_data$diamonds <- diamonds[1:100,1:5]
+# result <- correlation("diamonds",cor_var)
+
+# summary_correlation(result)
+# plots_correlation(result)
+
+# system.time(
+#   for(i in 1:100) {
+#     print(i)
+#     correlation("diamonds",colnames(diamonds))
+#   }
+# )
+
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(broom)
+library(gridExtra)
+source("~/gh/radiant_dev/R/radiant.R")
+result <- single_prop("diamonds","cut")
+plot(result)
+result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
+plot(result, sp_plots = c("hist", "simulate"))
+
 # library(dplyr)
 # source("~/gh/radiant_dev/R/radiant.R")
 # result <- sample_size()

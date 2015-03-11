@@ -17,6 +17,7 @@ init_state <- function(r_data) {
   # the data need to be a reactive value so the other reactive functions
   # and outputs that depend on these datasets will know when they are changed."
   robj <- load("../base/data/data_init/diamonds.rda")
+  # df <- tbl_df(get(robj))
   df <- get(robj)
   r_data[["diamonds"]] <- df
   r_data[["diamonds_descr"]] <- attr(df,'description')

@@ -27,13 +27,16 @@ output$ui_sm_var <- renderUI({
 
 output$ui_single_mean <- renderUI({
   tagList(
-  	wellPanel(
-      conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
+    conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
+      wellPanel(
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
           choices = sm_plots,
           selected = state_single("sm_plots", sm_plots, "hist"),
           multiple = TRUE,
-          options = list(plugins = list('remove_button', 'drag_drop')))),
+          options = list(plugins = list('remove_button', 'drag_drop')))
+      )
+    ),
+    wellPanel(
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
