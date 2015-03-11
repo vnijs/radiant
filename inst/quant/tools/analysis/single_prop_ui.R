@@ -40,13 +40,16 @@ output$ui_sp_levels <- renderUI({
 
 output$ui_single_prop <- renderUI({
   tagList(
-  	wellPanel(
-      conditionalPanel(condition = "input.tabs_single_prop == 'Plot'",
+    conditionalPanel(condition = "input.tabs_single_prop == 'Plot'",
+      wellPanel(
         selectizeInput(inputId = "sp_plots", label = "Select plots:",
                 choices = sp_plots,
-                selected = state_single("sp_plots", sp_plots, sp_args$sp_plots),
+                selected = state_single("sp_plots", sp_plots, "hist"),
                 multiple = TRUE,
-                options = list(plugins = list('remove_button', 'drag_drop')))),
+                options = list(plugins = list('remove_button', 'drag_drop')))
+      )
+    ),
+    wellPanel(
  	   	uiOutput("ui_sp_var"),
       uiOutput("ui_sp_levels"),
    	  selectInput(inputId = "sp_alternative", label = "Alternative hypothesis:",
@@ -65,16 +68,21 @@ output$ui_single_prop <- renderUI({
   )
 })
 
-sp_plot_height <- function() {
-  result <- .single_prop()
-  ifelse(!"character" %in% class(result), result$plot_height, 400)
-}
+sp_plot <- reactive({
+  list(plot_width = 650, plot_height = 400 * length(input$sp_plots))
+})
+
+sp_plot_width <- function()
+  sp_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+
+sp_plot_height <- function()
+  sp_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
 # output is called from the main radiant ui.R
 output$single_prop <- renderUI({
 
-		register_print_output("summary_single_prop", ".single_prop")
-		register_plot_output("plot_single_prop", ".single_prop",
+		register_print_output2("summary_single_prop", ".summary_single_prop")
+		register_plot_output2("plot_single_prop", ".plot_single_prop",
                          height_fun = "sp_plot_height")
 
 		# two separate tabs
@@ -91,23 +99,48 @@ output$single_prop <- renderUI({
 })
 
 .single_prop <- reactive({
-
-  if(input$sp_var %>% not_available)
-    return("This analysis requires a variable of type factor with two levels.\nPlease select another dataset.\n\n" %>% suggest_data("facebook"))
-
-  if(input$sp_comp_value %>% { is.na(.) |
-     is_weakly_greater_than(.,1) |
-     is_weakly_less_than(.,0) } )
-  	return("Please choose a comparison value between 0 and 1")
-
 	do.call(single_prop, sp_inputs())
 })
 
+.summary_single_prop <- reactive({
+
+  if(not_available(input$sp_var))
+    return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
+
+ if(input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
+    return("Please choose a comparison value between 0 and 1")
+
+  summary(.single_prop())
+})
+
+.plot_single_prop <- reactive({
+
+  if(not_available(input$sp_var))
+    return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
+
+ if(input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
+    return("Please choose a comparison value between 0 and 1")
+
+  plot(.single_prop(), sp_plots = input$sp_plots)
+})
 
 observe({
-  if(input$single_prop_report %>% not_pressed) return()
+  if(not_pressed(input$single_prop_report)) return()
   isolate({
-		update_report(inp = sp_inputs() %>% clean_args, fun_name = "single_prop",
-		              outputs = c("summary", "plot"))
+    outputs <- c("summary","plot")
+    inp_out <- list(sp_plots = input$sp_plots) %>% list("",.)
+    figs <- TRUE
+    if(length(input$sp_plots) == 0) {
+      figs <- FALSE
+      outputs <- c("summary")
+      inp_out <- list("","")
+    }
+    update_report2(inp_main = clean_args(sp_inputs(), sp_args),
+                  fun_name = "single_prop",
+                  inp_out = inp_out,
+                  outputs = outputs,
+                  figs = figs,
+                  fig.width = round(7 * sp_plot_width()/650,2),
+                  fig.height = round(7 * sp_plot_height()/650,2))
   })
 })

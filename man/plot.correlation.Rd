@@ -13,7 +13,7 @@ Plot method for the correlation function
 See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 }
 \examples{
-result <- correlation("titanic", "pclass", "survived", cp_plots = "props")
+result <- correlation("diamonds",c("price","carat","clarity"))
 plot(result)
 }
 \seealso{

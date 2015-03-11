@@ -6,12 +6,12 @@
 #' @param cor_var Variables to include in the analysis
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param cor_type Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
-#' @param cor_cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
 #'
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' correlation("diamonds",c("price","carat","clarity"))
+#' result <- correlation("diamonds",c("price","carat","clarity"))
+#' result <- correlation("diamonds",c("price:table"))
 #'
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #' @seealso \code{\link{plot.correlation}} to plot results
@@ -21,11 +21,9 @@
 #' @export
 correlation <- function(dataset, cor_var,
                         data_filter = "",
-                        cor_type = "pearson",
-                        cor_cutoff = 0) {
+                        cor_type = "pearson") {
 
-	# could use data.matrix as the last step in the chain but it seems to be
-	# about 25% slower on system time
+	# data.matrix as the last step in the chain is about 25% slower system.time
 	getdata(dataset, cor_var, filt = data_filter) %>%
 		mutate_each(funs(as.numeric)) -> dat
 
@@ -34,48 +32,33 @@ correlation <- function(dataset, cor_var,
   environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }
 
-# library(ggplot2)
-# library(psych)
-# r_data <- list()
-# dataset <- "diamonds"
-# cor_var <- colnames(diamonds)[1:5]
-# r_data$diamonds <- diamonds[1:100,1:5]
-# result <- correlation("diamonds",cor_var)
-
-# summary_correlation(result)
-# plots_correlation(result)
-
-# system.time(
-# 	for(i in 1:100) {
-# 		print(i)
-# 		correlation("diamonds",colnames(diamonds))
-# 	}
-# )
-
-#' Summarize method for output from the correlation function. This is a method of class correlation and can be called as summary or summary.correlation
+#' Summarize method for the correlation function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'
+#' @param result Return value from \code{\link{correlation}}
+#' @param cor_cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
+#'
 #' @examples
-#' result <- correlation("titanic", "pclass", "survived")
-#' summary(result)
+#' result <- correlation("diamonds",c("price","carat","clarity"))
+#' summary(result, cor_cutoff = .3)
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @export
-summary.correlation <- function(result) {
+summary.correlation <- function(result, cor_cutoff = 0) {
 
 	# calculate the correlation matrix with p-values using the psych package
 	cmat <- suppressWarnings( corr.test(result$dat, method = result$cor_type) )
 
 	cr <- format(round(cmat$r,2))
-  cr[abs(cmat$r) < result$cor_cutoff] <- ""
+  cr[abs(cmat$r) < cor_cutoff] <- ""
 	ltmat <- lower.tri(cr)
   cr[!ltmat] <- ""
 
 	cp <- format(round(cmat$p,2))
-  cp[abs(cmat$r) < result$cor_cutoff] <- ""
+  cp[abs(cmat$r) < cor_cutoff] <- ""
   cp[!ltmat] <- ""
 
   cat("Correlation\n")
@@ -90,6 +73,7 @@ summary.correlation <- function(result) {
   print(cr, quote = FALSE)
 	cat("\np-values:\n")
   print(cp, quote = FALSE)
+  rm(result)
 }
 
 #' Plot method for the correlation function
@@ -97,7 +81,7 @@ summary.correlation <- function(result) {
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'
 #' @examples
-#' result <- correlation("titanic", "pclass", "survived", cp_plots = "props")
+#' result <- correlation("diamonds",c("price","carat","clarity"))
 #' plot(result)
 #'
 #' @seealso \code{\link{correlation}} to calculate results

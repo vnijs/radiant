@@ -5,10 +5,7 @@
 \title{Generalized linear models (GLM)}
 \usage{
 glm_reg(dataset, glm_dep_var, glm_indep_var, data_filter = "",
-  glm_levels = "", glm_test_var = "", glm_link = "logit",
-  glm_predict = "", glm_predict_cmd = "", glm_predict_data = "",
-  glm_predict_out = "", glm_check = "", glm_conf_level = 0.95,
-  glm_plots = "", glm_coef_int = FALSE)
+  glm_levels = "", glm_link = "logit", glm_int_var = "", glm_check = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -21,25 +18,11 @@ glm_reg(dataset, glm_dep_var, glm_indep_var, data_filter = "",
 
 \item{glm_levels}{The level in the dependent variable defined as _success_}
 
-\item{glm_test_var}{Variables to evaluate in model comparison (i.e., a competing models Chi-squared test)}
-
-\item{glm_predict}{Choose the type of prediction input. Default is no prediction (""). To generate predictions using a data.frame choose ("data"), and to include a command to generate predictions select ("cmd")}
-
-\item{glm_predict_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
-
-\item{glm_predict_data}{Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation}
-
-\item{glm_check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
-
-\item{glm_conf_level}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
-
-\item{glm_plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
-
-\item{glm_coef_int}{Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default}
+\item{glm_link}{Link function for _glm_ ('logit' or 'probit'). 'logit' is the default}
 
 \item{glm_int_var}{Interaction term to include in the model (not implement)}
 
-\item{glm_interactions}{Should interactions be considered? Options are "", 2, and 3. None ("") is the default. To consider 2-way interactions choose 2, and for 2- and 3-way interactions choose 3 (not implemented)}
+\item{glm_check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
 }
 \value{
 A list with all variables defined in glm_reg as an object of class glm_reg
@@ -57,5 +40,7 @@ result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 \code{\link{summary.glm_reg}} to summarize the results
 
 \code{\link{plot.glm_reg}} to plot the results
+
+\code{\link{predict.glm_reg}} to generate predictions
 }
 

@@ -201,12 +201,16 @@ suggest_data <- function(text = "", dat = "diamonds")
 # functions used to create Shiny in and outputs
 ################################################################
 plot_width <- function()
-  if(input$viz_plot_width %>% not_available) r_data$plotWidth else input$viz_plot_width
+  if(is.null(input$viz_plot_width)) r_data$plotWidth else input$viz_plot_width
+
+# if(input$viz_plot_width %>% not_available) r_data$plotWidth else input$viz_plot_width
 
 plotWidth <- plot_width
 
 plot_height <- function()
-  if(input$viz_plot_height %>% not_available) r_data$plotHeight else input$viz_plot_height
+  if(is.null(input$viz_plot_height)) r_data$plotHeight else input$viz_plot_height
+
+# if(input$viz_plot_height %>% not_available) r_data$plotHeight else input$viz_plot_height
 
 plotHeight <- plot_height
 

@@ -5,17 +5,15 @@ reg_show_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
 reg_predict <- c("None" = "", "Data" = "data","Command" = "cmd")
 reg_check <- c("Standardized coefficients" = "standardize",
                "Stepwise selection" = "stepwise")
-
 reg_sum_check <- c("RMSE" = "rmse", "Sum of squares" = "sumsquares",
-               "VIF" = "vif", "Confidence intervals" = "confint")
-
-reg_lines <- list("Line" = "line", "Loess" = "loess")
-reg_plots <- list("None" = "", "Histograms" = "hist",
-                  "Correlations" = "correlations", "Scatter" = "scatter",
-                  "Dashboard" = "dashboard",
-                  "Residual vs predictor" = "resid_pred",
-                  "Coefficient plot" = "coef",
-                  "Leverage plots" = "leverage")
+                   "VIF" = "vif", "Confidence intervals" = "confint")
+reg_lines <- c("Line" = "line", "Loess" = "loess")
+reg_plots <- c("None" = "", "Histograms" = "hist",
+               "Correlations" = "correlations", "Scatter" = "scatter",
+               "Dashboard" = "dashboard",
+               "Residual vs predictor" = "resid_pred",
+               "Coefficient plot" = "coef",
+               "Leverage plots" = "leverage")
 
 reg_args <- as.list(formals(regression))
 
@@ -52,7 +50,6 @@ reg_plot_inputs <- reactive({
 
 # need the ::: because plot is an S3 method and not an exported function
 reg_pred_args <- as.list(formals(radiant:::predict.regression))
-# reg_pred_args <- list()
 
 # list of function inputs selected by user
 reg_pred_inputs <- reactive({
@@ -67,13 +64,6 @@ reg_pred_inputs <- reactive({
   if(input$reg_predict == "data")
     reg_pred_args$reg_predict_data <- input$reg_predict_data
 
-  # reg_pred_args$reg_conf_level <- input$reg_conf_level
-
-  # if(not_pressed(input$reg_save_pred))
-  #   reg_pred_args$reg_save_pred <- FALSE
-  # else
-  #   reg_pred_args$reg_save_pred <- TRUE
-
   reg_pred_args
 })
 
@@ -87,7 +77,7 @@ output$ui_reg_dep_var <- renderUI({
 output$ui_reg_indep_var <- renderUI({
 	notChar <- "character" != getdata_class()
   vars <- varnames()[notChar]
-  if(input$reg_dep_var %>% not_available) vars <- character(0)
+  if(not_available(input$reg_dep_var)) vars <- character(0)
   if(length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]
   selectInput(inputId = "reg_indep_var", label = "Independent variables:", choices = vars,
   	selected = state_multiple("reg_indep_var", vars),
@@ -97,8 +87,7 @@ output$ui_reg_indep_var <- renderUI({
 # adding interaction terms as needed
 output$ui_reg_test_var <- renderUI({
   vars <- input$reg_indep_var
-	# if(!is.null(input$reg_int_var) && input$reg_show_interactions != '')
-  if(!is.null(input$reg_int_var)) vars <- c(input$reg_indep_var, input$reg_int_var)
+  if(!is.null(input$reg_int_var)) vars <- c(vars, input$reg_int_var)
 
   selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
     choices = vars, selected = state_multiple("reg_test_var", vars, ""),
@@ -121,12 +110,12 @@ output$ui_reg_show_interactions <- renderUI({
  })
 
 output$ui_reg_int_var <- renderUI({
-	# if(input$reg_show_interactions %>% is_empty) return()
   if(is_empty(input$reg_show_interactions)) {
     choices <- character(0)
   } else {
     vars <- input$reg_indep_var
     if(not_available(vars) || length(vars) < 2) return()
+    # vector of possible interaction terms to sel from glm_reg
     choices <- int_vec(vars, input$reg_show_interactions)       # create list of interactions to show user
   }
 	selectInput("reg_int_var", label = NULL, choices = choices,
@@ -134,36 +123,31 @@ output$ui_reg_int_var <- renderUI({
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
-
-# SAVE PREDICTIONS TO EXCEL
-# REPORT
-# USE INPUT LIST
-# RENAME getdata TO GETDATA AND changedata TO CHANGEDATA
-
-
-
-# create vector of possible interaction terms to select
-# using function from glm_reg
-# int_vec <- function(reg_vars, nway) {
-#   if(nway == "") return(character(0))
-#   int_vec <- c()
-#   for(i in 2:nway) {
-#     int_vec %<>% {c(., combn(reg_vars, i) %>% apply( 2, paste, collapse = ":" ))}
-#   }
-#   int_vec
-# }
-
 output$ui_regression <- renderUI({
-#   cp_reg_conf_level <- "input.reg_predict == 'cmd' | input.reg_predict == 'data' |  (input.reg_sum_check !== undefined & input.reg_sum_check.indexOf('confint') >= 0) | input.reg_plots == 'coef'"
-#   cp_reg_conf_level <- "input.reg_predict == 'cmd' | input.reg_predict == 'data' |  try{input.reg_sum_check.indexOf('confint') >= 0}catch(e){false} | input.reg_plots == 'coef'"
-
-# cp_reg_conf_level <- "input.reg_predict == 'cmd' | input.reg_predict == 'data' |  (input.reg_sum_check !== undefined && input.reg_sum_check.indexOf('confint') >= 0) | input.reg_plots == 'coef'"
-
   tagList(
-  	wellPanel(
-		  conditionalPanel(condition = "input.tabs_regression == 'Plot'",
-		    selectInput("reg_plots", "Regression plots:", choices = reg_plots,
-			  	selected = state_single("reg_plots", reg_plots)),
+    conditionalPanel(condition = "input.tabs_regression == 'Predict'",
+      wellPanel(
+        radioButtons(inputId = "reg_predict", label = "Prediction:", reg_predict,
+          selected = state_init("reg_predict", ""),
+          inline = TRUE),
+        conditionalPanel(condition = "input.reg_predict == 'cmd'",
+          returnTextAreaInput("reg_predict_cmd", "Prediction command:",
+            value = state_init("reg_predict_cmd", ""))
+        ),
+        conditionalPanel(condition = "input.reg_predict == 'data'",
+          selectizeInput(inputId = "reg_predict_data", label = "Predict for profiles:",
+                      choices = c("None" = "",r_data$datasetlist),
+                      selected = state_init("reg_predict_data", ""), multiple = FALSE)
+        ),
+        conditionalPanel(condition = "input.reg_predict != ''",
+          downloadButton("reg_save_pred", "Predictions")
+        )
+      )
+    ),
+	  conditionalPanel(condition = "input.tabs_regression == 'Plot'",
+      wellPanel(
+  	    selectInput("reg_plots", "Regression plots:", choices = reg_plots,
+  		  	selected = state_single("reg_plots", reg_plots)),
         conditionalPanel(condition = "input.reg_plots == 'coef'",
         	checkboxInput("reg_coef_int", "Include intercept", state_init("reg_coef_int", FALSE))
         ),
@@ -173,31 +157,19 @@ output$ui_regression <- renderUI({
           checkboxGroupInput("reg_lines", NULL, reg_lines,
             selected = state_init("reg_lines"), inline = TRUE)
         )
-		  ),
+      )
+	  ),
+    wellPanel(
 	    uiOutput("ui_reg_dep_var"),
 	    uiOutput("ui_reg_indep_var"),
 
       conditionalPanel(condition = "input.reg_indep_var != null",
 
   			uiOutput("ui_reg_show_interactions"),
-  		  # conditionalPanel(condition = "output.ui_reg_show_interactions != null & input.reg_show_interactions != ''",
         conditionalPanel(condition = "input.reg_show_interactions != ''",
   				uiOutput("ui_reg_int_var")
   			),
   		  conditionalPanel(condition = "input.tabs_regression == 'Summary'",
-     	    radioButtons(inputId = "reg_predict", label = "Prediction:", reg_predict,
-  	      	selected = state_init("reg_predict", ""),
-  	      	inline = TRUE),
-
-          conditionalPanel(condition = "input.reg_predict == 'cmd'",
-            returnTextAreaInput("reg_predict_cmd", "Prediction command:",
-  	    		  value = state_init("reg_predict_cmd", ""))
-          ),
-          conditionalPanel(condition = "input.reg_predict == 'data'",
-            selectizeInput(inputId = "reg_predict_data", label = "Predict for profiles:",
-                        choices = c("None" = "",r_data$datasetlist),
-                        selected = state_init("reg_predict_data", ""), multiple = FALSE)
-          ),
   		    uiOutput("ui_reg_test_var"),
           checkboxGroupInput("reg_check", NULL, reg_check,
             selected = state_init("reg_check"), inline = TRUE),
@@ -211,10 +183,10 @@ output$ui_regression <- renderUI({
    					 sliderInput("reg_conf_level", "Adjust confidence level:", min = 0.70,
    					             max = 0.99, value = state_init("reg_conf_level",.95),
    					             step = 0.01)
-  		  ), br(),
-        HTML("<label>Save:</label>"), br(),
-        actionButton("reg_saveres", "Residuals"),
-        downloadButton("reg_save_pred", "Predictions")
+  		  ),
+        conditionalPanel(condition = "input.tabs_regression == 'Summary'",
+          actionButton("reg_save_res", "Save residuals")
+        )
       )
 	  ),
   	help_and_report(modal_title = "Linear regression (OLS)",
@@ -259,8 +231,8 @@ output$regression <- renderUI({
 		# two separate tabs
 		reg_output_panels <- tabsetPanel(
 	    id = "tabs_regression",
-	    tabPanel("Summary", verbatimTextOutput("summary_regression"),
-               verbatimTextOutput("predict_regression")),
+	    tabPanel("Summary", verbatimTextOutput("summary_regression")),
+      tabPanel("Predict", verbatimTextOutput("predict_regression")),
 	    tabPanel("Plot", plotOutput("plot_regression", width = "100%", height = "100%"))
 	  )
 
@@ -271,26 +243,7 @@ output$regression <- renderUI({
 
 })
 
-# cleaning up the arguments for data_filter passed to report
-# clean_args2 <- function(rep_args, rep_default = list()) {
-#   if(rep_args$data_filter == "")
-#     rep_args$data_filter  <- NULL
-#   else
-#     rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
-
-#   if(length(rep_default) == 0) rep_default[names(rep_args)] <- ""
-
-#   # removing default arguments before sending to report feature
-#   for(i in names(rep_args))
-#     if(rep_args[[i]][1] == rep_default[[i]]) rep_args[[i]] <- NULL
-#   rep_args
-# }
-
 .regression <- reactive({
-
-  # if(not_available(input$reg_indep_var))
-  #   return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
-
 	do.call(regression, reg_inputs())
 })
 
@@ -301,10 +254,6 @@ output$regression <- renderUI({
   if(not_available(input$reg_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
-  # print(reg_sum_inputs())
-  # summary(.regression(), reg_sum_check = input$reg_sum_check,
-  #                        reg_conf_level = input$reg_conf_level,
-  #                        reg_test_var = input$reg_test_var)
   do.call(summary, c(list(result = .regression()), reg_sum_inputs()))
 })
 
@@ -318,22 +267,6 @@ output$regression <- renderUI({
   if(is_empty(input$reg_predict, ""))
     return(invisible())
 
-  # reg_predict_cmd <- reg_predict_data <- ""
-  # if(input$reg_predict == "cmd")
-  #   reg_predict_cmd <- gsub('\\s', '', input$reg_predict_cmd)
-
-  # if(input$reg_predict == "data")
-  #   reg_predict_data <- input$reg_predict_data
-
-  # reg_save_pred <- TRUE
-  # if(not_pressed(input$reg_save_pred))
-  #   reg_save_pred <- FALSE
-
-  # predict(.regression(), reg_predict_cmd = reg_predict_cmd,
-  #                        reg_predict_data = reg_predict_data,
-  #                        reg_conf_level = input$reg_conf_level,
-  #                        reg_save_pred = reg_save_pred)
-  # print(reg_pred_inputs())
   do.call(predict, c(list(result = .regression()), reg_pred_inputs()))
 })
 
@@ -348,37 +281,8 @@ output$regression <- renderUI({
   if(is_empty(input$reg_plots, ""))
     return("Please select a regression plot from the drop-down menu")
 
-  # plot(.regression(), reg_plots = input$reg_plots,
-  #                     reg_lines = input$reg_lines,
-  #                     reg_conf_level = input$reg_conf_level,
-  #                     reg_coef_int = input$reg_coef_int)
   do.call(plot, c(list(result = .regression()), reg_plot_inputs()))
 })
-
-# observe({
-#   # if(!is_empty(input$reg_show_interactions)) return()
-#   if(is_empty(input$reg_show_interactions)) {
-#     isolate({
-#       # if(is_empty(input$reg_int_var)) return()
-#       # if(length(input$reg_int_var) == 0) return()
-#       updateSelectInput(session = session, inputId = "reg_int_var", selected = character(0))
-#       # inp <- reg_inputs()
-#       # if(is_empty(input$reg_show_interactions)) reg_args$reg_int_var <- ""
-#     })
-#   }
-# })
-
-# observe({
-#   if(not_pressed(input$regression_report)) return()
-#   isolate({
-# 		outputs <- c("summary","plot")
-#   	# if(reg_inputs()$reg_plots == "") outputs = c("summary")
-# 		update_report(inp = clean_args(reg_inputs(), reg_args), fun_name = "regression",
-# 		              outputs = outputs,
-# 		              fig.width = round(7 * reg_plot_width()/650,2),
-# 		              fig.height = round(7 * reg_plot_height()/500,2))
-#   })
-# })
 
 observe({
   if(not_pressed(input$regression_report)) return()
@@ -408,7 +312,7 @@ observe({
 })
 
 observe({
-	if(not_pressed(input$reg_saveres)) return()
+	if(not_pressed(input$reg_save_res)) return()
 	isolate({
     .regression() %>% { if(is.list(.)) save_reg_resid(.) }
 	})
@@ -417,7 +321,8 @@ observe({
 output$reg_save_pred <- downloadHandler(
   filename = function() { "reg_save_pred.csv" },
   content = function(file) {
-    do.call(predict, c(list(result = .regression()), reg_pred_inputs(), list(reg_save_pred = TRUE))) %>%
+    do.call(predict, c(list(result = .regression()), reg_pred_inputs(),
+            list(reg_save_pred = TRUE))) %>%
       write.csv(., file = file, row.names = FALSE)
   }
 )
