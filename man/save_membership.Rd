@@ -16,8 +16,10 @@ Add a cluster membership variable to the select dataset
 See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
 }
 \examples{
+\dontrun{
 result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
 save_membership(result)
+}
 }
 \seealso{
 \code{\link{kmeans_clus}} to generate results

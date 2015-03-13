@@ -16,7 +16,10 @@ init_state <- function(r_data) {
   # "Datasets can change over time (i.e. the changedata function). Therefore,
   # the data need to be a reactive value so the other reactive functions
   # and outputs that depend on these datasets will know when they are changed."
-  robj <- load("../base/data/data_init/diamonds.rda")
+  # robj <- load("../base/data/diamonds.rda")
+  # robj <- load("../../data/diamonds.rda")
+  # robj <- load("data_examples/diamonds.rda")
+  robj <- load("../base/data/diamonds.rda")
   # df <- tbl_df(get(robj))
   df <- get(robj)
   r_data[["diamonds"]] <- df

@@ -14,6 +14,8 @@
 
 \item{reg_lines}{Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")}
 
+\item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
+
 \item{reg_coef_int}{Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default}
 }
 \description{

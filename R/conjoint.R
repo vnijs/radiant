@@ -105,7 +105,7 @@ summary.conjoint <- function(result, ca_vif = FALSE) {
 #'
 #' @param result Return value from \code{\link{conjoint}}
 #' @param ca_plots Show either the part-worth ("pw") or importance-weights ("iw") plot
-#' @param ca_scale_plots Scale the axes of the part-worth plots to the same range
+#' @param ca_scale_plot Scale the axes of the part-worth plots to the same range
 #'
 #' @examples
 #' result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")

@@ -11,7 +11,7 @@ changedata(dataset, vars = c(), var_names = names(vars))
 
 \item{vars}{New variables to add to the data.frame}
 
-\item{names}{Names for the new variables to add to the data.frame}
+\item{var_names}{Names for the new variables to add to the data.frame}
 }
 \value{
 None

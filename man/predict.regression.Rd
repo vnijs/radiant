@@ -14,6 +14,8 @@
 
 \item{reg_predict_data}{Name of the dataset to use for prediction}
 
+\item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
+
 \item{reg_save_pred}{Save predicted values to a csv file}
 }
 \description{

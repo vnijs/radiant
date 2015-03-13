@@ -7,7 +7,7 @@
 sig_stars(pval)
 }
 \arguments{
-\item{p.value}{Vector of p.values}
+\item{pval}{Vector of p-values}
 }
 \value{
 A vector of stars

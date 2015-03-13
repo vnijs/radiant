@@ -287,18 +287,19 @@ output$regression <- renderUI({
 observe({
   if(not_pressed(input$regression_report)) return()
   isolate({
-    outputs <- c("summary")
-    inp_out <- list("","","")
+    # outputs <- c("summary")
+    outputs <- c("summary","# save_reg_resid")
+    inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
     if(!is_empty(input$reg_plots)) {
-      inp_out[[2]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
+      inp_out[[3]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
     if(!is_empty(input$reg_predict)) {
-      inp_out[[3]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
-      outputs <- c(outputs, "pred <- predict")
+      inp_out[[3 + figs]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
+      outputs <- c(outputs, "result <- predict")
     }
     update_report2(inp_main = clean_args(reg_inputs(), reg_args),
                   fun_name = "regression",
@@ -307,7 +308,7 @@ observe({
                   figs = figs,
                   fig.width = round(7 * reg_plot_width()/650,2),
                   fig.height = round(7 * reg_plot_height()/650,2),
-                  xcmd = paste0("pred %T>% print %>% write.csv(., file = '~/reg_sav_pred.csv')\nsave_reg_resid(result)"))
+                  xcmd = paste0("print(result)\nwrite.csv(result, file = '~/reg_sav_pred.csv')"))
   })
 })
 

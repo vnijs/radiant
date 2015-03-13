@@ -220,13 +220,16 @@ observe({
   isolate({
 
     # loading data bundled with Radiant
-    path <- "data/data_examples/"
+    # path <- "data/data_examples/"
+    # path <- "../../data/"
+    path <- "../base/data/"
     examples <- list.files(path)
 
     for(ex in examples) loadUserData(ex, paste0(path,ex), 'rda')
 
     # loading data available for Rady students
-    path <- "data/data_rady/"
+    # path <- "data/data_rady/"
+    path <- "data/"
     examples <- list.files(path)
 
     for(ex in examples) loadUserData(ex, paste0(path,ex), 'rda')
