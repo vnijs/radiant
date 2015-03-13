@@ -175,7 +175,6 @@ plot.kmeans_clus <- function(result) {
 save_kmeans <- function(result, file = "kmeans.csv")
 	result$clus_means %>% write.csv(., file = file)
 
-
 #' Add a cluster membership variable to the select dataset
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
@@ -183,9 +182,10 @@ save_kmeans <- function(result, file = "kmeans.csv")
 #' @param result Return value from \code{\link{kmeans_clus}}
 #'
 #' @examples
+#' \dontrun{
 #' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
 #' save_membership(result)
-#'
+#' }
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{summary.kmeans_clus}} to summarize results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results

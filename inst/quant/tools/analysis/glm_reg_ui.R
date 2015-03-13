@@ -62,6 +62,17 @@ glm_pred_inputs <- reactive({
   glm_pred_args
 })
 
+# need the ::: because plot is an S3 method and not an exported function
+glm_pred_plot_args <- as.list(formals(radiant:::plot.glm_predict))
+
+# list of function inputs selected by user
+glm_pred_plot_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(glm_pred_plot_args))
+    glm_pred_plot_args[[i]] <- input[[i]]
+  glm_pred_plot_args
+})
+
 output$ui_glm_dep_var <- renderUI({
  	vars <- two_level_vars()
   selectInput(inputId = "glm_dep_var", label = "Dependent variable:", choices = vars,
@@ -136,6 +147,44 @@ output$ui_glm_int_var <- renderUI({
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
+# X - variable
+# output$ui_viz_vars1 <- renderUI({
+output$ui_glm_xvar <- renderUI({
+  vars <- input$glm_indep_var
+  selectizeInput(inputId = "glm_xvar", label = "X-variable:", choices = vars,
+    selected = state_multiple("glm_xvar",vars),
+    multiple = FALSE)
+})
+
+# output$ui_viz_facet_row <- renderUI({
+output$ui_glm_facet_row <- renderUI({
+  # isFct <- "factor" == getdata_class()
+  # vars <- c("None" = ".", varnames()[isFct])
+  vars <- input$glm_indep_var
+  vars <- c("None" = ".", vars)
+  selectizeInput("glm_facet_row", "Facet row", vars,
+                 selected = state_single("glm_facet_row", vars, "."),
+                 multiple = FALSE)
+})
+
+# output$ui_viz_facet_col <- renderUI({
+output$ui_glm_facet_col <- renderUI({
+  # isFct <- "factor" == getdata_class()
+  # vars <- c("None" = ".", varnames()[isFct])
+  vars <- input$glm_indep_var
+  vars <- c("None" = ".", vars)
+  selectizeInput("glm_facet_col", 'Facet column', vars,
+                 selected = state_single("glm_facet_col", vars, "."),
+                 multiple = FALSE)
+})
+
+output$ui_glm_color <- renderUI({
+  vars <- c("None" = "none", input$glm_indep_var)
+  sel <- state_single("glm_color", vars, "none")
+  selectizeInput("glm_color", "Color", vars, selected = sel,
+                 multiple = FALSE)
+})
+
 output$ui_glm_reg <- renderUI({
   tagList(
     conditionalPanel(condition = "input.tabs_glm_reg == 'Predict'",
@@ -153,6 +202,10 @@ output$ui_glm_reg <- renderUI({
                       selected = state_init("glm_predict_data"), multiple = FALSE)
         ),
         conditionalPanel(condition = "input.glm_predict != ''",
+          uiOutput("ui_glm_xvar"),
+          uiOutput("ui_glm_facet_row"),
+          uiOutput("ui_glm_facet_col"),
+          uiOutput("ui_glm_color"),
           downloadButton("glm_save_pred", "Save predictions")
         )
       )
@@ -187,7 +240,8 @@ output$ui_glm_reg <- renderUI({
   			),
   	    conditionalPanel(condition = "(input.glm_sum_check && (input.glm_sum_check.indexOf('odds') >= 0 |
                          input.glm_sum_check.indexOf('confint') >= 0)) |
-  	                     input.glm_plots == 'coef'",
+  	                     input.glm_plots == 'coef' |
+                         input.tabs_glm_reg == 'Predict'",
    					 sliderInput("glm_conf_level", "Adjust confidence level:", min = 0.70,
    					             max = 0.99, value = state_init("glm_conf_level",.95),
    					             step = 0.01)
@@ -223,21 +277,26 @@ glm_plot_width <- function()
 glm_plot_height <- function()
   glm_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
+glm_pred_plot_height <- function()
+  if(input$tabs_glm_reg == "Predict" && is.null(r_data$glm_pred)) 0 else 500
 
 # output is called from the main radiant ui.R
 output$glm_reg <- renderUI({
 
 		register_print_output2("summary_glm_reg", ".summary_glm_reg")
     register_print_output2("predict_glm_reg", ".predict_glm_reg")
+    register_plot_output2("predict_plot_glm_reg", ".predict_plot_glm_reg",
+                          height_fun = "glm_pred_plot_height")
 		register_plot_output2("plot_glm_reg", ".plot_glm_reg",
-                         height_fun = "glm_plot_height",
-                         width_fun = "glm_plot_width")
+                          height_fun = "glm_plot_height",
+                          width_fun = "glm_plot_width")
 
 		# two separate tabs
 		glm_output_panels <- tabsetPanel(
 	    id = "tabs_glm_reg",
 	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg")),
-      tabPanel("Predict", verbatimTextOutput("predict_glm_reg")),
+      tabPanel("Predict", plotOutput("predict_plot_glm_reg", width = "100%", height = "100%"),
+               verbatimTextOutput("predict_glm_reg")),
 	    tabPanel("Plot", plotOutput("plot_glm_reg", width = "100%", height = "100%"))
 	  )
 
@@ -264,6 +323,8 @@ output$glm_reg <- renderUI({
 })
 
 .predict_glm_reg <- reactive({
+  r_data$glm_pred <- NULL
+
   if(not_available(input$glm_dep_var))
     return(invisible())
 
@@ -273,7 +334,18 @@ output$glm_reg <- renderUI({
   if(is_empty(input$glm_predict, ""))
     return(invisible())
 
-  do.call(predict, c(list(result = .glm_reg()), glm_pred_inputs()))
+  r_data$glm_pred <- do.call(predict, c(list(result = .glm_reg()), glm_pred_inputs()))
+})
+
+.predict_plot_glm_reg <- reactive({
+
+  if(is_empty(input$glm_predict, ""))
+    return(invisible())
+
+  if(is.null(r_data$glm_pred))
+    return(invisible())
+
+  do.call(plot, c(list(pred = r_data$glm_pred), glm_pred_plot_inputs()))
 })
 
 .plot_glm_reg <- reactive({
@@ -293,19 +365,27 @@ output$glm_reg <- renderUI({
 observe({
   if(not_pressed(input$glm_reg_report)) return()
   isolate({
-    outputs <- c("summary")
-    inp_out <- list("","","")
+    outputs <- c("summary","# save_glm_resid")
+    inp_out <- list("","")
     inp_out[[1]] <- clean_args(glm_sum_inputs(), glm_sum_args[-1])
     figs <- FALSE
     if(!is_empty(input$glm_plots)) {
-      inp_out[[2]] <- clean_args(glm_plot_inputs(), glm_plot_args[-1])
+      inp_out[[3]] <- clean_args(glm_plot_inputs(), glm_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
-    if(!is_empty(input$glm_predict)) {
-      inp_out[[3]] <- clean_args(c(glm_pred_inputs(), list(glm_save_pred = TRUE)), glm_pred_args[-1])
-      outputs <- c(outputs, "pred <- predict")
+    xcmd <- ""
+    if(!is.null(r_data$glm_pred)) {
+      inp_out[[3 + figs]] <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
+      outputs <- c(outputs,"result <- predict")
+      xcmd <- "# write.csv(result, file = '~/glm_sav_pred.csv')"
+      if(!is_empty(input$glm_xvar)) {
+        inp_out[[4 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
+        outputs <- c(outputs, "plot")
+        figs <- TRUE
+      }
     }
+
     update_report2(inp_main = clean_args(glm_inputs(), glm_args),
                   fun_name = "glm_reg",
                   inp_out = inp_out,
@@ -313,7 +393,7 @@ observe({
                   figs = figs,
                   fig.width = round(7 * glm_plot_width()/650,2),
                   fig.height = round(7 * glm_plot_height()/650,2),
-                  xcmd = paste0("pred %T>% print %>% write.csv(., file = '~/glm_sav_pred.csv')\nsave_glm_resid(result)"))
+                  xcmd = xcmd)
   })
 })
 

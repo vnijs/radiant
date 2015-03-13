@@ -46,6 +46,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
  }
 
 # adding the figures path to avoid making a copy of all figures in www/figures
-if(!"package:radiant" %in% search())
+if(!"package:radiant" %in% search()) {
   addResourcePath("figures", "../base/tools/help/figures/")
   addResourcePath("imgs", "../base/www/imgs/")
+  # addResourcePath("data_examples", "../../data/")
+}

@@ -16,7 +16,9 @@ Save regression residuals
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
+\dontrun{
 result <- regression("diamonds", "price", c("carat","clarity"))
 save_reg_resid(result)
+}
 }
 

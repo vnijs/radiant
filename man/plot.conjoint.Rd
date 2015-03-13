@@ -11,7 +11,7 @@
 
 \item{ca_plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
 
-\item{ca_scale_plots}{Scale the axes of the part-worth plots to the same range}
+\item{ca_scale_plot}{Scale the axes of the part-worth plots to the same range}
 }
 \description{
 Plot method for conjoint output

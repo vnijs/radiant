@@ -39,7 +39,12 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
   if(viz_facet_row != ".") vars %<>% c(., viz_facet_row)
   if(viz_facet_col != ".") vars %<>% c(., viz_facet_col)
 
-  dat <- getdata(dataset, vars, filt = data_filter)
+  if(is.character(dataset)) {
+    dat <- getdata(dataset, vars, filt = data_filter)
+  } else {
+    dat <- dataset
+    dataset <- "dataset"
+  }
 
   plots <- list()
 
@@ -73,10 +78,12 @@ visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
       for (j in viz_vars2) {
         if (viz_color == 'none') {
           plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
+          # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group=1))
           itt <- itt + 1
         } else {
           for (z in viz_color) {
             plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = z)) + geom_line()
+            # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = z)) + geom_line(aes(group=1))
             itt <- itt + 1
           }
         }
