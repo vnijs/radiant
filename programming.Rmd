@@ -28,7 +28,7 @@ You can call functions for visualization (see below) and access help from the co
 visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price", viz_type = "scatter", viz_facet_row = "clarity", viz_color = "clarity")
 ```
 
-As an example, you can render the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R) for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the `Base` and `Regression` menus.
+As an example, you can render the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the `Base` and `Regression` menus.
 
 ## Programming
 

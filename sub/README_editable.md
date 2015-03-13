@@ -1,6 +1,6 @@
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
 
-[![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant)
+<!-- [![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant) -->
 `r sprintf("Version: %s, Date: %s", packageVersion("radiant"), packageDescription("radiant", fields = "Date"))`
 
 ## Key features
@@ -31,7 +31,7 @@ You can call functions for visualization and analysis in your R-code and access 
 ?single_mean
 ```
 
-As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R) for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean`, `single_prop`, and `compare_means` functions.
+As an example, you can compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example. Note that this feature is a _work in progress_ and will be expanded over time. It is currently available for the `single_mean`, `single_prop`, and `compare_means` functions.
 
 Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, calling analysis functions may produce an error if the data cannot be found.
 
@@ -86,13 +86,13 @@ When you start Radiant a browser window will open and you will see the web appli
 
 ## Saving and loading state
 
-To save your analyses you can save the state of the app to a state file (Data > Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that would like to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.rda?raw=true) in the `examples` folder. Go to `Data > View`, `Data > Visualize` to see some of the changes. There is also a report in `R > Report` created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/mostly-harmless/radiant/blob/master/examples/RadiantState.html?raw=true) contains the output.
+To save your analyses you can save the state of the app to a state file (Data > Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that would like to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.rda?raw=true) in the `examples` folder. Go to `Data > View`, `Data > Visualize` to see some of the changes. There is also a report in `R > Report` created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.html?raw=true) contains the output.
 
 A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit > Reset to return to a clean/new state.
 
 Loading and saving state now also works with Rstudio. If you start Radiant from Rstudio and use Quit > Quit to stop the app, lists called `r_data` and `r_state` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists (i.e., `r_data` and `r_state`) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file in Rstudio it will be used when you start Radiant to recreate a previous state.
 
-See [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/examples/radiant_rcode.R) for an example.
+See [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R) for an example.
 
 **Technical note**: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `r_state`. If there is, this value is used. The `r_state` list is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `r_state` can be used. `sm_args$sm_comp_value` is the default value specified in the `single_mean` function call.
 
