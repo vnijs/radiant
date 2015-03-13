@@ -4,7 +4,7 @@ setwd("~/gh/radiant_gh-pages/")
 # install.packages('rmarkdown')
 # library(rmarkdown)
 
-file.copy("../radiant_dev/inst/marketing/data/data_rady/shopping.rda",
+file.copy("../radiant_dev/inst/marketing/data/shopping.rda",
           "~/Desktop/shopping.rda",overwrite = TRUE)
 
 system('make')

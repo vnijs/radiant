@@ -5,9 +5,9 @@ title: Programming with Radiant
 ```{r echo = FALSE}
 knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
 suppressMessages(library(radiant))
-load("~/gh/radiant_dev/inst/quant/data/data_examples/salary.rda")
-load("~/gh/radiant_dev/inst/marketing/data/data_rady/shopping.rda")
-load("~/gh/radiant_dev/inst/base/data/data_init/diamonds.rda")
+load("~/gh/radiant_dev/inst/base/data/diamonds.rda")
+load("~/gh/radiant_dev/inst/base/data/salary.rda")
+load("~/gh/radiant_dev/inst/marketing/data/shopping.rda")
 ```
 
 An important goal for Radiant is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/). Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML.
