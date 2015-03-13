@@ -19,7 +19,6 @@ See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for 
 }
 \examples{
 result <- compare_means("diamonds","cut","price")
-summary(result)
 plot(result, cm_plots = c("bar","density"))
 }
 \seealso{

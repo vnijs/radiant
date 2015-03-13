@@ -66,6 +66,7 @@ output$tabs_data <- renderUI({
     tabPanel("Pivot", rpivotTableOutput("pivotData")),
     tabPanel("Merge", htmlOutput("merge_possible"),
              htmlOutput("merge_data1"), htmlOutput("merge_data2")),
+    # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),
     tabPanel("Transform", htmlOutput("transform_data"),
              verbatimTextOutput("transform_summary"))
   )

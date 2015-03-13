@@ -6,6 +6,7 @@
 #' @param cm_var1 A numeric variable or factor selected for comparison
 #' @param cm_var2 One or more numeric variables for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of cm_var1
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param cm_paired Are samples indepent ("independent") or not ("paired")
 #' @param cm_alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param cm_sig_level Span of the confidence interval
 #' @param cm_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
@@ -53,7 +54,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	##############################################
 
 	pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
-	                p.adj = cm_adjust, paired = cm_paired == "paired",
+	                p.adjust.method = cm_adjust, paired = cm_paired == "paired",
                   alternative = flip_alt[cm_alternative]) %>% tidy -> res
 
 	##############################################
@@ -137,7 +138,6 @@ summary.compare_means <- function(result) {
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
-#' summary(result)
 #' plot(result, cm_plots = c("bar","density"))
 #'
 #' @seealso \code{\link{compare_means}} to calculate results

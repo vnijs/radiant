@@ -80,6 +80,8 @@ summary.correlation <- function(result, cor_cutoff = 0) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'
+#' @param result Return value from \code{\link{correlation}}
+#'
 #' @examples
 #' result <- correlation("diamonds",c("price","carat","clarity"))
 #' plot(result)

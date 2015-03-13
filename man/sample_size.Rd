@@ -9,7 +9,25 @@ sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10,
   ss_response = 1, ss_pop_correction = "no", ss_pop_size = 1e+06)
 }
 \arguments{
-\item{smp_sample_size}{Number of units to select}
+\item{ss_type}{Choose "mean" or "proportion"}
+
+\item{ss_mean_err}{Acceptable Error for Mean}
+
+\item{ss_mean_s}{Standard deviation for Mean}
+
+\item{ss_prop_err}{Acceptable Error for Proportion}
+
+\item{ss_prop_p}{Initial proportion estimate for Proportion}
+
+\item{ss_z}{Z-value}
+
+\item{ss_incidence}{Incidence rate (i.e., fraction of valid respondents)}
+
+\item{ss_response}{Response rate}
+
+\item{ss_pop_correction}{Apply correction for population size ("yes","no")}
+
+\item{ss_pop_size}{Population size}
 }
 \value{
 A list of variables defined in sample_sizze as an object of class sample_size

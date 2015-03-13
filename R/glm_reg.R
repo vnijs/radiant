@@ -324,12 +324,12 @@ plot.glm_reg <- function(result,
 #' @param result Return value from \code{\link{regression}}
 #' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
 #' @param glm_predict_data Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation
-#' @param glm_conf_level Confidence level to use for prediction confidence intervals (.95 is the default)
-#' @param glm_save_pred Save predicted values to a csv file
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-#' predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+#' str(pred)
+#' names(pred)
 #' predict(result, glm_predict_cmd = "sex = c('male','female')")
 #'
 #' @seealso \code{\link{glm_reg}} to generate the result
@@ -339,9 +339,7 @@ plot.glm_reg <- function(result,
 #' @export
 predict.glm_reg <- function(result,
                             glm_predict_cmd = "",
-                            glm_predict_data = "",
-                            glm_conf_level = 0.95,
-                            glm_save_pred = FALSE) {
+                            glm_predict_data = "") {
 
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% result$glm_check) {
@@ -358,8 +356,8 @@ predict.glm_reg <- function(result,
   # glm_predict_cmd <- "pclass = levels(pclass)"
   if(glm_predict_cmd != "") {
     glm_predict_cmd %<>% gsub("\"","\'", .)
-    pred_df <- try(eval(parse(text = paste0("with(result$model$model, expand.grid(", glm_predict_cmd ,"))"))), silent = TRUE)
-    if(is(pred_df, 'try-error')) {
+    pred <- try(eval(parse(text = paste0("with(result$model$model, expand.grid(", glm_predict_cmd ,"))"))), silent = TRUE)
+    if(is(pred, 'try-error')) {
       return(cat("The command entered did not generate valid data for prediction. Please try again.\nExamples are shown in the helpfile.\n"))
     }
 
@@ -378,21 +376,23 @@ predict.glm_reg <- function(result,
     if(sum(isFct) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_freq), vars[isFct]))
 
+    rm(dat)
+
     if(sum(isNum) + sum(isFct) < length(vars)) {
       cat("The model includes data-types that cannot be used for\nprediction at this point\n")
     } else {
-      if(sum(names(pred_df) %in% names(plug_data)) < length(names(pred_df))) {
+      if(sum(names(pred) %in% names(plug_data)) < length(names(pred))) {
         return(cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n"))
       } else {
-        plug_data[names(pred_df)] <- list(NULL)
-        pred_df <- data.frame(plug_data[-1],pred_df)
+        plug_data[names(pred)] <- list(NULL)
+        pred <- data.frame(plug_data[-1],pred)
       }
     }
   } else {
-    pred_df <- getdata(glm_predict_data)
-    pred_names <- names(pred_df)
-    pred_df <- try(select_(pred_df, .dots = vars), silent = TRUE)
-    if(is(pred_df, 'try-error')) {
+    pred <- getdata(glm_predict_data)
+    pred_names <- names(pred)
+    pred <- try(select_(pred, .dots = vars), silent = TRUE)
+    if(is(pred, 'try-error')) {
       cat("Model variables: ")
       cat(vars,"\n")
       cat("Profile variables to be added: ")
@@ -402,14 +402,17 @@ predict.glm_reg <- function(result,
     reg_predict_type <- "data"
   }
 
-  pred <- try(predict(result$model, pred_df, type = 'response', se.fit = TRUE), silent = TRUE)
-  if(!is(pred, 'try-error')) {
-    pred %<>% data.frame %>% select(1:2)
-    colnames(pred) <- c("Prediction","std.error")
-    pred_df <- data.frame(pred_df, pred, check.names = FALSE)
+  pred_val <- try(predict(result$model, pred, type = 'response', se.fit = TRUE), silent = TRUE)
+  if(!is(pred_val, 'try-error')) {
+    pred_val %<>% data.frame %>% select(1:2)
+    colnames(pred_val) <- c("Prediction","std.error")
+    pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     # return predicted values
-    if(glm_save_pred) return(pred_df)
+    # if(glm_save_pred) {
+    #   pred %<>% set_class(c("glm_predict",class(.)))
+    #   return(pred)
+    # }
 
     if(glm_predict_type == "cmd") {
       cat("Predicted values for:\n")
@@ -417,21 +420,91 @@ predict.glm_reg <- function(result,
       cat(paste0("Predicted values for profiles from dataset: ",result$glm_predict_data,"\n"))
     }
 
-    pred_df %>% print(., row.names = FALSE)
+    pred %>% print(., row.names = FALSE)
 
     # pushing predictions into the clipboard
-    os_type <- Sys.info()["sysname"]
-    if (os_type == 'Windows') {
-      write.table(pred_df, "clipboard", sep="\t", row.names=FALSE)
-    } else if (os_type == "Darwin") {
-      write.table(pred_df, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-    }
-    if (os_type != "Linux")
-      cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
+    # os_type <- Sys.info()["sysname"]
+    # if (os_type == 'Windows') {
+    #   write.table(pred, "clipboard", sep="\t", row.names=FALSE)
+    # } else if (os_type == "Darwin") {
+    #   write.table(pred, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+    # }
+    # if (os_type != "Linux")
+    #   cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
 
+    # if(glm_save_pred)
+    # return(pred %>% set_class(c("glm_predict",class(.))))
+    return(pred %>% set_class(c("glm_predict",class(.))))
   } else {
     cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
   }
+
+  return(invisible())
+}
+
+#' Plot method for glm_predict (i.e., predict.glm_reg)
+#'
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant
+#'
+#' @param pred Return value from \code{\link{predict.glm_reg}}.
+#' @param glm_xvar Variable to display along the X-axis of the plot
+#' @param glm_facet_row Create vertically arranged subplots for each level of the selected factor variable
+#' @param glm_facet_col Create horizontally arranged subplots for each level of the selected factor variable
+#' @param glm_color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour
+#' @param glm_conf_level Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.
+#'
+#' @examples
+#' result <- glm_reg("titanic", "survived", c("pclass","sex","age"), glm_levels = "Yes")
+#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+#' plot(pred, glm_xvar = "pclass")
+#' pred <- predict(result, glm_predict_cmd = "age = 0:100")
+#' plot(pred, glm_xvar = "age")
+#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex)")
+#' plot(pred, glm_xvar = "pclass", glm_color = "sex")
+#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
+#' plot(pred, glm_xvar = "pclass", glm_color = "age")
+#' plot(pred, glm_xvar = "age", glm_color = "pclass")
+#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex), age = seq(0,100,20)")
+#' plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
+#' plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
+#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex), age = seq(0,100,5)")
+#' plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
+#' plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
+#'
+#' @seealso \code{\link{glm_reg}} to generate the result
+#' @seealso \code{\link{summary.glm_reg}} to summarize results
+#' @seealso \code{\link{plot.glm_reg}} to plot results
+#'
+#' @export
+plot.glm_predict <- function(pred,
+                             glm_xvar = "",
+                             glm_facet_row = ".",
+                             glm_facet_col = ".",
+                             glm_color = "none",
+                             glm_conf_level = .95) {
+
+  if(is.null(glm_xvar) || glm_xvar == "") return(invisible())
+
+  pred$ymin <- pred$Prediction - qnorm(.5 + glm_conf_level/2)*pred$std.error
+  pred$ymax <- pred$Prediction + qnorm(.5 + glm_conf_level/2)*pred$std.error
+
+  if (glm_color == 'none') {
+    p <- ggplot(pred, aes_string(x=glm_xvar, y="Prediction")) +
+           geom_line(aes(group=1))
+  } else {
+    p <- ggplot(pred, aes_string(x=glm_xvar, y="Prediction", color=glm_color)) +
+                geom_line(aes_string(group=glm_color))
+  }
+
+  facets <- paste(glm_facet_row, '~', glm_facet_col)
+  if (facets != '. ~ .') p <- p + facet_grid(facets)
+
+  if(length(unique(pred[[glm_xvar]])) < 10)
+    p <- p + geom_pointrange(aes(ymin = ymin, ymax = ymax), size=.3)
+  else
+    p <- p + geom_smooth(aes(ymin = ymin, ymax = ymax), stat="identity")
+
+  suppressMessages( suppressWarnings( p ) )
 }
 
 #' Save glm residuals
@@ -441,9 +514,10 @@ predict.glm_reg <- function(result,
 #' @param result Return value from \code{\link{glm_reg}}
 #'
 #' @examples
+#' \dontrun{
 #' result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
 #' save_glm_resid(result)
-#'
+#' }
 #' @export
 save_glm_resid <- function(result) {
   if(result$data_filter != "")

@@ -39,7 +39,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2, data_filter = "") {
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 
 #' @param result Return value from \code{\link{cross_tabs}}
-#' @param ct_check Show table(s) for variables `ct_var1` and `ct_var2`. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
+#' @param ct_check Show table(s) for variables ct_var1 and ct_var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
 #'
 #' @examples
 #' result <- cross_tabs("newspaper", "Income", "Newspaper")
@@ -127,9 +127,12 @@ summary.cross_tabs <- function(result, ct_check = "") {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 #'
+#' @param result Return value from \code{\link{cross_tabs}}
+#' @param ct_check Show plots for variables ct_var1 and ct_var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
+#'
 #' @examples
-#' result <- cross_tabs("newspaper", "Income", "Newspaper", ct_expected = TRUE)
-#' plot(result)
+#' result <- cross_tabs("newspaper", "Income", "Newspaper")
+#' plot(result, ct_check = c("observed","expected","chi_sq"))
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results

@@ -1,0 +1,40 @@
+---
+title: "Radiant testing - Rmarkdown document"
+output: html_document
+---
+
+```{r echo = FALSE}
+# from the R(studio) console, save the r_data list
+file_name <- "~/gh/radiant_dev/tests/r_data.rda"
+# save(r_data, file = file_name)
+# To hide commands uncomment the line below
+# knitr::opts_chunk$set(echo=FALSE)
+knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
+suppressMessages(library(radiant))
+load(file_name)
+```
+
+```{r fig.width=7, fig.height=4.31}
+result <- single_mean(dataset = "anscombe", sm_var = "y1")
+summary(result)
+plot(result, sm_plots = "hist")
+```
+
+```{r fig.width=7, fig.height=4}
+result <- compare_means(dataset = "anscombe", cm_var1 = "y1", cm_var2 = c("x2", "y3"), cm_paired = "independent", cm_alternative = "two.sided", cm_sig_level = 0.95, cm_adjust = "none")
+summary(result)
+plot(result, cm_plots = "bar")
+```
+
+```{r fig.width=7, fig.height=4}
+result <- regression(dataset = "anscombe", "y1", "x2")
+summary(result)
+plot(result, reg_plots = "coef")
+```
+
+
+```{r fig.width=7, fig.height=4}
+result <- regression(dataset = "ideal", "y", "x2")
+summary(result)
+plot(result, reg_plots = "coef")
+```

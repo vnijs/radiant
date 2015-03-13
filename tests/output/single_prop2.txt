@@ -1,0 +1,8 @@
+Single proportion test
+ Data     : diamonds
+ Variable : clarity
+ Null hyp.: the proportion of IF in clarity = 0.05
+ Alt. hyp.: the proportion of IF in clarity not equal to 0.05
+ 
+ prop chisq.value p.value df  2.5% 97.5% ns    n
+ 0.033      18.253  < .001  1 0.027  0.04 99 3000

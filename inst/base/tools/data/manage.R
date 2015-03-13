@@ -46,8 +46,6 @@ loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep
   r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique
 }
 
-help(dplyr)
-
 saveClipboardData <- function() {
   os_type <- Sys.info()["sysname"]
   if (os_type == 'Windows') {

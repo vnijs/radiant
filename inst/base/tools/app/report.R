@@ -183,13 +183,16 @@ update_report <- function(inp, fun_name, pre_cmd = "result <- ",
   update_report_fun(cmd)
 }
 
-update_report2 <- function(inp_main, fun_name, inp_out = list("",""), pre_cmd = "result <- ",
+update_report2 <- function(inp_main = "", fun_name = "", inp_out = list("",""), pre_cmd = "result <- ",
                           outputs = c("summary", "plot"),
                           figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
 
-  cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
-           sub("list", fun_name, .) %>%
-           paste0(pre_cmd, .)
+  cmd <- ""
+  if(inp_main[1] != "") {
+    cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
+             sub("list", fun_name, .) %>%
+             paste0(pre_cmd, .)
+  }
 
   lout <- length(outputs)
   if(lout > 0) {

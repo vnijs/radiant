@@ -6,6 +6,9 @@
 \usage{
 sshh(...)
 }
+\arguments{
+\item{...}{Inputs to keep quite}
+}
 \description{
 Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
 }
