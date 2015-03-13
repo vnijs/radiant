@@ -4,8 +4,6 @@ title: Radiant -- Business analytics using R and Shiny
 
 ***
 
-[![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant)
-
 ```{r child='sub/README_editable.md'}
 ```
 
