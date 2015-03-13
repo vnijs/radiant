@@ -5,7 +5,7 @@
 \title{Predict method for glm}
 \usage{
 \method{predict}{glm_reg}(result, glm_predict_cmd = "",
-  glm_predict_data = "", glm_conf_level = 0.95, glm_save_pred = FALSE)
+  glm_predict_data = "")
 }
 \arguments{
 \item{result}{Return value from \code{\link{regression}}}
@@ -13,10 +13,6 @@
 \item{glm_predict_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
 
 \item{glm_predict_data}{Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation}
-
-\item{glm_conf_level}{Confidence level to use for prediction confidence intervals (.95 is the default)}
-
-\item{glm_save_pred}{Save predicted values to a csv file}
 }
 \description{
 Predict method for glm
@@ -26,7 +22,9 @@ See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example 
 }
 \examples{
 result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+str(pred)
+names(pred)
 predict(result, glm_predict_cmd = "sex = c('male','female')")
 }
 \seealso{

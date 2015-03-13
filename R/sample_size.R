@@ -5,7 +5,16 @@
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/sample_size.html} for an example in Radiant
 #'
-#' @param smp_sample_size Number of units to select
+#' @param ss_type Choose "mean" or "proportion"
+#' @param ss_mean_err Acceptable Error for Mean
+#' @param ss_mean_s Standard deviation for Mean
+#' @param ss_prop_err Acceptable Error for Proportion
+#' @param ss_prop_p Initial proportion estimate for Proportion
+#' @param ss_z Z-value
+#' @param ss_incidence Incidence rate (i.e., fraction of valid respondents)
+#' @param ss_response Response rate
+#' @param ss_pop_correction Apply correction for population size ("yes","no")
+#' @param ss_pop_size Population size
 #'
 #' @return A list of variables defined in sample_sizze as an object of class sample_size
 #'

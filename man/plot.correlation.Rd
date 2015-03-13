@@ -6,6 +6,9 @@
 \usage{
 \method{plot}{correlation}(result)
 }
+\arguments{
+\item{result}{Return value from \code{\link{correlation}}}
+}
 \description{
 Plot method for the correlation function
 }

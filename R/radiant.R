@@ -9,6 +9,7 @@ radiant <- function(app = c("marketing", "quant", "base")) {
 
   addResourcePath("imgs", system.file("base/www/imgs/", package="radiant"))
   addResourcePath("figures", system.file("base/tools/help/figures/", package="radiant"))
+  # addResourcePath("data_examples", system.file("../data/", package="radiant"))
   if(app[1] == "marketing") {
     addResourcePath("figures_marketing", system.file("marketing/tools/help/figures/", package="radiant"))
   } else if(app[1] == "quant") {
@@ -28,7 +29,7 @@ set_class <- `class<-`
 
 #' Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
 #'
-#' @param p.value Vector of p.values
+#' @param pval Vector of p-values
 #'
 #' @return A vector of stars
 #'
@@ -43,6 +44,8 @@ sig_stars <- function(pval) {
 }
 
 #' Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+#'
+#' @param ... Inputs to keep quite
 #'
 #' @examples
 #' sshh( library(dplyr) )
@@ -91,7 +94,7 @@ getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 #'
 #' @param dataset Name of the dataframe to change
 #' @param vars New variables to add to the data.frame
-#' @param names Names for the new variables to add to the data.frame
+#' @param var_names Names for the new variables to add to the data.frame
 #'
 #' @return None
 #'

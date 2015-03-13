@@ -223,6 +223,7 @@ summary.regression <- function(result,
 #' @param result Return value from \code{\link{regression}}
 #' @param reg_plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
 #' @param reg_lines Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")
+#' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param reg_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
 #'
 #' @examples
@@ -374,6 +375,7 @@ plot.regression <- function(result,
 #' @param result Return value from \code{\link{regression}}
 #' @param reg_predict_cmd Command used to generate data for prediction
 #' @param reg_predict_data Name of the dataset to use for prediction
+#' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param reg_save_pred Save predicted values to a csv file
 #'
 #' @examples
@@ -495,9 +497,10 @@ predict.regression <- function(result,
 #' @param result Return value from \code{\link{regression}}
 #'
 #' @examples
+#' \dontrun{
 #' result <- regression("diamonds", "price", c("carat","clarity"))
 #' save_reg_resid(result)
-#'
+#' }
 #' @export
 save_reg_resid <- function(result) {
   if(result$data_filter != "")

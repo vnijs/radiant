@@ -17,6 +17,8 @@ compare_means(dataset, cm_var1, cm_var2, data_filter = "",
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 
+\item{cm_paired}{Are samples indepent ("independent") or not ("paired")}
+
 \item{cm_alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
 
 \item{cm_sig_level}{Span of the confidence interval}

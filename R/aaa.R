@@ -124,6 +124,33 @@ NULL
 #' @export
 NULL
 
+#' Pivot table
+#'
+#' @name rpivotTable
+#' @keywords internal
+#' @noRd
+#' @importFrom rpivotTable rpivotTable
+#' @export
+NULL
+
+#' Pivot table output
+#'
+#' @name rpivotTableOutput
+#' @keywords internal
+#' @noRd
+#' @importFrom rpivotTable rpivotTableOutput
+#' @export
+NULL
+
+#' Pivot table render
+#'
+#' @name renderRpivotTable
+#' @keywords internal
+#' @noRd
+#' @importFrom rpivotTable renderRpivotTable
+#' @export
+NULL
+
 # needed for wordclould?
 # RColorBrewer (>= 1.1.2),
 # needed by ?

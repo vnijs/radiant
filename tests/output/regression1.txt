@@ -1,0 +1,22 @@
+Linear regression (OLS)
+ Data     : diamonds
+ Dependent variable   : price
+ Independent variables: carat, clarity
+ 
+ coefficient std.error t.value p.value
+ (Intercept)   -6780.993   204.952 -33.086  < .001 ***
+ carat    8438.030    51.101 165.125  < .001 ***
+ clarity > SI2    2790.760   201.395  13.857  < .001 ***
+ clarity > SI1    3608.531   200.508  17.997  < .001 ***
+ clarity > VS2    4249.906   201.607  21.080  < .001 ***
+ clarity > VS1    4461.956   204.592  21.809  < .001 ***
+ clarity > VVS2    5109.476   210.207  24.307  < .001 ***
+ clarity > VVS1    5027.669   214.251  23.466  < .001 ***
+ clarity > IF    5265.170   233.658  22.534  < .001 ***
+ 
+ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+ 
+ R-squared: 0.904,  Adjusted R-squared: 0.904
+ F-statistic: 3530.024 df(9,2991), p.value < .001
+ Nr obs: 3000
+ 
