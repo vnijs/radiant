@@ -3,7 +3,6 @@ test_dir <- "~/gh/radiant_dev/tests/"
 trim_trailing <- function (x) sub("\\s+$", "", x)
 trim_leading <- function (x) sub("^\\s+", "", x)
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 compare_output <- function(res1, res2) {
   for(i in 1:length(res2)) {
@@ -51,8 +50,9 @@ all.equal(res1,res2)
 # compare_output(res1,res2)
 
 
-
-
-
-
-
+# for main analysis
+# load("~/gh/radiant_dev/inst/base/data/anscombe.rda")
+# r_data <- list()
+# dataset <- "anscombe"
+# r_data[[dataset]] <- anscombe
+# pf_var <- "y1:y4"

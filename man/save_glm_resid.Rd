@@ -4,10 +4,10 @@
 \alias{save_glm_resid}
 \title{Save glm residuals}
 \usage{
-save_glm_resid(result)
+save_glm_resid(object)
 }
 \arguments{
-\item{result}{Return value from \code{\link{glm_reg}}}
+\item{object}{Return value from \code{\link{glm_reg}}}
 }
 \description{
 Save glm residuals

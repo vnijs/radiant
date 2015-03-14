@@ -4,10 +4,12 @@
 \alias{summary.sampling}
 \title{Summary method for sampling}
 \usage{
-\method{summary}{sampling}(result)
+\method{summary}{sampling}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{sampling}}}
+\item{object}{Return value from \code{\link{sampling}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for sampling

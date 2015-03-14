@@ -245,7 +245,7 @@ observe({
 
 observe({
   # 'reading' data from clipboard
-  if(input$loadClipData %>% not_pressed) return()
+  if(not_pressed(input$loadClipData)) return()
   isolate({
     loadClipboardData()
     updateRadioButtons(session = session, inputId = "dataType",
@@ -254,7 +254,7 @@ observe({
                          "examples" = "examples", "state" = "state"),
                        selected = "rda", inline = TRUE)
     updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = r_data$datasetlist, selected = 'xls_data')
+                      choices = r_data$datasetlist, selected = "xls_data")
   })
 })
 

@@ -4,12 +4,14 @@
 \alias{plot.compare_means}
 \title{Plot method for output from compare_means}
 \usage{
-\method{plot}{compare_means}(result, cm_plots = "bar")
+\method{plot}{compare_means}(x, cm_plots = "bar", ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{single_mean}}}
+\item{x}{Return value from \code{\link{compare_means}}}
 
 \item{cm_plots}{One or more plots ("bar", "box", or "density")}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Plot method for output from compare_means

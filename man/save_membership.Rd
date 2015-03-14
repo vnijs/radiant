@@ -4,10 +4,10 @@
 \alias{save_membership}
 \title{Add a cluster membership variable to the select dataset}
 \usage{
-save_membership(result)
+save_membership(object)
 }
 \arguments{
-\item{result}{Return value from \code{\link{kmeans_clus}}}
+\item{object}{Return value from \code{\link{kmeans_clus}}}
 }
 \description{
 Add a cluster membership variable to the select dataset

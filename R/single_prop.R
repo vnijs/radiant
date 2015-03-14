@@ -49,7 +49,8 @@ single_prop <- function(dataset, sp_var,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{single_prop}}
+#' @param object Return value from \code{\link{single_prop}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
@@ -59,33 +60,33 @@ single_prop <- function(dataset, sp_var,
 #' @seealso \code{\link{plot.single_prop}} to plot the results
 #'
 #' @export
-summary.single_prop <- function(result) {
+summary.single_prop <- function(object, ...) {
 
   cat("Single proportion test\n")
-	cat("Data     :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variable :", result$sp_var, "\n")
+	cat("Data     :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variable :", object$sp_var, "\n")
 
 	hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
-                  "greater" = ">")[result$sp_alternative]
+                  "greater" = ">")[object$sp_alternative]
 
-	cat("Null hyp.: the proportion of", result$sp_levels, "in", result$sp_var, "=",
-	    result$sp_comp_value, "\n")
-	cat("Alt. hyp.: the proportion of", result$sp_levels, "in", result$sp_var, hyp_symbol,
-	    result$sp_comp_value, "\n\n")
+	cat("Null hyp.: the proportion of", object$sp_levels, "in", object$sp_var, "=",
+	    object$sp_comp_value, "\n")
+	cat("Alt. hyp.: the proportion of", object$sp_levels, "in", object$sp_var, hyp_symbol,
+	    object$sp_comp_value, "\n\n")
 
 	# determine lower and upper % for ci
-	{100 * (1-result$sp_sig_level)/2} %>%
+	{100 * (1-object$sp_sig_level)/2} %>%
 		c(., 100 - .) %>%
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
 
-	# result$res$n <- nrow(result$dat)
-	res <- round(result$res, 3) 	# restrict to 3 decimal places
-	res$ns <- result$ns
-	res$n <- result$n
+	# object$res$n <- nrow(object$dat)
+	res <- round(object$res, 3) 	# restrict to 3 decimal places
+	res$ns <- object$ns
+	res$n <- object$n
 	names(res) <- c("prop","chisq.value","p.value","df", ci_perc[1], ci_perc[2],
 									"ns","n")
 	if (res$p.value < .001) res$p.value <- "< .001"
@@ -97,8 +98,9 @@ summary.single_prop <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{single_prop}}
+#' @param x Return value from \code{\link{single_prop}}
 #' @param sp_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (sp_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
@@ -108,29 +110,33 @@ summary.single_prop <- function(result) {
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #'
 #' @export
-plot.single_prop <- function(result, sp_plots = "hist") {
+plot.single_prop <- function(x,
+                             sp_plots = "hist",
+                             ...) {
 
-	lev_name <- result$levs[1]
+  object <- x; rm(x)
+
+	lev_name <- object$levs[1]
 
  	plots <- list()
 	if("hist" %in% sp_plots) {
 		plots[[which("hist" == sp_plots)]] <-
-			ggplot(result$dat, aes_string(x = result$sp_var, fill = result$sp_var)) +
+			ggplot(object$dat, aes_string(x = object$sp_var, fill = object$sp_var)) +
 	 			geom_histogram(alpha=.7) +
-	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", result$sp_var))
+	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$sp_var))
 	}
 	if("simulate" %in% sp_plots) {
-		simdat <- rbinom(1000, prob = result$sp_comp_value, result$n) %>%
-								divide_by(result$n) %>%
+		simdat <- rbinom(1000, prob = object$sp_comp_value, object$n) %>%
+								divide_by(object$n) %>%
 							  data.frame %>%
 							  set_colnames(lev_name)
 
-		ci_perc <- {if(result$sp_alternative == 'two.sided') {
-									{(1-result$sp_sig_level)/2}  %>% c(., 1 - .)
-								} else if(result$sp_alternative == 'less') {
-									{1-result$sp_sig_level}
+		ci_perc <- {if(object$sp_alternative == 'two.sided') {
+									{(1-object$sp_sig_level)/2}  %>% c(., 1 - .)
+								} else if(object$sp_alternative == 'less') {
+									{1-object$sp_sig_level}
 								} else {
-									result$sp_sig_level
+									object$sp_sig_level
 								}} %>%
 									quantile(simdat[,lev_name], probs = . )
 
@@ -139,13 +145,13 @@ plot.single_prop <- function(result, sp_plots = "hist") {
 		plots[[which("simulate" == sp_plots)]] <-
 			ggplot(simdat, aes_string(x=lev_name)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
-				geom_vline(xintercept = result$sp_comp_value, color = 'red',
+				geom_vline(xintercept = object$sp_comp_value, color = 'red',
 				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = result$res$estimate, color = 'black',
+				geom_vline(xintercept = object$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = ci_perc,
 				           color = 'red', linetype = 'longdash', size = .5) +
-	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", result$sp_var, ")"))
+	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$sp_var, ")"))
 	}
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )

@@ -95,7 +95,8 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{compare_props}}
+#' @param object Return value from \code{\link{compare_props}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
@@ -105,31 +106,31 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #' @seealso \code{\link{plot.compare_props}} to plot results
 #'
 #' @export
-summary.compare_props <- function(result) {
+summary.compare_props <- function(object, ...) {
 
-  if(result$cp_adjust == "bonf") {
+  if(object$cp_adjust == "bonf") {
     cat("Pairwise comparisons (bonferroni adjustment)\n")
   } else {
 	  cat("Pairwise comparisons (no adjustment)\n")
   }
 
-	cat("Data     :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variables:", result$vars, "\n")
-	cat("Level    :", result$cp_levels, "in", result$cp_var2, "\n\n")
+	cat("Data     :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables:", object$vars, "\n")
+	cat("Level    :", object$cp_levels, "in", object$cp_var2, "\n\n")
 
-  result$dat_summary[,-1] %<>% round(3)
-  print(result$dat_summary %>% as.data.frame, row.names = FALSE)
+  object$dat_summary[,-1] %<>% round(3)
+  print(object$dat_summary %>% as.data.frame, row.names = FALSE)
 	cat("\n")
 
   hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
-                  "greater" = ">")[result$cp_alternative]
+                  "greater" = ">")[object$cp_alternative]
 
-  props <- result$dat_summary$p
-  names(props) <- result$rn
-	res <- result$res
+  props <- object$dat_summary$p
+  names(props) <- object$rn
+	res <- object$res
 	res$`Alt. hyp.` <- paste(res$group1,hyp_symbol,res$group2," ")
 	res$`Null hyp.` <- paste(res$group1,"=",res$group2, " ")
 	res$diff <- (props[res$group1 %>% as.character] - props[res$group2 %>% as.character]) %>% round(3)
@@ -145,8 +146,9 @@ summary.compare_props <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{compare_props}}
+#' @param x Return value from \code{\link{compare_props}}
 #' @param cp_plots One or more plots of proportions or counts ("props" or "counts")
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
@@ -156,30 +158,32 @@ summary.compare_props <- function(result) {
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
 #' @export
-plot.compare_props <- function(result, cp_plots = "props") {
+plot.compare_props <- function(x,
+                               cp_plots = "props",
+                               ...) {
 
-	# cp_plots <- "props"
-	dat <- result$dat
+	object <- x; rm(x)
+
+	dat <- object$dat
 	var1 <- colnames(dat)[1]
 	var2 <- colnames(dat)[-1]
-	result$dat_summary[,var1] <- result$rn
-	lev_name <- result$levs[1]
+	object$dat_summary[,var1] <- object$rn
+	lev_name <- object$levs[1]
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	plots <- list()
 	if("props" %in% cp_plots) {
 		# use of `which` allows the user to change the order of the plots shown
 		plots[[which("props" == cp_plots)]] <-
-			ggplot(result$dat_summary, aes_string(x = var1, y = "p", fill = var1)) +
+			ggplot(object$dat_summary, aes_string(x = var1, y = "p", fill = var1)) +
 			geom_bar(stat = "identity") +
 	 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
 	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue")
 	}
 
 	if("counts" %in% cp_plots) {
-		# use of `which` allows the user to change the order of the plots shown
 		plots[[which("counts" == cp_plots)]] <-
-			ggplot(result$dat, aes_string(x = var1, fill = var2)) +
+			ggplot(object$dat, aes_string(x = var1, fill = var2)) +
 			geom_bar(position = "dodge")
 	}
 

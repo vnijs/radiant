@@ -63,7 +63,7 @@ output$tabs_data <- renderUI({
              plotOutput("visualize", width = "100%", height = "100%")),
     tabPanel("Explore", verbatimTextOutput("expl_summary"),
              plotOutput("expl_plots", width = "100%", height = "100%")),
-    tabPanel("Pivot", rpivotTableOutput("pivotData")),
+    tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
     tabPanel("Merge", htmlOutput("merge_possible"),
              htmlOutput("merge_data1"), htmlOutput("merge_data2")),
     # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),

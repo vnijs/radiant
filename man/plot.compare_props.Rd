@@ -4,12 +4,14 @@
 \alias{plot.compare_props}
 \title{Plot results from the compare_props function. This is a method of class compare_props and can be called as plot or plot.compare_props}
 \usage{
-\method{plot}{compare_props}(result, cp_plots = "props")
+\method{plot}{compare_props}(x, cp_plots = "props", ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{compare_props}}}
+\item{x}{Return value from \code{\link{compare_props}}}
 
 \item{cp_plots}{One or more plots of proportions or counts ("props" or "counts")}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Plot results from the compare_props function. This is a method of class compare_props and can be called as plot or plot.compare_props

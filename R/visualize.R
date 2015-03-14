@@ -21,7 +21,8 @@
 #' visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
 #'
 #' @export
-visualize <- function(dataset, viz_vars1, viz_vars2 = "none",
+visualize <- function(dataset, viz_vars1,
+                      viz_vars2 = "none",
                       data_filter = "",
                       viz_type = "hist",
                       viz_facet_row = ".",
