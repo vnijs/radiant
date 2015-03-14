@@ -319,7 +319,7 @@ output$glm_reg <- renderUI({
   if(not_available(input$glm_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("titanic"))
 
-  do.call(summary, c(list(result = .glm_reg()), glm_sum_inputs()))
+  do.call(summary, c(list(object = .glm_reg()), glm_sum_inputs()))
 })
 
 .predict_glm_reg <- reactive({
@@ -334,7 +334,7 @@ output$glm_reg <- renderUI({
   if(is_empty(input$glm_predict, ""))
     return(invisible())
 
-  r_data$glm_pred <- do.call(predict, c(list(result = .glm_reg()), glm_pred_inputs()))
+  r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
 })
 
 .predict_plot_glm_reg <- reactive({
@@ -345,7 +345,7 @@ output$glm_reg <- renderUI({
   if(is.null(r_data$glm_pred))
     return(invisible())
 
-  do.call(plot, c(list(pred = r_data$glm_pred), glm_pred_plot_inputs()))
+  do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
 })
 
 .plot_glm_reg <- reactive({
@@ -359,7 +359,7 @@ output$glm_reg <- renderUI({
   if(is_empty(input$glm_plots, ""))
     return("Please select a regression plot from the drop-down menu")
 
-  do.call(plot, c(list(result = .glm_reg()), glm_plot_inputs()))
+  do.call(plot, c(list(x = .glm_reg()), glm_plot_inputs()))
 })
 
 observe({

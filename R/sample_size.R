@@ -56,7 +56,8 @@ sample_size <- function(ss_type = "mean",
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/sample_size} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{sample_size}}
+#' @param object Return value from \code{\link{sample_size}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
@@ -65,39 +66,39 @@ sample_size <- function(ss_type = "mean",
 #' @seealso \code{\link{sampling}} to generate the results
 #'
 #' @export
-summary.sample_size <- function(result) {
+summary.sample_size <- function(object, ...) {
 	cat("Sample size calculation\n")
 
-	if(result$ss_type == "mean") {
+	if(object$ss_type == "mean") {
 	  cat("Calculation type     : Mean\n")
-		cat("Acceptable Error     :", result$ss_mean_err, "\n")
-		cat("Sample std. deviation:", result$ss_mean_s, "\n")
+		cat("Acceptable Error     :", object$ss_mean_err, "\n")
+		cat("Sample std. deviation:", object$ss_mean_s, "\n")
 	} else {
 	  cat("Type: Proportion\n")
-		cat("Acceptable Error     :", result$ss_prop_err, "\n")
-		cat("Sample proportion    :", result$ss_prop_p, "\n")
+		cat("Acceptable Error     :", object$ss_prop_err, "\n")
+		cat("Sample proportion    :", object$ss_prop_p, "\n")
 	}
 
-	cat("Confidence level     :", result$ss_z, "\n")
-	cat("Incidence rate       :", result$ss_incidence, "\n")
-	cat("Response rate        :", result$ss_response, "\n")
+	cat("Confidence level     :", object$ss_z, "\n")
+	cat("Incidence rate       :", object$ss_incidence, "\n")
+	cat("Response rate        :", object$ss_response, "\n")
 
-	if(result$ss_pop_correction == "no") {
+	if(object$ss_pop_correction == "no") {
 		cat("Population correction: None\n")
 	} else {
 		cat("Population correction: Yes\n")
-		cat("Population size      :", format(result$ss_pop_size, big.mark = ",",
+		cat("Population size      :", format(object$ss_pop_size, big.mark = ",",
 		    																 scientific = FALSE), "\n")
 	}
 
-	cat("\nRequired sample size     :", format(result$n, big.mark = ",",
+	cat("\nRequired sample size     :", format(object$n, big.mark = ",",
 	    																			 scientific = FALSE))
-	cat("\nRequired contact attempts:", format(ceiling(result$n / result$ss_incidence / result$ss_response),
+	cat("\nRequired contact attempts:", format(ceiling(object$n / object$ss_incidence / object$ss_response),
 	    																			 big.mark = ",", scientific = FALSE))
 	cat("\n\nChoose a Z-value:\n")
 
   for(z in c(.80, .85, .90, .95, .99))
     cat(paste0(100*z,"%\t"),-qnorm((1-z)/2) %>% round(2),"\n")
 
-  rm(result)
+  rm(object)
 }

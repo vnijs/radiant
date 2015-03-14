@@ -4,10 +4,10 @@
 \alias{save_reg_resid}
 \title{Save regression residuals}
 \usage{
-save_reg_resid(result)
+save_reg_resid(object)
 }
 \arguments{
-\item{result}{Return value from \code{\link{regression}}}
+\item{object}{Return value from \code{\link{regression}}}
 }
 \description{
 Save regression residuals

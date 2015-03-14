@@ -4,14 +4,16 @@
 \alias{plot.conjoint}
 \title{Plot method for conjoint output}
 \usage{
-\method{plot}{conjoint}(result, ca_plots = "pw", ca_scale_plot = FALSE)
+\method{plot}{conjoint}(x, ca_plots = "pw", ca_scale_plot = FALSE, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{conjoint}}}
+\item{x}{Return value from \code{\link{conjoint}}}
 
 \item{ca_plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
 
 \item{ca_scale_plot}{Scale the axes of the part-worth plots to the same range}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Plot method for conjoint output

@@ -4,10 +4,12 @@
 \alias{summary.single_mean}
 \title{Summary method for single_mean}
 \usage{
-\method{summary}{single_mean}(result)
+\method{summary}{single_mean}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{single_mean}}}
+\item{object}{Return value from \code{\link{single_mean}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for single_mean

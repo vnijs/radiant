@@ -77,7 +77,8 @@ kmeans_clus <- function(dataset, km_vars,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{kmeans_clus}}
+#' @param object Return value from \code{\link{kmeans_clus}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
@@ -89,36 +90,36 @@ kmeans_clus <- function(dataset, km_vars,
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
-summary.kmeans_clus <- function(result) {
+summary.kmeans_clus <- function(object, ...) {
 
 	cat("K-means cluster analysis\n")
-	cat("Data        :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter      :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variables   :", paste0(result$km_vars, collapse=", "), "\n")
-	if(result$km_hc_init) {
-		cat("Method      :", result$km_meth, "\n")
-		cat("Distance    :", result$km_dist, "\n")
+	cat("Data        :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables   :", paste0(object$km_vars, collapse=", "), "\n")
+	if(object$km_hc_init) {
+		cat("Method      :", object$km_meth, "\n")
+		cat("Distance    :", object$km_dist, "\n")
 	}
-	cat("Observations:", result$nr_obs, "\n")
-	cat("Generated   :", result$km_nr_clus, "clusters of sizes", paste0(result$km_out$size, collapse=", "),"\n\n")
+	cat("Observations:", object$nr_obs, "\n")
+	cat("Generated   :", object$km_nr_clus, "clusters of sizes", paste0(object$km_out$size, collapse=", "),"\n\n")
 
 	cat("Cluster means:\n")
-	print(result$clus_means)
+	print(object$clus_means)
 
 	# percentage of within cluster variance accounted for by each cluster
 	cat("\nPercentage of within cluster variance accounted for by each cluster:\n")
-	(100 * result$km_out$withinss / result$km_out$tot.withinss) %>%
+	(100 * object$km_out$withinss / object$km_out$tot.withinss) %>%
 		round(2) %>%
 		sprintf("%.2f",.) %>%
 		paste0(.,"%") %>%
 		as.data.frame %>%
-		set_rownames(result$clus_names) %>%
+		set_rownames(object$clus_names) %>%
 		set_colnames("") %>%
 		print
 
 	# percentage of between cluster variance versus the total higher is better
-	(100 * result$km_out$betweenss / result$km_out$totss) %>% sprintf("%.2f",.) %>%
+	(100 * object$km_out$betweenss / object$km_out$totss) %>% sprintf("%.2f",.) %>%
 		paste0("\nBetween cluster variance accounts for ", . , "% of the\ntotal variance in the data (higher is better).") %>%
 		cat
 }
@@ -127,7 +128,8 @@ summary.kmeans_clus <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{kmeans_clus}}
+#' @param x Return value from \code{\link{kmeans_clus}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
@@ -139,11 +141,13 @@ summary.kmeans_clus <- function(result) {
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
-plot.kmeans_clus <- function(result) {
+plot.kmeans_clus <- function(x, ...) {
+
+	object <- x; rm(x)
 
 	# reloading the data
-	with(result, getdata(dataset, km_vars, filt = data_filter)) %>%
-	mutate(clus_var = as.factor(result$km_out$cluster)) -> dat
+	with(object, getdata(dataset, km_vars, filt = data_filter)) %>%
+	mutate(clus_var = as.factor(object$km_out$cluster)) -> dat
 	vars <- colnames(dat) %>% .[-length(.)]
 
 	plots <- list()
@@ -159,7 +163,7 @@ plot.kmeans_clus <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{kmeans_clus}}
+#' @param object Return value from \code{\link{kmeans_clus}}
 #' @param file Filename and path to use
 #'
 #' @examples
@@ -172,14 +176,14 @@ plot.kmeans_clus <- function(result) {
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
-save_kmeans <- function(result, file = "kmeans.csv")
-	result$clus_means %>% write.csv(., file = file)
+save_kmeans <- function(object, file = "kmeans.csv")
+	object$clus_means %>% write.csv(., file = file)
 
 #' Add a cluster membership variable to the select dataset
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{kmeans_clus}}
+#' @param object Return value from \code{\link{kmeans_clus}}
 #'
 #' @examples
 #' \dontrun{
@@ -192,9 +196,9 @@ save_kmeans <- function(result, file = "kmeans.csv")
 #' @seealso \code{\link{save_kmeans}} to save the table of cluster means to a csv file
 #'
 #' @export
-save_membership <- function(result) {
-	if(result$data_filter != "")
+save_membership <- function(object) {
+	if(object$data_filter != "")
     return("Please deactivate data filters before trying to save cluster membership")
-	as.factor(result$km_out$cluster) %>%
-	changedata(result$dataset, vars = ., var_names = paste0("kclus",result$km_nr_clus))
+	as.factor(object$km_out$cluster) %>%
+	changedata(object$dataset, vars = ., var_names = paste0("kclus",object$km_nr_clus))
 }

@@ -219,11 +219,11 @@ plots_pmap <- function(result = .pmap()) {
 
 				if("brand" %in% out$pmap_plot) {
 					points(std_scores[,i], std_scores[,j], pch = 16, cex = .6)
-					textplot(std_scores[,i], std_scores[,j]+(.04*max.max), out$brand_names, cex = out$pmap_fontsz, new = FALSE)
+					wordcloud::textplot(std_scores[,i], std_scores[,j]+(.04*max.max), out$brand_names, cex = out$pmap_fontsz, new = FALSE)
 				}
 
 				if("attr" %in% out$pmap_plot) {
-					textplot(std_m[,i]*lab_buf, std_m[,j]*lab_buf, out$pmap_attr, cex = out$pmap_fontsz, col = "darkblue", new = FALSE)
+					wordcloud::textplot(std_m[,i]*lab_buf, std_m[,j]*lab_buf, out$pmap_attr, cex = out$pmap_fontsz, col = "darkblue", new = FALSE)
 					# add arrows
 					for (k in out$pmap_attr)
 						arrows(0,0, x1=std_m[k,i], y1=std_m[k,j], lty='dashed', length=.05)
@@ -236,7 +236,7 @@ plots_pmap <- function(result = .pmap()) {
 				if("pref" %in% out$pmap_plot) {
 					if(nrow(std_pc) > 1) {
 						# textplot needs at least two coordinates
-						textplot(std_pc[,i]*lab_buf, std_pc[,j]*lab_buf, out$pmap_pref, cex = out$pmap_fontsz, col="darkred", new = FALSE)
+						wordcloud::textplot(std_pc[,i]*lab_buf, std_pc[,j]*lab_buf, out$pmap_pref, cex = out$pmap_fontsz, col="darkred", new = FALSE)
 					} else {
 						text(std_pc[,i]*lab_buf, std_pc[,j]*lab_buf, out$pmap_pref, cex = out$pmap_fontsz, col="darkred")
 					}

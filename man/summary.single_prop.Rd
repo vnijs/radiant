@@ -4,10 +4,12 @@
 \alias{summary.single_prop}
 \title{Summary method for single_prop}
 \usage{
-\method{summary}{single_prop}(result)
+\method{summary}{single_prop}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{single_prop}}}
+\item{object}{Return value from \code{\link{single_prop}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for single_prop

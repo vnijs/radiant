@@ -4,10 +4,10 @@
 \alias{save_kmeans}
 \title{Save cluster means to a csv file}
 \usage{
-save_kmeans(result, file = "kmeans.csv")
+save_kmeans(object, file = "kmeans.csv")
 }
 \arguments{
-\item{result}{Return value from \code{\link{kmeans_clus}}}
+\item{object}{Return value from \code{\link{kmeans_clus}}}
 
 \item{file}{Filename and path to use}
 }

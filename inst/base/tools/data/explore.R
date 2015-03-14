@@ -95,7 +95,7 @@ explore <- function(dataset, expl_columns,
     isNum <- sapply(dat, is.numeric)
     if(sum(isNum) > 0) {
       select(dat, which(isNum)) %>%
-      gather_("variable", "values", expl_columns) %>%
+      tidyr::gather_("variable", "values", expl_columns) %>%
       group_by(variable) %>%
       summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
                      median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),
@@ -182,7 +182,7 @@ plots_explore <- function(result = .explore()) {
     }
   }
 
-  do.call(grid.arrange, c(plots, list(ncol = 1)))
+  do.call(gridExtra::grid.arrange, c(plots, list(ncol = 1)))
 }
 
 expl_plot_width <- function() {

@@ -29,8 +29,8 @@ shinyUI(
   ),
 
   navbarMenu("Factor",
-    tabPanel("Pre-factor", uiOutput("preFactor")),
-    tabPanel("Factor", uiOutput("fullFactor"))
+    tabPanel("Pre-factor", uiOutput("pre_factor")),
+    tabPanel("Factor", uiOutput("full_factor"))
   ),
 
   navbarMenu("Cluster",

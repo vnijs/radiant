@@ -32,7 +32,7 @@ output$ui_hc_vars <- renderUI({
 
 
 output$ui_hier_clus <- renderUI({
-  list(
+  tagList(
   	wellPanel(
 	    uiOutput("ui_hc_vars"),
 	    selectInput("hc_dist", label = "Distance measure:", choices =hc_dist ,
@@ -99,7 +99,7 @@ output$hier_clus <- renderUI({
 
 .plot_hier_clus <- reactive({
   if(not_available(input$hc_vars))
-		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
+		return(invisible())
 
   plot(.hier_clus(), hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff)
 })

@@ -4,10 +4,12 @@
 \alias{summary.compare_means}
 \title{Summarize method for output from compare_means}
 \usage{
-\method{summary}{compare_means}(result)
+\method{summary}{compare_means}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{single_mean}}}
+\item{object}{Return value from \code{\link{compare_means}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summarize method for output from compare_means
