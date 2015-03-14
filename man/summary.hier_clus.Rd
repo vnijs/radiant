@@ -4,10 +4,12 @@
 \alias{summary.hier_clus}
 \title{Summary method for hier_clus}
 \usage{
-\method{summary}{hier_clus}(result)
+\method{summary}{hier_clus}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{hier_clus}}}
+\item{object}{Return value from \code{\link{hier_clus}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for hier_clus

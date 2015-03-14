@@ -4,10 +4,12 @@
 \alias{summary.compare_props}
 \title{Summary method for output from compare_props}
 \usage{
-\method{summary}{compare_props}(result)
+\method{summary}{compare_props}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{compare_props}}}
+\item{object}{Return value from \code{\link{compare_props}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for output from compare_props

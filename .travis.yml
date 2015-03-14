@@ -1,9 +1,6 @@
-# Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
-
 language: r
-
 warnings_are_errors: false
 
 r_github_packages:
- - smartinsightsfromdata/rpivotTable
- - trestletech/shinyAce
+  - smartinsightsfromdata/rpivotTable
+  - trestletech/shinyAce

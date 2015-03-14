@@ -4,10 +4,12 @@
 \alias{summary.sample_size}
 \title{Summary method for sample size calculation}
 \usage{
-\method{summary}{sample_size}(result)
+\method{summary}{sample_size}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{sample_size}}}
+\item{object}{Return value from \code{\link{sample_size}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for sample size calculation

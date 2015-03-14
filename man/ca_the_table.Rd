@@ -27,5 +27,7 @@ ca_the_table(result$model, result$dat, result$ca_indep_var)
 \code{\link{conjoint}} to generate results
 
 \code{\link{summary.conjoint}} to summarize results
+
+\code{\link{plot.conjoint}} to plot results
 }
 

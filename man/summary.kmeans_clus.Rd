@@ -4,10 +4,12 @@
 \alias{summary.kmeans_clus}
 \title{Summary method for kmeans_clus}
 \usage{
-\method{summary}{kmeans_clus}(result)
+\method{summary}{kmeans_clus}(object, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{kmeans_clus}}}
+\item{object}{Return value from \code{\link{kmeans_clus}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for kmeans_clus

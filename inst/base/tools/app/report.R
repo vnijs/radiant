@@ -31,16 +31,14 @@ for the `diamonds` data. There are plots of histograms and a scatterplot
 / heatmap of the price of diamonds versus carats. The colors in the plot
 reflect the clarity of the diamond.
 
-```{r fig.width=7, fig.height=3.5}
-result <- regression('diamonds', 'price', 'carat', NULL, NULL, 'none',
-                     'dataframe', '', 'none', FALSE, FALSE, FALSE, 0.95,
-                     FALSE, FALSE, FALSE, 'histlist', FALSE, FALSE)
-summary_regression(result)
-plots_regression(result)
+```{r fig.width=7, fig.height=4}
+result <- regression(dataset = 'diamonds', reg_dep_var = 'price', reg_indep_var = 'carat')
+summary(result)
+plot(result, reg_plots = 'hist')
 ```
 
 ```{r fig.width=7, fig.height=7}
-visualize('diamonds', 'price', 'carat', '', 'single', '.', '.', 'clarity', FALSE, FALSE, FALSE)
+visualize(dataset = 'diamonds', viz_vars1 = 'carat', viz_vars2 = 'price', viz_type = 'scatter', viz_color = 'clarity')
 ```
 "
 
@@ -61,7 +59,7 @@ output$report <- renderUI({
 
     div(class="row",
       div(class="col-xs-6",
-        aceEditor("rmd_report", mode="markdown", wordWrap = TRUE,
+        shinyAce::aceEditor("rmd_report", mode="markdown", wordWrap = TRUE,
                   height = "600px",
                   selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
                   hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
@@ -132,7 +130,7 @@ observe({
   if(!is.null(inFile) && !is.na(inFile)) {
     isolate({
       rmdfile <- paste0(readLines(inFile$datapath), collapse = "\n")
-      updateAceEditor(session, "rmd_report", value = rmdfile)
+      shinyAce::updateAceEditor(session, "rmd_report", value = rmdfile)
     })
   }
 })
@@ -241,7 +239,7 @@ update_report_fun <- function(cmd) {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
       }
     } else {
-      updateAceEditor(session, "rmd_report",
+      shinyAce::updateAceEditor(session, "rmd_report",
                       value = paste0(input$rmd_report,"\n",cmd))
     }
   }
@@ -289,7 +287,7 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row", div(class="col-xs-6",
-    aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example),
+    shinyAce::aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example),
               hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
               ),
     actionButton("rEval", "Run"),
@@ -342,7 +340,7 @@ observe({
   if(!is.null(inFile)) {
     isolate({
       paste0(readLines(inFile$datapath), collapse = "\n") %>%
-        updateAceEditor(session, "r_code", value = .)
+        shinyAce::updateAceEditor(session, "r_code", value = .)
     })
   }
 })

@@ -69,10 +69,11 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{regression}}
+#' @param object Return value from \code{\link{regression}}
 #' @param reg_sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
 #' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param reg_test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- regression("diamonds", "price", c("carat","clarity"))
@@ -87,28 +88,29 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #' @importFrom car vif
 #'
 #' @export
-summary.regression <- function(result,
+summary.regression <- function(object,
                                reg_sum_check = "",
                                reg_conf_level = .95,
-                               reg_test_var = "") {
+                               reg_test_var = "",
+                               ...) {
 
-	if(class(result$model)[1] != 'lm') return(result)
+	if(class(object$model)[1] != 'lm') return(object)
 
   # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
-  cat("Data     :", result$dataset, "\n")
-  if(result$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-  cat("Dependent variable   :", result$reg_dep_var, "\n")
-  cat("Independent variables:", paste0(result$reg_indep_var, collapse=", "), "\n")
-  if("standardize" %in% result$reg_check)
+  cat("Data     :", object$dataset, "\n")
+  if(object$data_filter %>% gsub("\\s","",.) != "")
+    cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+  cat("Dependent variable   :", object$reg_dep_var, "\n")
+  cat("Independent variables:", paste0(object$reg_indep_var, collapse=", "), "\n")
+  if("standardize" %in% object$reg_check)
  		cat("Standardized coefficients shown\n")
  	cat("\n")
   # cat("Null hyp.: variables x and y are not correlated\n")
   # cat("Alt. hyp.: variables x and y are correlated\n\n")
-	print(result$reg_coeff, row.names=FALSE)
+	print(object$reg_coeff, row.names=FALSE)
 
-	reg_fit <- glance(result$model) %>% round(3)
+	reg_fit <- glance(object$model) %>% round(3)
 	if(reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
@@ -117,12 +119,12 @@ summary.regression <- function(result,
   cat("\n\n")
 
   if("rmse" %in% reg_sum_check) {
-    mean(result$model$residual^2, na.rm=TRUE) %>% sqrt %>%
+    mean(object$model$residual^2, na.rm=TRUE) %>% sqrt %>%
     cat("Prediction error (RMSE): ", ., "\n\n")
   }
 
   if("sumsquares" %in% reg_sum_check) {
-    atab <- anova(result$model)
+    atab <- anova(object$model)
     nr_rows <- dim(atab)[1]
     df_reg <- sum(atab$Df[-nr_rows])
     df_err <- sum(atab$Df[nr_rows])
@@ -142,12 +144,12 @@ summary.regression <- function(result,
   }
 
   if("vif" %in% reg_sum_check) {
-    if(anyNA(result$model$coeff)) {
+    if(anyNA(object$model$coeff)) {
 			cat("The set of independent variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
 		} else {
-      if(length(result$reg_indep_var) > 1) {
+      if(length(object$reg_indep_var) > 1) {
         cat("Variance Inflation Factors\n")
-        vif(result$model) %>%
+        vif(object$model) %>%
           { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(3) %>%
@@ -162,7 +164,7 @@ summary.regression <- function(result,
   }
 
   if("confint" %in% reg_sum_check) {
-    if(anyNA(result$model$coeff)) {
+    if(anyNA(object$model$coeff)) {
       cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation. Confidence\nintervals were not calculated.\n")
     } else {
 
@@ -170,12 +172,12 @@ summary.regression <- function(result,
       cl_split(reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
       (100 - cl_split(reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
 
-      confint(result$model, level = reg_conf_level) %>%
+      confint(object$model, level = reg_conf_level) %>%
         as.data.frame %>%
         magrittr::set_colnames(c("Low","High")) %>%
-        cbind(select(result$reg_coeff,2),.) %>%
+        cbind(select(object$reg_coeff,2),.) %>%
         round(3) %>%
-        set_rownames(result$reg_coeff$`  `) %T>%
+        set_rownames(object$reg_coeff$`  `) %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
         magrittr::set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
         print
@@ -184,29 +186,29 @@ summary.regression <- function(result,
   }
 
   if(!is.null(reg_test_var) && reg_test_var[1] != "") {
-		if("stepwise" %in% result$reg_check) {
+		if("stepwise" %in% object$reg_check) {
 	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
 	  } else {
 			sub_formula <- ". ~ 1"
 
-			vars <- result$reg_indep_var
-      if(result$reg_int_var != "" && length(vars) > 1) {
+			vars <- object$reg_indep_var
+      if(object$reg_int_var != "" && length(vars) > 1) {
         # updating reg_test_var if needed
-        reg_test_var <- test_check(reg_test_var, result$reg_int_var)
-	 	    vars <- c(vars,result$reg_int_var)
+        reg_test_var <- test_check(reg_test_var, object$reg_int_var)
+	 	    vars <- c(vars,object$reg_int_var)
 			}
 
 			not_selected <- setdiff(vars,reg_test_var)
 			if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
-      sub_mod <- update(result$model, sub_formula, data = result$model$model) %>%
-                   anova(result$model, test='F')
+      sub_mod <- update(object$model, sub_formula, data = object$model$model) %>%
+                   anova(object$model, test='F')
 
 			if(sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
       p.value <- sub_mod[,"Pr(>F)"][2] %>% { if(. < .001) "< .001" else round(.,3) }
 
       # cat("\n")
 			cat(attr(sub_mod,"heading")[2])
-				result$model$model[,1] %>%
+				object$model$model[,1] %>%
 				{ sum((. - mean(.))^2) } %>%
 				{1 - (sub_mod$RSS / .)} %>%
 				round(3) %>%
@@ -220,11 +222,12 @@ summary.regression <- function(result,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{regression}}
+#' @param x Return value from \code{\link{regression}}
 #' @param reg_plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
 #' @param reg_lines Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")
 #' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param reg_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- regression("diamonds", "price", c("carat","clarity"))
@@ -238,32 +241,35 @@ summary.regression <- function(result,
 #' plot(result, reg_plots = "leverage")
 #' plot(result, reg_plots = "resid_pred", reg_lines = "line")
 #'
-#' @seealso \code{\link{regression}} to generate the result
+#' @seealso \code{\link{regression}} to generate the results
 #' @seealso \code{\link{summary.regression}} to summarize results
 #' @seealso \code{\link{predict.regression}} to generate predictions
 #'
 #' @importFrom car leveragePlots
 #'
 #' @export
-plot.regression <- function(result,
+plot.regression <- function(x,
                             reg_plots = "",
                             reg_lines = "",
                             reg_conf_level = .95,
-                            reg_coef_int = FALSE) {
+                            reg_coef_int = FALSE,
+                            ...) {
 
-	if(class(result$model)[1] != 'lm') return(result)
+  object <- x; rm(x)
+
+	if(class(object$model)[1] != 'lm') return(object)
 
   if(reg_plots[1] == "")
     return(cat("Please select a regression plot from the drop-down menu"))
 
   # no plots if aliased coefficients present
-  if(anyNA(result$model$coeff)) reg_plots <- return("")
+  if(anyNA(object$model$coeff)) reg_plots <- return("")
 
-  # object_size(result$model, model)
-	model <- ggplot2::fortify(result$model)
+  # object_size(object$model, model)
+	model <- ggplot2::fortify(object$model)
 
-	reg_dep_var <- result$reg_dep_var
-	reg_indep_var <- result$reg_indep_var
+	reg_dep_var <- object$reg_dep_var
+	reg_indep_var <- object$reg_indep_var
   vars <- c(reg_dep_var, reg_indep_var)
 
   plots <- list()
@@ -283,13 +289,13 @@ plot.regression <- function(result,
 		plots[[3]] <- ggplot(model, aes(y=.resid, x=seq_along(.resid))) + geom_line() +
 			labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
 
-    plots[[4]] <- ggplot(model, aes(sample=.stdresid)) + stat_qq(alpha = .5) +
+    plots[[4]] <- ggplot(model, aes_string(sample=".stdresid")) + stat_qq(alpha = .5) +
       labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
 
-  	plots[[5]] <- ggplot(model, aes(x = .resid)) + geom_histogram() +
+  	plots[[5]] <- ggplot(model, aes_string(x = ".resid")) + geom_histogram() +
       labs(list(title = "Histogram of residuals", x = "Residuals"))
 
-    plots[[6]] <- ggplot(model, aes(x=.resid)) + geom_density(alpha=.3, fill = "green") +
+    plots[[6]] <- ggplot(model, aes_string(x=".resid")) + geom_density(alpha=.3, fill = "green") +
       stat_function(fun = dnorm, args = list(mean = mean(model[,'.resid']), sd = sd(model[,'.resid'])), color = "blue") +
   		labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
 
@@ -337,21 +343,22 @@ plot.regression <- function(result,
 	}
 
   if("coef" %in% reg_plots) {
-    if(!anyNA(result$model$coeff)) {
+    if(!anyNA(object$model$coeff)) {
       cl_split <- function(x) 100*(1-x)/2
       cl_split(reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
       (100 - cl_split(reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
 
-      confint(result$model, level = reg_conf_level) %>%
+      confint(object$model, level = reg_conf_level) %>%
         data.frame %>%
         magrittr::set_colnames(c("Low","High")) %>%
-        cbind(select(result$reg_coeff,2),.) %>%
+        cbind(select(object$reg_coeff,2),.) %>%
         round(3) %>%
-        set_rownames(result$reg_coeff$`  `) %>%
+        set_rownames(object$reg_coeff$`  `) %>%
         { if(!reg_coef_int) .[-1,] else . } %>%
         mutate(variable = rownames(.)) %>%
           ggplot() +
-            geom_pointrange(aes(x = variable, y = coefficient, ymin = Low, ymax = High)) +
+            geom_pointrange(aes_string(x = "variable", y = "coefficient",
+                            ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip() -> p
             return(p)
             # -> plots[["coef"]]
@@ -359,10 +366,10 @@ plot.regression <- function(result,
 	}
 
   if("correlations" %in% reg_plots)
-    return(plot.correlation(result$model$model))
+    return(plot.correlation(object$model$model))
 
   if("leverage" %in% reg_plots)
-    return(leveragePlots(result$model, main = "", ask=FALSE, id.n = 1, layout = c(ceiling(length(reg_indep_var)/2),2)))
+    return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1, layout = c(ceiling(length(reg_indep_var)/2),2)))
 
 	if(exists("plots"))
 		sshh( do.call(grid.arrange, c(plots, list(ncol = 2))) )
@@ -372,11 +379,12 @@ plot.regression <- function(result,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{regression}}
+#' @param object Return value from \code{\link{regression}}
 #' @param reg_predict_cmd Command used to generate data for prediction
 #' @param reg_predict_data Name of the dataset to use for prediction
 #' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param reg_save_pred Save predicted values to a csv file
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- regression("diamonds", "price", c("carat","clarity"))
@@ -390,14 +398,15 @@ plot.regression <- function(result,
 #' @seealso \code{\link{plot.regression}} to plot results
 #'
 #' @export
-predict.regression <- function(result,
+predict.regression <- function(object,
                                reg_predict_cmd = "",
                                reg_predict_data = "",
                                reg_conf_level = 0.95,
-                               reg_save_pred = FALSE) {
+                               reg_save_pred = FALSE,
+                               ...) {
 
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
-  if ("standardize" %in% result$reg_check) {
+  if ("standardize" %in% object$reg_check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (reg_predict_cmd == "" && reg_predict_data == "") {
     return(cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press CTRL-return (CMD-return on mac) after you finish entering the command.\nIf no results are shown the command was likely invalid\nAlternatively specify a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant"))
@@ -407,19 +416,19 @@ predict.regression <- function(result,
     cat("Both a command and a dataset where specified for prediciton. The command will be used.\nTo use the dataset remove the command.")
 
   reg_predict_type <- "cmd"
-  vars <- result$reg_indep_var
+  vars <- object$reg_indep_var
   if(reg_predict_cmd != "") {
     reg_predict_cmd %<>% gsub("\"","\'", .)
-    pred_df <- try(eval(parse(text = paste0("with(result$model$model, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
+    pred_df <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
     if(is(pred_df, 'try-error')) {
       return(cat("The command entered did not generate valid data for prediction. Please try again.\nExamples are shown in the helpfile.\n"))
     }
 
     # adding information to the prediction data.frame
-    dat_classes <- attr(result$model$term, "dataClasses")[-1]
+    dat_classes <- attr(object$model$term, "dataClasses")[-1]
     isFct <- dat_classes == "factor"
     isNum <- dat_classes == "numeric"
-    dat <- select_(result$model$model, .dots = vars)
+    dat <- select_(object$model$model, .dots = vars)
 
     # based on http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
     max_freq <- function(x) names(which.max(table(x)))
@@ -454,7 +463,7 @@ predict.regression <- function(result,
     reg_predict_type <- "data"
   }
 
-  pred <- try(predict(result$model, pred_df, interval = 'prediction', level = reg_conf_level), silent = TRUE)
+  pred <- try(predict(object$model, pred_df, interval = 'prediction', level = reg_conf_level), silent = TRUE)
   if(!is(pred, 'try-error')) {
     pred %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
     cl_split <- function(x) 100*(1-x)/2
@@ -470,7 +479,7 @@ predict.regression <- function(result,
     if(reg_predict_type == "cmd") {
       cat("Predicted values for:\n")
     } else {
-      cat(paste0("Predicted values for profiles from dataset: ",result$reg_predict_data,"\n"))
+      cat(paste0("Predicted values for profiles from dataset: ",object$reg_predict_data,"\n"))
     }
 
     pred_df %>% print(., row.names = FALSE)
@@ -494,7 +503,7 @@ predict.regression <- function(result,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{regression}}
+#' @param object Return value from \code{\link{regression}}
 #'
 #' @examples
 #' \dontrun{
@@ -502,11 +511,11 @@ predict.regression <- function(result,
 #' save_reg_resid(result)
 #' }
 #' @export
-save_reg_resid <- function(result) {
-  if(result$data_filter != "")
+save_reg_resid <- function(object) {
+  if(object$data_filter != "")
     return("Please deactivate data filters before trying to save residuals")
-  result$model$residuals %>%
-    changedata(result$dataset, vars = ., var_names = "reg_residuals")
+  object$model$residuals %>%
+    changedata(object$dataset, vars = ., var_names = "reg_residuals")
 }
 
 #' Check if main effects for all interaction effects are included in the model

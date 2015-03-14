@@ -4,12 +4,14 @@
 \alias{summary.conjoint}
 \title{Summary method for conjoint output}
 \usage{
-\method{summary}{conjoint}(result, ca_vif = FALSE)
+\method{summary}{conjoint}(object, ca_vif = FALSE, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{conjoint}}}
+\item{object}{Return value from \code{\link{conjoint}}}
 
 \item{ca_vif}{Shows multicollinearity diagnostics.}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Summary method for conjoint output

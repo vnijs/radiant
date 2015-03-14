@@ -4,10 +4,12 @@
 \alias{plot.correlation}
 \title{Plot method for the correlation function}
 \usage{
-\method{plot}{correlation}(result)
+\method{plot}{correlation}(x, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{correlation}}}
+\item{x}{Return value from \code{\link{correlation}}}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 Plot method for the correlation function

@@ -4,12 +4,14 @@
 \alias{summary.correlation}
 \title{Summarize method for the correlation function}
 \usage{
-\method{summary}{correlation}(result, cor_cutoff = 0)
+\method{summary}{correlation}(object, cor_cutoff = 0, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{correlation}}}
+\item{object}{Return value from \code{\link{correlation}}}
 
 \item{cor_cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 Summarize method for the correlation function

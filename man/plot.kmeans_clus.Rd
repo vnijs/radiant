@@ -4,10 +4,12 @@
 \alias{plot.kmeans_clus}
 \title{Plot method for kmeans_clus}
 \usage{
-\method{plot}{kmeans_clus}(result)
+\method{plot}{kmeans_clus}(x, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{kmeans_clus}}}
+\item{x}{Return value from \code{\link{kmeans_clus}}}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Plot method for kmeans_clus

@@ -38,7 +38,8 @@ single_mean <- function(dataset, sm_var,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{single_mean}}
+#' @param object Return value from \code{\link{single_mean}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- single_mean("diamonds","price")
@@ -48,33 +49,33 @@ single_mean <- function(dataset, sm_var,
 #' @seealso \code{\link{plot.single_mean}} to plot results
 #'
 #' @export
-summary.single_mean <- function(result) {
+summary.single_mean <- function(object, ...) {
 
-  # cat("Time - main",result$time_main,"\n")
+  # cat("Time - main",object$time_main,"\n")
   # cat("Time - summary",now(),"\n")
   cat("Single mean test\n")
-	cat("Data     :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variable :", result$sm_var, "\n")
+	cat("Data     :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variable :", object$sm_var, "\n")
 
 	hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
-                  "greater" = ">")[result$sm_alternative]
+                  "greater" = ">")[object$sm_alternative]
 
-	cat("Null hyp.: the mean of", result$sm_var, "=", result$sm_comp_value, "\n")
-	cat("Alt. hyp.: the mean of", result$sm_var, "is", hyp_symbol,
-	    result$sm_comp_value, "\n\n")
+	cat("Null hyp.: the mean of", object$sm_var, "=", object$sm_comp_value, "\n")
+	cat("Alt. hyp.: the mean of", object$sm_var, "is", hyp_symbol,
+	    object$sm_comp_value, "\n\n")
 
 	# determine lower and upper % for ci
-	{100 * (1-result$sm_sig_level)/2} %>%
+	{100 * (1-object$sm_sig_level)/2} %>%
 		c(., 100 - .) %>%
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
 
-	result$res$sd <- sd(result$dat[,result$sm_var])
-	result$res$n <- nrow(result$dat)
-	res <- round(result$res, 3) 	# restrict to 3 decimals
+	object$res$sd <- sd(object$dat[,object$sm_var])
+	object$res$n <- nrow(object$dat)
+	res <- round(object$res, 3) 	# restrict to 3 decimals
 	names(res)[1:6] <- c("mean","t.value","p.value","df", ci_perc[1], ci_perc[2])
 	if (res$p.value < .001) res$p.value <- "< .001"
 
@@ -85,8 +86,9 @@ summary.single_mean <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{single_mean}}
+#' @param x Return value from \code{\link{single_mean}}
 #' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- single_mean("diamonds","price", sm_comp_value = 3500)
@@ -96,56 +98,60 @@ summary.single_mean <- function(result) {
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
 #' @export
-plot.single_mean <- function(result, sm_plots = "hist") {
+plot.single_mean <- function(x,
+                             sm_plots = "hist",
+                             ...) {
+
+  object <- x; rm(x)
 
  	plots <- list()
 
 	if("hist" %in% sm_plots) {
-		bw <- result$dat %>% range(na.rm = TRUE) %>% diff %>% divide_by(10)
+		bw <- object$dat %>% range(na.rm = TRUE) %>% diff %>% divide_by(10)
 
 		plots[[which("hist" == sm_plots)]] <-
-			ggplot(result$dat, aes_string(x=result$sm_var)) +
+			ggplot(object$dat, aes_string(x=object$sm_var)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
-				geom_vline(xintercept = result$sm_comp_value, color = 'red',
+				geom_vline(xintercept = object$sm_comp_value, color = 'red',
 				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = result$res$estimate, color = 'black',
+				geom_vline(xintercept = object$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = c(result$res$conf.low, result$res$conf.high),
+				geom_vline(xintercept = c(object$res$conf.low, object$res$conf.high),
 				           color = 'black', linetype = 'longdash', size = .5)
 	}
 	if("simulate" %in% sm_plots) {
 
 		simdat <- matrix(0, nrow = 1000)
 		for(i in 1:nrow(simdat)) {
-			simdat[i] <- result$dat[,result$sm_var] %>%
+			simdat[i] <- object$dat[,object$sm_var] %>%
 										 sample(., length(.), replace = TRUE) %>%
 										 mean
 		}
 
-		simdat %<>% { (. - mean(.)) + result$sm_comp_value } %>%
-									as.data.frame %>% set_colnames(result$sm_var)
+		simdat %<>% { (. - mean(.)) + object$sm_comp_value } %>%
+									as.data.frame %>% set_colnames(object$sm_var)
 
-		ci_perc <- {if(result$sm_alternative == 'two.sided') {
-									{(1-result$sm_sig_level)/2}  %>% c(., 1 - .)
-								} else if(result$sm_alternative == 'less') {
-									1-result$sm_sig_level
+		ci_perc <- {if(object$sm_alternative == 'two.sided') {
+									{(1-object$sm_sig_level)/2}  %>% c(., 1 - .)
+								} else if(object$sm_alternative == 'less') {
+									1-object$sm_sig_level
 								} else {
-									result$sm_sig_level
+									object$sm_sig_level
 								}} %>%
-									quantile(simdat[,result$sm_var], probs = .)
+									quantile(simdat[,object$sm_var], probs = .)
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
 		plots[[which("simulate" == sm_plots)]] <-
-			ggplot(simdat, aes_string(x=result$sm_var)) +
+			ggplot(simdat, aes_string(x=object$sm_var)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
-				geom_vline(xintercept = result$sm_comp_value, color = 'red',
+				geom_vline(xintercept = object$sm_comp_value, color = 'red',
 				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = result$res$estimate, color = 'black',
+				geom_vline(xintercept = object$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = ci_perc,
 				           color = 'red', linetype = 'longdash', size = .5) +
-	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", result$sm_var, ")"))
+	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", object$sm_var, ")"))
 	}
 
 	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )

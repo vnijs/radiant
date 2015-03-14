@@ -18,9 +18,9 @@
 #'
 #' @export
 hier_clus <- function(dataset, hc_vars,
-                  data_filter = "",
-                  hc_dist = "sq.euclidian",
-                  hc_meth = "ward.D") {
+                      data_filter = "",
+                      hc_dist = "sq.euclidian",
+                      hc_meth = "ward.D") {
 
 	getdata(dataset, hc_vars, filt = data_filter) %>%
 	  scale %>%
@@ -38,7 +38,8 @@ hier_clus <- function(dataset, hc_vars,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{hier_clus}}
+#' @param object Return value from \code{\link{hier_clus}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- hier_clus("shopping", hc_vars = c("v1:v6"))
@@ -48,25 +49,26 @@ hier_clus <- function(dataset, hc_vars,
 #' @seealso \code{\link{plot.hier_clus}} to plot results
 #'
 #' @export
-summary.hier_clus <- function(result) {
+summary.hier_clus <- function(object, ...) {
 
 	cat("Hierarchical cluster analysis\n")
-	cat("Data        :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter      :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variables   :", paste0(result$hc_vars, collapse=", "), "\n")
-	cat("Method      :", result$hc_meth, "\n")
-	cat("Distance    :", result$hc_dist, "\n")
-	cat("Observations:", length(result$hc_out$order), "\n")
+	cat("Data        :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables   :", paste0(object$hc_vars, collapse=", "), "\n")
+	cat("Method      :", object$hc_meth, "\n")
+	cat("Distance    :", object$hc_dist, "\n")
+	cat("Observations:", length(object$hc_out$order), "\n")
 }
 
 #' Plot method for hier_clus
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{hier_clus}}
+#' @param x Return value from \code{\link{hier_clus}}
 #' @param hc_plots Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity
 #' @param hc_cutoff For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., 0.05 percent) the initial steps in hierachical cluster analysis are removed from the plot
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- hier_clus("shopping", hc_vars = c("v1:v6"))
@@ -79,14 +81,19 @@ summary.hier_clus <- function(result) {
 #' @import ggdendro
 #'
 #' @export
-plot.hier_clus <- function(result, hc_plots = c("scree","diff"), hc_cutoff = 0.02) {
+plot.hier_clus <- function(x,
+                           hc_plots = c("scree","diff"),
+                           hc_cutoff = 0.02,
+                           ...) {
+
+	object <- x; rm(x)
 
 	# importFrom ggdendro ggdendrogram dendro_data segment
-	result$hc_out$height %<>% { . / max(.) }
+	object$hc_out$height %<>% { . / max(.) }
 
 	plots <- list()
 	if("scree" %in% hc_plots) {
-		result$hc_out$height[result$hc_out$height > hc_cutoff] %>%
+		object$hc_out$height[object$hc_out$height > hc_cutoff] %>%
 		data.frame(height = ., nr_clus = length(.):1) %>%
 		ggplot(aes(x=factor(nr_clus,levels=nr_clus), y=height, group = 1)) +
 				  geom_line(colour="blue", linetype = 'dotdash', size=.7) +
@@ -96,7 +103,7 @@ plot.hier_clus <- function(result, hc_plots = c("scree","diff"), hc_cutoff = 0.0
 	}
 
 	if("diff" %in% hc_plots) {
-		result$hc_out$height[result$hc_out$height > hc_cutoff] %>%
+		object$hc_out$height[object$hc_out$height > hc_cutoff] %>%
 			{ (. - lag(.)) / lag(.) } %>%
 			data.frame(bump = ., nr_clus = paste0((length(.)+1):2, "-", length(.):1)) %>%
 			na.omit %>%
@@ -108,23 +115,23 @@ plot.hier_clus <- function(result, hc_plots = c("scree","diff"), hc_cutoff = 0.0
 
 	if("dendro" %in% hc_plots) {
 
-		if(length(result$hc_out$height) < 100) {
+		if(length(object$hc_out$height) < 100) {
 
 			if(hc_cutoff == 0) {
-				ggdendrogram(result$hc_out) + labs(list(title = paste("Dendrogram"), x = "",
+				ggdendrogram(object$hc_out) + labs(list(title = paste("Dendrogram"), x = "",
 				  y = "Within cluster heterogeneity")) + theme_bw() +
 					theme(axis.text.x  = element_text(angle=90, size=6)) -> plots[['dendro']]
 
 			} else {
 				hc_cutoff = .02
-				result$hc_out %>% dendro_data(type="rectangle") %>%
+				object$hc_out %>% dendro_data(type="rectangle") %>%
 					segment %>% filter(y > hc_cutoff) %>% ggplot(.) +
-					geom_segment(aes(x=x, y=y, xend=xend, yend=yend))+
+					geom_segment(aes_string(x="x", y="y", xend="xend", yend="yend"))+
 					labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
 					theme_bw() + theme(axis.text.x = element_blank()) -> plots[['dendro']]
 			}
 		} else {
-			as.dendrogram(result$hc_out) %>%
+			as.dendrogram(object$hc_out) %>%
 			{
 				if(length(hc_plots) > 1) {
 					xlab <- "When the number of observations is larger than 100 only the dendrogram is shown even\n if other types are specified. Call the plot function separately for different plot types."

@@ -105,34 +105,3 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
 
   r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique
 }
-
-# rm(list = ls())
-# source("~/gh/radiant_dev/R/radiant.R")
-# source("~/gh/radiant_dev/inst/base/radiant.R")
-# library(dplyr)
-# r_data <- list()
-# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
-# filename <- fname
-# loadUserData(fname, fname, "csv")
-# r_data
-# loadUserData(fname, fname, "rda")
-# r_data
-# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.csv")
-# loadUserData(fname, fname, "csv")
-# r_data
-# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/houseprices.xlsx")
-# loadUserData(fname, fname, "rda")
-# r_data
-# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/tests/test_data/RadiantState-2015-01-18.rda")
-# loadUserData(fname, fname, "rda")
-# r_data
-
-# fname <- normalizePath("~/Desktop/GitHub/radiant_dev/examples/RadiantState.rda")
-# loadUserData(fname, fname, "rda")
-# r_data[['datasetlist']][1]
-
-# robjname <- try(load(fname), silent=TRUE)
-# robjname
-# length(robjname) > 1
-# sum(robjname %in% c("r_state", "r_data")) == 2
-
