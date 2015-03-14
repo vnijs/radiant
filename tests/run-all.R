@@ -1,5 +1,6 @@
 library(radiant)
-test_dir <- "~/gh/radiant_dev/tests/"
+# test_dir <- "~/gh/radiant_dev/tests/"
+test_dir <- ""
 trim_trailing <- function (x) sub("\\s+$", "", x)
 trim_leading <- function (x) sub("^\\s+", "", x)
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
