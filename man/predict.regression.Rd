@@ -4,11 +4,12 @@
 \alias{predict.regression}
 \title{Predict method for regression}
 \usage{
-\method{predict}{regression}(result, reg_predict_cmd = "",
-  reg_predict_data = "", reg_conf_level = 0.95, reg_save_pred = FALSE)
+\method{predict}{regression}(object, reg_predict_cmd = "",
+  reg_predict_data = "", reg_conf_level = 0.95, reg_save_pred = FALSE,
+  ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{regression}}}
+\item{object}{Return value from \code{\link{regression}}}
 
 \item{reg_predict_cmd}{Command used to generate data for prediction}
 
@@ -17,6 +18,8 @@
 \item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
 \item{reg_save_pred}{Save predicted values to a csv file}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Predict method for regression

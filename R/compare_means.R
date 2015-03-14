@@ -68,7 +68,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	 	se * qt(conf.lev/2 + .5, n-1)
 
 	dat %>%
-		group_by(variable) %>%
+		group_by_("variable") %>%
     summarise_each(funs(mean, n = length(.), sd,
                    			se = sd/sqrt(n),
                    			ci = ci_calc(se,n,cm_sig_level))) %>%
@@ -82,7 +82,8 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{single_mean}}
+#' @param object Return value from \code{\link{compare_means}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
@@ -92,32 +93,33 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 #' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-summary.compare_means <- function(result) {
+summary.compare_means <- function(object, ...) {
 
-  if(result$cm_adjust == "bonf") {
+	# result <- object
+  if(object$cm_adjust == "bonf") {
     cat("Pairwise comparisons (bonferroni adjustment)\n")
   } else {
 	  cat("Pairwise comparisons (no adjustment)\n")
   }
 
-	cat("Data     :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variables:", result$vars, "\n")
-	cat("Samples  :", result$cm_paired, "\n\n")
+	cat("Data     :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables:", object$vars, "\n")
+	cat("Samples  :", object$cm_paired, "\n\n")
 
-  result$dat_summary[,-1] %<>% round(3)
-  print(result$dat_summary %>% as.data.frame, row.names = FALSE)
+  object$dat_summary[,-1] %<>% round(3)
+  print(object$dat_summary %>% as.data.frame, row.names = FALSE)
 	cat("\n")
 
   hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
-                  "greater" = ">")[result$cm_alternative]
+                  "greater" = ">")[object$cm_alternative]
 
-  means <- result$dat_summary$mean
-  names(means) <- result$dat_summary$` ` %>% as.character
+  means <- object$dat_summary$mean
+  names(means) <- object$dat_summary$` ` %>% as.character
 
-	mod <- result$res
+	mod <- object$res
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
 	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(3)
@@ -133,8 +135,9 @@ summary.compare_means <- function(result) {
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{single_mean}}
+#' @param x Return value from \code{\link{compare_means}}
 #' @param cm_plots One or more plots ("bar", "box", or "density")
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
@@ -144,18 +147,22 @@ summary.compare_means <- function(result) {
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #'
 #' @export
-plot.compare_means <- function(result, cm_plots = "bar") {
+plot.compare_means <- function(x,
+                               cm_plots = "bar",
+                               ...) {
 
-	dat <- result$dat
+	object <- x; rm(x)
+
+	dat <- object$dat
 	var1 <- colnames(dat)[1]
 	var2 <- colnames(dat)[-1]
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	plots <- list()
 	if("bar" %in% cm_plots) {
-		colnames(result$dat_summary)[1] <- "variable"
+		colnames(object$dat_summary)[1] <- "variable"
 		# use of `which` allows the user to change the order of the plots shown
-		plots[[which("bar" == cm_plots)]] <- ggplot(result$dat_summary,
+		plots[[which("bar" == cm_plots)]] <- ggplot(object$dat_summary,
 	    aes_string(x="variable", y="mean", fill="variable")) +
 	    geom_bar(stat="identity")  +
 	 		geom_errorbar(width=.1, aes(ymin=mean-ci, ymax=mean+ci)) +

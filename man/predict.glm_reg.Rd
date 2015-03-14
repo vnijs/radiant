@@ -4,15 +4,17 @@
 \alias{predict.glm_reg}
 \title{Predict method for glm}
 \usage{
-\method{predict}{glm_reg}(result, glm_predict_cmd = "",
-  glm_predict_data = "")
+\method{predict}{glm_reg}(object, glm_predict_cmd = "",
+  glm_predict_data = "", ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{regression}}}
+\item{object}{Return value from \code{\link{regression}}}
 
 \item{glm_predict_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
 
 \item{glm_predict_data}{Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Predict method for glm

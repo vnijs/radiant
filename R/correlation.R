@@ -27,7 +27,7 @@ correlation <- function(dataset, cor_var,
 	getdata(dataset, cor_var, filt = data_filter) %>%
 		mutate_each(funs(as.numeric)) -> dat
 
-	plot_height <- plot_width <- 150 * ncol(dat)
+	# plot_height <- plot_width <- 150 * ncol(dat)
 
   environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }
@@ -36,8 +36,9 @@ correlation <- function(dataset, cor_var,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{correlation}}
+#' @param object Return value from \code{\link{correlation}}
 #' @param cor_cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' result <- correlation("diamonds",c("price","carat","clarity"))
@@ -47,10 +48,12 @@ correlation <- function(dataset, cor_var,
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @export
-summary.correlation <- function(result, cor_cutoff = 0) {
+summary.correlation <- function(object,
+                                cor_cutoff = 0,
+                                ...) {
 
 	# calculate the correlation matrix with p-values using the psych package
-	cmat <- suppressWarnings( corr.test(result$dat, method = result$cor_type) )
+	cmat <- suppressWarnings( corr.test(object$dat, method = object$cor_type) )
 
 	cr <- format(round(cmat$r,2))
   cr[abs(cmat$r) < cor_cutoff] <- ""
@@ -62,10 +65,10 @@ summary.correlation <- function(result, cor_cutoff = 0) {
   cp[!ltmat] <- ""
 
   cat("Correlation\n")
-	cat("Data     :", result$dataset, "\n")
-	if(result$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", result$data_filter), "\n")
-	cat("Variables:", paste0(result$cor_var, collapse=", "), "\n")
+	cat("Data     :", object$dataset, "\n")
+	if(object$data_filter %>% gsub("\\s","",.) != "")
+		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables:", paste0(object$cor_var, collapse=", "), "\n")
 	cat("Null hyp.: variables x and y are not correlated\n")
 	cat("Alt. hyp.: variables x and y are correlated\n\n")
 
@@ -73,14 +76,15 @@ summary.correlation <- function(result, cor_cutoff = 0) {
   print(cr, quote = FALSE)
 	cat("\np-values:\n")
   print(cp, quote = FALSE)
-  rm(result)
+  rm(object)
 }
 
 #' Plot method for the correlation function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{correlation}}
+#' @param x Return value from \code{\link{correlation}}
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' result <- correlation("diamonds",c("price","carat","clarity"))
@@ -90,13 +94,15 @@ summary.correlation <- function(result, cor_cutoff = 0) {
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #'
 #' @export
-plot.correlation <- function(result) {
+plot.correlation <- function(x, ...) {
+
+	object <- x; rm(x)
 
 	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
 	panel.plot <- function(x, y) {
 	    usr <- par("usr"); on.exit(par(usr))
 	    par(usr = c(0, 1, 0, 1))
-	    ct <- cor.test(x,y, method = result$cor_type)
+	    ct <- cor.test(x,y, method = object$cor_type)
 	    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
 	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
 	                  symbols = c("***", "**", "*", ".", " "))
@@ -114,6 +120,6 @@ plot.correlation <- function(result) {
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	result$dat %>% { if(is.null(.)) result else . } %>%
+	object$dat %>% { if(is.null(.)) object else . } %>%
 	pairs(lower.panel=panel.smooth, upper.panel=panel.plot)
 }

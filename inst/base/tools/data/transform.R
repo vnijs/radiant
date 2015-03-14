@@ -363,7 +363,7 @@ output$transform_summary <- renderPrint({
 
 		cat("Summarize numeric variables:\n")
     select(dat, which(isNum)) %>%
-      gather_("variable", "values", cn) %>%
+      tidyr::gather_("variable", "values", cn) %>%
       group_by(variable) %>%
       summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
                      median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),

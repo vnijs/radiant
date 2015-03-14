@@ -35,7 +35,8 @@ sampling <- function(dataset, smp_var, smp_sample_size,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/sampling} for an example in Radiant
 #'
-#' @param result Return value from \code{\link{sampling}}
+#' @param object Return value from \code{\link{sampling}}
+#' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- sampling("rndnames","Names",10)
@@ -44,17 +45,17 @@ sampling <- function(dataset, smp_var, smp_sample_size,
 #' @seealso \code{\link{sampling}} to generate the results
 #'
 #' @export
-summary.sampling <- function(result) {
+summary.sampling <- function(object, ...) {
   cat("Sampling (simple random)\n")
-  cat("Data       :", result$dataset, "\n")
-  if(result$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter     :", gsub("\\n","", result$data_filter), "\n")
-  cat("ID variable:", result$smp_var, "\n")
-  cat("Sample size:", result$smp_sample_size, "\n\n")
+  cat("Data       :", object$dataset, "\n")
+  if(object$data_filter %>% gsub("\\s","",.) != "")
+    cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
+  cat("ID variable:", object$smp_var, "\n")
+  cat("Sample size:", object$smp_sample_size, "\n\n")
 
   cat("Selected:\n")
-	print(result$seldat)
+	print(object$seldat)
 	cat("\nSampling frame (max 100 shown):\n")
-  if(result$smp_print_full)
-    head(result$dat, n = 100) %>% print
+  if(object$smp_print_full)
+    head(object$dat, n = 100) %>% print
 }

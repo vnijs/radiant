@@ -147,7 +147,7 @@
 #     }
 #   }
 #
-#   do.call(grid.arrange, c(plots, list(ncol = 1)))
+#   do.call(gridExtra::grid.arrange, c(plots, list(ncol = 1)))
 # }
 #
 # expl_plot_width <- function() {

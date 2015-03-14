@@ -214,7 +214,7 @@ plots_mds <- function(result = .mds()) {
 			points(out$points[,i], out$points[,j], pch = 16, cex = .6)
 
 			# text(out$points[,i], out$points[,j], out$labels, col=rainbow(out$nr.lev,start=.6,end=.1), adj = c(0.4,-.4))
-			textplot(out$points[,i], out$points[,j]+(.04*out$lim), out$labels, col=rainbow(out$nr.lev,start=.6,end=.1),
+			wordclould::textplot(out$points[,i], out$points[,j]+(.04*out$lim), out$labels, col=rainbow(out$nr.lev,start=.6,end=.1),
 				cex = out$mds_fontsz, new = FALSE)
 			abline(v=0, h=0)
 		}

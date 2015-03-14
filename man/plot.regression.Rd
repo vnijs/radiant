@@ -4,11 +4,11 @@
 \alias{plot.regression}
 \title{Plot method for regression}
 \usage{
-\method{plot}{regression}(result, reg_plots = "", reg_lines = "",
-  reg_conf_level = 0.95, reg_coef_int = FALSE)
+\method{plot}{regression}(x, reg_plots = "", reg_lines = "",
+  reg_conf_level = 0.95, reg_coef_int = FALSE, ...)
 }
 \arguments{
-\item{result}{Return value from \code{\link{regression}}}
+\item{x}{Return value from \code{\link{regression}}}
 
 \item{reg_plots}{Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable}
 
@@ -17,6 +17,8 @@
 \item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
 \item{reg_coef_int}{Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Plot method for regression
@@ -37,7 +39,7 @@ plot(result, reg_plots = "leverage")
 plot(result, reg_plots = "resid_pred", reg_lines = "line")
 }
 \seealso{
-\code{\link{regression}} to generate the result
+\code{\link{regression}} to generate the results
 
 \code{\link{summary.regression}} to summarize results
 

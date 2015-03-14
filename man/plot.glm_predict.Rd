@@ -4,11 +4,11 @@
 \alias{plot.glm_predict}
 \title{Plot method for glm_predict (i.e., predict.glm_reg)}
 \usage{
-\method{plot}{glm_predict}(pred, glm_xvar = "", glm_facet_row = ".",
-  glm_facet_col = ".", glm_color = "none", glm_conf_level = 0.95)
+\method{plot}{glm_predict}(x, glm_xvar = "", glm_facet_row = ".",
+  glm_facet_col = ".", glm_color = "none", glm_conf_level = 0.95, ...)
 }
 \arguments{
-\item{pred}{Return value from \code{\link{predict.glm_reg}}.}
+\item{x}{Return value from \code{\link{predict.glm_reg}}.}
 
 \item{glm_xvar}{Variable to display along the X-axis of the plot}
 
@@ -19,6 +19,8 @@
 \item{glm_color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
 
 \item{glm_conf_level}{Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.}
+
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Plot method for glm_predict (i.e., predict.glm_reg)
@@ -37,10 +39,10 @@ plot(pred, glm_xvar = "pclass", glm_color = "sex")
 pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
 plot(pred, glm_xvar = "pclass", glm_color = "age")
 plot(pred, glm_xvar = "age", glm_color = "pclass")
-pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex), age = seq(0,100,20)")
+pred <- predict(result, glm_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
 plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
 plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
-pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex), age = seq(0,100,5)")
+pred <- predict(result, glm_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
 plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
 plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
 }

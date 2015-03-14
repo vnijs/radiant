@@ -254,7 +254,7 @@ output$regression <- renderUI({
   if(not_available(input$reg_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
-  do.call(summary, c(list(result = .regression()), reg_sum_inputs()))
+  do.call(summary, c(list(object = .regression()), reg_sum_inputs()))
 })
 
 .predict_regression <- reactive({
@@ -267,7 +267,7 @@ output$regression <- renderUI({
   if(is_empty(input$reg_predict, ""))
     return(invisible())
 
-  do.call(predict, c(list(result = .regression()), reg_pred_inputs()))
+  do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
 })
 
 .plot_regression <- reactive({
@@ -281,7 +281,7 @@ output$regression <- renderUI({
   if(is_empty(input$reg_plots, ""))
     return("Please select a regression plot from the drop-down menu")
 
-  do.call(plot, c(list(result = .regression()), reg_plot_inputs()))
+  do.call(plot, c(list(x = .regression()), reg_plot_inputs()))
 })
 
 observe({
@@ -292,6 +292,7 @@ observe({
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
+    xcmd <- ""
     if(!is_empty(input$reg_plots)) {
       inp_out[[3]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
       outputs <- c(outputs, "plot")
@@ -300,6 +301,7 @@ observe({
     if(!is_empty(input$reg_predict)) {
       inp_out[[3 + figs]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
+      xcmd <- paste0("print(result)\nwrite.csv(result, file = '~/reg_sav_pred.csv')")
     }
     update_report2(inp_main = clean_args(reg_inputs(), reg_args),
                   fun_name = "regression",
@@ -308,7 +310,7 @@ observe({
                   figs = figs,
                   fig.width = round(7 * reg_plot_width()/650,2),
                   fig.height = round(7 * reg_plot_height()/650,2),
-                  xcmd = paste0("print(result)\nwrite.csv(result, file = '~/reg_sav_pred.csv')"))
+                  xcmd = xcmd)
   })
 })
 
