@@ -85,14 +85,14 @@ plot(result, reg_plots = "coef")
 plot(result, reg_plots = "dashboard")
 ```
 
-As a final example, imagine that you wanted segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis try `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`.
+As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`.
 
 ```{r}
 # set working directory to your Desktop
 setwd("~/Desktop") # or setwd("~/Documents/Desktop")
 
 # get the data from the link below and save it to your desktop
-browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/data_rady/shopping.rda?raw=true")
+browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
 
 # load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
 load("shopping.rda")

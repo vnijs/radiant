@@ -358,12 +358,12 @@ use Manage &gt; Data to paste the predictions as a new dataset.</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>plot(result, reg_plots = &quot;dashboard&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" width="672" /></p>
-<p>As a final example, imagine that you wanted segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis try <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>.</p>
+<p>As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>.</p>
 <pre class="r"><code># set working directory to your Desktop
 setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
 
 # get the data from the link below and save it to your desktop
-browseURL(&quot;https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/data_rady/shopping.rda?raw=true&quot;)
+browseURL(&quot;https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
 
 # load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
 load(&quot;shopping.rda&quot;)
