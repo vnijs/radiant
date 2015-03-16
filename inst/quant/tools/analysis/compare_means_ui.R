@@ -100,8 +100,8 @@ cm_plot_height <- function()
 # output is called from the main radiant ui.R
 output$compare_means <- renderUI({
 
-    register_print_output2("summary_compare_means", ".summary_compare_means", )
-    register_plot_output2("plot_compare_means", ".plot_compare_means",
+    register_print_output("summary_compare_means", ".summary_compare_means", )
+    register_plot_output("plot_compare_means", ".plot_compare_means",
                           height_fun = "cm_plot_height")
 
     # two separate tabs
@@ -111,7 +111,7 @@ output$compare_means <- renderUI({
       tabPanel("Plot", plotOutput("plot_compare_means", height = "100%"))
     )
 
-    statTabPanel2(menu = "Base",
+    stat_tab_panel(menu = "Base",
                   tool = "Compare means",
                   tool_ui = "ui_compare_means",
                   output_panels = cm_output_panels)
@@ -158,7 +158,7 @@ observe({
       outputs <- c("summary")
       inp_out <- list("","")
     }
-    update_report2(inp_main = clean_args(cm_inputs(), cm_args),
+    update_report(inp_main = clean_args(cm_inputs(), cm_args),
                   fun_name = "compare_means",
                   inp_out = inp_out,
                   outputs = outputs,
@@ -167,12 +167,3 @@ observe({
                   fig.height = round(7 * cm_plot_height()/650,2))
   })
 })
-
-# observe({
-#   if(input$compare_means_report %>% not_pressed) return()
-#   isolate({
-#     update_report(inp = cm_inputs() %>% clean_args, fun_name = "compare_means",
-#                   outputs = c("summary", "plot"),
-#                   fig.height = round(7 * cm_plot_height()/650))
-#   })
-# })

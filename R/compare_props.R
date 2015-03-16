@@ -65,8 +65,8 @@ compare_props <- function(dataset, cp_var1, cp_var2,
                 "greater" = "less")
 	##############################################
 
-	suppressWarnings(pairwise.prop.test(prop_input, p.adjust.method = cp_adjust,
-	                     alternative = flip_alt[cp_alternative])) %>% tidy -> res
+	sshhr( pairwise.prop.test(prop_input, p.adjust.method = cp_adjust,
+	       alternative = flip_alt[cp_alternative]) ) %>% tidy -> res
 
 	##############################################
 	# flip the order of pairwise testing - part 2

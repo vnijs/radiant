@@ -23,8 +23,11 @@ pre_factor <- function(dataset, pf_var,
 	dat <- getdata(dataset, pf_var, filt = data_filter)
 	nrObs <- nrow(dat)
 
-	if(nrObs <= ncol(dat))
-		return("Data should have more observations than variables.\nPlease reduce the number of variables.")
+	if(nrObs <= ncol(dat)) {
+		ret <- "Data should have more observations than variables.\nPlease reduce the number of variables." %>%
+						 set_class(c("pre_factor",class(.)))
+		return(ret)
+	}
 
   cmat <- cor(dat)
 	btest <- cortest.bartlett(cmat, nrow(dat))
@@ -60,12 +63,16 @@ pre_factor <- function(dataset, pf_var,
 #' @examples
 #' result <- pre_factor("diamonds",c("price","carat","table"))
 #' summary(result)
+#' result <- pre_factor("computer","HighEnd:Business")
+#' summary(result)
 #'
 #' @seealso \code{\link{pre_factor}} to calculate results
 #' @seealso \code{\link{plot.pre_factor}} to plot results
 #'
 #' @export
 summary.pre_factor <- function(object, ...) {
+
+	if(is.character(object)) return(cat(object))
 
 	if(object$pre_r2 %>% is.character) {
 		cat(object$pre_r2)
@@ -123,6 +130,8 @@ summary.pre_factor <- function(object, ...) {
 plot.pre_factor <- function(x, ...){
 
 	object <- x; rm(x)
+
+	if(is.character(object)) return(invisible())
 
 	if(object$pre_r2 %>% is.character) return(invisible())
 

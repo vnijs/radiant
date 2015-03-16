@@ -23,7 +23,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
-	cst <- suppressWarnings( chisq.test(tab, correct = FALSE) )
+	cst <- sshhr( chisq.test(tab, correct = FALSE) )
 
 	# adding the % deviation table
 	cst$deviation <- with(cst, (observed-expected) / expected)
@@ -153,7 +153,7 @@ plot.cross_tabs <- function(x,
 		tab %>%
 			data.frame(., check.names = FALSE) %>%
 			mutate(rnames = rownames(.)) %>%
-			{ suppressMessages( gather_(., "variable", "values") ) }
+			{ sshhr( gather_(., "variable", "values") ) }
 	}
 
 	plots <- list()

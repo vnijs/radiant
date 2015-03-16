@@ -75,8 +75,8 @@ ff_plot_height <- function()
 
 output$full_factor <- renderUI({
 
-		register_print_output2("summary_full_factor", ".summary_full_factor")
-		register_plot_output2("plot_full_factor", ".plot_full_factor",
+		register_print_output("summary_full_factor", ".summary_full_factor")
+		register_plot_output("plot_full_factor", ".plot_full_factor",
                          	width_fun = "ff_plot_width",
                          	height_fun = "ff_plot_height")
 
@@ -86,7 +86,7 @@ output$full_factor <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_full_factor", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Factor",
+		stat_tab_panel(menu = "Factor",
 		              tool = "Factor",
 		              tool_ui = "ui_full_factor",
 		             	output_panels = ff_output_panels)
@@ -123,14 +123,13 @@ observe({
     inp_out <- list()
     inp_out[[1]] <- list(ff_cutoff = input$ff_cutoff, ff_sort = input$ff_sort)
   	inp_out[[2]] <- ""
- 		xcmd <- paste0("save_factors(result)")
-    update_report2(inp_main = clean_args(ff_inputs(), ff_args),
+ 		xcmd <- paste0("# save_factors(result)")
+    update_report(inp_main = clean_args(ff_inputs(), ff_args),
                    fun_name = "full_factor",
                    inp_out = inp_out,
                    fig.width = round(7 * ff_plot_width()/650,2),
                    fig.height = round(7 * ff_plot_height()/650,2),
                    xcmd = xcmd)
-
   })
 })
 
@@ -138,7 +137,6 @@ observe({
 observe({
 	if(not_pressed(input$ff_save_scores)) return()
 	isolate({
-		.full_factor() %>%
-			{ if(!is.character(.)) save_factors(.) }
+	 .full_factor() %>% { if(!is.character(.)) save_factors(.) }
 	})
 })

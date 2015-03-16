@@ -68,8 +68,8 @@ hc_plot_height <- function()
 # output is called from the main radiant ui.R
 output$hier_clus <- renderUI({
 
-		register_print_output2("summary_hier_clus", ".summary_hier_clus")
-		register_plot_output2("plot_hier_clus", ".plot_hier_clus",
+		register_print_output("summary_hier_clus", ".summary_hier_clus")
+		register_plot_output("plot_hier_clus", ".plot_hier_clus",
                          	width_fun = "hc_plot_width",
                          	height_fun = "hc_plot_height")
 
@@ -79,7 +79,7 @@ output$hier_clus <- renderUI({
 	     tabPanel("Plot", plotOutput("plot_hier_clus", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Cluster",
+		stat_tab_panel(menu = "Cluster",
 		              tool = "Hierarchical",
 		              tool_ui = "ui_hier_clus",
 		             	output_panels = hc_output_panels)
@@ -116,7 +116,7 @@ observe({
       inp_out <- list("","")
       figs <- FALSE
     }
-    update_report2(inp_main = clean_args(hc_inputs(), hc_args),
+    update_report(inp_main = clean_args(hc_inputs(), hc_args),
                   fun_name = "hier_clus",
                   inp_out = inp_out,
                   outputs = outputs,

@@ -1,6 +1,6 @@
 #' Generalized linear models (GLM)
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param glm_dep_var The dependent variable in the logit (probit) model
@@ -517,7 +517,7 @@ plot.glm_predict <- function(x,
   else
     p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
 
-  suppressMessages( suppressWarnings( p ) )
+  sshhr( p )
 }
 
 #' Save glm residuals

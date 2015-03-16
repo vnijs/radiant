@@ -44,7 +44,7 @@ setwd("~/Desktop")
 # setwd("~/Documents/Desktop")
 
 # get the data from the link below and save it to your desktop
-browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/data_rady/shopping.rda?raw=true")
+browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
 
 # load example dataset, if the file is not found make sure your working directory
 # is set to Desktop

@@ -54,14 +54,14 @@ output$ui_sample_size <- renderUI({
 
 output$sample_size <- renderUI({
 
-    register_print_output2("summary_sample_size", ".summary_sample_size")
+    register_print_output("summary_sample_size", ".summary_sample_size")
 
     # one output with components stacked
     ss_output_panels <- tagList(
        tabPanel("Summary", verbatimTextOutput("summary_sample_size"))
     )
 
-    statTabPanel2(menu = "Sample",
+    stat_tab_panel(menu = "Sample",
                   tool = "Sample size",
                   tool_ui = "ui_sample_size",
                   output_panels = ss_output_panels)
@@ -79,7 +79,7 @@ output$sample_size <- renderUI({
 observe({
   if(not_pressed(input$sample_size_report)) return()
   isolate({
-    update_report2(inp_main = clean_args(ss_inputs(), ss_args),
+    update_report(inp_main = clean_args(ss_inputs(), ss_args),
                    fun_name = "sample_size", outputs = "summary", figs = FALSE)
   })
 })

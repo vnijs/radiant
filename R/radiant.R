@@ -56,6 +56,18 @@ sshh <- function(...) {
   invisible()
 }
 
+#' Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+#'
+#' @param ... Inputs to keep quite
+#'
+#' @examples
+#' sshhr( library(dplyr) )
+#'
+#' @export
+sshhr <- function(...) {
+  suppressWarnings( suppressMessages( ... ) )
+}
+
 #' Get data for analysis functions exported by Radiant
 #'
 #' @param dataset Name of the dataframe

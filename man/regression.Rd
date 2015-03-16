@@ -31,6 +31,7 @@ See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an 
 }
 \examples{
 result <- regression("diamonds", "price", c("carat","clarity"))
+result <- regression("diamonds", "price", c("carat","clarity"), reg_check = "standardize")
 }
 \seealso{
 \code{\link{summary.regression}} to summarize results

@@ -19,7 +19,8 @@
 #'
 #' @examples
 #' visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
-#'
+#' visualize("diamonds", "price:x", viz_type = "hist")
+#' visualize("diamonds", "carat:x", viz_vars2 = "price", viz_type = "scatter")
 #' @export
 visualize <- function(dataset, viz_vars1,
                       viz_vars2 = "none",
@@ -35,16 +36,37 @@ visualize <- function(dataset, viz_vars1,
 
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- viz_vars1
+
+  if(!viz_type %in% c("scatter","line"))
+    viz_color = "none"
+
   if(viz_vars2 != "none") vars %<>% c(., viz_vars2)
   if(viz_color != "none") vars %<>% c(., viz_color)
   if(viz_facet_row != ".") vars %<>% c(., viz_facet_row)
   if(viz_facet_col != ".") vars %<>% c(., viz_facet_col)
 
+  # so you can also pass-in a data.frame
   if(is.character(dataset)) {
     dat <- getdata(dataset, vars, filt = data_filter)
   } else {
     dat <- dataset
     dataset <- "dataset"
+  }
+
+  # if : is used to specify a range of variables
+  if(length(vars) < ncol(dat)) {
+    fl <- strsplit(viz_vars1,":") %>% unlist
+    cn <- colnames(dat)
+    viz_vars1 <- cn[which(fl[1] == cn):which(fl[2] == cn)]
+  }
+
+  # dat$x <- as.character(dat$x)
+  isChar <- sapply(dat, class) == "character"
+  if(sum(isChar) > 0) {
+    if(viz_type == "density")
+      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as.numeric))
+    else
+      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as.factor))
   }
 
   plots <- list()
@@ -63,7 +85,6 @@ visualize <- function(dataset, viz_vars1,
     for (i in viz_vars1) {
       plots[[i]] <- ggplot(dat, aes_string(x=i)) +
                     geom_density(adjust=viz_smooth, fill = "green", alpha=.3)
-                    # + labs(list(y = "", x = ""))
     }
   } else if (viz_type == "scatter") {
     itt <- 1
@@ -78,16 +99,14 @@ visualize <- function(dataset, viz_vars1,
     for (i in viz_vars1) {
       for (j in viz_vars2) {
         if (viz_color == 'none') {
-          plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
-          # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group=1))
-          itt <- itt + 1
+          plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
         } else {
-          for (z in viz_color) {
-            plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = z)) + geom_line()
-            # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = z)) + geom_line(aes(group=1))
-            itt <- itt + 1
-          }
+          plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) + geom_line()
+            # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) +
+                              # geom_line(aes_string(group = viz_color))
+                              # geom_line(aes(group=1))
         }
+        itt <- itt + 1
       }
     }
   } else if (viz_type == "bar") {
@@ -124,11 +143,15 @@ visualize <- function(dataset, viz_vars1,
 
   if ("line" %in% viz_check)
     for (i in 1:length(plots))
-      plots[[i]] <- plots[[i]] + geom_smooth(method = "lm", fill = 'blue', alpha = .1, size = .75, linetype = "dashed", colour = 'black')
+      plots[[i]] <- plots[[i]] + geom_smooth(method = "lm", fill = 'blue',
+                                             alpha = .1, size = .75,
+                                             linetype = "dashed",
+                                             colour = 'black')
 
   if ("loess" %in% viz_check)
     for (i in 1:length(plots))
-      plots[[i]] <- plots[[i]] + geom_smooth(span = viz_smooth, size = .75, linetype = "dotdash", aes(group=1))
+      plots[[i]] <- plots[[i]] + geom_smooth(span = viz_smooth, size = .75,
+                                             linetype = "dotdash", aes(group=1))
 
   if ("flip" %in% viz_axes)
     for (i in 1:length(plots)) plots[[i]] <- plots[[i]] + coord_flip()

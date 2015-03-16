@@ -24,8 +24,9 @@ merge_data <- function(dataset, merge_data,
 
   if(exists("r_data")) {
     r_data[[merge_name]] <<- merge_fun(getdata(dataset), getdata(merge_data), by = merge_vars)
-    r_data[[merge_name]] %>% print
-    cat("Merged data added to r_data as", merge_name)
+    r_data[[merge_name]] %>% head
+    r_data[['datasetlist']] <<- c(merge_name,r_data[['datasetlist']]) %>% unique
+    cat("\nMerged data added to r_data as", merge_name)
   } else {
     merge_fun(getdata(dataset), getdata(merge_data), by = merge_vars)
   }
