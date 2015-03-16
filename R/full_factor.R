@@ -190,7 +190,7 @@ plot.full_factor <- function(x, ...) {
 
 #' Save factor scores to active dataset
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/matrix/full_factor.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{full_factor}}
 #'
