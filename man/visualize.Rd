@@ -45,5 +45,7 @@ See \url{http://mostly-harmless.github.io/radiant/base/visualize.html} for an ex
 }
 \examples{
 visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
+visualize("diamonds", "price:x", viz_type = "hist")
+visualize("diamonds", "carat:x", viz_vars2 = "price", viz_type = "scatter")
 }
 

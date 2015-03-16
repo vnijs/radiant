@@ -1,4 +1,4 @@
-#' Evaluate if data are appropriate for PCA / Factor analysis
+#' Factor analysis (PCA)
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
@@ -32,8 +32,11 @@ full_factor <- function(dataset, ff_var,
 	dat <- getdata(dataset, ff_var, filt = data_filter)
 
 	nrObs <- nrow(dat)
-	if(nrObs <= ncol(dat))
-		return("Data should have more observations than variables.\nPlease reduce the number of variables.")
+	if(nrObs <= ncol(dat)) {
+		ret <- "Data should have more observations than variables.\nPlease reduce the number of variables." %>%
+						 set_class(c("full_factor",class(.)))
+		return(ret)
+	}
 
 	nrFac <- max(1,as.numeric(ff_number))
 	if(nrFac > ncol(dat)) {
@@ -80,6 +83,8 @@ summary.full_factor <- function(object,
                                 ff_sort = FALSE,
                                 ...) {
 
+	if(is.character(object)) return(cat(object))
+
 	cat("Factor analysis\n")
 	cat("Data        :", object$dataset, "\n")
 	if(object$data_filter %>% gsub("\\s","",.) != "")
@@ -90,7 +95,7 @@ summary.full_factor <- function(object,
 	cat("Rotation    :", object$ff_rotation, "\n")
 	cat("Observations:", object$nrObs, "\n")
 
-	cat("\nFactor loadings matrix:\n")
+	cat("\nFactor loadings:\n")
 
 	# convert loadings object to data.frame
 	lds <- object$fres$loadings %>%
@@ -141,6 +146,8 @@ summary.full_factor <- function(object,
 #' @examples
 #' result <- full_factor("diamonds",c("price","carat","table"))
 #' plot(result)
+#' result <- full_factor("computer","HighEnd:Business")
+#' summary(result)
 #'
 #' @seealso \code{\link{full_factor}} to calculate results
 #' @seealso \code{\link{plot.full_factor}} to plot results
@@ -153,8 +160,13 @@ plot.full_factor <- function(x, ...) {
 	object <- x; rm(x)
 
 	# when no analysis was conducted (e.g., no variables selected)
-	if(is.character(object)) return(plot(x = 1, type = 'n', main=object, axes = FALSE, xlab = "", ylab = ""))
-	if(object$fres$factors < 2) object <- "Plots require two or more factors"
+	if(is.character(object))
+		return(plot(x = 1, type = 'n', main=object, axes = FALSE, xlab = "", ylab = ""))
+
+	if(object$fres$factors < 2) {
+		object <- "Plots require two or more factors"
+		return(plot(x = 1, type = 'n', main=object, axes = FALSE, xlab = "", ylab = ""))
+	}
 
 	df <- round(as.data.frame(object$fres$loadings[]),3)
 	rnames <- rownames(df)

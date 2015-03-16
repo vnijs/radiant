@@ -2,7 +2,6 @@
 output$uiExpl_columns <- renderUI({
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
-  # if(length(vars) == 0) return()
   selectInput("expl_columns", label = "Select columns(s):", choices = vars,
     selected = state_multiple("expl_columns",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
@@ -10,7 +9,6 @@ output$uiExpl_columns <- renderUI({
 
 output$uiExpl_byvar <- renderUI({
   vars <- groupable_vars()
-  # if(length(vars) == 0) return()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar",vars), multiple = TRUE,
     options = list(placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
@@ -47,17 +45,8 @@ output$ui_Explore <- renderUI({
         div(class="col-xs-6", uiOutput("uiExpl_show_viz"))
       )
     ),
-    helpAndReport('Explore','explore',inclMD("../base/tools/help/explore.md"))
+    help_modal('Explore','exploreHelp',inclMD("../base/tools/help/explore.md"))
   )
-})
-
-observe({
-  if(is.null(input$exploreReport) || input$exploreReport == 0) return()
-  isolate({
-    inp <- list(input$dataset, input$expl_columns, input$expl_byvar, input$expl_function,
-                input$expl_show_tab, input$expl_show_viz)
-    updateReport(inp,"explore", round(7 * expl_plot_width()/650,2), round(7 * expl_plot_height()/650,2))
-  })
 })
 
 .explore <- reactive({
@@ -185,15 +174,10 @@ plots_explore <- function(result = .explore()) {
   do.call(gridExtra::grid.arrange, c(plots, list(ncol = 1)))
 }
 
-expl_plot_width <- function() {
-  # return(input$expl_plot_width)
-  650
-}
+expl_plot_width <- function() 650
 
-expl_plot_height <- function() {
-  # return(input$expl_plot_height)
+expl_plot_height <- function()
   400 * length(input$expl_function) * length(input$expl_columns)
-}
 
 output$expl_plots <- renderPlot({
 

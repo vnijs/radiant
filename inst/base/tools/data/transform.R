@@ -131,7 +131,6 @@ trans_types <- list("None" = "none", "Type" = "type", "Change" = "change",
                     "Filter" = "sub_filter")
 
 output$ui_Transform <- renderUI({
-
 	# Inspired by Ian Fellow's transform ui in JGR/Deducer
   list(wellPanel(
     uiOutput("uiTr_columns"),
@@ -146,7 +145,6 @@ output$ui_Transform <- renderUI({
       uiOutput("uiTr_normalizer")
     ),
     conditionalPanel(condition = "input.tr_changeType == 'create'",
-	    # returnTextInput("tr_transform", "Create (e.g., x = y - z):", '')
 	    returnTextAreaInput("tr_transform", "Create (e.g., x = y - z):", '')
     ),
     conditionalPanel(condition = "input.tr_changeType == 'clip'",
@@ -173,11 +171,8 @@ output$ui_Transform <- renderUI({
     ),
 	  textInput("tr_dataset", "Save changes to:", input$dataset)
   	),
+		help_modal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
 
-		helpModal('Transform','transformHelp',inclMD("../base/tools/help/transform.md"))
-
-		# Reporting option not yet available for transform
- 		# helpAndReport('Explore','explore',inclRmd("tools/help/explore.Rmd"))
 	)
 })
 

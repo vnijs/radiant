@@ -2,7 +2,7 @@ shinyUI(
   navbarPage("Radiant - Quantitative Analysis", id = "nav_radiant",
              inverse = TRUE, collapsible = TRUE,
 
-  tabPanel("Data", uiOutput('data_ui_and_tabs')),
+  tabPanel("Data", uiOutput('ui_data')),
 
   withMathJax(),
 

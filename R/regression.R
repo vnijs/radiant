@@ -13,6 +13,7 @@
 #'
 #' @examples
 #' result <- regression("diamonds", "price", c("carat","clarity"))
+#' result <- regression("diamonds", "price", c("carat","clarity"), reg_check = "standardize")
 #'
 #' @seealso \code{\link{summary.regression}} to summarize results
 #' @seealso \code{\link{plot.regression}} to plot results
@@ -32,7 +33,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 
 	if("standardize" %in% reg_check) {
     isNum <- sapply(dat, is.numeric)
-    if(sum(isNum > 0)) dat[,isNum] %<>% data_frame %>% mutate_each(funs(scale))
+    if(sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
 	formula <- paste(reg_dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
@@ -109,6 +110,9 @@ summary.regression <- function(object,
   # cat("Null hyp.: variables x and y are not correlated\n")
   # cat("Alt. hyp.: variables x and y are correlated\n\n")
 	print(object$reg_coeff, row.names=FALSE)
+
+  if(nrow(object$model$model) <= (length(object$reg_indep_var) + 1))
+    return("\nInsufficient observations to estimate model")
 
 	reg_fit <- glance(object$model) %>% round(3)
 	if(reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"

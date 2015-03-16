@@ -66,8 +66,8 @@ sm_plot_height <- function()
 # output is called from the main radiant ui.R
 output$single_mean <- renderUI({
 
-		register_print_output2("summary_single_mean", ".summary_single_mean")
-		register_plot_output2("plot_single_mean", ".plot_single_mean",
+		register_print_output("summary_single_mean", ".summary_single_mean")
+		register_plot_output("plot_single_mean", ".plot_single_mean",
                          height_fun = "sm_plot_height")
 
 		# two separate tabs
@@ -83,7 +83,7 @@ output$single_mean <- renderUI({
 	  #    tabPanel("Plot", plotOutput("plot_single_mean", height = "100%"))
 	  # )
 
-		statTabPanel2(menu = "Base",
+		stat_tab_panel(menu = "Base",
 		              tool = "Single mean",
 		              tool_ui = "ui_single_mean",
 		             	output_panels = sm_output_panels)
@@ -128,7 +128,7 @@ observe({
       outputs <- c("summary")
       inp_out <- list("","")
     }
-    update_report2(inp_main = clean_args(sm_inputs(), sm_args),
+    update_report(inp_main = clean_args(sm_inputs(), sm_args),
                   fun_name = "single_mean",
                   inp_out = inp_out,
                   outputs = outputs,

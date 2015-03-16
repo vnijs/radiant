@@ -12,7 +12,7 @@ Version: 0.1.66, Date: 2015-3-13
 - Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes)
 - Context: Data and examples focus on business applications
 - Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using [Rmarkdown document](http://rmarkdown.rstudio.com/). You will not lose your work if you accidentally leave the radiant page in your browser
-- Cross-platform: It runs in a browser (e.g., Chrome or Firefow). No data will leave your computer when Radiant is running on your computer. When you have installed the app you can even run it without an internet connection.
+- Cross-platform: It runs in a browser (e.g., Chrome or Firefox). No data will leave your computer when Radiant is running on your computer. When you have installed the app you can even run it without an internet connection.
 
 ## Goal
 

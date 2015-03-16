@@ -3,7 +3,7 @@
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
 
-[![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant)
+<!-- [![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant) -->
 Version: 0.1.66, Date: 2015-3-13
 
 ## Key features
@@ -12,7 +12,7 @@ Version: 0.1.66, Date: 2015-3-13
 - Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes)
 - Context: Data and examples focus on business applications
 - Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using [Rmarkdown document](http://rmarkdown.rstudio.com/). You will not lose your work if you accidentally leave the radiant page in your browser
-- Cross-platform: It runs in a browser (e.g., Chrome or Firefow). No data will leave your computer when Radiant is running on your computer. When you have installed the app you can even run it without an internet connection.
+- Cross-platform: It runs in a browser (e.g., Chrome or Firefox). No data will leave your computer when Radiant is running on your computer. When you have installed the app you can even run it without an internet connection.
 
 ## Goal
 

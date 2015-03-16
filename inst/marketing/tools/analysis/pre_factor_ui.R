@@ -44,8 +44,8 @@ pf_plot_height <- function()
 
 output$pre_factor <- renderUI({
 
-	register_print_output2("summary_pre_factor", ".summary_pre_factor")
-	register_plot_output2("plot_pre_factor", ".plot_pre_factor",
+	register_print_output("summary_pre_factor", ".summary_pre_factor")
+	register_plot_output("plot_pre_factor", ".plot_pre_factor",
                        	width_fun = "pf_plot_width",
                        	height_fun = "pf_plot_height")
 
@@ -55,7 +55,7 @@ output$pre_factor <- renderUI({
      tabPanel("Plot", plotOutput("plot_pre_factor", height = "100%"))
   )
 
-	statTabPanel2(menu = "Factor",
+	stat_tab_panel(menu = "Factor",
 	              tool = "Pre-factor",
 	              tool_ui = "ui_pre_factor",
 	             	output_panels = pf_output_panels)
@@ -84,7 +84,7 @@ output$pre_factor <- renderUI({
 observe({
   if(not_pressed(input$pre_factor_report)) return()
   isolate({
-    update_report2(inp_main = clean_args(pf_inputs(), pf_args),
+    update_report(inp_main = clean_args(pf_inputs(), pf_args),
                   fun_name = "pre_factor")
   })
 })

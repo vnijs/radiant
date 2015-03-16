@@ -104,19 +104,11 @@ output$ui_Visualize <- renderUI({
       div(class="row",
           div(class="col-xs-6",
               numericInput("viz_plot_height", label = "Plot height:", min = 100, step = 50,
-                           value = state_init("viz_plot_height", r_data$plotHeight))),
+                           value = state_init("viz_plot_height", r_data$plot_height))),
           div(class="col-xs-6",
               numericInput("viz_plot_width", label = "Plot width:", min = 100, step = 50,
-                           value = state_init("viz_plot_width", r_data$plotWidth)))
+                           value = state_init("viz_plot_width", r_data$plot_width)))
       )
-      # ,div(class="row-fluid",
-      # 	div(class="span6",
-      # 		dateInput("date_start", "From:", value = Sys.Date()-14)),
-      # 	div(class="span6",
-      # 		dateInput("date_end", "To:", value = Sys.Date())),
-      # 	tags$style(type="text/css", '#date_start {width: 80%}'),
-      # 	tags$style(type="text/css", '#date_end {width: 80%}')
-      # )
     ),
     help_and_report(modal_title = "Visualize",
                 fun_name = "visualize",
@@ -125,12 +117,12 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  if(is.null(input$viz_plot_width)) r_data$plotWidth else input$viz_plot_width
+  if(is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 })
 
 viz_plot_height <- reactive({
   if(is.null(input$viz_plot_height)) {
-    r_data$plotHeight
+    r_data$plot_height
   } else {
     length(input$viz_vars1) %>%
     { if(. > 1)
@@ -152,15 +144,13 @@ output$visualize <- renderPlot({
   withProgress(message = 'Making plot', value = 0, {
     .visualize() %>% { if(is.list(.)) . else return() }
   })
-
-
 }, width = viz_plot_width, height = viz_plot_height)
 
 .visualize <- reactive({
   # need dependency on ..
   input$viz_plot_height; input$viz_plot_width
 
-  if(input$viz_vars1 %>% not_available) return()
+  if(not_available(input$viz_vars1)) return()
   if(input$viz_type %in% c("scatter","line", "box", "bar")
      && is_empty(input$viz_vars2, "none")) return()
 
@@ -170,10 +160,10 @@ output$visualize <- renderPlot({
 observe({
   if(not_pressed(input$visualize_report)) return()
   isolate({
-    outputs <- c()
-    update_report(inp = clean_args(viz_inputs(), viz_args), fun_name = "visualize",
-                  pre_cmd = "", outputs = outputs,
-                  fig.width = round(7 * viz_plot_width()/650,2),
-                  fig.height = round(7 * viz_plot_height()/500,2))
+    update_report(inp_main = clean_args(viz_inputs(), viz_args),
+                   fun_name = "visualize", outputs = character(0),
+                   figs = TRUE,
+                   fig.width = round(7 * viz_plot_width()/650,2),
+                   fig.height = round(7 * viz_plot_height()/500,2))
   })
 })

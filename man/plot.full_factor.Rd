@@ -20,6 +20,8 @@ See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} fo
 \examples{
 result <- full_factor("diamonds",c("price","carat","table"))
 plot(result)
+result <- full_factor("computer","HighEnd:Business")
+summary(result)
 }
 \seealso{
 \code{\link{full_factor}} to calculate results
