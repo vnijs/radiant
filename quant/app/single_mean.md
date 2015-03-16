@@ -2,7 +2,7 @@
 
 The single mean (or one-sample) t-test is used to compare the mean of a variable in our data to a hypothesized mean in the population from which our sample data are drawn. This is important since we seldom have access to data for an entire population. The hypothesized value in the population is specified in the 'Comparison value' box.
 
-We can perform either a one-tailed test (i.e., less than or greater than) or two-tailed test (see 'Alternative hypothesis'). In marketing we often use one-tailed tests because we want to evaluate if the available data provide evidence that a variable or effect is larger (or smaller) than some base-value (i.e., the value specified in the null-hypothesis).
+We can perform either a one-tailed test (i.e., less than or greater than) or two-tailed test (see 'Alternative hypothesis'). We use one-tailed tests to evaluate if the available data provide evidence that a variable or effect is larger (or smaller) than some base-value (i.e., the value specified in the null-hypothesis).
 
 #### Example
 

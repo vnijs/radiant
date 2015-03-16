@@ -36,15 +36,15 @@ Select `survived` as the dependent variable with `Yes` in **Choose level**. Sele
 
 ![Summary](figures_quant/glm_reg_summary.png)
 
-In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.
+In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared to age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.
 
 ![Plot](figures_quant/glm_reg_plot.png)
 
-Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the `Command` radio button, type `pclass = levels(pclass)` in the **Prediction command** box, and press Enter.
+Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the `Command` radio button in the Predict tab, type `pclass = levels(pclass)` in the **Prediction command** box, and press CTRL-return (CMD-return on mac).
 
-![Plot](figures_quant/glm_reg_summary_pred.png)
+![Plot](figures_quant/glm_reg_predict.png)
 
-For males of average age (approx. 30 in the sample) the survival probability was close to 50%. For 3rd class passengers this probability was closer to 9%.
+The figure shows that the probabilities drop sharply between 1st, 2nd, and 3rd class. For males of average age (approx. 30 in the sample) the survival probability was close to 50%. For 3rd class passengers this probability was closer to 9%.
 
 ```r
     age  sex pclass  pred
@@ -53,7 +53,7 @@ For males of average age (approx. 30 in the sample) the survival probability was
  29.881 male    3rd 0.092
 ```
 
-To see the effects of gender type `sex = levels(sex)` in the **Prediction command** box and press Enter. For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 9%.
+To see the effects of gender type `sex = levels(sex)` in the **Prediction command** box and press CTRL-return (CMD-return on mac). For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 9%.
 
 ```r
     age pclass    sex  pred
@@ -61,7 +61,7 @@ To see the effects of gender type `sex = levels(sex)` in the **Prediction comman
  29.881    3rd   male 0.092
 ```
 
-To see the effects for age type `age = seq(0,100, 20)` in the **Prediction command** box. For male infants in 3rd class the survival probability was around 20%. For 60 year old males in 3rd class the probability drops to around 3%. For the oldest males on board the model predicts a survival probability close to 0%.
+To see the effects for age type `age = seq(0,100, 20)` in the **Prediction command** box and press CTRL-return (CMD-return on mac). For male infants in 3rd class the survival probability was around 20%. For 60 year old males in 3rd class the probability drops to around 3%. For the oldest males on board the model predicts a survival probability close to 0%.
 
 ```r
  pclass  sex age  pred
@@ -73,8 +73,8 @@ To see the effects for age type `age = seq(0,100, 20)` in the **Prediction comma
     3rd male 100 0.009
 ```
 
-For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities using the following command: `pclass = levels(pclass), sex = levels(sex), age = seq(0,100, 20)`. There are too many numbers to easily interpret in table form so we save the predictions (you can use the `Prediction` button) and paste the table into Radiant through the Data > Manage tab. Finally, generate the following plot in the Data > Visualize tab:
+For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities by selecting the **Data** radio button in the Predict tab and selecting `Titanic` from the dropdown. There are too many numbers to easily interpret in table form but the figure gives a clear overview of how survival probabilities change with `age`, `gender`, and `pclass`:
 
-![Probability](figures_quant/glm_reg_viz_pred.png)
+![Probability](figures_quant/glm_reg_predict_data.png)
 
 

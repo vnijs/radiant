@@ -108,10 +108,10 @@ img {
              <li><a href="/radiant/base/manage.html">Manage</a></li>
              <li><a href="/radiant/base/view.html">View</a></li>
              <li><a href="/radiant/base/visualize.html">Visualize</a></li>
-             <li><a href="/radiant/base/explore.html">Explore</a></li>
              <li><a href="/radiant/base/pivot.html">Pivot</a></li>
-             <li><a href="/radiant/base/merge.html">Merge</a></li>
+             <li><a href="/radiant/base/explore.html">Explore</a></li>
              <li><a href="/radiant/base/transform.html">Transform</a></li>
+             <li><a href="/radiant/base/merge.html">Merge</a></li>
           </ul>
         </li>
 
@@ -256,7 +256,7 @@ img {
 </div>
 <div id="example-3-linear-or-log-log-regression" class="section level3">
 <h3>Example 3: Linear or log-log regression?</h3>
-<p>In marketing both linear and log-log regressions are very common. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.</p>
+<p>Both linear and log-log regressions are commonly applied to business data. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.</p>
 <p>The data <code>diamonds</code> contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data &gt; Manage page. Select the variable <code>price</code> as the dependent variable and <code>carat</code> and <code>clarity</code> as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the <em>tail</em> is.</p>
 <p><img src="figures_quant/regression_diamonds_hist.png" alt="Regression 3 - histograms" /></p>
 <p>In the plot of correlations there are clear associations among the dependent and independent variables. The correlation between price and carat is extremely large (i.e., .93). The correlation between carat and clarity of the diamond is significant and negative.</p>
@@ -266,7 +266,8 @@ img {
 <p>The dashboard of six residual plots looks less than stellar. The true values and predicted values from the regression form an S-shaped curve. At higher actual and predicted values the spread of points around the line is wider, consistent with what we saw in the scatter plot of price versus carats. The residuals (i.e., the differences between the actual data and the values predicted by the regression) show an even more distinct pattern as they are clearly not randomly scattered around a horizontal axis. The Residual vs Row order plot looks perfectly straight indicating that auto-correlation is not a concern. Finally, while for the <code>ideal</code> data in example 2 the Q-Q plot showed a nice straight diagonal line, here dots clearly separate from the line at the right extreme, evidence that the residuals are not normally distributed. This conclusions is confirmed by the histogram and density plots of the residuals that show a more spiked appearance than a truly normally distributed variable would.</p>
 <p><img src="figures_quant/regression_diamonds_dashboard.png" alt="Regression 3 - dashboard" /></p>
 <p>The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). The residuals fan-out from left to right in the plot of residuals vs carats. The box-plot of clarity versus residuals shows outliers with strong negative values for lower levels of clarity and outliers with strong positive values for diamonds with higher levels of clarity. <img src="figures_quant/regression_diamonds_res_vs_pred.png" alt="Regression 3 - residual vs predicted" /></p>
-<p>Since the diagnostics do not look good, we should <strong>not</strong> draw inferences from this regression. A log-log specification may be preferable.</p>
+<p>Since the diagnostics do not look good, we should <strong>not</strong> draw inferences from this regression. A log-log specification may be preferable. A quick way to check the validity of this model change is available through the Data &gt; Visualize tab. Select <code>price</code> as the Y-variable and <code>carat</code> as the X-variable in a <code>Scatter</code> plot. Check the <code>log X</code> and <code>log Y</code> boxes to produce the plot below. The relationship between log-price and log-carat looks close to linear. Exactly what we are looking for.</p>
+<p><img src="figures_quant/regression_log_diamonds_viz_scatter.png" alt="Regression 3 - viz log scatter" /></p>
 <p>We will apply a log transformation to both price and carat and rerun the analysis to see if the log-log specification is more appropriate for the data. This transformation can be done in Data &gt; Transform. Select the variables price and carat. Choose <code>change</code> from the Transformation type drop-down and choose <code>Log</code> from the Apply function drop-down. Make sure to <code>Save changes</code> so the new variables are added to the dataset. Note that we cannot apply a log transformation to clarity because it is a <a href="http://en.wikipedia.org/wiki/Categorical_variable" target="_blank">categorical</a> variable.</p>
 <p>In Regression &gt; Linear (OLS) select the variable <code>log_price</code> as the dependent variable and <code>log_carat</code> and <code>clarity</code> as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. log_price and log_carat are no longer right skewed, a good sign.</p>
 <p><img src="figures_quant/regression_log_diamonds_hist.png" alt="Regression 3 - log histograms" /></p>
