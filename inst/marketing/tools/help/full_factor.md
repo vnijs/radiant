@@ -32,9 +32,7 @@ Factor 2: Social benefits
 
 The best way to see what rotation does is to toggle the radio buttons `Rotation` between Varimax and None and inspect what changes in the output. Click on the Plots tab and set the radio button to None. The image shown below depicts the loadings of the variables on the two factors. Variable 5 falls somewhat in between the lines for factor 1 and factor 2. When we select Varimax rotation, however, the label for v5 lines up nicely with the horizontal axis. This change in alignment is also reflected in the factor loadings. The unrotated factor loadings for v5 are -0.869 for factor 1 and -0.351 for factor 2. The rotated factor loadings for v5 are -0.934 for factor 1 and -0.079 for factor 2.
 
-![Plot](figures_marketing/full_factor_plot.png)
-
-![Plot - rotation](figures_marketing/full_factor_plot_rotation.png)
+![Plot](figures_marketing/full_factor_plot.png) ![Plot - rotation](figures_marketing/full_factor_plot_rotation.png)
 
 The final step is to generate the factor scores. You can think of these scores as a weighted average of the variables that are linked to a factor. They approximate the scores that a respondent would have provided if we could have asked about the factor in a single question, i.e., the respondents inferred ratings on the factors. By clicking on the 'Save scores' button two new variables will be added to the toothpaste data file. You can see them by going to Data > View. We can use factor scores in other analyses (e.g., cluster analysis or regression). You can rename the new variables, e.g., to 'health' and 'social' through Data > Transform by selecting 'Rename' from the Transformation type dropdown.
 
