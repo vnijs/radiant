@@ -9,7 +9,6 @@ radiant <- function(app = c("marketing", "quant", "base")) {
 
   addResourcePath("imgs", system.file("base/www/imgs/", package="radiant"))
   addResourcePath("figures", system.file("base/tools/help/figures/", package="radiant"))
-  # addResourcePath("data_examples", system.file("../data/", package="radiant"))
   if(app[1] == "marketing") {
     addResourcePath("figures_marketing", system.file("marketing/tools/help/figures/", package="radiant"))
   } else if(app[1] == "quant") {
@@ -112,6 +111,9 @@ getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 #'
 #' @export
 changedata <- function(dataset, vars = c(), var_names = names(vars)) {
+
+  r_env <- r_data <- NULL
+
   if(exists("r_env")) {
     cat("Dataset", dataset, "changed in r_env\n")
     r_env$r_data[[dataset]][,var_names] <<- vars

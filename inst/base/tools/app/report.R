@@ -140,7 +140,7 @@ observe({
 })
 
 # updating the report when called
-update_report2 <- function(inp_main = "", fun_name = "", inp_out = list("",""), pre_cmd = "result <- ",
+update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""), pre_cmd = "result <- ",
                           outputs = c("summary", "plot"),
                           figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
 

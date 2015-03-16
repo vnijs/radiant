@@ -190,7 +190,7 @@ plot.full_factor <- function(x, ...) {
 
 #' Save factor scores to active dataset
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/full_factor.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/matrix/full_factor.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{full_factor}}
 #'
@@ -205,6 +205,6 @@ plot.full_factor <- function(x, ...) {
 save_factors <- function(object) {
   if(object$data_filter != "")
     return("Please deactivate data filters before trying to save factor scores")
-  object$fres$scores %>%
+  object$fres$scores %>% as.data.frame %>%
     changedata(object$dataset, vars = ., var_names = paste0("fac",1:ncol(.)))
 }

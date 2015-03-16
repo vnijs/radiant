@@ -13,7 +13,7 @@ save_membership(object)
 Add a cluster membership variable to the select dataset
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 }
 \examples{
 \dontrun{
