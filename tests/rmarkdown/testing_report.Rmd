@@ -1,0 +1,156 @@
+---
+title: Testing Radiant
+---
+
+```{r echo = FALSE}
+knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
+suppressMessages(library(radiant))
+load("~/gh/radiant_dev/tests/rmarkdown/testing_state.rda")
+```
+```{r fig.width=7, fig.height=4.31}
+result <- single_mean(dataset = "anscombe", sm_var = "y1")
+summary(result)
+plot(result, sm_plots = "hist")
+```
+
+```{r fig.width=7, fig.height=4}
+result <- compare_means(dataset = "anscombe", cm_var1 = "y1", cm_var2 = c("x2", "y3"), cm_paired = "independent", cm_alternative = "two.sided", cm_sig_level = 0.95, cm_adjust = "none")
+summary(result)
+plot(result, cm_plots = "bar")
+```
+
+```{r fig.width=7, fig.height=4}
+result <- regression(dataset = "anscombe", "y1", "x2")
+summary(result)
+plot(result, reg_plots = "coef")
+```
+
+
+```{r fig.width=7, fig.height=4}
+result <- regression(dataset = "ideal", "y", "x2")
+summary(result)
+plot(result, reg_plots = "coef")
+```
+
+```{r fig.width=6.46, fig.height=8.4}
+result <- visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price", viz_type = "scatter", viz_color = "clarity", viz_check = c("line", "loess"), viz_axes = c("log_x", "log_y"))
+```
+
+```{r}
+result <- sampling(dataset = "rndnames", smp_var = "Names", smp_sample_size = 6)
+summary(result)
+```
+
+```{r}
+result <- sample_size()
+summary(result)
+```
+
+```{r fig.width=7, fig.height=8.62}
+result <- single_mean(dataset = "demand_uk", sm_var = "demand_uk", sm_comp_value = 1750)
+summary(result)
+plot(result, sm_plots = c("hist", "simulate"))
+```
+
+```{r fig.width=7, fig.height=12.92}
+result <- compare_means(dataset = "diamonds", cm_var1 = "cut", cm_var2 = "price", cm_adjust = "bonf")
+summary(result)
+plot(result, cm_plots = c("bar", "box", "density"))
+```
+
+```{r fig.width=7, fig.height=8.62}
+result <- single_prop(dataset = "diamonds", sp_var = "clarity", sp_levels = "I1", sp_comp_value = 0.05)
+summary(result)
+plot(result, sp_plots = c("hist", "simulate"))
+```
+
+```{r fig.width=7, fig.height=8.62}
+result <- compare_props(dataset = "titanic", cp_var1 = "pclass", cp_var2 = "survived", cp_levels = "Yes")
+summary(result)
+plot(result, cp_plots = c("props", "counts"))
+```
+
+```{r fig.width=7, fig.height=21.54}
+result <- cross_tabs(dataset = "titanic", ct_var1 = "pclass", ct_var2 = "survived")
+summary(result, ct_check = c("observed", "expected", "chi_sq", "dev_std", "dev_perc"))
+plot(result, ct_check = c("observed", "expected", "chi_sq", "dev_std", "dev_perc"))
+```
+
+```{r fig.width=9.15, fig.height=9.15}
+result <- correlation(dataset = "titanic", cor_var = c("pclass", "survived", "sex", "age", "sibsp", "parch"))
+summary(result, cor_cutoff = 0)
+plot(result)
+```
+
+```{r fig.width=7, fig.height=8.08}
+result <- regression(dataset = "diamonds", reg_dep_var = "price", reg_indep_var = c("carat", "clarity"))
+summary(result, reg_sum_check = c("rmse", "confint"), reg_conf_level = 0.99)
+# save_reg_resid(result)
+plot(result, reg_plots = "dashboard", reg_lines = "line", reg_conf_level = 0.99)
+result <- predict(result, reg_predict_data = "diamonds", reg_conf_level = 0.99, reg_save_pred = TRUE)
+print(result)
+# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)
+```
+
+```{r fig.width=7, fig.height=4.74}
+result <- glm_reg(dataset = "titanic", glm_dep_var = "survived", glm_indep_var = c("pclass", "sex", "age"), glm_levels = "Yes", glm_int_var = "pclass:sex")
+summary(result, glm_sum_check = "vif", glm_test_var = "sex")
+# save_glm_resid(result)
+plot(result, glm_plots = "coef")
+result <- predict(result, glm_predict_cmd = "pclass=levels(pclass),sex=levels(sex),age=seq(0,100,20)")
+plot(result, glm_xvar = "age", glm_facet_col = "pclass", glm_color = "sex")
+# write.csv(result, file = '~/glm_sav_pred.csv', row.names = FALSE)
+```
+
+```{r fig.width=7, fig.height=21}
+result <- mds(dataset = "tpbrands", mds_id1 = "id1", mds_id2 = "id2", mds_dis = "dissimilarity", mds_method = "non-metric", mds_dim_number = "3")
+summary(result)
+plot(result, mds_rev_dim = c("2", "3"))
+```
+
+```{r fig.width=7, fig.height=21}
+result <- pmap(dataset = "computer", pmap_brand = "Brand", pmap_attr = c("HighEnd", "Stylish", "Modern", "Value", "Dated", "Innovative"), pmap_pref = "Business", pmap_dim_number = "3")
+summary(result)
+plot(result, pmap_plot = c("brand", "attr", "pref"), pmap_fontsz = 2)
+# save_factors(result)
+```
+
+```{r fig.width=7, fig.height=7}
+result <- pre_factor(dataset = "toothpaste", pf_var = c("v1", "v2", "v3", "v4", "v5", "v6"))
+summary(result)
+plot(result)
+```
+
+```{r fig.width=3.77, fig.height=3.77}
+result <- full_factor(dataset = "toothpaste", ff_var = c("v1", "v2", "v3", "v4", "v5", "v6"))
+summary(result, ff_cutoff = 0.2, ff_sort = TRUE)
+plot(result)
+# save_factors(result)
+```
+
+```{r fig.width=7, fig.height=12.92}
+result <- hier_clus(dataset = "toothpaste", hc_vars = c("v1", "v2", "v3", "v4", "v5", "v6"))
+summary(result)
+plot(result, hc_plots = c("scree", "diff", "dendro"))
+```
+
+```{r fig.width=8.08, fig.height=9.69}
+result <- kmeans_clus(dataset = "toothpaste", km_vars = c("v1", "v2", "v3", "v4", "v5", "v6"), km_nr_clus = 3)
+summary(result)
+plot(result)
+# save_membership(result)
+# save_kmeans(result, file = '~/kmeans.csv')
+```
+
+```{r}
+result <- conjoint_profiles(dataset = "ca_attr")
+summary(result)
+# write.csv(result$frac, file = '~/conjoint_profiles.csv', row.names = FALSE)
+```
+
+```{r fig.width=7, fig.height=10.5}
+result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = c("Memory", "Radio", "Size", "Price", "Shape"))
+summary(result, ca_vif = TRUE)
+plot(result, ca_plots = "pw", ca_scale_plot = TRUE)
+```
+

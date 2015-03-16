@@ -35,14 +35,14 @@ output$ui_sampling <- renderUI({
 
 output$sampling <- renderUI({
 
-    register_print_output2("summary_sampling", ".summary_sampling")
+    register_print_output("summary_sampling", ".summary_sampling")
 
     # one output with components stacked
     smp_output_panels <- tagList(
        tabPanel("Summary", verbatimTextOutput("summary_sampling"))
     )
 
-    statTabPanel2(menu = "Sample",
+    stat_tab_panel(menu = "Sample",
                   tool = "Sampling",
                   tool_ui = "ui_sampling",
                   output_panels = smp_output_panels)
@@ -67,7 +67,7 @@ output$sampling <- renderUI({
 observe({
   if(not_pressed(input$sampling_report)) return()
   isolate({
-    update_report2(inp_main = clean_args(smp_inputs(), smp_args),
+    update_report(inp_main = clean_args(smp_inputs(), smp_args),
                   fun_name = "sampling", outputs = "summary", figs = FALSE)
   })
 })

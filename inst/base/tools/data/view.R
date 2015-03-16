@@ -13,7 +13,7 @@ output$ui_View <- renderUI({
     wellPanel(
       uiOutput("uiView_vars")
     ),
-    helpModal('View','viewHelp',inclMD("../base/tools/help/view.md"))
+    help_modal('View','viewHelp',inclMD("../base/tools/help/view.md"))
   )
 })
 

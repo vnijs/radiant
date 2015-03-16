@@ -1,6 +1,6 @@
 #' Hierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param hc_vars Vector of variables to include in the analysis

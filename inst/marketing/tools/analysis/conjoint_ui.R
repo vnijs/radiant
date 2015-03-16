@@ -2,6 +2,8 @@
 # Conjoint regression - UI
 ################################################################
 
+ca_plots <- list("Part-worths" = "pw", "Importance-weights" = "iw")
+
 # list of function arguments
 ca_args <- as.list(formals(conjoint))
 
@@ -28,8 +30,6 @@ output$ui_ca_indep_var <- renderUI({
   	selected = state_multiple("ca_indep_var", vars), multiple = TRUE,
   	size = min(10, length(vars)), selectize = FALSE)
 })
-
-ca_plots <- list("Part-worths" = "pw", "Importance-weights" = "iw")
 
 output$ui_conjoint <- renderUI({
   tagList(
@@ -81,9 +81,9 @@ ca_plot_height <- function()
 # output is called from the main radiant ui.R
 output$conjoint <- renderUI({
 
-		register_print_output2("summary_conjoint", ".summary_conjoint")
-		register_print_output2("predict_conjoint", ".predict_conjoint")
-		register_plot_output2("plot_conjoint", ".plot_conjoint",
+		register_print_output("summary_conjoint", ".summary_conjoint")
+		register_print_output("predict_conjoint", ".predict_conjoint")
+		register_plot_output("plot_conjoint", ".plot_conjoint",
                           height_fun = "ca_plot_height",
                           width_fun = "ca_plot_width")
 
@@ -96,7 +96,7 @@ output$conjoint <- renderUI({
 	    # tabPanel("Plot", plotOutput("plot_conjoint"))
 	  )
 
-		statTabPanel2(menu = "Conjoint",
+		stat_tab_panel(menu = "Conjoint",
 		              tool = "Conjoint",
 		              tool_ui = "ui_conjoint",
 		             	output_panels = ca_output_panels)
@@ -144,11 +144,9 @@ observe({
       outputs <- c("summary")
     	inp_out[[2]] <- ""
     }
-    update_report2(inp_main = clean_args(ca_inputs(), ca_args),
-                  fun_name = "conjoint",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
+    update_report(inp_main = clean_args(ca_inputs(), ca_args),
+                  fun_name = "conjoint", inp_out = inp_out,
+                  outputs = outputs, figs = figs,
                   fig.width = round(7 * ca_plot_width()/650,2),
                   fig.height = round(7 * ca_plot_height()/650,2))
   })

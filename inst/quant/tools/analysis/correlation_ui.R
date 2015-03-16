@@ -55,8 +55,8 @@ cor_plot_height <- function()
 # output is called from the main radiant ui.R
 output$correlation <- renderUI({
 
-		register_print_output2("summary_correlation", ".summary_correlation")
-		register_plot_output2("plot_correlation", ".plot_correlation",
+		register_print_output("summary_correlation", ".summary_correlation")
+		register_plot_output("plot_correlation", ".plot_correlation",
                          	height_fun = "cor_plot_height",
                          	width_fun = "cor_plot_width")
 
@@ -67,7 +67,7 @@ output$correlation <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_correlation", width = "100%", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Regression",
+		stat_tab_panel(menu = "Regression",
 		              tool = "Correlation",
 		              tool_ui = "ui_correlation",
 		             	output_panels = cor_output_panels)
@@ -104,7 +104,7 @@ observe({
   if(not_pressed(input$correlation_report)) return()
   isolate({
     inp_out <- list(cor_cutoff = input$cor_cutoff) %>% list(.,"")
-    update_report2(inp_main = clean_args(cor_inputs(), cor_args),
+    update_report(inp_main = clean_args(cor_inputs(), cor_args),
                   fun_name = "correlation",
                   inp_out = inp_out,
                   fig.width = round(7 * cor_plot_width()/650,2),

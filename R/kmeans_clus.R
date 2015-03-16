@@ -1,9 +1,6 @@
-###############################################################
-# Kmeans clustering
-###############################################################
 #' K-means cluster analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param km_vars Vector of variables to include in the analysis

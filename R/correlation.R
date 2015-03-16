@@ -53,7 +53,7 @@ summary.correlation <- function(object,
                                 ...) {
 
 	# calculate the correlation matrix with p-values using the psych package
-	cmat <- suppressWarnings( corr.test(object$dat, method = object$cor_type) )
+	cmat <- sshhr( corr.test(object$dat, method = object$cor_type) )
 
 	cr <- format(round(cmat$r,2))
   cr[abs(cmat$r) < cor_cutoff] <- ""
