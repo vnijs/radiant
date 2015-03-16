@@ -10,16 +10,14 @@ The first step in factor analysis is to determine if the data has the required c
 
 The KMO and Bartlett test evaluate all available data together. A KMO value over 0.6 and a significance level for the Bartlett’s test below .05 suggest there is correlation in the data. Variable collinearity indicates how strongly a single variable is correlated with other variables. Values above .4 are considered appropriate.
 
-As can be seen in the output in the Summary tab from Factor > Pre-factor, Bartlett’s test statistic is large and significant (p-value very close to 0) as desired. The Kaiser-Meyer-Olkin (KMO) > 0.6 and thus acceptable. The variable collinearity values are all above 0.4 so all variables can be used in the analysis.
+As can be seen in the output from Factor > Pre-factor, Bartlett’s test statistic is large and significant (p-value very close to 0) as desired. The Kaiser-Meyer-Olkin (KMO) > 0.6 and thus acceptable. The variable collinearity values are all above 0.4 so all variables can be used in the analysis.
 
-![Summary](figures_marketing/pre_factor_summary.png)
+![Summary and Plot](figures_marketing/pre_factor_summary_plot.png)
 
 The next step is to determine the number of factors needed to capture the structure underlying the data. Factors that do not capture even as much variance as could be expected by chance are generally omitted from further consideration. These factors have eigenvalues < 1 in the output.
 
-A further criteria that is often used to determine the number of factors is the scree-plot. This is a plot of the eigenvalues against the number of factors, in order of extraction. Often a break or _elbow_ is visible in the plot. Factors up to and including this elbow are selected for further analysis if they all have eigenvalues above 1. A set of factors that explain > 70% of the variance in the original data is generally considered acceptable. The eigenvalues for all factors are shown in the Summary tab (see above). Only two factors have eigenvalues above 1. The screeplot of the eigenvalues is shown in the Plot tab.
+A further criteria that is often used to determine the number of factors is the scree-plot. This is a plot of the eigenvalues against the number of factors, in order of extraction. Often a break or _elbow_ is visible in the plot. Factors up to and including this elbow are selected for further analysis if they all have eigenvalues above 1. A set of factors that explain > 70% of the variance in the original data is generally considered acceptable. The eigenvalues for all factors are shown above. Only two factors have eigenvalues above 1.
 
-![Plot](figures_marketing/pre_factor_plot.png)
+At first glance the Scree Plot of the Eigenvalues seems to suggest that 3 factors should be extracted (i.e., look for the _elbow_). However, because the value for the third factor is below one we will extract 2 factors.
 
-At first glance the Scree Plot seems to suggest that 3 factors should be extracted (i.e., look for the _elbow_). However, because the eigenvalue for the third factor is below one we choose to extract 2 factors.
-
-In the output in the Summary tab shows that the increase in cumulative % explained variance is relatively small going from 2 to 3 factors (i.e., from 82.49% to 89.85%). This is confirmed by the fact that the eigenvalue for factor 3 is smaller than 1 (= .442). Again, we choose 2 factors. The first 2 factors capture 82% of the variance in the original data which is excellent.
+The increase in cumulative % explained variance is relatively small going from 2 to 3 factors (i.e., from 82.49% to 89.85%). This is confirmed by the fact that the eigenvalue for factor 3 is smaller than 1 (= .442). Again, we choose 2 factors. The first 2 factors capture 82% of the variance in the original data which is excellent.
