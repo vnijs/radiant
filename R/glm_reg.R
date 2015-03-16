@@ -79,7 +79,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 
 #' Summary method for glm_reg
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{glm_reg}}
 #' @param glm_sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
@@ -228,7 +228,7 @@ summary.glm_reg <- function(object,
 
 #' Plot method for glm_reg
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{glm_reg}}
 #' @param glm_plots Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot

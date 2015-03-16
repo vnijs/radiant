@@ -13,7 +13,7 @@ save_factors(object)
 Save factor scores to active dataset
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/full_factor.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/matrix/full_factor.html} for an example in Radiant
 }
 \examples{
 \dontrun{

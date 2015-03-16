@@ -36,7 +36,7 @@ hier_clus <- function(dataset, hc_vars,
 
 #' Summary method for hier_clus
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{hier_clus}}
 #' @param ... further arguments passed to or from other methods
@@ -63,7 +63,7 @@ summary.hier_clus <- function(object, ...) {
 
 #' Plot method for hier_clus
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant
+#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{hier_clus}}
 #' @param hc_plots Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity
