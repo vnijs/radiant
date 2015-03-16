@@ -12,7 +12,7 @@ Depends:
 		magrittr (>= 1.5)
 Imports:
 		car (>= 2.0.22),
-    MASS (>= 7.3-39),
+    MASS (>= 7.3),
 		gridExtra (>= 0.9.1),
 		AlgDesign (>= 1.1.7.3),
 		GPArotation (>= 2014.11.1),
