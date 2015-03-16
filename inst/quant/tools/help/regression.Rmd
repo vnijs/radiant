@@ -94,7 +94,7 @@ Increases in x1 and x3 are associated with increases in y whereas increases in x
 
 ### Example 3: Linear or log-log regression?
 
-In marketing both linear and log-log regressions are very common. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.
+Both linear and log-log regressions are commonly applied to business data. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.
 
 The data `diamonds` contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable `price` as the dependent variable and `carat` and `clarity` as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the _tail_ is.
 
@@ -115,7 +115,9 @@ The dashboard of six residual plots looks less than stellar. The true values and
 The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). The residuals fan-out from left to right in the plot of residuals vs carats. The box-plot of clarity versus residuals shows outliers with strong negative values for lower levels of clarity and outliers with strong positive values for diamonds with higher levels of clarity.
 ![Regression 3 - residual vs predicted](figures_quant/regression_diamonds_res_vs_pred.png)
 
-Since the diagnostics do not look good, we should **not** draw inferences from this regression. A log-log specification may be preferable.
+Since the diagnostics do not look good, we should **not** draw inferences from this regression. A log-log specification may be preferable. A quick way to check the validity of this model change is available through the Data > Visualize tab. Select `price` as the Y-variable and `carat` as the X-variable in a `Scatter` plot. Check the `log X` and `log Y` boxes to produce the plot below. The relationship between log-price and log-carat looks close to linear. Exactly what we are looking for.
+
+![Regression 3 - viz log scatter](figures_quant/regression_log_diamonds_viz_scatter.png)
 
 We will apply a log transformation to both price and carat and rerun the analysis to see if the log-log specification is more appropriate for the data. This transformation can be done in Data > Transform. Select the variables price and carat. Choose `change` from the Transformation type drop-down and choose `Log` from the Apply function drop-down. Make sure to `Save changes` so the new variables are added to the dataset. Note that we cannot apply a log transformation to clarity because it is a <a href="http://en.wikipedia.org/wiki/Categorical_variable" target="_blank">categorical</a> variable.
 
