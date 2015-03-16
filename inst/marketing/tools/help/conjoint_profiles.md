@@ -15,4 +15,4 @@ food = c("No food","Hot dogs and popcorn","Gourmet food")
 The output from Radiant is shown below. Note that the full list of 162 profiles was omitted from the output for brevity.
 The correlation matrix shown indicates that for any two attributes the correlations are zero. In the fractional factorial design, profiles are deliberately selected such that all attributes are uncorrelated (i.e., orthogonal).
 
-![conjoint profiles](figures_marketing/conjoint_profiles.png)
+![conjoint profiles](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/conjoint_profiles.png)

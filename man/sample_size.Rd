@@ -6,7 +6,7 @@
 \usage{
 sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10,
   ss_prop_err = 0.1, ss_prop_p = 0.5, ss_z = 1.96, ss_incidence = 1,
-  ss_response = 1, ss_pop_correction = "no", ss_pop_size = 1e+06)
+  ss_response = 1, ss_pop_correction = "no", ss_pop_size = 1000000)
 }
 \arguments{
 \item{ss_type}{Choose "mean" or "proportion"}

@@ -20,7 +20,7 @@
 Plot method for hier_clus
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 }
 \examples{
 result <- hier_clus("shopping", hc_vars = c("v1:v6"))
