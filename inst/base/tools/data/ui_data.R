@@ -51,7 +51,7 @@ output$datatabs <- renderUI({
     # tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
     tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
     tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
-    tabPanel("Merge", htmlOutput("merge_possible"), htmlOutput("merge_data1"), htmlOutput("merge_data2"))
+    tabPanel("Merge", htmlOutput("merge_possible"), htmlOutput("mergedata1"), htmlOutput("mergedata2"))
   )
 })
 

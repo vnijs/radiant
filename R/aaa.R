@@ -4,6 +4,7 @@ globalVariables(c("r_env", "r_data", "r_state", "running_local", ".",
                   "null.deviance"))
 
 options("width"=200)
+options("scipen"=100, "digits"=4)
 
 #' radiant
 #'
@@ -13,7 +14,7 @@ options("width"=200)
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% set_rownames set_colnames divide_by add
-#' @importFrom lubridate is.Date
+#' @importFrom lubridate is.Date now
 #' @importFrom broom tidy glance
 #' @importFrom tidyr gather_
 #' @importFrom AlgDesign optFederov

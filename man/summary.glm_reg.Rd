@@ -22,7 +22,7 @@
 Summary method for glm_reg
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/glm.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 }
 \examples{
 result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")

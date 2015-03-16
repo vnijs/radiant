@@ -3,8 +3,8 @@
 
 Interactive business analytics using [R](http://www.r-project.org/) and [Shiny](http[://www.rstudio.com/shiny/). Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please use radiant@rady.ucsd.edu.
 
-[![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant) 
-Version: 0.1.70, Date: 2015-3-15
+[![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant)
+Version: 0.1.71, Date: 2015-3-16
 
 ## Key features
 
@@ -107,11 +107,12 @@ numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm
 
 Three (related) apps are included in the inst/ directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools. The `quant` app focusses on basic quantitative analysis (e.g., comparing means, regression, etc.). The `marketing` app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc.
 
+<!--
 ## Online
 
 If you really don't want to install Radiant on your computer (yet) you can tryout the app online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
 
-
+ -->
 ## License
 
 

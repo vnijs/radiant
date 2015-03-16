@@ -15,7 +15,7 @@ save_kmeans(object, file = "kmeans.csv")
 Save cluster means to a csv file
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/kmeans_clus.html} for an example in Radiant
+See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 }
 \examples{
 result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
