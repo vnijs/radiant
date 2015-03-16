@@ -9,18 +9,14 @@ ip <- ifelse(running_local, "", session$request$REMOTE_ADDR)
 init_state <- function(r_data) {
 
   # initial plot height and width
-  r_data$plotHeight <- 600
-  r_data$plotWidth <- 600
+  r_data$plot_height <- 600
+  r_data$plot_width <- 600
 
   # From Joe Cheng
   # "Datasets can change over time (i.e. the changedata function). Therefore,
   # the data need to be a reactive value so the other reactive functions
   # and outputs that depend on these datasets will know when they are changed."
-  # robj <- load("../base/data/diamonds.rda")
-  # robj <- load("../../data/diamonds.rda")
-  # robj <- load("data_examples/diamonds.rda")
   robj <- load("../base/data/diamonds.rda")
-  # df <- tbl_df(get(robj))
   df <- get(robj)
   r_data[["diamonds"]] <- df
   r_data[["diamonds_descr"]] <- attr(df,'description')
@@ -110,11 +106,9 @@ if(running_local) {
   # does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")
 
-  # add any data.frame in global environment to r_data
-  # should not affect memory usage ... at least until
-  # dat <- diamonds
+  # adding any data.frame in the global environment to r_data should not affect
+  # memory usage ... at least until the entry in r_data is changed
   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% { names(.[.]) }
-  # df_list
 
   for(df in df_list) {
     isolate({
@@ -125,16 +119,4 @@ if(running_local) {
       rm(list = df, envir = .GlobalEnv)
     })
   }
-  # get("init_state")
-  # r_data %>% names
-
-  # library(shiny)
-  # rv <- reactiveValues()
-  # is.reactivevalues(rv)
-  # rv$diamonds <- diamonds
-
-  # library(pryr)
-  # object_size(rv, diamonds)
-  # object_size(rv)
-  # object_size(diamonds)
 }

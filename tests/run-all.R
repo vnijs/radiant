@@ -1,5 +1,6 @@
 library(radiant)
-test_dir <- "~/gh/radiant_dev/tests/"
+# test_dir <- "~/gh/radiant_dev/tests/"
+test_dir <- ""
 trim_trailing <- function (x) sub("\\s+$", "", x)
 trim_leading <- function (x) sub("^\\s+", "", x)
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
@@ -56,3 +57,11 @@ all.equal(res1,res2)
 # dataset <- "anscombe"
 # r_data[[dataset]] <- anscombe
 # pf_var <- "y1:y4"
+
+# tr <- clean_args(list(a = "", b = ""))
+# class(tr)
+# length(tr)
+# list(a = "", b = "") %>% length
+# library(dplyr)
+# library(magrittr)
+

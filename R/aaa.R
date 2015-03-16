@@ -3,11 +3,13 @@ globalVariables(c("r_env", "r_data", "r_state", "running_local", ".",
                   "se","ci","height","bump","y","nr_clus",".resid","rnd_number",
                   "null.deviance"))
 
+options("width"=200)
+
 #' radiant
 #'
 #' @name radiant
 #' @docType package
-#' @import ggplot2 shiny dplyr shinyAce htmlwidgets
+#' @import ggplot2 shiny dplyr shinyAce
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% set_rownames set_colnames divide_by add
@@ -18,7 +20,6 @@ globalVariables(c("r_env", "r_data", "r_state", "running_local", ".",
 #' @importFrom gridExtra grid.arrange
 #' @importFrom markdown markdownToHTML
 #' @importFrom wordcloud textplot
-#' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
 NULL
 
 # kurtosi <<- psych::kurtosi
@@ -106,4 +107,34 @@ NULL
 #' @name toothpaste
 #' @usage data(toothpaste)
 #' @format A data frame with 60 rows and 10 variables
+NULL
+
+#' Distance in miles between nine cities in the USA
+#' The dataset is used to illustrate multi-dimensional scaling (MDS)
+#' Description provided in attr(city,"description")
+#' @docType data
+#' @keywords datasets
+#' @name city
+#' @usage data(city)
+#' @format A data frame with 45 rows and 3 variables
+NULL
+
+#' Distance in miles between nine cities in the USA
+#' The dataset is used to illustrate multi-dimensional scaling (MDS)
+#' Description provided in attr(city,"description")
+#' @docType data
+#' @keywords datasets
+#' @name city
+#' @usage data(city)
+#' @format A data frame with 45 rows and 3 variables
+NULL
+
+#' Perceptions of computer (re)sellers
+#' The dataset is used to illustrate perceptual maps
+#' Description provided in attr(computer,"description")
+#' @docType data
+#' @keywords datasets
+#' @name computer
+#' @usage data(computer)
+#' @format A data frame with 5 rows and 8 variables
 NULL

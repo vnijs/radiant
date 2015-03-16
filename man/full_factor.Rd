@@ -2,7 +2,7 @@
 % Please edit documentation in R/full_factor.R
 \name{full_factor}
 \alias{full_factor}
-\title{Evaluate if data are appropriate for PCA / Factor analysis}
+\title{Factor analysis (PCA)}
 \usage{
 full_factor(dataset, ff_var, data_filter = "", ff_meth = "PCA",
   ff_number = 2, ff_rotation = "varimax")
@@ -24,7 +24,7 @@ full_factor(dataset, ff_var, data_filter = "", ff_meth = "PCA",
 A list with all variables defined in the function as an object of class full_factor
 }
 \description{
-Evaluate if data are appropriate for PCA / Factor analysis
+Factor analysis (PCA)
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant

@@ -60,8 +60,8 @@ ct_plot_height <- function()
 # output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
 
-		register_print_output2("summary_cross_tabs", ".summary_cross_tabs")
-		register_plot_output2("plot_cross_tabs", ".plot_cross_tabs",
+		register_print_output("summary_cross_tabs", ".summary_cross_tabs")
+		register_plot_output("plot_cross_tabs", ".plot_cross_tabs",
                          height_fun = "ct_plot_height",
                          width_fun = "ct_plot_width")
 
@@ -72,7 +72,7 @@ output$cross_tabs <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Base",
+		stat_tab_panel(menu = "Base",
 		              tool = "Cross-tabs",
 		              tool_ui = "ui_cross_tabs",
 		             	output_panels = ct_output_panels)
@@ -108,7 +108,7 @@ observe({
   		figs <- TRUE
   	}
 
-		update_report2(inp_main = clean_args(ct_inputs(), ct_args),
+		update_report(inp_main = clean_args(ct_inputs(), ct_args),
 		              inp_out = inp_out,
 		             	fun_name = "cross_tabs",
 		             	outputs = outputs,

@@ -81,8 +81,8 @@ sp_plot_height <- function()
 # output is called from the main radiant ui.R
 output$single_prop <- renderUI({
 
-		register_print_output2("summary_single_prop", ".summary_single_prop")
-		register_plot_output2("plot_single_prop", ".plot_single_prop",
+		register_print_output("summary_single_prop", ".summary_single_prop")
+		register_plot_output("plot_single_prop", ".plot_single_prop",
                          height_fun = "sp_plot_height")
 
 		# two separate tabs
@@ -92,7 +92,7 @@ output$single_prop <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_single_prop", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Base",
+		stat_tab_panel(menu = "Base",
 		              tool = "Single proportion",
 		              tool_ui = "ui_single_prop",
 		             	output_panels = sp_output_panels)
@@ -135,7 +135,7 @@ observe({
       outputs <- c("summary")
       inp_out <- list("","")
     }
-    update_report2(inp_main = clean_args(sp_inputs(), sp_args),
+    update_report(inp_main = clean_args(sp_inputs(), sp_args),
                   fun_name = "single_prop",
                   inp_out = inp_out,
                   outputs = outputs,

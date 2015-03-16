@@ -9,7 +9,7 @@ merge_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for(i in names(merge_args))
     merge_args[[i]] <- input[[i]]
-  if(!input$show_filter) merge_args$data_filter = ""
+  # if(!input$show_filter) merge_args$data_filter = ""
   merge_args
 })
 
@@ -62,19 +62,17 @@ output$ui_Merge <- renderUI({
 
 observe({
   # merging data
-  if(input$merge_button %>% not_pressed) return()
+  if(not_pressed(input$merge_button)) return()
   isolate({
     do.call(merge_data, merge_inputs())
   })
 })
 
 observe({
-  # if(is.null(input$mergeReport) || input$mergeReport == 0) return()
-  if(input$merge_report %>% not_pressed) return()
+  if(not_pressed(input$merge_report)) return()
   isolate({
-    outputs <- c()
-    # inp <- list(input$dataset, input$merge_data, input$merge_vars, input$merge_type, input$merge_name)
-    update_report(inp = merge_inputs(), fun_name = "merge_data", outputs = outputs, pre_cmd = "")
+    update_report(inp_main = clean_args(merge_inputs(), merge_args),
+                   fun_name = "merge_data", outputs = character(0), figs = FALSE)
   })
 })
 

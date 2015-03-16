@@ -222,9 +222,9 @@ reg_plot_height <- function()
 # output is called from the main radiant ui.R
 output$regression <- renderUI({
 
-		register_print_output2("summary_regression", ".summary_regression")
-    register_print_output2("predict_regression", ".predict_regression")
-		register_plot_output2("plot_regression", ".plot_regression",
+		register_print_output("summary_regression", ".summary_regression")
+    register_print_output("predict_regression", ".predict_regression")
+		register_plot_output("plot_regression", ".plot_regression",
                          height_fun = "reg_plot_height",
                          width_fun = "reg_plot_width")
 
@@ -236,7 +236,7 @@ output$regression <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_regression", width = "100%", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Regression",
+		stat_tab_panel(menu = "Regression",
 		              tool = "Linear (OLS)",
 		              tool_ui = "ui_regression",
 		             	output_panels = reg_output_panels)
@@ -301,9 +301,9 @@ observe({
     if(!is_empty(input$reg_predict)) {
       inp_out[[3 + figs]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
-      xcmd <- paste0("print(result)\nwrite.csv(result, file = '~/reg_sav_pred.csv')")
+      xcmd <- paste0("print(result)\n# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
     }
-    update_report2(inp_main = clean_args(reg_inputs(), reg_args),
+    update_report(inp_main = clean_args(reg_inputs(), reg_args),
                   fun_name = "regression",
                   inp_out = inp_out,
                   outputs = outputs,

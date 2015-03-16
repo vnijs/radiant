@@ -67,8 +67,8 @@ km_plot_height <- function()
 # output is called from the main radiant ui.R
 output$kmeans_clus <- renderUI({
 
-		register_print_output2("summary_kmeans_clus", ".summary_kmeans_clus")
-		register_plot_output2("plot_kmeans_clus", ".plot_kmeans_clus",
+		register_print_output("summary_kmeans_clus", ".summary_kmeans_clus")
+		register_plot_output("plot_kmeans_clus", ".plot_kmeans_clus",
                          	width_fun = "km_plot_width",
                          	height_fun = "km_plot_height")
 
@@ -78,17 +78,13 @@ output$kmeans_clus <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_kmeans_clus", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Cluster",
+		stat_tab_panel(menu = "Cluster",
 		              tool = "K-means",
 		              tool_ui = "ui_kmeans_clus",
 		             	output_panels = km_output_panels)
 })
 
 .kmeans_clus <- reactive({
-
-  # if(not_available(input$km_vars))
-		# return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
-
 	do.call(kmeans_clus, km_inputs())
 })
 
@@ -109,11 +105,11 @@ output$kmeans_clus <- renderUI({
 observe({
   if(not_pressed(input$kmeans_clus_report)) return()
   isolate({
-    update_report2(inp_main = clean_args(km_inputs(), km_args),
+    update_report(inp_main = clean_args(km_inputs(), km_args),
                   fun_name = "kmeans_clus",
                   fig.width = round(7 * km_plot_width()/650,2),
                   fig.height = round(7 * km_plot_height()/650,2),
-									xcmd = paste0("save_membership(result)\nsave_kmeans(result, file = '~/kmeans.csv')"))
+									xcmd = paste0("# save_membership(result)\n# save_kmeans(result, file = '~/kmeans.csv')"))
   })
 })
 

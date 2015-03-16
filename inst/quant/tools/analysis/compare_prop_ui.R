@@ -94,8 +94,8 @@ cp_plot_height <- function()
 # output is called from the main radiant ui.R
 output$compare_props <- renderUI({
 
-    register_print_output2("summary_compare_props", ".summary_compare_props", )
-    register_plot_output2("plot_compare_props", ".plot_compare_props",
+    register_print_output("summary_compare_props", ".summary_compare_props", )
+    register_plot_output("plot_compare_props", ".plot_compare_props",
                          height_fun = "cp_plot_height")
 
     # two separate tabs
@@ -105,7 +105,7 @@ output$compare_props <- renderUI({
       tabPanel("Plot", plotOutput("plot_compare_props", height = "100%"))
     )
 
-    statTabPanel2(menu = "Base",
+    stat_tab_panel(menu = "Base",
                   tool = "Compare proportions",
                   tool_ui = "ui_compare_props",
                   output_panels = cp_output_panels)
@@ -148,7 +148,7 @@ observe({
       outputs <- c("summary")
       inp_out <- list("","")
     }
-    update_report2(inp_main = clean_args(cp_inputs(), cp_args),
+    update_report(inp_main = clean_args(cp_inputs(), cp_args),
                   fun_name = "compare_props",
                   inp_out = inp_out,
                   outputs = outputs,

@@ -44,7 +44,6 @@ visualize(dataset = 'diamonds', viz_vars1 = 'carat', viz_vars2 = 'price', viz_ty
 
 knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
                fig.path = "~/radiant_figures/")
-               # fig.path = "~/radiant_temp/rmd/figure/")
 knitr::opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
@@ -59,10 +58,12 @@ output$report <- renderUI({
 
     div(class="row",
       div(class="col-xs-6",
-        shinyAce::aceEditor("rmd_report", mode="markdown", wordWrap = TRUE,
+        shinyAce::aceEditor("rmd_report", mode="markdown",
+                  # wordWrap = TRUE,
                   height = "600px",
-                  selectionId = "rmd_selection", value=state_init("rmd_report",rmd_example),
-                  hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+                  # selectionId = "rmd_selection",
+                  value=state_init("rmd_report",rmd_example),
+                  # hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
                   )),
       div(class="col-xs-6", htmlOutput("rmd_knitDoc"))
     )
@@ -95,8 +96,10 @@ output$rmd_knitDoc <- renderUI({
     }
     if(input$rmd_report != "") {
       withProgress(message = 'Knitting report', value = 0, {
-        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "", return(knitIt2(input$rmd_report)),
-          return(knitIt2(input$rmd_selection)))
+        return(knitIt2(input$rmd_report))
+        # ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+        #        return(knitIt2(input$rmd_report)),
+        #        return(knitIt2(input$rmd_selection)))
       })
     }
   })
@@ -107,8 +110,9 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if(running_local) {
       isolate({
-        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
-               text <- input$rmd_report, text <- input$rmd_selection)
+        text <- input$rmd_report
+        # ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+        #        text <- input$rmd_report, text <- input$rmd_selection)
         knitIt(text) %>% cat(.,file=file,sep="\n")
       })
     }
@@ -136,51 +140,6 @@ observe({
 })
 
 # updating the report when called
-updateReport <- function(inp, fun_name, fig.width = 7, fig.height = 7, xcmd = "",
-                         sum_name = paste0("summary_",fun_name), plots_name = paste0("plots_",fun_name)) {
-
-  # deprecate in favor of update_report below
-
-  cmd <- paste0("result <- ", sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)),
-                collapse="\n")
-  cmd <- paste0(cmd, "\n", sum_name,"(result)\n", plots_name,"(result)")
-  if(xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
-  cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
-  update_report_fun(cmd)
-}
-
-# test for update_report
-# library(dplyr)
-# c("dataset", "sm_var", "sm_comp_value", "sm_alternative", "sm_sig_level") %>%
-#   setNames(as.list(.),.) -> base_sm_list
-# # removing elements that are NA!!
-# base_sm_list$sm_sig_level <- NA
-# base_sm_list <- base_sm_list[!is.na(base_sm_list)]
-# deparse(base_sm_list, control = c("keepNA"))
-# update_report(inp = base_sm_list, fun_name = "single_mean")
-# update_report(inp = base_sm_list, fun_name = "single_mean", pre = "",
-#                outputs = c(), figs = FALSE)
-
-# updating the report when called
-update_report <- function(inp, fun_name, pre_cmd = "result <- ",
-                          outputs = c("summary", "plot"),
-                          figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
-
-  cmd <- paste0(pre_cmd, sub('list',fun_name, deparse(inp, control = c("keepNA"), width.cutoff = 500L)))
-  for(i in outputs)
-    cmd <- paste0(cmd, "\n", i, "(result)")
-
-  if(xcmd != "")
-    cmd <- paste0(cmd, "\n", xcmd)
-
-  if(figs)
-    cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
-  else
-    cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
-
-  update_report_fun(cmd)
-}
-
 update_report2 <- function(inp_main = "", fun_name = "", inp_out = list("",""), pre_cmd = "result <- ",
                           outputs = c("summary", "plot"),
                           figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
@@ -195,7 +154,7 @@ update_report2 <- function(inp_main = "", fun_name = "", inp_out = list("",""), 
   lout <- length(outputs)
   if(lout > 0) {
     for(i in 1:lout) {
-      if(inp_out[i] != "") {
+      if(inp_out[i] != "" && length(inp_out[[i]]) > 0) {
         cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
                  sub("list\\(", paste0(outputs[i], "\\(result, "), .) %>%
                  paste0(cmd, "\n", .)
@@ -246,15 +205,6 @@ update_report_fun <- function(cmd) {
 
   # move to the report panel
   updateTabsetPanel(session, "nav_radiant", selected = "Report")
-  # updateTabsetPanel(session, "nav_radiant", selected = "transform")
-  # updateTabsetPanel(session, "nav_radiant", selected = "Regression")
-  # updateTabsetPanel(session, "nav_radiant", selected = "GLM")
-  # updateTabsetPanel(session, "nav_radiant", selected = "GLM")
-  # updateTabsetPanel(session, "tabs_glm_reg", selected = "plot_glm_reg")
-  # updateTabsetPanel(session, "nav_radiant", selected = "Transform")
-  # updateTabsetPanel(session, "nav_radiant", selected = "Data")
-  # updateTabsetPanel(session, "datatabs", selected = "Transform")
-  # updateTabsetPanel(session, "nav_radiant", selected = "Transform")
 }
 
 
@@ -287,8 +237,10 @@ summary(reg)
 
 output$rcode <- renderUI({
   div(class="row", div(class="col-xs-6",
-    shinyAce::aceEditor("r_code", mode="r", selectionId = "r_code_selection", value=state_init("r_code",r_example),
-              hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+    shinyAce::aceEditor("r_code", mode="r",
+                        # selectionId = "r_code_selection",
+                        value=state_init("r_code",r_example),
+                        # hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
               ),
     actionButton("rEval", "Run"),
     downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
@@ -310,11 +262,11 @@ output$rCodeEval <- renderPrint({
   if(valsCode$code == 1) return()
   isolate({
     if(running_local) {
-      if(is.null(input$r_code_selection) || input$r_code_selection == "") {
+      # if(is.null(input$r_code_selection) || input$r_code_selection == "") {
         r_code <- input$r_code
-      } else {
-        r_code <- input$r_code_selection
-      }
+      # } else {
+        # r_code <- input$r_code_selection
+      # }
 
       r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
       return(HTML(paste(knitr::knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE),

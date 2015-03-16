@@ -20,6 +20,8 @@ See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for
 \examples{
 result <- pre_factor("diamonds",c("price","carat","table"))
 summary(result)
+result <- pre_factor("computer","HighEnd:Business")
+summary(result)
 }
 \seealso{
 \code{\link{pre_factor}} to calculate results

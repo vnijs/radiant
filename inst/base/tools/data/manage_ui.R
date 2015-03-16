@@ -96,7 +96,7 @@ output$ui_Manage <- renderUI({
         actionButton('removeDataButton', 'Remove data')
       )
     ),
-    helpModal('Manage','manageHelp',inclMD("../base/tools/help/manage.md"))
+    help_modal('Manage','manageHelp',inclMD("../base/tools/help/manage.md"))
   )
 })
 
@@ -216,7 +216,7 @@ observe({
 
 # loading all examples files (linked to helpfiles)
 observe({
-  if(input$loadExampleData %>% not_pressed) return()
+  if(not_pressed(input$loadExampleData)) return()
   isolate({
 
     # loading data bundled with Radiant
@@ -312,7 +312,7 @@ observe({
   if(input$renameButton %>% not_pressed) return()
   isolate({
     # you can use pryr::object_size to see that the size of the list doesn't change
-    # when you assing a list element another name
+    # when you assign a list element another name
     r_data[[input$data_rename]] <- r_data[[input$dataset]]
     r_data[[input$dataset]] <- NULL
     r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
@@ -326,7 +326,7 @@ observe({
   })
 })
 
-output$uiDatasets <- renderUI({
+output$ui_datasets <- renderUI({
   # Drop-down selection of data set
   tagList(
     selectInput(inputId = "dataset", label = "Datasets:", choices = r_data$datasetlist,

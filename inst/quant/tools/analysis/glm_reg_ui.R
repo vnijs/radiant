@@ -140,7 +140,7 @@ output$ui_glm_int_var <- renderUI({
     vars <- input$glm_indep_var
     if(not_available(vars) || length(vars) < 2) return()
     # vector of possible interaction terms to sel from glm_reg
-    choices <- int_vec(vars, input$glm_show_interactions)       # create list of interactions to show user
+    choices <- int_vec(vars, input$glm_show_interactions)
   }
 	selectInput("glm_int_var", label = NULL, choices = choices,
   	selected = state_multiple("glm_int_var", choices),
@@ -148,7 +148,6 @@ output$ui_glm_int_var <- renderUI({
 })
 
 # X - variable
-# output$ui_viz_vars1 <- renderUI({
 output$ui_glm_xvar <- renderUI({
   vars <- input$glm_indep_var
   selectizeInput(inputId = "glm_xvar", label = "X-variable:", choices = vars,
@@ -156,10 +155,7 @@ output$ui_glm_xvar <- renderUI({
     multiple = FALSE)
 })
 
-# output$ui_viz_facet_row <- renderUI({
 output$ui_glm_facet_row <- renderUI({
-  # isFct <- "factor" == getdata_class()
-  # vars <- c("None" = ".", varnames()[isFct])
   vars <- input$glm_indep_var
   vars <- c("None" = ".", vars)
   selectizeInput("glm_facet_row", "Facet row", vars,
@@ -167,10 +163,7 @@ output$ui_glm_facet_row <- renderUI({
                  multiple = FALSE)
 })
 
-# output$ui_viz_facet_col <- renderUI({
 output$ui_glm_facet_col <- renderUI({
-  # isFct <- "factor" == getdata_class()
-  # vars <- c("None" = ".", varnames()[isFct])
   vars <- input$glm_indep_var
   vars <- c("None" = ".", vars)
   selectizeInput("glm_facet_col", 'Facet column', vars,
@@ -283,11 +276,11 @@ glm_pred_plot_height <- function()
 # output is called from the main radiant ui.R
 output$glm_reg <- renderUI({
 
-		register_print_output2("summary_glm_reg", ".summary_glm_reg")
-    register_print_output2("predict_glm_reg", ".predict_glm_reg")
-    register_plot_output2("predict_plot_glm_reg", ".predict_plot_glm_reg",
+		register_print_output("summary_glm_reg", ".summary_glm_reg")
+    register_print_output("predict_glm_reg", ".predict_glm_reg")
+    register_plot_output("predict_plot_glm_reg", ".predict_plot_glm_reg",
                           height_fun = "glm_pred_plot_height")
-		register_plot_output2("plot_glm_reg", ".plot_glm_reg",
+		register_plot_output("plot_glm_reg", ".plot_glm_reg",
                           height_fun = "glm_plot_height",
                           width_fun = "glm_plot_width")
 
@@ -300,7 +293,7 @@ output$glm_reg <- renderUI({
 	    tabPanel("Plot", plotOutput("plot_glm_reg", width = "100%", height = "100%"))
 	  )
 
-		statTabPanel2(menu = "Regression",
+		stat_tab_panel(menu = "Regression",
 		              tool = "GLM",
 		              tool_ui = "ui_glm_reg",
 		             	output_panels = glm_output_panels)
@@ -378,7 +371,7 @@ observe({
     if(!is.null(r_data$glm_pred)) {
       inp_out[[3 + figs]] <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
       outputs <- c(outputs,"result <- predict")
-      xcmd <- "# write.csv(result, file = '~/glm_sav_pred.csv')"
+      xcmd <- "# write.csv(result, file = '~/glm_sav_pred.csv', row.names = FALSE)"
       if(!is_empty(input$glm_xvar)) {
         inp_out[[4 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
         outputs <- c(outputs, "plot")
@@ -386,7 +379,7 @@ observe({
       }
     }
 
-    update_report2(inp_main = clean_args(glm_inputs(), glm_args),
+    update_report(inp_main = clean_args(glm_inputs(), glm_args),
                   fun_name = "glm_reg",
                   inp_out = inp_out,
                   outputs = outputs,
