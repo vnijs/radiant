@@ -2,7 +2,7 @@
 % Please edit documentation in R/hier_clus.R
 \name{hier_clus}
 \alias{hier_clus}
-\title{Hierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysis}
+\title{Hierarchical cluster analysis}
 \usage{
 hier_clus(dataset, hc_vars, data_filter = "", hc_dist = "sq.euclidian",
   hc_meth = "ward.D")
@@ -22,7 +22,7 @@ hier_clus(dataset, hc_vars, data_filter = "", hc_dist = "sq.euclidian",
 A list of all variables used in hier_clus as an object of class hier_clus
 }
 \description{
-Hierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysis
+Hierarchical cluster analysis
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
