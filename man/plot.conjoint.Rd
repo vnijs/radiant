@@ -2,7 +2,7 @@
 % Please edit documentation in R/conjoint.R
 \name{plot.conjoint}
 \alias{plot.conjoint}
-\title{Plot method for conjoint output}
+\title{Plot method for the conjoint function}
 \usage{
 \method{plot}{conjoint}(x, ca_plots = "pw", ca_scale_plot = FALSE, ...)
 }
@@ -16,7 +16,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for conjoint output
+Plot method for the conjoint function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant

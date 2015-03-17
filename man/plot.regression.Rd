@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.R
 \name{plot.regression}
 \alias{plot.regression}
-\title{Plot method for regression}
+\title{Plot method for the regression function}
 \usage{
 \method{plot}{regression}(x, reg_plots = "", reg_lines = "",
   reg_conf_level = 0.95, reg_coef_int = FALSE, ...)
@@ -21,7 +21,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for regression
+Plot method for the regression function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant

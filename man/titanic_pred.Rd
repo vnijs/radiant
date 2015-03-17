@@ -3,13 +3,16 @@
 \docType{data}
 \name{titanic_pred}
 \alias{titanic_pred}
-\title{Prediction data.frame for glm_reg based on Titanic}
+\title{Predict survival}
 \format{A data frame with 6 rows and 3 variables}
 \usage{
 data(titanic_pred)
 }
 \description{
-Prediction data.frame for glm_reg based on Titanic
+Predict survival
+}
+\details{
+Prediction data.frame for glm_reg based on the Titanic dataset
 }
 \keyword{datasets}
 

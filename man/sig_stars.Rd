@@ -15,6 +15,9 @@ A vector of stars
 \description{
 Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
 }
+\details{
+Add stars to output from broom's `tidy` function
+}
 \examples{
 sig_stars(c(.0009, .049, .009, .4, .09))
 }

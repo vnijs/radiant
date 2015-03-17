@@ -3,15 +3,16 @@
 \docType{data}
 \name{newspaper}
 \alias{newspaper}
-\title{Newspaper readership data for 580 consumers
-Description provided in attr(newspaper,"description")}
+\title{Newspaper readership}
 \format{A data frame with 580 rows and 2 variables}
 \usage{
 data(newspaper)
 }
 \description{
-Newspaper readership data for 580 consumers
-Description provided in attr(newspaper,"description")
+Newspaper readership
+}
+\details{
+Newspaper readership data for 580 consumers. Description provided in attr(newspaper,"description")
 }
 \keyword{datasets}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{sshh}
 \alias{sshh}
-\title{Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
+\title{Hide warnings and messages and return invisible}
 \usage{
 sshh(...)
 }
@@ -10,7 +10,10 @@ sshh(...)
 \item{...}{Inputs to keep quite}
 }
 \description{
-Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+Hide warnings and messages and return invisible
+}
+\details{
+Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 }
 \examples{
 sshh( library(dplyr) )

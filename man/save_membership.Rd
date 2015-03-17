@@ -2,7 +2,7 @@
 % Please edit documentation in R/kmeans_clus.R
 \name{save_membership}
 \alias{save_membership}
-\title{Add a cluster membership variable to the select dataset}
+\title{Add a cluster membership variable to the active dataset}
 \usage{
 save_membership(object)
 }
@@ -10,7 +10,7 @@ save_membership(object)
 \item{object}{Return value from \code{\link{kmeans_clus}}}
 }
 \description{
-Add a cluster membership variable to the select dataset
+Add a cluster membership variable to the active dataset
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant

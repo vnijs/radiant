@@ -66,7 +66,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   environment() %>% as.list %>% set_class(c("regression",class(.)))
 }
 
-#' Summary method for regression
+#' Summary method for the regression function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
@@ -222,7 +222,7 @@ summary.regression <- function(object,
 	}
 }
 
-#' Plot method for regression
+#' Plot method for the regression function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
@@ -379,7 +379,7 @@ plot.regression <- function(x,
 		sshh( do.call(grid.arrange, c(plots, list(ncol = 2))) )
 }
 
-#' Predict method for regression
+#' Predict method for the regression function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
@@ -395,7 +395,8 @@ plot.regression <- function(x,
 #' predict(result, reg_predict_cmd = "carat = 1:10")
 #' predict(result, reg_predict_cmd = "clarity = levels(clarity)")
 #' result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
-#' predict(result, reg_predict_data = "diamonds")
+#' dpred <- getdata("diamonds") %>% slice(1:10)
+#' predict(result, reg_predict_data = "dpred")
 #'
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results

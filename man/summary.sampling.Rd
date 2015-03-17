@@ -2,7 +2,7 @@
 % Please edit documentation in R/sampling.R
 \name{summary.sampling}
 \alias{summary.sampling}
-\title{Summary method for sampling}
+\title{Summary method for the sampling function}
 \usage{
 \method{summary}{sampling}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for sampling
+Summary method for the sampling function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/sampling} for an example in Radiant

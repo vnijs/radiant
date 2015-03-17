@@ -2,7 +2,7 @@
 % Please edit documentation in R/glm_reg.R
 \name{plot.glm_reg}
 \alias{plot.glm_reg}
-\title{Plot method for glm_reg}
+\title{Plot method for the glm_reg function}
 \usage{
 \method{plot}{glm_reg}(x, glm_plots = "", glm_conf_level = 0.95,
   glm_coef_int = FALSE, ...)
@@ -19,7 +19,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for glm_reg
+Plot method for the glm_reg function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant

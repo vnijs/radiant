@@ -78,7 +78,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 	environment() %>% as.list %>% set_class(c("mds",class(.)))
 }
 
-#' Summarize method for the mds function
+#' Summary method for the mds function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/mds.html} for an example in Radiant
 #'

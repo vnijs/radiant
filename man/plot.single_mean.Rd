@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_mean.R
 \name{plot.single_mean}
 \alias{plot.single_mean}
-\title{Plot method for single_mean}
+\title{Plot method for the single_mean function}
 \usage{
 \method{plot}{single_mean}(x, sm_plots = "hist", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for single_mean
+Plot method for the single_mean function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant

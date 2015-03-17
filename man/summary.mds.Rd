@@ -2,7 +2,7 @@
 % Please edit documentation in R/mds.R
 \name{summary.mds}
 \alias{summary.mds}
-\title{Summarize method for the mds function}
+\title{Summary method for the mds function}
 \usage{
 \method{summary}{mds}(object, mds_round = 1, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summarize method for the mds function
+Summary method for the mds function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/mds.html} for an example in Radiant

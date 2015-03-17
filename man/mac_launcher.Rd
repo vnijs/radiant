@@ -2,17 +2,29 @@
 % Please edit documentation in R/radiant.R
 \name{mac_launcher}
 \alias{mac_launcher}
-\title{Create a launcher for Windows (.command)}
+\title{Create a launcher for Mac (.command)}
 \usage{
 mac_launcher(app = c("marketing", "quant", "base"))
 }
 \arguments{
 \item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
-\value{
+\description{
+Create a launcher for Mac (.command)
+}
+\details{
 On Mac a file named `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
 }
-\description{
-Create a launcher for Windows (.command)
+\examples{
+if (interactive()) {
+  if(Sys.info()["sysname"] != "Darwin") {
+    mac_launcher()
+    fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
+    if(!file.exists(fn))
+       stop("Mac launcher not created")
+    else
+      unlink(fn)
+  }
+}
 }
 

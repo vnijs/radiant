@@ -53,7 +53,7 @@ pre_factor <- function(dataset, pf_var,
   environment() %>% as.list %>% set_class(c("pre_factor",class(.)))
 }
 
-#' Summarize method for the pre_factor function
+#' Summary method for the pre_factor function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 #'

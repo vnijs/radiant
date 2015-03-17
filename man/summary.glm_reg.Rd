@@ -2,7 +2,7 @@
 % Please edit documentation in R/glm_reg.R
 \name{summary.glm_reg}
 \alias{summary.glm_reg}
-\title{Summary method for glm_reg}
+\title{Summary method for the glm_reg function}
 \usage{
 \method{summary}{glm_reg}(object, glm_sum_check = "", glm_conf_level = 0.95,
   glm_test_var = "", ...)
@@ -19,7 +19,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for glm_reg
+Summary method for the glm_reg function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant

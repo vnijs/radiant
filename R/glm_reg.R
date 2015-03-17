@@ -78,7 +78,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
 }
 
-#' Summary method for glm_reg
+#' Summary method for the glm_reg function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
@@ -228,7 +228,7 @@ summary.glm_reg <- function(object,
 	}
 }
 
-#' Plot method for glm_reg
+#' Plot method for the glm_reg function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
@@ -327,7 +327,7 @@ plot.glm_reg <- function(x,
 	if(length(plots) > 0) sshh( do.call(grid.arrange, c(plots, list(ncol = nrCol))) )
 }
 
-#' Predict method for glm
+#' Predict method for the glm_reg function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant
 #'
@@ -455,7 +455,7 @@ predict.glm_reg <- function(object,
   return(invisible())
 }
 
-#' Plot method for glm_predict (i.e., predict.glm_reg)
+#' Plot method for the predict.glm_reg function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant
 #'
@@ -525,7 +525,7 @@ plot.glm_predict <- function(x,
   sshhr( p )
 }
 
-#' Save glm residuals
+#' Save residuals generated in the glm_reg function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'

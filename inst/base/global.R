@@ -13,7 +13,6 @@ pkgs <- c(pkgs_cran, pkgs_gh)
 
 if(Sys.getenv('SHINY_PORT') == "") {
 
-  # running_local <<- TRUE
   running_local <- TRUE
 
   # no limit to filesize locally
@@ -31,23 +30,14 @@ if(Sys.getenv('SHINY_PORT') == "") {
     source("../base/dependencies.R", local = TRUE)
 
 } else {
-
   running_local <- FALSE
-
   # limit upload filesize on server (5MB)
   options(shiny.maxRequestSize=5*1024^2)
-
-  # load packages in order set by variable pkgs
-  # sapply(pkgs, require, lib.loc = Sys.getenv("R_LIBS_USER"),
-  #        character.only=TRUE)
-
-  # used the line above before - the next line should work as well however - test
   source("../base/dependencies.R", local = TRUE)
- }
+}
 
 # adding the figures path to avoid making a copy of all figures in www/figures
 if(!"package:radiant" %in% search()) {
   addResourcePath("figures", "../base/tools/help/figures/")
   addResourcePath("imgs", "../base/www/imgs/")
-  # addResourcePath("data_examples", "../../data/")
 }

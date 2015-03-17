@@ -2,7 +2,7 @@
 % Please edit documentation in R/full_factor.R
 \name{summary.full_factor}
 \alias{summary.full_factor}
-\title{Summarize method for the full_factor function}
+\title{Summary method for the full_factor function}
 \usage{
 \method{summary}{full_factor}(object, ff_cutoff = 0, ff_sort = FALSE, ...)
 }
@@ -16,7 +16,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summarize method for the full_factor function
+Summary method for the full_factor function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
