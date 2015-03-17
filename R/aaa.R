@@ -19,8 +19,6 @@ options("scipen"=100, "digits"=4)
 #' @importFrom tidyr gather_
 #' @importFrom gridExtra grid.arrange
 #' @importFrom markdown markdownToHTML
-#' @import htmlwidgets
-#' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
 NULL
 
 #' Exporting the kurtosi function from the psych package

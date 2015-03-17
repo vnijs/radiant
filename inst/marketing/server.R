@@ -30,10 +30,6 @@ shinyServer(function(input, output, session) {
       										 pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
 
-	# shinyFileChoose(input, 'file', roots=c('R Installation'=R.home()), session=session, restrictions=system.file(package='base'))
-	# shinyFileChoose(input, 'file', roots=c('R Installation'=R.home()), session=session)
-
   # save state on refresh or browser close
   saveStateOnRefresh(session)
-
 })
