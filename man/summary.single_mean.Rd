@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_mean.R
 \name{summary.single_mean}
 \alias{summary.single_mean}
-\title{Summary method for single_mean}
+\title{Summary method for the single_mean function}
 \usage{
 \method{summary}{single_mean}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for single_mean
+Summary method for the single_mean function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant

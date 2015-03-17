@@ -45,7 +45,7 @@ conjoint_profiles <- function(dataset) {
 	environment() %>% as.list %>% set_class(c("conjoint_profiles",class(.)))
 }
 
-#' Summarize method for the conjoint_profiles function
+#' Summary method for the conjoint_profiles function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 #'

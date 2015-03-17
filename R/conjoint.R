@@ -42,7 +42,7 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
 	environment() %>% as.list %>% set_class(c("conjoint",class(.)))
 }
 
-#' Summary method for conjoint output
+#' Summary method for the conjoint function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
@@ -102,7 +102,7 @@ summary.conjoint <- function(object,
 	}
 }
 
-#' Plot method for conjoint output
+#' Plot method for the conjoint function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'

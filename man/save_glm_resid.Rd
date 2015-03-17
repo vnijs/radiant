@@ -2,7 +2,7 @@
 % Please edit documentation in R/glm_reg.R
 \name{save_glm_resid}
 \alias{save_glm_resid}
-\title{Save glm residuals}
+\title{Save residuals generated in the glm_reg function}
 \usage{
 save_glm_resid(object)
 }
@@ -10,7 +10,7 @@ save_glm_resid(object)
 \item{object}{Return value from \code{\link{glm_reg}}}
 }
 \description{
-Save glm residuals
+Save residuals generated in the glm_reg function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hier_clus.R
 \name{plot.hier_clus}
 \alias{plot.hier_clus}
-\title{Plot method for hier_clus}
+\title{Plot method for the hier_clus function}
 \usage{
 \method{plot}{hier_clus}(x, hc_plots = c("scree", "diff"), hc_cutoff = 0.02,
   ...)
@@ -17,7 +17,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for hier_clus
+Plot method for the hier_clus function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant

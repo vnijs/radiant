@@ -34,7 +34,7 @@ hier_clus <- function(dataset, hc_vars,
 	environment() %>% as.list %>% set_class(c("hier_clus",class(.)))
 }
 
-#' Summary method for hier_clus
+#' Summary method for the hier_clus function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 #'
@@ -61,7 +61,7 @@ summary.hier_clus <- function(object, ...) {
 	cat("Observations:", length(object$hc_out$order), "\n")
 }
 
-#' Plot method for hier_clus
+#' Plot method for the hier_clus function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 #'

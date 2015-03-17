@@ -2,12 +2,12 @@
 % Please edit documentation in R/radiant.R
 \name{set_class}
 \alias{set_class}
-\title{Alias used to set the class for output from an analysis function in R/ (e.g., single_mean)}
+\title{Alias used to set the class for analysis function return}
 \usage{
 set_class()
 }
 \description{
-Alias used to set the class for output from an analysis function in R/ (e.g., single_mean)
+Alias used to set the class for analysis function return
 }
 \examples{
 foo <- function(x) x^2 \%>\% set_class(c("foo", class(.)))

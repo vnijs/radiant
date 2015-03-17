@@ -3,15 +3,16 @@
 \docType{data}
 \name{toothpaste}
 \alias{toothpaste}
-\title{Attitudinal data on toothpaste for 60 consumers
-Description provided in attr(toothpaste,"description")}
+\title{Toothpaste attitudes}
 \format{A data frame with 60 rows and 10 variables}
 \usage{
 data(toothpaste)
 }
 \description{
-Attitudinal data on toothpaste for 60 consumers
-Description provided in attr(toothpaste,"description")
+Toothpaste attitudes
+}
+\details{
+Attitudinal data on toothpaste for 60 consumers. Description provided in attr(toothpaste,"description")
 }
 \keyword{datasets}
 

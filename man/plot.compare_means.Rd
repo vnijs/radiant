@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_means.R
 \name{plot.compare_means}
 \alias{plot.compare_means}
-\title{Plot method for output from compare_means}
+\title{Plot method for the compare_means function}
 \usage{
 \method{plot}{compare_means}(x, cm_plots = "bar", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for output from compare_means
+Plot method for the compare_means function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant

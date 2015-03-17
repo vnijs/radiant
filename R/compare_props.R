@@ -91,7 +91,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
   environment() %>% as.list %>% set_class(c("compare_props",class(.)))
 }
 
-#' Summary method for output from compare_props
+#' Summary method for the compare_props function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
@@ -142,7 +142,7 @@ summary.compare_props <- function(object, ...) {
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 
-#' Plot results from the compare_props function. This is a method of class compare_props and can be called as plot or plot.compare_props
+#' Plot method for the compare_props function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'

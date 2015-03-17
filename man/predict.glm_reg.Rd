@@ -2,7 +2,7 @@
 % Please edit documentation in R/glm_reg.R
 \name{predict.glm_reg}
 \alias{predict.glm_reg}
-\title{Predict method for glm}
+\title{Predict method for the glm_reg function}
 \usage{
 \method{predict}{glm_reg}(object, glm_predict_cmd = "",
   glm_predict_data = "", ...)
@@ -17,7 +17,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Predict method for glm
+Predict method for the glm_reg function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant

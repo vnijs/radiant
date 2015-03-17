@@ -9,10 +9,22 @@ win_launcher(app = c("marketing", "quant", "base"))
 \arguments{
 \item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
-\value{
-On Windows a file named `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
-}
 \description{
 Create a launcher for Windows (.bat)
+}
+\details{
+On Windows a file named `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
+}
+\examples{
+if (interactive()) {
+  if(Sys.info()["sysname"] != "Windows") {
+    win_launcher()
+    fn <- paste0(Sys.getenv("USERPROFILE") ,"/Desktop/radiant.bat")
+    if(!file.exists(fn))
+       stop("Windows launcher not created")
+    else
+      unlink(fn)
+  }
+}
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/correlation.R
 \name{summary.correlation}
 \alias{summary.correlation}
-\title{Summarize method for the correlation function}
+\title{Summary method for the correlation function}
 \usage{
 \method{summary}{correlation}(object, cor_cutoff = 0, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods.}
 }
 \description{
-Summarize method for the correlation function
+Summary method for the correlation function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant

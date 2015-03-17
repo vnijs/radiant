@@ -34,7 +34,7 @@ single_mean <- function(dataset, sm_var,
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
 
-#' Summary method for single_mean
+#' Summary method for the single_mean function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
@@ -82,7 +82,7 @@ summary.single_mean <- function(object, ...) {
 	print(res, row.names = FALSE)
 }
 
-#' Plot method for single_mean
+#' Plot method for the single_mean function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'

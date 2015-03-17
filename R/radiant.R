@@ -4,6 +4,10 @@
 #'
 #' @param app Choose the app to run. Either "base", "quant", or "marketing". "marketing" is the default
 #'
+#' @examples
+#' if (interactive()) {
+#'   radiant()
+#' }
 #' @export
 radiant <- function(app = c("marketing", "quant", "base")) {
 
@@ -18,7 +22,7 @@ radiant <- function(app = c("marketing", "quant", "base")) {
   runApp(system.file(app[1], package='radiant'))
 }
 
-#' Alias used to set the class for output from an analysis function in R/ (e.g., single_mean)
+#' Alias used to set the class for analysis function return
 #'
 #' @examples
 #' foo <- function(x) x^2 %>% set_class(c("foo", class(.)))
@@ -27,6 +31,8 @@ radiant <- function(app = c("marketing", "quant", "base")) {
 set_class <- `class<-`
 
 #' Add stars '***' to a data.frame (from broom's `tidy` function) based on p.values
+#'
+#' @details Add stars to output from broom's `tidy` function
 #'
 #' @param pval Vector of p-values
 #'
@@ -42,7 +48,9 @@ sig_stars <- function(pval) {
     c("",".","*", "**", "***")[.]
 }
 
-#' Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+#' Hide warnings and messages and return invisible
+#'
+#' @details Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 #'
 #' @param ... Inputs to keep quite
 #'
@@ -55,7 +63,9 @@ sshh <- function(...) {
   invisible()
 }
 
-#' Hide warnings and messages from app user (e.g., ggplot2). Adapted from http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/
+#' Hide warnings and messages and return result
+#'
+#' @details Adapted from \url{http://www.onthelambda.com/2014/09/17/fun-with-rprofile-and-customizing-r-startup/}
 #'
 #' @param ... Inputs to keep quite
 #'
@@ -67,7 +77,7 @@ sshhr <- function(...) {
   suppressWarnings( suppressMessages( ... ) )
 }
 
-#' Get data for analysis functions exported by Radiant
+#' Get data for analysis functions
 #'
 #' @param dataset Name of the dataframe
 #' @param vars Variables to extract from the dataframe
@@ -80,8 +90,6 @@ sshhr <- function(...) {
 #' @examples
 #' r_data <- list()
 #' r_data$dat <- mtcars
-#' library(magrittr)
-#' library(dplyr)
 #' getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
 #'
 #' @export
@@ -100,7 +108,7 @@ getdata <- function(dataset,
       r_data[[dataset]]
     } else if(exists(dataset)) {
       d_env <- pryr::where(dataset)
-      # cat("Dataset", dataset, "loaded from", attr(d_env,"name"), "environment\n")
+      # cat("Dataset", dataset, "loaded from", environmentName(d_env), "environment\n")
       d_env[[dataset]]
     } else {
       paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
@@ -112,7 +120,7 @@ getdata <- function(dataset,
         { if(na.rm) { if(anyNA(.)) na.omit(.) else . } }
 }
 
-#' Change data function exported by Radiant
+#' Change data
 #'
 #' @param dataset Name of the dataframe to change
 #' @param vars New variables to add to the data.frame
@@ -121,10 +129,12 @@ getdata <- function(dataset,
 #' @return None
 #'
 #' @examples
+#' \dontrun{
 #' r_data <- list()
-#' r_data$df <- data.frame(a = 1:20)
-#' changedata("df",20:1, "b")
-#' head(r_data$df)
+#' r_data$dat <- data.frame(a = 1:20)
+#' changedata("dat",20:1, "b")
+#' head(r_data$dat)
+#' }
 #'
 #' @export
 changedata <- function(dataset,
@@ -141,7 +151,7 @@ changedata <- function(dataset,
     d_env$r_data[[dataset]][,var_names] <- vars
   } else if(exists(dataset)) {
     d_env <- pryr::where(dataset)
-    cat("Dataset", dataset, "changed in", attr(d_env,"name"), "environment\n")
+    cat("Dataset", dataset, "changed in", environmentName(d_env), "environment\n")
     d_env[[dataset]][,var_names] <- vars
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
@@ -156,14 +166,26 @@ changedata <- function(dataset,
 
 #' Create a launcher for Windows (.bat)
 #'
+#' @details On Windows a file named `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
+#'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
-#' @return On Windows a file named `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @examples
+#' if (interactive()) {
+#'   if(Sys.info()["sysname"] != "Windows") {
+#'     win_launcher()
+#'     fn <- paste0(Sys.getenv("USERPROFILE") ,"/Desktop/radiant.bat")
+#'     if(!file.exists(fn))
+#'        stop("Windows launcher not created")
+#'     else
+#'       unlink(fn)
+#'   }
+#' }
 #'
 #' @export
 win_launcher <- function(app = c("marketing", "quant", "base")) {
 
-  if(.Platform$OS.type != 'windows')
+  if(Sys.info()["sysname"] != "Windows")
     return("This function is for Windows only. For Mac use the mac_launcher() function")
 
   local_dir <- Sys.getenv("R_LIBS_USER")
@@ -174,11 +196,23 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   cat(launch_string,file=paste0(filepath,"radiant.bat"),sep="\n")
 }
 
-#' Create a launcher for Windows (.command)
+#' Create a launcher for Mac (.command)
+#'
+#' @details On Mac a file named `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
-#' @return On Mac a file named `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @examples
+#' if (interactive()) {
+#'   if(Sys.info()["sysname"] != "Darwin") {
+#'     mac_launcher()
+#'     fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
+#'     if(!file.exists(fn))
+#'        stop("Mac launcher not created")
+#'     else
+#'       unlink(fn)
+#'   }
+#' }
 #'
 #' @export
 mac_launcher <- function(app = c("marketing", "quant", "base")) {

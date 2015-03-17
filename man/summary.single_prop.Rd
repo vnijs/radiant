@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_prop.R
 \name{summary.single_prop}
 \alias{summary.single_prop}
-\title{Summary method for single_prop}
+\title{Summary method for the single_prop function}
 \usage{
 \method{summary}{single_prop}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for single_prop
+Summary method for the single_prop function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant

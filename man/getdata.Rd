@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{getdata}
 \alias{getdata}
-\title{Get data for analysis functions exported by Radiant}
+\title{Get data for analysis functions}
 \usage{
 getdata(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
 }
@@ -21,13 +21,11 @@ getdata(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
 Data.frame with specified columns and rows
 }
 \description{
-Get data for analysis functions exported by Radiant
+Get data for analysis functions
 }
 \examples{
 r_data <- list()
 r_data$dat <- mtcars
-library(magrittr)
-library(dplyr)
 getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
 }
 
