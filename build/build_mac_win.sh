@@ -23,7 +23,7 @@ rm $dirwin/radiant*
 # rm $dirmac/shinyAce*
 # rm $dirmac_mav/shinyAce*
 # rm $dirwin/shinyAce*
-#
+
 # rm $dirsource/rpivotTable*
 # rm $dirmac/rpivotTable*
 # rm $dirmac_mav/rpivotTable*
