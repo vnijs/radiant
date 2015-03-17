@@ -42,5 +42,7 @@ result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 \code{\link{plot.glm_reg}} to plot the results
 
 \code{\link{predict.glm_reg}} to generate predictions
+
+\code{\link{plot.glm_predict}} to plot prediction output
 }
 

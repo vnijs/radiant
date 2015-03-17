@@ -35,8 +35,8 @@ result <- pmap("computer","Brand","HighEnd:Dated",
 plot(result, pmap_plot = c("brand","attr","pref"))
 }
 \seealso{
-\code{\link{mds}} to calculate results
+\code{\link{pmap}} to calculate results
 
-\code{\link{summary.mds}} to plot results
+\code{\link{summary.pmap}} to plot results
 }
 
