@@ -36,5 +36,7 @@ summary(res, glm_sum_check = c("vif","confint","odds"))
 \code{\link{plot.glm_reg}} to plot the results
 
 \code{\link{predict.glm_reg}} to generate predictions
+
+\code{\link{plot.glm_predict}} to plot prediction output
 }
 
