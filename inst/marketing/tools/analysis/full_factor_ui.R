@@ -46,7 +46,9 @@ output$ui_full_factor <- renderUI({
       radioButtons("ff_rotation", label = "Rotation:", ff_rotation,
       	selected = state_init("ff_rotation", "varimax"),
       	inline = TRUE),
-      actionButton("ff_save_scores", "Save scores")
+      conditionalPanel(condition = "input.ff_var != null",
+        actionButton("ff_save_scores", "Save scores")
+      )
   	),
 		help_and_report(modal_title = "Factor",
 		                fun_name = "full_factor",

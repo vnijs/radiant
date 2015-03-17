@@ -1,3 +1,12 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Fixed the invalid URLs
+* Updated the Description field to a complete sentence
+* Reduced the documentation size to less than 2MB
+* Eliminated the NOTE produced when checking R code for possible problems
+* The only remaining NOTE is for a New submission 
+
 ## Test environments
 * local OS X install, R 3.1.2
 * local Windows 8.1.1 install, R 3.1.2
