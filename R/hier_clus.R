@@ -1,4 +1,4 @@
-#' Hierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysis
+#' Hierarchical cluster analysis
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 #'
@@ -88,7 +88,6 @@ plot.hier_clus <- function(x,
 
 	object <- x; rm(x)
 
-	# importFrom ggdendro ggdendrogram dendro_data segment
 	object$hc_out$height %<>% { . / max(.) }
 
 	plots <- list()
