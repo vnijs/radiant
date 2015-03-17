@@ -90,8 +90,12 @@ summary.conjoint_profiles <- function(object, ...) {
 #' @seealso \code{\link{conjoint_profiles}} to calculate results
 #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
 #'
+#' @importFrom AlgDesign optFederov
+#'
 #' @export
-ff_design <- function(attr, trial = 0, rseed = 172110) {
+ff_design <- function(attr,
+                      trial = 0,
+                      rseed = 172110) {
 
 	experiment <- expand.grid(attr)
 
