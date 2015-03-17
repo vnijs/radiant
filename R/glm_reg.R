@@ -19,6 +19,7 @@
 #' @seealso \code{\link{summary.glm_reg}} to summarize the results
 #' @seealso \code{\link{plot.glm_reg}} to plot the results
 #' @seealso \code{\link{predict.glm_reg}} to generate predictions
+#' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
 #' @export
 glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
@@ -96,6 +97,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 #' @seealso \code{\link{glm_reg}} to generate the results
 #' @seealso \code{\link{plot.glm_reg}} to plot the results
 #' @seealso \code{\link{predict.glm_reg}} to generate predictions
+#' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
 #' @importFrom car vif
 #'
@@ -243,6 +245,7 @@ summary.glm_reg <- function(object,
 #' @seealso \code{\link{glm_reg}} to generate results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
 #' @seealso \code{\link{predict.glm_reg}} to generate predictions
+#' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
 #' @export
 plot.glm_reg <- function(x,
@@ -328,7 +331,7 @@ plot.glm_reg <- function(x,
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant
 #'
-#' @param object Return value from \code{\link{regression}}
+#' @param object Return value from \code{\link{glm_reg}}
 #' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
 #' @param glm_predict_data Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation
 #' @param ... further arguments passed to or from other methods
@@ -343,6 +346,7 @@ plot.glm_reg <- function(x,
 #' @seealso \code{\link{glm_reg}} to generate the result
 #' @seealso \code{\link{summary.glm_reg}} to summarize results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
+#' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
 #' @export
 predict.glm_reg <- function(object,
@@ -484,6 +488,7 @@ predict.glm_reg <- function(object,
 #' @seealso \code{\link{glm_reg}} to generate the result
 #' @seealso \code{\link{summary.glm_reg}} to summarize results
 #' @seealso \code{\link{plot.glm_reg}} to plot results
+#' @seealso \code{\link{predict.glm_reg}} to generate predictions
 #'
 #' @export
 plot.glm_predict <- function(x,

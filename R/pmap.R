@@ -148,8 +148,8 @@ summary.pmap <- function(object,
 #'               pmap_pref = c("Innovative","Business"))
 #' plot(result, pmap_plot = c("brand","attr","pref"))
 #'
-#' @seealso \code{\link{mds}} to calculate results
-#' @seealso \code{\link{summary.mds}} to plot results
+#' @seealso \code{\link{pmap}} to calculate results
+#' @seealso \code{\link{summary.pmap}} to plot results
 #'
 #' @importFrom wordcloud textplot
 #'
