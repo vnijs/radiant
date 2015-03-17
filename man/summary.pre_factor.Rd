@@ -2,7 +2,7 @@
 % Please edit documentation in R/pre_factor.R
 \name{summary.pre_factor}
 \alias{summary.pre_factor}
-\title{Summarize method for the pre_factor function}
+\title{Summary method for the pre_factor function}
 \usage{
 \method{summary}{pre_factor}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summarize method for the pre_factor function
+Summary method for the pre_factor function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for an example in Radiant

@@ -32,7 +32,7 @@ correlation <- function(dataset, cor_var,
   environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }
 
-#' Summarize method for the correlation function
+#' Summary method for the correlation function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/correlation.html} for an example in Radiant
 #'

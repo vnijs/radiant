@@ -45,7 +45,7 @@ single_prop <- function(dataset, sp_var,
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }
 
-#' Summary method for single_prop
+#' Summary method for the single_prop function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
@@ -94,7 +94,7 @@ summary.single_prop <- function(object, ...) {
 	print(res, row.names = FALSE)
 }
 
-#' Plot method for single_prop
+#' Plot method for the single_prop function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'

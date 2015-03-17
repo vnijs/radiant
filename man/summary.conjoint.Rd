@@ -2,7 +2,7 @@
 % Please edit documentation in R/conjoint.R
 \name{summary.conjoint}
 \alias{summary.conjoint}
-\title{Summary method for conjoint output}
+\title{Summary method for the conjoint function}
 \usage{
 \method{summary}{conjoint}(object, ca_vif = FALSE, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for conjoint output
+Summary method for the conjoint function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant

@@ -19,4 +19,9 @@ Launch Radiant in the default browser
 \details{
 See \url{http://mostly-harmless.github.io/radiant} for documentation and tutorials
 }
+\examples{
+if (interactive()) {
+  radiant()
+}
+}
 

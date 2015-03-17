@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_props.R
 \name{plot.compare_props}
 \alias{plot.compare_props}
-\title{Plot results from the compare_props function. This is a method of class compare_props and can be called as plot or plot.compare_props}
+\title{Plot method for the compare_props function}
 \usage{
 \method{plot}{compare_props}(x, cp_plots = "props", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot results from the compare_props function. This is a method of class compare_props and can be called as plot or plot.compare_props
+Plot method for the compare_props function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant

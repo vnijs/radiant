@@ -3,15 +3,16 @@
 \docType{data}
 \name{diamonds}
 \alias{diamonds}
-\title{A sample of 3,000 from the diamonds dataset bundeled with ggplot2
-Description provided in attr(diamonds,"description")}
+\title{Diamond prices}
 \format{A data frame with 3000 rows and 10 variables}
 \usage{
 data(diamonds)
 }
 \description{
-A sample of 3,000 from the diamonds dataset bundeled with ggplot2
-Description provided in attr(diamonds,"description")
+Diamond prices
+}
+\details{
+A sample of 3,000 from the diamonds dataset bundeled with ggplot2. Description provided in attr(diamonds,"description")
 }
 \keyword{datasets}
 

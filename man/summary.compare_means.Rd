@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_means.R
 \name{summary.compare_means}
 \alias{summary.compare_means}
-\title{Summarize method for output from compare_means}
+\title{Summary method for the compare_means function}
 \usage{
 \method{summary}{compare_means}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summarize method for output from compare_means
+Summary method for the compare_means function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant

@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.R
 \name{summary.regression}
 \alias{summary.regression}
-\title{Summary method for regression}
+\title{Summary method for the regression function}
 \usage{
 \method{summary}{regression}(object, reg_sum_check = "",
   reg_conf_level = 0.95, reg_test_var = "", ...)
@@ -19,7 +19,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for regression
+Summary method for the regression function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant

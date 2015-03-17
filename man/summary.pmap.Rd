@@ -2,7 +2,7 @@
 % Please edit documentation in R/pmap.R
 \name{summary.pmap}
 \alias{summary.pmap}
-\title{Summarize method for the pmap function}
+\title{Summary method for the pmap function}
 \usage{
 \method{summary}{pmap}(object, pmap_cutoff = 0, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summarize method for the pmap function
+Summary method for the pmap function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/pmap.html} for an example in Radiant

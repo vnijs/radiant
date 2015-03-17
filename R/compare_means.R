@@ -78,7 +78,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
   environment() %>% as.list %>% set_class(c("compare_means",class(.)))
 }
 
-#' Summarize method for output from compare_means
+#' Summary method for the compare_means function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
@@ -131,7 +131,7 @@ summary.compare_means <- function(object, ...) {
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 
-#' Plot method for output from compare_means
+#' Plot method for the compare_means function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'

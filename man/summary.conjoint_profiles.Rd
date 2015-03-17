@@ -2,7 +2,7 @@
 % Please edit documentation in R/conjoint_profiles.R
 \name{summary.conjoint_profiles}
 \alias{summary.conjoint_profiles}
-\title{Summarize method for the conjoint_profiles function}
+\title{Summary method for the conjoint_profiles function}
 \usage{
 \method{summary}{conjoint_profiles}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods.}
 }
 \description{
-Summarize method for the conjoint_profiles function
+Summary method for the conjoint_profiles function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
