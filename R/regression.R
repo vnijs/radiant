@@ -395,7 +395,8 @@ plot.regression <- function(x,
 #' predict(result, reg_predict_cmd = "carat = 1:10")
 #' predict(result, reg_predict_cmd = "clarity = levels(clarity)")
 #' result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
-#' predict(result, reg_predict_data = "diamonds")
+#' dpred <- getdata("diamonds") %>% slice(1:10)
+#' predict(result, reg_predict_data = "dpred")
 #'
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results
