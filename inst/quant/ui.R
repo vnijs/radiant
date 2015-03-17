@@ -4,8 +4,6 @@ shinyUI(
 
   tabPanel("Data", uiOutput('ui_data')),
 
-  withMathJax(),
-
   navbarMenu("Sample",
     tabPanel("Sampling", uiOutput("sampling")),
     tabPanel("Sample size", withMathJax(), uiOutput("sample_size"))
