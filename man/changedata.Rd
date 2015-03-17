@@ -19,4 +19,10 @@ None
 \description{
 Change data function exported by Radiant
 }
+\examples{
+r_data <- list()
+r_data$df <- data.frame(a = 1:20)
+changedata("df",20:1, "b")
+head(r_data$df)
+}
 

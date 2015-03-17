@@ -5,7 +5,9 @@ output$ui_conjoint_profiles <- renderUI({
   list(
   	wellPanel(
 			fileInput('ca_upload', 'Upload attributes:', multiple=FALSE),
-	  	downloadButton('download_profiles', 'Save profiles')
+      # conditionalPanel(condition = "input.ca_upload != null",
+	  		downloadButton('download_profiles', 'Save profiles')
+	  	# )
 		),
   	help_and_report(modal_title = "Conjoint profiles",
   	                fun_name = "conjoint_profiles",

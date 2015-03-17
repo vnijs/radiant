@@ -151,6 +151,8 @@ summary.pmap <- function(object,
 #' @seealso \code{\link{mds}} to calculate results
 #' @seealso \code{\link{summary.mds}} to plot results
 #'
+#' @importFrom wordcloud textplot
+#'
 #' @export
 plot.pmap <- function(x,
                       pmap_plot = "",

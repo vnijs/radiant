@@ -59,11 +59,11 @@ output$report <- renderUI({
     div(class="row",
       div(class="col-xs-6",
         shinyAce::aceEditor("rmd_report", mode="markdown",
-                  # wordWrap = TRUE,
+                  wordWrap = TRUE,
                   height = "600px",
-                  # selectionId = "rmd_selection",
+                  selectionId = "rmd_selection",
                   value=state_init("rmd_report",rmd_example),
-                  # hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+                  hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
                   )),
       div(class="col-xs-6", htmlOutput("rmd_knitDoc"))
     )
@@ -96,10 +96,10 @@ output$rmd_knitDoc <- renderUI({
     }
     if(input$rmd_report != "") {
       withProgress(message = 'Knitting report', value = 0, {
-        return(knitIt2(input$rmd_report))
-        # ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
-        #        return(knitIt2(input$rmd_report)),
-        #        return(knitIt2(input$rmd_selection)))
+        # return(knitIt2(input$rmd_report))
+        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+               return(knitIt2(input$rmd_report)),
+               return(knitIt2(input$rmd_selection)))
       })
     }
   })
@@ -110,9 +110,9 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if(running_local) {
       isolate({
-        text <- input$rmd_report
-        # ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
-        #        text <- input$rmd_report, text <- input$rmd_selection)
+        # text <- input$rmd_report
+        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+               text <- input$rmd_report, text <- input$rmd_selection)
         knitIt(text) %>% cat(.,file=file,sep="\n")
       })
     }
@@ -238,9 +238,9 @@ summary(reg)
 output$rcode <- renderUI({
   div(class="row", div(class="col-xs-6",
     shinyAce::aceEditor("r_code", mode="r",
-                        # selectionId = "r_code_selection",
+                        selectionId = "r_code_selection",
                         value=state_init("r_code",r_example),
-                        # hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+                        hotkeys=list(runKeyCode=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
               ),
     actionButton("rEval", "Run"),
     downloadButton('saveCode', 'Save R-code'), tags$br(), tags$br(),
@@ -262,11 +262,11 @@ output$rCodeEval <- renderPrint({
   if(valsCode$code == 1) return()
   isolate({
     if(running_local) {
-      # if(is.null(input$r_code_selection) || input$r_code_selection == "") {
+      if(is.null(input$r_code_selection) || input$r_code_selection == "") {
         r_code <- input$r_code
-      # } else {
-        # r_code <- input$r_code_selection
-      # }
+      } else {
+        r_code <- input$r_code_selection
+      }
 
       r_output <- paste0("```{r cache = FALSE, echo = TRUE}\n",r_code,"\n```")
       return(HTML(paste(knitr::knit2html(text = r_output, fragment.only = TRUE, quiet = TRUE),

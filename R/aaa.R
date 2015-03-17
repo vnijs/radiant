@@ -10,21 +10,18 @@ options("scipen"=100, "digits"=4)
 #'
 #' @name radiant
 #' @docType package
-#' @import ggplot2 shiny dplyr shinyAce
+#' @import ggplot2 shiny dplyr shinyAce htmlwidgets
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% set_rownames set_colnames divide_by add
 #' @importFrom lubridate is.Date now
 #' @importFrom broom tidy glance
 #' @importFrom tidyr gather_
-#' @importFrom AlgDesign optFederov
 #' @importFrom gridExtra grid.arrange
 #' @importFrom markdown markdownToHTML
-#' @importFrom wordcloud textplot
+#' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
 NULL
 
-# kurtosi <<- psych::kurtosi
-# skew <<- psych::skew
 #' Exporting the kurtosi function from the psych package
 #' @importFrom psych kurtosi
 #' @name kurtosi
