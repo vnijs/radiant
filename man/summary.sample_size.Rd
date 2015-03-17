@@ -22,6 +22,6 @@ result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
 summary(result)
 }
 \seealso{
-\code{\link{sampling}} to generate the results
+\code{\link{sample_size}} to generate the results
 }
 

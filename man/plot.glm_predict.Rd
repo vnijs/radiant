@@ -52,5 +52,7 @@ plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
 \code{\link{summary.glm_reg}} to summarize results
 
 \code{\link{plot.glm_reg}} to plot results
+
+\code{\link{predict.glm_reg}} to generate predictions
 }
 
