@@ -3,15 +3,16 @@
 \docType{data}
 \name{titanic}
 \alias{titanic}
-\title{Survival data for the Titanic
-Description provided in attr(titanic,"description")}
+\title{Survival data for the Titanic}
 \format{A data frame with 1309 rows and 11 variables}
 \usage{
 data(titanic)
 }
 \description{
 Survival data for the Titanic
-Description provided in attr(titanic,"description")
+}
+\details{
+Survival data for the Titanic. Description provided in attr(titanic,"description")
 }
 \keyword{datasets}
 

@@ -3,15 +3,16 @@
 \docType{data}
 \name{shopping}
 \alias{shopping}
-\title{Attitudinal data on shopping for 20 consumers
-Description provided in attr(shopping,"description")}
+\title{Shopping attitudes}
 \format{A data frame with 20 rows and 7 variables}
 \usage{
 data(shopping)
 }
 \description{
-Attitudinal data on shopping for 20 consumers
-Description provided in attr(shopping,"description")
+Shopping attitudes
+}
+\details{
+Attitudinal data on shopping for 20 consumers. Description provided in attr(shopping,"description")
 }
 \keyword{datasets}
 

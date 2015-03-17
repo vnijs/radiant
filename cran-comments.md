@@ -1,3 +1,15 @@
+## Critical bug-fix
+
+The package version submitted to CRAN has a fatal bug that crashes the Shiny app
+on start-up. The bug is fixed in this submission.
+
+
+### Test environments
+* local OS X install, R 3.1.2
+* local Windows 8.1.1 install, R 3.1.2
+* ubuntu 12.04 (on travis-ci), R 3.1.2
+* win-builder (devel and release)
+
 ## Resubmission
 This is a resubmission. In this version I have:
 
@@ -5,15 +17,11 @@ This is a resubmission. In this version I have:
 * Updated the Description field to a complete sentence
 * Reduced the documentation size to less than 2MB
 * Eliminated the NOTE produced when checking R code for possible problems
-* The only remaining NOTE is for a New submission 
+* The only remaining NOTE is for a New submission
 
-## Test environments
-* local OS X install, R 3.1.2
-* local Windows 8.1.1 install, R 3.1.2
-* ubuntu 12.04 (on travis-ci), R 3.1.2
-* win-builder (devel and release)
+## Initial submission
 
-## R CMD check results
+### R CMD check results
 There were no ERRORs or WARNINGs.
 
 There were 2 NOTES:

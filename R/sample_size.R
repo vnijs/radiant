@@ -52,7 +52,7 @@ sample_size <- function(ss_type = "mean",
   environment() %>% as.list %>% set_class(c("sample_size",class(.)))
 }
 
-#' Summary method for sample size calculation
+#' Summary method for the sample_size function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/sample_size} for an example in Radiant
 #'

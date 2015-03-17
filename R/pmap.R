@@ -57,7 +57,7 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 	environment() %>% as.list %>% set_class(c("pmap",class(.)))
 }
 
-#' Summarize method for the pmap function
+#' Summary method for the pmap function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/pmap.html} for an example in Radiant
 #'

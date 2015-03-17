@@ -56,7 +56,7 @@ full_factor <- function(dataset, ff_var,
   environment() %>% as.list %>% set_class(c("full_factor",class(.)))
 }
 
-#' Summarize method for the full_factor function
+#' Summary method for the full_factor function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'

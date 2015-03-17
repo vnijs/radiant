@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{changedata}
 \alias{changedata}
-\title{Change data function exported by Radiant}
+\title{Change data}
 \usage{
 changedata(dataset, vars = c(), var_names = names(vars))
 }
@@ -17,12 +17,14 @@ changedata(dataset, vars = c(), var_names = names(vars))
 None
 }
 \description{
-Change data function exported by Radiant
+Change data
 }
 \examples{
+\dontrun{
 r_data <- list()
-r_data$df <- data.frame(a = 1:20)
-changedata("df",20:1, "b")
-head(r_data$df)
+r_data$dat <- data.frame(a = 1:20)
+changedata("dat",20:1, "b")
+head(r_data$dat)
+}
 }
 

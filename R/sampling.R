@@ -30,7 +30,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
   environment() %>% as.list %>% set_class(c("sampling",class(.)))
 }
 
-#' Summary method for sampling
+#' Summary method for the sampling function
 #'
 #' @details See \url{http://mostly-harmless.github.io/radiant/quant/sampling} for an example in Radiant
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hier_clus.R
 \name{summary.hier_clus}
 \alias{summary.hier_clus}
-\title{Summary method for hier_clus}
+\title{Summary method for the hier_clus function}
 \usage{
 \method{summary}{hier_clus}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for hier_clus
+Summary method for the hier_clus function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/marketing/hier_clus.html} for an example in Radiant

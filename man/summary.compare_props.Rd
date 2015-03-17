@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_props.R
 \name{summary.compare_props}
 \alias{summary.compare_props}
-\title{Summary method for output from compare_props}
+\title{Summary method for the compare_props function}
 \usage{
 \method{summary}{compare_props}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for output from compare_props
+Summary method for the compare_props function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant

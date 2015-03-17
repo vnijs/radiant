@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.R
 \name{predict.regression}
 \alias{predict.regression}
-\title{Predict method for regression}
+\title{Predict method for the regression function}
 \usage{
 \method{predict}{regression}(object, reg_predict_cmd = "",
   reg_predict_data = "", reg_conf_level = 0.95, reg_save_pred = FALSE,
@@ -22,7 +22,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Predict method for regression
+Predict method for the regression function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
@@ -32,7 +32,8 @@ result <- regression("diamonds", "price", c("carat","clarity"))
 predict(result, reg_predict_cmd = "carat = 1:10")
 predict(result, reg_predict_cmd = "clarity = levels(clarity)")
 result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
-predict(result, reg_predict_data = "diamonds")
+dpred <- getdata("diamonds") \%>\% slice(1:10)
+predict(result, reg_predict_data = "dpred")
 }
 \seealso{
 \code{\link{regression}} to generate the result

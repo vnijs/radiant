@@ -3,23 +3,16 @@
 \docType{data}
 \name{city}
 \alias{city}
-\title{Distance in miles between nine cities in the USA
-The dataset is used to illustrate multi-dimensional scaling (MDS)
-Description provided in attr(city,"description")}
+\title{City distances}
 \format{A data frame with 45 rows and 3 variables}
 \usage{
 data(city)
-
-data(city)
 }
 \description{
-Distance in miles between nine cities in the USA
-The dataset is used to illustrate multi-dimensional scaling (MDS)
-Description provided in attr(city,"description")
-
-Distance in miles between nine cities in the USA
-The dataset is used to illustrate multi-dimensional scaling (MDS)
-Description provided in attr(city,"description")
+City distances
+}
+\details{
+Distance in miles between nine cities in the USA. The dataset is used to illustrate multi-dimensional scaling (MDS). Description provided in attr(city,"description")
 }
 \keyword{datasets}
 

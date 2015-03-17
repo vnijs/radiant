@@ -2,7 +2,7 @@
 % Please edit documentation in R/single_prop.R
 \name{plot.single_prop}
 \alias{plot.single_prop}
-\title{Plot method for single_prop}
+\title{Plot method for the single_prop function}
 \usage{
 \method{plot}{single_prop}(x, sp_plots = "hist", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for single_prop
+Plot method for the single_prop function
 }
 \details{
 See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
