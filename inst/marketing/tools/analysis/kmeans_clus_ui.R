@@ -43,10 +43,11 @@ output$ui_kmeans_clus <- renderUI({
 		  ),
 	    numericInput("km_nr_clus", "Number of clusters:", min = 2,
 	    	value = state_init('km_nr_clus',2)),
-
-			HTML("<label>Save:</label>"), br(),
-      downloadButton("km_save_kmeans", "Means"),
-	    actionButton("km_save_membership", "Membership")
+      conditionalPanel(condition = "input.km_vars != null",
+				HTML("<label>Save:</label>"), br(),
+	      downloadButton("km_save_kmeans", "Means"),
+		    actionButton("km_save_membership", "Membership")
+		  )
   	),
   	help_and_report(modal_title = "K-means cluster analysis",
   	                fun_name = "kmeans_clus",

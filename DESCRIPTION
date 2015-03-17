@@ -1,6 +1,6 @@
 Package: radiant
 Title: Business Analytics using R and Shiny
-Version: 0.1.71
+Version: 0.1.72
 Date: 2015-3-16
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description:
@@ -25,8 +25,10 @@ Imports:
 		broom (>= 0.3.6),
 		tidyr (>= 0.2.0),
 		pryr (>= 0.1),
+		htmlwidgets (>= 0.3.2),
+		rpivotTable (>= 0.1.2.6),
 		shiny (>= 0.11.1),
-		shinyAce (>= 0.1.0)
+		shinyAce (>= 0.2.1)
 Suggests:
 		rmarkdown (>= 0.4.2),
 		ggvis (>= 0.4),

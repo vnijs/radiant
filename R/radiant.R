@@ -77,8 +77,19 @@ sshhr <- function(...) {
 #'
 #' @return Data.frame with specified columns and rows
 #'
+#' @examples
+#' r_data <- list()
+#' r_data$dat <- mtcars
+#' library(magrittr)
+#' library(dplyr)
+#' getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
+#'
 #' @export
-getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
+getdata <- function(dataset,
+                    vars = "",
+                    na.rm = TRUE,
+                    filt = "",
+                    slice = "") {
 
   filt %<>% gsub("\\s","", .)
 
@@ -109,17 +120,25 @@ getdata <- function(dataset, vars = "", na.rm = TRUE, filt = "", slice = "") {
 #'
 #' @return None
 #'
+#' @examples
+#' r_data <- list()
+#' r_data$df <- data.frame(a = 1:20)
+#' changedata("df",20:1, "b")
+#' head(r_data$df)
+#'
 #' @export
-changedata <- function(dataset, vars = c(), var_names = names(vars)) {
-
-  r_env <- r_data <- NULL
+changedata <- function(dataset,
+                       vars = c(),
+                       var_names = names(vars)) {
 
   if(exists("r_env")) {
     cat("Dataset", dataset, "changed in r_env\n")
-    r_env$r_data[[dataset]][,var_names] <<- vars
+    # r_env$r_data[[dataset]][,var_names] <<- vars
+    r_env$r_data[[dataset]][,var_names] <- vars
   } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
     if(exists("running_local")) { if(running_local) cat("Dataset", dataset, "changed in r_data list\n") }
-    r_data[[dataset]][,var_names] <<- vars
+    d_env <- pryr::where("r_data")
+    d_env$r_data[[dataset]][,var_names] <- vars
   } else if(exists(dataset)) {
     d_env <- pryr::where(dataset)
     cat("Dataset", dataset, "changed in", attr(d_env,"name"), "environment\n")

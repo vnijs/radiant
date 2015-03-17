@@ -79,9 +79,11 @@ output$ui_pmap <- renderUI({
 		    )
 	    ),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Summary'",
-	    	numericInput("pmap_cutoff", label = "Loadings cutoff:", min = 0, max = 1,
-	    		state_init("pmap_cutoff",0), step = .05),
-		    actionButton("pmap_save_scores", "Save scores")
+	    	numericInput("pmap_cutoff", label = "Loadings cutoff:", min = 0,
+	    	             max = 1, state_init("pmap_cutoff",0), step = .05),
+      	conditionalPanel(condition = "input.pmap_attr != null",
+		    	actionButton("pmap_save_scores", "Save scores")
+		    )
 		  )
  		),
 		help_and_report(modal_title = "Attribute based brand maps",

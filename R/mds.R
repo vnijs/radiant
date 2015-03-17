@@ -141,6 +141,8 @@ summary.mds <- function(object, mds_round = 1, ...) {
 #' @seealso \code{\link{mds}} to calculate results
 #' @seealso \code{\link{summary.mds}} to plot results
 #'
+#' @importFrom wordcloud textplot
+#'
 #' @export
 plot.mds <- function(x,
                      mds_rev_dim = "",

@@ -4,12 +4,12 @@
 # options(warn=2)
 # options(shiny.error=recover)
 
-# load/attach packages
-pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud", "AlgDesign",
-               "knitr", "lubridate", "ggplot2", "ggdendro", "shiny", "pryr", "shiny", "magrittr", "tidyr",
-               "dplyr", "broom","shinyAce")
-pkgs <- pkgs_cran
-
+pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
+               "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
+               "shiny", "pryr", "shiny", "magrittr", "tidyr", "dplyr",
+               "broom", "htmlwidgets")
+pkgs_gh <- c("shinyAce","rpivotTable")
+pkgs <- c(pkgs_cran, pkgs_gh)
 
 if(Sys.getenv('SHINY_PORT') == "") {
 

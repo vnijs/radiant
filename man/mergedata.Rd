@@ -28,6 +28,6 @@ Merge datasets using dplyr's join functions
 See \url{http://mostly-harmless.github.io/radiant/base/merge.html} for an example in Radiant
 }
 \examples{
-mergedata("titanic","titanic_pred",c("pclass","sex","age"))
+mergedata("titanic","titanic_pred",c("pclass","sex","age")) \%>\% head
 }
 
