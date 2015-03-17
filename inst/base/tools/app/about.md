@@ -99,11 +99,11 @@ numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm
 
 Three (related) apps are included in the inst/ directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools. The `quant` app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The `marketing` app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc.
 
-## Online
+<!-- ## Online
 
 If you really don't want to install Radiant on your computer (yet) you can tryout the app online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
 
-
+ -->
 ## License
 
 

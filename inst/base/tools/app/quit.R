@@ -78,7 +78,7 @@ observe({
           # cat(input$rmd_report, file = pipe("pbcopy"))
         }
       }
-      rm(r_env, envir = .GlobalEnv) # removing the reference to the shiny environment
+      try(rm(r_env, envir = .GlobalEnv), silent = TRUE) # removing the reference to the shiny environment
       stopApp(cat(stop_message))
     })
   } else {
