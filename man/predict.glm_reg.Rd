@@ -8,7 +8,7 @@
   glm_predict_data = "", ...)
 }
 \arguments{
-\item{object}{Return value from \code{\link{regression}}}
+\item{object}{Return value from \code{\link{glm_reg}}}
 
 \item{glm_predict_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
 
@@ -35,5 +35,7 @@ predict(result, glm_predict_cmd = "sex = c('male','female')")
 \code{\link{summary.glm_reg}} to summarize results
 
 \code{\link{plot.glm_reg}} to plot results
+
+\code{\link{plot.glm_predict}} to plot prediction output
 }
 

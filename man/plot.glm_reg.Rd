@@ -34,5 +34,7 @@ plot(result, glm_plots = "coef")
 \code{\link{plot.glm_reg}} to plot results
 
 \code{\link{predict.glm_reg}} to generate predictions
+
+\code{\link{plot.glm_predict}} to plot prediction output
 }
 

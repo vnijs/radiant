@@ -30,7 +30,7 @@ sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10,
 \item{ss_pop_size}{Population size}
 }
 \value{
-A list of variables defined in sample_sizze as an object of class sample_size
+A list of variables defined in sample_size as an object of class sample_size
 }
 \description{
 Sample size calculation
