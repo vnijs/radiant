@@ -41,9 +41,9 @@ To help you get started you can also take a look at this [playlist](https://www.
 
 ## How-to install Radiant
 
-- Required: [R](http://cran.cnr.berkeley.edu/), version 3.1.2 or later
+- Required: <a href="http://cran.cnr.berkeley.edu/" target="_blank">R</a>, version 3.1.2 or later
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
-- Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
+- Recommended: <a href="http://www.rstudio.com/products/rstudio/download/" target="_blank">Rstudio</a>
 
 Radiant is now available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version of the package with complete documentation for off-line access use the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repository (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
 

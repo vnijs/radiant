@@ -1,0 +1,49 @@
+## Radiant
+
+Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http[://www.rstudio.com/shiny/) package.
+
+## Key features
+
+- Explore: Quickly and easily summarize, visualize, and analyze your data
+- Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes).
+- Reproducible: Save and load the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a report using [Rmarkdown document](http://rmarkdown.rstudio.com/).
+- Cross-platform: It runs in a browser (e.g., Chrome or Firefox) on Windows, Mac, and Linux. No data will leave your computer and you can run it without an internet connection. You can, however, also run it as a web application on a server.
+- Context: Data and examples focus on business applications
+
+Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/) (see `R > Report`). As an example, click the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press `Update` to render the report to HTML. For more information on programming with Radiant see the [programming](http://mostly-harmless.github.io/radiant/programming.html) page.
+
+## How-to install Radiant
+
+- Required: [R](http://cran.cnr.berkeley.edu/), version 3.1.2 or later
+- Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
+- Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
+
+Radiant is now available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version of the package with complete documentation for off-line access open R(studio) and copy-and-paste the commands below.
+
+```r
+options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
+install.packages("radiant")
+```
+
+Once all packages are installed use the commands below to start the app:
+
+```r
+library(radiant)
+radiant("marketing")
+```
+
+See also the `Installing Radiant` video below:
+
+<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+
+## Documentation
+
+Documentation and tutorials for Radiant are available at <http://mostly-harmless.github.io/radiant/> and through the help files in the Radiant web-interface (see the `?` icon and the `Help` menu in the navbar).
+
+To help you get started you can also take a look at this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
+
+## Online
+
+If you really don't want to install Radiant on your computer (yet) you can tryout the app online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
+
+For questions and comments please contact me at radiant@rady.ucsd.edu.
