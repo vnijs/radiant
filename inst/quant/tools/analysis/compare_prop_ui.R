@@ -18,8 +18,6 @@ cp_inputs <- reactive({
 # Compare proportions
 ###############################
 output$ui_cp_var1 <- renderUI({
-  # isFct <- "factor" == getdata_class()
-  # vars <- varnames()[isFct]
   vars <- groupable_vars()
   selectInput(inputId = "cp_var1",
               label = "Select a grouping variable:",
@@ -29,7 +27,7 @@ output$ui_cp_var1 <- renderUI({
 })
 
 output$ui_cp_var2 <- renderUI({
-  if(input$cp_var1 %>% not_available) return()
+  if(not_available(input$cp_var1)) return()
   vars <- two_level_vars()
   if(input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
   selectInput(inputId = "cp_var2", label = "Variable (select one):",
@@ -38,7 +36,7 @@ output$ui_cp_var2 <- renderUI({
 })
 
 output$ui_cp_levels <- renderUI({
-  if(input$cp_var2 %>% not_available)
+  if(not_available(input$cp_var2))
     levs <- c()
   else
     levs <- .getdata()[1,input$cp_var2] %>% as.factor %>% levels
@@ -54,7 +52,7 @@ output$ui_compare_props <- renderUI({
       wellPanel(
         selectizeInput(inputId = "cp_plots", label = "Select plots:",
                 choices = cp_plots,
-                selected = state_single("cp_plots", cp_plots, "props"),
+                selected = state_multiple("cp_plots", cp_plots, "props"),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))
       )

@@ -65,9 +65,9 @@ output$ui_viz_facet_col <- renderUI({
 output$ui_viz_color <- renderUI({
   if(not_available(input$viz_vars2)) return()  # can't have an XY plot without an X
   vars <- c("None" = "none", varnames())
-  sel <- "none"
-  if(!input$viz_type %in% c("scatter","line"))
-    sel <- state_single("viz_color", vars, "none")
+  # sel <- "none"
+  # if(!input$viz_type %in% c("scatter","line"))
+  sel <- state_single("viz_color", vars, "none")
   selectizeInput("viz_color", "Color", vars,
                  selected = sel,
                  multiple = FALSE)
