@@ -10,7 +10,7 @@ load("~/gh/radiant_dev/inst/base/data/salary.rda")
 load("~/gh/radiant_dev/inst/marketing/data/shopping.rda")
 ```
 
-An important goal for Radiant is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/). Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML.
+Radiant's goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/). Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML.
 
 You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.
 
@@ -22,10 +22,11 @@ summary(result)
 plot(result)
 ```
 
-You can call functions for visualization (see below) and access help from the console using `?visualize`
+You can also call functions for visualization (see below) and access help from the console using `?visualize`
 
 ```{r}
-visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price", viz_type = "scatter", viz_facet_row = "clarity", viz_color = "clarity")
+visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price",
+          viz_type = "scatter", viz_facet_row = "clarity", viz_color = "clarity")
 ```
 
 As an example, you can render the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the `Base` and `Regression` menus.
@@ -118,9 +119,7 @@ plot(result, hc_plots = "dendro", hc_cutoff = 0)
 # plots created above suggest 3 clusters may be  most appropriate
 # use kmeans to create the clusters
 # generate output and save clustermembership to the datafile
-result <- kmeans_clus("shopping",
-                      km_vars = c("v1", "v2", "v3", "v4", "v5", "v6"),
-                      km_nr_clus = 3)
+result <- kmeans_clus("shopping", km_vars = "v1:v6", km_nr_clus = 3)
 summary(result)
 plot(result)
 save_membership(result)

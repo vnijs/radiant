@@ -185,7 +185,7 @@ img {
 </div>
 
 
-<p>An important goal for Radiant is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a>. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Update</code> button on the <code>R &gt; Report</code> page to render the report to HTML.</p>
+<p>Radiant’s goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a>. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Update</code> button on the <code>R &gt; Report</code> page to render the report to HTML.</p>
 <p>You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.</p>
 <p>If you close Radiant using <code>Quit &gt; Quit</code> after launching it from Rstudio or Rgui you can can paste the commands below into the command console to get the same output as in the browser interface.</p>
 <pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;)
@@ -200,8 +200,9 @@ Alt. hyp.: the mean of price is not equal to 0
  3907.186  54.084  &lt; .001 2999 3765.535 4048.837 3956.915 3000</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-2-1.png" title="" alt="" width="672" /></p>
-<p>You can call functions for visualization (see below) and access help from the console using <code>?visualize</code></p>
-<pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, viz_vars1 = &quot;carat&quot;, viz_vars2 = &quot;price&quot;, viz_type = &quot;scatter&quot;, viz_facet_row = &quot;clarity&quot;, viz_color = &quot;clarity&quot;)</code></pre>
+<p>You can also call functions for visualization (see below) and access help from the console using <code>?visualize</code></p>
+<pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, viz_vars1 = &quot;carat&quot;, viz_vars2 = &quot;price&quot;,
+          viz_type = &quot;scatter&quot;, viz_facet_row = &quot;clarity&quot;, viz_color = &quot;clarity&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-3-1.png" title="" alt="" width="672" /></p>
 <p>As an example, you can render the <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the <code>Base</code> and <code>Regression</code> menus.</p>
 <div id="programming" class="section level2">
@@ -394,13 +395,11 @@ plot(result, hc_plots = &quot;dendro&quot;, hc_cutoff = 0)</code></pre>
 <pre class="r"><code># plots created above suggest 3 clusters may be  most appropriate
 # use kmeans to create the clusters
 # generate output and save clustermembership to the datafile
-result &lt;- kmeans_clus(&quot;shopping&quot;,
-                      km_vars = c(&quot;v1&quot;, &quot;v2&quot;, &quot;v3&quot;, &quot;v4&quot;, &quot;v5&quot;, &quot;v6&quot;),
-                      km_nr_clus = 3)
+result &lt;- kmeans_clus(&quot;shopping&quot;, km_vars = &quot;v1:v6&quot;, km_nr_clus = 3)
 summary(result)</code></pre>
 <pre><code>K-means cluster analysis
 Data        : shopping 
-Variables   : v1, v2, v3, v4, v5, v6 
+Variables   : v1:v6 
 Method      : ward.D 
 Distance    : sq.euclidian 
 Observations: 20 
@@ -423,7 +422,7 @@ total variance in the data (higher is better).</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-9-3.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>save_membership(result)</code></pre>
-<pre><code>Dataset shopping changed in environment</code></pre>
+<pre><code>Dataset shopping changed in R_GlobalEnv environment</code></pre>
 <pre class="r"><code># was the data really changed?
 getdata(&quot;shopping&quot;) %&gt;% head</code></pre>
 <pre><code>  id v1 v2 v3 v4 v5 v6 kclus3
