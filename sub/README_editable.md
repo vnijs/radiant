@@ -66,9 +66,9 @@ library(radiant)
 radiant('quant')
 ```
 
-See also the [installing Radiant](https://www.youtube.com/watch?v=AtB2SsmzBsk) video.
+See also the [installing Radiant](https://www.youtube.com/embed/NEPSFiHH_dw) video.
 
-<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
 ## Creating a desktop launcher
 

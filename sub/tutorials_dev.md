@@ -3,11 +3,11 @@
 
 ## Installing Radiant
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
 ## Starting and stopping
 
-<iframe width="640" height="375" src="//www.youtube.com/embed/D71alRsGmBk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/jqtip-kL3bc" frameborder="0" allowfullscreen></iframe>
 
 ## Getting help
 
@@ -16,6 +16,9 @@
 ## Getting data in and out
 
 <iframe width="640" height="375" src="//www.youtube.com/embed/6AE1Wa74cJI" frameborder="0" allowfullscreen></iframe>
+
+## Selecting variables for fast and efficient analysis
+
 
 ## Visualizing data
 
@@ -30,7 +33,7 @@
 <iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen></iframe>
 
 <!--
-## Selecting variables for fast and efficient analysis
+
 ## View data in table form
 ## Visualize data
 ## Explore data

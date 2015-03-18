@@ -4,7 +4,7 @@
 A platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http[://www.rstudio.com/shiny/) package. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please contact me at radiant@rady.ucsd.edu.
 
 [![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant)
-Version: 0.1.76, Date: 2015-3-18
+Version: 0.1.75, Date: 2015-3-17
 
 ## Key features
 
@@ -69,9 +69,9 @@ library(radiant)
 radiant('quant')
 ```
 
-See also the [installing Radiant](https://www.youtube.com/watch?v=AtB2SsmzBsk) video.
+See also the [installing Radiant](https://www.youtube.com/embed/NEPSFiHH_dw) video.
 
-<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
 ## Creating a desktop launcher
 
