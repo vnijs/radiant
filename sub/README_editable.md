@@ -41,7 +41,7 @@ To help you get started you can also take a look at this [playlist](https://www.
 
 ## How-to install Radiant
 
-- Required: <a href="http://cran.cnr.berkeley.edu/" target="_blank">R</a>, version 3.1.2 or later
+- Required: <a href="http://cran.rstudio.com" target="_blank">R</a>, version 3.1.2 or later
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
 - Recommended: <a href="http://www.rstudio.com/products/rstudio/download/" target="_blank">Rstudio</a>
 
