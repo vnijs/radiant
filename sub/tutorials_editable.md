@@ -4,7 +4,7 @@
 
 ## Starting and stopping
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/jqtip-kL3bc" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/fC3EMC7N7_w" frameborder="0" allowfullscreen></iframe>
 
 ## Getting help
 
