@@ -1,3 +1,16 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Fixed the invalid URL mentioned below. Note that none of the checkdevtools::submit_cran()
+showed me this error. Please advise how I can best check for these types of 
+problems in the future. Thank you.
+
+* checking CRAN incoming feasibility … NOTE
+Found the following (possibly) invalid URLs:
+   URL: http[://www.rstudio.com/shiny/
+     From: README.md
+     Message: Invalid URI scheme
+
 ## Critical bug-fix
 
 The package version now on CRAN has a fatal bug that crashes the app on
