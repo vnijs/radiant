@@ -44,9 +44,9 @@ To help you get started you can also take a look at this [playlist](https://www.
 
 ## How-to install Radiant
 
-- Required: [R](http://cran.cnr.berkeley.edu/), version 3.1.2 or later
+- Required: <a href="http://cran.rstudio.com" target="_blank">R</a>, version 3.1.2 or later
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
-- Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
+- Recommended: <a href="http://www.rstudio.com/products/rstudio/download/" target="_blank">Rstudio</a>
 
 Radiant is now available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version of the package with complete documentation for off-line access use the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repository (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
 
@@ -69,9 +69,9 @@ library(radiant)
 radiant('quant')
 ```
 
-See also the [installing Radiant](https://www.youtube.com/watch?v=AtB2SsmzBsk) video.
+See also the [installing Radiant](https://www.youtube.com/embed/NEPSFiHH_dw) video.
 
-<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
 ## Creating a desktop launcher
 

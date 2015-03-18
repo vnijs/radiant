@@ -31,7 +31,7 @@ output$ui_cm_var1 <- renderUI({
 })
 
 output$ui_cm_var2 <- renderUI({
-  if(input$cm_var1 %>% not_available) return()
+  if(not_available(input$cm_var1)) return()
   isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
   vars <- varnames()[isNum]
   if(input$cm_var1 %in% vars) {
@@ -58,7 +58,7 @@ output$ui_compare_means <- renderUI({
       wellPanel(
         selectizeInput(inputId = "cm_plots", label = "Select plots:",
                 choices = cm_plots,
-                selected = state_single("cm_plots", cm_plots, "bar"),
+                selected = state_multiple("cm_plots", cm_plots, "bar"),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))
       )
