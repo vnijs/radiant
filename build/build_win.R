@@ -6,9 +6,9 @@
 
 library(devtools)
 document(roclets=c('rd', 'collate', 'namespace'))
-build('../radiant_dev', binary = TRUE)
 build('../shinyAce', binary = TRUE)
 build('../rpivotTable', binary = TRUE)
+build('../radiant_dev', binary = TRUE)
 
 setwd('../')
 rfile <- Sys.glob("*zip")
