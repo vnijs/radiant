@@ -1,14 +1,18 @@
 ## Critical bug-fix
 
-The package version submitted to CRAN has a fatal bug that crashes the Shiny app
-on start-up. The bug is fixed in this submission.
+The package version now on CRAN has a fatal bug that crashes the app on
+start-up. The bug is fixed in this submission. My sincere apologies for the
+inconvenience.
 
+There were no ERRORs or WARNINGs. There was 1 NOTE about a possible misspelling.
 
 ### Test environments
 * local OS X install, R 3.1.2
 * local Windows 8.1.1 install, R 3.1.2
 * ubuntu 12.04 (on travis-ci), R 3.1.2
 * win-builder (devel and release)
+
+## earlier communications
 
 ## Resubmission
 This is a resubmission. In this version I have:
