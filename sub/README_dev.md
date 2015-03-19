@@ -3,8 +3,8 @@
 
 A platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http[://www.rstudio.com/shiny/) package. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please contact me at radiant@rady.ucsd.edu.
 
-[![Travis-CI Build Status](https://travis-ci.org/mostly-harmless/radiant.png?branch=master)](https://travis-ci.org/mostly-harmless/radiant)
-Version: 0.1.75, Date: 2015-3-17
+[![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
+Version: 0.1.77, Date: 2015-3-19
 
 ## Key features
 
@@ -32,13 +32,13 @@ You can call functions for visualization and analysis in your R-code and access 
 ?single_mean
 ```
 
-As an example, compile the [`single_mean.Rmd`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file to html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example.
+As an example, compile the [`single_mean.Rmd`](https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file to html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example.
 
 Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using `Quit > Quit`, calling analysis functions may produce an error if the data cannot be found.
 
 ## Documentation
 
-Documentation and tutorials for Radiant are available at <http://mostly-harmless.github.io/radiant/> and through the help files in the Radiant interface (see the `?` icon on most pages and the Help menu in the navbar).
+Documentation and tutorials for Radiant are available at <http://vnijs.github.io/radiant/> and through the help files in the Radiant interface (see the `?` icon on most pages and the Help menu in the navbar).
 
 To help you get started you can also take a look at this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
 
@@ -48,10 +48,10 @@ To help you get started you can also take a look at this [playlist](https://www.
 - Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.
 - Recommended: <a href="http://www.rstudio.com/products/rstudio/download/" target="_blank">Rstudio</a>
 
-Radiant is now available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version of the package with complete documentation for off-line access use the [radiant_miniCRAN](https://github.com/mostly-harmless/radiant_miniCRAN) repository (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
+Radiant is now available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version of the package with complete documentation for off-line access use the [radiant_miniCRAN](https://github.com/vnijs/radiant_miniCRAN) repository (created using [miniCRAN](https://github.com/andrie/miniCRAN)). Open R(studio) and copy-and-paste the commands below.
 
 ```r
-options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))
+options(repos = c(XRAN = 'http://vnijs.github.io/radiant_miniCRAN/'))
 install.packages('radiant')
 ```
 
@@ -83,7 +83,7 @@ Radiant runs in a browser window. You will see data on diamond prices. To close 
 
 ## Saving and loading state
 
-To save your analyses save the state of the app to a file (Data > Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.rda?raw=true) in the `examples` folder. Go to `Data > View`, `Data > Visualize` to see some of the settings. There is also a report in `R > Report` that was created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.html?raw=true) contains the output.
+To save your analyses save the state of the app to a file (Data > Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true) in the `examples` folder. Go to `Data > View`, `Data > Visualize` to see some of the settings. There is also a report in `R > Report` that was created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true) contains the output.
 
 A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit > Reset to return to a clean/new state.
 
@@ -113,4 +113,4 @@ As a summary, the AGPLv3 license requires, attribution, including copyright and 
 
 If you are interested in using Radiant please email me at radiant@rady.ucsd.edu
 
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/mostly-harmless/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>
+&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://github.com/vnijs/radiant/blob/master/inst/base/www/imgs/80x15.png" /></a>

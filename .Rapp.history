@@ -2,7 +2,7 @@ library(radiant)
 radiant()
 #' Compare means for two or more variables#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant#
 #'#
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant#
 #' @param cm_var1 A numeric variable or factor selected for comparison#
@@ -85,7 +85,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,#
 #
 #' Summarize method for output from compare_means#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant#
 #'#
 #' @param result Return value from \code{\link{single_mean}}#
 #'#
@@ -136,7 +136,7 @@ summary.compare_means <- function(result) {#
 #
 #' Plot method for output from compare_means#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant#
 #'#
 #' @param result Return value from \code{\link{single_mean}}#
 #' @param cm_plots One or more plots ("bar", "box", or "density")#
@@ -186,7 +186,7 @@ summary(result)
 plot(result, cm_plots = c("bar","density"))
 #' Compare means for two or more variables#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant#
 #'#
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant#
 #' @param cm_var1 A numeric variable or factor selected for comparison#
@@ -265,7 +265,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,#
 #
 #' Summarize method for output from compare_means#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant#
 #'#
 #' @param result Return value from \code{\link{single_mean}}#
 #'#
@@ -316,7 +316,7 @@ summary.compare_means <- function(result) {#
 #
 #' Plot method for output from compare_means#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant#
 #'#
 #' @param result Return value from \code{\link{single_mean}}#
 #' @param cm_plots One or more plots ("bar", "box", or "density")#
@@ -367,7 +367,7 @@ summary(result)
 plot(result, cm_plots = c("bar","density"))
 #' Hierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysisHierarchical cluster analysis#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/hier_clus.html} for an example in Radiant#
 #'#
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant#
 #' @param hc_vars Vector of variables to include in the analysis#
@@ -403,7 +403,7 @@ hier_clus <- function(dataset, hc_vars,#
 #
 #' Summary method for hier_clus#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/hier_clus.html} for an example in Radiant#
 #'#
 #' @param result Return value from \code{\link{hier_clus}}#
 #'#
@@ -429,7 +429,7 @@ summary.hier_clus <- function(result) {#
 #
 #' Plot method for hier_clus#
 #'#
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/hier_clus.html} for an example in Radiant#
+#' @details See \url{http://vnijs.github.io/radiant/quant/hier_clus.html} for an example in Radiant#
 #'#
 #' @param result Return value from \code{\link{hier_clus}}#
 #' @param hc_plots Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity#

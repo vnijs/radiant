@@ -97,7 +97,7 @@ img {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+      <a class="navbar-brand" href="https://github.com/vnijs/radiant">Radiant</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -187,7 +187,7 @@ img {
 
 <hr />
 <p>A platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http[://www.rstudio.com/shiny/">Shiny</a> package. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please contact me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
-<p><a href="https://travis-ci.org/mostly-harmless/radiant"><img src="https://travis-ci.org/mostly-harmless/radiant.png?branch=master" alt="Travis-CI Build Status" /></a> Version: 0.1.75, Date: 2015-3-17</p>
+<p><a href="https://travis-ci.org/vnijs/radiant"><img src="https://travis-ci.org/vnijs/radiant.png?branch=master" alt="Travis-CI Build Status" /></a> Version: 0.1.77, Date: 2015-3-19</p>
 <div id="key-features" class="section level2">
 <h2>Key features</h2>
 <ul>
@@ -207,12 +207,12 @@ summary(result)
 plot(result, sm_plot = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
 <p>You can call functions for visualization and analysis in your R-code and access basic help from the R(studio) console using:</p>
 <pre class="r"><code>?single_mean</code></pre>
-<p>As an example, compile the <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file to html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example.</p>
+<p>As an example, compile the <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file to html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example.</p>
 <p>Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using <code>Quit &gt; Quit</code>, calling analysis functions may produce an error if the data cannot be found.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>Documentation and tutorials for Radiant are available at <a href="http://mostly-harmless.github.io/radiant/" class="uri">http://mostly-harmless.github.io/radiant/</a> and through the help files in the Radiant interface (see the <code>?</code> icon on most pages and the Help menu in the navbar).</p>
+<p>Documentation and tutorials for Radiant are available at <a href="http://vnijs.github.io/radiant/" class="uri">http://vnijs.github.io/radiant/</a> and through the help files in the Radiant interface (see the <code>?</code> icon on most pages and the Help menu in the navbar).</p>
 <p>To help you get started you can also take a look at this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
 </div>
 <div id="how-to-install-radiant" class="section level2">
@@ -222,8 +222,8 @@ plot(result, sm_plot = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
 <li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
 <li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/" target="_blank">Rstudio</a></li>
 </ul>
-<p>Radiant is now available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version of the package with complete documentation for off-line access use the <a href="https://github.com/mostly-harmless/radiant_miniCRAN">radiant_miniCRAN</a> repository (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
-<pre class="r"><code>options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
+<p>Radiant is now available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version of the package with complete documentation for off-line access use the <a href="https://github.com/vnijs/radiant_miniCRAN">radiant_miniCRAN</a> repository (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
+<pre class="r"><code>options(repos = c(XRAN = &#39;http://vnijs.github.io/radiant_miniCRAN/&#39;))
 install.packages(&#39;radiant&#39;)</code></pre>
 <p>Once all packages are installed use the commands below to start the app:</p>
 <pre class="r"><code>library(radiant)
@@ -243,7 +243,7 @@ radiant(&#39;quant&#39;)</code></pre>
 </div>
 <div id="saving-and-loading-state" class="section level2">
 <h2>Saving and loading state</h2>
-<p>To save your analyses save the state of the app to a file (Data &gt; Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a> in the <code>examples</code> folder. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings. There is also a report in <code>R &gt; Report</code> that was created using the Radiant interface. The html file <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
+<p>To save your analyses save the state of the app to a file (Data &gt; Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a> in the <code>examples</code> folder. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings. There is also a report in <code>R &gt; Report</code> that was created using the Radiant interface. The html file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
 <p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit &gt; Reset to return to a clean/new state.</p>
 <p>Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use Quit &gt; Quit to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file directly into Rstudio it will be used when you start Radiant to recreate a previous state.</p>
 <p><strong>Technical note</strong>: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> list is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$sm_comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>

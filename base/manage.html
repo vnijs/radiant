@@ -97,7 +97,7 @@ img {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+      <a class="navbar-brand" href="https://github.com/vnijs/radiant">Radiant</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -205,7 +205,7 @@ img {
 <div id="save-and-load-state" class="section level4">
 <h4>Save and load state</h4>
 <p>You can save and load the state of the Radiant app just as you would a data file. The state file (extension rda) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the R-menu. Save the state-file to your hard-disk and when you are ready to continue simply load it by selecting the state radio button and clicking the <code>Choose file</code> button.</p>
-<p>This is convenient if you want to save your work to be completed at another time, perhaps on another computer, or to review any assignments you completed using Radiant. You can also share the file with others that would like to replicate your analyses. As an example, download and then load the state_file <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a>. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings loaded from the statefile. There is also a report in <code>R &gt; Report</code> created using the Radiant interface. The html file <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
+<p>This is convenient if you want to save your work to be completed at another time, perhaps on another computer, or to review any assignments you completed using Radiant. You can also share the file with others that would like to replicate your analyses. As an example, download and then load the state_file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a>. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings loaded from the statefile. There is also a report in <code>R &gt; Report</code> created using the Radiant interface. The html file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
 <p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use <code>Quit &gt; Reset</code> to return to a clean/new state.</p>
 <p>Loading and saving state also works with R(studio). If you start Radiant from Rstudio and use <code>Quit &gt; Quit</code> to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists (i.e., <code>r_data</code> and <code>r_state</code>) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a statefile in Rstudio it will be used when you start Radiant to recreate a previous state.</p>
 </div>

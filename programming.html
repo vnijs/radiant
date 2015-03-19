@@ -97,7 +97,7 @@ img {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://github.com/mostly-harmless/radiant">Radiant</a>
+      <a class="navbar-brand" href="https://github.com/vnijs/radiant">Radiant</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -185,8 +185,7 @@ img {
 </div>
 
 
-<pre><code>## Warning: package &#39;radiant&#39; was built under R version 3.1.3</code></pre>
-<p>Radiant’s goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a>. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Update</code> button on the <code>R &gt; Report</code> page to render the report to HTML. The full function manual is available at <a href="http://mostly-harmless.github.io/radiant/radiant.pdf" target="_blank">http://mostly-harmless.github.io/radiant/radiant.pdf</a>.</p>
+<p>Radiant’s goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a>. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Update</code> button on the <code>R &gt; Report</code> page to render the report to HTML. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.</p>
 <p>You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.</p>
 <p>If you close Radiant using <code>Quit &gt; Quit</code> after launching it from Rstudio or Rgui you can can paste the commands below into the command console to get the same output as in the browser interface.</p>
 <pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;)
@@ -205,11 +204,11 @@ Alt. hyp.: the mean of price is not equal to 0
 <pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, viz_vars1 = &quot;carat&quot;, viz_vars2 = &quot;price&quot;,
           viz_type = &quot;scatter&quot;, viz_facet_row = &quot;clarity&quot;, viz_color = &quot;clarity&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-3-1.png" title="" alt="" width="672" /></p>
-<p>As an example, you can render the <a href="https://github.com/mostly-harmless/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the <code>Base</code> and <code>Regression</code> menus.</p>
+<p>As an example, you can render the <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the <code>Base</code> and <code>Regression</code> menus.</p>
 <div id="programming" class="section level2">
 <h2>Programming</h2>
 <p>If you have not yet installed Radiant enter the commands below in the R(studio) console:</p>
-<pre class="r"><code>options(repos = c(XRAN = &#39;http://mostly-harmless.github.io/radiant_miniCRAN/&#39;))
+<pre class="r"><code>options(repos = c(XRAN = &#39;http://vnijs.github.io/radiant_miniCRAN/&#39;))
 install.packages(&#39;radiant&#39;)
 library(&#39;radiant&#39;)</code></pre>
 <p>This will load the library and the required packages. To see the index of functions currently available from the Radiant package using the <code>help(package = &quot;radiant&quot;)</code> command</p>
@@ -360,12 +359,12 @@ use Manage &gt; Data to paste the predictions as a new dataset.</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>plot(result, reg_plots = &quot;dashboard&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" width="672" /></p>
-<p>As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://mostly-harmless.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
+<p>As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
 <pre class="r"><code># set working directory to your Desktop
 setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
 
 # get the data from the link below and save it to your desktop
-browseURL(&quot;https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
+browseURL(&quot;https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
 
 # load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
 load(&quot;shopping.rda&quot;)
