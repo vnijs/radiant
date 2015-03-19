@@ -17,7 +17,7 @@ ff_design(attr, trial = 0, rseed = 172110)
 Function to generate a fractional factorial design
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 }
 \seealso{
 \code{\link{conjoint_profiles}} to calculate results

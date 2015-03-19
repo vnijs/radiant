@@ -1,6 +1,6 @@
 #' Create fractional factorial design for conjoint analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #'
@@ -47,7 +47,7 @@ conjoint_profiles <- function(dataset) {
 
 #' Summary method for the conjoint_profiles function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{conjoint_profiles}}
 #' @param ... further arguments passed to or from other methods.
@@ -81,7 +81,7 @@ summary.conjoint_profiles <- function(object, ...) {
 
 #' Function to generate a fractional factorial design
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 #'
 #' @param attr Attributes used to generate profiles
 #' @param trial Number of trials that have already been run

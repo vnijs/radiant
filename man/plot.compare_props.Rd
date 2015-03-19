@@ -17,7 +17,7 @@
 Plot method for the compare_props function
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 }
 \examples{
 result <- compare_props("titanic", "pclass", "survived")

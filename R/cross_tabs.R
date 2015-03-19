@@ -1,6 +1,6 @@
 #' Evaluate associations between categorical variables
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param ct_var1 A categorical variable
@@ -37,7 +37,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 
 #' Summary method for the cross_tabs function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 
 #' @param object Return value from \code{\link{cross_tabs}}
 #' @param ct_check Show table(s) for variables ct_var1 and ct_var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
@@ -129,7 +129,7 @@ summary.cross_tabs <- function(object,
 
 #' Plot method for the cross_tabs function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{cross_tabs}}
 #' @param ct_check Show plots for variables ct_var1 and ct_var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)

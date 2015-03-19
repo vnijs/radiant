@@ -1,6 +1,6 @@
 #' Linear regression using OLS
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param reg_dep_var The dependent variable in the regression
@@ -68,7 +68,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 
 #' Summary method for the regression function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
 #' @param reg_sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
@@ -224,7 +224,7 @@ summary.regression <- function(object,
 
 #' Plot method for the regression function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{regression}}
 #' @param reg_plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
@@ -381,7 +381,7 @@ plot.regression <- function(x,
 
 #' Predict method for the regression function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
 #' @param reg_predict_cmd Command used to generate data for prediction
@@ -506,7 +506,7 @@ predict.regression <- function(object,
 
 #' Save regression residuals
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
 #'
@@ -525,7 +525,7 @@ save_reg_resid <- function(object) {
 
 #' Check if main effects for all interaction effects are included in the model
 #' If ':' is used to select a range _indep_var_ is updated
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param indep_var List of independent variables provided to _regression_ or _glm_
 #' @param cn Column names for all independent variables in _dat_
@@ -558,7 +558,7 @@ var_check <- function(indep_var, cn, int_var = "") {
 
 #' Add interaction terms to list of test variables if needed
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param test_var List of variables to use for testing for _regression_ or _glm_
 #' @param int_var Interaction terms specified

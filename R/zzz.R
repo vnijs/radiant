@@ -1,4 +1,4 @@
 .onLoad <- function(libname, pkgname) {
-	options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
+	options(repos = c(XRAN = "http://vnijs.github.io/radiant_miniCRAN/"))
 }
 

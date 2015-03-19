@@ -36,7 +36,7 @@ A list of variables defined in sample_size as an object of class sample_size
 Sample size calculation
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/sample_size.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/sample_size.html} for an example in Radiant
 }
 \examples{
 result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)

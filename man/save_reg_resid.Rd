@@ -13,7 +13,7 @@ save_reg_resid(object)
 Save regression residuals
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
 \dontrun{

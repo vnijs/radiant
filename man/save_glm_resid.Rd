@@ -13,7 +13,7 @@ save_glm_resid(object)
 Save residuals generated in the glm_reg function
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 }
 \examples{
 \dontrun{

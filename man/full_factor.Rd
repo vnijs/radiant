@@ -27,7 +27,7 @@ A list with all variables defined in the function as an object of class full_fac
 Factor analysis (PCA)
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 }
 \examples{
 result <- full_factor("diamonds",c("price","carat","table","x","y"))

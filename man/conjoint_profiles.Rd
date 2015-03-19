@@ -16,7 +16,7 @@ A list with all variables defined in the function as an object of class conjoint
 Create fractional factorial design for conjoint analysis
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 }
 \examples{
 ca_prof <- readLines(system.file("examples/profiles-movie.txt", package='radiant'))

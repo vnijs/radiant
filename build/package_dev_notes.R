@@ -7,8 +7,8 @@ local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
 # setting the url for the miniCRAN, using XRAN as in yihui/xran :)
-# options(repos = c(XRAN="http://mostly-harmless.github.io/radiant_miniCRAN/", CRAN="http://cran.rstudio.com"))
-options(repos = c(XRAN = "http://mostly-harmless.github.io/radiant_miniCRAN/"))
+# options(repos = c(XRAN="http://vnijs.github.io/radiant_miniCRAN/", CRAN="http://cran.rstudio.com"))
+options(repos = c(XRAN = "http://vnijs.github.io/radiant_miniCRAN/"))
 
 # udpate old-packages
 update.packages(lib.loc = local_dir, ask = FALSE)
@@ -24,7 +24,7 @@ if(length(to_inp) != 0)
 dep_list <- function() {
 
 	# get list of packages()
-	devtools::source_url("https://raw.githubusercontent.com/mostly-harmless/radiant_miniCRAN/gh-pages/pkgs.R")
+	devtools::source_url("https://raw.githubusercontent.com/vnijs/radiant_miniCRAN/gh-pages/pkgs.R")
 
 	# setwd("~/Desktop/GitHub/radiant_dev")
 	# for(i in pkgs)

@@ -52,7 +52,7 @@ if(!file.exists(path2desktop))
 setwd(path2desktop)
 
 # get the data from the link below and save it to your desktop
-browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
+browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
 
 # load example dataset, if the file is not found make sure your working directory
 # is set to Desktop

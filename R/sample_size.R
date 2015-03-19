@@ -3,7 +3,7 @@
 ###############################
 #' Sample size calculation
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/sample_size.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/sample_size.html} for an example in Radiant
 #'
 #' @param ss_type Choose "mean" or "proportion"
 #' @param ss_mean_err Acceptable Error for Mean
@@ -54,7 +54,7 @@ sample_size <- function(ss_type = "mean",
 
 #' Summary method for the sample_size function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/sample_size} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/sample_size} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{sample_size}}
 #' @param ... further arguments passed to or from other methods

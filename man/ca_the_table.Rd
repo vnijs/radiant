@@ -17,7 +17,7 @@ ca_the_table(model, dat, ca_indep_var)
 Function to calculate the PW and IW table for conjoint
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
 result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")

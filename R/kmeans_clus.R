@@ -1,6 +1,6 @@
 #' K-means cluster analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param km_vars Vector of variables to include in the analysis
@@ -72,7 +72,7 @@ kmeans_clus <- function(dataset, km_vars,
 
 #' Summary method for kmeans_clus
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{kmeans_clus}}
 #' @param ... further arguments passed to or from other methods
@@ -123,7 +123,7 @@ summary.kmeans_clus <- function(object, ...) {
 
 #' Plot method for kmeans_clus
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{kmeans_clus}}
 #' @param ... further arguments passed to or from other methods
@@ -158,7 +158,7 @@ plot.kmeans_clus <- function(x, ...) {
 
 #' Save cluster means to a csv file
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{kmeans_clus}}
 #' @param file Filename and path to use
@@ -178,7 +178,7 @@ save_kmeans <- function(object, file = "kmeans.csv")
 
 #' Add a cluster membership variable to the active dataset
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{kmeans_clus}}
 #'

@@ -29,7 +29,7 @@ A list of variables used in single_prop as an object of class single_prop
 Compare a sample proportion to a population proportion
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
 result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
