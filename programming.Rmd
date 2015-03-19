@@ -10,7 +10,7 @@ load("~/gh/radiant_dev/inst/base/data/salary.rda")
 load("~/gh/radiant_dev/inst/marketing/data/shopping.rda")
 ```
 
-Radiant's goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/). Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML.
+Radiant's goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/). Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML. The full function manual is available at <a href="http://mostly-harmless.github.io/radiant/radiant.pdf" target="_blank">http://mostly-harmless.github.io/radiant/radiant.pdf</a>.
 
 You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.
 
@@ -86,7 +86,7 @@ plot(result, reg_plots = "coef")
 plot(result, reg_plots = "dashboard")
 ```
 
-As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://mostly-harmless.github.io/radiant/radian.pdf" target="_blank">radiant manual</a>.
+As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://mostly-harmless.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
 ```{r}
 # set working directory to your Desktop
 setwd("~/Desktop") # or setwd("~/Documents/Desktop")
