@@ -15,7 +15,7 @@
 Plot method for kmeans_clus
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 }
 \examples{
 result <- kmeans_clus("shopping", km_vars = c("v1:v6"))

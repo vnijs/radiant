@@ -1,6 +1,6 @@
 #' Factor analysis (PCA)
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param ff_var Variables to include in the analysis
@@ -58,7 +58,7 @@ full_factor <- function(dataset, ff_var,
 
 #' Summary method for the full_factor function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{full_factor}}
 #' @param ff_cutoff Show only loadings with (absolute) values above ff_cutoff (default = 0)
@@ -138,7 +138,7 @@ summary.full_factor <- function(object,
 
 #' Plot method for the full_factor function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{full_factor}}
 #' @param ... further arguments passed to or from other methods
@@ -190,7 +190,7 @@ plot.full_factor <- function(x, ...) {
 
 #' Save factor scores to active dataset
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/full_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{full_factor}}
 #'

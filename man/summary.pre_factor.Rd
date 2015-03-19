@@ -15,7 +15,7 @@
 Summary method for the pre_factor function
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 }
 \examples{
 result <- pre_factor("diamonds",c("price","carat","table"))

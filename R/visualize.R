@@ -1,6 +1,6 @@
 #' Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/base/visualize.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param viz_vars1 One or more variables to display along the X-axis of the plot

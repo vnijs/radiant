@@ -1,6 +1,6 @@
 #' Conjoint analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param ca_dep_var The dependent variable (e.g., profile ratings)
@@ -44,7 +44,7 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
 
 #' Summary method for the conjoint function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{conjoint}}
 #' @param ca_vif Shows multicollinearity diagnostics.
@@ -104,7 +104,7 @@ summary.conjoint <- function(object,
 
 #' Plot method for the conjoint function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{conjoint}}
 #' @param ca_plots Show either the part-worth ("pw") or importance-weights ("iw") plot
@@ -164,7 +164,7 @@ plot.conjoint <- function(x,
 
 #' Function to calculate the PW and IW table for conjoint
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param model Tidied model results (broom) output from \code{\link{conjoint}} passed on by summary.conjoint
 #' @param dat Conjoint data

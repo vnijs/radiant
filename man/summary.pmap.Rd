@@ -17,7 +17,7 @@
 Summary method for the pmap function
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/pmap.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/pmap.html} for an example in Radiant
 }
 \examples{
 result <- pmap("computer","Brand","HighEnd:Business")

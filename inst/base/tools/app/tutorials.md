@@ -11,11 +11,11 @@
 
 ## Getting help
 
-<iframe width="854" height="510" src="https://www.youtube.com/embed/O4w7eTmBh5M" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/O4w7eTmBh5M" frameborder="0" allowfullscreen></iframe>
 
 ## Getting data in and out
 
-<iframe width="854" height="510" src="https://www.youtube.com/embed/ojNeFoMm4uQ" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/ojNeFoMm4uQ" frameborder="0" allowfullscreen></iframe>
 
 ## Selecting variables for fast and efficient analysis
 

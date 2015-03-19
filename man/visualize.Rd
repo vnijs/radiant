@@ -41,7 +41,7 @@ Generated plots
 Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/base/visualize.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in Radiant
 }
 \examples{
 visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")

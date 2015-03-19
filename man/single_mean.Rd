@@ -27,7 +27,7 @@ A list of variables defined in single_mean as an object of class single_mean
 Compare a sample mean to a population mean
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example in Radiant
 }
 \examples{
 single_mean("diamonds","price")

@@ -15,7 +15,7 @@
 Summary method for the compare_means function
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 }
 \examples{
 result <- compare_means("diamonds","cut","price")

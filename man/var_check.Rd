@@ -22,7 +22,7 @@ Check if main effects for all interaction effects are included in the model
 If ':' is used to select a range _indep_var_ is updated
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
 var_check("a:d", c("a","b","c","d"))

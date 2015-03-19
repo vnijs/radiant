@@ -1,6 +1,6 @@
 #' Launch Radiant in the default browser
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant} for documentation and tutorials
+#' @details See \url{http://vnijs.github.io/radiant} for documentation and tutorials
 #'
 #' @param app Choose the app to run. Either "base", "quant", or "marketing". "marketing" is the default
 #'
@@ -192,7 +192,7 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
   filepath <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
-  launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/')); install.packages('radiant'); }; require(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
+  launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = c(XRAN = 'http://vnijs.github.io/radiant_miniCRAN/')); install.packages('radiant'); }; require(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
   cat(launch_string,file=paste0(filepath,"radiant.bat"),sep="\n")
 }
 
@@ -224,7 +224,7 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
   if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
   filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-  launch_string <- paste0("#!/usr/bin/env Rscript\n if(!require(radiant)) {\n options(repos = c(XRAN = 'http://mostly-harmless.github.io/radiant_miniCRAN/'))\n install.packages('radiant')\n }\n\nrequire(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
+  launch_string <- paste0("#!/usr/bin/env Rscript\n if(!require(radiant)) {\n options(repos = c(XRAN = 'http://vnijs.github.io/radiant_miniCRAN/'))\n install.packages('radiant')\n }\n\nrequire(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
   cat(launch_string,file=filename,sep="\n")
   Sys.chmod(filename, mode = "0755")
 }

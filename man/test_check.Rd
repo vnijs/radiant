@@ -18,7 +18,7 @@ test_check(test_var, int_var)
 Add interaction terms to list of test variables if needed
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
 test_check("a", c("a:b","b:c"))

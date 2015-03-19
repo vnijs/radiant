@@ -1,6 +1,6 @@
 #' Merge datasets using dplyr's join functions
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/base/merge.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/base/merge.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param dataset2 Dataset name (string) to merge with `dataset`. This can be a dataframe in the global environment or an element in an r_data list from Radiant
