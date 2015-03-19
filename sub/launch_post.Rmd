@@ -6,11 +6,11 @@ Radiant is a platform-independent browser-based interface for business analytics
 
 - Explore: Quickly and easily summarize, visualize, and analyze your data
 - Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes).
-- Reproducible: Save and load the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a report using [Rmarkdown document](http://rmarkdown.rstudio.com/).
-- Cross-platform: It runs in a browser (e.g., Chrome or Firefox) on Windows, Mac, and Linux. No data will leave your computer and you can run it without an internet connection. You can, however, also run it as a web application on a server.
+- Reproducible: Save and load the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a report using [Rmarkdown](http://rmarkdown.rstudio.com/).
+- Cross-platform: It runs in a browser on Windows, Mac, and Linux. No data will leave your computer and you can run it without an internet connection. You can, however, also run it as a web application on a server.
 - Context: Data and examples focus on business applications
 
-Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/) (see `R > Report`). As an example, click the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press `Update` to render the report to HTML. For more information on programming with Radiant see the [programming](http://mostly-harmless.github.io/radiant/programming.html) page.
+Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/) (see `R > Report`). As an example, click the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press `Update` to render the report to HTML. You can also call the analysis functions from your own R-code. For more information on programming with Radiant see the [programming](http://mostly-harmless.github.io/radiant/programming.html) page.
 
 ## How-to install Radiant
 

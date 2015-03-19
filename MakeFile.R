@@ -26,5 +26,20 @@ file.copy("tutorials_dev.md","../../radiant_dev/inst/base/tools/app/tutorials.md
 setwd('../')
 
 unlink("~/Desktop/shopping.rda")
-
 system('sh rsync_base2app.sh')
+
+#  creating documentation pdf
+# unlink('radiant.pdf')
+
+# create documentation pdf
+
+unlink('radiant.pdf')
+# create pdf of documentation
+setwd("~")
+unlink('radiant.pdf')
+system("R CMD Rd2pdf radiant --no-preview")
+system("rm -rf .Rd2pdf*")
+setwd("~/gh/radiant_gh-pages/")
+file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
+system("rm -rf .Rd2pdf*")
+

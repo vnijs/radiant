@@ -5,9 +5,9 @@ A platform-independent browser-based interface for business analytics in [R](htt
 
 ## Key features
 
-- Explore: Quickly and easily summarize and visualize your data
+- Explore: Quickly and easily summarize, visualize, and analyze your data
 - Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes)
-- Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using [Rmarkdown document](http://rmarkdown.rstudio.com/). You will not lose your work if you accidentally leave the radiant page in your browser
+- Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using [Rmarkdown](http://rmarkdown.rstudio.com/). You will not lose your work if you accidentally leave the radiant page in your browser
 - Cross-platform: It runs in a browser (e.g., Chrome or Firefox) on Windows, Mac, and Linux. No data will leave your computer and you can run it without an internet connection. You can, however, also run it as a web application on a server.
 - Context: Data and examples focus on business applications
 
