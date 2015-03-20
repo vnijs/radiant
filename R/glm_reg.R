@@ -329,7 +329,7 @@ plot.glm_reg <- function(x,
 
 #' Predict method for the glm_reg function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{glm_reg}}
 #' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
@@ -457,7 +457,7 @@ predict.glm_reg <- function(object,
 
 #' Plot method for the predict.glm_reg function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{predict.glm_reg}}.
 #' @param glm_xvar Variable to display along the X-axis of the plot
