@@ -33,13 +33,13 @@ system('sh rsync_base2app.sh')
 
 # create documentation pdf
 
-unlink('radiant.pdf')
-# create pdf of documentation
-setwd("~")
-unlink('radiant.pdf')
-system("R CMD Rd2pdf radiant --no-preview")
-system("rm -rf .Rd2pdf*")
-setwd("~/gh/radiant_gh-pages/")
-file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
-system("rm -rf .Rd2pdf*")
+# unlink('radiant.pdf')
+# # create pdf of documentation
+# setwd("~")
+# unlink('radiant.pdf')
+# system("R CMD Rd2pdf radiant --no-preview")
+# system("rm -rf .Rd2pdf*")
+# setwd("~/gh/radiant_gh-pages/")
+# file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
+# system("rm -rf .Rd2pdf*")
 

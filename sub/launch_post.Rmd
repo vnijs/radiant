@@ -5,36 +5,43 @@ Radiant is a platform-independent browser-based interface for business analytics
 ## Key features
 
 - Explore: Quickly and easily summarize, visualize, and analyze your data
-- Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes).
-- Reproducible: Save and load the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a report using [Rmarkdown](http://rmarkdown.rstudio.com/).
-- Cross-platform: It runs in a browser on Windows, Mac, and Linux. No data will leave your computer and you can run it without an internet connection. You can, however, also run it as a web application on a server.
+- Cross-platform: It runs in a browser on Windows, Mac, and Linux
+- Reproducible: Recreate your results at any time or share your work with others as a state-file or an [Rmarkdown](http://rmarkdown.rstudio.com/) report
+- Programming: The analysis functions used in Radiant are exported so you can incorporate them in your own R-code
 - Context: Data and examples focus on business applications
-- Programming: ...
 
-### Explore  Save and load the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a report using [Rmarkdown](http://rmarkdown.rstudio.com/).
-+ interactive?
+### Explore
 
-### Reproducible: Save and load the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a report using [Rmarkdown](http://rmarkdown.rstudio.com/).
+Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes). This greatly facilitates exploration and understanding of the data
 
-Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/) (see `R > Report`). As an example, click the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press `Update` to render the report to HTML. You can also call the analysis functions from your own R-code. For more information on programming with Radiant see the [programming](http://vnijs.github.io/radiant/programming.html) page.
+### Cross-platform
+
+Radiant works the same on Windows, Mac, or Linux. No data will leave your computer and you can run it without an Internet connection. You can, however, also run the app as a web application on a server.
+
+### Reproducible
+
+Simply saving output is not enough. You need the ability to recreate your results for the same data and/or when new data become available. Others may also want to review your analysis and results. In Radiant you can save and load the state of the application to continue your work at a later time or on another computer. Share the state-file with others or create a reproducible report using [Rmarkdown](http://rmarkdown.rstudio.com/).
+
+### Programming
+
+Although Radiant's web-interface can already handle quite a few data and analysis tasks you may prefer the additional flexibility of writing your own code at times. Radiant provides a bridge to programming in R(studio) by exporting functions call from R-code. The easiest way to create the syntax is to run a (partial) analysis in Radiant's web-interface and output the relevant function calls to an [Rmarkdown](http://rmarkdown.rstudio.com/) document. As an example, click the book icon on the bottom left on the `Base > Single mean` page. This will take you to the `R > Report` tab where the relevant code is shown. Copy-and-paste the generated commands into your code-editor or press `Update` to render the report to HTML. For more information about programming with Radiant see the [programming](http://vnijs.github.io/radiant/programming.html) page on the documentation site.
+
+### Context
+
+Radiant focuses on business data and decisions. It offers tools, examples, and documentation relevant for that context, effectively making the learning curve for business analytics less-steep.
 
 ## How-to install Radiant
 
 - Required: [R](http://cran.cnr.berkeley.edu/), version 3.1.2 or later
-- Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well
-
-[IE version check]
-
+- Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). The latest version of Internet Explorer (11 or higher) should work as well
 
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
 Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version complete documentation for off-line access open R(studio) and copy-and-paste the commands below:
 
 ```r
-options(repos = c(XRAN = 'http://vnijs.github.io/radiant_miniCRAN/'))
 options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')
 install.packages("radiant")
-
 ```
 
 Once all packages are installed use the commands below to start the app:
