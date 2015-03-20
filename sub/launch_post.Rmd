@@ -37,14 +37,14 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version complete documentation for off-line access open R(studio) and copy-and-paste the commands below:
+Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for off-line access open R(studio) and copy-and-paste the commands below:
 
 ```r
 options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')
 install.packages("radiant")
 ```
 
-Once all packages are installed use the commands below to start the app:
+Once all packages are installed use the commands below to launch the app:
 
 ```r
 library(radiant)
@@ -59,10 +59,10 @@ See also the `Installing Radiant` video below:
 
 Documentation and tutorials for Radiant are available at <http://vnijs.github.io/radiant/> and through the help files in the Radiant web-interface (see the `?` icon and the `Help` menu in the navbar).
 
-To help you get started you can also take a look at this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
+Need help to get started? Watch this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
 
 ## Online
 
-If you really don't want to install Radiant on your computer (yet) you can tryout the app online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
+Not ready to install Radiant on your computer? Try it out online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
 
-For questions and comments please contact me at radiant@rady.ucsd.edu.
+Please send questions and comments to: radiant@rady.ucsd.edu.
