@@ -99,7 +99,11 @@ visualize <- function(dataset, viz_xvar,
     for (i in viz_xvar) {
       for (j in viz_yvar) {
         if (viz_color == 'none') {
-          plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
+          if(is.factor(dat[,i]))
+            plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
+          else
+            plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
+          # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
         } else {
           plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) + geom_line()
             # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) +

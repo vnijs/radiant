@@ -183,8 +183,7 @@ output$ui_glm_reg <- renderUI({
     conditionalPanel(condition = "input.tabs_glm_reg == 'Predict'",
       wellPanel(
         radioButtons(inputId = "glm_predict", label = "Prediction:", glm_predict,
-          selected = state_init("glm_predict", ""),
-          inline = TRUE),
+          selected = state_init("glm_predict", ""), inline = TRUE),
         conditionalPanel(condition = "input.glm_predict == 'cmd'",
           returnTextAreaInput("glm_predict_cmd", "Prediction command:",
             value = state_init("glm_predict_cmd",""))
@@ -400,7 +399,7 @@ observe({
 output$glm_save_pred <- downloadHandler(
   filename = function() { "glm_save_pred.csv" },
   content = function(file) {
-    do.call(predict, c(list(result = .glm_reg()), glm_pred_inputs(),
+    do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
             list(glm_save_pred = TRUE))) %>%
       write.csv(., file = file, row.names = FALSE)
   }
