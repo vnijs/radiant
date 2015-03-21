@@ -521,22 +521,13 @@ predict.regression <- function(object,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- regression("titanic", "survived", c("pclass","sex","age"), reg_levels = "Yes")
-#' pred <- predict(result, reg_predict_cmd = "pclass = levels(pclass)")
-#' plot(pred, reg_xvar = "pclass")
-#' pred <- predict(result, reg_predict_cmd = "age = 0:100")
-#' plot(pred, reg_xvar = "age")
-#' pred <- predict(result, reg_predict_cmd = "pclass = levels(pclass), sex = levels(sex)")
-#' plot(pred, reg_xvar = "pclass", reg_color = "sex")
-#' pred <- predict(result, reg_predict_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
-#' plot(pred, reg_xvar = "pclass", reg_color = "age")
-#' plot(pred, reg_xvar = "age", reg_color = "pclass")
-#' pred <- predict(result, reg_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
-#' plot(pred, reg_xvar = "age", reg_color = "sex", reg_facet_col = "pclass")
-#' plot(pred, reg_xvar = "age", reg_color = "pclass", reg_facet_col = "sex")
-#' pred <- predict(result, reg_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
-#' plot(pred, reg_xvar = "age", reg_color = "sex", reg_facet_col = "pclass")
-#' plot(pred, reg_xvar = "age", reg_color = "pclass", reg_facet_col = "sex")
+#' result <- regression("diamonds", "price", c("carat","clarity"))
+#' pred <- predict(result, reg_predict_cmd = "carat = 1:10")
+#' plot(pred, reg_xvar = "carat")
+#' result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
+#' dpred <- getdata("diamonds") %>% slice(1:100)
+#' pred <- predict(result, reg_predict_data = "dpred")
+#' plot(pred, reg_xvar = "carat", reg_color = "clarity")
 #'
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results
@@ -556,8 +547,19 @@ plot.reg_predict <- function(x,
 
   object <- x; rm(x)
 
-  object$ymin <- object$Prediction - qnorm(.5 + reg_conf_level/2)*object$std.error
-  object$ymax <- object$Prediction + qnorm(.5 + reg_conf_level/2)*object$std.error
+  # object <- pred
+  # reg_xvar <- 'carat'
+  # reg_conf_level <- .95
+
+  cn <- colnames(object)
+  cn[which(cn == "Prediction") + 1] <- "ymin"
+  cn[which(cn == "Prediction") + 2] <- "ymax"
+  colnames(object) <- cn
+
+  # ymax <- cn[which(cn == "Prediction") + 2]
+
+  # object$ymin <- object$Prediction - qnorm(.5 + reg_conf_level/2)*object$std.error
+  # object$ymax <- object$Prediction + qnorm(.5 + reg_conf_level/2)*object$std.error
 
   if (reg_color == 'none') {
     p <- ggplot(object, aes_string(x=reg_xvar, y="Prediction")) +
@@ -570,10 +572,14 @@ plot.reg_predict <- function(x,
   facets <- paste(reg_facet_row, '~', reg_facet_col)
   if (facets != '. ~ .') p <- p + facet_grid(facets)
 
+    # p <- p + geom_pointrange(aes_string(ymin = ymin, ymax = ymax), size=.3)
+
   if(length(unique(object[[reg_xvar]])) < 10)
     p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
   else
     p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
+
+    # p <- p + geom_smooth(aes_string(ymin = ymin, ymax = ymax), stat="identity")
 
   sshhr( p )
 }
