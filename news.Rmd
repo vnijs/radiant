@@ -5,7 +5,7 @@ title: Introducing Radiant
 ***
 
 
-Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http[://www.rstudio.com/shiny/) package.
+Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package.
 
 ## Key features
 
@@ -15,7 +15,7 @@ Radiant is a platform-independent browser-based interface for business analytics
 - Programming: Integrate Radiant's analysis functions into your own R-code
 - Context: Data and examples focus on business applications
 
-<iframe width="854" height="510" src="https://www.youtube.com/embed/ioHopyfD2f0" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/ioHopyfD2f0" frameborder="0" allowfullscreen></iframe>
 
 #### Explore
 
