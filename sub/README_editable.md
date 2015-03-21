@@ -53,7 +53,7 @@ radiant("marketing")
 
 See also the `Installing Radiant` video:
 
-<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
 You can create a launcher on your Desktop to start Radiant. On Windows type `win_launcher()` in the R-console and press return. A file called `radiant.bat` will be created that you can double-click to start Radiant in your default browser.
 
