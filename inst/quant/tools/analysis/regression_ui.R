@@ -265,10 +265,7 @@ reg_plot_height <- function()
   reg_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
 reg_pred_plot_height <- function()
-  500
-
-  # if(input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
-
+  if(input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
 
 # output is called from the main radiant ui.R
 output$regression <- renderUI({
@@ -360,16 +357,22 @@ observe({
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
-    xcmd <- ""
     if(!is_empty(input$reg_plots)) {
       inp_out[[3]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
-    if(!is_empty(input$reg_predict)) {
+    xcmd <- ""
+    if(!is.null(r_data$reg_pred)) {
+    # if(!is_empty(input$reg_predict)) {
       inp_out[[3 + figs]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
-      xcmd <- paste0("print(result)\n# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
+      xcmd <- paste0("# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
+      if(!is_empty(input$reg_xvar)) {
+        inp_out[[4 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
+        outputs <- c(outputs, "plot")
+        figs <- TRUE
+      }
     }
     update_report(inp_main = clean_args(reg_inputs(), reg_args),
                   fun_name = "regression",

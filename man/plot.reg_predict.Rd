@@ -29,22 +29,13 @@ Plot method for the predict.regression function
 See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
-result <- regression("titanic", "survived", c("pclass","sex","age"), reg_levels = "Yes")
-pred <- predict(result, reg_predict_cmd = "pclass = levels(pclass)")
-plot(pred, reg_xvar = "pclass")
-pred <- predict(result, reg_predict_cmd = "age = 0:100")
-plot(pred, reg_xvar = "age")
-pred <- predict(result, reg_predict_cmd = "pclass = levels(pclass), sex = levels(sex)")
-plot(pred, reg_xvar = "pclass", reg_color = "sex")
-pred <- predict(result, reg_predict_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
-plot(pred, reg_xvar = "pclass", reg_color = "age")
-plot(pred, reg_xvar = "age", reg_color = "pclass")
-pred <- predict(result, reg_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
-plot(pred, reg_xvar = "age", reg_color = "sex", reg_facet_col = "pclass")
-plot(pred, reg_xvar = "age", reg_color = "pclass", reg_facet_col = "sex")
-pred <- predict(result, reg_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
-plot(pred, reg_xvar = "age", reg_color = "sex", reg_facet_col = "pclass")
-plot(pred, reg_xvar = "age", reg_color = "pclass", reg_facet_col = "sex")
+result <- regression("diamonds", "price", c("carat","clarity"))
+pred <- predict(result, reg_predict_cmd = "carat = 1:10")
+plot(pred, reg_xvar = "carat")
+result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
+dpred <- getdata("diamonds") \%>\% slice(1:100)
+pred <- predict(result, reg_predict_data = "dpred")
+plot(pred, reg_xvar = "carat", reg_color = "clarity")
 }
 \seealso{
 \code{\link{regression}} to generate the result

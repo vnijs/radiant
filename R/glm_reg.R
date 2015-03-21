@@ -338,9 +338,7 @@ plot.glm_reg <- function(x,
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
-#' str(pred)
-#' names(pred)
+#' predict(result, glm_predict_cmd = "pclass = levels(pclass)")
 #' predict(result, glm_predict_cmd = "sex = c('male','female')")
 #'
 #' @seealso \code{\link{glm_reg}} to generate the result
