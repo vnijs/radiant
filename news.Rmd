@@ -72,3 +72,6 @@ Want some help getting started? Watch the tutorials on the [documentation site](
 Not ready to install Radiant on your computer? Try it out online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
 
 Please send questions and comments to: radiant@rady.ucsd.edu.
+
+***
+Linkback to [r-bloggers](http://www.r-bloggers.com/)
