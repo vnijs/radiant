@@ -34,8 +34,6 @@
 
 <iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen></iframe>
 
- --><!--
-
 ## View data in table form
 ## Visualize data
 ## Explore data
