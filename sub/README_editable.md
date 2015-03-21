@@ -65,7 +65,7 @@ When Radiant starts you will see data on diamond prices. To close the applicatio
 
 Documentation and tutorials are available at <http://vnijs.github.io/radiant/> and in the Radiant web-interface (the `?` icons and the `Help` menu).
 
-Need help to get started? Watch this [playlist](https://www.youtube.com/watch?v=e02LFmNysoM&list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC).
+Want some help getting started? Watch the tutorials on the [documentation site](http://vnijs.github.io/radiant/tutorials.html)
 
 ## Online
 
