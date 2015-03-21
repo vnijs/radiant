@@ -1,8 +1,16 @@
 setwd("~/gh/radiant_gh-pages/")
 # setwd('quant'); system('make')
 
-# install.packages('rmarkdown')
-# library(rmarkdown)
+local_dir <- .libPaths()[1]
+global_dir <- .libPaths()[2]
+
+# installing packages to global_dir
+# repos <- "http://cran.rstudio.com"
+# options(repos = c(CRAN = repos))
+# install.packages("rmarkdown", lib = global_dir)
+install.packages("ggvis", lib = global_dir)
+install.packages("testthat", lib = global_dir)
+devtools::install_github
 
 file.copy("../radiant_dev/inst/marketing/data/shopping.rda",
           "~/Desktop/shopping.rda",overwrite = TRUE)
@@ -28,18 +36,14 @@ setwd('../')
 unlink("~/Desktop/shopping.rda")
 system('sh rsync_base2app.sh')
 
-#  creating documentation pdf
-# unlink('radiant.pdf')
-
 # create documentation pdf
-
-# unlink('radiant.pdf')
-# # create pdf of documentation
-# setwd("~")
-# unlink('radiant.pdf')
-# system("R CMD Rd2pdf radiant --no-preview")
-# system("rm -rf .Rd2pdf*")
-# setwd("~/gh/radiant_gh-pages/")
-# file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
-# system("rm -rf .Rd2pdf*")
+unlink('radiant.pdf')
+# create pdf of documentation
+setwd("~")
+unlink('radiant.pdf')
+system("R CMD Rd2pdf radiant --no-preview")
+system("rm -rf .Rd2pdf*")
+setwd("~/gh/radiant_gh-pages/")
+file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
+system("rm -rf .Rd2pdf*")
 

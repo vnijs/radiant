@@ -102,6 +102,7 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li><a href="/radiant/index.html">Home</a></li>
+        <li><a href="/radiant/news.html">News</a></li>
         <li class="dropdown">
           <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -172,7 +173,13 @@ img {
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
-        <li><a href="/radiant/programming.html">Programming</a></li>
+        <li class="dropdown">
+          <a href="/radiant/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/radiant/programming.html">Programming</a></li>
+             <li><a href="/radiant/resources.html">Resources</a></li>
+          </ul>
+        </li>
         <li><a href="/radiant/tutorials.html">Tutorials</a></li>
         <li><a href="/radiant/about.html">About</a></li>
       </ul>
@@ -186,60 +193,66 @@ img {
 
 
 <hr />
-<p>A platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http[://www.rstudio.com/shiny/">Shiny</a> package. Radiant is designed to facilitate decision making in business using data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. For questions and comments please contact me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
-<p><a href="https://travis-ci.org/vnijs/radiant"><img src="https://travis-ci.org/vnijs/radiant.png?branch=master" alt="Travis-CI Build Status" /></a> Version: 0.1.77, Date: 2015-3-19</p>
+<p>Radiant is a platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http[://www.rstudio.com/shiny/">Shiny</a> package. It provides access to the power of R for business and marketing analytics to facilitate decision making based on data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please send questions and comments to: <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
+<p><a href="https://travis-ci.org/vnijs/radiant"><img src="https://travis-ci.org/vnijs/radiant.png?branch=master" alt="Travis-CI Build Status" /></a> Version: 0.1.78, Date: 2015-3-19</p>
 <div id="key-features" class="section level2">
 <h2>Key features</h2>
 <ul>
 <li>Explore: Quickly and easily summarize, visualize, and analyze your data</li>
-<li>Interactive: Results update immediately when inputs are changed (i.e., no separate dialog boxes)</li>
-<li>Save and share your work: Load and save the state of the application to continue your analysis at a later time or on another computer. Share the state-file with others or create a (reproducible) report using <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a>. You will not lose your work if you accidentally leave the radiant page in your browser</li>
-<li>Cross-platform: It runs in a browser (e.g., Chrome or Firefox) on Windows, Mac, and Linux. No data will leave your computer and you can run it without an internet connection. You can, however, also run it as a web application on a server.</li>
+<li>Cross-platform: It runs in a browser on Windows, Mac, and Linux</li>
+<li>Reproducible: Recreate results at any time and share work with others as a state file or an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> report</li>
+<li>Programming: Integrate Radiant’s analysis functions into your own R-code</li>
 <li>Context: Data and examples focus on business applications</li>
 </ul>
+<div id="explore" class="section level4">
+<h4>Explore</h4>
+<p>Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes). This greatly facilitates exploration and understanding of the data.</p>
 </div>
-<div id="goal" class="section level2">
-<h2>Goal</h2>
-<p>Provide access to the power of R for business and marketing analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown document</a> (see <code>R &gt; Report</code>). Reproducible research, with no programming required. Most pages have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press <code>Update</code> to render the report to HTML.</p>
-<p>You can also use Rstudio to render and edit rmarkdown documents created in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an rmarkdown document. If you close Radiant using <code>Quit &gt; Quit</code> after launching it from Rstudio or Rgui you can paste the commands below into the command console to get the same output as in the browser.</p>
-<pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;, sm_comp_value = 3500)
-summary(result)
-plot(result, sm_plot = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
-<p>You can call functions for visualization and analysis in your R-code and access basic help from the R(studio) console using:</p>
-<pre class="r"><code>?single_mean</code></pre>
-<p>As an example, compile the <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file to html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example.</p>
-<p>Note: If you exit the app by stopping the process in R(studio) or closing the browser, rather than using <code>Quit &gt; Quit</code>, calling analysis functions may produce an error if the data cannot be found.</p>
+<div id="cross-platform" class="section level4">
+<h4>Cross-platform</h4>
+<p>Radiant works on Windows, Mac, or Linux. It can run without an Internet connection and no data will leave your computer. You can also run the app as a web application on a server.</p>
+</div>
+<div id="reproducible" class="section level4">
+<h4>Reproducible</h4>
+<p>Simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another omputer. Share state files with others and create reproducible reports using <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a>. See also the section on <code>Saving and loading state</code> below</p>
+</div>
+<div id="programming" class="section level4">
+<h4>Programming</h4>
+<p>Although Radiant’s web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For more information about programming with Radiant see the <a href="http://vnijs.github.io/radiant/programming.html">programming</a> page on the documentation site.</p>
+</div>
+<div id="context" class="section level4">
+<h4>Context</h4>
+<p>Radiant focuses on business data and decisions. It offers tools, examples, and documentation relevant for that context, effectively reducing the business analytics learning curve.</p>
+</div>
+</div>
+<div id="how-to-install-radiant" class="section level2">
+<h2>How to install Radiant</h2>
+<ul>
+<li>Required: <a href="http://cran.rstudio.com/">R</a> version 3.1.2 or later</li>
+<li>Required: A modern browser (e.g., <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Chrome</a> or Safari). Internet Explorer (version 11 or higher) should work as well</li>
+<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
+</ul>
+<p>Radiant is available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:</p>
+<pre class="r"><code>options(repos = &#39;http://vnijs.github.io/radiant_miniCRAN/&#39;)
+install.packages(&quot;radiant&quot;)</code></pre>
+<p>Once all packages are installed use the commands below to launch the app:</p>
+<pre class="r"><code>library(radiant)
+radiant(&quot;marketing&quot;)</code></pre>
+<p>See also the <code>Installing Radiant</code> video:</p>
+<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen>
+</iframe>
+<p>You can create a launcher on your Desktop to start Radiant. On Windows type <code>win_launcher()</code> in the R-console and press return. A file called <code>radiant.bat</code> will be created that you can double-click to start Radiant in your default browser.</p>
+<p>On a Mac you can create a launcher for Radiant by typing <code>mac_launcher()</code> in the R-console. This will create a file called <code>radiant.command</code> on your Desktop. Double-click the icon to start Radiant in your default browser.</p>
+<p>When Radiant starts you will see data on diamond prices. To close the application click on <code>Quit</code> in the Navigation bar and then click the <code>Quit</code> button on the left of the screen. The Radiant process will stop and the browser window will close (or gray-out).</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>Documentation and tutorials for Radiant are available at <a href="http://vnijs.github.io/radiant/" class="uri">http://vnijs.github.io/radiant/</a> and through the help files in the Radiant interface (see the <code>?</code> icon on most pages and the Help menu in the navbar).</p>
-<p>To help you get started you can also take a look at this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
+<p>Documentation and tutorials are available at <a href="http://vnijs.github.io/radiant/" class="uri">http://vnijs.github.io/radiant/</a> and in the Radiant web-interface (the <code>?</code> icons and the <code>Help</code> menu).</p>
+<p>Need help to get started? Watch this <a href="https://www.youtube.com/watch?v=e02LFmNysoM&amp;list=PLNhtaetb48EfAAlfQMJsuvLCSLvcn_0BC">playlist</a>.</p>
 </div>
-<div id="how-to-install-radiant" class="section level2">
-<h2>How-to install Radiant</h2>
-<ul>
-<li>Required: <a href="http://cran.rstudio.com" target="_blank">R</a>, version 3.1.2 or later</li>
-<li>Required: A modern browser (e.g., Chrome, Safari, or Firefox). The latest version of internet explorer may work as well.</li>
-<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/" target="_blank">Rstudio</a></li>
-</ul>
-<p>Radiant is now available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version of the package with complete documentation for off-line access use the <a href="https://github.com/vnijs/radiant_miniCRAN">radiant_miniCRAN</a> repository (created using <a href="https://github.com/andrie/miniCRAN">miniCRAN</a>). Open R(studio) and copy-and-paste the commands below.</p>
-<pre class="r"><code>options(repos = c(XRAN = &#39;http://vnijs.github.io/radiant_miniCRAN/&#39;))
-install.packages(&#39;radiant&#39;)</code></pre>
-<p>Once all packages are installed use the commands below to start the app:</p>
-<pre class="r"><code>library(radiant)
-radiant(&#39;marketing&#39;)</code></pre>
-<p><code>marketing</code> is the default app so you could also use the command <code>radiant()</code> to launch it. To start the <code>quant</code> app use:</p>
-<pre class="r"><code>library(radiant)
-radiant(&#39;quant&#39;)</code></pre>
-<p>See also the <a href="https://www.youtube.com/embed/NEPSFiHH_dw">installing Radiant</a> video.</p>
-<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen>
-</iframe>
-</div>
-<div id="creating-a-desktop-launcher" class="section level2">
-<h2>Creating a desktop launcher</h2>
-<p>You can create a launcher on your Desktop to make it easy to start Radiant. On Windows type <code>win_launcher()</code> in the R-console and press return. A file called <code>radiant.bat</code> will be created that you can double-click to start Radiant in your default browser.</p>
-<p>On a Mac you can create a launcher for Radiant by typing <code>mac_launcher()</code> in the R-console. This will create a file called <code>radiant.command</code> on your Desktop. Double-click the icon to start Radiant in your default browser.</p>
-<p>Radiant runs in a browser window. You will see data on diamond prices. To close the application click on <code>Quit</code> in the Navigation bar and then click the <code>Quit</code> button on the left of the screen. The Radiant process will stop and the browser window will close (or gray-out).</p>
+<div id="online" class="section level2">
+<h2>Online</h2>
+<p>Not ready to install Radiant on your computer? Try it out online at <a href="http://vnijs.rady.ucsd.edu:3838/marketing" class="uri">http://vnijs.rady.ucsd.edu:3838/marketing</a>. Note that this is a test server only!</p>
 </div>
 <div id="saving-and-loading-state" class="section level2">
 <h2>Saving and loading state</h2>
@@ -252,10 +265,7 @@ radiant(&#39;quant&#39;)</code></pre>
 <div id="source-code" class="section level2">
 <h2>Source code</h2>
 <p>Three (related) apps are included in the inst/ directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools. The <code>quant</code> app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The <code>marketing</code> app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc.</p>
-</div>
-<div id="online" class="section level2">
-<h2>Online</h2>
-<p>If you really don’t want to install Radiant on your computer (yet) you can tryout the app online at <a href="http://vnijs.rady.ucsd.edu:3838/marketing" class="uri">http://vnijs.rady.ucsd.edu:3838/marketing</a>. Note that this is a test server only!</p>
+<p>Please send questions and comments to: <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
 </div>
 <div id="license" class="section level2">
 <h2>License</h2>

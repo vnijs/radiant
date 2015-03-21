@@ -9,12 +9,11 @@ load("~/gh/radiant_dev/inst/base/data/diamonds.rda")
 load("~/gh/radiant_dev/inst/base/data/salary.rda")
 load("~/gh/radiant_dev/inst/marketing/data/shopping.rda")
 ```
-
-Radiant's goal is to provide access to the power of R for business analytics. Radiant also provides a bridge to programming in R(studio). For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown document](http://rmarkdown.rstudio.com/). Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.
+Radiant's goal is to provide access to the power of R for business analytics. Although Radiant's web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown](http://rmarkdown.rstudio.com/) document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.
 
 You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.
 
-If you close Radiant using `Quit > Quit` after launching it from Rstudio or Rgui you can can paste the commands below into the command console to get the same output as in the browser interface.
+If you close Radiant using `Quit > Quit` after launching it from R(studio) you can can paste the commands below into the command console to get the same output as in the browser interface.
 
 ```{r}
 result <- single_mean("diamonds","price")
@@ -25,20 +24,18 @@ plot(result)
 You can also call functions for visualization (see below) and access help from the console using `?visualize`
 
 ```{r}
-visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price",
+visualize(dataset = "diamonds", viz_xvar = "carat", viz_yvar = "price",
           viz_type = "scatter", viz_facet_row = "clarity", viz_color = "clarity")
 ```
 
 As an example, you can render the [`single_mean.Rmd`](https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the `Base` and `Regression` menus.
 
-## Programming
-
-If you have not yet installed Radiant enter the commands below in the R(studio) console:
+Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
 
 ```r
-options(repos = c(XRAN = 'http://vnijs.github.io/radiant_miniCRAN/'))
-install.packages('radiant')
-library('radiant')
+options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')
+install.packages("radiant")
+library(radiant)
 ```
 
 This will load the library and the required packages. To see the index of functions currently available from the Radiant package using the `help(package = "radiant")` command
@@ -86,7 +83,8 @@ plot(result, reg_plots = "coef")
 plot(result, reg_plots = "dashboard")
 ```
 
-As a final example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
+As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
+
 ```{r}
 # set working directory to your Desktop
 setwd("~/Desktop") # or setwd("~/Documents/Desktop")
@@ -125,13 +123,7 @@ save_membership(result)
 
 # was the data really changed?
 getdata("shopping") %>% head
-
 ```
 
 See if you can reproduce this output in the radiant web-interface. Start radiant using `radiant()`.
-
-
-
-
-
 
