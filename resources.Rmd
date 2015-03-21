@@ -1,0 +1,31 @@
+---
+title: R resources
+---
+
+## dplyr & tidyr
+
+<http://www.dataschool.io/dplyr-tutorial-part-2/>
+
+<http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf>
+
+<http://rpubs.com/bradleyboehmke/data_wrangling>
+
+<http://rpackages.ianhowson.com/cran/dplyr/>
+
+## ggplot2
+
+<http://www.cookbook-r.com/Graphs/>
+
+## Basic
+
+<http://www.cookbook-r.com/>
+
+<http://www.statmethods.net/>
+
+## News
+
+<http://www.r-bloggers.com/>
+
+## Questions and answers
+
+<http://stackoverflow.com/questions/tagged/r>
