@@ -28,7 +28,8 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_xvar <- renderUI({
   if(is.null(input$viz_type)) return()
   vars <- varnames()
-  if(input$viz_type %in% c("density","line")) vars <- vars["factor" != getdata_class()]
+  # if(input$viz_type %in% c("density","line")) vars <- vars["factor" != getdata_class()]
+  if(input$viz_type %in% c("density")) vars <- vars["factor" != getdata_class()]
   if(input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("viz_xvar",vars),
