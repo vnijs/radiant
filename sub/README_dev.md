@@ -4,7 +4,7 @@
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http[://www.rstudio.com/shiny/) package. It provides access to the power of R for business and marketing analytics to facilitate decision making based on data and models. It is currently used in the Research for Marketing Decisions and Quantitative Analysis classes at the <a href="http://rady.ucsd.edu/" target="\_blank">Rady School of Management</a> by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a> and <a href="http://rady.ucsd.edu/faculty/directory/august/">Terrence August</a>. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please send questions and comments to: radiant@rady.ucsd.edu.
 
 [![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
-Version: 0.1.78, Date: 2015-3-19
+Version: 0.1.80, Date: 2015-3-20
 
 ## Key features
 
@@ -56,7 +56,7 @@ radiant("marketing")
 
 See also the `Installing Radiant` video:
 
-<iframe width="640" height="390" src="https://www.youtube.com/embed/AtB2SsmzBsk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
 You can create a launcher on your Desktop to start Radiant. On Windows type `win_launcher()` in the R-console and press return. A file called `radiant.bat` will be created that you can double-click to start Radiant in your default browser.
 
