@@ -100,8 +100,8 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
 
   if(ext == 'csv') {
     # r_data[[objname]] <<- read.csv(uFile, header=header, sep=sep, dec=dec,
-    r_data[[objname]] <<- read.table(uFile, header=header, sep=sep,
-                                     dec=dec, stringsAsFactors=man_str_as_factor) # %>% tbl_df
+    r_data[[objname]] <<- read.table(uFile, header=header, sep=sep, dec=dec,
+                                     stringsAsFactors=man_str_as_factor) # %>% tbl_df
   }
 
   r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique

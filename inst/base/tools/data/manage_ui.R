@@ -4,7 +4,7 @@
 
 output$ui_fileUpload <- renderUI({
 
-  if(input$dataType %>% is.null) return()
+  if(is.null(input$dataType)) return()
   if(input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c('text/csv','text/comma-separated-values',
@@ -35,7 +35,8 @@ output$ui_clipboard_save <- renderUI({
       "<label>Add data description:</label><br>" %>% HTML,
       tags$textarea(class="form-control", id="save_cdata",
         rows="5",
-        capture.output(write.table(.getdata(), file = "", row.names = FALSE, sep = "\t")) %>%
+        capture.output(write.table(.getdata(), file = "", row.names = FALSE,
+                       sep = "\t")) %>%
           paste(collapse = "\n"))
     )
   }

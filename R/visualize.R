@@ -79,6 +79,7 @@ visualize <- function(dataset, viz_xvar,
       } else {
         bw <- select_(dat,i) %>% range %>% diff(.)/viz_bins
         plots[[i]] <- plots[[i]] + geom_histogram(binwidth = bw)
+                      # + stat_ecdf()
       }
     }
   } else if (viz_type == "density") {
@@ -103,12 +104,9 @@ visualize <- function(dataset, viz_xvar,
             plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
           else
             plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
-          # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
         } else {
           plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) + geom_line()
-            # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) +
-                              # geom_line(aes_string(group = viz_color))
-                              # geom_line(aes(group=1))
+          # plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = viz_color)) + geom_line(aes_string(group = viz_color))
         }
         itt <- itt + 1
       }
@@ -167,6 +165,9 @@ visualize <- function(dataset, viz_xvar,
   if ("log_x" %in% viz_axes)
     for (i in 1:length(plots))
       plots[[i]] <- plots[[i]] + scale_x_continuous(trans = "log")
+
+
+
 
   sshh(do.call(grid.arrange, c(plots, list(ncol = min(length(plots), 2)))))
 

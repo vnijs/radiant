@@ -8,7 +8,7 @@ if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
 # setting the url for the miniCRAN, using XRAN as in yihui/xran :)
 # options(repos = c(XRAN="http://vnijs.github.io/radiant_miniCRAN/", CRAN="http://cran.rstudio.com"))
-options(repos = c(XRAN = "http://vnijs.github.io/radiant_miniCRAN/"))
+options(repos = "http://vnijs.github.io/radiant_miniCRAN/")
 
 # udpate old-packages
 update.packages(lib.loc = local_dir, ask = FALSE)

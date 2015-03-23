@@ -11,26 +11,33 @@ output$uiExpl_byvar <- renderUI({
   vars <- groupable_vars()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar",vars), multiple = TRUE,
-    options = list(placeholder = 'Select group-by variable', plugins = list('remove_button', 'drag_drop'))
+    options = list(placeholder = 'Select group-by variable',
+                   plugins = list('remove_button', 'drag_drop'))
   )
 })
 
-expl_functions <- list("n" = "length", "mean" = "r_mean", "median" = "r_median", "min" = "r_min", "max" = "r_max",
-                       "25%" = "p25", "75%" = "p75", "sd" = "r_sd", "se" = "serr", "cv" = "cv", "skew" = "skew",
-                        "kurtosis" = "kurtosi", "# missing" = "nmissing")
+expl_functions <- list("n" = "length", "mean" = "r_mean", "median" = "r_median",
+                       "min" = "r_min", "max" = "r_max", "25%" = "p25",
+                       "75%" = "p75", "sd" = "r_sd", "se" = "serr",
+                       "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
+                       "# missing" = "nmissing")
 
 output$uiExpl_function <- renderUI({
   if(is.null(input$expl_byvar)) return()
-  selectizeInput("expl_function", label = "Apply function(s):", choices = expl_functions,
-                 selected = state_multiple("expl_function", expl_functions, c("length","mean")),
-                 multiple = TRUE, options = list(placeholder = 'Select functions',
-                                                 plugins = list('remove_button', 'drag_drop'))
+  selectizeInput("expl_function", label = "Apply function(s):",
+                 choices = expl_functions,
+                 selected = state_multiple("expl_function",
+                                           expl_functions, c("length","mean")),
+                 multiple = TRUE,
+                 options = list(placeholder = 'Select functions',
+                                plugins = list('remove_button', 'drag_drop'))
     )
 })
 
 output$uiExpl_show_viz <- renderUI({
   if(is.null(input$expl_byvar)) return()
-  checkboxInput('expl_show_viz', 'Show plot', value = state_init("expl_show_viz", FALSE))
+  checkboxInput('expl_show_viz', 'Show plot',
+                value = state_init("expl_show_viz", FALSE))
 })
 
 output$ui_Explore <- renderUI({
@@ -53,8 +60,8 @@ output$ui_Explore <- renderUI({
   if(input$expl_columns %>% not_available) return()
 
   withProgress(message = 'Calculating', value = 0, {
-    explore(input$dataset, input$expl_columns, input$expl_byvar, input$expl_function,
-            input$expl_show_tab, input$expl_show_viz)
+    explore(input$dataset, input$expl_columns, input$expl_byvar,
+            input$expl_function, input$expl_show_tab, input$expl_show_viz)
   })
 })
 
@@ -140,8 +147,8 @@ summary_explore <- function(result = .explore()) {
 }
 
 output$expl_summary <- renderPrint({
-
-  if(!is.null(input$expl_show_tab) && !input$expl_show_tab) return(invisible())
+  if(!is.null(input$expl_show_tab) && !input$expl_show_tab)
+    return(invisible())
   .summary_explore()
 })
 
@@ -157,7 +164,8 @@ output$expl_summary <- renderPrint({
 
 plots_explore <- function(result = .explore()) {
 
-  if(is.null(result$expl_show_viz) || result$expl_show_viz == FALSE) return(invisible())
+  if(is.null(result$expl_show_viz) || result$expl_show_viz == FALSE)
+    return(invisible())
 
   by_var <- fill_var <- result$expl_byvar[1]
   if(length(result$expl_byvar) > 1) fill_var <- result$expl_byvar[2]
@@ -165,9 +173,10 @@ plots_explore <- function(result = .explore()) {
   plots <- list()
   for(func in result$expl_function) {
     for(var in result$expl_columns) {
-      plots[[paste0(var,"_",func)]] <- ggplot(data = result[[func]], aes_string(x = by_var, y = var, fill = fill_var)) +
-        geom_bar(stat="identity", position = "dodge", alpha=.7) +
-        ggtitle(paste("Function used:", names(which(expl_functions == func))))
+      plots[[paste0(var,"_",func)]] <-
+        ggplot(data = result[[func]], aes_string(x = by_var, y = var, fill = fill_var)) +
+          geom_bar(stat="identity", position = "dodge", alpha=.7) +
+          ggtitle(paste("Function used:", names(which(expl_functions == func))))
     }
   }
 
@@ -175,7 +184,6 @@ plots_explore <- function(result = .explore()) {
 }
 
 expl_plot_width <- function() 650
-
 expl_plot_height <- function()
   400 * length(input$expl_function) * length(input$expl_columns)
 

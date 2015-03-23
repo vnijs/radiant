@@ -1,3 +1,4 @@
+// based on https://gist.github.com/xiaodaigh/7150112
 var returnTextInputBinding = new Shiny.InputBinding();
 $.extend(returnTextInputBinding, {
   find: function(scope) {
