@@ -69,3 +69,7 @@ all.equal(res1,res2)
 # library(dplyr)
 # library(magrittr)
 
+# setwd("~/gh/radiant_dev/tests")
+# read.csv2(file="data/euro.csv", head=TRUE, sep=";", dec=",")
+# read.table(file="data/euro.csv", head=TRUE, sep=";", dec=",")
+
