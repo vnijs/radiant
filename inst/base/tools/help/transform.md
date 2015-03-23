@@ -92,9 +92,13 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press CTRL-return (or CMD-return on mac) to see the variables with their new names on screen and  press `Save changes` to alter the variable names in the original data.
 
-#### Remove columns
+#### Reorder or remove columns
 
-Choose `Remove columns` from the `Transformation type` dropdown and select one or more variables to remove. Press `Save changes` to remove the variables from the original data. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data > Manage page.
+Choose `Reorder/Remove columns` from the `Transformation type` dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Save changes` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data > Manage page.
+
+#### Reorder or remove levels
+
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Save changes` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data > Manage tab. To temporarily remove levels from the data use the `Filter` option discussed below.
 
 #### Remove missing
 
