@@ -365,7 +365,6 @@ plot.regression <- function(x,
                             ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip() -> p
             return(p)
-            # -> plots[["coef"]]
     }
 	}
 
@@ -547,19 +546,10 @@ plot.reg_predict <- function(x,
 
   object <- x; rm(x)
 
-  # object <- pred
-  # reg_xvar <- 'carat'
-  # reg_conf_level <- .95
-
   cn <- colnames(object)
   cn[which(cn == "Prediction") + 1] <- "ymin"
   cn[which(cn == "Prediction") + 2] <- "ymax"
   colnames(object) <- cn
-
-  # ymax <- cn[which(cn == "Prediction") + 2]
-
-  # object$ymin <- object$Prediction - qnorm(.5 + reg_conf_level/2)*object$std.error
-  # object$ymax <- object$Prediction + qnorm(.5 + reg_conf_level/2)*object$std.error
 
   if (reg_color == 'none') {
     p <- ggplot(object, aes_string(x=reg_xvar, y="Prediction")) +
@@ -572,14 +562,10 @@ plot.reg_predict <- function(x,
   facets <- paste(reg_facet_row, '~', reg_facet_col)
   if (facets != '. ~ .') p <- p + facet_grid(facets)
 
-    # p <- p + geom_pointrange(aes_string(ymin = ymin, ymax = ymax), size=.3)
-
   if(length(unique(object[[reg_xvar]])) < 10)
     p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
   else
     p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
-
-    # p <- p + geom_smooth(aes_string(ymin = ymin, ymax = ymax), stat="identity")
 
   sshhr( p )
 }

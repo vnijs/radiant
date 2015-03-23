@@ -19,11 +19,9 @@ output$ui_data <- renderUI({
         wellPanel(
           uiOutput("ui_datasets"),
           conditionalPanel("input.datatabs != 'Manage'",
-            checkboxInput('show_filter', 'Filter (e.g., price > 5000)',
-                          value = state_init("show_filter",FALSE)),
+            checkboxInput('show_filter', 'Filter (e.g., price > 5000)', value = state_init("show_filter",FALSE)),
             conditionalPanel("input.show_filter == true",
-              returnTextAreaInput("data_filter", label = "",
-                                  value = state_init("data_filter")),
+              returnTextAreaInput("data_filter", label = "", value = state_init("data_filter")),
               uiOutput("ui_filter_error")))
         ),
         conditionalPanel("input.datatabs == 'Manage'", uiOutput("ui_Manage")),
