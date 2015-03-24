@@ -139,7 +139,7 @@ result <- kmeans_clus(dataset = "toothpaste", km_vars = c("v1", "v2", "v3", "v4"
 summary(result)
 plot(result)
 # save_membership(result)
-# save_kmeans(result, file = '~/kmeans.csv')
+# write.csv(result$clus_means, file = '~/kmeans.csv')
 ```
 
 ```{r}

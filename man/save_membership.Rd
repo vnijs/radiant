@@ -27,7 +27,5 @@ save_membership(result)
 \code{\link{summary.kmeans_clus}} to summarize results
 
 \code{\link{plot.kmeans_clus}} to plot results
-
-\code{\link{save_kmeans}} to save the table of cluster means to a csv file
 }
 

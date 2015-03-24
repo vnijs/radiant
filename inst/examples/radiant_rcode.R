@@ -91,7 +91,7 @@ save_membership(result)
 getdata("shopping") %>% head
 
 # to save the average shopping attitude scores for each segment
-save_kmeans(result, file = "kmeans.csv")
+write.csv(result$clus_means, file = "kmeans.csv")
 
 # the following command should open the created csv file in Excel
 browseURL("kmeans.csv")

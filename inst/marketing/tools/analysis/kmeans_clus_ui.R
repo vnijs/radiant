@@ -110,15 +110,15 @@ observe({
                   fun_name = "kmeans_clus",
                   fig.width = round(7 * km_plot_width()/650,2),
                   fig.height = round(7 * km_plot_height()/650,2),
-									xcmd = paste0("# save_membership(result)\n# save_kmeans(result, file = '~/kmeans.csv')"))
+									xcmd = paste0("# save_membership(result)\n# write.csv(result, file = '~/kmeans.csv')"))
   })
 })
 
 # save cluster means when download button is pressed
 output$km_save_kmeans <- downloadHandler(
-  filename = function() { "save_kmeans.csv" },
+  filename = function() { "kmeans.csv" },
   content = function(file) {
-  	.kmeans_clus() %>% { if(is.list(.)) save_kmeans(., file) }
+  	.kmeans_clus() %>% { if(is.list(.)) write.csv(.$clus_means, file) }
   }
 )
 
