@@ -2,6 +2,12 @@
 title: R resources
 ---
 
+## R(studio) basics
+
+<http://tryr.codeschool.com/>
+
+<http://swirlstats.com/students.html>
+
 ## dplyr & tidyr
 
 <http://www.dataschool.io/dplyr-tutorial-part-2/>
@@ -16,11 +22,7 @@ title: R resources
 
 <http://www.cookbook-r.com/Graphs/>
 
-## Basic
-
-<http://www.cookbook-r.com/>
-
-<http://www.statmethods.net/>
+<http://docs.ggplot2.org/>
 
 ## News
 
@@ -29,3 +31,9 @@ title: R resources
 ## Questions and answers
 
 <http://stackoverflow.com/questions/tagged/r>
+
+## Other
+
+<http://www.cookbook-r.com/>
+
+<http://www.statmethods.net/>
