@@ -176,6 +176,7 @@ plots_explore <- function(result = .explore()) {
       plots[[paste0(var,"_",func)]] <-
         ggplot(data = result[[func]], aes_string(x = by_var, y = var, fill = fill_var)) +
           geom_bar(stat="identity", position = "dodge", alpha=.7) +
+          theme(legend.position = "none") +
           ggtitle(paste("Function used:", names(which(expl_functions == func))))
     }
   }
