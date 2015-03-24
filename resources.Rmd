@@ -24,6 +24,14 @@ title: R resources
 
 <http://docs.ggplot2.org/>
 
+## Radiant
+
+<http://vnijs.github.io/radiant>
+
+In R(studio) enter: `help(package = "radiant")`
+
+<http://rpackages.ianhowson.com/radiant>
+
 ## News
 
 <http://www.r-bloggers.com/>
@@ -37,3 +45,10 @@ title: R resources
 <http://www.cookbook-r.com/>
 
 <http://www.statmethods.net/>
+
+## Official documentation
+
+<http://rpackages.ianhowson.com/>
+
+<http://www.rdocumentation.org/>
+
