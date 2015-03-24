@@ -12,10 +12,10 @@ Select variables v1 through v6 in the Variables box. The Dendrogram shown below 
 
 Hierarchical cluster analysis starts with many segments, as many as there are respondents, and in a stepwise (i.e., hierarchical) process adds the most similar respondents or groups together until only one segment remains. To determine the appropriate number of segments look for a _jump_ along the vertical axis of the plot. At that point two dissimilar segments have been joined. The measure along the vertical axis indicates of the level of heterogeneity within the segments that have been formed. The purpose of clustering is to create homogeneous groups of individuals so we want to avoid creating a heterogeneous segment. Since the most obvious _jump_ in heterogeneity occurs when we go from 3 to 2 segments we choose 3 segments (i.e., we avoid creating a heterogeneous segment).
 
-![Dendogram](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/hier_clus_dendro.png)
+![Dendogram](http://vnijs.github.io/radiant/marketing/figures_marketing/hier_clus_dendro.png)
 
 Another plot that can be used to determine the number of segments is a scree-plot. This is a plot of the within-segment heterogeneity on the vertical axis and the number of segments on the horizontal axis. Again, Hierarchical cluster analysis starts with many segments and groups respondents together until only one segments is left. The scree plot is created in the Plot tab by selecting `Scree` from the `Plot(s)` dropdown menu.
 
-![Scree](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/hier_clus_scree.png)
+![Scree](http://vnijs.github.io/radiant/marketing/figures_marketing/hier_clus_scree.png)
 
 Reading the plot from left-to-right we see that within segment heterogeneity increases sharply when we move from 3 to 2 segments. This is also very clear from the `Change in within-cluster heterogeneity` plot. To avoid creating a heterogeneous segment we, again, choose 3 segments. Now that we have determined the appropriate number of segments to extract we will use K-means to generate the final cluster solution.

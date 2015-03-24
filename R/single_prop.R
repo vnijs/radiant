@@ -1,6 +1,6 @@
 #' Compare a sample proportion to a population proportion
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sp_var The variable selected for the proportion comparison
@@ -47,7 +47,7 @@ single_prop <- function(dataset, sp_var,
 
 #' Summary method for the single_prop function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{single_prop}}
 #' @param ... further arguments passed to or from other methods
@@ -96,7 +96,7 @@ summary.single_prop <- function(object, ...) {
 
 #' Plot method for the single_prop function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_prop.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{single_prop}}
 #' @param sp_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (sp_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis

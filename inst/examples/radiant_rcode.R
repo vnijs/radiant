@@ -52,7 +52,7 @@ if(!file.exists(path2desktop))
 setwd(path2desktop)
 
 # get the data from the link below and save it to your desktop
-browseURL("https://github.com/mostly-harmless/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
+browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
 
 # load example dataset, if the file is not found make sure your working directory
 # is set to Desktop
@@ -91,7 +91,7 @@ save_membership(result)
 getdata("shopping") %>% head
 
 # to save the average shopping attitude scores for each segment
-save_kmeans(result, file = "kmeans.csv")
+write.csv(result$clus_means, file = "kmeans.csv")
 
 # the following command should open the created csv file in Excel
 browseURL("kmeans.csv")

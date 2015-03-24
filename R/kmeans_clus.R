@@ -1,6 +1,6 @@
 #' K-means cluster analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param km_vars Vector of variables to include in the analysis
@@ -18,7 +18,6 @@
 #'
 #' @seealso \code{\link{summary.kmeans_clus}} to summarize results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
-#' @seealso \code{\link{save_kmeans}} to save the table of cluster means to a csv file
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
@@ -72,7 +71,7 @@ kmeans_clus <- function(dataset, km_vars,
 
 #' Summary method for kmeans_clus
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{kmeans_clus}}
 #' @param ... further arguments passed to or from other methods
@@ -83,7 +82,6 @@ kmeans_clus <- function(dataset, km_vars,
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
-#' @seealso \code{\link{save_kmeans}} to save the table of cluster means to a csv file
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
@@ -123,7 +121,7 @@ summary.kmeans_clus <- function(object, ...) {
 
 #' Plot method for kmeans_clus
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{kmeans_clus}}
 #' @param ... further arguments passed to or from other methods
@@ -134,7 +132,6 @@ summary.kmeans_clus <- function(object, ...) {
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{summary.kmeans_clus}} to summarize results
-#' @seealso \code{\link{save_kmeans}} to save the table of cluster means to a csv file
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
@@ -156,29 +153,9 @@ plot.kmeans_clus <- function(x, ...) {
 	sshh( do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))) )
 }
 
-#' Save cluster means to a csv file
-#'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
-#'
-#' @param object Return value from \code{\link{kmeans_clus}}
-#' @param file Filename and path to use
-#'
-#' @examples
-#' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
-#' save_kmeans(result, file = "~/shopping_kmeans.csv")
-#'
-#' @seealso \code{\link{kmeans_clus}} to generate results
-#' @seealso \code{\link{summary.kmeans_clus}} to summarize results
-#' @seealso \code{\link{plot.kmeans_clus}} to plot results
-#' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
-#'
-#' @export
-save_kmeans <- function(object, file = "kmeans.csv")
-	object$clus_means %>% write.csv(., file = file)
-
 #' Add a cluster membership variable to the active dataset
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{kmeans_clus}}
 #'
@@ -190,7 +167,6 @@ save_kmeans <- function(object, file = "kmeans.csv")
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{summary.kmeans_clus}} to summarize results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
-#' @seealso \code{\link{save_kmeans}} to save the table of cluster means to a csv file
 #'
 #' @export
 save_membership <- function(object) {

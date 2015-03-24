@@ -4,7 +4,7 @@
 
 output$ui_fileUpload <- renderUI({
 
-  if(input$dataType %>% is.null) return()
+  if(is.null(input$dataType)) return()
   if(input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c('text/csv','text/comma-separated-values',
@@ -35,7 +35,8 @@ output$ui_clipboard_save <- renderUI({
       "<label>Add data description:</label><br>" %>% HTML,
       tags$textarea(class="form-control", id="save_cdata",
         rows="5",
-        capture.output(write.table(.getdata(), file = "", row.names = FALSE, sep = "\t")) %>%
+        capture.output(write.table(.getdata(), file = "", row.names = FALSE,
+                       sep = "\t")) %>%
           paste(collapse = "\n"))
     )
   }
@@ -52,10 +53,12 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
-          checkboxInput('header', 'Header', TRUE),
+          checkboxInput('man_header', 'Header', TRUE),
           checkboxInput('man_str_as_factor', 'String as Factor', TRUE),
-          radioButtons('sep', NULL, c(Comma=',', Semicolon=';', Tab='\t'), ',',
-                       inline = TRUE)
+          radioButtons('man_sep', "Separator:", c(Comma=',', Semicolon=';', Tab='\t'),
+                       ',', inline = TRUE),
+          radioButtons('man_dec', "Decimal:", c(Period='.', Comma=','),
+                       '.', inline = TRUE)
         ),
         uiOutput("ui_fileUpload")
       ),
@@ -203,9 +206,9 @@ observe({
       # iterating through the files to upload
       for(i in 1:(dim(inFile)[1]))
         loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
-                     header = input$header,
+                     header = input$man_header,
                      man_str_as_factor = input$man_str_as_factor,
-                     sep = input$sep)
+                     sep = input$man_sep, dec = input$man_dec)
 
       updateSelectInput(session, "dataset", label = "Datasets:",
                         choices = r_data$datasetlist,

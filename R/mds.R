@@ -1,6 +1,6 @@
 #' (Dis)similarity based brand maps (MDS)
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/mds.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param mds_id1 A character variable or factor with unique entries
@@ -80,7 +80,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 
 #' Summary method for the mds function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/mds.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{mds}}
 #' @param mds_round Rounding to use for output (default = 0). +1 used for coordinates. +2 used for stress measure. Not currently accessible in Radiant
@@ -125,7 +125,7 @@ summary.mds <- function(object, mds_round = 1, ...) {
 
 #' Plot method for the mds function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/mds.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{mds}}
 #' @param mds_rev_dim Flip the axes in plots

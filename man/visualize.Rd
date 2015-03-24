@@ -4,7 +4,7 @@
 \alias{visualize}
 \title{Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}}
 \usage{
-visualize(dataset, viz_vars1, viz_vars2 = "none", data_filter = "",
+visualize(dataset, viz_xvar, viz_yvar = "none", data_filter = "",
   viz_type = "hist", viz_facet_row = ".", viz_facet_col = ".",
   viz_color = "none", viz_bins = 10, viz_smooth = 1, viz_check = "",
   viz_axes = "")
@@ -12,9 +12,9 @@ visualize(dataset, viz_vars1, viz_vars2 = "none", data_filter = "",
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{viz_vars1}{One or more variables to display along the X-axis of the plot}
+\item{viz_xvar}{One or more variables to display along the X-axis of the plot}
 
-\item{viz_vars2}{Variable to display along the Y-axis of the plot (default = "none")}
+\item{viz_yvar}{Variable to display along the Y-axis of the plot (default = "none")}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
@@ -41,11 +41,11 @@ Generated plots
 Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/base/visualize.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in Radiant
 }
 \examples{
 visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
 visualize("diamonds", "price:x", viz_type = "hist")
-visualize("diamonds", "carat:x", viz_vars2 = "price", viz_type = "scatter")
+visualize("diamonds", "carat:x", viz_yvar = "price", viz_type = "scatter")
 }
 

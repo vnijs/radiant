@@ -1,6 +1,6 @@
 #' Compare means for two or more variables
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cm_var1 A numeric variable or factor selected for comparison
@@ -80,7 +80,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 #' Summary method for the compare_means function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{compare_means}}
 #' @param ... further arguments passed to or from other methods
@@ -133,7 +133,7 @@ summary.compare_means <- function(object, ...) {
 
 #' Plot method for the compare_means function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_means}}
 #' @param cm_plots One or more plots ("bar", "box", or "density")

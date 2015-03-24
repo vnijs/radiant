@@ -33,7 +33,7 @@ plot(result, reg_plots = "coef")
 ```
 
 ```{r fig.width=6.46, fig.height=8.4}
-result <- visualize(dataset = "diamonds", viz_vars1 = "carat", viz_vars2 = "price", viz_type = "scatter", viz_color = "clarity", viz_check = c("line", "loess"), viz_axes = c("log_x", "log_y"))
+result <- visualize(dataset = "diamonds", viz_xvar = "carat", viz_yvar = "price", viz_type = "scatter", viz_color = "clarity", viz_check = c("line", "loess"), viz_axes = c("log_x", "log_y"))
 ```
 
 ```{r}
@@ -139,7 +139,7 @@ result <- kmeans_clus(dataset = "toothpaste", km_vars = c("v1", "v2", "v3", "v4"
 summary(result)
 plot(result)
 # save_membership(result)
-# save_kmeans(result, file = '~/kmeans.csv')
+# write.csv(result$clus_means, file = '~/kmeans.csv')
 ```
 
 ```{r}

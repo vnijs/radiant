@@ -8,11 +8,11 @@ We would like to start an ISP and need to estimate the average Internet usage of
 
 Since we are interested in estimating the average (or mean) internet usage in the population we select sample size calculation for `Mean`. In the screen shot below we entered 10 (minutes) as the Acceptable error and 60.95 as the estimate of the Sample standard deviation. The Confidence level is 95% so we choose a z-value of 1.96.
 
-![Example 1b](http://mostly-harmless.github.io/radiant/quant/figures_quant/sample_size_ex1a.png)
+![Example 1b](http://vnijs.github.io/radiant/quant/figures_quant/sample_size_ex1a.png)
 
 As you can see the required sample size is equal to 143, i.e., we need 143 valid responses from our target population to make an inference of the population average with the required Acceptable Error, Confidence level, and Sample standard deviation. This number assumes an Incidence and Response rate of 1 (or 100%). Suppose that only 75% of the household in out market have access to internet at home. In addition, suppose that the anticipated response rate is 20%. What would be the required number of household to contact?
 
-![Example 1a](http://mostly-harmless.github.io/radiant/quant/figures_quant/sample_size_ex1b.png)
+![Example 1a](http://vnijs.github.io/radiant/quant/figures_quant/sample_size_ex1b.png)
 
 In the screen shot above the incidence rate is set to 75% and response rate to 20%. The required number of valid responses is the same as before (143), however the number of contact requests is now equal to 143 / .75 / .2 = 954.
 
@@ -28,11 +28,11 @@ Let's say that the population size is 5000 and the initial estimate of the preva
 
 Because we want to estimate the proportion of people with HIV antibodies in the population of interest we select sample size calculation for a `Proportion`. In the screen shot below we entered 4% as the Acceptable error and 10% as the initial estimate of the proportion (p). The Confidence level is 95% so we choose a z-value of 1.96.
 
-![Example 2a](http://mostly-harmless.github.io/radiant/quant/figures_quant/sample_size_ex2a.png)
+![Example 2a](http://vnijs.github.io/radiant/quant/figures_quant/sample_size_ex2a.png)
 
 As you can see the required sample size is equal to 217, i.e., we need 217 valid responses to make an inference of the population proportion with the required Acceptable error and Confidence level. This number again assumes an Incidence and Response rate of 100%. The example suggests the population of interest has only 5000 people so it may be worthwhile to apply a correction for population size.
 
-![Example 2b](http://mostly-harmless.github.io/radiant/quant/figures_quant/sample_size_ex2b.png)
+![Example 2b](http://vnijs.github.io/radiant/quant/figures_quant/sample_size_ex2b.png)
 
 In the screen shot above we clicked `Yes` to apply the population correction and then entered 5000 as the population size. The required number of valid responses drops only slightly from 217 to 208.
 

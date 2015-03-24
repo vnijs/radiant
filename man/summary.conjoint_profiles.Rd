@@ -15,7 +15,7 @@
 Summary method for the conjoint_profiles function
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 }
 \examples{
 ca_prof <- readLines(system.file("examples/profiles-movie.txt", package='radiant'))

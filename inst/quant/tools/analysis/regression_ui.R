@@ -67,6 +67,17 @@ reg_pred_inputs <- reactive({
   reg_pred_args
 })
 
+# need the ::: because plot is an S3 method and not an exported function
+reg_pred_plot_args <- as.list(formals(radiant:::plot.reg_predict))
+
+# list of function inputs selected by user
+reg_pred_plot_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(reg_pred_plot_args))
+    reg_pred_plot_args[[i]] <- input[[i]]
+  reg_pred_plot_args
+})
+
 output$ui_reg_dep_var <- renderUI({
 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
  	vars <- varnames()[isNum]
@@ -123,13 +134,43 @@ output$ui_reg_int_var <- renderUI({
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
+# X - variable
+output$ui_reg_xvar <- renderUI({
+  vars <- input$reg_indep_var
+  selectizeInput(inputId = "reg_xvar", label = "X-variable:", choices = vars,
+    selected = state_multiple("reg_xvar",vars),
+    multiple = FALSE)
+})
+
+output$ui_reg_facet_row <- renderUI({
+  vars <- input$reg_indep_var
+  vars <- c("None" = ".", vars)
+  selectizeInput("reg_facet_row", "Facet row", vars,
+                 selected = state_single("reg_facet_row", vars, "."),
+                 multiple = FALSE)
+})
+
+output$ui_reg_facet_col <- renderUI({
+  vars <- input$reg_indep_var
+  vars <- c("None" = ".", vars)
+  selectizeInput("reg_facet_col", 'Facet column', vars,
+                 selected = state_single("reg_facet_col", vars, "."),
+                 multiple = FALSE)
+})
+
+output$ui_reg_color <- renderUI({
+  vars <- c("None" = "none", input$reg_indep_var)
+  sel <- state_single("reg_color", vars, "none")
+  selectizeInput("reg_color", "Color", vars, selected = sel,
+                 multiple = FALSE)
+})
+
 output$ui_regression <- renderUI({
   tagList(
     conditionalPanel(condition = "input.tabs_regression == 'Predict'",
       wellPanel(
         radioButtons(inputId = "reg_predict", label = "Prediction:", reg_predict,
-          selected = state_init("reg_predict", ""),
-          inline = TRUE),
+          selected = state_init("reg_predict", ""), inline = TRUE),
         conditionalPanel(condition = "input.reg_predict == 'cmd'",
           returnTextAreaInput("reg_predict_cmd", "Prediction command:",
             value = state_init("reg_predict_cmd", ""))
@@ -140,6 +181,10 @@ output$ui_regression <- renderUI({
                       selected = state_init("reg_predict_data", ""), multiple = FALSE)
         ),
         conditionalPanel(condition = "input.reg_predict != ''",
+          uiOutput("ui_reg_xvar"),
+          uiOutput("ui_reg_facet_row"),
+          uiOutput("ui_reg_facet_col"),
+          uiOutput("ui_reg_color"),
           downloadButton("reg_save_pred", "Predictions")
         )
       )
@@ -219,11 +264,16 @@ reg_plot_width <- function()
 reg_plot_height <- function()
   reg_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
+reg_pred_plot_height <- function()
+  if(input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
+
 # output is called from the main radiant ui.R
 output$regression <- renderUI({
 
 		register_print_output("summary_regression", ".summary_regression")
     register_print_output("predict_regression", ".predict_regression")
+    register_plot_output("predict_plot_regression", ".predict_plot_regression",
+                          height_fun = "reg_pred_plot_height")
 		register_plot_output("plot_regression", ".plot_regression",
                          height_fun = "reg_plot_height",
                          width_fun = "reg_plot_width")
@@ -232,7 +282,8 @@ output$regression <- renderUI({
 		reg_output_panels <- tabsetPanel(
 	    id = "tabs_regression",
 	    tabPanel("Summary", verbatimTextOutput("summary_regression")),
-      tabPanel("Predict", verbatimTextOutput("predict_regression")),
+      tabPanel("Predict", plotOutput("predict_plot_regression", width = "100%", height = "100%"),
+               verbatimTextOutput("predict_regression")),
 	    tabPanel("Plot", plotOutput("plot_regression", width = "100%", height = "100%"))
 	  )
 
@@ -240,7 +291,6 @@ output$regression <- renderUI({
 		              tool = "Linear (OLS)",
 		              tool_ui = "ui_regression",
 		             	output_panels = reg_output_panels)
-
 })
 
 .regression <- reactive({
@@ -258,6 +308,9 @@ output$regression <- renderUI({
 })
 
 .predict_regression <- reactive({
+
+  r_data$reg_pred <- NULL
+
   if(not_available(input$reg_dep_var))
     return(invisible())
 
@@ -267,7 +320,19 @@ output$regression <- renderUI({
   if(is_empty(input$reg_predict, ""))
     return(invisible())
 
-  do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  # do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  r_data$reg_pred <- do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+})
+
+.predict_plot_regression <- reactive({
+
+  if(is_empty(input$reg_predict, ""))
+    return(invisible())
+
+  if(is.null(r_data$reg_pred))
+    return(invisible())
+
+  do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
 })
 
 .plot_regression <- reactive({
@@ -292,16 +357,22 @@ observe({
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
-    xcmd <- ""
     if(!is_empty(input$reg_plots)) {
       inp_out[[3]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
-    if(!is_empty(input$reg_predict)) {
+    xcmd <- ""
+    if(!is.null(r_data$reg_pred)) {
+    # if(!is_empty(input$reg_predict)) {
       inp_out[[3 + figs]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
-      xcmd <- paste0("print(result)\n# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
+      xcmd <- paste0("# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
+      if(!is_empty(input$reg_xvar)) {
+        inp_out[[4 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
+        outputs <- c(outputs, "plot")
+        figs <- TRUE
+      }
     }
     update_report(inp_main = clean_args(reg_inputs(), reg_args),
                   fun_name = "regression",
@@ -324,7 +395,7 @@ observe({
 output$reg_save_pred <- downloadHandler(
   filename = function() { "reg_save_pred.csv" },
   content = function(file) {
-    do.call(predict, c(list(result = .regression()), reg_pred_inputs(),
+    do.call(predict, c(list(object = .regression()), reg_pred_inputs(),
             list(reg_save_pred = TRUE))) %>%
       write.csv(., file = file, row.names = FALSE)
   }

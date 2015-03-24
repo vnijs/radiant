@@ -1,6 +1,6 @@
 #' Generalized linear models (GLM)
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param glm_dep_var The dependent variable in the logit (probit) model
@@ -80,7 +80,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 
 #' Summary method for the glm_reg function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{glm_reg}}
 #' @param glm_sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
@@ -230,7 +230,7 @@ summary.glm_reg <- function(object,
 
 #' Plot method for the glm_reg function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{glm_reg}}
 #' @param glm_plots Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot
@@ -329,7 +329,7 @@ plot.glm_reg <- function(x,
 
 #' Predict method for the glm_reg function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{glm_reg}}
 #' @param glm_predict_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
@@ -338,9 +338,7 @@ plot.glm_reg <- function(x,
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-#' pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
-#' str(pred)
-#' names(pred)
+#' predict(result, glm_predict_cmd = "pclass = levels(pclass)")
 #' predict(result, glm_predict_cmd = "sex = c('male','female')")
 #'
 #' @seealso \code{\link{glm_reg}} to generate the result
@@ -457,7 +455,7 @@ predict.glm_reg <- function(object,
 
 #' Plot method for the predict.glm_reg function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{predict.glm_reg}}.
 #' @param glm_xvar Variable to display along the X-axis of the plot
@@ -527,7 +525,7 @@ plot.glm_predict <- function(x,
 
 #' Save residuals generated in the glm_reg function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/glm_reg.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{glm_reg}}
 #'

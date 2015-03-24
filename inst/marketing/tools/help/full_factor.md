@@ -8,7 +8,7 @@ Click the 'examples' radio button on the Data > Manage page and click 'Load exam
 
 Once we have determined the number of factors we can extract and rotate them. The factors are rotated to generate a solution where, to the extent possible, a variable has a high loading on only one factor. This is an important benefit because it makes it easier to interpret what the factor represents. While there are numerous algorithms to rotate a factor loadings matrix the most commonly used is Varimax rotation.
 
-![Summary](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/full_factor_summary.png)
+![Summary](http://vnijs.github.io/radiant/marketing/figures_marketing/full_factor_summary.png)
 
 The numbers in the table are the correlations of the six variables with the two Factors. For example, variable v1 has a correlation of .962 with Factor 1 and a correlation of -.031 with Factor 2. As such v1 will play a big role in naming Factor 1 but an insignificant role in naming Factor 2.
 
@@ -32,7 +32,7 @@ Factor 2: Social benefits
 
 The best way to see what rotation does is to toggle the radio buttons `Rotation` between Varimax and None and inspect what changes in the output. Click on the Plots tab and set the radio button to None. The image shown below depicts the loadings of the variables on the two factors. Variable 5 falls somewhat in between the lines for factor 1 and factor 2. When we select Varimax rotation, however, the label for v5 lines up nicely with the horizontal axis. This change in alignment is also reflected in the factor loadings. The unrotated factor loadings for v5 are -0.869 for factor 1 and -0.351 for factor 2. The rotated factor loadings for v5 are -0.934 for factor 1 and -0.079 for factor 2.
 
-![Plot](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/full_factor_plot.png) ![Plot - rotation](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/full_factor_plot_rotation.png)
+![Plot](http://vnijs.github.io/radiant/marketing/figures_marketing/full_factor_plot.png) ![Plot - rotation](http://vnijs.github.io/radiant/marketing/figures_marketing/full_factor_plot_rotation.png)
 
 The final step is to generate the factor scores. You can think of these scores as a weighted average of the variables that are linked to a factor. They approximate the scores that a respondent would have provided if we could have asked about the factor in a single question, i.e., the respondents inferred ratings on the factors. By clicking on the 'Save scores' button two new variables will be added to the toothpaste data file. You can see them by going to Data > View. We can use factor scores in other analyses (e.g., cluster analysis or regression). You can rename the new variables, e.g., to 'health' and 'social' through Data > Transform by selecting 'Rename' from the Transformation type dropdown.
 
@@ -48,4 +48,4 @@ The final step is to generate the factor scores. You can think of these scores a
 
 If you want more practice open the 'shopping' data set and see if you can reproduce the results shown in the screen capture of the Summary tab below. Use Pre-factor to determine if the correct number of factors were selected. Do you agree? Why (not)?
 
-![Summary - shopping](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/full_factor_summary_shopping.png)
+![Summary - shopping](http://vnijs.github.io/radiant/marketing/figures_marketing/full_factor_summary_shopping.png)

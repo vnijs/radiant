@@ -1,6 +1,6 @@
 #' Linear regression using OLS
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param reg_dep_var The dependent variable in the regression
@@ -68,7 +68,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 
 #' Summary method for the regression function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
 #' @param reg_sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
@@ -224,7 +224,7 @@ summary.regression <- function(object,
 
 #' Plot method for the regression function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{regression}}
 #' @param reg_plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
@@ -365,7 +365,6 @@ plot.regression <- function(x,
                             ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip() -> p
             return(p)
-            # -> plots[["coef"]]
     }
 	}
 
@@ -381,7 +380,7 @@ plot.regression <- function(x,
 
 #' Predict method for the regression function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
 #' @param reg_predict_cmd Command used to generate data for prediction
@@ -424,8 +423,8 @@ predict.regression <- function(object,
   vars <- object$reg_indep_var
   if(reg_predict_cmd != "") {
     reg_predict_cmd %<>% gsub("\"","\'", .)
-    pred_df <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
-    if(is(pred_df, 'try-error')) {
+    pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
+    if(is(pred, 'try-error')) {
       return(cat("The command entered did not generate valid data for prediction. Please try again.\nExamples are shown in the helpfile.\n"))
     }
 
@@ -444,21 +443,23 @@ predict.regression <- function(object,
     if(sum(isFct) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_freq), vars[isFct]))
 
+     rm(dat)
+
     if(sum(isNum) + sum(isFct) < length(vars)) {
       cat("The model includes data-types that cannot be used for\nprediction at this point\n")
     } else {
-      if(sum(names(pred_df) %in% names(plug_data)) < length(names(pred_df))) {
+      if(sum(names(pred) %in% names(plug_data)) < length(names(pred))) {
         return(cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n"))
       } else {
-        plug_data[names(pred_df)] <- list(NULL)
-        pred_df <- data.frame(plug_data[-1],pred_df)
+        plug_data[names(pred)] <- list(NULL)
+        pred <- data.frame(plug_data[-1],pred)
       }
     }
   } else {
-    pred_df <- getdata(reg_predict_data)
-    pred_names <- names(pred_df)
-    pred_df <- try(select_(pred_df, .dots = vars), silent = TRUE)
-    if(is(pred_df, 'try-error')) {
+    pred <- getdata(reg_predict_data)
+    pred_names <- names(pred)
+    pred <- try(select_(pred, .dots = vars), silent = TRUE)
+    if(is(pred, 'try-error')) {
       cat("Model variables: ")
       cat(vars,"\n")
       cat("Profile variables to be added: ")
@@ -468,18 +469,18 @@ predict.regression <- function(object,
     reg_predict_type <- "data"
   }
 
-  pred <- try(predict(object$model, pred_df, interval = 'prediction', level = reg_conf_level), silent = TRUE)
-  if(!is(pred, 'try-error')) {
-    pred %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
+  pred_val <- try(predict(object$model, pred, interval = 'prediction', level = reg_conf_level), silent = TRUE)
+  if(!is(pred_val, 'try-error')) {
+    pred_val %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
     cl_split <- function(x) 100*(1-x)/2
     cl_split(reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
     (100 - cl_split(reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
-    colnames(pred) <- c("Prediction",cl_low,cl_high,"+/-")
+    colnames(pred_val) <- c("Prediction",cl_low,cl_high,"+/-")
 
-    pred_df <- data.frame(pred_df, pred, check.names = FALSE)
+    pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     # return predicted values
-    if(reg_save_pred) return(pred_df)
+    # if(reg_save_pred) return(pred)
 
     if(reg_predict_type == "cmd") {
       cat("Predicted values for:\n")
@@ -487,26 +488,91 @@ predict.regression <- function(object,
       cat(paste0("Predicted values for profiles from dataset: ",object$reg_predict_data,"\n"))
     }
 
-    pred_df %>% print(., row.names = FALSE)
+    pred %>% print(., row.names = FALSE)
 
     # pushing predictions into the clipboard
-    os_type <- Sys.info()["sysname"]
-    if (os_type == 'Windows') {
-      write.table(pred_df, "clipboard", sep="\t", row.names=FALSE)
-    } else if (os_type == "Darwin") {
-      write.table(pred_df, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-    }
-    if (os_type != "Linux")
-      cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
+    # os_type <- Sys.info()["sysname"]
+    # if (os_type == 'Windows') {
+    #   write.table(pred, "clipboard", sep="\t", row.names=FALSE)
+    # } else if (os_type == "Darwin") {
+    #   write.table(pred, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
+    # }
+    # if (os_type != "Linux")
+    #   cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
+
+    return(pred %>% set_class(c("reg_predict",class(.))))
 
   } else {
     cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
   }
 }
 
+#' Plot method for the predict.regression function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{predict.regression}}.
+#' @param reg_xvar Variable to display along the X-axis of the plot
+#' @param reg_facet_row Create vertically arranged subplots for each level of the selected factor variable
+#' @param reg_facet_col Create horizontally arranged subplots for each level of the selected factor variable
+#' @param reg_color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour
+#' @param reg_conf_level Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.
+#' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- regression("diamonds", "price", c("carat","clarity"))
+#' pred <- predict(result, reg_predict_cmd = "carat = 1:10")
+#' plot(pred, reg_xvar = "carat")
+#' result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
+#' dpred <- getdata("diamonds") %>% slice(1:100)
+#' pred <- predict(result, reg_predict_data = "dpred")
+#' plot(pred, reg_xvar = "carat", reg_color = "clarity")
+#'
+#' @seealso \code{\link{regression}} to generate the result
+#' @seealso \code{\link{summary.regression}} to summarize results
+#' @seealso \code{\link{plot.regression}} to plot results
+#' @seealso \code{\link{predict.regression}} to generate predictions
+#'
+#' @export
+plot.reg_predict <- function(x,
+                             reg_xvar = "",
+                             reg_facet_row = ".",
+                             reg_facet_col = ".",
+                             reg_color = "none",
+                             reg_conf_level = .95,
+                             ...) {
+
+  if(is.null(reg_xvar) || reg_xvar == "") return(invisible())
+
+  object <- x; rm(x)
+
+  cn <- colnames(object)
+  cn[which(cn == "Prediction") + 1] <- "ymin"
+  cn[which(cn == "Prediction") + 2] <- "ymax"
+  colnames(object) <- cn
+
+  if (reg_color == 'none') {
+    p <- ggplot(object, aes_string(x=reg_xvar, y="Prediction")) +
+           geom_line(aes(group=1))
+  } else {
+    p <- ggplot(object, aes_string(x=reg_xvar, y="Prediction", color=reg_color)) +
+                geom_line(aes_string(group=reg_color))
+  }
+
+  facets <- paste(reg_facet_row, '~', reg_facet_col)
+  if (facets != '. ~ .') p <- p + facet_grid(facets)
+
+  if(length(unique(object[[reg_xvar]])) < 10)
+    p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
+  else
+    p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
+
+  sshhr( p )
+}
+
 #' Save regression residuals
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
 #'
@@ -525,7 +591,7 @@ save_reg_resid <- function(object) {
 
 #' Check if main effects for all interaction effects are included in the model
 #' If ':' is used to select a range _indep_var_ is updated
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param indep_var List of independent variables provided to _regression_ or _glm_
 #' @param cn Column names for all independent variables in _dat_
@@ -558,7 +624,7 @@ var_check <- function(indep_var, cn, int_var = "") {
 
 #' Add interaction terms to list of test variables if needed
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/regression.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param test_var List of variables to use for testing for _regression_ or _glm_
 #' @param int_var Interaction terms specified

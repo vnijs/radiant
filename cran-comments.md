@@ -1,8 +1,13 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
+* Removed the offending function save_kmeans in R/kmeans_clus.R
+
+## Resubmission
+This is a resubmission. In this version I have:
+
 * Fixed the invalid URL mentioned below. Note that none of the checkdevtools::submit_cran()
-showed me this error. Please advise how I can best check for these types of 
+showed me this error. Please advise how I can best check for these types of
 problems in the future. Thank you.
 
 * checking CRAN incoming feasibility … NOTE

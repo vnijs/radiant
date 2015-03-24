@@ -38,7 +38,7 @@ plot(result, reg_plots = 'hist')
 ```
 
 ```{r fig.width=7, fig.height=7}
-visualize(dataset = 'diamonds', viz_vars1 = 'carat', viz_vars2 = 'price', viz_type = 'scatter', viz_color = 'clarity')
+visualize(dataset = 'diamonds', viz_xvar = 'carat', viz_yvar = 'price', viz_type = 'scatter', viz_color = 'clarity')
 ```
 "
 

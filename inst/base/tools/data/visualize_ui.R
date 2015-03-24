@@ -25,24 +25,25 @@ output$ui_viz_type <- renderUI({
 })
 
 # X - variable
-output$ui_viz_vars1 <- renderUI({
+output$ui_viz_xvar <- renderUI({
   if(is.null(input$viz_type)) return()
   vars <- varnames()
-  if(input$viz_type %in% c("density","line")) vars <- vars["factor" != getdata_class()]
+  # if(input$viz_type %in% c("density","line")) vars <- vars["factor" != getdata_class()]
+  if(input$viz_type %in% c("density")) vars <- vars["factor" != getdata_class()]
   if(input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
-  selectInput(inputId = "viz_vars1", label = "X-variable:", choices = vars,
-    selected = state_multiple("viz_vars1",vars),
+  selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
+    selected = state_multiple("viz_xvar",vars),
     multiple = TRUE, size = min(5, length(vars)), selectize = FALSE)
 })
 
 # Y - variable
-output$ui_viz_vars2 <- renderUI({
+output$ui_viz_yvar <- renderUI({
   if(is.null(input$viz_type)) return()
   vars <- varnames()
   if(input$viz_type %in% c("line")) vars <- vars["factor" != getdata_class()]
-  selectizeInput(inputId = "viz_vars2", label = "Y-variable:",
+  selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
                  choices = c("None" = "none", vars),
-                 selected = state_single("viz_vars2", vars, "none"),
+                 selected = state_single("viz_yvar", vars, "none"),
                  multiple = FALSE)
 })
 
@@ -63,11 +64,9 @@ output$ui_viz_facet_col <- renderUI({
 })
 
 output$ui_viz_color <- renderUI({
-  if(not_available(input$viz_vars2)) return()  # can't have an XY plot without an X
+  if(not_available(input$viz_yvar)) return()  # can't have an XY plot without an X
   vars <- c("None" = "none", varnames())
-  sel <- "none"
-  if(!input$viz_type %in% c("scatter","line"))
-    sel <- state_single("viz_color", vars, "none")
+  sel <- state_single("viz_color", vars, "none")
   selectizeInput("viz_color", "Color", vars,
                  selected = sel,
                  multiple = FALSE)
@@ -87,9 +86,9 @@ output$ui_Visualize <- renderUI({
     wellPanel(
       uiOutput("ui_viz_type"),
       conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
-        uiOutput("ui_viz_vars2")
+        uiOutput("ui_viz_yvar")
       ),
-      uiOutput("ui_viz_vars1"),
+      uiOutput("ui_viz_xvar"),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
@@ -124,7 +123,7 @@ viz_plot_height <- reactive({
   if(is.null(input$viz_plot_height)) {
     r_data$plot_height
   } else {
-    length(input$viz_vars1) %>%
+    length(input$viz_xvar) %>%
     { if(. > 1)
         (input$viz_plot_height/2) * ceiling(. / 2)
       else
@@ -134,7 +133,7 @@ viz_plot_height <- reactive({
 })
 
 output$visualize <- renderPlot({
-  if(is_empty(input$viz_vars1, "none"))
+  if(is_empty(input$viz_xvar, "none"))
     return(
       plot(x = 1, type = 'n',
            main="\nPlease select variables from the dropdown menus to create a plot",
@@ -150,9 +149,9 @@ output$visualize <- renderPlot({
   # need dependency on ..
   input$viz_plot_height; input$viz_plot_width
 
-  if(not_available(input$viz_vars1)) return()
+  if(not_available(input$viz_xvar)) return()
   if(input$viz_type %in% c("scatter","line", "box", "bar")
-     && is_empty(input$viz_vars2, "none")) return()
+     && is_empty(input$viz_yvar, "none")) return()
 
   do.call(visualize, viz_inputs())
 })

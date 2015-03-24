@@ -1,6 +1,6 @@
 #' Evaluate if data are appropriate for PCA / Factor analysis
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param pf_var Variables to include in the analysis
@@ -55,7 +55,7 @@ pre_factor <- function(dataset, pf_var,
 
 #' Summary method for the pre_factor function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pre_factor}}
 #' @param ... further arguments passed to or from other methods
@@ -114,7 +114,7 @@ summary.pre_factor <- function(object, ...) {
 
 #' Plot method for the pre_factor function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{pre_factor}}
 #' @param ... further arguments passed to or from other methods

@@ -1,6 +1,6 @@
 #' Compare a sample mean to a population mean
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sm_var The variable selected for the mean comparison
@@ -36,7 +36,7 @@ single_mean <- function(dataset, sm_var,
 
 #' Summary method for the single_mean function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{single_mean}}
 #' @param ... further arguments passed to or from other methods
@@ -84,7 +84,7 @@ summary.single_mean <- function(object, ...) {
 
 #' Plot method for the single_mean function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/single_mean.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{single_mean}}
 #' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis

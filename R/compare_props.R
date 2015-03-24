@@ -1,6 +1,6 @@
 #' Compare proportions across groups
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cp_var1 A grouping variable to split the data for comparisons
@@ -93,7 +93,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 
 #' Summary method for the compare_props function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{compare_props}}
 #' @param ... further arguments passed to or from other methods
@@ -144,7 +144,7 @@ summary.compare_props <- function(object, ...) {
 
 #' Plot method for the compare_props function
 #'
-#' @details See \url{http://mostly-harmless.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_props}}
 #' @param cp_plots One or more plots of proportions or counts ("props" or "counts")

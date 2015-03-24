@@ -11,10 +11,10 @@ We will use a dataset that describes the survival status of individual passenger
 
 Suppose we want to test if the proportion of people that survived the sinking of the Titanic differs across passenger classes. To test this hypothesis we select `pclass` as the grouping variable and calculate proportions for `survived`. Radiant will do a pair-wise comparison of survival probabilities across the three passenger class levels. Unless we have an explicit hypothesis for the direction of the effect we should use a two-sided test. Our first alternative hypothesis would be 'The proportion of survivors is different for 1st vs 2nd class passengers'.
 
-![Summary](http://mostly-harmless.github.io/radiant/quant/figures_quant/compare_props_summary.png)
+![Summary](http://vnijs.github.io/radiant/quant/figures_quant/compare_props_summary.png)
 
 Because the p-values are smaller than the conventional level of significance (i.e. < 0.05) for each pair-wise comparison we can reject the null hypothesis that the proportions are equal based on the available data. The results suggest that 1st class passengers were more likely to survive the sinking than either the 2nd or 3rd class passengers. In turn, the 2nd class passengers were more likely to survive than those in 3rd class.
 
 In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of the survival proportion with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the proportions across passenger classes. We can also choose to plot the data using a bar-chart of the survival counts.
 
-![Plot](http://mostly-harmless.github.io/radiant/quant/figures_quant/compare_props_plot.png)
+![Plot](http://vnijs.github.io/radiant/quant/figures_quant/compare_props_plot.png)

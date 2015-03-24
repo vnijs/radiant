@@ -17,7 +17,7 @@ A respondent was presented 18 product profiles for a carpet cleaning product des
 
 Design characteristics:
 
-![conjoint design](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/conjoint_carpet_design.png)
+![conjoint design](http://vnijs.github.io/radiant/marketing/figures_marketing/conjoint_carpet_design.png)
 
 Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108). The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank 1) to least preferred (rank 18).  The first five columns represent the five attributes and the last column is the respondent's ranking.
 
@@ -25,12 +25,12 @@ a. Compute the correlation matrix for the attribute variables. Display the corre
 
 * The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In the fractional factorial design profiles are deliberately selected such that all attributes are uncorrelated (i.e., orthogonal).
 
-![conjoint correlations](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/conjoint_corr_mat.png)
+![conjoint correlations](http://vnijs.github.io/radiant/marketing/figures_marketing/conjoint_corr_mat.png)
 
 b. Estimate a conjoint regression using the respondent's evaluations as the dependent variable and the attributes as the predictors. Show the complete list of part-worths and importance weights.
 
-![conjoint summary](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/conjoint_summary.png)
-![conjoint plot](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/conjoint_plot.png)
+![conjoint summary](http://vnijs.github.io/radiant/marketing/figures_marketing/conjoint_summary.png)
+![conjoint plot](http://vnijs.github.io/radiant/marketing/figures_marketing/conjoint_plot.png)
 
 c. Calculate the predicted utilities for the following options:
 

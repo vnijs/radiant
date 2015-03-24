@@ -12,7 +12,7 @@ The KMO and Bartlett test evaluate all available data together. A KMO value over
 
 As can be seen in the output from Factor > Pre-factor, Bartlett’s test statistic is large and significant (p-value very close to 0) as desired. The Kaiser-Meyer-Olkin (KMO) > 0.6 and thus acceptable. The variable collinearity values are all above 0.4 so all variables can be used in the analysis.
 
-![Summary and Plot](http://mostly-harmless.github.io/radiant/marketing/figures_marketing/pre_factor_summary_plot.png)
+![Summary and Plot](http://vnijs.github.io/radiant/marketing/figures_marketing/pre_factor_summary_plot.png)
 
 The next step is to determine the number of factors needed to capture the structure underlying the data. Factors that do not capture even as much variance as could be expected by chance are generally omitted from further consideration. These factors have eigenvalues < 1 in the output.
 

@@ -32,7 +32,7 @@ A list of all variables defined in the function as an object of class compare_me
 Compare means for two or more variables
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/quant/compare_means.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 }
 \examples{
 result <- compare_means("diamonds","cut","price")

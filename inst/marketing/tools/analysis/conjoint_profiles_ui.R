@@ -35,7 +35,7 @@ output$conjoint_profiles <- renderUI({
 })
 
 .summary_conjoint_profiles <- reactive({
-	ret_text <- "Please load a file with attribute information. For an example see\nhttps://github.com/mostly-harmless/radiant/blob/master/inst/examples/profiles-movie.txt"
+	ret_text <- "Please load a file with attribute information. For an example see\nhttps://github.com/vnijs/radiant/blob/master/inst/examples/profiles-movie.txt"
 	if(is.null(input$ca_upload)) return(ret_text)
   if(is.null(r_data[["ca_attr"]])) return(ret_text)
 

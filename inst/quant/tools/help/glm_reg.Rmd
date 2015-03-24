@@ -12,7 +12,7 @@ Predicting probabilities for different values of the independent variable(s) is 
 
 As an example of how to use data as input for prediction (e.g., predict the survival probabilities for 30 year old men and women in each of the passenger classes) you can use `titanic_pred`. Select `titanic` as the dataset for analysis and specify a model in Regression > GLM with `pclass`, `sex`, and `age` as independent variables. Click the `Data` radio button and select `titanic_pred` from the dropdown to generate the predictions. Note that the variables in the datafile and in the model must be the same.
 
-To generate predicted values for all cases in, for example, the `titanic` dataset click the `Data` radio button and then select the dataset from the dropdown. You can also create a dataset for input in Excel and then paste it into Radiant through the Data > Manage menu. You can also load csv data as input. For example, load this <a href="https://raw.githubusercontent.com/mostly-harmless/radiant/master/inst/examples/glm_pred.csv" target="_blank">example</a> csv file into Radiant through the Data > Manage tab and try to generate the same predictions (right-click the link to save the file).
+To generate predicted values for all cases in, for example, the `titanic` dataset click the `Data` radio button and then select the dataset from the dropdown. You can also create a dataset for input in Excel and then paste it into Radiant through the Data > Manage menu. You can also load csv data as input. For example, load this <a href="https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/glm_pred.csv" target="_blank">example</a> csv file into Radiant through the Data > Manage tab and try to generate the same predictions (right-click the link to save the file).
 
 Once the desired predictions have been generated they can be saved to a csv file by clicking the `Predictions` button on the bottom left of the screen.
 
@@ -34,15 +34,15 @@ We will use a dataset that describes the survival status of individual passenger
 
 Select `survived` as the dependent variable with `Yes` in **Choose level**. Select `pclass`, `sex` and `age` as the independent variables. In the screenshot below we see that each of the coefficients is statistically significant (p.value < .05) and that the model has some predictive power (Chi-squared statistic < .05). The `vif` measure suggest that multi-collinearity is not a concern in this model. Unfortunately the coefficients from a logit of probit model can be difficult to interpret. If we click the `Odds` checkbox we see that the odds of survival for 2nd and 3rd class passengers were significantly lower for 2nd and 3rd class passengers compared to first class passenger. The odds for males were also lower than for females. While the effect of age is statically significant, for each extra year the odds of survival are not as strongly affected (see also the standardized coefficient).
 
-![Summary](http://mostly-harmless.github.io/radiant/quant/figures_quant/glm_reg_summary.png)
+![Summary](http://vnijs.github.io/radiant/quant/figures_quant/glm_reg_summary.png)
 
 In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared to age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.
 
-![Plot](http://mostly-harmless.github.io/radiant/quant/figures_quant/glm_reg_plot.png)
+![Plot](http://vnijs.github.io/radiant/quant/figures_quant/glm_reg_plot.png)
 
 Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the `Command` radio button in the Predict tab, type `pclass = levels(pclass)` in the **Prediction command** box, and press CTRL-return (CMD-return on mac).
 
-![Plot](http://mostly-harmless.github.io/radiant/quant/figures_quant/glm_reg_predict.png)
+![Plot](http://vnijs.github.io/radiant/quant/figures_quant/glm_reg_predict.png)
 
 The figure shows that the probabilities drop sharply between 1st, 2nd, and 3rd class. For males of average age (approx. 30 in the sample) the survival probability was close to 50%. For 3rd class passengers this probability was closer to 9%.
 
@@ -75,6 +75,6 @@ To see the effects for age type `age = seq(0,100, 20)` in the **Prediction comma
 
 For a more comprehensive overview of the influence of gender, age, and passenger class on the chances of survival we can generate a full table of probabilities by selecting the **Data** radio button in the Predict tab and selecting `Titanic` from the dropdown. There are too many numbers to easily interpret in table form but the figure gives a clear overview of how survival probabilities change with `age`, `gender`, and `pclass`:
 
-![Probability](http://mostly-harmless.github.io/radiant/quant/figures_quant/glm_reg_predict_data.png)
+![Probability](http://vnijs.github.io/radiant/quant/figures_quant/glm_reg_predict_data.png)
 
 

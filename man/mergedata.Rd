@@ -25,7 +25,7 @@ If (reactive) list `r_data` exists the merged dataset added as `merge_name`. Els
 Merge datasets using dplyr's join functions
 }
 \details{
-See \url{http://mostly-harmless.github.io/radiant/base/merge.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/base/merge.html} for an example in Radiant
 }
 \examples{
 mergedata("titanic","titanic_pred",c("pclass","sex","age")) \%>\% head

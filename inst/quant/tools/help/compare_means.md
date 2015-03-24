@@ -19,10 +19,10 @@ The data are part of the CAR package for R and are linked to the book:  Fox J. a
 
 Suppose we want to test if, as we might expect, professors of higher rank earn a higher income compared to those of lower rank. To test this hypothesis we first select professor `rank` and select `salary` as the numerical variable to compare across ranks. Radiant will do a pair-wise comparison of salaries across the three levels. We are interested in a one-sided hypothesis.
 
-![Summary](http://mostly-harmless.github.io/radiant/quant/figures_quant/compare_means_summary.png)
+![Summary](http://vnijs.github.io/radiant/quant/figures_quant/compare_means_summary.png)
 
 Because the p-values are smaller than the conventional level of significance (i.e. < 0.05) for each pair-wise comparison we can reject the null hypothesis based on the available sample of salaries. The data suggest that associate professors make more than assistant professors and professors make more than assistant and associate professors.
 
 In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of professor salaries with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the salaries across ranks. We can also choose to plot the data as a box plot or as a set of density curves.
 
-![Plot](http://mostly-harmless.github.io/radiant/quant/figures_quant/compare_means_plot.png)
+![Plot](http://vnijs.github.io/radiant/quant/figures_quant/compare_means_plot.png)
