@@ -217,7 +217,7 @@ plot_height <- function()
 # rfun_name is a string of the reactive wrapper that calls the main function
 # out_name is the name of the output, set to fun_name by default
 register_print_output <- function(fun_name, rfun_name,
-                                   out_name = fun_name) {
+                                  out_name = fun_name) {
 
   # Generate output for the summary tab
   output[[out_name]] <- renderPrint({
@@ -251,7 +251,7 @@ register_plot_output <- function(fun_name, rfun_name,
 }
 
 stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
-                          data = input$dataset) {
+                           data = input$dataset) {
   sidebarLayout(
     sidebarPanel(
       wellPanel(
