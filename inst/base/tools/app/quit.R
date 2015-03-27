@@ -79,7 +79,8 @@ observe({
         }
       }
       try(rm(r_env, envir = .GlobalEnv), silent = TRUE) # removing the reference to the shiny environment
-      stopApp(cat(stop_message))
+      cat(stop_message)
+      stopApp("-- stop successful --")
     })
   } else {
     stopApp("Stopped Radiant")

@@ -19,7 +19,7 @@ radiant <- function(app = c("marketing", "quant", "base")) {
     addResourcePath("figures_quant", system.file("quant/tools/help/figures/", package="radiant"))
   }
 
-  runApp(system.file(app[1], package='radiant'))
+  runApp(system.file(app[1], package="radiant"), launch.browser = TRUE)
 }
 
 #' Alias used to set the class for analysis function return
