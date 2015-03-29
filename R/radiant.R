@@ -266,6 +266,7 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
+#' @export
 launcher <- function(app = c("marketing", "quant", "base")) {
 
   if(Sys.info()["sysname"] == "Darwin")
