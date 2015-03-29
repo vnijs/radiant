@@ -102,10 +102,12 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_axes"),
       div(class="row",
           div(class="col-xs-6",
-              numericInput("viz_plot_height", label = "Plot height:", min = 100, step = 50,
+              numericInput("viz_plot_height", label = "Plot height:", min = 100,
+                           max = 2000, step = 50,
                            value = state_init("viz_plot_height", r_data$plot_height))),
           div(class="col-xs-6",
-              numericInput("viz_plot_width", label = "Plot width:", min = 100, step = 50,
+              numericInput("viz_plot_width", label = "Plot width:", min = 100,
+                           max = 2000, step = 50,
                            value = state_init("viz_plot_width", r_data$plot_width)))
       )
     ),
@@ -141,7 +143,7 @@ output$visualize <- renderPlot({
     )
 
   withProgress(message = 'Making plot', value = 0, {
-    .visualize() %>% { if(is.list(.)) . else return() }
+    .visualize() %>% { if(!"ggplot" %in% class(.)) return() else . } %>% print
   })
 }, width = viz_plot_width, height = viz_plot_height)
 
@@ -153,16 +155,16 @@ output$visualize <- renderPlot({
   if(input$viz_type %in% c("scatter","line", "box", "bar")
      && is_empty(input$viz_yvar, "none")) return()
 
-  do.call(visualize, viz_inputs())
+  viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
 
 observe({
   if(not_pressed(input$visualize_report)) return()
   isolate({
     update_report(inp_main = clean_args(viz_inputs(), viz_args),
-                   fun_name = "visualize", outputs = character(0),
-                   figs = TRUE,
-                   fig.width = round(7 * viz_plot_width()/650,2),
-                   fig.height = round(7 * viz_plot_height()/500,2))
+                  fun_name = "visualize", outputs = character(0),
+                  pre_cmd = "", figs = TRUE,
+                  fig.width = round(7 * viz_plot_width()/650,2),
+                  fig.height = round(7 * viz_plot_height()/500,2))
   })
 })

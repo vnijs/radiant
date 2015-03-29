@@ -4,12 +4,14 @@
 \alias{plot.single_mean}
 \title{Plot method for the single_mean function}
 \usage{
-\method{plot}{single_mean}(x, sm_plots = "hist", ...)
+\method{plot}{single_mean}(x, sm_plots = "hist", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_mean}}}
 
 \item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

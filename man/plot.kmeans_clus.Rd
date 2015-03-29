@@ -4,10 +4,12 @@
 \alias{plot.kmeans_clus}
 \title{Plot method for kmeans_clus}
 \usage{
-\method{plot}{kmeans_clus}(x, ...)
+\method{plot}{kmeans_clus}(x, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{kmeans_clus}}}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

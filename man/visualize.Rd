@@ -7,7 +7,7 @@
 visualize(dataset, viz_xvar, viz_yvar = "none", data_filter = "",
   viz_type = "hist", viz_facet_row = ".", viz_facet_col = ".",
   viz_color = "none", viz_bins = 10, viz_smooth = 1, viz_check = "",
-  viz_axes = "")
+  viz_axes = "", shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -33,6 +33,8 @@ visualize(dataset, viz_xvar, viz_yvar = "none", data_filter = "",
 \item{viz_check}{Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot}
 
 \item{viz_axes}{Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 }
 \value{
 Generated plots

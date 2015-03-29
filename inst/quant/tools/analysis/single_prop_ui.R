@@ -121,7 +121,7 @@ output$single_prop <- renderUI({
  if(input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
     return("Please choose a comparison value between 0 and 1")
 
-  plot(.single_prop(), sp_plots = input$sp_plots)
+  plot(.single_prop(), sp_plots = input$sp_plots, shiny = TRUE)
 })
 
 observe({

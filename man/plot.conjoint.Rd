@@ -4,7 +4,8 @@
 \alias{plot.conjoint}
 \title{Plot method for the conjoint function}
 \usage{
-\method{plot}{conjoint}(x, ca_plots = "pw", ca_scale_plot = FALSE, ...)
+\method{plot}{conjoint}(x, ca_plots = "pw", ca_scale_plot = FALSE,
+  shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{conjoint}}}
@@ -12,6 +13,8 @@
 \item{ca_plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
 
 \item{ca_scale_plot}{Scale the axes of the part-worth plots to the same range}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

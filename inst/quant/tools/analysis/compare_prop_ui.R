@@ -132,7 +132,7 @@ output$compare_props <- renderUI({
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
   if(input$cp_var1 %in% input$cp_var2) return(" ")
 
-  plot(.compare_props(), cp_plots = input$cp_plots)
+  plot(.compare_props(), cp_plots = input$cp_plots, shiny = TRUE)
 })
 
 observe({

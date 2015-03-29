@@ -115,7 +115,7 @@ output$full_factor <- renderUI({
 	if(length(input$ff_var) < 2) return("Please select two or more variables")
 	if(is.null(input$ff_number)) return("Number of factors should be > 1.")
 
-  plot(.full_factor())
+  plot(.full_factor(), shiny = TRUE)
 })
 
 observe({

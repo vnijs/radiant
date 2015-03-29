@@ -124,6 +124,7 @@ summary.kmeans_clus <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{kmeans_clus}}
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -135,7 +136,9 @@ summary.kmeans_clus <- function(object, ...) {
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
-plot.kmeans_clus <- function(x, ...) {
+plot.kmeans_clus <- function(x,
+                             shiny = FALSE,
+                             ...) {
 
 	object <- x; rm(x)
 
@@ -150,7 +153,9 @@ plot.kmeans_clus <- function(x, ...) {
 				geom_density(adjust=2.5, alpha=.3) +
 				labs(y = "") + theme(axis.text.y = element_blank())
 	}
-	sshh( do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2)))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+	 	{ if(shiny) . else print(.) }
+
 }
 
 #' Add a cluster membership variable to the active dataset

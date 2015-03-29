@@ -68,6 +68,7 @@ summary.hier_clus <- function(object, ...) {
 #' @param x Return value from \code{\link{hier_clus}}
 #' @param hc_plots Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity
 #' @param hc_cutoff For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., 0.05 percent) the initial steps in hierachical cluster analysis are removed from the plot
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -84,6 +85,7 @@ summary.hier_clus <- function(object, ...) {
 plot.hier_clus <- function(x,
                            hc_plots = c("scree","diff"),
                            hc_cutoff = 0.02,
+                           shiny = TRUE,
                            ...) {
 
 	object <- x; rm(x)
@@ -124,12 +126,13 @@ plot.hier_clus <- function(x,
 			} else {
 				hc_cutoff = .02
 				object$hc_out %>% dendro_data(type="rectangle") %>%
-					segment %>% filter(y > hc_cutoff) %>% ggplot(.) +
-					geom_segment(aes_string(x="x", y="y", xend="xend", yend="yend"))+
-					labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
-					theme_bw() + theme(axis.text.x = element_blank()) -> plots[['dendro']]
+					segment %>% filter(y > hc_cutoff) %>%
+					ggplot(.) + geom_segment(aes_string(x="x", y="y", xend="xend", yend="yend")) +
+					  labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
+					  theme_bw() + theme(axis.text.x = element_blank()) -> plots[['dendro']]
 			}
 		} else {
+			# this plot will disappear if the user zooms in/out
 			as.dendrogram(object$hc_out) %>%
 			{
 				if(length(hc_plots) > 1) {
@@ -148,5 +151,6 @@ plot.hier_clus <- function(x,
 		}
 	}
 
-	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	 	{ if(shiny) . else print(.) }
 }

@@ -346,7 +346,12 @@ output$regression <- renderUI({
   if(is_empty(input$reg_plots, ""))
     return("Please select a regression plot from the drop-down menu")
 
-  do.call(plot, c(list(x = .regression()), reg_plot_inputs()))
+  if("correlations" %in% input$reg_plots || "leverage" %in% input$reg_plots)
+    capture_plot( do.call(plot, c(list(x = .regression()), reg_plot_inputs())) )
+  else
+    reg_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
+      { do.call(plot, c(list(x = .regression()), .)) }
+
 })
 
 observe({

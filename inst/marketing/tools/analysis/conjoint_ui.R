@@ -128,7 +128,9 @@ output$conjoint <- renderUI({
 	if(not_available(input$ca_indep_var))
 		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
-  plot(.conjoint(), ca_plots = input$ca_plots, ca_scale_plot = input$ca_scale_plot)
+  plot(.conjoint(), ca_plots = input$ca_plots,
+       							ca_scale_plot = input$ca_scale_plot,
+       							shiny = TRUE)
 })
 
 observe({

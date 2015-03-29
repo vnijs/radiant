@@ -195,6 +195,19 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
 suggest_data <- function(text = "", dat = "diamonds")
   paste0(text, "For an example dataset go to Data > Manage, select the 'examples' radio button,\nand press the 'Load examples' button. Then select the \'", dat, "\' dataset")
 
+# function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
+capture_plot <- function(expr, env = parent.frame()) {
+  structure(
+    list(expr = substitute(expr), env = env),
+    class = "capture_plot"
+  )
+}
+
+# function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
+print.capture_plot <- function(x, ...) {
+  eval(x$expr, x$env)
+}
+
 ################################################################
 # functions used to create Shiny in and outputs
 ################################################################
@@ -240,13 +253,25 @@ register_plot_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPlot({
 
     # when no analysis was conducted (e.g., no variables selected)
-    get(rfun_name)() %>%
+    get(rfun_name)() %>% { if(is.null(.)) " " else . } %>%
     { if(is.character(.)) {
         plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
       } else {
-        withProgress(message = 'Making plot', value = 0, { . })
+        withProgress(message = 'Making plot', value = 0, print(.))
       }
     }
+
+    return(invisible())
+
+    # } %>% withProgress(message = 'Making plot', value = 0, . %>% print)
+
+    # { if(is.character(.)) {
+    #     plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
+    #   } else {
+    #     withProgress(message = 'Making plot', value = 0, { . %>% print })
+    #   }
+    # }
+
   }, width=get(width_fun), height=get(height_fun))
 }
 

@@ -4,12 +4,14 @@
 \alias{plot.compare_props}
 \title{Plot method for the compare_props function}
 \usage{
-\method{plot}{compare_props}(x, cp_plots = "props", ...)
+\method{plot}{compare_props}(x, cp_plots = "props", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{compare_props}}}
 
 \item{cp_plots}{One or more plots of proportions or counts ("props" or "counts")}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

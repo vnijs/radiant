@@ -17,7 +17,7 @@ options("scipen"=100, "digits"=4)
 #' @importFrom lubridate is.Date now
 #' @importFrom broom tidy glance
 #' @importFrom tidyr gather_
-#' @importFrom gridExtra grid.arrange
+#' @importFrom gridExtra arrangeGrob
 #' @importFrom markdown markdownToHTML
 #' @import htmlwidgets
 #' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
@@ -27,6 +27,13 @@ NULL
 #' @importFrom psych kurtosi
 #' @name kurtosi
 #' @rdname kurtosi.re
+#' @export
+NULL
+
+#' Exporting the print.arrange method from the gridExtra package
+#' @importFrom gridExtra print.arrange
+#' @name print.arrange
+#' @rdname print.arrange
 #' @export
 NULL
 

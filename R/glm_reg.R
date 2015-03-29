@@ -236,6 +236,7 @@ summary.glm_reg <- function(object,
 #' @param glm_plots Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot
 #' @param glm_conf_level Confidence level to use for coefficient and odds confidence intervals (.95 is the default)
 #' @param glm_coef_int Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -252,6 +253,7 @@ plot.glm_reg <- function(x,
                          glm_plots = "",
                          glm_conf_level = .95,
                          glm_coef_int = FALSE,
+                         shiny = FALSE,
                          ...) {
 
   object <- x; rm(x)
@@ -279,17 +281,17 @@ plot.glm_reg <- function(x,
     for(i in vars) plots[[i]] <- ggplot(model, aes_string(x = i)) + geom_histogram()
 
   if("coef" %in% glm_plots) {
-    p <- confint(object$model, level = glm_conf_level) %>%
+    plots[["coef"]] <- confint(object$model, level = glm_conf_level) %>%
           data.frame %>%
           magrittr::set_colnames(c("Low","High")) %>%
           cbind(select(object$glm_coeff,2),.) %>%
           set_rownames(object$glm_coeff$`  `) %>%
           { if(!glm_coef_int) .[-1,] else . } %>%
-          mutate(variable = rownames(.)) %>% ggplot() +
-          geom_pointrange(aes_string(x = "variable", y = "coefficient",
-                          ymin = "Low", ymax = "High")) +
-          geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip()
-          return(p)
+          mutate(variable = rownames(.)) %>%
+          ggplot() +
+            geom_pointrange(aes_string(x = "variable", y = "coefficient", ymin = "Low", ymax = "High")) +
+            geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") +
+            coord_flip()
   }
 
   if (glm_plots == "scatter") {
@@ -324,7 +326,10 @@ plot.glm_reg <- function(x,
   		labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
 	}
 
-	if(length(plots) > 0) sshh( do.call(grid.arrange, c(plots, list(ncol = nrCol))) )
+	if(length(plots) > 0) {
+    sshhr( do.call(arrangeGrob, c(plots, list(ncol = nrCol))) ) %>%
+      { if(shiny) . else print(.) }
+  }
 }
 
 #' Predict method for the glm_reg function

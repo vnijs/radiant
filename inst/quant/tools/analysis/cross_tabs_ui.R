@@ -94,7 +94,7 @@ output$cross_tabs <- renderUI({
 	if(input$ct_var2 %>% not_available)
 		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
 
-	plot(.cross_tabs(), ct_check = input$ct_check)
+	plot(.cross_tabs(), ct_check = input$ct_check, shiny = TRUE)
 })
 
 observe({

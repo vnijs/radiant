@@ -14,6 +14,7 @@
 #' @param viz_smooth Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)
 #' @param viz_check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
 #' @param viz_axes Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")
+#' @param shiny Did the function call originate inside a shiny app
 #'
 #' @return Generated plots
 #'
@@ -32,7 +33,8 @@ visualize <- function(dataset, viz_xvar,
                       viz_bins = 10,
                       viz_smooth = 1,
                       viz_check = "",
-                      viz_axes = "") {
+                      viz_axes = "",
+                      shiny = FALSE) {
 
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- viz_xvar
@@ -166,9 +168,7 @@ visualize <- function(dataset, viz_xvar,
     for (i in 1:length(plots))
       plots[[i]] <- plots[[i]] + scale_x_continuous(trans = "log")
 
-
-
-
-  sshh(do.call(grid.arrange, c(plots, list(ncol = min(length(plots), 2)))))
+ sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots), 2)))) ) %>%
+   { if(shiny) . else print(.) }
 
 }

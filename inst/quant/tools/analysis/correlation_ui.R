@@ -97,7 +97,7 @@ output$correlation <- renderUI({
 	if(not_available(input$cor_var)) return(rt)
 	if(length(input$cor_var) < 2) return(rt)
 
-	plot(.correlation())
+	capture_plot( plot(.correlation()) )
 })
 
 observe({

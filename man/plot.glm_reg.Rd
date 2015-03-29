@@ -5,7 +5,7 @@
 \title{Plot method for the glm_reg function}
 \usage{
 \method{plot}{glm_reg}(x, glm_plots = "", glm_conf_level = 0.95,
-  glm_coef_int = FALSE, ...)
+  glm_coef_int = FALSE, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{glm_reg}}}
@@ -15,6 +15,8 @@
 \item{glm_conf_level}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
 
 \item{glm_coef_int}{Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

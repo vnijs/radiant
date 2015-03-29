@@ -137,6 +137,7 @@ summary.compare_means <- function(object, ...) {
 #'
 #' @param x Return value from \code{\link{compare_means}}
 #' @param cm_plots One or more plots ("bar", "box", or "density")
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -149,6 +150,7 @@ summary.compare_means <- function(object, ...) {
 #' @export
 plot.compare_means <- function(x,
                                cm_plots = "bar",
+                               shiny = FALSE,
                                ...) {
 
 	object <- x; rm(x)
@@ -181,5 +183,7 @@ plot.compare_means <- function(x,
 			ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.7)
 	}
 
-	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+ 	  { if(shiny) . else print(.) }
+
 }

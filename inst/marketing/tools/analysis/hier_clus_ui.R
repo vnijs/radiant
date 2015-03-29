@@ -91,17 +91,27 @@ output$hier_clus <- renderUI({
 })
 
 .summary_hier_clus <- reactive({
-  if(not_available(input$hc_vars))
-		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
+  if(not_available(input$hc_vars)) {
+    cat("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
+		return(invisible())
+  }
 
   summary(.hier_clus())
 })
 
 .plot_hier_clus <- reactive({
   if(not_available(input$hc_vars))
-		return(invisible())
+		return(" ")
 
-  plot(.hier_clus(), hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff)
+    # return(invisible())
+
+  .hier_clus() %>%
+    { if("dendro" %in% input$hc_plots && length(.$hc_out$height) > 100) {
+        capture_plot( plot(., hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff) )
+      } else {
+        plot(., hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff, shiny = TRUE)
+      }
+    }
 })
 
 observe({

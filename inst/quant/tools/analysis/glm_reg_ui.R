@@ -332,11 +332,13 @@ output$glm_reg <- renderUI({
 .predict_plot_glm_reg <- reactive({
 
   if(is_empty(input$glm_predict, ""))
-    return(invisible())
+    return(" ")
 
   if(is.null(r_data$glm_pred))
-    return(invisible())
+    return(" ")
 
+  # glm_pred_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
+  #   { do.call(plot, c(list(x = r_data$glm_pred), .)) }
   do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
 })
 
@@ -351,7 +353,9 @@ output$glm_reg <- renderUI({
   if(is_empty(input$glm_plots, ""))
     return("Please select a regression plot from the drop-down menu")
 
-  do.call(plot, c(list(x = .glm_reg()), glm_plot_inputs()))
+  glm_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
+    { do.call(plot, c(list(x = .glm_reg()), .)) }
+  # do.call(plot, c(list(x = .glm_reg()), glm_plot_inputs()))
 })
 
 observe({

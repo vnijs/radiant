@@ -114,7 +114,7 @@ output$single_mean <- renderUI({
   if(is.na(input$sm_comp_value))
     return("Please choose a comparison value")
 
-  plot(.single_mean(), sm_plots = input$sm_plots)
+  plot(.single_mean(), sm_plots = input$sm_plots, shiny = TRUE)
 })
 
 observe({
