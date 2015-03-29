@@ -144,7 +144,7 @@ output$compare_means <- renderUI({
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if(input$cm_var1 %in% input$cm_var2) return(" ")
 
-  plot(.compare_means(), cm_plots = input$cm_plots)
+  plot(.compare_means(), cm_plots = input$cm_plots, shiny = TRUE)
 })
 
 observe({

@@ -133,6 +133,7 @@ summary.cross_tabs <- function(object,
 #'
 #' @param x Return value from \code{\link{cross_tabs}}
 #' @param ct_check Show plots for variables ct_var1 and ct_var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -145,6 +146,7 @@ summary.cross_tabs <- function(object,
 #' @export
 plot.cross_tabs <- function(x,
                             ct_check = "",
+                            shiny = FALSE,
                             ...) {
 
 	object <- x; rm(x)
@@ -212,5 +214,6 @@ plot.cross_tabs <- function(x,
          			labs(list(title = paste("Deviation % for ",object$ct_var2," versus ",object$ct_var1, sep = ""), x = object$ct_var1))
   }
 
-	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	  { if(shiny) . else print(.) }
 }

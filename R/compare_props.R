@@ -148,6 +148,7 @@ summary.compare_props <- function(object, ...) {
 #'
 #' @param x Return value from \code{\link{compare_props}}
 #' @param cp_plots One or more plots of proportions or counts ("props" or "counts")
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -160,6 +161,7 @@ summary.compare_props <- function(object, ...) {
 #' @export
 plot.compare_props <- function(x,
                                cp_plots = "props",
+                               shiny = FALSE,
                                ...) {
 
 	object <- x; rm(x)
@@ -187,5 +189,6 @@ plot.compare_props <- function(x,
 			geom_bar(position = "dodge")
 	}
 
-	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+ 	  { if(shiny) . else print(.) }
 }

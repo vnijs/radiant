@@ -109,6 +109,7 @@ summary.conjoint <- function(object,
 #' @param x Return value from \code{\link{conjoint}}
 #' @param ca_plots Show either the part-worth ("pw") or importance-weights ("iw") plot
 #' @param ca_scale_plot Scale the axes of the part-worth plots to the same range
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -123,17 +124,18 @@ summary.conjoint <- function(object,
 plot.conjoint <- function(x,
                           ca_plots = "pw",
                           ca_scale_plot = FALSE,
+                          shiny = FALSE,
                           ...) {
 
 	object <- x; rm(x)
 
 	the_table <- object$the_table
 	plot_ylim <- the_table$plot_ylim
+	plots <- list()
 
 	if("pw" %in% ca_plots) {
 		PW.df <- the_table[["PW"]]
 
-		plots <- list()
 		for(var in object$ca_indep_var) {
 			PW.var <- PW.df[PW.df[,"Attributes"] == var,]
 
@@ -150,17 +152,19 @@ plot.conjoint <- function(x,
 		  if(ca_scale_plot) p <- p + ylim(plot_ylim[var,"Min"],plot_ylim[var,"Max"])
 			plots[[var]] <- p
 		}
-		do.call(grid.arrange, c(plots, list(ncol = min(length(plots),2))))
 	}
 
 	if("iw" %in% ca_plots) {
 		IW.df <- the_table[['IW']]
-		p <- ggplot(IW.df, aes_string(x="Attributes", y="IW", fill = "Attributes")) + geom_bar(stat = "identity", alpha = .5) +
-			theme(legend.position = "none") + labs(list(title = "Importance weights"))
-		print(p)
+		plots[["iw"]] <- ggplot(IW.df, aes_string(x="Attributes", y="IW", fill = "Attributes")) +
+		                   geom_bar(stat = "identity", alpha = .5) +
+		                   theme(legend.position = "none") +
+		                   labs(list(title = "Importance weights"))
 	}
-}
 
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+	 	{ if(shiny) . else print(.) }
+}
 
 #' Function to calculate the PW and IW table for conjoint
 #'

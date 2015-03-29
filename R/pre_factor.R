@@ -115,7 +115,6 @@ summary.pre_factor <- function(object, ...) {
 #' Plot method for the pre_factor function
 #'
 #' @details See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
-#'
 #' @param x Return value from \code{\link{pre_factor}}
 #' @param ... further arguments passed to or from other methods
 #'

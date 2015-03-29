@@ -150,7 +150,7 @@ output$pmap <- renderUI({
 
 	if(length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
 
-  do.call(plot, c(list(x = .pmap()), pmap_plot_inputs()))
+  capture_plot( do.call(plot, c(list(x = .pmap()), pmap_plot_inputs())) )
 })
 
 observe({

@@ -133,7 +133,7 @@ output$mds <- renderUI({
   			.
   		} else {
   			# plot(., mds_rev_dim = input$mds_rev_dim, mds_fontsz = input$mds_fontsz)
-        do.call(plot, c(list(x = .), mds_plot_inputs()))
+        capture_plot( do.call(plot, c(list(x = .), mds_plot_inputs())) )
   		}
     }
 

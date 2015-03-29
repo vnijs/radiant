@@ -27,8 +27,6 @@ correlation <- function(dataset, cor_var,
 	getdata(dataset, cor_var, filt = data_filter) %>%
 		mutate_each(funs(as.numeric)) -> dat
 
-	# plot_height <- plot_width <- 150 * ncol(dat)
-
   environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }
 

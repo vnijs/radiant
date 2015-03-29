@@ -13,7 +13,7 @@ win_launcher(app = c("marketing", "quant", "base"))
 Create a launcher for Windows (.bat)
 }
 \details{
-On Windows a file named `radiant.bat` will be put on the desktop. Double-click the file to launch the specified Radiant app
+On Windows a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app
 }
 \examples{
 if (interactive()) {
@@ -21,7 +21,7 @@ if (interactive()) {
     win_launcher()
     fn <- paste0(Sys.getenv("USERPROFILE") ,"/Desktop/radiant.bat")
     if(!file.exists(fn))
-       stop("Windows launcher not created")
+      stop("Windows launcher not created")
     else
       unlink(fn)
   }

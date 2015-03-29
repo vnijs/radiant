@@ -5,7 +5,7 @@
 \title{Plot method for the regression function}
 \usage{
 \method{plot}{regression}(x, reg_plots = "", reg_lines = "",
-  reg_conf_level = 0.95, reg_coef_int = FALSE, ...)
+  reg_conf_level = 0.95, reg_coef_int = FALSE, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{regression}}}
@@ -17,6 +17,8 @@
 \item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
 \item{reg_coef_int}{Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

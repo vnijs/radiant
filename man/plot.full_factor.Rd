@@ -4,10 +4,12 @@
 \alias{plot.full_factor}
 \title{Plot method for the full_factor function}
 \usage{
-\method{plot}{full_factor}(x, ...)
+\method{plot}{full_factor}(x, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{full_factor}}}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

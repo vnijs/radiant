@@ -75,8 +75,8 @@ output$pre_factor <- renderUI({
 
 .plot_pre_factor <- reactive({
 
-	if(not_available(input$pf_var) || length(input$pf_var) < 2)
-	   return(invisible())
+  if(not_available(input$pf_var) || length(input$pf_var) < 2)
+    return(invisible())
 
   plot(.pre_factor())
 })

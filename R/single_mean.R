@@ -88,6 +88,7 @@ summary.single_mean <- function(object, ...) {
 #'
 #' @param x Return value from \code{\link{single_mean}}
 #' @param sm_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -100,6 +101,7 @@ summary.single_mean <- function(object, ...) {
 #' @export
 plot.single_mean <- function(x,
                              sm_plots = "hist",
+                             shiny = FALSE,
                              ...) {
 
   object <- x; rm(x)
@@ -154,5 +156,6 @@ plot.single_mean <- function(x,
 	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", object$sm_var, ")"))
 	}
 
-	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	  { if(shiny) . else print(.) }
 }

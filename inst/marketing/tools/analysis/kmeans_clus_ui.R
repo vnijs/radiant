@@ -100,7 +100,7 @@ output$kmeans_clus <- renderUI({
   if(not_available(input$km_vars))
 		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
 
-  plot(.kmeans_clus())
+  plot(.kmeans_clus(), shiny = TRUE)
 })
 
 observe({

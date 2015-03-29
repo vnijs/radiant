@@ -42,8 +42,8 @@ visualize(dataset = 'diamonds', viz_xvar = 'carat', viz_yvar = 'price', viz_type
 ```
 "
 
-knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE, warning=FALSE,
-               fig.path = "~/radiant_figures/")
+knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE,
+                      warning=FALSE, fig.path = "~/radiant_figures/")
 knitr::opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
@@ -63,7 +63,8 @@ output$report <- renderUI({
                   height = "600px",
                   selectionId = "rmd_selection",
                   value=state_init("rmd_report",rmd_example),
-                  hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter", mac="CMD-ENTER|CMD-SHIFT-ENTER"))
+                  hotkeys=list(runKeyRmd=list(win="Ctrl-R|Ctrl-Shift-Enter",
+                                              mac="CMD-ENTER|CMD-SHIFT-ENTER"))
                   )),
       div(class="col-xs-6", htmlOutput("rmd_knitDoc"))
     )
@@ -72,15 +73,20 @@ output$report <- renderUI({
 
 valsRmd <- reactiveValues(knit = 0)
 
-knitIt <- function(text) knitr::knit2html(text = text, quiet = TRUE, options=c("mathjax", "base64_images"),
-                                          stylesheet = "../base/www/rmarkdown.css") %>% HTML
+knitIt <- function(text) {
+  knitr::knit2html(text = text, quiet = TRUE,
+                   options=c("mathjax", "base64_images"),
+                   stylesheet = "../base/www/rmarkdown.css") %>% HTML
+}
 
 # rmarkdown requires pandoc install
 # knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
 
-knitIt2 <- function(text) paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
-                                "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-                                "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
+knitIt2 <- function(text) {
+  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
+        "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+        "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
+}
 
 observe({
   input$runKeyRmd
@@ -140,15 +146,17 @@ observe({
 })
 
 # updating the report when called
-update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""), pre_cmd = "result <- ",
+update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
+                          pre_cmd = "result <- ", post_cmd = "", xcmd = "",
                           outputs = c("summary", "plot"),
-                          figs = TRUE, fig.width = 7, fig.height = 7, xcmd = "") {
+                          figs = TRUE, fig.width = 7, fig.height = 7) {
 
   cmd <- ""
   if(inp_main[1] != "") {
     cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
              sub("list", fun_name, .) %>%
-             paste0(pre_cmd, .)
+             paste0(pre_cmd, .) %>%
+             paste0(., post_cmd)
   }
 
   lout <- length(outputs)

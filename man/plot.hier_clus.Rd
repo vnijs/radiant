@@ -5,7 +5,7 @@
 \title{Plot method for the hier_clus function}
 \usage{
 \method{plot}{hier_clus}(x, hc_plots = c("scree", "diff"), hc_cutoff = 0.02,
-  ...)
+  shiny = TRUE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{hier_clus}}}
@@ -13,6 +13,8 @@
 \item{hc_plots}{Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity}
 
 \item{hc_cutoff}{For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., 0.05 percent) the initial steps in hierachical cluster analysis are removed from the plot}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

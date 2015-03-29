@@ -231,6 +231,7 @@ summary.regression <- function(object,
 #' @param reg_lines Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")
 #' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param reg_coef_int Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -257,6 +258,7 @@ plot.regression <- function(x,
                             reg_lines = "",
                             reg_conf_level = .95,
                             reg_coef_int = FALSE,
+                            shiny = FALSE,
                             ...) {
 
   object <- x; rm(x)
@@ -372,10 +374,13 @@ plot.regression <- function(x,
     return(plot.correlation(object$model$model))
 
   if("leverage" %in% reg_plots)
-    return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1, layout = c(ceiling(length(reg_indep_var)/2),2)))
+    return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1,
+           layout = c(ceiling(length(reg_indep_var)/2),2)))
 
-	if(exists("plots"))
-		sshh( do.call(grid.arrange, c(plots, list(ncol = 2))) )
+	if(exists("plots")) {
+		sshhr( do.call(arrangeGrob, c(plots, list(ncol = 2))) ) %>%
+      { if(shiny) . else print(.) }
+  }
 }
 
 #' Predict method for the regression function

@@ -13,7 +13,7 @@ mac_launcher(app = c("marketing", "quant", "base"))
 Create a launcher for Mac (.command)
 }
 \details{
-On Mac a file named `radiant.command` will be put on the desktop. Double-click the file to launch the specified Radiant app
+On Mac a file named 'radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app
 }
 \examples{
 if (interactive()) {
@@ -21,7 +21,7 @@ if (interactive()) {
     mac_launcher()
     fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
     if(!file.exists(fn))
-       stop("Mac launcher not created")
+      stop("Mac launcher not created")
     else
       unlink(fn)
   }

@@ -100,6 +100,7 @@ summary.single_prop <- function(object, ...) {
 #'
 #' @param x Return value from \code{\link{single_prop}}
 #' @param sp_plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (sp_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -112,6 +113,7 @@ summary.single_prop <- function(object, ...) {
 #' @export
 plot.single_prop <- function(x,
                              sp_plots = "hist",
+                             shiny = FALSE,
                              ...) {
 
   object <- x; rm(x)
@@ -131,14 +133,14 @@ plot.single_prop <- function(x,
 							  data.frame %>%
 							  set_colnames(lev_name)
 
-		ci_perc <- {if(object$sp_alternative == 'two.sided') {
+		ci_perc <- { if(object$sp_alternative == 'two.sided') {
 									{(1-object$sp_sig_level)/2}  %>% c(., 1 - .)
-								} else if(object$sp_alternative == 'less') {
+								 } else if(object$sp_alternative == 'less') {
 									{1-object$sp_sig_level}
-								} else {
+								 } else {
 									object$sp_sig_level
-								}} %>%
-									quantile(simdat[,lev_name], probs = . )
+								 }
+							 } %>% quantile(simdat[,lev_name], probs = . )
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
@@ -154,5 +156,6 @@ plot.single_prop <- function(x,
 	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$sp_var, ")"))
 	}
 
-	sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	  { if(shiny) . else print(.) }
 }

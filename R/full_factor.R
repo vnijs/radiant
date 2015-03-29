@@ -141,6 +141,7 @@ summary.full_factor <- function(object,
 #' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{full_factor}}
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -155,7 +156,9 @@ summary.full_factor <- function(object,
 #' @importFrom psych fa.sort
 #'
 #' @export
-plot.full_factor <- function(x, ...) {
+plot.full_factor <- function(x,
+                             shiny = FALSE,
+                             ...) {
 
 	object <- x; rm(x)
 
@@ -185,7 +188,8 @@ plot.full_factor <- function(x, ...) {
   		pnr <- pnr + 1
   	}
 	}
-	do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
+	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+	 	{ if(shiny) . else print(.) }
 }
 
 #' Save factor scores to active dataset

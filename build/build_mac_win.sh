@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 # set directories
 cd ~/Desktop/GitHub/radiant_dev
 dirsource=../radiant_miniCRAN/src/contrib/
