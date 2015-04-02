@@ -21,8 +21,8 @@ glm_inputs <- reactive({
   glm_args
 })
 
-# need the ::: because summary is an S3 method and not an exported function
-glm_sum_args <- as.list(formals(radiant:::summary.glm_reg))
+glm_sum_args <- as.list(if(exists("summary.glm_reg")) formals(summary.glm_reg)
+                        else formals(radiant:::summary.glm_reg))
 
 # list of function inputs selected by user
 glm_sum_inputs <- reactive({
@@ -32,8 +32,9 @@ glm_sum_inputs <- reactive({
   glm_sum_args
 })
 
-# need the ::: because plot is an S3 method and not an exported function
-glm_plot_args <- as.list(formals(radiant:::plot.glm_reg))
+glm_plot_args <- as.list(if(exists("plot.glm_reg")) formals(plot.glm_reg)
+                         else formals(radiant:::plot.glm_reg))
+
 
 # list of function inputs selected by user
 glm_plot_inputs <- reactive({
@@ -43,8 +44,8 @@ glm_plot_inputs <- reactive({
   glm_plot_args
 })
 
-# need the ::: because plot is an S3 method and not an exported function
-glm_pred_args <- as.list(formals(radiant:::predict.glm_reg))
+glm_pred_args <- as.list(if(exists("predict.glm_reg")) formals(predict.glm_reg)
+                         else formals(radiant:::predict.glm_reg))
 
 # list of function inputs selected by user
 glm_pred_inputs <- reactive({
@@ -62,8 +63,8 @@ glm_pred_inputs <- reactive({
   glm_pred_args
 })
 
-# need the ::: because plot is an S3 method and not an exported function
-glm_pred_plot_args <- as.list(formals(radiant:::plot.glm_predict))
+glm_pred_plot_args <- as.list(if(exists("plot.glm_predict")) formals(plot.glm_predict)
+                              else formals(radiant:::plot.glm_predict))
 
 # list of function inputs selected by user
 glm_pred_plot_inputs <- reactive({
@@ -99,7 +100,6 @@ output$ui_glm_indep_var <- renderUI({
 })
 
 output$ui_glm_test_var <- renderUI({
-	# if(input$glm_indep_var %>% not_available) return()
  	vars <- input$glm_indep_var
 	if(!is.null(input$glm_int_var)) vars <- c(vars,input$glm_int_var)
 

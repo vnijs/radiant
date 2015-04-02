@@ -16,7 +16,8 @@ pmap_inputs <- reactive({
   pmap_args
 })
 
-pmap_plot_args <- as.list(formals(radiant:::plot.pmap))
+pmap_plot_args <- as.list(if(exists("plot.pmap")) formals(plot.pmap)
+                          else formals(radiant:::plot.pmap))
 
 # list of function inputs selected by user
 pmap_plot_inputs <- reactive({

@@ -26,8 +26,8 @@ reg_inputs <- reactive({
   reg_args
 })
 
-# need the ::: because summary is an S3 method and not an exported function
-reg_sum_args <- as.list(formals(radiant:::summary.regression))
+reg_sum_args <- as.list(if(exists("summary.regression")) formals(summary.regression)
+                        else formals(radiant:::summary.regression))
 
 # list of function inputs selected by user
 reg_sum_inputs <- reactive({
@@ -37,8 +37,8 @@ reg_sum_inputs <- reactive({
   reg_sum_args
 })
 
-# need the ::: because plot is an S3 method and not an exported function
-reg_plot_args <- as.list(formals(radiant:::plot.regression))
+reg_plot_args <- as.list(if(exists("plot.regression")) formals(plot.regression)
+                         else formals(radiant:::plot.regression))
 
 # list of function inputs selected by user
 reg_plot_inputs <- reactive({
@@ -48,8 +48,8 @@ reg_plot_inputs <- reactive({
   reg_plot_args
 })
 
-# need the ::: because plot is an S3 method and not an exported function
-reg_pred_args <- as.list(formals(radiant:::predict.regression))
+reg_pred_args <- as.list(if(exists("predict.regression")) formals(predict.regression)
+                         else formals(radiant:::predict.regression))
 
 # list of function inputs selected by user
 reg_pred_inputs <- reactive({
@@ -59,7 +59,7 @@ reg_pred_inputs <- reactive({
 
   reg_pred_args$reg_predict_cmd <- reg_pred_args$reg_predict_data <- ""
   if(input$reg_predict == "cmd")
-    reg_pred_args$reg_predict_cmd <- gsub('\\s', '', input$reg_predict_cmd)
+    reg_pred_args$reg_predict_cmd <- gsub("\\s", "", input$reg_predict_cmd)
 
   if(input$reg_predict == "data")
     reg_pred_args$reg_predict_data <- input$reg_predict_data
@@ -67,8 +67,8 @@ reg_pred_inputs <- reactive({
   reg_pred_args
 })
 
-# need the ::: because plot is an S3 method and not an exported function
-reg_pred_plot_args <- as.list(formals(radiant:::plot.reg_predict))
+reg_pred_plot_args <- as.list(if(exists("plot.reg_predict")) formals(plot.reg_predict)
+                         else formals(radiant:::plot.reg_predict))
 
 # list of function inputs selected by user
 reg_pred_plot_inputs <- reactive({
