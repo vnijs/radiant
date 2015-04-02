@@ -4,7 +4,7 @@
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please send questions and comments to: radiant@rady.ucsd.edu.
 
 [![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
-Version: 0.1.88, Date: 2015-3-29
+Version: 0.1.89, Date: 2015-4-1
 
 ## Key features
 
@@ -42,11 +42,10 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
+Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the command below:
 
 ```r
-options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')
-install.packages("radiant")
+install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 ```
 
 Once all packages are installed use the commands below to launch the app:
