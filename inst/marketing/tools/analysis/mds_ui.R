@@ -8,7 +8,6 @@ mds_method <- c("metric" = "metric", "non-metric" = "non-metric")
 # list of function arguments
 mds_args <- as.list(formals(mds))
 
-
 # list of function inputs selected by user
 mds_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
@@ -18,7 +17,8 @@ mds_inputs <- reactive({
   mds_args
 })
 
-mds_plot_args <- as.list(formals(radiant:::plot.mds))
+mds_plot_args <- as.list(if(exists("plot.mds")) formals(plot.mds)
+                         else formals(radiant:::plot.mds))
 
 # list of function inputs selected by user
 mds_plot_inputs <- reactive({

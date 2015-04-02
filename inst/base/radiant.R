@@ -16,41 +16,6 @@ observe({
     if(r_state$dataset != input$dataset) r_state <<- list()
 })
 
-## Can't export the state_... function through R/radiant.R
-## Error in checkboxGroupInput("help_data", NULL, help_data, selected = state_init_list("help_data",  :
-##  could not find function "state_init"
-
-# Set initial value for shiny input (e.g., radio button or checkbox)
-state_init <- function(inputvar, init = "")
-  if(is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
-
-# library(dplyr)
-# r_state <- list()
-# state_init("test")
-# state_init("test",0)
-# r_state$test <- c("a","b")
-# state_init("test",0)
-
-# Set initial value for shiny input from a list of values
-state_single <- function(inputvar, vals, init = character(0))
-  if(is.null(r_state[[inputvar]])) init else vals[vals == r_state[[inputvar]]]
-
-# library(dplyr)
-# r_state <- list()
-# state_single("test",1,1:10)
-# r_state$test <- 8
-# state_single("test",1,1:10)
-# state_single("test",1,1:5)
-
-# Set initial values for variable selection (e.g., selection used in another analysis)
-state_multiple <- function(inputvar, vals, init = character(0)) {
-  if(is.null(r_state[[inputvar]]))
-    # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
-    vals[vals %in% init]
-  else
-    vals[vals %in% r_state[[inputvar]]]
-}
-
 ################################################################################
 # function to save app state on refresh or crash
 ################################################################################
@@ -262,15 +227,6 @@ register_plot_output <- function(fun_name, rfun_name,
     }
 
     return(invisible())
-
-    # } %>% withProgress(message = 'Making plot', value = 0, . %>% print)
-
-    # { if(is.character(.)) {
-    #     plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
-    #   } else {
-    #     withProgress(message = 'Making plot', value = 0, { . %>% print })
-    #   }
-    # }
 
   }, width=get(width_fun), height=get(height_fun))
 }
