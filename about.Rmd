@@ -29,6 +29,10 @@ Built using <a href="http://www.rstudio.com/shiny/" target="\_blank">Shiny</a> b
 ```
 </details>
 
+### Google analytics
+
+This site uses Google Analytics to track user behavior while on the site. These data will be used for educational purposes only.
+
 ### License
 
 ```{r child='sub/license.md'}

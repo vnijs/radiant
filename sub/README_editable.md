@@ -39,11 +39,10 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
+Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the command below:
 
 ```r
-options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')
-install.packages("radiant")
+install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 ```
 
 Once all packages are installed use the commands below to launch the app:
