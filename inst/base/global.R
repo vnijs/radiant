@@ -11,6 +11,9 @@ pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
 pkgs_gh <- c("shinyAce","rpivotTable")
 pkgs <- c(pkgs_cran, pkgs_gh)
 
+# environment to hold session information
+sessionStore <- new.env(parent = emptyenv())
+
 if(Sys.getenv('SHINY_PORT') == "") {
 
   running_local <- TRUE

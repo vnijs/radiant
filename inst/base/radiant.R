@@ -14,9 +14,6 @@ saveStateOnRefresh <- function(session = session) {
     isolate({
       if(not_pressed(input$resetState) && not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
-        # assign(ip_inputs, reactiveValuesToList(input), envir = .GlobalEnv)
-        # assign(ip_data, reactiveValuesToList(r_data), envir = .GlobalEnv)
-        # assign(ip_dump, now(), envir = .GlobalEnv)
         sessionStore[[ssuid]] <- list(
           r_data = reactiveValuesToList(r_data),
           r_state = reactiveValuesToList(input),
