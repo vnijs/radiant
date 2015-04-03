@@ -79,6 +79,7 @@ observe({
         }
       }
       try(rm(r_env, envir = .GlobalEnv), silent = TRUE) # removing the reference to the shiny environment
+      try(rm(sessionStore, envir = .GlobalEnv), silent = TRUE) # removing the sessionStore
       cat(stop_message)
       stopApp("-- stop successful --")
     })

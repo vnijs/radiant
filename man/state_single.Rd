@@ -27,10 +27,15 @@ r_state <- list()
 state_single("test",1:10,1)
 r_state$test <- 8
 state_single("test",1:10,1)
+shiny::selectInput("si", label = "Select:", c("a","b"), selected = state_single("si"))
+r_state$si <- "b"
+shiny::selectInput("si", label = "Select:", c("a","b"), selected = state_single("si", "b"))
 }
 \seealso{
 \code{\link{state_init}}
 
 \code{\link{state_multiple}}
+
+\code{\link{copy_from}}
 }
 

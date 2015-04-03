@@ -277,6 +277,34 @@ launcher <- function(app = c("marketing", "quant", "base")) {
     return(cat("This function is for Mac and Windows only."))
 }
 
+#' Source for package functions
+#'
+#' @details Equivalent of source with local=TRUE for package functions. Written by smbache, author of the import package. See \url{https://github.com/smbache/import/issues/4} for a discussion. This function will be depracated when (if) it is included in \url{https://github.com/smbache/import}
+#'
+#' @param .from The package to pull the function from
+#' @param ... Functions to pull
+#'
+#' @examples
+#'
+#' copy_from(radiant, state_init)
+#'
+#' @export
+copy_from <- function(.from, ...) {
+
+  symbols <- import:::symbol_list(...)
+  parent  <- parent.frame()
+  from    <- import:::symbol_as_character(substitute(.from))
+
+  for (s in seq_along(symbols)) {
+    fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
+    assign(names(symbols)[s],
+           eval.parent(call("function", formals(fn), body(fn))),
+           parent)
+  }
+
+  invisible(NULL)
+}
+
 #' Set initial value for shiny input
 #'
 #' @details Useful for radio button or checkbox
@@ -293,15 +321,18 @@ launcher <- function(app = c("marketing", "quant", "base")) {
 #' state_init("test",0)
 #' r_state$test <- c("a","b")
 #' state_init("test",0)
+#' shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
+#' r_state$rb <- "b"
+#' shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
 #'
 #' @seealso \code{\link{state_single}}
 #' @seealso \code{\link{state_multiple}}
+#' @seealso \code{\link{copy_from}}
 #'
 #' @export
 state_init <- function(inputvar, init = "") {
-  { if(exists("r_state")) r_state else get("r_state", r_env) } %>%
-    { if(is.null(.[[inputvar]])) init else .[[inputvar]] }
-  # r_state %>% { if(is.null(.[[inputvar]])) init else .[[inputvar]] }
+  if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  r_state %>% { if(is.null(.[[inputvar]])) init else .[[inputvar]] }
 }
 
 #' Set initial value for shiny input from a list of values
@@ -320,19 +351,23 @@ state_init <- function(inputvar, init = "") {
 #' state_single("test",1:10,1)
 #' r_state$test <- 8
 #' state_single("test",1:10,1)
+#' shiny::selectInput("si", label = "Select:", c("a","b"), selected = state_single("si"))
+#' r_state$si <- "b"
+#' shiny::selectInput("si", label = "Select:", c("a","b"), selected = state_single("si", "b"))
 #'
 #' @seealso \code{\link{state_init}}
 #' @seealso \code{\link{state_multiple}}
+#' @seealso \code{\link{copy_from}}
 #'
 #' @export
 state_single <- function(inputvar, vals, init = character(0)) {
-  { if(exists("r_state")) r_state else get("r_state", r_env) } %>%
-    { if(is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
+  if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  r_state %>% { if(is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
 }
 
 #' Set initial values for shiny input from a list of values
 #'
-#' @details Useful for select input with multiple = TRUE and when you want to use inputs selected for another tool
+#' @details Useful for select input with multiple = TRUE and when you want to use inputs selected for another tool (e.g., pre_factor and full_factor or hier_clus and kmeans_clus in Radiant)
 #'
 #' @param inputvar Name shiny input
 #' @param vals Possible values for inputvar
@@ -346,13 +381,21 @@ state_single <- function(inputvar, vals, init = character(0)) {
 #' state_multiple("test",1:10,1:3)
 #' r_state$test <- 8:10
 #' state_multiple("test",1:10,1:3)
+#' shiny::selectInput("sim", label = "Select:", c("a","b"),
+#'   selected = state_multiple("sim", c("a","b")),  multiple = TRUE)
+#' r_state$sim <- c("a","b")
+#' shiny::selectInput("sim", label = "Select:", c("a","b"),
+#'   selected = state_single("sim", c("a","b")),  multiple = TRUE)
 #'
 #' @seealso \code{\link{state_init}}
 #' @seealso \code{\link{state_single}}
+#' @seealso \code{\link{copy_from}}
 #'
 #' @export
 state_multiple <- function(inputvar, vals, init = character(0)) {
-  { if(exists("r_state")) r_state else get("r_state", r_env) } %>%
+  if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  # { if(exists("r_state")) r_state else get("r_state", r_env) } %>% # to remove ...
+  r_state %>%
     { if(is.null(.[[inputvar]]))
         # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
         vals[vals %in% init]

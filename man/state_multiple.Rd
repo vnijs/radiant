@@ -20,17 +20,24 @@ value for inputvar
 Set initial values for shiny input from a list of values
 }
 \details{
-Useful for select input with multiple = TRUE and when you want to use inputs selected for another tool
+Useful for select input with multiple = TRUE and when you want to use inputs selected for another tool (e.g., pre_factor and full_factor or hier_clus and kmeans_clus in Radiant)
 }
 \examples{
 r_state <- list()
 state_multiple("test",1:10,1:3)
 r_state$test <- 8:10
 state_multiple("test",1:10,1:3)
+shiny::selectInput("sim", label = "Select:", c("a","b"),
+  selected = state_multiple("sim", c("a","b")),  multiple = TRUE)
+r_state$sim <- c("a","b")
+shiny::selectInput("sim", label = "Select:", c("a","b"),
+  selected = state_single("sim", c("a","b")),  multiple = TRUE)
 }
 \seealso{
 \code{\link{state_init}}
 
 \code{\link{state_single}}
+
+\code{\link{copy_from}}
 }
 

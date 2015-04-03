@@ -1,3 +1,6 @@
+# environment to hold session information
+sessionStore <- new.env(parent = emptyenv())
+
 shinyServer(function(input, output, session) {
 
   # source shared functions
@@ -12,6 +15,8 @@ shinyServer(function(input, output, session) {
 
 	  	source(file, local = TRUE)
 	  }
+	} else {
+	  copy_from(radiant, state_init, state_single, state_multiple)
 	}
 
 	# source data & analysis tools

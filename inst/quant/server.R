@@ -1,3 +1,6 @@
+# environment to hold session information
+sessionStore <- new.env(parent = emptyenv())
+
 shinyServer(function(input, output, session) {
 
 	# source shared functions
@@ -12,7 +15,9 @@ shinyServer(function(input, output, session) {
 
       source(file, local = TRUE)
     }
-  }
+  } else {
+	  copy_from(radiant, state_init, state_single, state_multiple)
+	}
 
   # source data & app tools from base
   for(file in list.files(c("../base/tools/app", "../base/tools/data"),
@@ -24,6 +29,6 @@ shinyServer(function(input, output, session) {
     source(file, local = TRUE)
 
   # save state on refresh or browser close
-  saveStateOnRefresh(session)
+  # saveStateOnRefresh(session)
 
 })

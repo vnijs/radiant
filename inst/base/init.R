@@ -3,8 +3,6 @@
 # when available
 ################################################################################
 
-# getting ip doesn't work - use shiny-resume when complete
-ip <- ifelse(running_local, "", session$request$REMOTE_ADDR)
 
 init_state <- function(r_data) {
 
@@ -23,10 +21,6 @@ init_state <- function(r_data) {
   r_data$datasetlist <- c("diamonds")
   r_data
 }
-
-ip_inputs <- paste0("RadiantInputs",ip)
-ip_data <- paste0("RadiantValues",ip)
-ip_dump <- paste0("RadiantDumpTime",ip)
 
 #### test section
 # rm(list = ls())
@@ -87,15 +81,32 @@ if(!running_local) {
   check_state_dump_times()
 }
 
+# from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R
+isolate({
+  params <- parseQueryString(session$clientData$url_search)
+  prevSSUID <- params[["SSUID"]]
+})
+
+if(running_local) {
+  ssuid <- "local"
+} else {
+  if(is.null(prevSSUID)) {
+    ssuid <- shiny:::createUniqueId(16)
+  } else {
+    ssuid <- prevSSUID
+  }
+}
+
+session$sendCustomMessage("session_start", ssuid)
+
 # load previous state if available
 if (exists("r_state") && exists("r_data")) {
   r_data <- do.call(reactiveValues, r_data)
   r_state <- r_state
   rm(r_data, r_state, envir = .GlobalEnv)
-} else if (exists(ip_inputs) && exists(ip_data)) {
-  r_data <- do.call(reactiveValues, get(ip_data))
-  r_state <- get(ip_inputs)
-  rm(list = c(ip_inputs, ip_data, ip_dump), envir = .GlobalEnv)
+} else if(!is.null(sessionStore[[ssuid]]$r_data)) {
+  r_data <- do.call(reactiveValues, sessionStore[[ssuid]]$r_data)
+  r_state <- sessionStore[[ssuid]]$r_state
 } else {
   r_state <- list()
   r_data <- init_state(reactiveValues())
