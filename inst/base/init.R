@@ -48,9 +48,8 @@ if(!running_local) {
     session_size <- pryr::object_size(sessionStore) %>% as.numeric %>%
                       {. / 1048576} %>% round(3)
 
-    # if(length(sessionStore) > 20 || session_size > 200*10^6 )
-    if(length(sessionStore) > 0 || session_size > 1)
-      state_email(c("Session size (MB):\n",session_size,"\n\nAges in days:\n",ages))
+    if(length(sessionStore) > 10 || session_size > 20)
+      state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
   }
 
   # are there any state files dumped more than 1 minute ago?
@@ -63,6 +62,7 @@ isolate({
   prevSSUID <- params[["SSUID"]]
 })
 
+# set the session id
 if(running_local) {
   ssuid <- "local"
 } else {
@@ -73,6 +73,7 @@ if(running_local) {
   }
 }
 
+# (re)start the session and push the id into the url
 session$sendCustomMessage("session_start", ssuid)
 
 # load previous state if available
@@ -101,7 +102,8 @@ if(running_local) {
     isolate({
       r_data[[df]] <- get(df, envir = .GlobalEnv)
       attr(r_data[[df]],'description')
-      r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>% { if(is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
+      r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
+        { if(is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
       r_data$datasetlist %<>% c(df, .) %>% unique
       rm(list = df, envir = .GlobalEnv)
     })
