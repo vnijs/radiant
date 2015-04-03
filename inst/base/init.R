@@ -21,27 +21,6 @@ init_state <- function(r_data) {
   r_data
 }
 
-#### test section
-# rm(list = ls())
-# library(lubridate)
-# library(dplyr)
-# t1 <- lubridate::now()
-# less_1 <- t1 - 5
-# less_2 <- t1 - minutes(1)
-# more_2 <- t1 - minutes(5)
-
-# ip <- "127.0.0.1"
-# ip_dump <- paste0("RadiantDumpTime",ip)
-# assign(ip_dump, less_2)
-
-# ip <- "127.0.0.2"
-# ip_dump2 <- paste0("RadiantDumpTime",ip)
-# assign(ip_dump2, more_2)
-
-## email may work only on linux
-# check_state_dump_times()
-#### end test section
-
 if(!running_local) {
 
   state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
@@ -56,49 +35,26 @@ if(!running_local) {
              control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
   }
 
-  check_state_dump_times <- function() {
-
-    # environment to hold session information
-    # sessionStore <- new.env(parent = emptyenv())
-    # sessionStore$a <- list(timestamp = Sys.time())
-    # sessionStore$b <- list(timestamp = Sys.time())
-    # sessionStore$c <- list(timestamp = Sys.time())
+  check_age_and_size <- function() {
 
     ids <- ls(sessionStore)
     ages <- list()
     for (i in ids) {
       session_age <- difftime(Sys.time(), sessionStore[[i]]$timestamp, units = "days")
       if(session_age > 7) sessionStore[[i]] <- NULL
-      ages[i] <- session_age
+      ages[i] <- session_age %>% round(3)
     }
 
-    session_size <- pryr::object_size(sessionStore)
+    session_size <- pryr::object_size(sessionStore) %>% as.numeric %>%
+                      {. / 1048576} %>% round(3)
 
     # if(length(sessionStore) > 20 || session_size > 200*10^6 )
-    if(length(sessionStore) > 0 || session_size > 200)
-      state_email(c(session_size,ages))
-
-    # dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
-    # for (i in dump_times) {
-    #   dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
-    #   body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-    #   if (dump_time > 1) {
-    #     sub("RadiantDumpTime","",i) %>%
-    #       paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
-    #       rm(list = ., envir = .GlobalEnv)
-    #     body_part2 <- c("\n\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-    #     state_email(c(body_part1,body_part2))
-    #   } else {
-    #     state_email(c(body_part1, "\n\nDump times:\n",
-    #                   dump_times,dump_time, "\n\nFull ls():\n",
-    #                   ls(envir = .GlobalEnv)))
-    #   }
-    # }
-
+    if(length(sessionStore) > 0 || session_size > 1)
+      state_email(c("Session size (MB):\n",session_size,"\n\nAges in days:\n",ages))
   }
 
   # are there any state files dumped more than 1 minute ago?
-  check_state_dump_times()
+  check_age_and_size()
 }
 
 # from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R
