@@ -1,6 +1,3 @@
-# environment to hold session information
-sessionStore <- new.env(parent = emptyenv())
-
 shinyServer(function(input, output, session) {
 
 	# source shared functions

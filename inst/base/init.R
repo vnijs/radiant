@@ -3,7 +3,6 @@
 # when available
 ################################################################################
 
-
 init_state <- function(r_data) {
 
   # initial plot height and width
@@ -59,22 +58,43 @@ if(!running_local) {
 
   check_state_dump_times <- function() {
 
-    dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
-    for (i in dump_times) {
-      dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
-      body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-      if (dump_time > 1) {
-        sub("RadiantDumpTime","",i) %>%
-          paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
-          rm(list = ., envir = .GlobalEnv)
-        body_part2 <- c("\n\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
-        state_email(c(body_part1,body_part2))
-      } else {
-        state_email(c(body_part1, "\n\nDump times:\n",
-                      dump_times,dump_time, "\n\nFull ls():\n",
-                      ls(envir = .GlobalEnv)))
-      }
+    # environment to hold session information
+    # sessionStore <- new.env(parent = emptyenv())
+    # sessionStore$a <- list(timestamp = Sys.time())
+    # sessionStore$b <- list(timestamp = Sys.time())
+    # sessionStore$c <- list(timestamp = Sys.time())
+
+    ids <- ls(sessionStore)
+    ages <- list()
+    for (i in ids) {
+      session_age <- difftime(Sys.time(), sessionStore[[i]]$timestamp, units = "days")
+      if(session_age > 7) sessionStore[[i]] <- NULL
+      ages[i] <- session_age
     }
+
+    session_size <- pryr::object_size(sessionStore)
+
+    # if(length(sessionStore) > 20 || session_size > 200*10^6 )
+    if(length(sessionStore) > 0 || session_size > 200)
+      state_email(c(session_size,ages))
+
+    # dump_times <- ls(pattern = "^RadiantDumpTime", envir = .GlobalEnv)
+    # for (i in dump_times) {
+    #   dump_time <- difftime(now(), get(i, envir=.GlobalEnv), units = "mins")
+    #   body_part1 <- c("Before:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+    #   if (dump_time > 1) {
+    #     sub("RadiantDumpTime","",i) %>%
+    #       paste0(c("RadiantInputs","RadiantValues","RadiantDumpTime"),.) %>%
+    #       rm(list = ., envir = .GlobalEnv)
+    #     body_part2 <- c("\n\nAfter:\n",ls(pattern="^Radiant" ,envir = .GlobalEnv))
+    #     state_email(c(body_part1,body_part2))
+    #   } else {
+    #     state_email(c(body_part1, "\n\nDump times:\n",
+    #                   dump_times,dump_time, "\n\nFull ls():\n",
+    #                   ls(envir = .GlobalEnv)))
+    #   }
+    # }
+
   }
 
   # are there any state files dumped more than 1 minute ago?
