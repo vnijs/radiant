@@ -21,7 +21,8 @@ saveStateOnRefresh <- function(session = session) {
         )
         if(running_local) rm(r_env, envir = .GlobalEnv)
       } else {
-        if(is.null(input$uploadState)) sessionStore[[ssuid]] <- NULL
+        if(is.null(input$uploadState))
+          try(sessionStore[[ssuid]] <- NULL, silent = TRUE)
       }
     })
   })
