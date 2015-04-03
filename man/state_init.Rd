@@ -26,10 +26,15 @@ state_init("test")
 state_init("test",0)
 r_state$test <- c("a","b")
 state_init("test",0)
+shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
+r_state$rb <- "b"
+shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
 }
 \seealso{
 \code{\link{state_single}}
 
 \code{\link{state_multiple}}
+
+\code{\link{copy_from}}
 }
 

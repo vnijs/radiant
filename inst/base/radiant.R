@@ -1,13 +1,3 @@
-################################################################################
-# functions to set initial values and take information from r_state
-# when available
-#
-# Note: putting functions in R/radiant.R produces
-# Error in eval(expr, envir, enclos) : object 'r_state' not found
-# because exported functions cannot access variables in the environment
-# created by shinyServer
-################################################################################
-
 observe({
   # reset r_state on dataset change ... when you are not on the
   # Manage > Data tab
@@ -22,14 +12,19 @@ observe({
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     isolate({
-      if(not_pressed(input$resetState) &&
-         not_pressed(input$quitApp) &&
+      if(not_pressed(input$resetState) && not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
-
-        assign(ip_inputs, reactiveValuesToList(input), envir = .GlobalEnv)
-        assign(ip_data, reactiveValuesToList(r_data), envir = .GlobalEnv)
-        assign(ip_dump, now(), envir = .GlobalEnv)
+        # assign(ip_inputs, reactiveValuesToList(input), envir = .GlobalEnv)
+        # assign(ip_data, reactiveValuesToList(r_data), envir = .GlobalEnv)
+        # assign(ip_dump, now(), envir = .GlobalEnv)
+        sessionStore[[ssuid]] <- list(
+          r_data = reactiveValuesToList(r_data),
+          r_state = reactiveValuesToList(input),
+          timestamp = Sys.time()
+        )
         if(running_local) rm(r_env, envir = .GlobalEnv)
+      } else {
+        if(is.null(input$uploadState)) sessionStore[[ssuid]] <- NULL
       }
     })
   })
@@ -43,11 +38,6 @@ saveStateOnRefresh <- function(session = session) {
      new_col_name[1] != "")
     r_data[[dataset]][,new_col_name] <- new_col
 }
-
-# .changedata <- changedata
-# .getdata <- getdata
-# changedata_names <- function(oldnames, newnames)
-#   r_data[[input$dataset]] %<>% rename_(.dots = setNames(oldnames, newnames))
 
 .getdata <- reactive({
 

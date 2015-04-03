@@ -270,11 +270,12 @@ observe({
     isolate({
       tmpEnv <- new.env()
       load(inFile$datapath, envir=tmpEnv)
-      if (exists("r_data", envir=tmpEnv, inherits=FALSE))
-        assign(ip_data, tmpEnv$r_data, envir=.GlobalEnv)
-      if (exists("r_state", envir=tmpEnv, inherits=FALSE))
-        assign(ip_inputs, tmpEnv$r_state, envir=.GlobalEnv)
-      assign(ip_dump, now(), envir = .GlobalEnv)
+
+      sessionStore[[ssuid]] <- list(
+        r_data = tmpEnv$r_data,
+        r_state = tmpEnv$r_state,
+        timestamp = Sys.time()
+      )
       rm(tmpEnv)
     })
   }
