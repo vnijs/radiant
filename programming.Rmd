@@ -33,8 +33,7 @@ As an example, you can render the [`single_mean.Rmd`](https://github.com/vnijs/r
 Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
 
 ```r
-options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')
-install.packages("radiant")
+install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 library(radiant)
 ```
 

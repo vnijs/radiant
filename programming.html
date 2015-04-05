@@ -213,8 +213,7 @@ Alt. hyp.: the mean of price is not equal to 0
 <p><img src="programming_files/figure-html/unnamed-chunk-3-1.png" title="" alt="" width="672" /></p>
 <p>As an example, you can render the <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example. Note that this feature is in development and will be expanded and changed over time. It is currently available for all tools listed in the <code>Base</code> and <code>Regression</code> menus.</p>
 <p>Radiant is available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:</p>
-<pre class="r"><code>options(repos = &#39;http://vnijs.github.io/radiant_miniCRAN/&#39;)
-install.packages(&quot;radiant&quot;)
+<pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)
 library(radiant)</code></pre>
 <p>This will load the library and the required packages. To see the index of functions currently available from the Radiant package using the <code>help(package = &quot;radiant&quot;)</code> command</p>
 <p>Lets start by comparing the mean of a variable to a (population) value using the built-in <code>mtcars</code> dataset. This functionality is in the Radiant menu <code>Base &gt; Single mean</code>. The analysis is conducted in function <code>single_mean</code>. Calling the <code>summary</code> method on the result object will show tabular output. Calling <code>plot</code> on the same result will produce plots to help evaluate the hypothesis.</p>
