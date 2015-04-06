@@ -5,8 +5,7 @@
 \title{Predict method for the regression function}
 \usage{
 \method{predict}{regression}(object, reg_predict_cmd = "",
-  reg_predict_data = "", reg_conf_level = 0.95, reg_save_pred = FALSE,
-  ...)
+  reg_predict_data = "", reg_conf_level = 0.95, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}
@@ -16,8 +15,6 @@
 \item{reg_predict_data}{Name of the dataset to use for prediction}
 
 \item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
-
-\item{reg_save_pred}{Save predicted values to a csv file}
 
 \item{...}{further arguments passed to or from other methods}
 }

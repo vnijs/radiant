@@ -391,7 +391,6 @@ plot.regression <- function(x,
 #' @param reg_predict_cmd Command used to generate data for prediction
 #' @param reg_predict_data Name of the dataset to use for prediction
 #' @param reg_conf_level Confidence level used to estimate confidence intervals (.95 is the default)
-#' @param reg_save_pred Save predicted values to a csv file
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -411,7 +410,6 @@ predict.regression <- function(object,
                                reg_predict_cmd = "",
                                reg_predict_data = "",
                                reg_conf_level = 0.95,
-                               reg_save_pred = FALSE,
                                ...) {
 
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
@@ -483,9 +481,6 @@ predict.regression <- function(object,
     colnames(pred_val) <- c("Prediction",cl_low,cl_high,"+/-")
 
     pred <- data.frame(pred, pred_val, check.names = FALSE)
-
-    # return predicted values
-    # if(reg_save_pred) return(pred)
 
     if(reg_predict_type == "cmd") {
       cat("Predicted values for:\n")

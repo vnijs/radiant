@@ -1,13 +1,16 @@
-# for debugging
+### options used for debugging
 # options(warn=0)
-# options(shiny.trace = TRUE)
 # options(warn=2)
+# options(shiny.trace = TRUE)
 # options(shiny.error=recover)
+
+options("width"=200)
+options("scipen"=100, "digits"=4)
 
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
                "shiny", "pryr", "shiny", "magrittr", "tidyr", "dplyr",
-               "broom", "htmlwidgets", "import")
+               "broom", "htmlwidgets")
 pkgs_gh <- c("shinyAce","rpivotTable")
 pkgs <- c(pkgs_cran, pkgs_gh)
 
