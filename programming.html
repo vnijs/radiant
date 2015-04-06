@@ -203,8 +203,8 @@ Variable : price
 Null hyp.: the mean of price = 0 
 Alt. hyp.: the mean of price is not equal to 0 
 
-     mean t.value p.value   df     2.5%    97.5%       sd    n
- 3907.186  54.084  &lt; .001 2999 3765.535 4048.837 3956.915 3000</code></pre>
+ mean t.value p.value   df 2.5% 97.5%   sd    n
+ 3907   54.08  &lt; .001 2999 3766  4049 3957 3000</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-2-1.png" title="" alt="" width="672" /></p>
 <p>You can also call functions for visualization (see below) and access help from the console using <code>?visualize</code></p>
@@ -225,8 +225,8 @@ Variable : mpg
 Null hyp.: the mean of mpg = 20 
 Alt. hyp.: the mean of mpg is &gt; 20 
 
-   mean t.value p.value df   2.5% 97.5%    sd  n
- 20.091   0.085   0.466 31 18.284   Inf 6.027 32</code></pre>
+  mean t.value p.value df  2.5% 97.5%    sd  n
+ 20.09   0.085   0.466 31 18.28   Inf 6.027 32</code></pre>
 <pre class="r"><code>plot(result, sm_plots = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-4-1.png" title="" alt="" width="672" /></p>
 <p>To compare the mean price of diamonds across different levels of clarity we can call the <code>compare_means</code> function:</p>
@@ -237,45 +237,45 @@ Data     : diamonds
 Variables: clarity, price 
 Samples  : independent 
 
-          mean   n       sd      se      ci
-   I1 4194.775  40 2519.678 398.396 805.832
-  SI2 5100.189 529 4406.982 191.608 376.407
-  SI1 3998.577 721 3813.190 142.011 278.804
-  VS2 3822.967 661 3917.484 152.372 299.193
-  VS1 3789.181 442 3880.907 184.596 362.797
- VVS2 3337.820 284 3932.706 233.363 459.348
- VVS1 2608.460 224 3201.282 213.895 421.513
-   IF 2411.697  99 3330.560 334.734 664.268
+      mean   n   sd    se    ci
+   I1 4195  40 2520 398.4 805.8
+  SI2 5100 529 4407 191.6 376.4
+  SI1 3999 721 3813 142.0 278.8
+  VS2 3823 661 3917 152.4 299.2
+  VS1 3789 442 3881 184.6 362.8
+ VVS2 3338 284 3933 233.4 459.3
+ VVS1 2608 224 3201 213.9 421.5
+   IF 2412  99 3331 334.7 664.3
 
- Alt. hyp.                Null hyp.     diff     p.value    
- I1 not equal to SI2      I1 = SI2      -905.414 0.045   *  
- I1 not equal to SI1      I1 = SI1       196.198 0.645      
- I1 not equal to VS2      I1 = VS2       371.808 0.387      
- I1 not equal to VS1      I1 = VS1       405.594 0.36       
- I1 not equal to VVS2     I1 = VVS2      856.955 0.068   .  
- I1 not equal to VVS1     I1 = VVS1     1586.315 0.001   ***
- I1 not equal to IF       I1 = IF       1783.078 0.001   ***
- SI2 not equal to SI1     SI2 = SI1     1101.612 &lt; .001  ***
- SI2 not equal to VS2     SI2 = VS2     1277.222 &lt; .001  ***
- SI2 not equal to VS1     SI2 = VS1     1311.008 &lt; .001  ***
- SI2 not equal to VVS2    SI2 = VVS2    1762.369 &lt; .001  ***
- SI2 not equal to VVS1    SI2 = VVS1    2491.729 &lt; .001  ***
- SI2 not equal to IF      SI2 = IF      2688.492 &lt; .001  ***
- SI1 not equal to VS2     SI1 = VS2      175.610 0.399      
- SI1 not equal to VS1     SI1 = VS1      209.396 0.369      
- SI1 not equal to VVS2    SI1 = VVS2     660.757 0.016   *  
- SI1 not equal to VVS1    SI1 = VVS1    1390.117 &lt; .001  ***
- SI1 not equal to IF      SI1 = IF      1586.880 &lt; .001  ***
- VS2 not equal to VS1     VS2 = VS1       33.786 0.888      
- VS2 not equal to VVS2    VS2 = VVS2     485.147 0.082   .  
- VS2 not equal to VVS1    VS2 = VVS1    1214.507 &lt; .001  ***
- VS2 not equal to IF      VS2 = IF      1411.270 &lt; .001  ***
- VS1 not equal to VVS2    VS1 = VVS2     451.361 0.13       
- VS1 not equal to VVS1    VS1 = VVS1    1180.721 &lt; .001  ***
- VS1 not equal to IF      VS1 = IF      1377.484 &lt; .001  ***
- VVS2 not equal to VVS1   VVS2 = VVS1    729.360 0.022   *  
- VVS2 not equal to IF     VVS2 = IF      926.123 0.024   *  
- VVS1 not equal to IF     VVS1 = IF      196.763 0.621      
+ Alt. hyp.                Null hyp.     diff    p.value    
+ I1 not equal to SI2      I1 = SI2      -905.41 0.045   *  
+ I1 not equal to SI1      I1 = SI1       196.20 0.645      
+ I1 not equal to VS2      I1 = VS2       371.81 0.387      
+ I1 not equal to VS1      I1 = VS1       405.59 0.36       
+ I1 not equal to VVS2     I1 = VVS2      856.96 0.068   .  
+ I1 not equal to VVS1     I1 = VVS1     1586.32 0.001   ***
+ I1 not equal to IF       I1 = IF       1783.08 0.001   ***
+ SI2 not equal to SI1     SI2 = SI1     1101.61 &lt; .001  ***
+ SI2 not equal to VS2     SI2 = VS2     1277.22 &lt; .001  ***
+ SI2 not equal to VS1     SI2 = VS1     1311.01 &lt; .001  ***
+ SI2 not equal to VVS2    SI2 = VVS2    1762.37 &lt; .001  ***
+ SI2 not equal to VVS1    SI2 = VVS1    2491.73 &lt; .001  ***
+ SI2 not equal to IF      SI2 = IF      2688.49 &lt; .001  ***
+ SI1 not equal to VS2     SI1 = VS2      175.61 0.399      
+ SI1 not equal to VS1     SI1 = VS1      209.40 0.369      
+ SI1 not equal to VVS2    SI1 = VVS2     660.76 0.016   *  
+ SI1 not equal to VVS1    SI1 = VVS1    1390.12 &lt; .001  ***
+ SI1 not equal to IF      SI1 = IF      1586.88 &lt; .001  ***
+ VS2 not equal to VS1     VS2 = VS1       33.79 0.888      
+ VS2 not equal to VVS2    VS2 = VVS2     485.15 0.082   .  
+ VS2 not equal to VVS1    VS2 = VVS1    1214.51 &lt; .001  ***
+ VS2 not equal to IF      VS2 = IF      1411.27 &lt; .001  ***
+ VS1 not equal to VVS2    VS1 = VVS2     451.36 0.13       
+ VS1 not equal to VVS1    VS1 = VVS1    1180.72 &lt; .001  ***
+ VS1 not equal to IF      VS1 = IF      1377.48 &lt; .001  ***
+ VVS2 not equal to VVS1   VVS2 = VVS1    729.36 0.022   *  
+ VVS2 not equal to IF     VVS2 = IF      926.12 0.024   *  
+ VVS1 not equal to IF     VVS1 = IF      196.76 0.621      
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result, cm_plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
@@ -291,19 +291,15 @@ Data     : salary
 Variables: rank, salary 
 Samples  : independent 
 
-                mean   n        sd       se       ci
-  AsstProf  80775.99  67  8174.113  998.627 1993.823
- AssocProf  93876.44  64 13831.700 1728.962 3455.056
-      Prof 126772.11 266 27718.675 1699.541 3346.322
+             mean   n    sd     se   ci
+  AsstProf  80776  67  8174  998.6 1994
+ AssocProf  93876  64 13832 1729.0 3455
+      Prof 126772 266 27719 1699.5 3346
 
- Alt. hyp.                         Null hyp.              diff     
- AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45
- AsstProf not equal to Prof        AsstProf = Prof        -45996.12
- AssocProf not equal to Prof       AssocProf = Prof       -32895.67
- p.value    
- &lt; .001  ***
- &lt; .001  ***
- &lt; .001  ***
+ Alt. hyp.                         Null hyp.              diff   p.value    
+ AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100 &lt; .001  ***
+ AsstProf not equal to Prof        AsstProf = Prof        -45996 &lt; .001  ***
+ AssocProf not equal to Prof       AssocProf = Prof       -32896 &lt; .001  ***
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
@@ -317,56 +313,56 @@ Dependent variable   : price
 Independent variables: carat, clarity 
 
                 coefficient std.error t.value p.value    
-    (Intercept)   -6780.993   204.952 -33.086  &lt; .001 ***
-          carat    8438.030    51.101 165.125  &lt; .001 ***
-  clarity &gt; SI2    2790.760   201.395  13.857  &lt; .001 ***
-  clarity &gt; SI1    3608.531   200.508  17.997  &lt; .001 ***
-  clarity &gt; VS2    4249.906   201.607  21.080  &lt; .001 ***
-  clarity &gt; VS1    4461.956   204.592  21.809  &lt; .001 ***
- clarity &gt; VVS2    5109.476   210.207  24.307  &lt; .001 ***
- clarity &gt; VVS1    5027.669   214.251  23.466  &lt; .001 ***
-   clarity &gt; IF    5265.170   233.658  22.534  &lt; .001 ***
+    (Intercept)       -6781     205.0  -33.09  &lt; .001 ***
+          carat        8438      51.1  165.12  &lt; .001 ***
+  clarity &gt; SI2        2791     201.4   13.86  &lt; .001 ***
+  clarity &gt; SI1        3609     200.5   18.00  &lt; .001 ***
+  clarity &gt; VS2        4250     201.6   21.08  &lt; .001 ***
+  clarity &gt; VS1        4462     204.6   21.81  &lt; .001 ***
+ clarity &gt; VVS2        5109     210.2   24.31  &lt; .001 ***
+ clarity &gt; VVS1        5028     214.3   23.47  &lt; .001 ***
+   clarity &gt; IF        5265     233.7   22.53  &lt; .001 ***
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 R-squared: 0.904,  Adjusted R-squared: 0.904 
-F-statistic: 3530.024 df(9,2991), p.value &lt; .001
+F-statistic: 3530 df(9,2991), p.value &lt; .001
 Nr obs: 3000
 
-               coefficient      2.5%     97.5%     +/-
-(Intercept)      -6780.993 -7182.855 -6379.131 401.862
-carat             8438.030  8337.834  8538.227 100.197
-clarity &gt; SI2     2790.760  2395.873  3185.646 394.886
-clarity &gt; SI1     3608.531  3215.384  4001.679 393.148
-clarity &gt; VS2     4249.906  3854.604  4645.208 395.302
-clarity &gt; VS1     4461.956  4060.801  4863.111 401.155
-clarity &gt; VVS2    5109.476  4697.311  5521.640 412.164
-clarity &gt; VVS1    5027.669  4607.574  5447.764 420.095
-clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
+               coefficient  2.5% 97.5%   +/-
+(Intercept)          -6781 -7183 -6379 401.9
+carat                 8438  8338  8538 100.2
+clarity &gt; SI2         2791  2396  3186 394.9
+clarity &gt; SI1         3609  3215  4002 393.1
+clarity &gt; VS2         4250  3855  4645 395.3
+clarity &gt; VS1         4462  4061  4863 401.2
+clarity &gt; VVS2        5109  4697  5522 412.2
+clarity &gt; VVS1        5028  4608  5448 420.1
+clarity &gt; IF          5265  4807  5723 458.1</code></pre>
 <pre class="r"><code>predict(result, reg_predict_cmd = &quot;carat = 1:10&quot;)</code></pre>
 <pre><code>Predicted values for:
- clarity carat Prediction      2.5%     97.5%      +/-
-     SI1     1   5265.569  2859.633  7671.505 2405.936
-     SI1     2  13703.599 11294.952 16112.246 2408.647
-     SI1     3  22141.629 19726.114 24557.145 2415.515
-     SI1     4  30579.660 28153.155 33006.165 2426.505
-     SI1     5  39017.690 36576.130 41459.250 2441.560
-     SI1     6  47455.720 44995.114 49916.327 2460.607
-     SI1     7  55893.751 53410.198 58377.303 2483.552
-     SI1     8  64331.781 61821.491 66842.072 2510.291
-     SI1     9  72769.811 70229.110 75310.513 2540.701
-     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
-<pre><code>   clarity carat Prediction      2.5%     97.5%      +/-
-1      SI1     1   5265.569  2859.633  7671.505 2405.936
-2      SI1     2  13703.599 11294.952 16112.246 2408.647
-3      SI1     3  22141.629 19726.114 24557.145 2415.515
-4      SI1     4  30579.660 28153.155 33006.165 2426.505
-5      SI1     5  39017.690 36576.130 41459.250 2441.560
-6      SI1     6  47455.720 44995.114 49916.327 2460.607
-7      SI1     7  55893.751 53410.198 58377.303 2483.552
-8      SI1     8  64331.781 61821.491 66842.072 2510.291
-9      SI1     9  72769.811 70229.110 75310.513 2540.701
-10     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
+ clarity carat Prediction  2.5% 97.5%  +/-
+     SI1     1       5266  2860  7672 2406
+     SI1     2      13704 11295 16112 2409
+     SI1     3      22142 19726 24557 2416
+     SI1     4      30580 28153 33006 2427
+     SI1     5      39018 36576 41459 2442
+     SI1     6      47456 44995 49916 2461
+     SI1     7      55894 53410 58377 2484
+     SI1     8      64332 61821 66842 2510
+     SI1     9      72770 70229 75311 2541
+     SI1    10      81208 78633 83782 2575</code></pre>
+<pre><code>   clarity carat Prediction  2.5% 97.5%  +/-
+1      SI1     1       5266  2860  7672 2406
+2      SI1     2      13704 11295 16112 2409
+3      SI1     3      22142 19726 24557 2416
+4      SI1     4      30580 28153 33006 2427
+5      SI1     5      39018 36576 41459 2442
+6      SI1     6      47456 44995 49916 2461
+7      SI1     7      55894 53410 58377 2484
+8      SI1     8      64332 61821 66842 2510
+9      SI1     9      72770 70229 75311 2541
+10     SI1    10      81208 78633 83782 2575</code></pre>
 <pre class="r"><code>plot(result, reg_plots = &quot;coef&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>plot(result, reg_plots = &quot;dashboard&quot;)</code></pre>
