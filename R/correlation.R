@@ -71,9 +71,9 @@ summary.correlation <- function(object,
 	cat("Alt. hyp.: variables x and y are correlated\n\n")
 
 	cat("Correlation matrix:\n")
-  print(cr, quote = FALSE)
+  print(cr[-1,-ncol(cr)], quote = FALSE)
 	cat("\np-values:\n")
-  print(cp, quote = FALSE)
+  print(cp[-1,-ncol(cp)], quote = FALSE)
   rm(object)
 }
 

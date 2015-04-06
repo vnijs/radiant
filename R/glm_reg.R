@@ -424,12 +424,6 @@ predict.glm_reg <- function(object,
     colnames(pred_val) <- c("Prediction","std.error")
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
-    # return predicted values
-    # if(glm_save_pred) {
-    #   pred %<>% set_class(c("glm_predict",class(.)))
-    #   return(pred)
-    # }
-
     if(glm_predict_type == "cmd") {
       cat("Predicted values for:\n")
     } else {
@@ -448,8 +442,6 @@ predict.glm_reg <- function(object,
     # if (os_type != "Linux")
     #   cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
 
-    # if(glm_save_pred)
-    # return(pred %>% set_class(c("glm_predict",class(.))))
     return(pred %>% set_class(c("glm_predict",class(.))))
   } else {
     cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")

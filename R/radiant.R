@@ -291,9 +291,19 @@ launcher <- function(app = c("marketing", "quant", "base")) {
 #' @export
 copy_from <- function(.from, ...) {
 
-  symbols <- import:::symbol_list(...)
+  # copied from import:::symbol_list and import:::symbol_as_character by @smbache
+  dots <- eval(substitute(alist(...)), parent.frame(), parent.frame())
+  names <- names(dots)
+  unnamed <- if (is.null(names)) 1:length(dots)
+             else which(names == "")
+  dots <- vapply(dots, as.character, character(1))
+  names(dots)[unnamed] <- dots[unnamed]
+
+  # symbols <- import:::symbol_list(...)
+  # from    <- import:::symbol_as_character(substitute(.from))
+  symbols <- dots
   parent  <- parent.frame()
-  from    <- import:::symbol_as_character(substitute(.from))
+  from    <- as.character(substitute(.from))
 
   for (s in seq_along(symbols)) {
     fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
@@ -394,7 +404,6 @@ state_single <- function(inputvar, vals, init = character(0)) {
 #' @export
 state_multiple <- function(inputvar, vals, init = character(0)) {
   if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
-  # { if(exists("r_state")) r_state else get("r_state", r_env) } %>% # to remove ...
   r_state %>%
     { if(is.null(.[[inputvar]]))
         # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)

@@ -42,9 +42,9 @@ visualize(dataset = 'diamonds', viz_xvar = 'carat', viz_yvar = 'price', viz_type
 ```
 "
 
+knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE,
                       warning=FALSE, fig.path = "~/radiant_figures/")
-knitr::opts_knit$set(progress = TRUE)
 
 output$report <- renderUI({
 
@@ -129,7 +129,8 @@ output$saveRmd <- downloadHandler(
   filename = function() {"report.Rmd"},
   content = function(file) {
     isolate({
-      input$rmd_report %>% cat(.,file=file,sep="\n")
+      "```{r echo = FALSE}\n# knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\n# suppressMessages(library(radiant))\n# uncomment the lines above to 'knit' the Rmd file in Rstudio\n# you will also need to load the data using load()\n```\n\n" %>%
+        paste0(.,input$rmd_report) %>% cat(.,file=file,sep="\n")
     })
   }
 )
@@ -153,7 +154,9 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
 
   cmd <- ""
   if(inp_main[1] != "") {
+    # cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
     cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
+             paste(collapse="") %>%
              sub("list", fun_name, .) %>%
              paste0(pre_cmd, .) %>%
              paste0(., post_cmd)

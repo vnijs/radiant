@@ -370,7 +370,7 @@ observe({
     xcmd <- ""
     if(!is.null(r_data$reg_pred)) {
     # if(!is_empty(input$reg_predict)) {
-      inp_out[[3 + figs]] <- clean_args(c(reg_pred_inputs(), list(reg_save_pred = TRUE)), reg_pred_args[-1])
+      inp_out[[3 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
       xcmd <- paste0("# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
       if(!is_empty(input$reg_xvar)) {
