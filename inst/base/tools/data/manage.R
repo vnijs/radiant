@@ -57,8 +57,10 @@ saveClipboardData <- function() {
   }
 }
 
-loadUserData <- function(fname, uFile, ext, header = TRUE,
-                         man_str_as_factor = TRUE, sep = ",",
+loadUserData <- function(fname, uFile, ext,
+                         header = TRUE,
+                         man_str_as_factor = TRUE,
+                         sep = ",",
                          dec = ".") {
 
   filename <- basename(fname)
@@ -84,7 +86,6 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
     robjname <- try(load(uFile), silent=TRUE)
     if(is(robjname, 'try-error')) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-      return()
     } else if(length(robjname) > 1) {
       if(sum(robjname %in% c("r_state", "r_data")) == 2) {
         upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
@@ -100,8 +101,14 @@ loadUserData <- function(fname, uFile, ext, header = TRUE,
 
   if(ext == 'csv') {
     # r_data[[objname]] <<- read.csv(uFile, header=header, sep=sep, dec=dec,
-    r_data[[objname]] <<- read.table(uFile, header=header, sep=sep, dec=dec,
-                                     stringsAsFactors=man_str_as_factor) # %>% tbl_df
+    r_data[[objname]] <<- try(read.table(uFile, header=header, sep=sep, dec=dec,
+                              stringsAsFactors=man_str_as_factor), silent = TRUE) %>%
+                              { if(is(., 'try-error')) {
+                                  upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+                                } else {
+                                  .
+                                }
+                              } # %>% tbl_df
   }
 
   r_data[['datasetlist']] <<- c(objname,r_data[['datasetlist']]) %>% unique

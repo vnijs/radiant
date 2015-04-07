@@ -2,7 +2,6 @@
 globalVariables(c("r_env", "r_data", "r_state", "running_local", ".",
                   "se","ci","height","bump","y","nr_clus",".resid","rnd_number",
                   "null.deviance"))
-                  # "null.deviance", "symbol_list", "symbol_as_character"))
 
 #' radiant
 #'
