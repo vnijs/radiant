@@ -95,7 +95,7 @@ clean_args <- function(rep_args, rep_default = list()) {
 
   # removing default arguments before sending to report feature
   for(i in names(rep_args))
-    if(rep_args[[i]][1] == rep_default[[i]]) rep_args[[i]] <- NULL
+    if(all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
   rep_args
 }
 
@@ -105,9 +105,6 @@ not_available <- function(x)
 
 # check if a button was NOT pressed
 not_pressed <- function(x) if(is.null(x) || x == 0) TRUE else FALSE
-
-# check if string variable is defined
-is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
 
 # check for duplicate entries
 has_duplicates <- function(x)

@@ -183,6 +183,22 @@ getclass <- function(dat) {
     sub("Date","date", .)
 }
 
+#' Is a character variable defined
+#'
+#' @details Is a variable NULL or an empty string
+#'
+#' @param x Character value to evaluate
+#' @param empty Indicate what 'empty' means. Default is empty string (i.e., "")
+#'
+#' @return TRUE if empty, else FALSE
+#'
+#' @examples
+#' is_empty("")
+#' is_empty(NULL)
+#'
+#' @export
+is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
+
 #' Create a launcher for Windows (.bat)
 #'
 #' @details On Windows a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app
