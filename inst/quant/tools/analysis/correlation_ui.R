@@ -16,7 +16,7 @@ cor_inputs <- reactive({
 })
 
 output$ui_cor_var <- renderUI({
-	isChar <- "character" == getdata_class()
+	isChar <- "character" == .getclass()
 	vars <- varnames()[!isChar]
   if(length(vars) == 0) return()
   selectInput(inputId = "cor_var", label = "Select variables:", choices = vars,

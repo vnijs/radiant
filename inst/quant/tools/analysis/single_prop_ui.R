@@ -18,7 +18,7 @@ sp_inputs <- reactive({
 })
 
 output$ui_sp_var <- renderUI({
-  # isFct <- "factor" == getdata_class()
+  # isFct <- "factor" == .getclass()
   # vars <- varnames()[isFct]
   # vars <- two_level_vars()
   vars <- groupable_vars()

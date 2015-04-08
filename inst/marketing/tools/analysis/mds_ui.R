@@ -30,7 +30,7 @@ mds_plot_inputs <- reactive({
 })
 
 output$ui_mds_id1 <- renderUI({
-	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
+	isLabel <- "character" == .getclass() | "factor" == .getclass()
   vars <- varnames()[isLabel]
   selectInput(inputId = "mds_id1", label = "ID 1:", choices = vars,
    	selected = state_single("mds_id1",vars), multiple = FALSE)
@@ -38,7 +38,7 @@ output$ui_mds_id1 <- renderUI({
 
 output$ui_mds_id2 <- renderUI({
   if(not_available(input$mds_id1)) return()
-	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
+	isLabel <- "character" == .getclass() | "factor" == .getclass()
   vars <- varnames()[isLabel]
   if(length(vars) > 0) vars <- vars[-which(vars == input$mds_id1)]
   selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
@@ -47,7 +47,7 @@ output$ui_mds_id2 <- renderUI({
 
 output$ui_mds_dis <- renderUI({
   if(not_available(input$mds_id2)) return()
- 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+ 	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
   selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
    	selected = state_single("mds_dis",vars), multiple = FALSE)

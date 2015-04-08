@@ -163,6 +163,26 @@ changedata <- function(dataset,
 # dat$new <- NA
 # dat$new[1:10] <- 1:10
 
+#' Get variable class
+#'
+#' @details Get variable class information for each column in a data.frame
+#'
+#' @param dat Dataset to evaluate
+#'
+#' @return Vector with class information for each variable
+#'
+#' @examples
+#' getclass(mtcars)
+#'
+#' @export
+getclass <- function(dat) {
+  sapply(dat, function(x) class(x)[1]) %>%
+    sub("ordered","factor", .) %>%
+    sub("POSIXct","date", .) %>%
+    sub("POSIXlt","date", .) %>%
+    sub("Date","date", .)
+}
+
 #' Create a launcher for Windows (.bat)
 #'
 #' @details On Windows a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app

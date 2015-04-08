@@ -79,14 +79,14 @@ reg_pred_plot_inputs <- reactive({
 })
 
 output$ui_reg_dep_var <- renderUI({
-	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
   selectInput(inputId = "reg_dep_var", label = "Dependent variable:", choices = vars,
   	selected = state_single("reg_dep_var",vars), multiple = FALSE)
 })
 
 output$ui_reg_indep_var <- renderUI({
-	notChar <- "character" != getdata_class()
+	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
   if(not_available(input$reg_dep_var)) vars <- character(0)
   if(length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]

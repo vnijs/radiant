@@ -90,7 +90,7 @@ output$ui_glm_levels <- renderUI({
 })
 
 output$ui_glm_indep_var <- renderUI({
-	notChar <- "character" != getdata_class()
+	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
   if(not_available(input$glm_dep_var)) vars <- character(0)
   if(length(vars) > 0 ) vars <- vars[-which(vars == input$glm_dep_var)]

@@ -15,7 +15,7 @@ output$uiTr_reorg_cols <- renderUI({
 })
 
 output$uiTr_normalizer <- renderUI({
-  isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+  isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   if(length(vars) == 0) return(NULL)
   selectInput("tr_normalizer", "Normalizing variable:", c("None" = "none", vars),
@@ -25,7 +25,7 @@ output$uiTr_normalizer <- renderUI({
 output$uiTr_reorg_levs <- renderUI({
 	if(input$tr_columns %>% not_available) return()
   fctCol <- input$tr_columns[1]
-	isFct <- "factor" == getdata_class()[fctCol]
+	isFct <- "factor" == .getclass()[fctCol]
   if(!isFct) return()
 	.getdata()[,fctCol] %>% levels -> levs
   selectizeInput("tr_reorg_levs", "Reorder/remove levels", choices  = levs,
@@ -237,8 +237,8 @@ transform_main <- reactive({
 		}
     if(!is.null(input$tr_normalizer) && input$tr_normalizer != 'none') {
 
-      dat_class <- getdata_class_fun(dat)
-      isNum <- "numeric" == dat_class | "integer" == dat_class
+      dc <- getclass(dat)
+      isNum <- "numeric" == dc | "integer" == dc
       if(length(isNum) == 0) return("Please select numerical variables to normalize")
       dat_tr <- try(dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer], silent = TRUE)
       if(is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
@@ -252,7 +252,7 @@ transform_main <- reactive({
 
 	if(!is.null(input$tr_columns) & input$tr_changeType == 'reorg_levs') {
     if(!is.null(input$tr_reorg_levs)) {
-    	isFct <- "factor" == getdata_class()[input$tr_columns[1]]
+    	isFct <- "factor" == .getclass()[input$tr_columns[1]]
 		  if(isFct) dat[,input$tr_columns[1]] <-
 		  						factor(dat[,input$tr_columns[1]], levels = input$tr_reorg_levs)
     }
@@ -344,54 +344,56 @@ output$transform_summary <- renderPrint({
 	if(is.null(dat)) return(invisible())
 	if(is.character(dat)) return(dat)
 
-  dat_class <- getdata_class_fun(dat)
+	getsummary(dat)
 
-	isFct <- "factor" == dat_class
-	isNum <- "numeric" == dat_class | "integer" == dat_class
-	isDate <- "date" == dat_class | "Date" == dat_class
-	isChar <- "character" == dat_class
-	isLogic <- "logical" == dat_class
+ #  dc <- getclass(dat)
 
-	if(sum(isNum) > 0) {
+	# isFct <- "factor" == dc
+	# isNum <- "numeric" == dc | "integer" == dc
+	# isDate <- "date" == dc | "Date" == dc
+	# isChar <- "character" == dc
+	# isLogic <- "logical" == dc
 
-		cn <- names(dat_class)[isNum]
+	# if(sum(isNum) > 0) {
 
-		cat("Summarize numeric variables:\n")
-    select(dat, which(isNum)) %>%
-      tidyr::gather_("variable", "values", cn) %>%
-      group_by(variable) %>%
-      summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
-                     median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),
-                     `25%` = p25, `75%` = p75, sd(.,na.rm=TRUE), se = serr,
-                     cv = sd/mean)) %>%
-      as.data.frame -> num_dat
-      num_dat[,-1] %<>% round(3)
-      colnames(num_dat)[1] <- ""
-      num_dat %>% print(row.names = FALSE)
-		cat("\n")
-	}
-	if(sum(isFct) > 0) {
-		cat("Summarize factors:\n")
-    select(dat, which(isFct)) %>% summary %>% print
-		cat("\n")
-	}
-	if(sum(isDate) > 0) {
-		cat("Earliest dates:\n")
-    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
-		cat("\nFinal dates:\n")
-    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
-		cat("\n")
-	}
-	if(sum(isChar) > 0) {
-		cat("Summarize character variables:\n")
-    select(dat, which(isChar)) %>% table %>% print
-		cat("\n")
-	}
-	if(sum(isLogic) > 0) {
-		cat("Summarize logical variables:\n")
-    select(dat, which(isLogic)) %>% table %>% print
-		cat("\n")
-	}
+	# 	cn <- names(dc)[isNum]
+
+	# 	cat("Summarize numeric variables:\n")
+ #    select(dat, which(isNum)) %>%
+ #      tidyr::gather_("variable", "values", cn) %>%
+ #      group_by(variable) %>%
+ #      summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
+ #                     median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),
+ #                     `25%` = p25, `75%` = p75, sd(.,na.rm=TRUE), se = serr,
+ #                     cv = sd/mean)) %>%
+ #      as.data.frame -> num_dat
+ #      num_dat[,-1] %<>% round(3)
+ #      colnames(num_dat)[1] <- ""
+ #      num_dat %>% print(row.names = FALSE)
+	# 	cat("\n")
+	# }
+	# if(sum(isFct) > 0) {
+	# 	cat("Summarize factors:\n")
+ #    select(dat, which(isFct)) %>% summary %>% print
+	# 	cat("\n")
+	# }
+	# if(sum(isDate) > 0) {
+	# 	cat("Earliest dates:\n")
+ #    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
+	# 	cat("\nFinal dates:\n")
+ #    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
+	# 	cat("\n")
+	# }
+	# if(sum(isChar) > 0) {
+	# 	cat("Summarize character variables:\n")
+ #    select(dat, which(isChar)) %>% table %>% print
+	# 	cat("\n")
+	# }
+	# if(sum(isLogic) > 0) {
+	# 	cat("Summarize logical variables:\n")
+ #    select(dat, which(isLogic)) %>% table %>% print
+	# 	cat("\n")
+	# }
 })
 
 observe({
