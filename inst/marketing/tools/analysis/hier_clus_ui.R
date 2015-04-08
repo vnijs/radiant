@@ -23,7 +23,7 @@ hc_inputs <- reactive({
 ###############################################################
 output$ui_hc_vars <- renderUI({
 
-	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+	isNum <- "numeric" == .getclass() | "integer" == .getclass()
 	vars <- varnames()[isNum]
   selectInput(inputId = "hc_vars", label = "Variables:", choices = vars,
    	selected = state_multiple("hc_vars", vars),

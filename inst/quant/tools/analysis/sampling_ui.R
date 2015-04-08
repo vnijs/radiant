@@ -15,7 +15,7 @@ smp_inputs <- reactive({
 })
 
 output$ui_smp_var <- renderUI({
-	isChar <- "character" == getdata_class()
+	isChar <- "character" == .getclass()
   vars <- varnames()[isChar]
   selectInput(inputId = "smp_var", label = "ID variable:",
               choices = vars, selected = state_single("smp_var",vars),

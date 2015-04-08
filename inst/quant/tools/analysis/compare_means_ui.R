@@ -19,9 +19,9 @@ cm_inputs <- reactive({
 # Compare means
 ###############################
 output$ui_cm_var1 <- renderUI({
-  isNumOrFct <- "numeric" == getdata_class() |
-                "integer" == getdata_class() |
-                "factor" == getdata_class()
+  isNumOrFct <- "numeric" == .getclass() |
+                "integer" == .getclass() |
+                "factor" == .getclass()
   vars <- varnames()[isNumOrFct]
   selectInput(inputId = "cm_var1",
               label = "Select a factor or numeric variable:",
@@ -32,7 +32,7 @@ output$ui_cm_var1 <- renderUI({
 
 output$ui_cm_var2 <- renderUI({
   if(not_available(input$cm_var1)) return()
-  isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+  isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   if(input$cm_var1 %in% vars) {
     # when cm_var1 is numeric comparisons for multiple variables are possible
@@ -126,7 +126,7 @@ output$compare_means <- renderUI({
   if(not_available(input$cm_var2))
     return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
   # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if(length(input$cm_var2) > 1 && getdata_class()[input$cm_var1] == 'factor')
+  if(length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
     return(" ")
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if(input$cm_var1 %in% input$cm_var2) return(" ")
@@ -139,7 +139,7 @@ output$compare_means <- renderUI({
   if(not_available(input$cm_var2))
     return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
   # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if(length(input$cm_var2) > 1 && getdata_class()[input$cm_var1] == 'factor')
+  if(length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
     return(" ")
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if(input$cm_var1 %in% input$cm_var2) return(" ")

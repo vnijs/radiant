@@ -57,18 +57,9 @@ saveStateOnRefresh <- function(session = session) {
   r_data[[input$dataset]]
 })
 
-getdata_class <- reactive({
-  # r_data[[input$dataset]][1,,drop = FALSE] %>% getdata_class_fun
-  r_data[[input$dataset]] %>% getdata_class_fun
+.getclass <- reactive({
+  r_data[[input$dataset]] %>% head %>% getclass
 })
-
-getdata_class_fun <- function(dat) {
-  sapply(dat, function(x) class(x)[1]) %>%
-	  gsub("ordered","factor", .) %>%
-	  gsub("POSIXct","date", .) %>%
-    gsub("POSIXct","date", .) %>%
-	  gsub("Date","date", .)
-}
 
 groupable_vars <- reactive({
   .getdata() %>%
@@ -87,8 +78,8 @@ two_level_vars <- reactive({
 })
 
 varnames <- reactive({
-  getdata_class() %>% names %>%
-    set_names(., paste0(., " {", getdata_class(), "}"))
+  .getclass() %>% names %>%
+    set_names(., paste0(., " {", .getclass(), "}"))
 })
 
 # cleaning up the arguments for data_filter and defaults passed to report

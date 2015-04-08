@@ -28,8 +28,8 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_xvar <- renderUI({
   if(is.null(input$viz_type)) return()
   vars <- varnames()
-  # if(input$viz_type %in% c("density","line")) vars <- vars["factor" != getdata_class()]
-  if(input$viz_type %in% c("density")) vars <- vars["factor" != getdata_class()]
+  # if(input$viz_type %in% c("density","line")) vars <- vars["factor" != .getclass()]
+  if(input$viz_type %in% c("density")) vars <- vars["factor" != .getclass()]
   if(input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("viz_xvar",vars),
@@ -40,7 +40,7 @@ output$ui_viz_xvar <- renderUI({
 output$ui_viz_yvar <- renderUI({
   if(is.null(input$viz_type)) return()
   vars <- varnames()
-  if(input$viz_type %in% c("line")) vars <- vars["factor" != getdata_class()]
+  if(input$viz_type %in% c("line")) vars <- vars["factor" != .getclass()]
   selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
                  choices = c("None" = "none", vars),
                  selected = state_single("viz_yvar", vars, "none"),
@@ -48,7 +48,7 @@ output$ui_viz_yvar <- renderUI({
 })
 
 output$ui_viz_facet_row <- renderUI({
-  isFct <- "factor" == getdata_class()
+  isFct <- "factor" == .getclass()
   vars <- c("None" = ".", varnames()[isFct])
   selectizeInput("viz_facet_row", "Facet row", vars,
                  selected = state_single("viz_facet_row", vars, "."),
@@ -56,7 +56,7 @@ output$ui_viz_facet_row <- renderUI({
 })
 
 output$ui_viz_facet_col <- renderUI({
-  isFct <- "factor" == getdata_class()
+  isFct <- "factor" == .getclass()
   vars <- c("None" = ".", varnames()[isFct])
   selectizeInput("viz_facet_col", 'Facet column', vars,
                  selected = state_single("viz_facet_col", vars, "."),

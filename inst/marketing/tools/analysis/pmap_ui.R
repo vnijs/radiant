@@ -29,14 +29,14 @@ pmap_plot_inputs <- reactive({
 })
 
 output$ui_pmap_brand <- renderUI({
-	isLabel <- "character" == getdata_class() | "factor" == getdata_class()
+	isLabel <- "character" == .getclass() | "factor" == .getclass()
   vars <- varnames()[isLabel]
  	selectInput(inputId = "pmap_brand", label = "Brand:", choices = vars,
    	selected = state_single("pmap_brand",vars), multiple = FALSE)
 })
 
 output$ui_pmap_attr <- renderUI({
- 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+ 	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
   selectInput(inputId = "pmap_attr", label = "Attributes:", choices = vars,
    	selected = state_multiple("pmap_attr",vars), multiple = TRUE,
@@ -45,7 +45,7 @@ output$ui_pmap_attr <- renderUI({
 
 output$ui_pmap_pref <- renderUI({
   if(not_available(input$pmap_attr)) return()
- 	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+ 	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
  	if(length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
   selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,

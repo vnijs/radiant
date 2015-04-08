@@ -17,14 +17,14 @@ ca_inputs <- reactive({
 })
 
 output$ui_ca_dep_var <- renderUI({
-	isNum <- "numeric" == getdata_class() | "integer" == getdata_class()
+	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
   selectInput(inputId = "ca_dep_var", label = "Profile evaluations:", choices = vars,
    	selected = state_single("ca_dep_var",vars), multiple = FALSE)
 })
 
 output$ui_ca_indep_var <- renderUI({
-	isFct <- "factor" == getdata_class()
+	isFct <- "factor" == .getclass()
  	vars <- varnames()[isFct]
   selectInput(inputId = "ca_indep_var", label = "Attributes:", choices = vars,
   	selected = state_multiple("ca_indep_var", vars), multiple = TRUE,
