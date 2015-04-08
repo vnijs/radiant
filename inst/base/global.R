@@ -14,6 +14,13 @@ pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
 pkgs_gh <- c("shinyAce","rpivotTable")
 pkgs <- c(pkgs_cran, pkgs_gh)
 
+# list of function arguments
+expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm",
+                       "min" = "min_rm", "max" = "max_rm", "25%" = "p25",
+                       "75%" = "p75", "sd" = "sd_rm", "se" = "serr",
+                       "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
+                       "# missing" = "nmissing")
+
 # environment to hold session information
 sessionStore <- new.env(parent = emptyenv())
 

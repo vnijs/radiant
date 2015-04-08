@@ -1,98 +1,119 @@
+#######################################
+# Explore datasets
+#######################################
+
+# expl_args <- as.list(formals(explore))
+expl_args <- list(dataset = "", expl_vars = "", data_filter = "",
+                  expl_byvar = "", expl_fun = c("length", "mean_rm"))
+
+# list of function inputs selected by user
+expl_inputs <- reactive({
+  # loop needed because reactive values don't allow single bracket indexing
+  for(i in names(expl_args))
+    expl_args[[i]] <- input[[i]]
+  if(!input$show_filter) expl_args$data_filter = ""
+
+  if(is_empty(input$expl_byvar)) expl_args$expl_fun <- c("length", "mean_rm")
+
+  expl_args   # expl_args is only changed inside this function
+})
+
 # UI-elements for explore
-output$uiExpl_columns <- renderUI({
+output$ui_expl_vars <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
-  selectInput("expl_columns", label = "Select columns(s):", choices = vars,
-    selected = state_multiple("expl_columns",vars), multiple = TRUE,
+  selectInput("expl_vars", label = "Select variable(s):", choices = vars,
+    selected = state_multiple("expl_vars",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
 })
 
-output$uiExpl_byvar <- renderUI({
+output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    selected = state_multiple("expl_byvar",vars), multiple = TRUE,
+    selected = state_multiple("expl_byvar",vars, ""), multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
 
-expl_functions <- list("n" = "length", "mean" = ".mean", "median" = ".median",
-                       "min" = ".min", "max" = ".max", "25%" = "p25",
-                       "75%" = "p75", "sd" = ".sd", "se" = "serr",
-                       "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
-                       "# missing" = "nmissing")
-
-output$uiExpl_function <- renderUI({
-  if(is.null(input$expl_byvar)) return()
-  selectizeInput("expl_function", label = "Apply function(s):",
+output$ui_expl_fun <- renderUI({
+  if(is_empty(input$expl_byvar)) return()
+  selectizeInput("expl_fun", label = "Apply function(s):",
                  choices = expl_functions,
-                 selected = state_multiple("expl_function",
-                                           expl_functions, c("length","mean")),
+                 selected = state_multiple("expl_fun", expl_functions, c("length","mean_rm")),
                  multiple = TRUE,
                  options = list(placeholder = 'Select functions',
                                 plugins = list('remove_button', 'drag_drop'))
     )
 })
 
-output$uiExpl_show_viz <- renderUI({
-  if(is.null(input$expl_byvar)) return()
-  checkboxInput('expl_show_viz', 'Show plot',
-                value = state_init("expl_show_viz", FALSE))
+output$ui_expl_viz <- renderUI({
+  if(is_empty(input$expl_byvar)) return()
+  checkboxInput('expl_viz', 'Show plot',
+                value = state_init("expl_viz", FALSE))
 })
 
 output$ui_Explore <- renderUI({
   list(
     wellPanel(
-      uiOutput("uiExpl_columns"),
-      uiOutput("uiExpl_byvar"),
-      uiOutput("uiExpl_function"),
+      uiOutput("ui_expl_vars"),
+      uiOutput("ui_expl_byvar"),
+      uiOutput("ui_expl_fun"),
       div(class="row",
-        div(class="col-xs-6", checkboxInput('expl_show_tab', 'Show table',
-            value = state_init("expl_show_tab", TRUE))),
-        div(class="col-xs-6", uiOutput("uiExpl_show_viz"))
+        div(class="col-xs-6", checkboxInput('expl_tab', 'Show table',
+            value = state_init("expl_tab", TRUE))),
+        div(class="col-xs-6", uiOutput("ui_expl_viz"))
       )
     ),
-    help_modal('Explore','exploreHelp',inclMD("../base/tools/help/explore.md"))
+    help_and_report(modal_title = "Explore",
+                    fun_name = "explore",
+                    help_file = inclMD("../base/tools/help/explore.md"))
   )
 })
 
 .explore <- reactive({
-  if(input$expl_columns %>% not_available) return()
-
+  if(not_available(input$expl_vars)) return()
   withProgress(message = 'Calculating', value = 0, {
-    explore(input$dataset, input$expl_columns, input$expl_byvar,
-            input$expl_function, input$expl_show_tab, input$expl_show_viz)
+    do.call(explore, expl_inputs())
   })
-})
-
-.summary_explore <- reactive({
-
-  result <- .explore()
-  if(is.null(result)) return(invisible())
-  summary_explore(result)
 })
 
 output$expl_summary <- renderPrint({
-  if(!is.null(input$expl_show_tab) && !input$expl_show_tab)
-    return(invisible())
-  .summary_explore()
-})
-
-.plots_explore <- reactive({
-
-  result <- .explore()
-  if(is.null(result)) return()
-
-  withProgress(message = 'Making plot', value = 0, {
-    plots_explore(result)
-  })
+  if(!is.null(input$expl_tab) && input$expl_tab)
+    .explore() %>% { if(is.null(.)) invisible() else summary(.) }
 })
 
 expl_plot_width <- function() 650
 expl_plot_height <- function()
-  400 * length(input$expl_function) * length(input$expl_columns)
+  400 * length(input$expl_fun) * length(input$expl_vars)
 
 output$expl_plots <- renderPlot({
-  if(!input$expl_show_viz || is.null(input$expl_byvar)) return()
-  .plots_explore() %>% print
+  if(!input$expl_viz || is.null(input$expl_byvar)) return()
+  withProgress(message = 'Making plot', value = 0, {
+    .explore() %>% { if(is.null(.)) invisible() else print(plot(., shiny = TRUE)) }
+  })
 }, width = expl_plot_width, height = expl_plot_height)
+
+observe({
+  if(not_pressed(input$explore_report)) return()
+  isolate({
+    # if(!is.null(input$expl_viz) && input$expl_viz == TRUE) {
+    if(!is_empty(input$expl_byvar) && input$expl_viz == TRUE) {
+      inp_out <- list("","")
+      outputs <- c("summary","plot")
+      figs <- TRUE
+    } else {
+      outputs <- c("summary")
+      inp_out <- list("","")
+      figs <- FALSE
+    }
+    update_report(inp_main = clean_args(expl_inputs(), expl_args),
+                  fun_name = "explore",
+                  inp_out = inp_out,
+                  outputs = outputs,
+                  figs = figs,
+                  fig.width = round(7 * expl_plot_width()/650,2),
+                  fig.height = round(7 * expl_plot_height()/650,2))
+  })
+})
+
