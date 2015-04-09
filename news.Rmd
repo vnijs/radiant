@@ -29,6 +29,8 @@ Radiant works on Windows, Mac, or Linux. It can run without an Internet connecti
 
 Simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another omputer. Share state files with others and create reproducible reports using [Rmarkdown](http://rmarkdown.rstudio.com/).
 
+If you are using Radiant on a server you can even share the url (include the SSUID) with others so they can see what you are working on. Thanks for this feature go to [Joe Cheng](https://github.com/jcheng5).
+
 #### Programming
 
 Although Radiant's web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For more information about programming with Radiant see the [programming](http://vnijs.github.io/radiant/programming.html) page on the documentation site.
@@ -71,6 +73,3 @@ Want some help getting started? Watch the tutorials on the [documentation site](
 Not ready to install Radiant on your computer? Try it out online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
 
 Please send questions and comments to: radiant@rady.ucsd.edu.
-
-***
-Linkback to [r-bloggers](http://www.r-bloggers.com/)
