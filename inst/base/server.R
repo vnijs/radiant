@@ -6,12 +6,16 @@ shinyServer(function(input, output, session) {
 
 	# for shiny-server
  	if(!"package:radiant" %in% search()) {
-	  for(file in list.files("../../R",
-	      pattern="\\.(r|R)$",
-	      full.names = TRUE)) {
+ 		if(path == "..") {
+		  for(file in list.files(paste0(path, "/../R"),
+		      pattern="\\.(r|R)$",
+		      full.names = TRUE)) {
 
-	  	source(file, local = TRUE)
-	  }
+		  	source(file, local = TRUE)
+		  }
+		} else {
+			radiant::copy_all(radiant)
+		}
 	} else {
 	  copy_from(radiant, state_init, state_single, state_multiple)
 	}

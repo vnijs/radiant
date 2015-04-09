@@ -13,13 +13,13 @@ output$ui_View <- renderUI({
     wellPanel(
       uiOutput("uiView_vars")
     ),
-    help_modal('View','viewHelp',inclMD("../base/tools/help/view.md"))
+    help_modal('View','viewHelp',inclMD(paste0(path,"/base/tools/help/view.md")))
   )
 })
 
 output$dataviewer <- renderDataTable({
 
-  if(input$view_vars %>% not_available) return()
+  if(not_available(input$view_vars)) return()
   select_(.getdata(), .dots = input$view_vars)
 
 }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
@@ -30,11 +30,11 @@ output$dataviewer <- renderDataTable({
 # use DT to add dplyr - server side code
 # output$dataviewer <- DT::renderDataTable({
 
-#   if(input$view_vars %>% not_available) return()
+#   if(not_available(input$view_vars)) return()
 #   select_(.getdata(), .dots = input$view_vars) %>%
-#   DT::datatable(., server = TRUE)
+#   DT::datatable(., rownames = FALSE, filter = 'bottom',
+#         options = list(pageLength = 10, autoWidth = TRUE, server = TRUE,
+#                        class = 'cell-border stripe',
+#                        lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')))
+#   )
 # })
-
-# options = list(orderClasses = TRUE, caseInsensitive = TRUE,
-#   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
-#   pageLength = 10, search = list(regex = TRUE)))

@@ -349,6 +349,37 @@ copy_from <- function(.from, ...) {
   invisible(NULL)
 }
 
+#' Source all package functions
+#'
+#' @details Equivalent of source with local=TRUE for all package functions. Adapted from functions by smbache, author of the import package. See \url{https://github.com/smbache/import/issues/4} for a discussion. This function will be depracated when (if) it is included in \url{https://github.com/smbache/import}
+#'
+#' @param .from The package to pull the function from
+#'
+#' @examples
+#'
+#' copy_all(radiant)
+#'
+#' @export
+copy_all <- function(.from) {
+
+  from <- as.character(substitute(.from))
+  ls(getNamespace(from), all.names=TRUE) %>%
+    .[grep("^\\.", ., invert = TRUE)] %>%
+    set_names(.,.) -> symbols
+
+  parent  <- parent.frame()
+  from    <- as.character(substitute(.from))
+
+  for (s in seq_along(symbols)) {
+    fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
+    assign(names(symbols)[s],
+           eval.parent(call("function", formals(fn), body(fn))),
+           parent)
+  }
+
+  invisible(NULL)
+}
+
 #' Set initial value for shiny input
 #'
 #' @details Useful for radio button or checkbox

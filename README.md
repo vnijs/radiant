@@ -28,6 +28,8 @@ Radiant works on Windows, Mac, or Linux. It can run without an Internet connecti
 
 Simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another omputer. Share state files with others and create reproducible reports using [Rmarkdown](http://rmarkdown.rstudio.com/). See also the section on `Saving and loading state` below
 
+If you are using Radiant on a server you can even share the url (include the SSUID) with others so they can see what you are working on. Thanks for this feature go to [Joe Cheng](https://github.com/jcheng5).
+
 #### Programming
 
 Although Radiant's web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For more information about programming with Radiant see the [programming](http://vnijs.github.io/radiant/programming.html) page on the documentation site.
@@ -36,13 +38,14 @@ Although Radiant's web-interface can handle quite a few data and analysis tasks,
 
 Radiant focuses on business data and decisions. It offers tools, examples, and documentation relevant for that context, effectively reducing the business analytics learning curve.
 
+
 ## How to install Radiant
 
 - Required: [R](http://cran.rstudio.com/) version 3.1.2 or later
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the command below:
+Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access open R(studio) and copy-and-paste the command below:
 
 ```r
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
@@ -59,15 +62,13 @@ See also the `Installing Radiant` video:
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
-You can create a launcher on your Desktop to start Radiant. On Windows type `win_launcher()` in the R-console and press return. A file called `radiant.bat` will be created that you can double-click to start Radiant in your default browser.
-
-On a Mac you can create a launcher for Radiant by typing `mac_launcher()` in the R-console. This will create a file called `radiant.command` on your Desktop. Double-click the icon to start Radiant in your default browser.
+You can create a launcher on your Desktop to start Radiant by typing `launcher()` in the R-console and pressing return. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser.
 
 When Radiant starts you will see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button on the left of the screen. The Radiant process will stop and the browser window will close (or gray-out).
 
 ## Documentation
 
-Documentation and tutorials are available at <http://vnijs.github.io/radiant/> and in the Radiant web-interface (the `?` icons and the `Help` menu).
+Documentation and tutorials are available at <http://vnijs.github.io/radiant/> and in the Radiant web interface (the `?` icons and the `Help` menu).
 
 Want some help getting started? Watch the tutorials on the [documentation site](http://vnijs.github.io/radiant/tutorials.html)
 
