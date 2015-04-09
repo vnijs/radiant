@@ -155,6 +155,9 @@ output$visualize <- renderPlot({
   if(input$viz_type %in% c("scatter","line", "box", "bar")
      && is_empty(input$viz_yvar, "none")) return()
 
+  if(input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars()))
+    return()
+
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
 
