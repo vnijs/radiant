@@ -8,3 +8,6 @@ build('../shinyAce', binary = TRUE)
 
 build('../rpivotTable')
 build('../rpivotTable', binary = TRUE)
+
+build('../DT')
+build('../DT', binary = TRUE)

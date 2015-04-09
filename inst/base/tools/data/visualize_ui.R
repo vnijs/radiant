@@ -112,8 +112,8 @@ output$ui_Visualize <- renderUI({
       )
     ),
     help_and_report(modal_title = "Visualize",
-                fun_name = "visualize",
-                help_file = inclRmd("../base/tools/help/visualize.md"))
+                    fun_name = "visualize",
+                    help_file = inclRmd(paste0(path,"/base/tools/help/visualize.md")))
   )
 })
 

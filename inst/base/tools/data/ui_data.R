@@ -10,9 +10,9 @@ output$ui_filter_error <- renderUI({
 # data ui and tabs
 output$ui_data <- renderUI({
   list(
-    includeCSS("../base/www/style.css"),
-    includeScript("../base/www/js/jquery-ui.custom.min.js"),
-    includeScript("../base/www/js/returnTextAreaBinding.js"),
+    includeCSS(paste0(path,"/base/www/style.css")),
+    includeScript(paste0(path,"/base/www/js/jquery-ui.custom.min.js")),
+    includeScript(paste0(path,"/base/www/js/returnTextAreaBinding.js")),
     sidebarLayout(
       sidebarPanel(
         # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
@@ -45,6 +45,7 @@ output$datatabs <- renderUI({
       conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
       conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
     tabPanel("View", dataTableOutput("dataviewer")),
+    # tabPanel("View", DT::dataTableOutput("dataviewer")),
     tabPanel("Visualize",plotOutput("visualize", width = "100%", height = "100%")),
     tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
     tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
@@ -54,5 +55,4 @@ output$datatabs <- renderUI({
 })
 
 # to add
-# tabPanel("View", DT::dataTableOutput("dataviewer")),
 # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),

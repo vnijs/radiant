@@ -22,7 +22,8 @@ shinyServer(function(input, output, session) {
     source(file, local = TRUE)
 
 	# source analysis tools for quant app
-  for(file in list.files(c("tools/analysis"), pattern="\\.(r|R)$", full.names = TRUE))
+  for(file in list.files(c("tools/analysis"),
+                         pattern="\\.(r|R)$", full.names = TRUE))
     source(file, local = TRUE)
 
   # save state on refresh or browser close
