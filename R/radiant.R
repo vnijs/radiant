@@ -335,8 +335,6 @@ copy_from <- function(.from, ...) {
   dots <- vapply(dots, as.character, character(1))
   names(dots)[unnamed] <- dots[unnamed]
 
-  # symbols <- import:::symbol_list(...)
-  # from    <- import:::symbol_as_character(substitute(.from))
   symbols <- dots
   parent  <- parent.frame()
   from    <- as.character(substitute(.from))

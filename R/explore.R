@@ -32,7 +32,7 @@ explore <- function(dataset, expl_vars = "",
   dat <- getdata(dataset, vars, filt = data_filter)
 
   # in case : was used
-  expl_vars <- colnames(dat)
+  expl_vars <- colnames(head(dat) %>% select_(.dots = expl_vars))
 
   if(is_empty(expl_byvar)) {
     res <- capture.output(getsummary(dat))
@@ -95,6 +95,7 @@ summary.explore <- function(object, ...) {
       cat("\n")
     }
   }
+
   invisible()
 }
 
@@ -123,13 +124,12 @@ plot.explore <- function(x, shiny = FALSE, ...) {
 
   by_var <- fill_var <- object$expl_byvar[1]
   if(length(object$expl_byvar) > 1) fill_var <- object$expl_byvar[2]
-  if(object$expl_vars[1] == "")
-    object$expl_vars <- names(object$res[[1]])[-c(1:length(object$expl_byvar))]
 
-  if(!exists("expl_functions"))
+  if(!exists("expl_functions")) {
     funcs <- object$expl_fun %>% set_names(.,.)
-  else
+  } else {
     funcs <- get("expl_functions")
+  }
 
   plots <- list()
   for(f in object$expl_fun) {
