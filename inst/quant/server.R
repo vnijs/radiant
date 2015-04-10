@@ -15,13 +15,15 @@ shinyServer(function(input, output, session) {
       }
     } else {
       radiant::copy_all(radiant)
+      set_class <- radiant::set_class
     }
   } else {
     copy_from(radiant, state_init, state_single, state_multiple)
   }
 
   # source data & app tools from base
-  for(file in list.files(c(paste0(path,"/base/tools/app"), paste0(path,"/base/tools/data")),
+  for(file in list.files(c(paste0(path,"/base/tools/app"),
+                         paste0(path,"/base/tools/data")),
                          pattern="\\.(r|R)$", full.names = TRUE))
     source(file, local = TRUE)
 
