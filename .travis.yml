@@ -5,3 +5,4 @@ sudo: required
 r_github_packages:
   - smartinsightsfromdata/rpivotTable
   - trestletech/shinyAce
+  - rstudio/DT
