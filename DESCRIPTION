@@ -28,7 +28,8 @@ Imports:
 		htmlwidgets (>= 0.3.2),
 		rpivotTable (>= 0.1.2.6),
 		shiny (>= 0.11.1),
-		shinyAce (>= 0.2.1)
+		shinyAce (>= 0.2.1),
+		DT (>= 0.0.35)
 Suggests:
 		rmarkdown (>= 0.4.2),
 		ggvis (>= 0.4),
