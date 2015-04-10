@@ -1,8 +1,8 @@
 # path to use for local and server use
-path <- ".."
+# path <- ".."
 
 # path to use for shinyapps.io
-# path <- system.file(package = "radiant")
+path <- system.file(package = "radiant")
 
 ### options used for debugging
 # options(warn=0)
