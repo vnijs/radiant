@@ -71,7 +71,11 @@ Want some help getting started? Watch the tutorials on the [documentation site](
 
 ## Online
 
-Not ready to install Radiant on your computer? Try it out online at <http://vnijs.rady.ucsd.edu:3838/marketing>. Note that this is a test server only!
+Not ready to install Radiant on your computer? Try it online at the links below:
+
+<https://vnijs.shinyapps.io/base>
+<https://vnijs.shinyapps.io/quant>
+<https://vnijs.shinyapps.io/marketing>
 
 ## Saving and loading state
 
