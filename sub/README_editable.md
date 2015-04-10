@@ -73,11 +73,12 @@ Want some help getting started? Watch the tutorials on the [documentation site](
 
 Not ready to install Radiant on your computer? Try it online at the links below:
 
-<https://vnijs.shinyapps.io/base>
+<a href="https://vnijs.shinyapps.io/base" target="_blank">vnijs.shinyapps.io/base</a>
 
-<https://vnijs.shinyapps.io/quant>
+<a href="https://vnijs.shinyapps.io/quant" target="_blank">vnijs.shinyapps.io/quant</a>
 
-<https://vnijs.shinyapps.io/marketing>
+<a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a>
+
 
 ## Saving and loading state
 
