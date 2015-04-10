@@ -1,23 +1,27 @@
 shinyServer(function(input, output, session) {
 
 	# source shared functions
-	source('../base/init.R', local = TRUE)
-	source('../base/radiant.R', local = TRUE)
+	source(paste0(path,"/base/init.R"), local = TRUE)
+	source(paste0(path,"/base/radiant.R"), local = TRUE)
 
   # for shiny-server
   if(!"package:radiant" %in% search()) {
-    for(file in list.files("../../R",
-        pattern="\\.(r|R)$",
-        full.names = TRUE)) {
+    if(path == "..") {
+      for(file in list.files("../../R",
+          pattern="\\.(r|R)$",
+          full.names = TRUE)) {
 
-      source(file, local = TRUE)
+        source(file, local = TRUE)
+      }
+    } else {
+      radiant::copy_all(radiant)
     }
   } else {
-	  copy_from(radiant, state_init, state_single, state_multiple)
-	}
+    copy_from(radiant, state_init, state_single, state_multiple)
+  }
 
   # source data & app tools from base
-  for(file in list.files(c("../base/tools/app", "../base/tools/data"),
+  for(file in list.files(c(paste0(path,"/base/tools/app"), paste0(path,"/base/tools/data")),
                          pattern="\\.(r|R)$", full.names = TRUE))
     source(file, local = TRUE)
 

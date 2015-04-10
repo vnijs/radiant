@@ -1,13 +1,13 @@
 shinyServer(function(input, output, session) {
 
   # source shared functions
-	source('init.R', local = TRUE)
-	source('radiant.R', local = TRUE)
+	source("init.R", local = TRUE)
+	source("radiant.R", local = TRUE)
 
 	# for shiny-server
  	if(!"package:radiant" %in% search()) {
  		if(path == "..") {
-		  for(file in list.files(paste0(path, "/../R"),
+      for(file in list.files("../../R",
 		      pattern="\\.(r|R)$",
 		      full.names = TRUE)) {
 

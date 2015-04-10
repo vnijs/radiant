@@ -83,7 +83,7 @@ output$ui_compare_means <- renderUI({
     ),
     help_and_report(modal_title = "Compare means",
                     fun_name = "compare_means",
-                    help_file = inclMD("../quant/tools/help/compare_means.md"))
+                    help_file = inclMD(paste0(path,"/quant/tools/help/compare_means.md")))
   )
 })
 

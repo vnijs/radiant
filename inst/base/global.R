@@ -4,6 +4,7 @@
 # path to use for shinyapps.io
 path <- system.file(package = "radiant")
 
+# if radiant is not installed revert to path in the inst directory
 if(path == "") path <- ".."
 
 ### options used for debugging
@@ -56,7 +57,9 @@ if(Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize=5*1024^2)
   # source("../base/dependencies.R", local = TRUE)
   # source(paste0(path, "/base/dependencies.R"), local = TRUE)
-  source("for_shinyapps.R", local = TRUE)
+  # source("for_shinyapps.R", local = TRUE)
+  if(exists("pkgs"))
+    sapply(pkgs, require, character.only=TRUE)
 }
 
 # adding the figures path to avoid making a copy of all figures in www/figures
