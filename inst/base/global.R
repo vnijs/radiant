@@ -4,6 +4,8 @@
 # path to use for shinyapps.io
 path <- system.file(package = "radiant")
 
+if(path == "") path <- ".."
+
 ### options used for debugging
 # options(warn=0)
 # options(warn=2)

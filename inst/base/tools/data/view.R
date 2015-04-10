@@ -17,6 +17,16 @@ output$ui_View <- renderUI({
   )
 })
 
+# output$dataviewer <- renderDataTable({
+
+  # if(not_available(input$view_vars)) return()
+  # select_(.getdata(), .dots = input$view_vars)
+
+# }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
+#   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
+#   pageLength = 10, search = list(regex = TRUE)))
+
+
 output$dataviewer <- DT::renderDataTable({
 
   if(not_available(input$view_vars)) return()
@@ -28,7 +38,9 @@ output$dataviewer <- DT::renderDataTable({
     server = TRUE,
     options = list(
       ajax = list(url = action),
+      search = list(regex = TRUE),
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
+      autoWidth = TRUE,
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
