@@ -55,7 +55,8 @@ if(Sys.getenv('SHINY_PORT') == "") {
   # limit upload filesize on server (5MB)
   options(shiny.maxRequestSize=5*1024^2)
   # source("../base/dependencies.R", local = TRUE)
-  source(paste0(path, "/base/dependencies.R"), local = TRUE)
+  # source(paste0(path, "/base/dependencies.R"), local = TRUE)
+  source("for_shinyapps.R", local = TRUE)
 }
 
 # adding the figures path to avoid making a copy of all figures in www/figures
