@@ -17,7 +17,7 @@ pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
                "shiny", "pryr", "shiny", "magrittr", "tidyr", "dplyr",
                "broom", "htmlwidgets")
-pkgs_gh <- c("shinyAce","rpivotTable")
+pkgs_gh <- c("shinyAce","rpivotTable","DT")
 pkgs <- c(pkgs_cran, pkgs_gh)
 
 # list of function arguments

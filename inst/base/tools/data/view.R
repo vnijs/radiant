@@ -17,27 +17,21 @@ output$ui_View <- renderUI({
   )
 })
 
-# output$dataviewer <- renderDataTable({
-
-#   if(not_available(input$view_vars)) return()
-#   select_(.getdata(), .dots = input$view_vars)
-
-# }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
-#   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
-#   pageLength = 10, search = list(regex = TRUE)))
-
-
-# use DT to add dplyr - server side code
 output$dataviewer <- DT::renderDataTable({
 
   if(not_available(input$view_vars)) return()
-  select_(.getdata(), .dots = input$view_vars) -> dat
-  DT::datatable(dat, rownames = FALSE, filter = "bottom",
-    # server = TRUE,
+
+  dat <- select_(.getdata(), .dots = input$view_vars)
+  action = DT::dataTableAjax(session, dat, rownames = FALSE)
+
+  DT::datatable(dat, filter = "bottom", rownames = FALSE,
+    server = TRUE,
     options = list(
+      ajax = list(url = action),
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
+      processing = FALSE,
       pageLength = 10,
-      lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All'))
+      lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
     )
   )
 })
