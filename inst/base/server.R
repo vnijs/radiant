@@ -6,7 +6,7 @@ shinyServer(function(input, output, session) {
 
 	# for shiny-server
  	if(!"package:radiant" %in% search()) {
- 		if(path == "..") {
+ 		if(r_path == "..") {
       for(file in list.files("../../R",
 		      pattern="\\.(r|R)$",
 		      full.names = TRUE)) {
