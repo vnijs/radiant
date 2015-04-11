@@ -1,5 +1,6 @@
 # path to use for local and server use
-r_path <- if(file.exists("../quant"))  ".." else system.file(package = "radiant")
+r_path <- ifelse(file.exists("../base") && file.exists("../quant"), "..",
+                 system.file(package = "radiant"))
 if(r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 
 # reactive programming in Shiny requires (some) use of global variables
