@@ -34,7 +34,7 @@ shinyServer(function(input, output, session) {
 
 	# source additional analysis tools for marketing app
   for(file in list.files(c("tools/analysis"),
-      										 pattern="\\.(r|R)$", full.names = TRUE))
+      									 pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
 
   # save state on refresh or browser close

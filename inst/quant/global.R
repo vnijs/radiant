@@ -6,4 +6,4 @@ if(bp == "") stop("Radiant base app not found")
 source(file.path(bp,'/base/global.R'), local = TRUE)
 rm(bp)
 
-addResourcePath("figures_quant", file.path(r_path,"/quant/tools/help/figures/"))
+addResourcePath("figures_quant", "tools/help/figures/")
