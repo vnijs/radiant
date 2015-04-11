@@ -26,7 +26,7 @@ upload_error_handler <- function(objname, ret) {
 
 loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep = "\t") {
 
-  if (.Platform$OS.type == 'windows') {
+  if (Sys.info()["sysname"] == "Windows") {
     dat <- try(read.table("clipboard", header = header, sep = sep), silent = TRUE)
   } else if (Sys.info()["sysname"] == "Darwin") {
     dat <- try(read.table(pipe("pbpaste"), header = header, sep = sep), silent = TRUE)
