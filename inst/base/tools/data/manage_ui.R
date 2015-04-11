@@ -17,7 +17,7 @@ output$ui_fileUpload <- renderUI({
 })
 
 output$ui_clipboard_load <- renderUI({
-  if(running_local) {
+  if(r_local) {
     actionButton('loadClipData', 'Paste data')
   } else {
     tagList(tags$textarea(class="form-control",
@@ -28,7 +28,7 @@ output$ui_clipboard_load <- renderUI({
 })
 
 output$ui_clipboard_save <- renderUI({
-  if(running_local) {
+  if(r_local) {
     actionButton('saveClipData', 'Copy data')
   } else {
     tagList(
@@ -99,7 +99,7 @@ output$ui_Manage <- renderUI({
         actionButton('removeDataButton', 'Remove data')
       )
     ),
-    help_modal('Manage','manageHelp',inclMD(file.path(path,"/base/tools/help/manage.md")))
+    help_modal('Manage','manageHelp',inclMD(file.path(r_path,"/base/tools/help/manage.md")))
   )
 })
 
@@ -225,7 +225,7 @@ observe({
     # loading data bundled with Radiant
     # path <- "data/data_examples/"
     # path <- "../../data/"
-    data_path <- file.path(path,"/base/data/")
+    data_path <- file.path(r_path,"/base/data/")
     examples <- list.files(data_path)
 
     for(ex in examples) loadUserData(ex, paste0(data_path,ex), 'rda')

@@ -1,4 +1,4 @@
-# Used for running as a shiny-app instead of using radiant() from the radiant package
+# Used to install dependencies on shiny-server (not for shinyapp.io)
 # install to user directory
 local_dir <- Sys.getenv("R_LIBS_USER")
 if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)

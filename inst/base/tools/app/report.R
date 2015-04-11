@@ -76,7 +76,7 @@ valsRmd <- reactiveValues(knit = 0)
 knitIt <- function(text) {
   knitr::knit2html(text = text, quiet = TRUE,
                    options=c("mathjax", "base64_images"),
-                   stylesheet = file.path(path,"/base/www/rmarkdown.css")) %>% HTML
+                   stylesheet = file.path(r_path,"/base/www/rmarkdown.css")) %>% HTML
 }
 
 # rmarkdown requires pandoc install
@@ -97,7 +97,7 @@ output$rmd_knitDoc <- renderUI({
   if(valsRmd$knit == 1) return()
 
   isolate({
-    if(!running_local) {
+    if(!r_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
     }
     if(input$rmd_report != "") {
@@ -114,7 +114,7 @@ output$rmd_knitDoc <- renderUI({
 output$saveHTML <- downloadHandler(
   filename = function() {"report.html"},
   content = function(file) {
-    if(running_local) {
+    if(r_local) {
       isolate({
         # text <- input$rmd_report
         ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
@@ -272,7 +272,7 @@ observe({
 output$rCodeEval <- renderPrint({
   if(valsCode$code == 1) return()
   isolate({
-    if(running_local) {
+    if(r_local) {
       if(is.null(input$r_code_selection) || input$r_code_selection == "") {
         r_code <- input$r_code
       } else {

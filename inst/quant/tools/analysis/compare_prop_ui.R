@@ -75,7 +75,7 @@ output$ui_compare_props <- renderUI({
     ),
     help_and_report(modal_title = "Compare proportions",
                     fun_name = "compare_props",
-                    help_file = inclMD(file.path(path,"/quant/tools/help/compare_props.md")))
+                    help_file = inclMD(file.path(r_path,"/quant/tools/help/compare_props.md")))
   )
 })
 

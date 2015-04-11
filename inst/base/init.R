@@ -13,7 +13,7 @@ init_state <- function(r_data) {
   # Therefore, the data need to be a reactive value so the other reactive
   # functions and outputs that depend on these datasets will know when they
   # are changed."
-  robj <- load(file.path(path,"/base/data/diamonds.rda"))
+  robj <- load(file.path(r_path,"/base/data/diamonds.rda"))
   df <- get(robj)
   r_data[["diamonds"]] <- df
   r_data[["diamonds_descr"]] <- attr(df,'description')
@@ -21,12 +21,13 @@ init_state <- function(r_data) {
   r_data
 }
 
-if(!running_local) {
+if(!r_local) {
 
   state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
-    if(!require(sendmailR))
+    if(!require(sendmailR)) {
       install.packages("sendmailR", repos = "http://cran.rstudio.com")
-    library(sendmailR)
+      library(sendmailR)
+    }
 
     from <- '<vincent.nijs@gmail.com>'
     to <- '<vincent.nijs@gmail.com>'
@@ -41,14 +42,14 @@ if(!running_local) {
     ages <- list()
     for (i in ids) {
       session_age <- difftime(Sys.time(), sessionStore[[i]]$timestamp, units = "days")
-      if(session_age > 7) sessionStore[[i]] <- NULL
+      if(session_age > 1) sessionStore[[i]] <- NULL
       ages[i] <- session_age %>% round(3)
     }
 
     session_size <- pryr::object_size(sessionStore) %>% as.numeric %>%
                       {. / 1048576} %>% round(3)
 
-    if(length(sessionStore) > 10 || session_size > 20)
+    if(length(sessionStore) > 20 || session_size > 20)
       state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
   }
 
@@ -63,7 +64,7 @@ isolate({
 })
 
 # set the session id
-if(running_local) {
+if(r_local) {
   ssuid <- "local"
 } else {
   if(is.null(prevSSUID)) {
@@ -89,7 +90,7 @@ if (exists("r_state") && exists("r_data")) {
   r_data <- init_state(reactiveValues())
 }
 
-if(running_local) {
+if(r_local) {
   # reference to radiant environment that can be accessed by exported functions
   # does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")

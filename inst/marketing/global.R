@@ -1,17 +1,10 @@
-# path to use for local and server use
-# path <- ".."
+# if base is available in inst/ use it, else use installed radiant (i.e., for shinyapps.io)
+bp <- if(file.exists("../base"))  ".." else system.file(package = "radiant")
+if(bp == "") stop("Radiant base app not found")
 
-# path to use for shinyapps.io
-path <- system.file(package = "radiant")
+# sourcing from radiant base, note that path is set in base/global.R
+source(file.path(bp,'/base/global.R'), local = TRUE)
+rm(bp)
 
-# if radiant is not installed revert to path in the inst directory
-if(path == "") path <- ".."
-
-# sourcing from radiant base
-source(file.path(path,"/base/global.R"), local = TRUE)
-
-# add functions below that may not be needed in other apps
-if(!"package:radiant" %in% search()) {
-	addResourcePath("figures_marketing", "tools/help/figures/")
-	addResourcePath("figures_quant", file.path(path,"/quant/tools/help/figures/"))
-}
+addResourcePath("figures_marketing", "tools/help/figures/")
+addResourcePath("figures_quant", file.path(r_path,"/quant/tools/help/figures/"))

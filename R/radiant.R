@@ -9,18 +9,8 @@
 #'   radiant()
 #' }
 #' @export
-radiant <- function(app = c("marketing", "quant", "base")) {
-
-  addResourcePath("imgs", system.file("base/www/imgs/", package="radiant"))
-  addResourcePath("figures", system.file("base/tools/help/figures/", package="radiant"))
-  if(app[1] == "marketing") {
-    addResourcePath("figures_marketing", system.file("marketing/tools/help/figures/", package="radiant"))
-  } else if(app[1] == "quant") {
-    addResourcePath("figures_quant", system.file("quant/tools/help/figures/", package="radiant"))
-  }
-
+radiant <- function(app = c("marketing", "quant", "base"))
   runApp(system.file(app[1], package="radiant"), launch.browser = TRUE)
-}
 
 #' Alias used to set the class for analysis function return
 #'
@@ -104,7 +94,7 @@ getdata <- function(dataset,
   { if(exists("r_env")) {
       r_env$r_data[[dataset]]
     } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-      if(exists("running_local")) { if(running_local) cat("Dataset", dataset, "loaded from r_data list\n") }
+      if(exists("r_local")) { if(r_local) cat("Dataset", dataset, "loaded from r_data list\n") }
       r_data[[dataset]]
     } else if(exists(dataset)) {
       d_env <- pryr::where(dataset)
@@ -145,7 +135,7 @@ changedata <- function(dataset,
     cat("Dataset", dataset, "changed in r_env\n")
     r_env$r_data[[dataset]][,var_names] <- vars
   } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-    if(exists("running_local")) { if(running_local) cat("Dataset", dataset, "changed in r_data list\n") }
+    if(exists("r_local")) { if(r_local) cat("Dataset", dataset, "changed in r_data list\n") }
     d_env <- pryr::where("r_data")
     d_env$r_data[[dataset]][,var_names] <- vars
   } else if(exists(dataset)) {

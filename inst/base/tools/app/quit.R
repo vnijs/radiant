@@ -20,7 +20,7 @@ output$savequit <- renderUI({
         checkboxInput('showInput', 'Show input', FALSE),
         checkboxInput('showState', 'Show state', FALSE)),
 
-      help_modal('Quit','quitHelp',inclMD(file.path(path,"/base/tools/help/quit.md")))
+      help_modal('Quit','quitHelp',inclMD(file.path(r_path,"/base/tools/help/quit.md")))
     ),
     mainPanel(
       conditionalPanel(condition = "input.showInput == true",
@@ -56,7 +56,7 @@ output$showState <- renderPrint({
 })
 
 observe({
-  if(not_pressed(input$quitApp) || !running_local) return()
+  if(not_pressed(input$quitApp) || !r_local) return()
 
   # quit R, unless you are running an interactive session
   if(interactive()) {
