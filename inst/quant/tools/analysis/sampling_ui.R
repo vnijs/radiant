@@ -29,7 +29,7 @@ output$ui_sampling <- renderUI({
 	  	numericInput("smp_sample_size", "Sample size:", min = 1,
                    value = state_init("smp_sample_size",1))),
     help_and_report(modal_title = 'Sampling', fun_name = 'sampling',
-                    help_file = inclMD(paste0(path,"/quant/tools/help/sampling.md")))
+                    help_file = inclMD(file.path(path,"/quant/tools/help/sampling.md")))
  	)
 })
 

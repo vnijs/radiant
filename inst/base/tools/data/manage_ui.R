@@ -99,7 +99,7 @@ output$ui_Manage <- renderUI({
         actionButton('removeDataButton', 'Remove data')
       )
     ),
-    help_modal('Manage','manageHelp',inclMD(paste0(path,"/base/tools/help/manage.md")))
+    help_modal('Manage','manageHelp',inclMD(file.path(path,"/base/tools/help/manage.md")))
   )
 })
 
@@ -225,7 +225,7 @@ observe({
     # loading data bundled with Radiant
     # path <- "data/data_examples/"
     # path <- "../../data/"
-    data_path <- paste0(path,"/base/data/")
+    data_path <- file.path(path,"/base/data/")
     examples <- list.files(data_path)
 
     for(ex in examples) loadUserData(ex, paste0(data_path,ex), 'rda')

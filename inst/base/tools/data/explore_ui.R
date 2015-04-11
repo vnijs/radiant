@@ -67,7 +67,7 @@ output$ui_Explore <- renderUI({
     ),
     help_and_report(modal_title = "Explore",
                     fun_name = "explore",
-                    help_file = inclMD(paste0(path,"/base/tools/help/explore.md")))
+                    help_file = inclMD(file.path(path,"/base/tools/help/explore.md")))
   )
 })
 

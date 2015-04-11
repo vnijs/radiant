@@ -56,6 +56,6 @@ shinyUI(
     tabPanel("About", uiOutput("help_about"))
   ),
 
-  includeScript(paste0(path,"/base/www/js/session.js")),
+  includeScript(file.path(path,"/base/www/js/session.js")),
   tags$head(tags$link(rel="shortcut icon", href="imgs/icon.png"))
 ))

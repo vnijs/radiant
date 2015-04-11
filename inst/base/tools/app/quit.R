@@ -20,7 +20,7 @@ output$savequit <- renderUI({
         checkboxInput('showInput', 'Show input', FALSE),
         checkboxInput('showState', 'Show state', FALSE)),
 
-      help_modal('Quit','quitHelp',inclMD(paste0(path,"/base/tools/help/quit.md")))
+      help_modal('Quit','quitHelp',inclMD(file.path(path,"/base/tools/help/quit.md")))
     ),
     mainPanel(
       conditionalPanel(condition = "input.showInput == true",

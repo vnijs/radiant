@@ -10,9 +10,9 @@ output$ui_filter_error <- renderUI({
 # data ui and tabs
 output$ui_data <- renderUI({
   list(
-    includeCSS(paste0(path,"/base/www/style.css")),
-    includeScript(paste0(path,"/base/www/js/jquery-ui.custom.min.js")),
-    includeScript(paste0(path,"/base/www/js/returnTextAreaBinding.js")),
+    includeCSS(file.path(path,"/base/www/style.css")),
+    includeScript(file.path(path,"/base/www/js/jquery-ui.custom.min.js")),
+    includeScript(file.path(path,"/base/www/js/returnTextAreaBinding.js")),
     sidebarLayout(
       sidebarPanel(
         # based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo

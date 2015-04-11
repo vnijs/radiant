@@ -1,8 +1,8 @@
 shinyServer(function(input, output, session) {
 
 	# source shared functions
-	source(paste0(path,"/base/init.R"), local = TRUE)
-	source(paste0(path,"/base/radiant.R"), local = TRUE)
+	source(file.path(path,"/base/init.R"), local = TRUE)
+	source(file.path(path,"/base/radiant.R"), local = TRUE)
 
   # for shiny-server
   if(!"package:radiant" %in% search()) {
@@ -22,13 +22,13 @@ shinyServer(function(input, output, session) {
   }
 
 	# source data & app tools from base
-	for(file in list.files(c(paste0(path,"/base/tools/app"),
-	    									 paste0(path,"/base/tools/data")),
+	for(file in list.files(c(file.path(path,"/base/tools/app"),
+	    									 file.path(path,"/base/tools/data")),
 												 pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
 
 	# source analysis tools from quant app
-	for(file in list.files(paste0(path,"/quant/tools/analysis"),
+	for(file in list.files(file.path(path,"/quant/tools/analysis"),
 	    									 pattern="\\.(r|R)$", full.names = TRUE))
 	  source(file, local = TRUE)
 

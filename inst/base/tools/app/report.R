@@ -76,7 +76,7 @@ valsRmd <- reactiveValues(knit = 0)
 knitIt <- function(text) {
   knitr::knit2html(text = text, quiet = TRUE,
                    options=c("mathjax", "base64_images"),
-                   stylesheet = paste0(path,"/base/www/rmarkdown.css")) %>% HTML
+                   stylesheet = file.path(path,"/base/www/rmarkdown.css")) %>% HTML
 }
 
 # rmarkdown requires pandoc install

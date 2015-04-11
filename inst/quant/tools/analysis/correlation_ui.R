@@ -37,7 +37,7 @@ output$ui_correlation <- renderUI({
 	  ),
   	help_and_report(modal_title = "Correlation",
   	                fun_name = "correlation",
-  	                help_file = inclMD(paste0(path,"/quant/tools/help/correlation.md")))
+  	                help_file = inclMD(file.path(path,"/quant/tools/help/correlation.md")))
 	)
 })
 
