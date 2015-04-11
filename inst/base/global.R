@@ -2,6 +2,8 @@
 r_path <- if(file.exists("../quant"))  ".." else system.file(package = "radiant")
 if(r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 
+# r_path <- system.file(package = "radiant")
+
 # reactive programming in Shiny requires (some) use of global variables
 # currently these are r_env, r_data, r_state, r_local, and r_path
 
