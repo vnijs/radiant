@@ -84,7 +84,7 @@ observe({
         }
       }
       try(rm(r_env, envir = .GlobalEnv), silent = TRUE) # removing the reference to the shiny environment
-      try(rm(sessionStore, envir = .GlobalEnv), silent = TRUE) # removing the sessionStore
+      try(rm(r_sessions, envir = .GlobalEnv), silent = TRUE) # removing the r_sessions
       try(unlink("~/radiant_figures/", recursive = TRUE), silent = TRUE) # removing temp knitr figures directory
       cat(stop_message)
       stopApp("-- stop successful --")

@@ -1,7 +1,6 @@
-# deplory shinyapps.io
+# deploy to shinyapps.io
 devtools::install_github("vnijs/radiant")
-devtools::install_github("jeroenooms/jsonlite")
-devtools::install_github("rstudio/shiny")
+devtools::install_github(c('jeroenooms/jsonlite', 'rstudio/shiny', 'yihui/htmlwidgets@jsonlite'))
 
 library(shinyapps)
 fpath <- "~/gh/radiant_dev/inst/base"

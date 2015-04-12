@@ -19,6 +19,9 @@ if (interactive()) {
 	radiant()
 }
 
+# try this
+# https://kbroman.wordpress.com/2014/08/01/testing-an-r-packages-interactive-graphs/
+
 ######################################################
 # regression
 ######################################################

@@ -4,17 +4,18 @@ r_path <- ifelse(file.exists("../base") && file.exists("../quant"), "..",
 if(r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 
 # reactive programming in Shiny requires (some) use of global variables
-# currently these are r_env, r_data, r_state, r_local, and r_path
+# currently these are r_env, r_data, r_state, r_local, r_path, r_sessions, r_ssuid
 
 options("width"=200)
 options("scipen"=100, "digits"=4)
 
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
-               "shiny", "pryr", "shiny", "magrittr", "tidyr", "dplyr",
-               "broom", "htmlwidgets")
+               "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
+               "htmlwidgets")
 pkgs_gh <- c("shinyAce","rpivotTable","DT")
 pkgs <- c(pkgs_cran, pkgs_gh)
+rm(pkgs_cran,pkgs_gh)
 
 # list of function arguments
 expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm",
@@ -24,7 +25,7 @@ expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm
                        "# missing" = "nmissing")
 
 # environment to hold session information
-sessionStore <- new.env(parent = emptyenv())
+r_sessions <- new.env(parent = emptyenv())
 
 if(Sys.getenv('SHINY_PORT') == "") {
 

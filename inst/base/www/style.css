@@ -33,6 +33,11 @@ th, td {
   text-align: left;
 }
 
+table.dataTable tfoot td, table.dataTable thead td {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .modal-dialog {
   width: 800px;
 }

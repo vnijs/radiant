@@ -38,18 +38,18 @@ if(!r_local) {
 
   check_age_and_size <- function() {
 
-    ids <- ls(sessionStore)
+    ids <- ls(r_sessions)
     ages <- list()
     for (i in ids) {
-      session_age <- difftime(Sys.time(), sessionStore[[i]]$timestamp, units = "days")
-      if(session_age > 1) sessionStore[[i]] <- NULL
+      session_age <- difftime(Sys.time(), r_sessions[[i]]$timestamp, units = "days")
+      if(session_age > 1) r_sessions[[i]] <- NULL
       ages[i] <- session_age %>% round(3)
     }
 
-    session_size <- pryr::object_size(sessionStore) %>% as.numeric %>%
+    session_size <- pryr::object_size(r_sessions) %>% as.numeric %>%
                       {. / 1048576} %>% round(3)
 
-    if(length(sessionStore) > 20 || session_size > 20)
+    if(length(r_sessions) > 20 || session_size > 20)
       state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
   }
 
@@ -65,26 +65,26 @@ isolate({
 
 # set the session id
 if(r_local) {
-  ssuid <- "local"
+  r_ssuid <- "local"
 } else {
   if(is.null(prevSSUID)) {
-    ssuid <- shiny:::createUniqueId(16)
+    r_ssuid <- shiny:::createUniqueId(16)
   } else {
-    ssuid <- prevSSUID
+    r_ssuid <- prevSSUID
   }
 }
 
 # (re)start the session and push the id into the url
-session$sendCustomMessage("session_start", ssuid)
+session$sendCustomMessage("session_start", r_ssuid)
 
 # load previous state if available
 if (exists("r_state") && exists("r_data")) {
   r_data <- do.call(reactiveValues, r_data)
   r_state <- r_state
   rm(r_data, r_state, envir = .GlobalEnv)
-} else if(!is.null(sessionStore[[ssuid]]$r_data)) {
-  r_data <- do.call(reactiveValues, sessionStore[[ssuid]]$r_data)
-  r_state <- sessionStore[[ssuid]]$r_state
+} else if(!is.null(r_sessions[[r_ssuid]]$r_data)) {
+  r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
+  r_state <- r_sessions[[r_ssuid]]$r_state
 } else {
   r_state <- list()
   r_data <- init_state(reactiveValues())

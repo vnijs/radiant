@@ -14,7 +14,7 @@ saveStateOnRefresh <- function(session = session) {
     isolate({
       if(not_pressed(input$resetState) && not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
-        sessionStore[[ssuid]] <- list(
+        r_sessions[[r_ssuid]] <- list(
           r_data = reactiveValuesToList(r_data),
           r_state = reactiveValuesToList(input),
           timestamp = Sys.time()
@@ -22,7 +22,7 @@ saveStateOnRefresh <- function(session = session) {
         if(r_local) rm(r_env, envir = .GlobalEnv)
       } else {
         if(is.null(input$uploadState))
-          try(sessionStore[[ssuid]] <- NULL, silent = TRUE)
+          try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
       }
     })
   })

@@ -271,7 +271,7 @@ observe({
       tmpEnv <- new.env()
       load(inFile$datapath, envir=tmpEnv)
 
-      sessionStore[[ssuid]] <- list(
+      r_sessions[[r_ssuid]] <- list(
         r_data = tmpEnv$r_data,
         r_state = tmpEnv$r_state,
         timestamp = Sys.time()
