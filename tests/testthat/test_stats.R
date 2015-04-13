@@ -74,24 +74,24 @@ test_that("regression", {
 
   # full output - cannot open file when running tests
   res1 <- capture.output(summary(result)) %>% trim
-  # cat(paste0(res1,"\n"))
-  # cat(paste0(res1,"\n"), file = "~/gh/radiant_dev/tests/output/regression1.txt")
-  # res2 <- paste0(readLines(file.path(t_path,"output/regression1.txt"))) %>% trim
+  # cat(paste0(res1,"\n"), file = "~/gh/radiant_dev/tests/testthat/output/regression1.txt")
   res2 <- paste0(readLines("output/regression1.txt")) %>% trim
   expect_equal(res1,res2)
 })
 
 test_that("regression - plots", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
-  # saved grob if > 2 time the filesize of the png
-  # grb <- plot(result, reg_plots = "dashboard", shiny = TRUE)
-  # save(grb, file = "/output/regression1-correct.rda")
-  png("output/regression1.png")
-    plot(result, reg_plots = "dashboard")
-  dev.off()
-  res1 <- readPNG("output/regression1.png")
-  res2 <- readPNG("output/regression1-correct.png")
-  expect_equal(res1,res2)
-  unlink("output/regression1.png")
-  rm(res1, res2)
+  grb <- plot(result, reg_plots = "dashboard", shiny = TRUE)
+  expect_equal(all(c("arrange","ggplot") %in% class(grb)), TRUE)
+  expect_equal(try(print(grb), silent = TRUE), NULL)
+  expect_equal(file.exists("Rplots.pdf"), TRUE)
+  unlink("Rplots.pdf")
+#   png("output/regression1.png")
+#     plot(result, reg_plots = "dashboard")
+#   dev.off()
+#   res1 <- readPNG("output/regression1.png")
+#   res2 <- readPNG("output/regression1-correct.png")
+#   expect_equal(res1,res2)
+#   unlink("output/regression1.png")
+#   rm(res1, res2)
 })
