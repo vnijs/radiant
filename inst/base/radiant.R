@@ -128,8 +128,8 @@ show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
     xtable::xtable(.) %>%
     print(type='html',  print.results = FALSE, include.rownames = FALSE) %>%
     paste0(title, .) %>%
-    sub("<table border=1>","<table class='table table-condensed table-hover'>", .) %>%
-    paste0(.,'<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
+    sub("<table border=.*\n<tr>","<table class='table table-condensed table-hover'>\n<tr>", ., perl = TRUE) %>%
+    paste0(.,'\n<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
     enc2utf8
 }
 

@@ -16,6 +16,6 @@ shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE,
     tabPanel("About", uiOutput("help_about"))
   ),
 
-  includeScript(file.path(r_path,"/base/www/js/session.js")),
-  tags$head(tags$link(rel="shortcut icon", href="imgs/icon.png"))
+  tags$head(tags$script(src="js/session.js"),
+            tags$link(rel="shortcut icon", href="imgs/icon.png"))
 ))
