@@ -1,5 +1,7 @@
 # deploy to shinyapps.io
 devtools::install_github("vnijs/radiant")
+devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
+devtools::install_github(c("rstudio/DT"))
 devtools::install_github(c('jeroenooms/jsonlite', 'rstudio/shiny', 'ramnathv/htmlwidgets'))
 
 library(shinyapps)
