@@ -5,4 +5,7 @@ sudo: required
 r_github_packages:
   - smartinsightsfromdata/rpivotTable
   - trestletech/shinyAce
+  - jeroenooms/jsonlite
+  - rstudio/shiny
+  - yihui/htmlwidgets@jsonlite
   - rstudio/DT

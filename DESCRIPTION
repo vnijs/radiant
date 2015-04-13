@@ -34,7 +34,9 @@ Suggests:
 		rmarkdown (>= 0.4.2),
 		ggvis (>= 0.4),
 		devtools (>= 1.7.0),
-		testthat (>= 0.9.1)
+		png (>= 0.1.7),
+		testthat (>= 0.9.1),
+		covr (>= 0.2.0.9002)
 URL: https://github.com/vnijs/radiant, http://vnijs.github.io/radiant/
 BugReports: https://github.com/vnijs/radiant/issues
 License: AGPL-3 | file LICENSE

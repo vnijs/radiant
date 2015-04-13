@@ -1,11 +1,12 @@
 library(radiant)
+library(png)
 
-# try this for interactive tests
-# https://kbroman.wordpress.com/2014/08/01/testing-an-r-packages-interactive-graphs/
-
+# change this directory to run locally
+# t_path <- "~/gh/radiant_dev/tests"
+# t_path <- system.file(package = "radiant")
+# t_path <- "."
 # setwd("~/gh/radiant_dev/tests")
-test_dir <- system.file(package = "radiant")
-# test_dir <- "."
+
 trim_trailing <- function (x) sub("\\s+$", "", x)
 trim_leading <- function (x) sub("^\\s+", "", x)
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
@@ -72,17 +73,25 @@ test_that("regression", {
   expect_equal(res1,res2)
 
   # full output - cannot open file when running tests
-  # res1 <- capture.output(summary(result)) %>% trim
+  res1 <- capture.output(summary(result)) %>% trim
   # cat(paste0(res1,"\n"))
   # cat(paste0(res1,"\n"), file = "~/gh/radiant_dev/tests/output/regression1.txt")
-  # res2 <- paste0(readLines(file.path(test_dir,"output/regression1.txt"))) %>% trim
-  # expect_equal(res1,res2)
+  res2 <- paste0(readLines(file.path(t_path,"output/regression1.txt"))) %>% trim
+  file.path(t_path,"output/regression1.txt")
+  expect_equal(res1,res2)
 })
 
-# png(paste0(test_dir,"/output/regression1.png"))
-#   plot(result, reg_plots = "dashboard")
-# dev.off()
-
-# res1 <- readPNG(paste0(test_dir,"/output/regression1.png"))
-# res2 <- readPNG(paste0(test_dir,"/output/regression1c.png"))
-# all.equal(res1,res2)
+test_that("regression - plots", {
+  result <- regression("diamonds", "price", c("carat", "clarity"))
+  # saved grob if > 2 time the filesize of the png
+  # grb <- plot(result, reg_plots = "dashboard", shiny = TRUE)
+  # save(grb, file = file.path(t_path,"/output/regression1-correct.rda"))
+  png(paste0(t_path,"/output/regression1.png"))
+    plot(result, reg_plots = "dashboard")
+  dev.off()
+  res1 <- readPNG(file.path(t_path,"/output/regression1.png"))
+  res2 <- readPNG(file.path(t_path,"/output/regression1-correct.png"))
+  expect_equal(res1,res2)
+  unlink(file.path(t_path,"/output/regression1.png"))
+  rm(res1, res2)
+})
