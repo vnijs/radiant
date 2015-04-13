@@ -1,5 +1,7 @@
 # Radiant - Business analytics using R and Shiny
 
+[![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
+
 ```{r child='README_editable.md'}
 ```
 
