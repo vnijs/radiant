@@ -33,9 +33,10 @@ result <- regression("diamonds", "price", c("carat","clarity"))
 pred <- predict(result, reg_predict_cmd = "carat = 1:10")
 plot(pred, reg_xvar = "carat")
 result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
-dpred <- getdata("diamonds") \%>\% slice(1:100)
+dpred <<- getdata("diamonds") \%>\% slice(1:100)
 pred <- predict(result, reg_predict_data = "dpred")
 plot(pred, reg_xvar = "carat", reg_color = "clarity")
+rm(dpred, envir = .GlobalEnv)
 }
 \seealso{
 \code{\link{regression}} to generate the result

@@ -29,8 +29,9 @@ result <- regression("diamonds", "price", c("carat","clarity"))
 predict(result, reg_predict_cmd = "carat = 1:10")
 predict(result, reg_predict_cmd = "clarity = levels(clarity)")
 result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
-dpred <- getdata("diamonds") \%>\% slice(1:10)
+dpred <<- getdata("diamonds") \%>\% slice(1:10)
 predict(result, reg_predict_data = "dpred")
+rm(dpred, envir = .GlobalEnv)
 }
 \seealso{
 \code{\link{regression}} to generate the result

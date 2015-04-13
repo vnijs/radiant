@@ -29,5 +29,6 @@ See \url{http://vnijs.github.io/radiant/base/merge.html} for an example in Radia
 }
 \examples{
 mergedata("titanic","titanic_pred",c("pclass","sex","age")) \%>\% head
+rm(merged_titanic, envir = .GlobalEnv)
 }
 

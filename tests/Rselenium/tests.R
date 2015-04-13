@@ -1,3 +1,11 @@
+
+## this might be very useful for interactive testing
+## would be even better if I could browse to a link
+
+## https://kbroman.wordpress.com/2014/08/01/testing-an-r-packages-interactive-graphs/
+
+## use \donttest{} and devtools::run_examples() for interactive testing
+
 # devtools::install_github("timelyportfolio/listviewer")
 library(listviewer)
 library(testthat)

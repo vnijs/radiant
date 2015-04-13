@@ -1,8 +1,0 @@
-Single proportion test
- Data     : diamonds
- Variable : cut
- Null hyp.: the proportion of  in cut = 0.5
- Alt. hyp.: the proportion of  in cut not equal to 0.5
- 
- prop chisq.value p.value df 2.5% 97.5% ns    n
- 0        3000  < .001  1    0 0.001  0 3000

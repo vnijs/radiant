@@ -13,6 +13,7 @@
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
 #' @examples
+#' result <- single_prop("diamonds","cut")
 #' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
@@ -34,13 +35,16 @@ single_prop <- function(dataset, sp_var,
 			dat[,sp_var] %<>% as.character %>% as.factor %>% relevel(sp_levels)
 			levs <- levels(dat[,sp_var])
 		}
+	} else {
+		sp_levels <- levs[1]
 	}
 
 	n <- nrow(dat)
 	ns <- sum(dat == sp_levels)
+
 	# use binom.test for exact
-	prop.test(ns, n, p = sp_comp_value, alternative = sp_alternative,
-	           conf.level = sp_sig_level, correct = FALSE) %>% tidy -> res
+	res <- prop.test(ns, n, p = sp_comp_value, alternative = sp_alternative,
+	                 conf.level = sp_sig_level, correct = FALSE) %>% tidy
 
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }
@@ -83,7 +87,6 @@ summary.single_prop <- function(object, ...) {
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
 
-	# object$res$n <- nrow(object$dat)
 	res <- round(object$res, 3) 	# restrict to 3 decimal places
 	res$ns <- object$ns
 	res$n <- object$n

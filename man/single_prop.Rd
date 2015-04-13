@@ -32,6 +32,7 @@ Compare a sample proportion to a population proportion
 See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
+result <- single_prop("diamonds","cut")
 result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 }
 \seealso{

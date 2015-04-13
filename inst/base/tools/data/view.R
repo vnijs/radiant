@@ -36,6 +36,7 @@ output$dataviewer <- DT::renderDataTable({
 
   DT::datatable(dat, filter = "bottom", rownames = FALSE,
     server = TRUE,
+    # class = "compact",
     options = list(
       ajax = list(url = action),
       search = list(regex = TRUE),

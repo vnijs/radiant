@@ -17,10 +17,10 @@ On Windows a file named 'radiant.bat' will be put on the desktop. Double-click t
 }
 \examples{
 if (interactive()) {
-  if(Sys.info()["sysname"] != "Windows") {
+  if (Sys.info()["sysname"] == "Windows") {
     win_launcher()
     fn <- paste0(Sys.getenv("USERPROFILE") ,"/Desktop/radiant.bat")
-    if(!file.exists(fn))
+    if (!file.exists(fn))
       stop("Windows launcher not created")
     else
       unlink(fn)

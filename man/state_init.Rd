@@ -21,7 +21,7 @@ Set initial value for shiny input
 Useful for radio button or checkbox
 }
 \examples{
-r_state <- list()
+r_state <<- list()
 state_init("test")
 state_init("test",0)
 r_state$test <- c("a","b")
@@ -29,6 +29,7 @@ state_init("test",0)
 shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
 r_state$rb <- "b"
 shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
+rm(r_state)
 }
 \seealso{
 \code{\link{state_single}}

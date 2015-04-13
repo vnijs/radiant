@@ -7,8 +7,9 @@
 #' @return A list with all variables defined in the function as an object of class conjoint_profiles
 #'
 #' @examples
-#' ca_prof <- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+#' ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
 #' result <- conjoint_profiles("ca_prof")
+#' rm(ca_prof)
 #'
 #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
 #'
@@ -53,9 +54,10 @@ conjoint_profiles <- function(dataset) {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' ca_prof <- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+#' ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
 #' result <- conjoint_profiles("ca_prof")
 #' summary(result)
+#' rm(ca_prof)
 #'
 #' @seealso \code{\link{conjoint_profiles}} to calculate results
 #'

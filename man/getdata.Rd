@@ -24,8 +24,11 @@ Data.frame with specified columns and rows
 Get data for analysis functions
 }
 \examples{
-r_data <- list()
-r_data$dat <- mtcars
+\donttest{
+r_data <<- list()
+r_data$dat <<- mtcars
 getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
+rm(r_data, envir = .GlobalEnv)
+}
 }
 

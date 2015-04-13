@@ -16,9 +16,10 @@ Save regression residuals
 See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
-\dontrun{
+\donttest{
 result <- regression("diamonds", "price", c("carat","clarity"))
 save_reg_resid(result)
+head(diamonds)
 }
 }
 

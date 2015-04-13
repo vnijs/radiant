@@ -12,6 +12,7 @@
 #'
 #' @examples
 #' mergedata("titanic","titanic_pred",c("pclass","sex","age")) %>% head
+#' rm(merged_titanic, envir = .GlobalEnv)
 #'
 #' @export
 mergedata <- function(dataset, dataset2,

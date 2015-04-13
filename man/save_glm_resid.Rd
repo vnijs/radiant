@@ -16,9 +16,10 @@ Save residuals generated in the glm_reg function
 See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 }
 \examples{
-\dontrun{
+\donttest{
 result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
 save_glm_resid(result)
+head(titanic)
 }
 }
 

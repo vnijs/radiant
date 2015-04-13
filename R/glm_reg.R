@@ -205,7 +205,7 @@ summary.glm_reg <- function(object,
       vars <- object$glm_indep_var
       if(object$glm_int_var != "" && length(vars) > 1) {
         # updating glm_test_var if needed
-        glm_test_var <- test_check(glm_test_var, object$glm_int_var)
+        glm_test_var <- test_specs(glm_test_var, object$glm_int_var)
         vars <- c(vars,object$glm_int_var)
       }
 
@@ -527,9 +527,10 @@ plot.glm_predict <- function(x,
 #' @param object Return value from \code{\link{glm_reg}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
 #' save_glm_resid(result)
+#' head(titanic)
 #' }
 #' @export
 save_glm_resid <- function(object) {

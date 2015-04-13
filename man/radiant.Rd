@@ -21,7 +21,9 @@ See \url{http://vnijs.github.io/radiant} for documentation and tutorials
 }
 \examples{
 if (interactive()) {
-  radiant()
+  radiant("base")
+  radiant("quant")
+  radiant("marketing")
 }
 }
 

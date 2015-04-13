@@ -198,7 +198,7 @@ summary.regression <- function(object,
 			vars <- object$reg_indep_var
       if(object$reg_int_var != "" && length(vars) > 1) {
         # updating reg_test_var if needed
-        reg_test_var <- test_check(reg_test_var, object$reg_int_var)
+        reg_test_var <- test_specs(reg_test_var, object$reg_int_var)
 	 	    vars <- c(vars,object$reg_int_var)
 			}
 
@@ -398,8 +398,9 @@ plot.regression <- function(x,
 #' predict(result, reg_predict_cmd = "carat = 1:10")
 #' predict(result, reg_predict_cmd = "clarity = levels(clarity)")
 #' result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
-#' dpred <- getdata("diamonds") %>% slice(1:10)
+#' dpred <<- getdata("diamonds") %>% slice(1:10)
 #' predict(result, reg_predict_data = "dpred")
+#' rm(dpred, envir = .GlobalEnv)
 #'
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results
@@ -524,9 +525,10 @@ predict.regression <- function(object,
 #' pred <- predict(result, reg_predict_cmd = "carat = 1:10")
 #' plot(pred, reg_xvar = "carat")
 #' result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
-#' dpred <- getdata("diamonds") %>% slice(1:100)
+#' dpred <<- getdata("diamonds") %>% slice(1:100)
 #' pred <- predict(result, reg_predict_data = "dpred")
 #' plot(pred, reg_xvar = "carat", reg_color = "clarity")
+#' rm(dpred, envir = .GlobalEnv)
 #'
 #' @seealso \code{\link{regression}} to generate the result
 #' @seealso \code{\link{summary.regression}} to summarize results
@@ -577,9 +579,10 @@ plot.reg_predict <- function(x,
 #' @param object Return value from \code{\link{regression}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' result <- regression("diamonds", "price", c("carat","clarity"))
 #' save_reg_resid(result)
+#' head(diamonds)
 #' }
 #' @export
 save_reg_resid <- function(object) {
@@ -632,10 +635,10 @@ var_check <- function(indep_var, cn, int_var = "") {
 #' @return 'test_var' is a vector of variables to test
 #'
 #' @examples
-#' test_check("a", c("a:b","b:c"))
+#' test_specs("a", c("a:b","b:c"))
 #'
 #' @export
-test_check <- function(test_var, int_var) {
+test_specs <- function(test_var, int_var) {
 
   if({int_var %>% strsplit(":") %>% unlist} %in% test_var %>% any) {
     cat("Interaction terms contain variables specified for testing.\nRelevant interaction terms are included in the requested test.\n\n")

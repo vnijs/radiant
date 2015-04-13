@@ -199,10 +199,10 @@ plot.full_factor <- function(x,
 #' @param object Return value from \code{\link{full_factor}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' result <- full_factor("diamonds",c("price","carat","table"))
 #' save_factors(result)
-#' head(dat)
+#' head(diamonds)
 #' }
 #'
 #' @export

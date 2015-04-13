@@ -7,7 +7,7 @@ if(r_path == "") r_path <- ".."  # if radiant is not installed revert to local i
 # currently these are r_env, r_data, r_state, r_local, r_path, r_sessions, r_ssuid
 
 options("width"=200)
-options("scipen"=100, "digits"=4)
+options("scipen"=100)
 
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",

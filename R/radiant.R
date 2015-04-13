@@ -6,7 +6,9 @@
 #'
 #' @examples
 #' if (interactive()) {
-#'   radiant()
+#'   radiant("base")
+#'   radiant("quant")
+#'   radiant("marketing")
 #' }
 #' @export
 radiant <- function(app = c("marketing", "quant", "base"))
@@ -63,9 +65,8 @@ sshh <- function(...) {
 #' sshhr( library(dplyr) )
 #'
 #' @export
-sshhr <- function(...) {
+sshhr <- function(...)
   suppressWarnings( suppressMessages( ... ) )
-}
 
 #' Get data for analysis functions
 #'
@@ -78,10 +79,12 @@ sshhr <- function(...) {
 #' @return Data.frame with specified columns and rows
 #'
 #' @examples
-#' r_data <- list()
-#' r_data$dat <- mtcars
+#' \donttest{
+#' r_data <<- list()
+#' r_data$dat <<- mtcars
 #' getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
-#'
+#' rm(r_data, envir = .GlobalEnv)
+#' }
 #' @export
 getdata <- function(dataset,
                     vars = "",
@@ -119,11 +122,12 @@ getdata <- function(dataset,
 #' @return None
 #'
 #' @examples
-#' \dontrun{
-#' r_data <- list()
-#' r_data$dat <- data.frame(a = 1:20)
+#' \donttest{
+#' r_data <<- list()
+#' r_data$dat <<- data.frame(a = 1:20)
 #' changedata("dat",20:1, "b")
 #' head(r_data$dat)
+#' rm(r_data, envir = .GlobalEnv)
 #' }
 #'
 #' @export
@@ -197,10 +201,10 @@ is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
 #'
 #' @examples
 #' if (interactive()) {
-#'   if(Sys.info()["sysname"] != "Windows") {
+#'   if (Sys.info()["sysname"] == "Windows") {
 #'     win_launcher()
 #'     fn <- paste0(Sys.getenv("USERPROFILE") ,"/Desktop/radiant.bat")
-#'     if(!file.exists(fn))
+#'     if (!file.exists(fn))
 #'       stop("Windows launcher not created")
 #'     else
 #'       unlink(fn)
@@ -244,7 +248,7 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 #'
 #' @examples
 #' if (interactive()) {
-#'   if(Sys.info()["sysname"] != "Darwin") {
+#'   if(Sys.info()["sysname"] == "Darwin") {
 #'     mac_launcher()
 #'     fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
 #'     if(!file.exists(fn))
@@ -381,7 +385,7 @@ copy_all <- function(.from) {
 #'
 #' @examples
 #'
-#' r_state <- list()
+#' r_state <<- list()
 #' state_init("test")
 #' state_init("test",0)
 #' r_state$test <- c("a","b")
@@ -389,6 +393,7 @@ copy_all <- function(.from) {
 #' shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
 #' r_state$rb <- "b"
 #' shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
+#' rm(r_state)
 #'
 #' @seealso \code{\link{state_single}}
 #' @seealso \code{\link{state_multiple}}
