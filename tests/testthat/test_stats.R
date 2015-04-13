@@ -1,12 +1,6 @@
 library(radiant)
 library(png)
 
-# change this directory to run locally
-# t_path <- "~/gh/radiant_dev/tests"
-# t_path <- file.path(system.file(package = "radiant"),"tests")
-# t_path <- "."
-# setwd("~/gh/radiant_dev/tests")
-
 trim_trailing <- function (x) sub("\\s+$", "", x)
 trim_leading <- function (x) sub("^\\s+", "", x)
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)

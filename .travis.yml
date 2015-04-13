@@ -8,5 +8,5 @@ r_github_packages:
   - jimhester/covr
   - jeroenooms/jsonlite
   - rstudio/shiny
-  - yihui/htmlwidgets@jsonlite
+  - ramnathv/htmlwidgets
   - rstudio/DT
