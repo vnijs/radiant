@@ -86,6 +86,8 @@ test_that("regression - plots", {
   expect_equal(try(print(grb), silent = TRUE), NULL)
   expect_equal(file.exists("Rplots.pdf"), TRUE)
   unlink("Rplots.pdf")
+
+  # useful for interactive testing - keep plots out of build
 #   png("output/regression1.png")
 #     plot(result, reg_plots = "dashboard")
 #   dev.off()
