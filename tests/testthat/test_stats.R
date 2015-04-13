@@ -3,7 +3,7 @@ library(png)
 
 # change this directory to run locally
 # t_path <- "~/gh/radiant_dev/tests"
-# t_path <- system.file(package = "radiant")
+# t_path <- file.path(system.file(package = "radiant"),"tests")
 # t_path <- "."
 # setwd("~/gh/radiant_dev/tests")
 
@@ -76,8 +76,8 @@ test_that("regression", {
   res1 <- capture.output(summary(result)) %>% trim
   # cat(paste0(res1,"\n"))
   # cat(paste0(res1,"\n"), file = "~/gh/radiant_dev/tests/output/regression1.txt")
-  res2 <- paste0(readLines(file.path(t_path,"output/regression1.txt"))) %>% trim
-  file.path(t_path,"output/regression1.txt")
+  # res2 <- paste0(readLines(file.path(t_path,"output/regression1.txt"))) %>% trim
+  res2 <- paste0(readLines("output/regression1.txt")) %>% trim
   expect_equal(res1,res2)
 })
 
@@ -85,13 +85,13 @@ test_that("regression - plots", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
   # saved grob if > 2 time the filesize of the png
   # grb <- plot(result, reg_plots = "dashboard", shiny = TRUE)
-  # save(grb, file = file.path(t_path,"/output/regression1-correct.rda"))
-  png(paste0(t_path,"/output/regression1.png"))
+  # save(grb, file = "/output/regression1-correct.rda")
+  png("output/regression1.png")
     plot(result, reg_plots = "dashboard")
   dev.off()
-  res1 <- readPNG(file.path(t_path,"/output/regression1.png"))
-  res2 <- readPNG(file.path(t_path,"/output/regression1-correct.png"))
+  res1 <- readPNG("output/regression1.png")
+  res2 <- readPNG("output/regression1-correct.png")
   expect_equal(res1,res2)
-  unlink(file.path(t_path,"/output/regression1.png"))
+  unlink("output/regression1.png")
   rm(res1, res2)
 })
