@@ -110,7 +110,7 @@ observe({
                   fun_name = "kmeans_clus",
                   fig.width = round(7 * km_plot_width()/650,2),
                   fig.height = round(7 * km_plot_height()/650,2),
-									xcmd = paste0("# save_membership(result)\n# write.csv(result, file = '~/kmeans.csv')"))
+									xcmd = paste0("# save_membership(result)\n# write.csv(result$clus_means, file = '~/kmeans.csv')"))
   })
 })
 

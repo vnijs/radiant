@@ -47,7 +47,9 @@ output$ui_full_factor <- renderUI({
       	selected = state_init("ff_rotation", "varimax"),
       	inline = TRUE),
       conditionalPanel(condition = "input.ff_var != null",
-        actionButton("ff_save_scores", "Save scores")
+        HTML("<label>Save:</label>"), br(),
+        downloadButton("ff_save_loadings", "Loadings"),
+        actionButton("ff_save_scores", "Scores")
       )
   	),
 		help_and_report(modal_title = "Factor",
@@ -125,7 +127,7 @@ observe({
     inp_out <- list()
     inp_out[[1]] <- list(ff_cutoff = input$ff_cutoff, ff_sort = input$ff_sort)
   	inp_out[[2]] <- ""
- 		xcmd <- paste0("# save_factors(result)")
+    xcmd = paste0("# save_factors(result)\n#clean_loadings(result$ff_loadings,", input$ff_cutoff, ",", input$ff_sort, ") %>% write.csv(file = '~/kmeans.csv')")
     update_report(inp_main = clean_args(ff_inputs(), ff_args),
                    fun_name = "full_factor",
                    inp_out = inp_out,
@@ -134,6 +136,17 @@ observe({
                    xcmd = xcmd)
   })
 })
+
+# save factor loadings when download button is pressed
+output$ff_save_loadings <- downloadHandler(
+  filename = function() { "loadings.csv" },
+  content = function(file) {
+    .full_factor() %>%
+      { if(is.list(.)) .$ff_loadings else return() } %>%
+      clean_loadings(input$ff_cutoff, input$ff_sort) %>%
+      write.csv(file)
+  }
+)
 
 # save factor scores when action button is pressed
 observe({

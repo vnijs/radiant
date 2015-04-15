@@ -50,7 +50,7 @@ summary.correlation <- function(object,
                                 cor_cutoff = 0,
                                 ...) {
 
-	# calculate the correlation matrix with p-values using the psych package
+	# calculate the correlation matrix with p.values using the psych package
 	cmat <- sshhr( corr.test(object$dat, method = object$cor_type) )
 
 	cr <- format(round(cmat$r,2))
@@ -72,7 +72,7 @@ summary.correlation <- function(object,
 
 	cat("Correlation matrix:\n")
   print(cr[-1,-ncol(cr)], quote = FALSE)
-	cat("\np-values:\n")
+	cat("\np.values:\n")
   print(cp[-1,-ncol(cp)], quote = FALSE)
   rm(object)
 }

@@ -51,6 +51,14 @@ full_factor <- function(dataset, ff_var,
 		fres <- factanal(dat, nrFac, rotation=ff_rotation, scores='regression')
 	}
 
+	# convert loadings object to data.frame
+	ff_loadings <- fres$loadings %>%
+	         { dn <- dimnames(.)
+	           matrix(., nrow = length(dn[[1]])) %>%
+	           set_colnames(., dn[[2]]) %>%
+	           set_rownames(., dn[[1]]) %>%
+	           data.frame }
+
 	rm(dat)
 
   environment() %>% as.list %>% set_class(c("full_factor",class(.)))
@@ -97,29 +105,18 @@ summary.full_factor <- function(object,
 
 	cat("\nFactor loadings:\n")
 
-	# convert loadings object to data.frame
-	lds <- object$fres$loadings %>%
-		{ if(ff_sort) fa.sort(.) else . }
-	dn <- dimnames(lds)
-	lds %<>% matrix(nrow = length(dn[[1]])) %>%
-		set_colnames(dn[[2]]) %>% set_rownames(dn[[1]]) %>%
-		data.frame
-
 	# show only the loadings > ff_cutoff
-  ind <- abs(lds) < ff_cutoff
-  print_lds <- round(lds,2)
-  print_lds[ind] <- ""
-  print(print_lds)
+  with(object, clean_loadings(ff_loadings, ff_cutoff, ff_sort, 2)) %>% print
 
   # fit measures
-	colSums(lds^2) %>%
-		rbind(., . / length(dn[[1]])) %>%
+	colSums(object$ff_loadings^2) %>%
+		rbind(., . / nrow(object$ff_loadings)) %>%
 		rbind(., cumsum(.[2,])) %>%
 		round(2) %>%
 		set_rownames(c("Eigenvalues","Variance %","Cumulative %")) %>%
 		print
 
-	# results from psych
+	# results from psych - uncomment to validate results
   # object$fres$loadings %>%
 		# { if(ff_sort) fa.sort(.) else . } %>%
 		# print(cutoff = ff_cutoff, digits = 2)
@@ -171,7 +168,8 @@ plot.full_factor <- function(x,
 		return(plot(x = 1, type = 'n', main=object, axes = FALSE, xlab = "", ylab = ""))
 	}
 
-	df <- round(as.data.frame(object$fres$loadings[]),3)
+	# df <- round(as.data.frame(object$fres$loadings[]),3)
+	df <- object$ff_loadings
 	rnames <- rownames(df)
 	cnames <- colnames(df)
 	plots <- list()
@@ -211,4 +209,36 @@ save_factors <- function(object) {
     return("Please deactivate data filters before trying to save factor scores")
   object$fres$scores %>% as.data.frame %>%
     changedata(object$dataset, vars = ., var_names = paste0("fac",1:ncol(.)))
+}
+
+#' Sort and clean loadings
+#'
+#' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
+#'
+#' @param ff_loadings Data.frame with loadings
+#' @param ff_sort Sort factor loadings
+#' @param ff_cutoff Show only loadings with (absolute) values above ff_cutoff (default = 0)
+#' @param ff_round Number of digits to show
+#'
+#' @examples
+#' result <- full_factor("diamonds",c("price","carat","table","x","y"))
+#' clean_loadings(result$ff_loadings, TRUE, .5, 2)
+#'
+#' @export
+clean_loadings <- function(ff_loadings,
+                           ff_cutoff = 0,
+                           ff_sort = FALSE,
+                           ff_round = 8) {
+
+	ff_loadings %>%
+		{ if (ff_sort) select(fa.sort(.), -order) else . } %>%
+		{ if (ff_cutoff == 0) {
+			  round(.,ff_round)
+		  } else {
+		  	ind <- abs(.) < ff_cutoff
+		  	. <- round(.,ff_round)
+		  	.[ind] <- ""
+		  	.
+		  }
+		}
 }
