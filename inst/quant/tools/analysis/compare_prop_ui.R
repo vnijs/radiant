@@ -9,7 +9,7 @@ cp_args <- as.list(formals(compare_props))
 # list of function inputs selected by user
 cp_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(cp_args))
+  for (i in names(cp_args))
     cp_args[[i]] <- input[[i]]
   cp_args
 })
@@ -27,16 +27,16 @@ output$ui_cp_var1 <- renderUI({
 })
 
 output$ui_cp_var2 <- renderUI({
-  if(not_available(input$cp_var1)) return()
+  if (not_available(input$cp_var1)) return()
   vars <- two_level_vars()
-  if(input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
+  if (input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
   selectInput(inputId = "cp_var2", label = "Variable (select one):",
               choices = vars, selected = state_single("cp_var2",vars),
               multiple = FALSE)
 })
 
 output$ui_cp_levels <- renderUI({
-  if(not_available(input$cp_var2))
+  if (not_available(input$cp_var2))
     levs <- c()
   else
     levs <- .getdata()[1,input$cp_var2] %>% as.factor %>% levels
@@ -115,33 +115,33 @@ output$compare_props <- renderUI({
 
 .summary_compare_props <- reactive({
 
-  if(not_available(input$cp_var1) || not_available(input$cp_var2))
+  if (not_available(input$cp_var1) || not_available(input$cp_var2))
     return("This analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are not available please select another dataset")
 
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
-  if(input$cp_var1 %in% input$cp_var2) return(" ")
+  if (input$cp_var1 %in% input$cp_var2) return(" ")
 
   summary(.compare_props())
 })
 
 .plot_compare_props <- reactive({
 
-  if(not_available(input$cp_var1) || not_available(input$cp_var2))
+  if (not_available(input$cp_var1) || not_available(input$cp_var2))
     return("This analysis requires two categorical variables. The first can have multiple\nlevels. The second can have only two levels. If these\nvariables are not available please select another dataset")
 
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
-  if(input$cp_var1 %in% input$cp_var2) return(" ")
+  if (input$cp_var1 %in% input$cp_var2) return(" ")
 
   plot(.compare_props(), cp_plots = input$cp_plots, shiny = TRUE)
 })
 
 observe({
-  if(not_pressed(input$compare_props_report)) return()
+  if (not_pressed(input$compare_props_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list(cp_plots = input$cp_plots) %>% list("",.)
     figs <- TRUE
-    if(length(input$cp_plots) == 0) {
+    if (length(input$cp_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")

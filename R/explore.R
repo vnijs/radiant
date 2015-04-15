@@ -26,7 +26,7 @@ explore <- function(dataset, expl_vars = "",
                     expl_fun = c("length", "mean_rm")) {
 
   vars <- expl_vars
-  if(!is_empty(expl_byvar))
+  if (!is_empty(expl_byvar))
     vars %<>% c(expl_byvar)
 
   dat <- getdata(dataset, vars, filt = data_filter)
@@ -34,14 +34,14 @@ explore <- function(dataset, expl_vars = "",
   # in case : was used
   expl_vars <- colnames(head(dat) %>% select_(.dots = expl_vars))
 
-  if(is_empty(expl_byvar)) {
+  if (is_empty(expl_byvar)) {
     res <- capture.output(getsummary(dat))
   } else {
     res <- list()
     dc <- getclass(dat)
     isNum <- "numeric" == dc | "integer" == dc
     dat %<>% group_by_(.dots = expl_byvar) %>% select(which(isNum))
-    for(f in expl_fun) {
+    for (f in expl_fun) {
       gf <- get(f)
       res[[f]] <- dat %>% summarise_each(funs(gf)) %>% as.data.frame
     }
@@ -73,20 +73,20 @@ explore <- function(dataset, expl_vars = "",
 summary.explore <- function(object, ...) {
 
   cat("Data     :", object$dataset, "\n")
-  if(object$data_filter %>% gsub("\\s","",.) != "")
+  if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 
   cat("\n")
-  if(class(object$res) == "character") {
+  if (class(object$res) == "character") {
     cat(paste0(object$res[-length(object$res)],sep="\n"))
   } else {
 
-    if(!exists("expl_functions"))
+    if (!exists("expl_functions"))
       funcs <- object$expl_fun %>% set_names(.,.)
     else
       funcs <- get("expl_functions")
 
-    for(f in object$expl_fun) {
+    for (f in object$expl_fun) {
       cat("Results grouped by: ", object$expl_byvar, "\n")
       cat("Function used: ", names(which(funcs == f)), "\n")
       object$res[[f]] %>%
@@ -119,27 +119,27 @@ plot.explore <- function(x, shiny = FALSE, ...) {
 
   object <- x; rm(x)
 
-  if(class(object$res)[1] == "character")
+  if (class(object$res)[1] == "character")
     return(invisible())
 
   by_var <- fill_var <- object$expl_byvar[1]
-  if(length(object$expl_byvar) > 1) fill_var <- object$expl_byvar[2]
+  if (length(object$expl_byvar) > 1) fill_var <- object$expl_byvar[2]
 
-  if(!exists("expl_functions")) {
+  if (!exists("expl_functions")) {
     funcs <- object$expl_fun %>% set_names(.,.)
   } else {
     funcs <- get("expl_functions")
   }
 
   plots <- list()
-  for(f in object$expl_fun) {
-    for(var in object$expl_vars) {
+  for (f in object$expl_fun) {
+    for (var in object$expl_vars) {
       plots[[paste0(var,"_",f)]] <-
         ggplot(data = object$res[[f]], aes_string(x = by_var, y = var, fill = fill_var)) +
           geom_bar(stat="identity", position = "dodge", alpha=.7) +
           ggtitle(paste("Function used:", names(which(funcs == f))))
 
-      if(length(object$expl_byvar) == 1) {
+      if (length(object$expl_byvar) == 1) {
         plots[[paste0(var,"_",f)]] <- plots[[paste0(var,"_",f)]] +
           theme(legend.position = "none")
       }
@@ -147,7 +147,7 @@ plot.explore <- function(x, shiny = FALSE, ...) {
   }
 
   sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = 1))) ) %>%
-    { if(shiny) . else print(.) }
+    { if (shiny) . else print(.) }
 }
 
 #' Create data.frame summary
@@ -166,7 +166,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
   isChar <- "character" == dc
   isLogic <- "logical" == dc
 
-  if(sum(isNum) > 0) {
+  if (sum(isNum) > 0) {
 
     cn <- names(dc)[isNum]
 
@@ -183,24 +183,24 @@ getsummary <- function(dat, dc = getclass(dat)) {
       print(row.names = FALSE)
     cat("\n")
   }
-  if(sum(isFct) > 0) {
+  if (sum(isFct) > 0) {
     cat("Summarize factors:\n")
     select(dat, which(isFct)) %>% summary %>% print
     cat("\n")
   }
-  if(sum(isDate) > 0) {
+  if (sum(isDate) > 0) {
     cat("Earliest dates:\n")
     select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
     cat("\nFinal dates:\n")
     select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
     cat("\n")
   }
-  if(sum(isChar) > 0) {
+  if (sum(isChar) > 0) {
     cat("Summarize character variables:\n")
     select(dat, which(isChar)) %>% table %>% print
     cat("\n")
   }
-  if(sum(isLogic) > 0) {
+  if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
     select(dat, which(isLogic)) %>% tally %>% print
     cat("\n")
@@ -251,7 +251,7 @@ serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
 #' @param na.rm If TRUE missing values are removed before calculation
 #' @return Coefficient of variation
 #' @examples
-#' cv(runif(100))
+#' cv(runif (100))
 #'
 #' @export
 cv <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
@@ -260,7 +260,7 @@ cv <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
 #' @param x Input variable
 #' @return Mean value
 #' @examples
-#' mean_rm(runif(100))
+#' mean_rm(runif (100))
 #'
 #' @export
 mean_rm <- function(x) mean(x, na.rm = TRUE)
@@ -269,7 +269,7 @@ mean_rm <- function(x) mean(x, na.rm = TRUE)
 #' @param x Input variable
 #' @return Median value
 #' @examples
-#' median_rm(runif(100))
+#' median_rm(runif (100))
 #'
 #' @export
 median_rm <- function(x) median(x, na.rm = TRUE)
@@ -278,7 +278,7 @@ median_rm <- function(x) median(x, na.rm = TRUE)
 #' @param x Input variable
 #' @return Minimum value
 #' @examples
-#' min_rm(runif(100))
+#' min_rm(runif (100))
 #'
 #' @export
 min_rm <- function(x) min(x, na.rm = TRUE)
@@ -287,7 +287,7 @@ min_rm <- function(x) min(x, na.rm = TRUE)
 #' @param x Input variable
 #' @return Maximum value
 #' @examples
-#' max_rm(runif(100))
+#' max_rm(runif (100))
 #'
 #' @export
 max_rm <- function(x) max(x, na.rm = TRUE)

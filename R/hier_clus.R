@@ -24,7 +24,7 @@ hier_clus <- function(dataset, hc_vars,
 
 	getdata(dataset, hc_vars, filt = data_filter) %>%
 	  scale %>%
-	  { if(hc_dist == "sq.euclidian") {
+	  { if (hc_dist == "sq.euclidian") {
 				dist(., method = "euclidean")^2
 			} else {
 				dist(., method = hc_dist)
@@ -53,7 +53,7 @@ summary.hier_clus <- function(object, ...) {
 
 	cat("Hierarchical cluster analysis\n")
 	cat("Data        :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(object$hc_vars, collapse=", "), "\n")
 	cat("Method      :", object$hc_meth, "\n")
@@ -93,7 +93,7 @@ plot.hier_clus <- function(x,
 	object$hc_out$height %<>% { . / max(.) }
 
 	plots <- list()
-	if("scree" %in% hc_plots) {
+	if ("scree" %in% hc_plots) {
 		object$hc_out$height[object$hc_out$height > hc_cutoff] %>%
 		data.frame(height = ., nr_clus = length(.):1) %>%
 		ggplot(aes(x=factor(nr_clus,levels=nr_clus), y=height, group = 1)) +
@@ -103,7 +103,7 @@ plot.hier_clus <- function(x,
 		  	       y = "Within cluster heterogeneity")) -> plots[['scree']]
 	}
 
-	if("diff" %in% hc_plots) {
+	if ("diff" %in% hc_plots) {
 		object$hc_out$height[object$hc_out$height > hc_cutoff] %>%
 			{ (. - lag(.)) / lag(.) } %>%
 			data.frame(bump = ., nr_clus = paste0((length(.)+1):2, "-", length(.):1)) %>%
@@ -114,11 +114,11 @@ plot.hier_clus <- function(x,
 				     x = "# clusters", y = "Change in within-cluster heterogeneity")) -> plots[['diff']]
 	}
 
-	if("dendro" %in% hc_plots) {
+	if ("dendro" %in% hc_plots) {
 
-		if(length(object$hc_out$height) < 100) {
+		if (length(object$hc_out$height) < 100) {
 
-			if(hc_cutoff == 0) {
+			if (hc_cutoff == 0) {
 				ggdendrogram(object$hc_out) + labs(list(title = paste("Dendrogram"), x = "",
 				  y = "Within cluster heterogeneity")) + theme_bw() +
 					theme(axis.text.x  = element_text(angle=90, size=6)) -> plots[['dendro']]
@@ -135,12 +135,12 @@ plot.hier_clus <- function(x,
 			# this plot will disappear if the user zooms in/out
 			as.dendrogram(object$hc_out) %>%
 			{
-				if(length(hc_plots) > 1) {
+				if (length(hc_plots) > 1) {
 					xlab <- "When the number of observations is larger than 100 only the dendrogram is shown even\n if other types are specified. Call the plot function separately for different plot types."
 				} else{
 					xlab <- ""
 				}
-				if(hc_cutoff == 0) {
+				if (hc_cutoff == 0) {
 					plot(., main = "Dendrogram", xlab = xlab, ylab = "Within cluster heterogeneity")
 				} else {
 					plot(., ylim = c(hc_cutoff,1), leaflab='none',
@@ -152,5 +152,5 @@ plot.hier_clus <- function(x,
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
-	 	{ if(shiny) . else print(.) }
+	 	{ if (shiny) . else print(.) }
 }

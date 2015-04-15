@@ -7,26 +7,26 @@ merge_args <- as.list(formals(mergedata))
 # list of function inputs selected by user
 merge_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(merge_args))
+  for (i in names(merge_args))
     merge_args[[i]] <- input[[i]]
-  # if(!input$show_filter) merge_args$data_filter = ""
+  # if (!input$show_filter) merge_args$data_filter = ""
   merge_args
 })
 
 output$ui_dataset2 <- renderUI({
   datasetlist <- r_data$datasetlist
-  if(length(datasetlist) < 2) return()
+  if (length(datasetlist) < 2) return()
   mdatasets <- datasetlist[-which(input$dataset == datasetlist)]
   selectInput(inputId = "dataset2", label = "Merge with:",
     choices = mdatasets, selected = state_init("dataset2"), multiple = FALSE)
 })
 
 output$ui_merge_vars <- renderUI({
-  if(input$dataset2 %>% is.null) return()
+  if (input$dataset2 %>% is.null) return()
   vars1 <- varnames()
   vars2 <- colnames(r_data[[input$dataset2]])
   vars <- intersect(vars1, vars2)
-  if(length(vars) == 0) return()
+  if (length(vars) == 0) return()
   vars <- vars1[vars1 %in% vars]  # need variable labels from varnames()
   selectInput("merge_vars", "Select merge-by variables:", choices  = vars,
     selected = state_multiple("merge_vars",vars),
@@ -62,14 +62,14 @@ output$ui_Merge <- renderUI({
 
 observe({
   # merging data
-  if(not_pressed(input$merge_button)) return()
+  if (not_pressed(input$merge_button)) return()
   isolate({
     do.call(mergedata, merge_inputs())
   })
 })
 
 observe({
-  if(not_pressed(input$merge_report)) return()
+  if (not_pressed(input$merge_report)) return()
   isolate({
     update_report(inp_main = clean_args(merge_inputs(), merge_args),
                   fun_name = "mergedata", outputs = character(0), figs = FALSE)
@@ -77,18 +77,18 @@ observe({
 })
 
 output$merge_possible <- renderText({
-  if(is.null(input$merge_vars))
+  if (is.null(input$merge_vars))
     "<h4>No matching variables selected</h4>"
   else
     ""
 })
 
 output$mergedata1 <- renderText({
-  if(is.null(input$dataset2)) return()
+  if (is.null(input$dataset2)) return()
   show_data_snippet(title = paste("<h3>Data:",input$dataset,"</h3>"))
 })
 
 output$mergedata2 <- renderText({
-  if(is.null(input$dataset2)) return()
+  if (is.null(input$dataset2)) return()
   show_data_snippet(input$dataset2, title = paste("<h3>Data:",input$dataset2,"</h3>"))
 })

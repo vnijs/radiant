@@ -36,14 +36,14 @@ output$conjoint_profiles <- renderUI({
 
 .summary_conjoint_profiles <- reactive({
 	ret_text <- "Please load a file with attribute information. For an example see\nhttps://github.com/vnijs/radiant/blob/master/inst/examples/profiles-movie.txt"
-	if(is.null(input$ca_upload)) return(ret_text)
-  if(is.null(r_data[["ca_attr"]])) return(ret_text)
+	if (is.null(input$ca_upload)) return(ret_text)
+  if (is.null(r_data[["ca_attr"]])) return(ret_text)
 
 	summary(.conjoint_profiles())
 })
 
 observe({
-  if(not_pressed(input$conjoint_profiles_report)) return()
+  if (not_pressed(input$conjoint_profiles_report)) return()
   isolate({
     xcmd <- "# write.csv(result$frac, file = '~/conjoint_profiles.csv', row.names = FALSE)"
     update_report(inp_main = list(dataset = "ca_attr"),
@@ -54,7 +54,7 @@ observe({
 })
 
 observe({
-  if(!is.null(input$ca_upload)) {
+  if (!is.null(input$ca_upload)) {
     isolate({
       r_data[["ca_attr"]] <- gsub("\"","\'",readLines(input$ca_upload$datapath))
     })
@@ -65,7 +65,7 @@ output$download_profiles <- downloadHandler(
 	filename = function() { 'conjoint_profiles.csv' },
   content = function(file) {
 		.conjoint_profiles() %>%
-		{ if(class(.)[1] == "character") . else .$frac } %>%
+		{ if (class(.)[1] == "character") . else .$frac } %>%
 		write.csv(file, row.names = FALSE)
 	}
 )

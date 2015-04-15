@@ -94,12 +94,12 @@ getdata <- function(dataset,
 
   filt %<>% gsub("\\s","", .)
 
-  { if(exists("r_env")) {
+  { if (exists("r_env")) {
       r_env$r_data[[dataset]]
-    } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-      if(exists("r_local")) { if(r_local) cat("Dataset", dataset, "loaded from r_data list\n") }
+    } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
+      if (exists("r_local")) { if (r_local) cat("Dataset", dataset, "loaded from r_data list\n") }
       r_data[[dataset]]
-    } else if(exists(dataset)) {
+    } else if (exists(dataset)) {
       d_env <- pryr::where(dataset)
       # cat("Dataset", dataset, "loaded from", environmentName(d_env), "environment\n")
       d_env[[dataset]]
@@ -107,10 +107,10 @@ getdata <- function(dataset,
       paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
         stop %>% return
     }
-  } %>% { if(filt == "") . else filter_(., filt) } %>%
-        { if(slice == "") . else slice_(., slice) } %>%
-        { if(vars[1] == "") . else select_(., .dots = vars) } %>%
-        { if(na.rm) { if(anyNA(.)) na.omit(.) else . } }
+  } %>% { if (filt == "") . else filter_(., filt) } %>%
+        { if (slice == "") . else slice_(., slice) } %>%
+        { if (vars[1] == "") . else select_(., .dots = vars) } %>%
+        { if (na.rm) { if (anyNA(.)) na.omit(.) else . } }
 }
 
 #' Change data
@@ -135,14 +135,14 @@ changedata <- function(dataset,
                        vars = c(),
                        var_names = names(vars)) {
 
-  if(exists("r_env")) {
+  if (exists("r_env")) {
     cat("Dataset", dataset, "changed in r_env\n")
     r_env$r_data[[dataset]][,var_names] <- vars
-  } else if(exists("r_data") && !is.null(r_data[[dataset]])) {
-    if(exists("r_local")) { if(r_local) cat("Dataset", dataset, "changed in r_data list\n") }
+  } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
+    if (exists("r_local")) { if (r_local) cat("Dataset", dataset, "changed in r_data list\n") }
     d_env <- pryr::where("r_data")
     d_env$r_data[[dataset]][,var_names] <- vars
-  } else if(exists(dataset)) {
+  } else if (exists(dataset)) {
     d_env <- pryr::where(dataset)
     cat("Dataset", dataset, "changed in", environmentName(d_env), "environment\n")
     d_env[[dataset]][,var_names] <- vars
@@ -191,7 +191,7 @@ getclass <- function(dat) {
 #' is_empty(NULL)
 #'
 #' @export
-is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
+is_empty <- function(x, empty = "") if (is.null(x) || x == empty) TRUE else FALSE
 
 #' Create a launcher for Windows (.bat)
 #'
@@ -214,23 +214,23 @@ is_empty <- function(x, empty = "") if(is.null(x) || x == empty) TRUE else FALSE
 #' @export
 win_launcher <- function(app = c("marketing", "quant", "base")) {
 
-  if(!interactive()) stop("This function can only be used in an interactive R session")
+  if (!interactive()) stop("This function can only be used in an interactive R session")
 
-  if(Sys.info()["sysname"] != "Windows")
+  if (Sys.info()["sysname"] != "Windows")
     return(cat("This function is for Windows only. For Mac use the mac_launcher() function"))
 
   answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
 
     local_dir <- Sys.getenv("R_LIBS_USER")
-    if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+    if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
     filename <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/') %>%
                   paste0("radiant.bat")
-    launch_string <- paste0(Sys.which('R'), " -e \"if(!require(radiant)) { options(repos = 'http://vnijs.github.io/radiant_miniCRAN/'); install.packages('radiant'); }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
+    launch_string <- paste0(Sys.which('R'), " -e \"if (!require(radiant)) { options(repos = 'http://vnijs.github.io/radiant_miniCRAN/'); install.packages('radiant'); }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
     cat(launch_string, file=filename, sep="\n")
 
-    if(file.exists(filename))
+    if (file.exists(filename))
       cat("Done! Look for a file named radiant.bat on your desktop. Double-click it to start Radiant in your default browser.\n")
     else
       cat("Something went wrong. No shortcut was created.")
@@ -248,10 +248,10 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 #'
 #' @examples
 #' if (interactive()) {
-#'   if(Sys.info()["sysname"] == "Darwin") {
+#'   if (Sys.info()["sysname"] == "Darwin") {
 #'     mac_launcher()
 #'     fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-#'     if(!file.exists(fn))
+#'     if (!file.exists(fn))
 #'       stop("Mac launcher not created")
 #'     else
 #'       unlink(fn)
@@ -261,23 +261,23 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 #' @export
 mac_launcher <- function(app = c("marketing", "quant", "base")) {
 
-  if(!interactive()) stop("This function can only be used in an interactive R session")
+  if (!interactive()) stop("This function can only be used in an interactive R session")
 
-  if(Sys.info()["sysname"] != "Darwin")
+  if (Sys.info()["sysname"] != "Darwin")
     return(cat("This function is for Mac only. For windows use the win_launcher() function"))
 
   answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
 
     local_dir <- Sys.getenv("R_LIBS_USER")
-    if(!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
+    if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
     filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-    launch_string <- paste0("#!/usr/bin/env Rscript\nif(!require(radiant)) {\n  options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n  install.packages('radiant')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
+    launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n  install.packages('radiant')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
     cat(launch_string,file=filename,sep="\n")
     Sys.chmod(filename, mode = "0755")
 
-    if(file.exists(filename))
+    if (file.exists(filename))
       cat("Done! Look for a file named radiant.command on your desktop. Double-click it to start Radiant in your default browser.\n")
     else
       cat("Something went wrong. No shortcut was created.")
@@ -299,9 +299,9 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
 #' @export
 launcher <- function(app = c("marketing", "quant", "base")) {
 
-  if(Sys.info()["sysname"] == "Darwin")
+  if (Sys.info()["sysname"] == "Darwin")
     mac_launcher(app[1])
-  else if(Sys.info()["sysname"] == "Windows")
+  else if (Sys.info()["sysname"] == "Windows")
     win_launcher(app[1])
   else
     return(cat("This function is for Mac and Windows only."))
@@ -401,8 +401,8 @@ copy_all <- function(.from) {
 #'
 #' @export
 state_init <- function(inputvar, init = "") {
-  if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
-  r_state %>% { if(is.null(.[[inputvar]])) init else .[[inputvar]] }
+  if (!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
 }
 
 #' Set initial value for shiny input from a list of values
@@ -431,8 +431,8 @@ state_init <- function(inputvar, init = "") {
 #'
 #' @export
 state_single <- function(inputvar, vals, init = character(0)) {
-  if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
-  r_state %>% { if(is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
+  if (!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  r_state %>% { if (is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
 }
 
 #' Set initial values for shiny input from a list of values
@@ -463,9 +463,9 @@ state_single <- function(inputvar, vals, init = character(0)) {
 #'
 #' @export
 state_multiple <- function(inputvar, vals, init = character(0)) {
-  if(!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  if (!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
   r_state %>%
-    { if(is.null(.[[inputvar]]))
+    { if (is.null(.[[inputvar]]))
         # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
         vals[vals %in% init]
       else

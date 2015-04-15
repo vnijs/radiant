@@ -57,7 +57,7 @@ summary.cross_tabs <- function(object,
 
   cat("Cross-tabs\n")
 	cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables:", paste0(c(object$ct_var1, object$ct_var2), collapse=", "), "\n")
 	cat("Null hyp.: there is no association between", object$ct_var1, "and", object$ct_var2, "\n")
@@ -66,7 +66,7 @@ summary.cross_tabs <- function(object,
 	object$cst$observed %>% rownames %>% c(., "Total") -> rnames
 	object$cst$observed %>% colnames %>% c(., "Total") -> cnames
 
-	if("observed" %in% ct_check) {
+	if ("observed" %in% ct_check) {
 		cat("\nObserved:\n")
 		object$cst$observed %>%
 			rbind(colSums(.)) %>%
@@ -76,7 +76,7 @@ summary.cross_tabs <- function(object,
 			print
 	}
 
-	if("expected" %in% ct_check) {
+	if ("expected" %in% ct_check) {
 		cat("\nExpected: (row total x column total) / total\n")
 		object$cst$expected %>%
 			rbind(colSums(.)) %>%
@@ -87,7 +87,7 @@ summary.cross_tabs <- function(object,
 			print
 	}
 
-	if("chi_sq" %in% ct_check) {
+	if ("chi_sq" %in% ct_check) {
 		cat("\nContribution to chi-squared: (o - e)^2 / e\n")
 		# ((object$cst$observed - object$cst$expected)^2 / object$cst$expected) %>%
 		object$cst$chi_sq %>%
@@ -99,30 +99,30 @@ summary.cross_tabs <- function(object,
 			print
 	}
 
-	if("dev_std" %in% ct_check) {
+	if ("dev_std" %in% ct_check) {
 		cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
 		print(round(object$cst$residuals, 2)) 	# these seem to be the correct std.residuals
 	}
 
-	if("dev_perc" %in% ct_check) {
+	if ("dev_perc" %in% ct_check) {
 		cat("\nDeviation %: (o - e) / e\n")
 		print(round(object$cst$deviation, 2)) 	# % deviation
 	}
-	# if(object$ct_cellperc) {
+	# if (object$ct_cellperc) {
 	# 	cat("\nCell percentages:\n")
 	# 	print(prop.table(object$table), digits = 2)  	# cell percentages
 	# }
-	# if(object$ct_rowperc) {
+	# if (object$ct_rowperc) {
 	# 	cat("\nRow percentages:\n")
 	# 	print(prop.table(object$table, 1), digits = 2) # row percentages
 	# }
-	# if(object$ct_colperc) {
+	# if (object$ct_colperc) {
 	# 	cat("\nColumn percentages:\n")
 	# 	print(prop.table(object$table, 2), digits = 2) # column percentages
 	# }
 
 	object$cst %>% tidy %>% round(3) -> res
-	if(res$p.value < .001) res$p.value  <- "< .001"
+	if (res$p.value < .001) res$p.value  <- "< .001"
 	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")
 	cat(paste(sprintf("%.1f",100 * (sum(object$cst$expected < 5) / length(object$cst$expected))),"% of cells have expected values below 5"), sep = "")
 }
@@ -160,7 +160,7 @@ plot.cross_tabs <- function(x,
 
 	plots <- list()
 
-	if("observed" %in% ct_check) {
+	if ("observed" %in% ct_check) {
 		fact_names <- object$cst$observed %>% dimnames %>% as.list
   	tab <- gather_table(object$cst$observed)
 		colnames(tab)[1:2] <- c(object$ct_var1, object$ct_var2)
@@ -174,7 +174,7 @@ plot.cross_tabs <- function(x,
 							x = "", y = "", fill = object$ct_var2))
 	}
 
-	if("expected" %in% ct_check) {
+	if ("expected" %in% ct_check) {
 		fact_names <- object$cst$expected %>% dimnames %>% as.list
   	tab <- gather_table(object$cst$expected)
 		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
@@ -185,7 +185,7 @@ plot.cross_tabs <- function(x,
 							x = "", y = "", fill = object$ct_var2))
 	}
 
-	if("chi_sq" %in% ct_check) {
+	if ("chi_sq" %in% ct_check) {
 
 		tab <- gather_table(object$cst$chi_sq)
 		# tab <- gather_table((object$cst$observed - object$cst$expected)^2 / object$cst$expected)
@@ -195,7 +195,7 @@ plot.cross_tabs <- function(x,
          			labs(list(title = paste("Contribution to chi-squared for ",object$ct_var2," versus ",object$ct_var1, sep = ""), x = object$ct_var1))
   }
 
-	if("dev_std" %in% ct_check) {
+	if ("dev_std" %in% ct_check) {
 		tab <- gather_table(object$cst$residuals)
 		colnames(tab)[1:2] <- c(object$ct_var1, object$ct_var2)
 		plots[['dev_std']] <- ggplot(tab, aes_string(x = object$ct_var1, y = "values", fill = object$ct_var2)) +
@@ -206,7 +206,7 @@ plot.cross_tabs <- function(x,
          			labs(list(title = paste("Deviation standardized for ",object$ct_var2," versus ",object$ct_var1, sep = ""), x = object$ct_var1))
 	}
 
-	if("dev_perc" %in% ct_check) {
+	if ("dev_perc" %in% ct_check) {
 		tab <- gather_table(object$cst$deviation)
 		colnames(tab)[1:2] <- c(object$ct_var1, object$ct_var2)
 		plots[['dev_prec']] <- ggplot(tab, aes_string(x = object$ct_var1, y = "values", fill = object$ct_var2)) +
@@ -215,5 +215,5 @@ plot.cross_tabs <- function(x,
   }
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
-	  { if(shiny) . else print(.) }
+	  { if (shiny) . else print(.) }
 }

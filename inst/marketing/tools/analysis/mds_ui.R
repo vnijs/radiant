@@ -11,21 +11,21 @@ mds_args <- as.list(formals(mds))
 # list of function inputs selected by user
 mds_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(mds_args))
+  for (i in names(mds_args))
     mds_args[[i]] <- input[[i]]
-  if(!input$show_filter) mds_args$data_filter = ""
+  if (!input$show_filter) mds_args$data_filter = ""
   mds_args
 })
 
-mds_plot_args <- as.list(if(exists("plot.mds")) formals(plot.mds)
+mds_plot_args <- as.list(if (exists("plot.mds")) formals(plot.mds)
                          else formals(radiant:::plot.mds))
 
 # list of function inputs selected by user
 mds_plot_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(mds_plot_args))
+  for (i in names(mds_plot_args))
     mds_plot_args[[i]] <- input[[i]]
-  if(!input$show_filter) mds_plot_args$data_filter = ""
+  if (!input$show_filter) mds_plot_args$data_filter = ""
   mds_plot_args
 })
 
@@ -37,16 +37,16 @@ output$ui_mds_id1 <- renderUI({
 })
 
 output$ui_mds_id2 <- renderUI({
-  if(not_available(input$mds_id1)) return()
+  if (not_available(input$mds_id1)) return()
 	isLabel <- "character" == .getclass() | "factor" == .getclass()
   vars <- varnames()[isLabel]
-  if(length(vars) > 0) vars <- vars[-which(vars == input$mds_id1)]
+  if (length(vars) > 0) vars <- vars[-which(vars == input$mds_id1)]
   selectInput(inputId = "mds_id2", label = "ID 2:", choices = vars,
    	selected = state_single("mds_id2",vars), multiple = FALSE)
 })
 
 output$ui_mds_dis <- renderUI({
-  if(not_available(input$mds_id2)) return()
+  if (not_available(input$mds_id2)) return()
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
   selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
@@ -119,17 +119,17 @@ output$mds <- renderUI({
 })
 
 .summary_mds <- reactive({
-	if(not_available(input$mds_id2) || not_available(input$mds_dis))
+	if (not_available(input$mds_id2) || not_available(input$mds_dis))
 		return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
-  .mds() %>% { if(is.character(.)) . else summary(., mds_round = 1) }
+  .mds() %>% { if (is.character(.)) . else summary(., mds_round = 1) }
 })
 
 .plot_mds <- reactive({
-	if(not_available(input$mds_id2) || not_available(input$mds_dis))
+	if (not_available(input$mds_id2) || not_available(input$mds_dis))
 		return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
 
   .mds() %>%
-  	{ if(is.character(.)) {
+  	{ if (is.character(.)) {
   			.
   		} else {
   			# plot(., mds_rev_dim = input$mds_rev_dim, mds_fontsz = input$mds_fontsz)
@@ -140,7 +140,7 @@ output$mds <- renderUI({
 })
 
 observe({
- if(not_pressed(input$mds_report)) return()
+ if (not_pressed(input$mds_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list()

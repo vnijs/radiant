@@ -33,16 +33,16 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
 
 	levs <- levels(dat[,cp_var2])
-	if(cp_levels != "") {
+	if (cp_levels != "") {
 		# levs <- levels(dat[,cp_var2])
-		if(cp_levels %in% levs && levs[1] != cp_levels) {
+		if (cp_levels %in% levs && levs[1] != cp_levels) {
 			dat[,cp_var2] %<>% as.character %>% as.factor %>% relevel(cp_levels)
 			levs <- levels(dat[,cp_var2])
 		}
 	}
 
 	# check variances in the data
-  if(dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
+  if (dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
   	return("Test could not be calculated. Please select another variable.")
 
   rn <- ""
@@ -108,14 +108,14 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #' @export
 summary.compare_props <- function(object, ...) {
 
-  if(object$cp_adjust == "bonf") {
+  if (object$cp_adjust == "bonf") {
     cat("Pairwise comparisons (bonferroni adjustment)\n")
   } else {
 	  cat("Pairwise comparisons (no adjustment)\n")
   }
 
 	cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables:", object$vars, "\n")
 	cat("Level    :", object$cp_levels, "in", object$cp_var2, "\n\n")
@@ -174,7 +174,7 @@ plot.compare_props <- function(x,
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	plots <- list()
-	if("props" %in% cp_plots) {
+	if ("props" %in% cp_plots) {
 		# use of `which` allows the user to change the order of the plots shown
 		plots[[which("props" == cp_plots)]] <-
 			ggplot(object$dat_summary, aes_string(x = var1, y = "p", fill = var1)) +
@@ -183,12 +183,12 @@ plot.compare_props <- function(x,
 	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue")
 	}
 
-	if("counts" %in% cp_plots) {
+	if ("counts" %in% cp_plots) {
 		plots[[which("counts" == cp_plots)]] <-
 			ggplot(object$dat, aes_string(x = var1, fill = var2)) +
 			geom_bar(position = "dodge")
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
- 	  { if(shiny) . else print(.) }
+ 	  { if (shiny) . else print(.) }
 }

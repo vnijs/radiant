@@ -30,19 +30,19 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	vars <- c(cm_var1, cm_var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
 
-	if(dat[,cm_var1] %>% is.factor) {
+	if (dat[,cm_var1] %>% is.factor) {
 		colnames(dat) <- c("variable","values")
 	} else {
 		dat %<>% gather_("variable", "values", vars)
 	}
 
 	# check variances in the data
-  if(dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
+  if (dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
   	return("Test could not be calculated. Please select another variable.")
 
 	# resetting option to independent if the number of observations is unequal
-  if(cm_paired == "paired")
-    if(summary(dat$variable) %>% { max(.) != min(.) })
+  if (cm_paired == "paired")
+    if (summary(dat$variable) %>% { max(.) != min(.) })
       cm_paired <- "independent (obs. per level unequal)"
 
 	##############################################
@@ -96,14 +96,14 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 summary.compare_means <- function(object, ...) {
 
 	# result <- object
-  if(object$cm_adjust == "bonf") {
+  if (object$cm_adjust == "bonf") {
     cat("Pairwise comparisons (bonferroni adjustment)\n")
   } else {
 	  cat("Pairwise comparisons (no adjustment)\n")
   }
 
 	cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables:", object$vars, "\n")
 	cat("Samples  :", object$cm_paired, "\n\n")
@@ -161,7 +161,7 @@ plot.compare_means <- function(x,
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	plots <- list()
-	if("bar" %in% cm_plots) {
+	if ("bar" %in% cm_plots) {
 		colnames(object$dat_summary)[1] <- "variable"
 		# use of `which` allows the user to change the order of the plots shown
 		plots[[which("bar" == cm_plots)]] <- ggplot(object$dat_summary,
@@ -172,18 +172,18 @@ plot.compare_means <- function(x,
 	}
 
 	# graphs on full data
-	if("box" %in% cm_plots) {
+	if ("box" %in% cm_plots) {
 		plots[[which("box" == cm_plots)]] <-
 			ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) +
 				geom_boxplot(alpha=.7)
 	}
 
-	if("density" %in% cm_plots) {
+	if ("density" %in% cm_plots) {
 		plots[[which("density" == cm_plots)]] <-
 			ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.7)
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
- 	  { if(shiny) . else print(.) }
+ 	  { if (shiny) . else print(.) }
 
 }

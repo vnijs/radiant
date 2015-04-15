@@ -15,11 +15,11 @@ output$help_about <- renderUI({
 # help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
 
 append_help <- function(help_str, help_path, Rmd = FALSE) {
-  if(length(input[[help_str]]) == 0) return()
+  if (length(input[[help_str]]) == 0) return()
   help_block <- get(help_str)
   local_hd <- help_block[which(help_block %in% input[[help_str]])]
   all_help <- c()
-  for(i in names(local_hd)) {
+  for (i in names(local_hd)) {
     all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),
                       inclMD(paste0(help_path,local_hd[i])),
                       sep="\n")
@@ -46,11 +46,11 @@ output$help_regression <- reactive(append_help("help_regression", file.path(r_pa
 
 
 help_switch <- function(help_all, help_str, help_on = TRUE) {
-  if(is.null(help_all) || help_all == 0) return()
+  if (is.null(help_all) || help_all == 0) return()
   help_choices <- help_init <- get(help_str)
   init <- ""
-  # if(help_on) init <- state_init(help_str, help_init)
-  if(help_on) init <- help_init
+  # if (help_on) init <- state_init(help_str, help_init)
+  if (help_on) init <- help_init
   updateCheckboxGroupInput(session, help_str,
     label = NULL,
     choices = help_choices,

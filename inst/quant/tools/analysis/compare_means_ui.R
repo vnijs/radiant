@@ -10,7 +10,7 @@ cm_args <- as.list(formals(compare_means))
 # list of function inputs selected by user
 cm_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(cm_args))
+  for (i in names(cm_args))
     cm_args[[i]] <- input[[i]]
   cm_args
 })
@@ -31,13 +31,13 @@ output$ui_cm_var1 <- renderUI({
 })
 
 output$ui_cm_var2 <- renderUI({
-  if(not_available(input$cm_var1)) return()
+  if (not_available(input$cm_var1)) return()
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
-  if(input$cm_var1 %in% vars) {
+  if (input$cm_var1 %in% vars) {
     # when cm_var1 is numeric comparisons for multiple variables are possible
     vars <- vars[-which(vars == input$cm_var1)]
-    if(length(vars) == 0) return()
+    if (length(vars) == 0) return()
     selectizeInput(inputId = "cm_var2", label = "Variables (select one or more):",
                 choices = vars,
                 selected = state_multiple("cm_var2", vars),
@@ -123,37 +123,37 @@ output$compare_means <- renderUI({
 
 .summary_compare_means <- reactive({
 
-  if(not_available(input$cm_var2))
+  if (not_available(input$cm_var2))
     return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
   # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if(length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
+  if (length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
     return(" ")
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
-  if(input$cm_var1 %in% input$cm_var2) return(" ")
+  if (input$cm_var1 %in% input$cm_var2) return(" ")
 
   summary(.compare_means())
 })
 
 .plot_compare_means <- reactive({
 
-  if(not_available(input$cm_var2))
+  if (not_available(input$cm_var2))
     return("This analysis requires at least two variables of type factor, numeric, or interval.\nIf less than two such variables are available please select another dataset")
   # cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if(length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
+  if (length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
     return(" ")
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
-  if(input$cm_var1 %in% input$cm_var2) return(" ")
+  if (input$cm_var1 %in% input$cm_var2) return(" ")
 
   plot(.compare_means(), cm_plots = input$cm_plots, shiny = TRUE)
 })
 
 observe({
-  if(not_pressed(input$compare_means_report)) return()
+  if (not_pressed(input$compare_means_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list(cm_plots = input$cm_plots) %>% list("",.)
     figs <- TRUE
-    if(length(input$cm_plots) == 0) {
+    if (length(input$cm_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")

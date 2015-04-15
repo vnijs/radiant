@@ -8,9 +8,9 @@ km_args <- as.list(formals(kmeans_clus))
 # list of function inputs selected by user
 km_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(km_args))
+  for (i in names(km_args))
     km_args[[i]] <- input[[i]]
-  if(!input$show_filter) km_args$data_filter = ""
+  if (!input$show_filter) km_args$data_filter = ""
   km_args
 })
 
@@ -90,21 +90,21 @@ output$kmeans_clus <- renderUI({
 })
 
 .summary_kmeans_clus <- reactive({
-  if(not_available(input$km_vars))
+  if (not_available(input$km_vars))
 		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
 
   summary(.kmeans_clus())
 })
 
 .plot_kmeans_clus <- reactive({
-  if(not_available(input$km_vars))
+  if (not_available(input$km_vars))
 		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
 
   plot(.kmeans_clus(), shiny = TRUE)
 })
 
 observe({
-  if(not_pressed(input$kmeans_clus_report)) return()
+  if (not_pressed(input$kmeans_clus_report)) return()
   isolate({
     update_report(inp_main = clean_args(km_inputs(), km_args),
                   fun_name = "kmeans_clus",
@@ -118,14 +118,14 @@ observe({
 output$km_save_kmeans <- downloadHandler(
   filename = function() { "kmeans.csv" },
   content = function(file) {
-  	.kmeans_clus() %>% { if(is.list(.)) write.csv(.$clus_means, file) }
+  	.kmeans_clus() %>% { if (is.list(.)) write.csv(.$clus_means, file) }
   }
 )
 
 # save cluster membership when action button is pressed
 observe({
-	if(not_pressed(input$km_save_membership)) return()
+	if (not_pressed(input$km_save_membership)) return()
 	isolate({
-		.kmeans_clus() %>% { if(is.list(.)) save_membership(.) }
+		.kmeans_clus() %>% { if (is.list(.)) save_membership(.) }
 	})
 })

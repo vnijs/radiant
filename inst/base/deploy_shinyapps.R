@@ -2,6 +2,7 @@
 devtools::install_github("vnijs/radiant")
 devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
 devtools::install_github(c('jeroenooms/jsonlite', 'rstudio/shiny', 'ramnathv/htmlwidgets'))
+devtools::install_github('rstudio/shiny', 'ramnathv/htmlwidgets'))
 devtools::install_github(c("rstudio/DT"))
 
 library(shinyapps)

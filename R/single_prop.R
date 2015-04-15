@@ -30,8 +30,8 @@ single_prop <- function(dataset, sp_var,
 	dat <- getdata(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
 
 	levs <- levels(dat[,sp_var])
-	if(sp_levels != "") {
-		if(sp_levels %in% levs && levs[1] != sp_levels) {
+	if (sp_levels != "") {
+		if (sp_levels %in% levs && levs[1] != sp_levels) {
 			dat[,sp_var] %<>% as.character %>% as.factor %>% relevel(sp_levels)
 			levs <- levels(dat[,sp_var])
 		}
@@ -68,7 +68,7 @@ summary.single_prop <- function(object, ...) {
 
   cat("Single proportion test\n")
 	cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variable :", object$sp_var, "\n")
 
@@ -124,21 +124,21 @@ plot.single_prop <- function(x,
 	lev_name <- object$levs[1]
 
  	plots <- list()
-	if("hist" %in% sp_plots) {
+	if ("hist" %in% sp_plots) {
 		plots[[which("hist" == sp_plots)]] <-
 			ggplot(object$dat, aes_string(x = object$sp_var, fill = object$sp_var)) +
 	 			geom_histogram(alpha=.7) +
 	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$sp_var))
 	}
-	if("simulate" %in% sp_plots) {
+	if ("simulate" %in% sp_plots) {
 		simdat <- rbinom(1000, prob = object$sp_comp_value, object$n) %>%
 								divide_by(object$n) %>%
 							  data.frame %>%
 							  set_colnames(lev_name)
 
-		ci_perc <- { if(object$sp_alternative == 'two.sided') {
+		ci_perc <- { if (object$sp_alternative == 'two.sided') {
 									{(1-object$sp_sig_level)/2}  %>% c(., 1 - .)
-								 } else if(object$sp_alternative == 'less') {
+								 } else if (object$sp_alternative == 'less') {
 									{1-object$sp_sig_level}
 								 } else {
 									object$sp_sig_level
@@ -160,5 +160,5 @@ plot.single_prop <- function(x,
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
-	  { if(shiny) . else print(.) }
+	  { if (shiny) . else print(.) }
 }

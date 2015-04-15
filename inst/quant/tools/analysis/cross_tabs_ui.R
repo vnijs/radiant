@@ -10,9 +10,9 @@ ct_args <- as.list(formals(cross_tabs))
 # list of function inputs selected by user
 ct_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(ct_args))
+  for (i in names(ct_args))
     ct_args[[i]] <- input[[i]]
-  if(!input$show_filter) ct_args$data_filter = ""
+  if (!input$show_filter) ct_args$data_filter = ""
   ct_args
 })
 
@@ -27,8 +27,8 @@ output$ui_ct_var1 <- renderUI({
 
 output$ui_ct_var2 <- renderUI({
 	vars <- groupable_vars()
-  if(input$ct_var1 %>% not_available) vars <- character(0)
-  if(length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
+  if (input$ct_var1 %>% not_available) vars <- character(0)
+  if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
   	selected = state_single("ct_var2",vars), multiple = FALSE)
 })
@@ -84,25 +84,25 @@ output$cross_tabs <- renderUI({
 })
 
 .summary_cross_tabs <- reactive({
-	if(input$ct_var2 %>% not_available)
+	if (input$ct_var2 %>% not_available)
 		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
 
 	summary(.cross_tabs(), ct_check = input$ct_check)
 })
 
 .plot_cross_tabs <- reactive({
-	if(input$ct_var2 %>% not_available)
+	if (input$ct_var2 %>% not_available)
 		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
 
 	plot(.cross_tabs(), ct_check = input$ct_check, shiny = TRUE)
 })
 
 observe({
-  if(not_pressed(input$cross_tabs_report)) return()
+  if (not_pressed(input$cross_tabs_report)) return()
   isolate({
   	outputs <- inp_out <- character(0)
   	figs <- FALSE
-  	if(length(input$ct_check) > 0) {
+  	if (length(input$ct_check) > 0) {
 			outputs <- c("summary","plot")
   		inp_out <- list(ct_check = input$ct_check) %>% list(.,.)
   		figs <- TRUE

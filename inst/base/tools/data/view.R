@@ -19,7 +19,7 @@ output$ui_View <- renderUI({
 
 # output$dataviewer <- renderDataTable({
 
-  # if(not_available(input$view_vars)) return()
+  # if (not_available(input$view_vars)) return()
   # select_(.getdata(), .dots = input$view_vars)
 
 # }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
@@ -29,7 +29,7 @@ output$ui_View <- renderUI({
 
 output$dataviewer <- DT::renderDataTable({
 
-  if(not_available(input$view_vars)) return()
+  if (not_available(input$view_vars)) return()
 
   dat <- select_(.getdata(), .dots = input$view_vars)
   action = DT::dataTableAjax(session, dat, rownames = FALSE)

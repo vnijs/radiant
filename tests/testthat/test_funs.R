@@ -40,11 +40,11 @@ test_that("getclass", {
 })
 
 test_that("is_empty", {
-  expect_equal(is_empty(""), TRUE)
-  expect_equal(is_empty(NULL), TRUE)
-  expect_equal(is_empty(3), FALSE)
-  expect_equal(is_empty(c()), TRUE)
-  expect_equal(is_empty("nothing", empty = "nothing"), TRUE)
+  expect_true(is_empty(""))
+  expect_true(is_empty(NULL))
+  expect_false(is_empty(3))
+  expect_true(is_empty(c()))
+  expect_true(is_empty("nothing", empty = "nothing"))
 })
 
 test_that("state_init", {
@@ -96,4 +96,3 @@ test_that("options", {
   expect_equal(options()$width, 200)
   expect_equal(options()$scipen, 100)
 })
-

@@ -16,6 +16,6 @@ Mean value
 Mean with na.rm = TRUE
 }
 \examples{
-mean_rm(runif(100))
+mean_rm(runif (100))
 }
 

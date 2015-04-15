@@ -29,7 +29,7 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
 
 	formula <- paste(ca_dep_var, "~", paste(ca_indep_var, collapse = " + "))
 
-	if(ca_rev) {
+	if (ca_rev) {
 		ca_dep <- dat[,ca_dep_var]
 		dat[,ca_dep_var] <- abs(ca_dep - max(ca_dep)) + 1
 	}
@@ -66,7 +66,7 @@ summary.conjoint <- function(object,
 
 	cat("Conjoint analysis\n")
   cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
   cat("Dependent variable   :", object$ca_dep_var, "\n")
   cat("Independent variables:", paste0(object$ca_indep_var, collapse=", "), "\n\n")
@@ -80,22 +80,22 @@ summary.conjoint <- function(object,
 	}
 
 	cat("\nConjoint regression coefficients:\n")
-  for(i in object$ca_indep_var) object$model$term %<>% gsub(i, paste0(i," > "), .)
+  for (i in object$ca_indep_var) object$model$term %<>% gsub(i, paste0(i," > "), .)
 	object$model$estimate %>% data.frame %>% round(3) %>%
 	  set_colnames("coefficients") %>%
 	  set_rownames(object$model$term) %>% print
 	cat("\n")
 
-	if(ca_vif) {
+	if (ca_vif) {
 
-    if(length(object$ca_indep_var) > 1) {
+    if (length(object$ca_indep_var) > 1) {
       cat("Variance Inflation Factors\n")
-      vif(object$lm_mod) %>%
-        { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+      vif (object$lm_mod) %>%
+        { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
         data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
         round(3) %>%
         .[order(.$VIF, decreasing=T),] %>%
-        { if(nrow(.) < 8) t(.) else . } %>% print
+        { if (nrow(.) < 8) t(.) else . } %>% print
     } else {
       cat("Insufficient number of attributes selected to calculate\nmulti-collinearity diagnostics")
     }
@@ -133,10 +133,10 @@ plot.conjoint <- function(x,
 	plot_ylim <- the_table$plot_ylim
 	plots <- list()
 
-	if("pw" %in% ca_plots) {
+	if ("pw" %in% ca_plots) {
 		PW.df <- the_table[["PW"]]
 
-		for(var in object$ca_indep_var) {
+		for (var in object$ca_indep_var) {
 			PW.var <- PW.df[PW.df[,"Attributes"] == var,]
 
 			# setting the levels in the same order as in the_table. Without this
@@ -149,12 +149,12 @@ plot.conjoint <- function(x,
 		  	  labs(list(title = paste("Part-worths for", var), x = ""))
 		  	  # theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-		  if(ca_scale_plot) p <- p + ylim(plot_ylim[var,"Min"],plot_ylim[var,"Max"])
+		  if (ca_scale_plot) p <- p + ylim(plot_ylim[var,"Min"],plot_ylim[var,"Max"])
 			plots[[var]] <- p
 		}
 	}
 
-	if("iw" %in% ca_plots) {
+	if ("iw" %in% ca_plots) {
 		IW.df <- the_table[['IW']]
 		plots[["iw"]] <- ggplot(IW.df, aes_string(x="Attributes", y="IW", fill = "Attributes")) +
 		                   geom_bar(stat = "identity", alpha = .5) +
@@ -163,7 +163,7 @@ plot.conjoint <- function(x,
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
-	 	{ if(shiny) . else print(.) }
+	 	{ if (shiny) . else print(.) }
 }
 
 #' Function to calculate the PW and IW table for conjoint
@@ -184,11 +184,11 @@ plot.conjoint <- function(x,
 #'
 #' @export
 ca_the_table <- function(model, dat, ca_indep_var) {
-	if(is.character(model)) return(list("PW" = "No attributes selected."))
+	if (is.character(model)) return(list("PW" = "No attributes selected."))
 
 	attr <- select_(dat, .dots = ca_indep_var)
 	isFct <- sapply(attr, is.factor)
-	if(sum(isFct) < ncol(attr)) return(list("PW" = "Only factors can be used.", "IW" = "Only factors can be used."))
+	if (sum(isFct) < ncol(attr)) return(list("PW" = "Only factors can be used.", "IW" = "Only factors can be used."))
 	levs <- lapply(attr[,isFct, drop = FALSE],levels)
 	vars <- colnames(attr)[isFct]
 

@@ -12,7 +12,7 @@ sp_args <- as.list(formals(single_prop))
 # list of function inputs selected by user
 sp_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(sp_args))
+  for (i in names(sp_args))
     sp_args[[i]] <- input[[i]]
   sp_args
 })
@@ -28,7 +28,7 @@ output$ui_sp_var <- renderUI({
 })
 
 output$ui_sp_levels <- renderUI({
-  if(input$sp_var %>% not_available)
+  if (input$sp_var %>% not_available)
     levs <- c()
   else
     levs <- .getdata()[1,input$sp_var] %>% as.factor %>% levels
@@ -104,10 +104,10 @@ output$single_prop <- renderUI({
 
 .summary_single_prop <- reactive({
 
-  if(not_available(input$sp_var))
+  if (not_available(input$sp_var))
     return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
 
- if(input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
+ if (input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
     return("Please choose a comparison value between 0 and 1")
 
   summary(.single_prop())
@@ -115,22 +115,22 @@ output$single_prop <- renderUI({
 
 .plot_single_prop <- reactive({
 
-  if(not_available(input$sp_var))
+  if (not_available(input$sp_var))
     return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
 
- if(input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
+ if (input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
     return("Please choose a comparison value between 0 and 1")
 
   plot(.single_prop(), sp_plots = input$sp_plots, shiny = TRUE)
 })
 
 observe({
-  if(not_pressed(input$single_prop_report)) return()
+  if (not_pressed(input$single_prop_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list(sp_plots = input$sp_plots) %>% list("",.)
     figs <- TRUE
-    if(length(input$sp_plots) == 0) {
+    if (length(input$sp_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")

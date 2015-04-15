@@ -29,7 +29,7 @@ kmeans_clus <- function(dataset, km_vars,
                         km_seed = 1234,
                         km_nr_clus = 2) {
 
-	if(km_hc_init) {
+	if (km_hc_init) {
 		hc_init <- hier_clus(dataset, km_vars, data_filter = data_filter,
 		                     hc_dist = km_dist, hc_meth = km_meth)
 
@@ -89,10 +89,10 @@ summary.kmeans_clus <- function(object, ...) {
 
 	cat("K-means cluster analysis\n")
 	cat("Data        :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(object$km_vars, collapse=", "), "\n")
-	if(object$km_hc_init) {
+	if (object$km_hc_init) {
 		cat("Method      :", object$km_meth, "\n")
 		cat("Distance    :", object$km_dist, "\n")
 	}
@@ -148,13 +148,13 @@ plot.kmeans_clus <- function(x,
 	vars <- colnames(dat) %>% .[-length(.)]
 
 	plots <- list()
-	for(var in vars) {
+	for (var in vars) {
 		plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clus_var')) +
 				geom_density(adjust=2.5, alpha=.3) +
 				labs(y = "") + theme(axis.text.y = element_blank())
 	}
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
-	 	{ if(shiny) . else print(.) }
+	 	{ if (shiny) . else print(.) }
 
 }
 
@@ -176,7 +176,7 @@ plot.kmeans_clus <- function(x,
 #'
 #' @export
 save_membership <- function(object) {
-	if(object$data_filter != "")
+	if (object$data_filter != "")
     return("Please deactivate data filters before trying to save cluster membership")
 	as.factor(object$km_out$cluster) %>%
 	changedata(object$dataset, vars = ., var_names = paste0("kclus",object$km_nr_clus))

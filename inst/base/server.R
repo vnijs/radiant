@@ -5,9 +5,9 @@ shinyServer(function(input, output, session) {
 	source("radiant.R", local = TRUE)
 
 	# for shiny-server
- 	if(!"package:radiant" %in% search()) {
- 		if(r_path == "..") {
-      for(file in list.files("../../R",
+ 	if (!"package:radiant" %in% search()) {
+ 		if (r_path == "..") {
+      for (file in list.files("../../R",
 		      pattern="\\.(r|R)$",
 		      full.names = TRUE)) {
 
@@ -22,7 +22,7 @@ shinyServer(function(input, output, session) {
 	}
 
 	# source data & analysis tools
-  for(file in list.files(c("tools/app","tools/data"),
+  for (file in list.files(c("tools/app","tools/data"),
       pattern="\\.(r|R)$",
       full.names = TRUE)) {
 

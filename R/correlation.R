@@ -64,7 +64,7 @@ summary.correlation <- function(object,
 
   cat("Correlation\n")
 	cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables:", paste0(object$cor_var, collapse=", "), "\n")
 	cat("Null hyp.: variables x and y are not correlated\n")
@@ -118,6 +118,6 @@ plot.correlation <- function(x, ...) {
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	object$dat %>% { if(is.null(.)) object else . } %>%
+	object$dat %>% { if (is.null(.)) object else . } %>%
 	pairs(lower.panel=panel.smooth, upper.panel=panel.plot)
 }

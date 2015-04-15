@@ -4,20 +4,20 @@
 
 output$ui_fileUpload <- renderUI({
 
-  if(is.null(input$dataType)) return()
-  if(input$dataType == "csv") {
+  if (is.null(input$dataType)) return()
+  if (input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c('text/csv','text/comma-separated-values',
                          'text/tab-separated-values',
                          'text/plain','.csv','.tsv'))
-  } else if(input$dataType == "rda") {
+  } else if (input$dataType == "rda") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c(".rda",".rds",".rdata"))
   }
 })
 
 output$ui_clipboard_load <- renderUI({
-  if(r_local) {
+  if (r_local) {
     actionButton('loadClipData', 'Paste data')
   } else {
     tagList(tags$textarea(class="form-control",
@@ -28,7 +28,7 @@ output$ui_clipboard_load <- renderUI({
 })
 
 output$ui_clipboard_save <- renderUI({
-  if(r_local) {
+  if (r_local) {
     actionButton('saveClipData', 'Copy data')
   } else {
     tagList(
@@ -105,7 +105,7 @@ output$ui_Manage <- renderUI({
 
 # updating the dataset description
 observe({
-  if(is.null(input$updateDescr) || input$updateDescr == 0) return()
+  if (is.null(input$updateDescr) || input$updateDescr == 0) return()
   isolate({
     r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr",
@@ -138,20 +138,20 @@ output$uiRemoveDataset <- renderUI({
 
 observe({
   # removing datasets
-  if(is.null(input$removeDataButton) || input$removeDataButton == 0) return()
+  if (is.null(input$removeDataButton) || input$removeDataButton == 0) return()
   isolate({
 
     # only remove datasets if 1 or more were selected - without this line
     # all files would be removed when the removeDataButton is pressed
-    if(is.null(input$removeDataset)) return()
+    if (is.null(input$removeDataset)) return()
     datasets <- r_data[['datasetlist']]
-    if(length(datasets) > 1) {  # have to leave at least one dataset
+    if (length(datasets) > 1) {  # have to leave at least one dataset
       removeDataset <- input$removeDataset
-      if(length(datasets) == length(removeDataset))
+      if (length(datasets) == length(removeDataset))
         removeDataset <- removeDataset[-1]
 
       # Must use single string to index into reactivevalues so loop is necessary
-      for(rem in removeDataset) {
+      for (rem in removeDataset) {
         r_data[[rem]] <- NULL
         r_data[[paste0(rem,"_descr")]] <- NULL
       }
@@ -162,7 +162,7 @@ observe({
 
 # 'saving' data to clipboard
 observe({
-  if(is.null(input$saveClipData) || input$saveClipData == 0) return()
+  if (is.null(input$saveClipData) || input$saveClipData == 0) return()
   isolate({
     saveClipboardData()
     updateRadioButtons(session = session, inputId = "saveAs",
@@ -179,8 +179,8 @@ output$downloadData <- downloadHandler(
     ext <- input$saveAs
     robj <- input$dataset
 
-    if(ext == 'rda') {
-      if(!is.null(input$man_data_descr) && input$man_data_descr != "") {
+    if (ext == 'rda') {
+      if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
         # save data description
         dat <- .getdata()
         attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
@@ -190,7 +190,7 @@ output$downloadData <- downloadHandler(
         assign(robj, .getdata())
         save(list = robj, file = file)
       }
-    } else if(ext == 'csv') {
+    } else if (ext == 'csv') {
       assign(robj, .getdata())
       write.csv(get(robj), file)
     }
@@ -201,10 +201,10 @@ output$downloadData <- downloadHandler(
 observe({
   # loading files from disk
   inFile <- input$uploadfile
-  if(!is.null(inFile)) {
+  if (!is.null(inFile)) {
     isolate({
       # iterating through the files to upload
-      for(i in 1:(dim(inFile)[1]))
+      for (i in 1:(dim(inFile)[1]))
         loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
                      header = input$man_header,
                      man_str_as_factor = input$man_str_as_factor,
@@ -219,7 +219,7 @@ observe({
 
 # loading all examples files (linked to helpfiles)
 observe({
-  if(not_pressed(input$loadExampleData)) return()
+  if (not_pressed(input$loadExampleData)) return()
   isolate({
 
     # loading data bundled with Radiant
@@ -228,14 +228,14 @@ observe({
     data_path <- file.path(r_path,"/base/data/")
     examples <- list.files(data_path)
 
-    for(ex in examples) loadUserData(ex, paste0(data_path,ex), 'rda')
+    for (ex in examples) loadUserData(ex, paste0(data_path,ex), 'rda')
 
     # loading data available for Rady students
     # path <- "data/data_rady/"
     data_path <- "data/"
     examples <- list.files(data_path)
 
-    for(ex in examples) loadUserData(ex, paste0(data_path,ex), 'rda')
+    for (ex in examples) loadUserData(ex, paste0(data_path,ex), 'rda')
 
     # sorting files alphabetically
     r_data[['datasetlist']] <- sort(r_data[['datasetlist']])
@@ -248,7 +248,7 @@ observe({
 
 observe({
   # 'reading' data from clipboard
-  if(not_pressed(input$loadClipData)) return()
+  if (not_pressed(input$loadClipData)) return()
   isolate({
     loadClipboardData()
     updateRadioButtons(session = session, inputId = "dataType",
@@ -266,7 +266,7 @@ observe({
 #######################################
 observe({
   inFile <- input$uploadState
-  if(!is.null(inFile)) {
+  if (!is.null(inFile)) {
     isolate({
       tmpEnv <- new.env()
       load(inFile$datapath, envir=tmpEnv)
@@ -283,7 +283,7 @@ observe({
 
 output$refreshOnUpload <- renderUI({
   inFile <- input$uploadState
-  if(!is.null(inFile)) {
+  if (!is.null(inFile)) {
     # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
     tags$script("window.location.reload();")
   }
@@ -312,8 +312,8 @@ output$downloadState <- downloadHandler(
 # Loading data into memory
 #######################################
 observe({
-  if(input$data_rename %>% is_empty) return()
-  if(input$renameButton %>% not_pressed) return()
+  if (input$data_rename %>% is_empty) return()
+  if (input$renameButton %>% not_pressed) return()
   isolate({
     # you can use pryr::object_size to see that the size of the list doesn't change
     # when you assign a list element another name
@@ -358,7 +358,7 @@ output$uiRename <- renderUI({
 output$htmlDataExample <- renderText({
 
   # dat <- .getdata()
-  if(is.null(.getdata())) return()
+  if (is.null(.getdata())) return()
 
   # Show only the first 10 (or 30) rows
   r_data[[paste0(input$dataset,"_descr")]] %>%

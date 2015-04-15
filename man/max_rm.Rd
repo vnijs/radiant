@@ -16,6 +16,6 @@ Maximum value
 Max with na.rm = TRUE
 }
 \examples{
-max_rm(runif(100))
+max_rm(runif (100))
 }
 

@@ -33,7 +33,7 @@ plot(result, cm_plots = c("bar","density"))
 
 # should produce an error because no dataset with that name exists
 result <- try(compare_means("no_dat", "cyl", "mpg"), silent = TRUE)
-if(is(result, 'try-error')) print("Error produced as expected")
+if (is(result, 'try-error')) print("Error produced as expected")
 
 # regression
 result <- regression("diamonds", "price", c("carat","clarity"))
@@ -47,7 +47,7 @@ plot(result, reg_plot = c("dashboard"))
 
 # set working directory to home
 path2desktop <- "~/Desktop/"
-if(!file.exists(path2desktop))
+if (!file.exists(path2desktop))
 	path2desktop <- "~/Documents/Desktop"
 setwd(path2desktop)
 

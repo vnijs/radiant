@@ -7,9 +7,9 @@ ff_args <- as.list(formals(full_factor))
 # list of function inputs selected by user
 ff_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(ff_args))
+  for (i in names(ff_args))
     ff_args[[i]] <- input[[i]]
-  if(!input$show_filter) ff_args$data_filter = ""
+  if (!input$show_filter) ff_args$data_filter = ""
   ff_args
 })
 
@@ -62,10 +62,10 @@ ff_plot <- reactive({
  	nrPlots <- (input$ff_number * (input$ff_number - 1)) / 2
 
 	plot_height <- plot_width <- 350
-	if(nrPlots > 2)
+	if (nrPlots > 2)
 		plot_height <- 350 * ceiling(nrPlots/2)
 
-	if(nrPlots > 1)
+	if (nrPlots > 1)
 		plot_width <- 700
 
   list(plot_width = plot_width, plot_height = plot_height)
@@ -101,27 +101,27 @@ output$full_factor <- renderUI({
 })
 
 .summary_full_factor <- reactive({
-  if(not_available(input$ff_var))
+  if (not_available(input$ff_var))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
 
-	if(length(input$ff_var) < 2) return("Please select two or more variables")
-	if(is.null(input$ff_number)) return("Number of factors should be > 1.")
+	if (length(input$ff_var) < 2) return("Please select two or more variables")
+	if (is.null(input$ff_number)) return("Number of factors should be > 1.")
 
   summary(.full_factor(), ff_cutoff = input$ff_cutoff, ff_sort = input$ff_sort)
 })
 
 .plot_full_factor <- reactive({
-  if(not_available(input$ff_var))
+  if (not_available(input$ff_var))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
 
-	if(length(input$ff_var) < 2) return("Please select two or more variables")
-	if(is.null(input$ff_number)) return("Number of factors should be > 1.")
+	if (length(input$ff_var) < 2) return("Please select two or more variables")
+	if (is.null(input$ff_number)) return("Number of factors should be > 1.")
 
   plot(.full_factor(), shiny = TRUE)
 })
 
 observe({
- if(not_pressed(input$full_factor_report)) return()
+ if (not_pressed(input$full_factor_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list()
@@ -142,7 +142,7 @@ output$ff_save_loadings <- downloadHandler(
   filename = function() { "loadings.csv" },
   content = function(file) {
     .full_factor() %>%
-      { if(is.list(.)) .$ff_loadings else return() } %>%
+      { if (is.list(.)) .$ff_loadings else return() } %>%
       clean_loadings(input$ff_cutoff, input$ff_sort) %>%
       write.csv(file)
   }
@@ -150,8 +150,8 @@ output$ff_save_loadings <- downloadHandler(
 
 # save factor scores when action button is pressed
 observe({
-	if(not_pressed(input$ff_save_scores)) return()
+	if (not_pressed(input$ff_save_scores)) return()
 	isolate({
-	 .full_factor() %>% { if(!is.character(.)) save_factors(.) }
+	 .full_factor() %>% { if (!is.character(.)) save_factors(.) }
 	})
 })

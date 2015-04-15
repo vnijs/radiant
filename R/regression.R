@@ -31,14 +31,14 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   var_check(reg_indep_var, colnames(dat)[-1], reg_int_var) %>%
     { vars <<- .$vars; reg_indep_var <<- .$indep_var; reg_int_var <<- .$int_var }
 
-	if("standardize" %in% reg_check) {
+	if ("standardize" %in% reg_check) {
     isNum <- sapply(dat, is.numeric)
-    if(sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+    if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
 	formula <- paste(reg_dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
 
-	if("stepwise" %in% reg_check) {
+	if ("stepwise" %in% reg_check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
 		model <- lm(paste(reg_dep_var, "~ 1") %>% as.formula, data = dat) %>%
       step(., k = 2, scope = list(upper = formula), direction = 'both')
@@ -53,8 +53,8 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
   colnames(reg_coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
 
   isFct <- sapply(select(dat,-1), is.factor)
-  if(sum(isFct) > 0) {
-    for(i in names(select(dat,-1)[isFct]))
+  if (sum(isFct) > 0) {
+    for (i in names(select(dat,-1)[isFct]))
       reg_coeff$`  ` %<>% gsub(i, paste0(i," > "), .)
 
     rm(i, isFct)
@@ -95,39 +95,39 @@ summary.regression <- function(object,
                                reg_test_var = "",
                                ...) {
 
-	if(class(object$model)[1] != 'lm') return(object)
+	if (class(object$model)[1] != 'lm') return(object)
 
   # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
   cat("Data     :", object$dataset, "\n")
-  if(object$data_filter %>% gsub("\\s","",.) != "")
+  if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
   cat("Dependent variable   :", object$reg_dep_var, "\n")
   cat("Independent variables:", paste0(object$reg_indep_var, collapse=", "), "\n")
-  if("standardize" %in% object$reg_check)
+  if ("standardize" %in% object$reg_check)
  		cat("Standardized coefficients shown\n")
  	cat("\n")
   # cat("Null hyp.: variables x and y are not correlated\n")
   # cat("Alt. hyp.: variables x and y are correlated\n\n")
 	print(object$reg_coeff, row.names=FALSE)
 
-  if(nrow(object$model$model) <= (length(object$reg_indep_var) + 1))
+  if (nrow(object$model$model) <= (length(object$reg_indep_var) + 1))
     return("\nInsufficient observations to estimate model")
 
 	reg_fit <- glance(object$model) %>% round(3)
-	if(reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
+	if (reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
   cat("F-statistic:", reg_fit$statistic, paste0("df(", reg_fit$df, ",", reg_fit$df.residual, "), p.value"), reg_fit$p.value)
   cat(paste0("\nNr obs: ", reg_fit$df + reg_fit$df.residual))
   cat("\n\n")
 
-  if("rmse" %in% reg_sum_check) {
+  if ("rmse" %in% reg_sum_check) {
     mean(object$model$residual^2, na.rm=TRUE) %>% sqrt %>%
     cat("Prediction error (RMSE): ", ., "\n\n")
   }
 
-  if("sumsquares" %in% reg_sum_check) {
+  if ("sumsquares" %in% reg_sum_check) {
     atab <- anova(object$model)
     nr_rows <- dim(atab)[1]
     df_reg <- sum(atab$Df[-nr_rows])
@@ -147,18 +147,18 @@ summary.regression <- function(object,
     cat("\n")
   }
 
-  if("vif" %in% reg_sum_check) {
-    if(anyNA(object$model$coeff)) {
+  if ("vif" %in% reg_sum_check) {
+    if (anyNA(object$model$coeff)) {
 			cat("The set of independent variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
 		} else {
-      if(length(object$reg_indep_var) > 1) {
+      if (length(object$reg_indep_var) > 1) {
         cat("Variance Inflation Factors\n")
-        vif(object$model) %>%
-          { if(!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+        vif (object$model) %>%
+          { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(3) %>%
           .[order(.$VIF, decreasing=T),] %>%
-          { if(nrow(.) < 8) t(.) else . } %>%
+          { if (nrow(.) < 8) t(.) else . } %>%
           print
       } else {
         cat("Insufficient number of independent variables selected to calculate\nmulti-collinearity diagnostics")
@@ -167,8 +167,8 @@ summary.regression <- function(object,
     cat("\n")
   }
 
-  if("confint" %in% reg_sum_check) {
-    if(anyNA(object$model$coeff)) {
+  if ("confint" %in% reg_sum_check) {
+    if (anyNA(object$model$coeff)) {
       cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation. Confidence\nintervals were not calculated.\n")
     } else {
 
@@ -189,26 +189,26 @@ summary.regression <- function(object,
     }
   }
 
-  if(!is.null(reg_test_var) && reg_test_var[1] != "") {
-		if("stepwise" %in% object$reg_check) {
+  if (!is.null(reg_test_var) && reg_test_var[1] != "") {
+		if ("stepwise" %in% object$reg_check) {
 	  	cat("Model comparisons are not conducted when Stepwise has been selected.\n")
 	  } else {
 			sub_formula <- ". ~ 1"
 
 			vars <- object$reg_indep_var
-      if(object$reg_int_var != "" && length(vars) > 1) {
+      if (object$reg_int_var != "" && length(vars) > 1) {
         # updating reg_test_var if needed
         reg_test_var <- test_specs(reg_test_var, object$reg_int_var)
 	 	    vars <- c(vars,object$reg_int_var)
 			}
 
 			not_selected <- setdiff(vars,reg_test_var)
-			if(length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
+			if (length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
       sub_mod <- update(object$model, sub_formula, data = object$model$model) %>%
                    anova(object$model, test='F')
 
-			if(sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
-      p.value <- sub_mod[,"Pr(>F)"][2] %>% { if(. < .001) "< .001" else round(.,3) }
+			if (sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
+      p.value <- sub_mod[,"Pr(>F)"][2] %>% { if (. < .001) "< .001" else round(.,3) }
 
       # cat("\n")
 			cat(attr(sub_mod,"heading")[2])
@@ -263,13 +263,13 @@ plot.regression <- function(x,
 
   object <- x; rm(x)
 
-	if(class(object$model)[1] != 'lm') return(object)
+	if (class(object$model)[1] != 'lm') return(object)
 
-  if(reg_plots[1] == "")
+  if (reg_plots[1] == "")
     return(cat("Please select a regression plot from the drop-down menu"))
 
   # no plots if aliased coefficients present
-  if(anyNA(object$model$coeff)) reg_plots <- return("")
+  if (anyNA(object$model$coeff)) reg_plots <- return("")
 
   # object_size(object$model, model)
 	model <- ggplot2::fortify(object$model)
@@ -279,10 +279,10 @@ plot.regression <- function(x,
   vars <- c(reg_dep_var, reg_indep_var)
 
   plots <- list()
-	if("hist" %in% reg_plots)
-		for(i in vars) plots[[paste0("hist",i)]] <- ggplot(model[,vars], aes_string(x = i)) + geom_histogram()
+	if ("hist" %in% reg_plots)
+		for (i in vars) plots[[paste0("hist",i)]] <- ggplot(model[,vars], aes_string(x = i)) + geom_histogram()
 
-	if("dashboard" %in% reg_plots) {
+	if ("dashboard" %in% reg_plots) {
 
 		plots[[1]] <- ggplot(model, aes_string(x=".fitted", y=reg_dep_var)) +
       labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual")) +
@@ -305,51 +305,51 @@ plot.regression <- function(x,
       stat_function(fun = dnorm, args = list(mean = mean(model[,'.resid']), sd = sd(model[,'.resid'])), color = "blue") +
   		labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
 
-    if("loess" %in% reg_lines)
-      for(i in 1:3) plots[[i]] <- plots[[i]] + geom_smooth(size = .75, linetype = "dotdash")
+    if ("loess" %in% reg_lines)
+      for (i in 1:3) plots[[i]] <- plots[[i]] + geom_smooth(size = .75, linetype = "dotdash")
 
-    if("line" %in% reg_lines) {
-      for(i in c(1,4))
+    if ("line" %in% reg_lines) {
+      for (i in c(1,4))
         plots[[i]] <- plots[[i]] + geom_abline(linetype = 'dotdash')
-      for(i in 2:3)
+      for (i in 2:3)
         plots[[i]] <- plots[[i]] + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
     }
 	}
 
-	if("scatter" %in% reg_plots) {
-		for(i in reg_indep_var) {
-			if('factor' %in% class(model[,i])) {
+	if ("scatter" %in% reg_plots) {
+		for (i in reg_indep_var) {
+			if ('factor' %in% class(model[,i])) {
 				plots[[paste0("scatter",i)]] <- ggplot(model, aes_string(x=i, y=reg_dep_var, fill=i)) +
                                           geom_boxplot(alpha = .7) +
                                           theme(legend.position = "none")
 			} else {
 				p <- ggplot(model, aes_string(x=i, y=reg_dep_var)) + geom_point()
-        if("line" %in% reg_lines) p <- p + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
-        if("loess" %in% reg_lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
+        if ("line" %in% reg_lines) p <- p + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
+        if ("loess" %in% reg_lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
         plots[[paste0("scatter",i)]] <- p
 			}
 		}
 	}
 
-	if("resid_pred" %in% reg_plots) {
-		for(i in reg_indep_var) {
-			if('factor' %in% class(model[,i])) {
+	if ("resid_pred" %in% reg_plots) {
+		for (i in reg_indep_var) {
+			if ('factor' %in% class(model[,i])) {
 				plots[[i]] <- ggplot(model, aes_string(x=i, y=".resid")) +
                         geom_boxplot(fill = 'blue', alpha = .7) +
                         ylab("residuals") + theme(legend.position = "none")
 			} else {
 				p <- ggplot(model, aes_string(x=i, y=".resid")) + geom_point(alpha = .5) + ylab("residuals")
-        if("line" %in% reg_lines)
+        if ("line" %in% reg_lines)
           p <- p + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
-        if("loess" %in% reg_lines)
+        if ("loess" %in% reg_lines)
           p <- p + geom_smooth(size = .75, linetype = "dotdash")
         plots[[i]] <- p
 			}
 		}
 	}
 
-  if("coef" %in% reg_plots) {
-    if(!anyNA(object$model$coeff)) {
+  if ("coef" %in% reg_plots) {
+    if (!anyNA(object$model$coeff)) {
       cl_split <- function(x) 100*(1-x)/2
       cl_split(reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
       (100 - cl_split(reg_conf_level)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
@@ -360,7 +360,7 @@ plot.regression <- function(x,
         cbind(select(object$reg_coeff,2),.) %>%
         round(3) %>%
         set_rownames(object$reg_coeff$`  `) %>%
-        { if(!reg_coef_int) .[-1,] else . } %>%
+        { if (!reg_coef_int) .[-1,] else . } %>%
         mutate(variable = rownames(.)) %>%
           ggplot() +
             geom_pointrange(aes_string(x = "variable", y = "coefficient",
@@ -370,16 +370,16 @@ plot.regression <- function(x,
     }
 	}
 
-  if("correlations" %in% reg_plots)
+  if ("correlations" %in% reg_plots)
     return(plot.correlation(object$model$model))
 
-  if("leverage" %in% reg_plots)
+  if ("leverage" %in% reg_plots)
     return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1,
            layout = c(ceiling(length(reg_indep_var)/2),2)))
 
-	if(exists("plots")) {
+	if (exists("plots")) {
 		sshhr( do.call(arrangeGrob, c(plots, list(ncol = 2))) ) %>%
-      { if(shiny) . else print(.) }
+      { if (shiny) . else print(.) }
   }
 }
 
@@ -425,10 +425,10 @@ predict.regression <- function(object,
 
   reg_predict_type <- "cmd"
   vars <- object$reg_indep_var
-  if(reg_predict_cmd != "") {
+  if (reg_predict_cmd != "") {
     reg_predict_cmd %<>% gsub("\"","\'", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
-    if(is(pred, 'try-error')) {
+    if (is(pred, 'try-error')) {
       return(cat("The command entered did not generate valid data for prediction. Please try again.\nExamples are shown in the helpfile.\n"))
     }
 
@@ -442,17 +442,17 @@ predict.regression <- function(object,
     max_freq <- function(x) names(which.max(table(x)))
 
     plug_data <- data.frame(init___ = 1)
-    if(sum(isNum) > 0)
+    if (sum(isNum) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(mean), vars[isNum]))
-    if(sum(isFct) > 0)
+    if (sum(isFct) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_freq), vars[isFct]))
 
      rm(dat)
 
-    if(sum(isNum) + sum(isFct) < length(vars)) {
+    if (sum(isNum) + sum(isFct) < length(vars)) {
       cat("The model includes data-types that cannot be used for\nprediction at this point\n")
     } else {
-      if(sum(names(pred) %in% names(plug_data)) < length(names(pred))) {
+      if (sum(names(pred) %in% names(plug_data)) < length(names(pred))) {
         return(cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n"))
       } else {
         plug_data[names(pred)] <- list(NULL)
@@ -463,7 +463,7 @@ predict.regression <- function(object,
     pred <- getdata(reg_predict_data)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
-    if(is(pred, 'try-error')) {
+    if (is(pred, 'try-error')) {
       cat("Model variables: ")
       cat(vars,"\n")
       cat("Profile variables to be added: ")
@@ -474,7 +474,7 @@ predict.regression <- function(object,
   }
 
   pred_val <- try(predict(object$model, pred, interval = 'prediction', level = reg_conf_level), silent = TRUE)
-  if(!is(pred_val, 'try-error')) {
+  if (!is(pred_val, 'try-error')) {
     pred_val %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
     cl_split <- function(x) 100*(1-x)/2
     cl_split(reg_conf_level) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
@@ -483,7 +483,7 @@ predict.regression <- function(object,
 
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
-    if(reg_predict_type == "cmd") {
+    if (reg_predict_type == "cmd") {
       cat("Predicted values for:\n")
     } else {
       cat(paste0("Predicted values for profiles from dataset: ",object$reg_predict_data,"\n"))
@@ -544,7 +544,7 @@ plot.reg_predict <- function(x,
                              reg_conf_level = .95,
                              ...) {
 
-  if(is.null(reg_xvar) || reg_xvar == "") return(invisible())
+  if (is.null(reg_xvar) || reg_xvar == "") return(invisible())
 
   object <- x; rm(x)
 
@@ -564,7 +564,7 @@ plot.reg_predict <- function(x,
   facets <- paste(reg_facet_row, '~', reg_facet_col)
   if (facets != '. ~ .') p <- p + facet_grid(facets)
 
-  if(length(unique(object[[reg_xvar]])) < 10)
+  if (length(unique(object[[reg_xvar]])) < 10)
     p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
   else
     p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
@@ -586,7 +586,7 @@ plot.reg_predict <- function(x,
 #' }
 #' @export
 save_reg_resid <- function(object) {
-  if(object$data_filter != "")
+  if (object$data_filter != "")
     return("Please deactivate data filters before trying to save residuals")
   object$model$residuals %>%
     changedata(object$dataset, vars = ., var_names = "reg_residuals")
@@ -611,10 +611,10 @@ var_check <- function(indep_var, cn, int_var = "") {
 
   # if : is used to select a range of variables reg_indep_var is updated
   vars <- indep_var
-  if(length(vars) < length(cn)) vars <- indep_var <- cn
+  if (length(vars) < length(cn)) vars <- indep_var <- cn
 
-  if(int_var != "" && length(vars) > 1) {
-    if({int_var %>% strsplit(":") %>% unlist} %in% vars %>% all) {
+  if (int_var != "" && length(vars) > 1) {
+    if ({int_var %>% strsplit(":") %>% unlist} %in% vars %>% all) {
       vars <- c(vars, int_var)
     } else{
       cat("Interaction terms contain variables not selected as main effects.\nRemoving all interactions from the estimation")
@@ -640,10 +640,10 @@ var_check <- function(indep_var, cn, int_var = "") {
 #' @export
 test_specs <- function(test_var, int_var) {
 
-  if({int_var %>% strsplit(":") %>% unlist} %in% test_var %>% any) {
+  if ({int_var %>% strsplit(":") %>% unlist} %in% test_var %>% any) {
     cat("Interaction terms contain variables specified for testing.\nRelevant interaction terms are included in the requested test.\n\n")
 
-    for(i in test_var) {
+    for (i in test_var) {
       ind <- grep(i, int_var)
       test_var <- c(test_var, int_var[ind])
     }

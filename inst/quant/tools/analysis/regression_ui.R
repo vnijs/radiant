@@ -20,60 +20,60 @@ reg_args <- as.list(formals(regression))
 # list of function inputs selected by user
 reg_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(reg_args))
+  for (i in names(reg_args))
     reg_args[[i]] <- input[[i]]
-  if(!input$show_filter) reg_args$data_filter <- ""
+  if (!input$show_filter) reg_args$data_filter <- ""
   reg_args
 })
 
-reg_sum_args <- as.list(if(exists("summary.regression")) formals(summary.regression)
+reg_sum_args <- as.list(if (exists("summary.regression")) formals(summary.regression)
                         else formals(radiant:::summary.regression))
 
 # list of function inputs selected by user
 reg_sum_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(reg_sum_args))
+  for (i in names(reg_sum_args))
     reg_sum_args[[i]] <- input[[i]]
   reg_sum_args
 })
 
-reg_plot_args <- as.list(if(exists("plot.regression")) formals(plot.regression)
+reg_plot_args <- as.list(if (exists("plot.regression")) formals(plot.regression)
                          else formals(radiant:::plot.regression))
 
 # list of function inputs selected by user
 reg_plot_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(reg_plot_args))
+  for (i in names(reg_plot_args))
     reg_plot_args[[i]] <- input[[i]]
   reg_plot_args
 })
 
-reg_pred_args <- as.list(if(exists("predict.regression")) formals(predict.regression)
+reg_pred_args <- as.list(if (exists("predict.regression")) formals(predict.regression)
                          else formals(radiant:::predict.regression))
 
 # list of function inputs selected by user
 reg_pred_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(reg_pred_args))
+  for (i in names(reg_pred_args))
     reg_pred_args[[i]] <- input[[i]]
 
   reg_pred_args$reg_predict_cmd <- reg_pred_args$reg_predict_data <- ""
-  if(input$reg_predict == "cmd")
+  if (input$reg_predict == "cmd")
     reg_pred_args$reg_predict_cmd <- gsub("\\s", "", input$reg_predict_cmd)
 
-  if(input$reg_predict == "data")
+  if (input$reg_predict == "data")
     reg_pred_args$reg_predict_data <- input$reg_predict_data
 
   reg_pred_args
 })
 
-reg_pred_plot_args <- as.list(if(exists("plot.reg_predict")) formals(plot.reg_predict)
+reg_pred_plot_args <- as.list(if (exists("plot.reg_predict")) formals(plot.reg_predict)
                          else formals(radiant:::plot.reg_predict))
 
 # list of function inputs selected by user
 reg_pred_plot_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(reg_pred_plot_args))
+  for (i in names(reg_pred_plot_args))
     reg_pred_plot_args[[i]] <- input[[i]]
   reg_pred_plot_args
 })
@@ -88,8 +88,8 @@ output$ui_reg_dep_var <- renderUI({
 output$ui_reg_indep_var <- renderUI({
 	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if(not_available(input$reg_dep_var)) vars <- character(0)
-  if(length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]
+  if (not_available(input$reg_dep_var)) vars <- character(0)
+  if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]
   selectInput(inputId = "reg_indep_var", label = "Independent variables:", choices = vars,
   	selected = state_multiple("reg_indep_var", vars),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
@@ -98,7 +98,7 @@ output$ui_reg_indep_var <- renderUI({
 # adding interaction terms as needed
 output$ui_reg_test_var <- renderUI({
   vars <- input$reg_indep_var
-  if(!is.null(input$reg_int_var)) vars <- c(vars, input$reg_int_var)
+  if (!is.null(input$reg_int_var)) vars <- c(vars, input$reg_int_var)
 
   selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
     choices = vars, selected = state_multiple("reg_test_var", vars, ""),
@@ -121,11 +121,11 @@ output$ui_reg_show_interactions <- renderUI({
  })
 
 output$ui_reg_int_var <- renderUI({
-  if(is_empty(input$reg_show_interactions)) {
+  if (is_empty(input$reg_show_interactions)) {
     choices <- character(0)
   } else {
     vars <- input$reg_indep_var
-    if(not_available(vars) || length(vars) < 2) return()
+    if (not_available(vars) || length(vars) < 2) return()
     # vector of possible interaction terms to sel from glm_reg
     choices <- int_vec(vars, input$reg_show_interactions)       # create list of interactions to show user
   }
@@ -248,11 +248,11 @@ reg_plot <- reactive({
   plot_width <- 650
   nrVars <- length(input$reg_indep_var) + 1
 
-  if(input$reg_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
-  if(input$reg_plots == 'dashboard') plot_height <- 1.5 * plot_height
-  if(input$reg_plots == 'correlations') { plot_height <- 150 * nrVars; plot_width <- 150 * nrVars }
-  if(input$reg_plots == 'coef') plot_height <- 300 + 20 * length(.regression()$model$coefficients)
-  if(input$reg_plots %in% c('scatter','leverage','resid_pred'))
+  if (input$reg_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
+  if (input$reg_plots == 'dashboard') plot_height <- 1.5 * plot_height
+  if (input$reg_plots == 'correlations') { plot_height <- 150 * nrVars; plot_width <- 150 * nrVars }
+  if (input$reg_plots == 'coef') plot_height <- 300 + 20 * length(.regression()$model$coefficients)
+  if (input$reg_plots %in% c('scatter','leverage','resid_pred'))
     plot_height <- (plot_height/2) * ceiling((nrVars-1) / 2)
 
   list(plot_width = plot_width, plot_height = plot_height)
@@ -265,7 +265,7 @@ reg_plot_height <- function()
   reg_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
 reg_pred_plot_height <- function()
-  if(input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
+  if (input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
 
 # output is called from the main radiant ui.R
 output$regression <- renderUI({
@@ -298,10 +298,10 @@ output$regression <- renderUI({
 })
 
 .summary_regression <- reactive({
-  if(not_available(input$reg_dep_var))
+  if (not_available(input$reg_dep_var))
     return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
 
-  if(not_available(input$reg_indep_var))
+  if (not_available(input$reg_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
   do.call(summary, c(list(object = .regression()), reg_sum_inputs()))
@@ -311,13 +311,13 @@ output$regression <- renderUI({
 
   r_data$reg_pred <- NULL
 
-  if(not_available(input$reg_dep_var))
+  if (not_available(input$reg_dep_var))
     return(invisible())
 
-  if(not_available(input$reg_indep_var))
+  if (not_available(input$reg_indep_var))
     return(invisible())
 
-  if(is_empty(input$reg_predict, ""))
+  if (is_empty(input$reg_predict, ""))
     return(invisible())
 
   # do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
@@ -326,10 +326,10 @@ output$regression <- renderUI({
 
 .predict_plot_regression <- reactive({
 
-  if(is_empty(input$reg_predict, ""))
+  if (is_empty(input$reg_predict, ""))
     return(invisible())
 
-  if(is.null(r_data$reg_pred))
+  if (is.null(r_data$reg_pred))
     return(invisible())
 
   do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
@@ -337,16 +337,16 @@ output$regression <- renderUI({
 
 .plot_regression <- reactive({
 
-  if(not_available(input$reg_dep_var))
+  if (not_available(input$reg_dep_var))
     return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
 
-  if(not_available(input$reg_indep_var))
+  if (not_available(input$reg_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
 
-  if(is_empty(input$reg_plots, ""))
+  if (is_empty(input$reg_plots, ""))
     return("Please select a regression plot from the drop-down menu")
 
-  if("correlations" %in% input$reg_plots || "leverage" %in% input$reg_plots)
+  if ("correlations" %in% input$reg_plots || "leverage" %in% input$reg_plots)
     capture_plot( do.call(plot, c(list(x = .regression()), reg_plot_inputs())) )
   else
     reg_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
@@ -355,25 +355,25 @@ output$regression <- renderUI({
 })
 
 observe({
-  if(not_pressed(input$regression_report)) return()
+  if (not_pressed(input$regression_report)) return()
   isolate({
     # outputs <- c("summary")
     outputs <- c("summary","# save_reg_resid")
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
-    if(!is_empty(input$reg_plots)) {
+    if (!is_empty(input$reg_plots)) {
       inp_out[[3]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
     xcmd <- ""
-    if(!is.null(r_data$reg_pred)) {
-    # if(!is_empty(input$reg_predict)) {
+    if (!is.null(r_data$reg_pred)) {
+    # if (!is_empty(input$reg_predict)) {
       inp_out[[3 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
       xcmd <- paste0("# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
-      if(!is_empty(input$reg_xvar)) {
+      if (!is_empty(input$reg_xvar)) {
         inp_out[[4 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
         outputs <- c(outputs, "plot")
         figs <- TRUE
@@ -391,9 +391,9 @@ observe({
 })
 
 observe({
-	if(not_pressed(input$reg_save_res)) return()
+	if (not_pressed(input$reg_save_res)) return()
 	isolate({
-    .regression() %>% { if(is.list(.)) save_reg_resid(.) }
+    .regression() %>% { if (is.list(.)) save_reg_resid(.) }
 	})
 })
 

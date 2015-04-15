@@ -32,19 +32,19 @@ full_factor <- function(dataset, ff_var,
 	dat <- getdata(dataset, ff_var, filt = data_filter)
 
 	nrObs <- nrow(dat)
-	if(nrObs <= ncol(dat)) {
+	if (nrObs <= ncol(dat)) {
 		ret <- "Data should have more observations than variables.\nPlease reduce the number of variables." %>%
 						 set_class(c("full_factor",class(.)))
 		return(ret)
 	}
 
 	nrFac <- max(1,as.numeric(ff_number))
-	if(nrFac > ncol(dat)) {
+	if (nrFac > ncol(dat)) {
 		cat("The number of factors cannot exceed the number of variables.\n")
 		nrFac <- ncol(dat)
 	}
 
-	if(ff_meth == 'PCA') {
+	if (ff_meth == 'PCA') {
 		fres <- principal(dat, nfactors=nrFac, rotate=ff_rotation, scores=TRUE,
 		                  oblique.scores=FALSE)
 	} else {
@@ -91,11 +91,11 @@ summary.full_factor <- function(object,
                                 ff_sort = FALSE,
                                 ...) {
 
-	if(is.character(object)) return(cat(object))
+	if (is.character(object)) return(cat(object))
 
 	cat("Factor analysis\n")
 	cat("Data        :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(object$ff_var, collapse=", "), "\n")
 	cat("# factors   :", object$ff_number, "\n")
@@ -118,7 +118,7 @@ summary.full_factor <- function(object,
 
 	# results from psych - uncomment to validate results
   # object$fres$loadings %>%
-		# { if(ff_sort) fa.sort(.) else . } %>%
+		# { if (ff_sort) fa.sort(.) else . } %>%
 		# print(cutoff = ff_cutoff, digits = 2)
 
 	cat("\nAttribute communalities:\n")
@@ -160,10 +160,10 @@ plot.full_factor <- function(x,
 	object <- x; rm(x)
 
 	# when no analysis was conducted (e.g., no variables selected)
-	if(is.character(object))
+	if (is.character(object))
 		return(plot(x = 1, type = 'n', main=object, axes = FALSE, xlab = "", ylab = ""))
 
-	if(object$fres$factors < 2) {
+	if (object$fres$factors < 2) {
 		object <- "Plots require two or more factors"
 		return(plot(x = 1, type = 'n', main=object, axes = FALSE, xlab = "", ylab = ""))
 	}
@@ -175,8 +175,8 @@ plot.full_factor <- function(x,
 	plots <- list()
 	pnr <- 1
 	ab_df <- data.frame(a=c(0,0), b=c(1, 0))
-	for(i in 1:(length(cnames)-1)) {
-		for(j in (i+1):length(cnames)) {
+	for (i in 1:(length(cnames)-1)) {
+		for (j in (i+1):length(cnames)) {
 			i_name <- cnames[i]; j_name <- cnames[j]
 		  df2 <- cbind(df[, c(i_name,j_name)],rnames)
   		plots[[pnr]] <- ggplot(df2, aes_string(x = i_name, y = j_name, color = 'rnames', label = 'rnames')) +
@@ -187,7 +187,7 @@ plot.full_factor <- function(x,
   	}
 	}
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
-	 	{ if(shiny) . else print(.) }
+	 	{ if (shiny) . else print(.) }
 }
 
 #' Save factor scores to active dataset
@@ -205,7 +205,7 @@ plot.full_factor <- function(x,
 #'
 #' @export
 save_factors <- function(object) {
-  if(object$data_filter != "")
+  if (object$data_filter != "")
     return("Please deactivate data filters before trying to save factor scores")
   object$fres$scores %>% as.data.frame %>%
     changedata(object$dataset, vars = ., var_names = paste0("fac",1:ncol(.)))

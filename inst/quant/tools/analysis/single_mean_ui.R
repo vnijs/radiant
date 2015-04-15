@@ -12,9 +12,9 @@ sm_args <- as.list(formals(single_mean))
 # list of function inputs selected by user
 sm_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(sm_args))
+  for (i in names(sm_args))
     sm_args[[i]] <- input[[i]]
-  if(!input$show_filter) sm_args$data_filter = ""
+  if (!input$show_filter) sm_args$data_filter = ""
   sm_args
 })
 
@@ -96,10 +96,10 @@ output$single_mean <- renderUI({
 
 .summary_single_mean <- reactive({
 
-  if(not_available(input$sm_var))
+  if (not_available(input$sm_var))
     return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
 
-  if(is.na(input$sm_comp_value))
+  if (is.na(input$sm_comp_value))
     return("Please choose a comparison value")
 
   summary(.single_mean())
@@ -107,22 +107,22 @@ output$single_mean <- renderUI({
 
 .plot_single_mean <- reactive({
 
-  if(not_available(input$sm_var))
+  if (not_available(input$sm_var))
     return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
 
-  if(is.na(input$sm_comp_value))
+  if (is.na(input$sm_comp_value))
     return("Please choose a comparison value")
 
   plot(.single_mean(), sm_plots = input$sm_plots, shiny = TRUE)
 })
 
 observe({
-  if(not_pressed(input$single_mean_report)) return()
+  if (not_pressed(input$single_mean_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list(sm_plots = input$sm_plots) %>% list("",.)
     figs <- TRUE
-    if(length(input$sm_plots) == 0) {
+    if (length(input$sm_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")

@@ -10,21 +10,21 @@ pmap_args <- as.list(formals(pmap))
 # list of function inputs selected by user
 pmap_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(pmap_args))
+  for (i in names(pmap_args))
     pmap_args[[i]] <- input[[i]]
-  if(!input$show_filter) pmap_args$data_filter = ""
+  if (!input$show_filter) pmap_args$data_filter = ""
   pmap_args
 })
 
-pmap_plot_args <- as.list(if(exists("plot.pmap")) formals(plot.pmap)
+pmap_plot_args <- as.list(if (exists("plot.pmap")) formals(plot.pmap)
                           else formals(radiant:::plot.pmap))
 
 # list of function inputs selected by user
 pmap_plot_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(pmap_plot_args))
+  for (i in names(pmap_plot_args))
     pmap_plot_args[[i]] <- input[[i]]
-  if(!input$show_filter) pmap_plot_args$data_filter = ""
+  if (!input$show_filter) pmap_plot_args$data_filter = ""
   pmap_plot_args
 })
 
@@ -44,10 +44,10 @@ output$ui_pmap_attr <- renderUI({
 })
 
 output$ui_pmap_pref <- renderUI({
-  if(not_available(input$pmap_attr)) return()
+  if (not_available(input$pmap_attr)) return()
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
- 	if(length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
+ 	if (length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
   selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,
    	selected = state_multiple("pmap_pref",vars), multiple = TRUE,
   	size = min(5, length(vars)), selectize = FALSE)
@@ -55,7 +55,7 @@ output$ui_pmap_pref <- renderUI({
 
 output$ui_pmap_plot <- renderUI({
 	plot_list <- c("Brands" = "brand", "Attributes" = "attr")
-  if(!is.null(input$pmap_pref)) plot_list <- c(plot_list, c("Preferences" = "pref"))
+  if (!is.null(input$pmap_pref)) plot_list <- c(plot_list, c("Preferences" = "pref"))
 	checkboxGroupInput("pmap_plot", NULL, plot_list,
    	selected = state_init("pmap_plot"),
    	inline = TRUE)
@@ -128,34 +128,34 @@ output$pmap <- renderUI({
 })
 
 .summary_pmap <- reactive({
-	if(not_available(input$pmap_brand) || not_available(input$pmap_attr))
+	if (not_available(input$pmap_brand) || not_available(input$pmap_attr))
 		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.")
 
 	brand <- .getdata()[,input$pmap_brand]
-	if(length(unique(brand)) < length(brand))
+	if (length(unique(brand)) < length(brand))
 		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
 
-	if(length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
+	if (length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
 
   summary(.pmap(), pmap_cutoff = input$pmap_cutoff)
 })
 
 .plot_pmap <- reactive({
 
-	if(not_available(input$pmap_brand) || not_available(input$pmap_attr))
+	if (not_available(input$pmap_brand) || not_available(input$pmap_attr))
 		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.")
 
 	brand <- .getdata()[,input$pmap_brand]
-	if(length(unique(brand)) < length(brand))
+	if (length(unique(brand)) < length(brand))
 		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
 
-	if(length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
+	if (length(input$pmap_attr) < 2) return("Please select two or more attribute variables")
 
   capture_plot( do.call(plot, c(list(x = .pmap()), pmap_plot_inputs())) )
 })
 
 observe({
- if(not_pressed(input$pmap_report)) return()
+ if (not_pressed(input$pmap_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list("","")
@@ -169,8 +169,8 @@ observe({
 })
 
 observe({
-	if(not_pressed(input$pmap_save_scores)) return()
+	if (not_pressed(input$pmap_save_scores)) return()
 	isolate({
-		.pmap() %>% { if(!is.character(.)) save_factors(.) }
+		.pmap() %>% { if (!is.character(.)) save_factors(.) }
 	})
 })

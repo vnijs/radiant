@@ -90,17 +90,17 @@ knitIt2 <- function(text) {
 
 observe({
   input$runKeyRmd
-  if(!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
+  if (!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
 })
 
 output$rmd_knitDoc <- renderUI({
-  if(valsRmd$knit == 1) return()
+  if (valsRmd$knit == 1) return()
 
   isolate({
-    if(!r_local) {
+    if (!r_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
     }
-    if(input$rmd_report != "") {
+    if (input$rmd_report != "") {
       withProgress(message = 'Knitting report', value = 0, {
         # return(knitIt2(input$rmd_report))
         ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
@@ -114,7 +114,7 @@ output$rmd_knitDoc <- renderUI({
 output$saveHTML <- downloadHandler(
   filename = function() {"report.html"},
   content = function(file) {
-    if(r_local) {
+    if (r_local) {
       isolate({
         # text <- input$rmd_report
         ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
@@ -138,7 +138,7 @@ output$saveRmd <- downloadHandler(
 observe({
   # loading rmd report from disk
   inFile <- input$loadRmd
-  if(!is.null(inFile) && !is.na(inFile)) {
+  if (!is.null(inFile) && !is.na(inFile)) {
     isolate({
       rmdfile <- paste0(readLines(inFile$datapath), collapse = "\n")
       shinyAce::updateAceEditor(session, "rmd_report", value = rmdfile)
@@ -153,7 +153,7 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
                           figs = TRUE, fig.width = 7, fig.height = 7) {
 
   cmd <- ""
-  if(inp_main[1] != "") {
+  if (inp_main[1] != "") {
     # cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
     cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
              paste(collapse="") %>%
@@ -163,9 +163,9 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
   }
 
   lout <- length(outputs)
-  if(lout > 0) {
-    for(i in 1:lout) {
-      if(inp_out[i] != "" && length(inp_out[[i]]) > 0) {
+  if (lout > 0) {
+    for (i in 1:lout) {
+      if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
         cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
                  sub("list\\(", paste0(outputs[i], "\\(result, "), .) %>%
                  paste0(cmd, "\n", .)
@@ -175,9 +175,9 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
     }
   }
 
-  if(xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
+  if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
-  if(figs)
+  if (figs)
     cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
   else
     cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
@@ -187,7 +187,7 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
 
 update_report_fun <- function(cmd) {
 
-  if(!is.null(input$manualPaste) && input$manualPaste) {
+  if (!is.null(input$manualPaste) && input$manualPaste) {
     os_type <- Sys.info()["sysname"]
     if (os_type == 'Windows') {
       cat(cmd, file = "clipboard")
@@ -201,9 +201,9 @@ update_report_fun <- function(cmd) {
     cmd <- ""
   }
 
-  if(cmd != "") {
-    if(is.null(input$rmd_report)) {
-      if(is.null(r_state$rmd_report)) {
+  if (cmd != "") {
+    if (is.null(input$rmd_report)) {
+      if (is.null(r_state$rmd_report)) {
         r_state$rmd_report <<- cmd
       } else {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
@@ -266,14 +266,14 @@ valsCode <- reactiveValues(code = 0)
 
 observe({
   input$runKeyCode
-  if(!is.null(input$rEval)) isolate(valsCode$code <- valsCode$code + 1)
+  if (!is.null(input$rEval)) isolate(valsCode$code <- valsCode$code + 1)
 })
 
 output$rCodeEval <- renderPrint({
-  if(valsCode$code == 1) return()
+  if (valsCode$code == 1) return()
   isolate({
-    if(r_local) {
-      if(is.null(input$r_code_selection) || input$r_code_selection == "") {
+    if (r_local) {
+      if (is.null(input$r_code_selection) || input$r_code_selection == "") {
         r_code <- input$r_code
       } else {
         r_code <- input$r_code_selection
@@ -300,7 +300,7 @@ output$saveCode <- downloadHandler(
 # loading r-code from disk
 observe({
   inFile <- input$loadCode
-  if(!is.null(inFile)) {
+  if (!is.null(inFile)) {
     isolate({
       paste0(readLines(inFile$datapath), collapse = "\n") %>%
         shinyAce::updateAceEditor(session, "r_code", value = .)
@@ -312,6 +312,6 @@ observe({
 # observe({
 #   inFile <- input$sourceCode
 #   isolate({
-#     if(!is.null(inFile)) source(inFile$datapath)
+#     if (!is.null(inFile)) source(inFile$datapath)
 #   })
 # })

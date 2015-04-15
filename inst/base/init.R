@@ -21,10 +21,10 @@ init_state <- function(r_data) {
   r_data
 }
 
-if(!r_local) {
+if (!r_local) {
 
   state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
-    if(!require(sendmailR)) {
+    if (!require(sendmailR)) {
       install.packages("sendmailR", repos = "http://cran.rstudio.com")
       library(sendmailR)
     }
@@ -42,14 +42,14 @@ if(!r_local) {
     ages <- list()
     for (i in ids) {
       session_age <- difftime(Sys.time(), r_sessions[[i]]$timestamp, units = "days")
-      if(session_age > 1) r_sessions[[i]] <- NULL
+      if (session_age > 1) r_sessions[[i]] <- NULL
       ages[i] <- session_age %>% round(3)
     }
 
     session_size <- pryr::object_size(r_sessions) %>% as.numeric %>%
                       {. / 1048576} %>% round(3)
 
-    if(length(r_sessions) > 20 || session_size > 20)
+    if (length(r_sessions) > 20 || session_size > 20)
       state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
   }
 
@@ -64,10 +64,10 @@ isolate({
 })
 
 # set the session id
-if(r_local) {
+if (r_local) {
   r_ssuid <- "local"
 } else {
-  if(is.null(prevSSUID)) {
+  if (is.null(prevSSUID)) {
     r_ssuid <- shiny:::createUniqueId(16)
   } else {
     r_ssuid <- prevSSUID
@@ -82,7 +82,7 @@ if (exists("r_state") && exists("r_data")) {
   r_data <- do.call(reactiveValues, r_data)
   r_state <- r_state
   rm(r_data, r_state, envir = .GlobalEnv)
-} else if(!is.null(r_sessions[[r_ssuid]]$r_data)) {
+} else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
   r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
   r_state <- r_sessions[[r_ssuid]]$r_state
 } else {
@@ -90,7 +90,7 @@ if (exists("r_state") && exists("r_data")) {
   r_data <- init_state(reactiveValues())
 }
 
-if(r_local) {
+if (r_local) {
   # reference to radiant environment that can be accessed by exported functions
   # does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")
@@ -99,12 +99,12 @@ if(r_local) {
   # memory usage ... at least until the entry in r_data is changed
   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% { names(.[.]) }
 
-  for(df in df_list) {
+  for (df in df_list) {
     isolate({
       r_data[[df]] <- get(df, envir = .GlobalEnv)
       attr(r_data[[df]],'description')
       r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
-        { if(is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
+        { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
       r_data$datasetlist %<>% c(df, .) %>% unique
       rm(list = df, envir = .GlobalEnv)
     })

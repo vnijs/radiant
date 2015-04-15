@@ -22,7 +22,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
   dat <- getdata(dataset, smp_var, filt = data_filter)
 
 	# example list of names obtained from http://listofrandomnames.com
-  dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
+  dat$rnd_number <- runif (nrow(dat), min = 0, max = 1)
   dat %>%
     arrange(desc(rnd_number)) %>%
     slice(1:smp_sample_size) -> seldat
@@ -47,7 +47,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
 summary.sampling <- function(object, ...) {
   cat("Sampling (simple random)\n")
   cat("Data       :", object$dataset, "\n")
-  if(object$data_filter %>% gsub("\\s","",.) != "")
+  if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
   cat("ID variable:", object$smp_var, "\n")
   cat("Sample size:", object$smp_sample_size, "\n\n")
@@ -55,6 +55,6 @@ summary.sampling <- function(object, ...) {
   cat("Selected:\n")
 	print(object$seldat)
 	cat("\nSampling frame (max 100 shown):\n")
-  if(object$smp_print_full)
+  if (object$smp_print_full)
     head(object$dat, n = 100) %>% print
 }

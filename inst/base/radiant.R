@@ -1,9 +1,9 @@
 observe({
   # reset r_state on dataset change ... when you are not on the
   # Manage > Data tab
-  if(is.null(r_state$dataset) || is.null(input$dataset)) return()
-  if(input$datatabs != "Manage" || input$nav_radiant != "Data")
-    if(r_state$dataset != input$dataset) r_state <<- list()
+  if (is.null(r_state$dataset) || is.null(input$dataset)) return()
+  if (input$datatabs != "Manage" || input$nav_radiant != "Data")
+    if (r_state$dataset != input$dataset) r_state <<- list()
 })
 
 ################################################################################
@@ -12,16 +12,16 @@ observe({
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     isolate({
-      if(not_pressed(input$resetState) && not_pressed(input$quitApp) &&
+      if (not_pressed(input$resetState) && not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
         r_sessions[[r_ssuid]] <- list(
           r_data = reactiveValuesToList(r_data),
           r_state = reactiveValuesToList(input),
           timestamp = Sys.time()
         )
-        if(r_local) rm(r_env, envir = .GlobalEnv)
+        if (r_local) rm(r_env, envir = .GlobalEnv)
       } else {
-        if(is.null(input$uploadState))
+        if (is.null(input$uploadState))
           try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
       }
     })
@@ -32,19 +32,19 @@ saveStateOnRefresh <- function(session = session) {
 # functions used across tools in radiant
 ################################################################
 .changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
-	if(nrow(r_data[[dataset]]) == new_col %>% nrow &&
+	if (nrow(r_data[[dataset]]) == new_col %>% nrow &&
      new_col_name[1] != "")
     r_data[[dataset]][,new_col_name] <- new_col
 }
 
 .getdata <- reactive({
 
-  if(is_empty(input$data_filter) | input$show_filter == FALSE) return(r_data[[input$dataset]])
+  if (is_empty(input$data_filter) | input$show_filter == FALSE) return(r_data[[input$dataset]])
   selcom <- gsub("\\s","", input$data_filter)
-  if(selcom != "") {
+  if (selcom != "") {
     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
 
-    if(is(seldat, 'try-error')) {
+    if (is(seldat, 'try-error')) {
       isolate(r_data$filter_error <- attr(seldat,"condition")$message)
     } else {
       isolate(r_data$filter_error <- "")
@@ -84,44 +84,44 @@ varnames <- reactive({
 
 # cleaning up the arguments for data_filter and defaults passed to report
 clean_args <- function(rep_args, rep_default = list()) {
-  if(!is.null(rep_args$data_filter)) {
-    if(rep_args$data_filter == "")
+  if (!is.null(rep_args$data_filter)) {
+    if (rep_args$data_filter == "")
       rep_args$data_filter  <- NULL
     else
       rep_args$data_filter %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   }
 
-  if(length(rep_default) == 0) rep_default[names(rep_args)] <- ""
+  if (length(rep_default) == 0) rep_default[names(rep_args)] <- ""
 
   # removing default arguments before sending to report feature
-  for(i in names(rep_args))
-    if(all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
+  for (i in names(rep_args))
+    if (all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
   rep_args
 }
 
 # check if a variable is null or not in the selected data.frame
 not_available <- function(x)
-  if(any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
+  if (any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
 
 # check if a button was NOT pressed
-not_pressed <- function(x) if(is.null(x) || x == 0) TRUE else FALSE
+not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
 
 # check for duplicate entries
 has_duplicates <- function(x)
-  if(length(unique(x)) < length(x)) TRUE else FALSE
+  if (length(unique(x)) < length(x)) TRUE else FALSE
 
 # is x some type of date variable
 is_date <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
 
 # convert a date variable to character for printing
-d2c <- function(x) if(is_date(x)) as.character(x) else x
+d2c <- function(x) if (is_date(x)) as.character(x) else x
 
 # truncate character fields for show_data_snippet
-trunc_char <- function(x) if(is.character(x)) strtrim(x,10) else x
+trunc_char <- function(x) if (is.character(x)) strtrim(x,10) else x
 
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
-  { if(is.character(dat) && length(dat) == 1) r_data[[dat]] else dat } %>%
+  { if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat } %>%
     slice(1:min(nshow,nrow(.))) %>%
     mutate_each(funs(d2c)) %>%
     mutate_each(funs(trunc_char)) %>%
@@ -162,10 +162,10 @@ returnTextAreaInput <- function(inputId, label = NULL, value = "") {
 }
 
 plot_width <- function()
-  if(is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
+  if (is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 
 plot_height <- function()
-  if(is.null(input$viz_plot_height)) r_data$plot_height else input$viz_plot_height
+  if (is.null(input$viz_plot_height)) r_data$plot_height else input$viz_plot_height
 
 # fun_name is a string of the main function name
 # rfun_name is a string of the reactive wrapper that calls the main function
@@ -177,7 +177,7 @@ register_print_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPrint({
     # when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>%
-    { if(is.character(.)) cat(.,"\n") else . } %>% rm
+    { if (is.character(.)) cat(.,"\n") else . } %>% rm
 
   })
 }
@@ -194,8 +194,8 @@ register_plot_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPlot({
 
     # when no analysis was conducted (e.g., no variables selected)
-    get(rfun_name)() %>% { if(is.null(.)) " " else . } %>%
-    { if(is.character(.)) {
+    get(rfun_name)() %>% { if (is.null(.)) " " else . } %>%
+    { if (is.character(.)) {
         plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
       } else {
         withProgress(message = 'Making plot', value = 0, print(.))
@@ -214,7 +214,7 @@ stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
       wellPanel(
         HTML(paste("<label><strong>Menu:",menu,"</strong></label><br>")),
         HTML(paste("<label><strong>Tool:",tool,"</strong></label><br>")),
-        if(!is.null(data))
+        if (!is.null(data))
           HTML(paste("<label><strong>Data:",data,"</strong></label>"))
       ),
       uiOutput(tool_ui)

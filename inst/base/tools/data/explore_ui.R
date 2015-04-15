@@ -9,11 +9,11 @@ expl_args <- list(dataset = "", expl_vars = "", data_filter = "",
 # list of function inputs selected by user
 expl_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(expl_args))
+  for (i in names(expl_args))
     expl_args[[i]] <- input[[i]]
-  if(!input$show_filter) expl_args$data_filter = ""
+  if (!input$show_filter) expl_args$data_filter = ""
 
-  if(is_empty(input$expl_byvar)) expl_args$expl_fun <- c("length", "mean_rm")
+  if (is_empty(input$expl_byvar)) expl_args$expl_fun <- c("length", "mean_rm")
 
   expl_args   # expl_args is only changed inside this function
 })
@@ -37,7 +37,7 @@ output$ui_expl_byvar <- renderUI({
 })
 
 output$ui_expl_fun <- renderUI({
-  if(is_empty(input$expl_byvar)) return()
+  if (is_empty(input$expl_byvar)) return()
   selectizeInput("expl_fun", label = "Apply function(s):",
                  choices = expl_functions,
                  selected = state_multiple("expl_fun", expl_functions, c("length","mean_rm")),
@@ -48,7 +48,7 @@ output$ui_expl_fun <- renderUI({
 })
 
 output$ui_expl_viz <- renderUI({
-  if(is_empty(input$expl_byvar)) return()
+  if (is_empty(input$expl_byvar)) return()
   checkboxInput('expl_viz', 'Show plot',
                 value = state_init("expl_viz", FALSE))
 })
@@ -72,15 +72,15 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- reactive({
-  if(not_available(input$expl_vars)) return()
+  if (not_available(input$expl_vars)) return()
   withProgress(message = 'Calculating', value = 0, {
     do.call(explore, expl_inputs())
   })
 })
 
 output$expl_summary <- renderPrint({
-  if(!is.null(input$expl_tab) && input$expl_tab)
-    .explore() %>% { if(is.null(.)) invisible() else summary(.) }
+  if (!is.null(input$expl_tab) && input$expl_tab)
+    .explore() %>% { if (is.null(.)) invisible() else summary(.) }
 })
 
 expl_plot_width <- function() 650
@@ -88,17 +88,17 @@ expl_plot_height <- function()
   400 * length(input$expl_fun) * length(input$expl_vars)
 
 output$expl_plots <- renderPlot({
-  if(!input$expl_viz || is.null(input$expl_byvar)) return()
+  if (!input$expl_viz || is.null(input$expl_byvar)) return()
   withProgress(message = 'Making plot', value = 0, {
-    .explore() %>% { if(is.null(.)) invisible() else print(plot(., shiny = TRUE)) }
+    .explore() %>% { if (is.null(.)) invisible() else print(plot(., shiny = TRUE)) }
   })
 }, width = expl_plot_width, height = expl_plot_height)
 
 observe({
-  if(not_pressed(input$explore_report)) return()
+  if (not_pressed(input$explore_report)) return()
   isolate({
-    # if(!is.null(input$expl_viz) && input$expl_viz == TRUE) {
-    if(!is_empty(input$expl_byvar) && input$expl_viz == TRUE) {
+    # if (!is.null(input$expl_viz) && input$expl_viz == TRUE) {
+    if (!is_empty(input$expl_byvar) && input$expl_viz == TRUE) {
       inp_out <- list("","")
       outputs <- c("summary","plot")
       figs <- TRUE

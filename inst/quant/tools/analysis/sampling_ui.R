@@ -8,9 +8,9 @@ smp_args <- as.list(formals(sampling))
 # list of function inputs selected by user
 smp_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(smp_args))
+  for (i in names(smp_args))
     smp_args[[i]] <- input[[i]]
-  if(!input$show_filter) smp_args$data_filter = ""
+  if (!input$show_filter) smp_args$data_filter = ""
   smp_args
 })
 
@@ -57,15 +57,15 @@ output$sampling <- renderUI({
   "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nIf a variable of this type is not available please select another dataset.\n\n" %>%
   suggest_data("rndnames") -> rt
 
-  if(not_available(input$smp_var)) return(rt)
-  if(is.na(input$smp_sample_size)) return("Please select a sample size of 1 or greater.")
-  if(has_duplicates(getdata(input$dataset, vars = input$smp_var))) return(rt)
+  if (not_available(input$smp_var)) return(rt)
+  if (is.na(input$smp_sample_size)) return("Please select a sample size of 1 or greater.")
+  if (has_duplicates(getdata(input$dataset, vars = input$smp_var))) return(rt)
 
   summary(.sampling())
 })
 
 observe({
-  if(not_pressed(input$sampling_report)) return()
+  if (not_pressed(input$sampling_report)) return()
   isolate({
     update_report(inp_main = clean_args(smp_inputs(), smp_args),
                   fun_name = "sampling", outputs = "summary", figs = FALSE)

@@ -16,6 +16,6 @@ Median value
 Median with na.rm = TRUE
 }
 \examples{
-median_rm(runif(100))
+median_rm(runif (100))
 }
 

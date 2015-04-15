@@ -10,9 +10,9 @@ ca_args <- as.list(formals(conjoint))
 # list of function inputs selected by user
 ca_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(ca_args))
+  for (i in names(ca_args))
     ca_args[[i]] <- input[[i]]
-  if(!input$show_filter) ca_args$data_filter = ""
+  if (!input$show_filter) ca_args$data_filter = ""
   ca_args
 })
 
@@ -107,10 +107,10 @@ output$conjoint <- renderUI({
 })
 
 .summary_conjoint <- reactive({
-	if(not_available(input$ca_dep_var))
+	if (not_available(input$ca_dep_var))
 		return("This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nIf these variables are not available please select another dataset")
 
-	if(not_available(input$ca_indep_var))
+	if (not_available(input$ca_indep_var))
 		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
   summary(.conjoint(), ca_vif = input$ca_vif)
@@ -122,10 +122,10 @@ output$conjoint <- renderUI({
 })
 
 .plot_conjoint <- reactive({
-	if(not_available(input$ca_dep_var))
+	if (not_available(input$ca_dep_var))
 		return("This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nIf these variables are not available please select another dataset")
 
-	if(not_available(input$ca_indep_var))
+	if (not_available(input$ca_indep_var))
 		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
   plot(.conjoint(), ca_plots = input$ca_plots,
@@ -134,14 +134,14 @@ output$conjoint <- renderUI({
 })
 
 observe({
-  if(not_pressed(input$conjoint_report)) return()
+  if (not_pressed(input$conjoint_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list()
     inp_out[[1]] <- list(ca_vif = input$ca_vif)
   	inp_out[[2]] <- list(ca_plots = input$ca_plots, ca_scale_plot = input$ca_scale_plot)
     figs <- TRUE
-    if(length(input$ca_plots) == 0) {
+    if (length(input$ca_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
     	inp_out[[2]] <- ""

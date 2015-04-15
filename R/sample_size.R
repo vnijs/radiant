@@ -34,17 +34,17 @@ sample_size <- function(ss_type = "mean",
                         ss_pop_correction = "no",
                         ss_pop_size = 1000000) {
 
-	if(ss_type == 'mean') {
-		if(is.na(ss_mean_err)) return("Please select an error value greater 0.")
+	if (ss_type == 'mean') {
+		if (is.na(ss_mean_err)) return("Please select an error value greater 0.")
 
 		n <- (ss_z^2 * ss_mean_s^2) / ss_mean_err^2
 	} else {
 
-		if(is.na(ss_prop_err)) return("Please select an error value greater 0.")
+		if (is.na(ss_prop_err)) return("Please select an error value greater 0.")
 		n <- (ss_z^2 * ss_prop_p * (1 - ss_prop_p)) / ss_prop_err^2
 	}
 
-	if(ss_pop_correction == 'yes')
+	if (ss_pop_correction == 'yes')
 		n <- n * ss_pop_size / ((n - 1) + ss_pop_size)
 
 	n <- ceiling(n)
@@ -69,7 +69,7 @@ sample_size <- function(ss_type = "mean",
 summary.sample_size <- function(object, ...) {
 	cat("Sample size calculation\n")
 
-	if(object$ss_type == "mean") {
+	if (object$ss_type == "mean") {
 	  cat("Calculation type     : Mean\n")
 		cat("Acceptable Error     :", object$ss_mean_err, "\n")
 		cat("Sample std. deviation:", object$ss_mean_s, "\n")
@@ -83,7 +83,7 @@ summary.sample_size <- function(object, ...) {
 	cat("Incidence rate       :", object$ss_incidence, "\n")
 	cat("Response rate        :", object$ss_response, "\n")
 
-	if(object$ss_pop_correction == "no") {
+	if (object$ss_pop_correction == "no") {
 		cat("Population correction: None\n")
 	} else {
 		cat("Population correction: Yes\n")
@@ -97,7 +97,7 @@ summary.sample_size <- function(object, ...) {
 	    																			 big.mark = ",", scientific = FALSE))
 	cat("\n\nChoose a Z-value:\n")
 
-  for(z in c(.80, .85, .90, .95, .99))
+  for (z in c(.80, .85, .90, .95, .99))
     cat(paste0(100*z,"%\t"),-qnorm((1-z)/2) %>% round(2),"\n")
 
   rm(object)

@@ -7,9 +7,9 @@ pf_args <- as.list(formals(pre_factor))
 # list of function inputs selected by user
 pf_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(pf_args))
+  for (i in names(pf_args))
     pf_args[[i]] <- input[[i]]
-  if(!input$show_filter) pf_args$data_filter = ""
+  if (!input$show_filter) pf_args$data_filter = ""
   pf_args
 })
 
@@ -66,23 +66,23 @@ output$pre_factor <- renderUI({
 })
 
 .summary_pre_factor <- reactive({
-	if(not_available(input$pf_var))
+	if (not_available(input$pf_var))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
-	if(length(input$pf_var) < 2) return("Please select two or more numeric variables")
+	if (length(input$pf_var) < 2) return("Please select two or more numeric variables")
 
   summary(.pre_factor())
 })
 
 .plot_pre_factor <- reactive({
 
-  if(not_available(input$pf_var) || length(input$pf_var) < 2)
+  if (not_available(input$pf_var) || length(input$pf_var) < 2)
     return(invisible())
 
   plot(.pre_factor())
 })
 
 observe({
-  if(not_pressed(input$pre_factor_report)) return()
+  if (not_pressed(input$pre_factor_report)) return()
   isolate({
     update_report(inp_main = clean_args(pf_inputs(), pf_args),
                   fun_name = "pre_factor")

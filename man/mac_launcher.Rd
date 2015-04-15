@@ -17,10 +17,10 @@ On Mac a file named 'radiant.command' will be put on the desktop. Double-click t
 }
 \examples{
 if (interactive()) {
-  if(Sys.info()["sysname"] == "Darwin") {
+  if (Sys.info()["sysname"] == "Darwin") {
     mac_launcher()
     fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-    if(!file.exists(fn))
+    if (!file.exists(fn))
       stop("Mac launcher not created")
     else
       unlink(fn)

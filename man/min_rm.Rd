@@ -16,6 +16,6 @@ Minimum value
 Min with na.rm = TRUE
 }
 \examples{
-min_rm(runif(100))
+min_rm(runif (100))
 }
 

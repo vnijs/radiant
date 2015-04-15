@@ -1,9 +1,9 @@
 descr_out <- function(descr, ret_type = 'html') {
    # if there is no data description
-  if(descr %>% is_empty) return("")
+  if (descr %>% is_empty) return("")
 
   # if there is a data description and we want html output
-  if(ret_type == 'html')
+  if (ret_type == 'html')
     descr <- markdown::markdownToHTML(text = descr, stylesheet=file.path(r_path,"/base/www/empty.css"))
 
   descr
@@ -34,8 +34,8 @@ loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep
     dat <- try(read.table(text = input$load_cdata, header = header, sep = sep), silent = TRUE)
   }
 
-  if(is(dat, 'try-error')) {
-    if(ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
+  if (is(dat, 'try-error')) {
+    if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
     upload_error_handler(objname,ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on", lubridate::now())
@@ -68,10 +68,10 @@ loadUserData <- function(fname, uFile, ext,
   objname <- sub(paste0(".",ext,"$"),"", filename)
 
   # if ext isn't in the filename ...
-  if(objname == filename) {
+  if (objname == filename) {
     fext <- tools::file_ext(filename) %>% tolower
 
-    if(fext %in% c("xls","xlsx")) {
+    if (fext %in% c("xls","xlsx")) {
       ret <- "### Radiant does not load xls files directly. Please save the data as a csv file and try again."
     } else {
       ret <- paste0("### The filename extension (",fext,") does not match the specified file-type (",ext,"). Please specify the file type you are trying to upload (i.e., csv or rda).")
@@ -81,13 +81,13 @@ loadUserData <- function(fname, uFile, ext,
     ext <- "---"
   }
 
-  if(ext == 'rda') {
+  if (ext == 'rda') {
     # objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent=TRUE)
-    if(is(robjname, 'try-error')) {
+    if (is(robjname, 'try-error')) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-    } else if(length(robjname) > 1) {
-      if(sum(robjname %in% c("r_state", "r_data")) == 2) {
+    } else if (length(robjname) > 1) {
+      if (sum(robjname %in% c("r_state", "r_data")) == 2) {
         upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
       } else {
         upload_error_handler(objname,"### More than one R object contained in the data.")
@@ -99,11 +99,11 @@ loadUserData <- function(fname, uFile, ext,
     }
   }
 
-  if(ext == 'csv') {
+  if (ext == 'csv') {
     # r_data[[objname]] <<- read.csv(uFile, header=header, sep=sep, dec=dec,
     r_data[[objname]] <<- try(read.table(uFile, header=header, sep=sep, dec=dec,
                               stringsAsFactors=man_str_as_factor), silent = TRUE) %>%
-                              { if(is(., 'try-error')) {
+                              { if (is(., 'try-error')) {
                                   upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
                                 } else {
                                   .

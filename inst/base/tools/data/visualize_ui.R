@@ -9,9 +9,9 @@ viz_args <- as.list(formals(visualize))
 # list of function inputs selected by user
 viz_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(viz_args))
+  for (i in names(viz_args))
     viz_args[[i]] <- input[[i]]
-  if(!input$show_filter) viz_args$data_filter = ""
+  if (!input$show_filter) viz_args$data_filter = ""
   viz_args
 })
 
@@ -26,11 +26,11 @@ output$ui_viz_type <- renderUI({
 
 # X - variable
 output$ui_viz_xvar <- renderUI({
-  if(is.null(input$viz_type)) return()
+  if (is.null(input$viz_type)) return()
   vars <- varnames()
-  # if(input$viz_type %in% c("density","line")) vars <- vars["factor" != .getclass()]
-  if(input$viz_type %in% c("density")) vars <- vars["factor" != .getclass()]
-  if(input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
+  # if (input$viz_type %in% c("density","line")) vars <- vars["factor" != .getclass()]
+  if (input$viz_type %in% c("density")) vars <- vars["factor" != .getclass()]
+  if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("viz_xvar",vars),
     multiple = TRUE, size = min(5, length(vars)), selectize = FALSE)
@@ -38,9 +38,9 @@ output$ui_viz_xvar <- renderUI({
 
 # Y - variable
 output$ui_viz_yvar <- renderUI({
-  if(is.null(input$viz_type)) return()
+  if (is.null(input$viz_type)) return()
   vars <- varnames()
-  if(input$viz_type %in% c("line")) vars <- vars["factor" != .getclass()]
+  if (input$viz_type %in% c("line")) vars <- vars["factor" != .getclass()]
   selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
                  choices = c("None" = "none", vars),
                  selected = state_single("viz_yvar", vars, "none"),
@@ -64,7 +64,7 @@ output$ui_viz_facet_col <- renderUI({
 })
 
 output$ui_viz_color <- renderUI({
-  if(not_available(input$viz_yvar)) return()  # can't have an XY plot without an X
+  if (not_available(input$viz_yvar)) return()  # can't have an XY plot without an X
   vars <- c("None" = "none", varnames())
   sel <- state_single("viz_color", vars, "none")
   selectizeInput("viz_color", "Color", vars,
@@ -73,9 +73,9 @@ output$ui_viz_color <- renderUI({
 })
 
 output$ui_viz_axes <- renderUI({
-  if(is.null(input$viz_type)) return()
+  if (is.null(input$viz_type)) return()
   ind <- 1
-  if(input$viz_type %in% c("line","scatter")) ind <- 1:3
+  if (input$viz_type %in% c("line","scatter")) ind <- 1:3
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
     selected = state_init("viz_axes"),
     inline = TRUE)
@@ -118,15 +118,15 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  if(is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
+  if (is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 })
 
 viz_plot_height <- reactive({
-  if(is.null(input$viz_plot_height)) {
+  if (is.null(input$viz_plot_height)) {
     r_data$plot_height
   } else {
     length(input$viz_xvar) %>%
-    { if(. > 1)
+    { if (. > 1)
         (input$viz_plot_height/2) * ceiling(. / 2)
       else
         input$viz_plot_height
@@ -135,7 +135,7 @@ viz_plot_height <- reactive({
 })
 
 output$visualize <- renderPlot({
-  if(is_empty(input$viz_xvar, "none"))
+  if (is_empty(input$viz_xvar, "none"))
     return(
       plot(x = 1, type = 'n',
            main="\nPlease select variables from the dropdown menus to create a plot",
@@ -143,7 +143,7 @@ output$visualize <- renderPlot({
     )
 
   withProgress(message = 'Making plot', value = 0, {
-    .visualize() %>% { if(!"ggplot" %in% class(.)) return() else . } %>% print
+    .visualize() %>% { if (!"ggplot" %in% class(.)) return() else . } %>% print
   })
 }, width = viz_plot_width, height = viz_plot_height)
 
@@ -151,18 +151,18 @@ output$visualize <- renderPlot({
   # need dependency on ..
   input$viz_plot_height; input$viz_plot_width
 
-  if(not_available(input$viz_xvar)) return()
-  if(input$viz_type %in% c("scatter","line", "box", "bar")
+  if (not_available(input$viz_xvar)) return()
+  if (input$viz_type %in% c("scatter","line", "box", "bar")
      && is_empty(input$viz_yvar, "none")) return()
 
-  if(input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars()))
+  if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars()))
     return()
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
 
 observe({
-  if(not_pressed(input$visualize_report)) return()
+  if (not_pressed(input$visualize_report)) return()
   isolate({
     update_report(inp_main = clean_args(viz_inputs(), viz_args),
                   fun_name = "visualize", outputs = character(0),

@@ -23,7 +23,7 @@ pre_factor <- function(dataset, pf_var,
 	dat <- getdata(dataset, pf_var, filt = data_filter)
 	nrObs <- nrow(dat)
 
-	if(nrObs <= ncol(dat)) {
+	if (nrObs <= ncol(dat)) {
 		ret <- "Data should have more observations than variables.\nPlease reduce the number of variables." %>%
 						 set_class(c("pre_factor",class(.)))
 		return(ret)
@@ -35,9 +35,9 @@ pre_factor <- function(dataset, pf_var,
 	pre_eigen <- eigen(cmat)$values
 
   err_mess <- "The selected variables are perfectly collinear. Please check the correlations\nand remove any variable with a correlation of 1 or -1 from the analysis"
-  if(det(cmat) > 0) {
+  if (det(cmat) > 0) {
     scmat <- try(solve(cmat), silent = TRUE)
-    if(is(scmat, 'try-error')) {
+    if (is(scmat, 'try-error')) {
     	pre_r2 <- err_mess
     } else {
     	pre_r2 <- {1 - (1 / diag(scmat))} %>%
@@ -72,16 +72,16 @@ pre_factor <- function(dataset, pf_var,
 #' @export
 summary.pre_factor <- function(object, ...) {
 
-	if(is.character(object)) return(cat(object))
+	if (is.character(object)) return(cat(object))
 
-	if(object$pre_r2 %>% is.character) {
+	if (object$pre_r2 %>% is.character) {
 		cat(object$pre_r2)
 		return(invisible())
 	}
 
 	cat("Pre-factor analysis diagnostics\n")
 	cat("Data        :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(object$pf_var, collapse=", "), "\n")
 	cat("Observations:", object$nrObs, "\n")
@@ -90,7 +90,7 @@ summary.pre_factor <- function(object, ...) {
 	cat("\nBartlett test\n")
 	cat("Null hyp.: variables are not correlated\n")
 	cat("Alt. hyp.: variables are correlated\n")
-	bt <- object$btest$p.value %>% { if(. < .001) "< .001" else round(.,3) }
+	bt <- object$btest$p.value %>% { if (. < .001) "< .001" else round(.,3) }
 	cat(paste0("Chi-square: ", round(object$btest$chisq,2), " df(",
 	    object$btest$df, "), p.value ", bt, "\n"))
 
@@ -130,9 +130,9 @@ plot.pre_factor <- function(x, ...){
 
 	object <- x; rm(x)
 
-	if(is.character(object)) return(invisible())
+	if (is.character(object)) return(invisible())
 
-	if(object$pre_r2 %>% is.character) return(invisible())
+	if (object$pre_r2 %>% is.character) return(invisible())
 
 	data.frame(y = object$pre_eigen, x = 1:length(object$pre_eigen)) %>%
 	ggplot(aes(x=x, y=y, group = 1)) +

@@ -10,7 +10,7 @@ ss_args <- as.list(formals(sample_size))
 # list of function inputs selected by user
 ss_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(ss_args))
+  for (i in names(ss_args))
     ss_args[[i]] <- input[[i]]
   ss_args
 })
@@ -72,12 +72,12 @@ output$sample_size <- renderUI({
 })
 
 .summary_sample_size <- reactive({
-	if(is.null(input$ss_type)) return(invisible())
+	if (is.null(input$ss_type)) return(invisible())
   summary(.sample_size())
 })
 
 observe({
-  if(not_pressed(input$sample_size_report)) return()
+  if (not_pressed(input$sample_size_report)) return()
   isolate({
     update_report(inp_main = clean_args(ss_inputs(), ss_args),
                    fun_name = "sample_size", outputs = "summary", figs = FALSE)

@@ -39,16 +39,16 @@ visualize <- function(dataset, viz_xvar,
   # inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- viz_xvar
 
-  if(!viz_type %in% c("scatter","line"))
+  if (!viz_type %in% c("scatter","line"))
     viz_color = "none"
 
-  if(viz_yvar != "none") vars %<>% c(., viz_yvar)
-  if(viz_color != "none") vars %<>% c(., viz_color)
-  if(viz_facet_row != ".") vars %<>% c(., viz_facet_row)
-  if(viz_facet_col != ".") vars %<>% c(., viz_facet_col)
+  if (viz_yvar != "none") vars %<>% c(., viz_yvar)
+  if (viz_color != "none") vars %<>% c(., viz_color)
+  if (viz_facet_row != ".") vars %<>% c(., viz_facet_row)
+  if (viz_facet_col != ".") vars %<>% c(., viz_facet_col)
 
   # so you can also pass-in a data.frame
-  if(is.character(dataset)) {
+  if (is.character(dataset)) {
     dat <- getdata(dataset, vars, filt = data_filter)
   } else {
     dat <- dataset
@@ -56,7 +56,7 @@ visualize <- function(dataset, viz_xvar,
   }
 
   # if : is used to specify a range of variables
-  if(length(vars) < ncol(dat)) {
+  if (length(vars) < ncol(dat)) {
     fl <- strsplit(viz_xvar,":") %>% unlist
     cn <- colnames(dat)
     viz_xvar <- cn[which(fl[1] == cn):which(fl[2] == cn)]
@@ -64,8 +64,8 @@ visualize <- function(dataset, viz_xvar,
 
   # dat$x <- as.character(dat$x)
   isChar <- sapply(dat, class) == "character"
-  if(sum(isChar) > 0) {
-    if(viz_type == "density")
+  if (sum(isChar) > 0) {
+    if (viz_type == "density")
       dat[,isChar] %<>% data.frame %>% mutate_each(funs(as.numeric))
     else
       dat[,isChar] %<>% data.frame %>% mutate_each(funs(as.factor))
@@ -102,7 +102,7 @@ visualize <- function(dataset, viz_xvar,
     for (i in viz_xvar) {
       for (j in viz_yvar) {
         if (viz_color == 'none') {
-          if(is.factor(dat[,i]))
+          if (is.factor(dat[,i]))
             plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
           else
             plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
@@ -169,6 +169,6 @@ visualize <- function(dataset, viz_xvar,
       plots[[i]] <- plots[[i]] + scale_x_continuous(trans = "log")
 
  sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots), 2)))) ) %>%
-   { if(shiny) . else print(.) }
+   { if (shiny) . else print(.) }
 
 }

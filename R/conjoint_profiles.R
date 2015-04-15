@@ -18,8 +18,8 @@ conjoint_profiles <- function(dataset) {
 
 	ca_str <- getdata(dataset)
 	cmd <- "ca_attr <- list(c()"
-	for(l in ca_str) {
-		if(l != "") cmd <- paste(cmd, ",", l)
+	for (l in ca_str) {
+		if (l != "") cmd <- paste(cmd, ",", l)
 	}
 	cmd <- paste(cmd, ")")
 	eval(parse(text = cmd))
@@ -27,10 +27,10 @@ conjoint_profiles <- function(dataset) {
 	cn <- names(ca_attr)
 
 	# reordering the attributes affects the number of profiles generated - strange
-	for(itt in 1:20) {
+	for (itt in 1:20) {
 		ret <- sample(ca_attr) %>%
 						 ff_design(itt)
-		if(!is.null(ret)) break
+		if (!is.null(ret)) break
 	}
 
 	frac <- ret$frac[,cn] %>% arrange_(.dots = cn) %>%
@@ -117,13 +117,13 @@ ff_design <- function(attr,
 		cor_mat <- cor(data.matrix(design$design))
 		# print(as.dist(cor_mat), digits = 1)
 		# cat('\nD-efficiency:',design$Dea,'\n')
-		# if(design$Dea == 1) break
-		if(det(cor_mat)==1) break
+		# if (design$Dea == 1) break
+		if (det(cor_mat)==1) break
 	}
 
 	nr_profiles <- design$design %>% nrow
-	if(nr_profiles> 24) {
-		if(trial < 20) {
+	if (nr_profiles> 24) {
+		if (trial < 20) {
 			return() 	# try again
 		} else {
 			cat(paste("The number of profiles required to generate an orthogonal design is\ngreater than the recommended maximum of 24. Consider\nreducing the number of attributes and/or levels.\n"))
@@ -162,7 +162,7 @@ ff_design <- function(attr,
 
 # to_pad <- sapply(lev, length)
 # max(to_pad) == min(to_pad)
-# for(i in 1:length(lev)) {
+# for (i in 1:length(lev)) {
 # 	lev[[i]] <- c(lev[[i]], rep("",max(to_pad)-length(lev[[i]])))
 # }
 

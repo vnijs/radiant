@@ -18,6 +18,6 @@ Coefficient of variation
 Coefficient of variation
 }
 \examples{
-cv(runif(100))
+cv(runif (100))
 }
 

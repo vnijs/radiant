@@ -34,7 +34,7 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 	nrObs <- nrow(dat)
 
 	# in case : is used
-	if(length(pmap_attr) < ncol(f_data)) pmap_attr <- colnames(f_data)
+	if (length(pmap_attr) < ncol(f_data)) pmap_attr <- colnames(f_data)
 
 	fres <- sshhr( principal(cov(f_data), nfactors=pmap_dim_number,
 	               rotate='varimax', scores=FALSE, oblique.scores=FALSE) )
@@ -45,7 +45,7 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 	fres$scores <- scale(as.matrix(f_data), center = TRUE, scale = TRUE) %*% cscm
 	rownames(fres$scores) <- brands
 
-	if(!is.null(pmap_pref) && pmap_pref != "") {
+	if (!is.null(pmap_pref) && pmap_pref != "") {
 		pref_cor <- getdata(dataset, pmap_pref, filt = data_filter) %>%
 								  cor(fres$scores) %>%
 								  data.frame
@@ -82,10 +82,10 @@ summary.pmap <- function(object,
 
  	cat("Attribute based brand map\n")
 	cat("Data        :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Attributes  :", paste0(object$pmap_attr, collapse=", "), "\n")
-	if(!is.null(object$pmap_pref) && object$pmap_pref != "")
+	if (!is.null(object$pmap_pref) && object$pmap_pref != "")
 		cat("Preferences :", paste0(object$pmap_pref, collapse=", "), "\n")
 	cat("# dimensions:", object$pmap_dim_number, "\n")
 	cat("Rotation    : varimax\n")
@@ -108,7 +108,7 @@ summary.pmap <- function(object,
   print_lds[ind] <- ""
   print(print_lds)
 
-	if(!is.null(object$pmap_pref) && object$pmap_pref != "") {
+	if (!is.null(object$pmap_pref) && object$pmap_pref != "") {
 		cat("\nPreference correlations:\n")
 		print(round(object$pref_cor,2), digits = 2)
 	}
@@ -181,28 +181,28 @@ plot.pmap <- function(x,
 	# http://sape.inf.usi.ch/quick-reference/ggplot2/geom_segment
 	# http://docs.ggplot2.org/0.9.3.1/geom_abline.html
 
-	if(object$pmap_dim_number == 3) {
+	if (object$pmap_dim_number == 3) {
 		op <- par(mfrow=c(3,1))
 		pmap_fontsz <- pmap_fontsz + .6
 	} else {
 		op <- par(mfrow=c(1,1))
 	}
 
-	for(i in 1:(object$pmap_dim_number-1)) {
-		for(j in (i+1):object$pmap_dim_number) {
+	for (i in 1:(object$pmap_dim_number-1)) {
+		for (j in (i+1):object$pmap_dim_number) {
 
 			plot(c(-lim,lim),type = "n",xlab='', ylab='', axes = F, asp = 1,
 			     yaxt = 'n', xaxt = 'n', ylim=c(-lim, lim), xlim=c(-lim,lim))
 			title(paste("Dimension",i,"vs Dimension",j), cex.main = pmap_fontsz)
 			abline(v=0, h=0)
 
-			if("brand" %in% pmap_plot) {
+			if ("brand" %in% pmap_plot) {
 				points(std_scores[,i], std_scores[,j], pch = 16, cex = .6)
 				wordcloud::textplot(std_scores[,i], std_scores[,j]+(.04*lim),
 				                    object$brand, cex = pmap_fontsz, new = FALSE)
 			}
 
-			if("attr" %in% pmap_plot) {
+			if ("attr" %in% pmap_plot) {
 				wordcloud::textplot(std_m[,i]*lab_buf, std_m[,j]*lab_buf,
 				                    object$pmap_attr, cex = pmap_fontsz,
 				                    col = "darkblue", new = FALSE)
@@ -211,8 +211,8 @@ plot.pmap <- function(x,
 					arrows(0,0, x1=std_m[k,i], y1=std_m[k,j], lty='dashed', length=.05)
 			}
 
-			if("pref" %in% pmap_plot) {
-				if(nrow(std_pc) > 1) {
+			if ("pref" %in% pmap_plot) {
+				if (nrow(std_pc) > 1) {
 					# textplot needs at least two coordinates
 					wordcloud::textplot(std_pc[,i]*lab_buf, std_pc[,j]*lab_buf,
 					                    object$pmap_pref, cex = pmap_fontsz,

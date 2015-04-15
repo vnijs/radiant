@@ -45,9 +45,9 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 
 	# setup the distance matrix
 	mds_dis_mat <- diag(nrLev)
-	if(lower == nrObs) {
+	if (lower == nrObs) {
 		mds_dis_mat[lower.tri(mds_dis_mat, diag = FALSE)] <- dis
-	} else if((lower + nrLev) == nrObs) {
+	} else if ((lower + nrLev) == nrObs) {
 		mds_dis_mat[lower.tri(mds_dis_mat, diag = TRUE)] <- dis
 	} else {
 		# return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset." %>% set_class(c("mds",class(.))))
@@ -60,13 +60,13 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 
 	# Alternative method, metaMDS - requires vegan
 	# res <- suppressWarnings(metaMDS(mds_dis_mat, k = mds_dim_number, trymax = 500))
-	# if(res$converged == FALSE) return("The MDS algorithm did not converge. Please try again.")
+	# if (res$converged == FALSE) return("The MDS algorithm did not converge. Please try again.")
 
 	set.seed(1234)
 	res <- MASS::isoMDS(mds_dis_mat, k = mds_dim_number, trace = FALSE)
 	res$stress <- res$stress / 100
 
-	if(mds_method == "metric") {
+	if (mds_method == "metric") {
 		res$points <- cmdscale(mds_dis_mat, k = mds_dim_number)
 		# Using R^2
 		# res$stress <- sqrt(1 - cor(dist(res$points),mds_dis_mat)^2) * 100
@@ -97,15 +97,15 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 #' @export
 summary.mds <- function(object, mds_round = 1, ...) {
 
-	if(is.character(object)) return(object)
+	if (is.character(object)) return(object)
 
 	cat("(Dis)similarity based brand map (MDS)\n")
 	cat("Data        :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(c(object$mds_id1, object$mds_id2, object$mds_dis), collapse=", "), "\n")
 	cat("# dimensions:", object$mds_dim_number, "\n")
-	meth <- if(object$mds_method == "metric") "Non-metric" else "Metric"
+	meth <- if (object$mds_method == "metric") "Non-metric" else "Metric"
 	cat("Method      :", meth, "\n")
 	cat("Observations:", object$nrObs, "\n")
 
@@ -155,7 +155,7 @@ plot.mds <- function(x,
 	lim <- max(abs(object$res$points))
 
 	# set plot space
-	if(object$mds_dim_number == 3) {
+	if (object$mds_dim_number == 3) {
 		op <- par(mfrow=c(3,1))
 		mds_fontsz <- mds_fontsz + .6
 	} else {
@@ -163,14 +163,14 @@ plot.mds <- function(x,
 	}
 
 	# reverse selected dimensions
-	if(!is.null(mds_rev_dim) && mds_rev_dim != "") {
+	if (!is.null(mds_rev_dim) && mds_rev_dim != "") {
 		as.numeric(mds_rev_dim) %>%
 			{ object$res$points[,.] <<- -1 * object$res$points[,.] }
 	}
 
 	# plot maps
-	for(i in 1:(object$mds_dim_number-1)) {
-		for(j in (i+1):object$mds_dim_number) {
+	for (i in 1:(object$mds_dim_number-1)) {
+		for (j in (i+1):object$mds_dim_number) {
 			plot(c(-lim,lim),type = "n",xlab='', ylab='', axes = F, asp = 1,
 			     yaxt = 'n', xaxt = 'n', ylim=c(-lim, lim), xlim=c(-lim,lim))
 			title(paste("Dimension",i,"vs Dimension",j), cex.main = mds_fontsz)

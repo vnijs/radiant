@@ -12,9 +12,9 @@ hc_args <- as.list(formals(hier_clus))
 # list of function inputs selected by user
 hc_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for(i in names(hc_args))
+  for (i in names(hc_args))
     hc_args[[i]] <- input[[i]]
-  if(!input$show_filter) hc_args$data_filter = ""
+  if (!input$show_filter) hc_args$data_filter = ""
   hc_args
 })
 
@@ -55,7 +55,7 @@ output$ui_hier_clus <- renderUI({
 })
 
 hc_plot <- reactive({
-	input$hc_plots %>% { if(length(.) == 1 && . == "dendro") 800 else 400 } -> bh
+	input$hc_plots %>% { if (length(.) == 1 && . == "dendro") 800 else 400 } -> bh
   list(plot_width = 650, plot_height = bh * length(input$hc_plots))
 })
 
@@ -91,7 +91,7 @@ output$hier_clus <- renderUI({
 })
 
 .summary_hier_clus <- reactive({
-  if(not_available(input$hc_vars)) {
+  if (not_available(input$hc_vars)) {
     cat("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
 		return(invisible())
   }
@@ -100,13 +100,13 @@ output$hier_clus <- renderUI({
 })
 
 .plot_hier_clus <- reactive({
-  if(not_available(input$hc_vars))
+  if (not_available(input$hc_vars))
 		return(" ")
 
     # return(invisible())
 
   .hier_clus() %>%
-    { if("dendro" %in% input$hc_plots && length(.$hc_out$height) > 100) {
+    { if ("dendro" %in% input$hc_plots && length(.$hc_out$height) > 100) {
         capture_plot( plot(., hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff) )
       } else {
         plot(., hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff, shiny = TRUE)
@@ -115,9 +115,9 @@ output$hier_clus <- renderUI({
 })
 
 observe({
-  if(not_pressed(input$hier_clus_report)) return()
+  if (not_pressed(input$hier_clus_report)) return()
   isolate({
-    if(length(input$hc_plots) > 0) {
+    if (length(input$hc_plots) > 0) {
       inp_out <- list(hc_plots = input$hc_plots) %>% list("",.)
       outputs <- c("summary","plot")
       figs <- TRUE

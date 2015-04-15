@@ -50,25 +50,25 @@ output$showInput <- renderPrint({
 
 output$showState <- renderPrint({
   cat("State list:\n")
-  if(is.null(r_state)) return()
-  if(length(r_state) == 0) return("[empty]")
+  if (is.null(r_state)) return()
+  if (length(r_state) == 0) return("[empty]")
   str(r_state[sort(names(r_state))])
 })
 
 observe({
-  if(not_pressed(input$quitApp) || !r_local) return()
+  if (not_pressed(input$quitApp) || !r_local) return()
 
   # quit R, unless you are running an interactive session
-  if(interactive()) {
+  if (interactive()) {
     # flush input and r_data into Rgui or Rstudio
     isolate({
       assign("r_state", reactiveValuesToList(input), envir = .GlobalEnv)
       assign("r_data", reactiveValuesToList(r_data), envir = .GlobalEnv)
       stop_message <- "\nStopping Radiant. State available as 'r_state' and 'r_data'.\n"
-      # if(!is.null(input$rmd_report) && input$rmd_report != "") {
+      # if (!is.null(input$rmd_report) && input$rmd_report != "") {
 
 
-      if(!is_empty(input$rmd_report)) {
+      if (!is_empty(input$rmd_report)) {
 
         "```{r echo = FALSE}\n# knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\n# suppressMessages(library(radiant))\n# uncomment the lines above to 'knit' the Rmd file in Rstudio\n# you will also need to load the data using load()\n```\n\n" %>%
           paste0(.,input$rmd_report) -> rmd_report

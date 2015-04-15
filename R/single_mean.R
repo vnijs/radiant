@@ -55,7 +55,7 @@ summary.single_mean <- function(object, ...) {
   # cat("Time - summary",now(),"\n")
   cat("Single mean test\n")
 	cat("Data     :", object$dataset, "\n")
-	if(object$data_filter %>% gsub("\\s","",.) != "")
+	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variable :", object$sm_var, "\n")
 
@@ -108,7 +108,7 @@ plot.single_mean <- function(x,
 
  	plots <- list()
 
-	if("hist" %in% sm_plots) {
+	if ("hist" %in% sm_plots) {
 		bw <- object$dat %>% range(na.rm = TRUE) %>% diff %>% divide_by(10)
 
 		plots[[which("hist" == sm_plots)]] <-
@@ -121,10 +121,10 @@ plot.single_mean <- function(x,
 				geom_vline(xintercept = c(object$res$conf.low, object$res$conf.high),
 				           color = 'black', linetype = 'longdash', size = .5)
 	}
-	if("simulate" %in% sm_plots) {
+	if ("simulate" %in% sm_plots) {
 
 		simdat <- matrix(0, nrow = 1000)
-		for(i in 1:nrow(simdat)) {
+		for (i in 1:nrow(simdat)) {
 			simdat[i] <- object$dat[,object$sm_var] %>%
 										 sample(., length(.), replace = TRUE) %>%
 										 mean
@@ -133,9 +133,9 @@ plot.single_mean <- function(x,
 		simdat %<>% { (. - mean(.)) + object$sm_comp_value } %>%
 									as.data.frame %>% set_colnames(object$sm_var)
 
-		ci_perc <- {if(object$sm_alternative == 'two.sided') {
+		ci_perc <- {if (object$sm_alternative == 'two.sided') {
 									{(1-object$sm_sig_level)/2}  %>% c(., 1 - .)
-								} else if(object$sm_alternative == 'less') {
+								} else if (object$sm_alternative == 'less') {
 									1-object$sm_sig_level
 								} else {
 									object$sm_sig_level
@@ -157,5 +157,5 @@ plot.single_mean <- function(x,
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
-	  { if(shiny) . else print(.) }
+	  { if (shiny) . else print(.) }
 }

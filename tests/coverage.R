@@ -1,7 +1,7 @@
 # use https://github.com/jimhester/covr
 if (interactive()) {
 
-	if(!require(covr)) {
+	if (!require(covr)) {
 	 	devtools::install_github("jimhester/covr")
 	 	library(covr)
 	}
