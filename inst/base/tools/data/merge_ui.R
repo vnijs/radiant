@@ -85,10 +85,10 @@ output$merge_possible <- renderText({
 
 output$mergedata1 <- renderText({
   if (is.null(input$dataset2)) return()
-  show_data_snippet(title = paste("<h3>Data:",input$dataset,"</h3>"))
+  # show_data_snippet(title = paste("<h3>Data:",input$dataset,"</h3>"))
 })
 
 output$mergedata2 <- renderText({
   if (is.null(input$dataset2)) return()
-  show_data_snippet(input$dataset2, title = paste("<h3>Data:",input$dataset2,"</h3>"))
+  # show_data_snippet(input$dataset2, title = paste("<h3>Data:",input$dataset2,"</h3>"))
 })

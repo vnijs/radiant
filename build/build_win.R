@@ -17,5 +17,5 @@ setwd('../')
 rfile <- Sys.glob("*zip")
 setwd('radiant_dev')
 
-file.copy(paste0("../",rfile),"Z:/Desktop/GitHub")
+# file.copy(paste0("../",rfile),"Z:/Desktop/GitHub")
 # file.remove(paste0("../",rfile))

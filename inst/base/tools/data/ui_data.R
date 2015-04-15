@@ -31,26 +31,38 @@ output$ui_data <- renderUI({
         conditionalPanel("input.datatabs == 'Transform'", uiOutput("ui_Transform")),
         conditionalPanel("input.datatabs == 'Merge'", uiOutput("ui_Merge"))),
       mainPanel(
-        uiOutput("datatabs")
+        tabsetPanel(id = "datatabs",
+          tabPanel("Manage", htmlOutput("htmlDataExample"),
+            conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
+            conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
+          # tabPanel("View", DT::dataTableOutput("dataviewer")),
+          tabPanel("View", dataTableOutput("dataviewer")),
+          tabPanel("Visualize",plotOutput("visualize", width = "100%", height = "100%")),
+          tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
+          tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
+          tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
+          tabPanel("Merge", htmlOutput("merge_possible"), htmlOutput("mergedata1"), htmlOutput("mergedata2"))
+        )
+        # uiOutput("datatabs")
       )
     )
   )
 })
 
 # data tabs
-output$datatabs <- renderUI({
-  tabsetPanel(id = "datatabs",
-    tabPanel("Manage", htmlOutput("htmlDataExample"),
-      conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
-      conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
-    tabPanel("View", DT::dataTableOutput("dataviewer")),
-    tabPanel("Visualize",plotOutput("visualize", width = "100%", height = "100%")),
-    tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
-    tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
-    tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
-    tabPanel("Merge", htmlOutput("merge_possible"), htmlOutput("mergedata1"), htmlOutput("mergedata2"))
-  )
-})
+# output$datatabs <- renderUI({
+#   tabsetPanel(id = "datatabs",
+#     tabPanel("Manage", htmlOutput("htmlDataExample"),
+#       conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
+#       conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
+#     tabPanel("View", DT::dataTableOutput("dataviewer")),
+#     tabPanel("Visualize",plotOutput("visualize", width = "100%", height = "100%")),
+#     tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
+#     tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
+#     tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
+#     tabPanel("Merge", htmlOutput("merge_possible"), htmlOutput("mergedata1"), htmlOutput("mergedata2"))
+#   )
+# })
 
 # to add
 # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),

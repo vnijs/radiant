@@ -7,6 +7,19 @@ dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.1/
 dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.1/
 dirwin=../radiant_miniCRAN/bin/windows/contrib/3.1/
 
+# updating gh packages
+cd ../DT
+git pull
+cd ../jsonlite
+git pull
+cd ../shiny
+git pull
+cd ../htmlwidgets
+git pull
+cd ../rpivotTable
+git pull
+cd ../radiant_dev
+
 # removing all files in miniCRAN
 # rm $dirsource/*
 # rm $dirmac/*
@@ -19,21 +32,21 @@ rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
 
-rm $dirsource/shinyAce*
-rm $dirmac/shinyAce*
-rm $dirmac_mav/shinyAce*
-rm $dirwin/shinyAce*
-
-rm $dirsource/rpivotTable*
-rm $dirmac/rpivotTable*
-rm $dirmac_mav/rpivotTable*
-rm $dirwin/rpivotTable*
-
-rm $dirsource/shiny*
-rm $dirmac/shiny*
-rm $dirmac_mav/shiny*
-rm $dirwin/shiny*
-
+# rm $dirsource/shinyAce*
+# rm $dirmac/shinyAce*
+# rm $dirmac_mav/shinyAce*
+# rm $dirwin/shinyAce*
+#
+# rm $dirsource/rpivotTable*
+# rm $dirmac/rpivotTable*
+# rm $dirmac_mav/rpivotTable*
+# rm $dirwin/rpivotTable*
+#
+# rm $dirsource/shiny*
+# rm $dirmac/shiny*
+# rm $dirmac_mav/shiny*
+# rm $dirwin/shiny*
+#
 rm $dirsource/DT*
 rm $dirmac/DT*
 rm $dirmac_mav/DT*

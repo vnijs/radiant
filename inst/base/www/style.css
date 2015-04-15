@@ -22,21 +22,25 @@
 }
 
 .radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 .radio-inline, .checkbox-inline {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 th, td {
   text-align: left;
 }
 
+/*
 table.dataTable tfoot td, table.dataTable thead td {
+  padding-top: 0px;
+  padding-bottom: 0px;
   padding-left: 0px;
   padding-right: 0px;
 }
+*/
 
 .modal-dialog {
   width: 800px;

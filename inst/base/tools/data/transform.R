@@ -335,7 +335,7 @@ output$transform_data <- reactive({
   dat <- transform_main()
   if (is.null(dat)) return(invisible())
   if (is.character(dat)) return(dat)
-  show_data_snippet(dat)
+  # show_data_snippet(dat)
 })
 
 output$transform_summary <- renderPrint({
@@ -343,57 +343,7 @@ output$transform_summary <- renderPrint({
 	dat <- transform_main()
 	if (is.null(dat)) return(invisible())
 	if (is.character(dat)) return(dat)
-
 	getsummary(dat)
-
- #  dc <- getclass(dat)
-
-	# isFct <- "factor" == dc
-	# isNum <- "numeric" == dc | "integer" == dc
-	# isDate <- "date" == dc | "Date" == dc
-	# isChar <- "character" == dc
-	# isLogic <- "logical" == dc
-
-	# if (sum(isNum) > 0) {
-
-	# 	cn <- names(dc)[isNum]
-
-	# 	cat("Summarize numeric variables:\n")
- #    select(dat, which(isNum)) %>%
- #      tidyr::gather_("variable", "values", cn) %>%
- #      group_by(variable) %>%
- #      summarise_each(funs(n = length, missing = nmissing, mean(.,na.rm=TRUE),
- #                     median(.,na.rm=TRUE), min(.,na.rm=TRUE), max(.,na.rm=TRUE),
- #                     `25%` = p25, `75%` = p75, sd(.,na.rm=TRUE), se = serr,
- #                     cv = sd/mean)) %>%
- #      as.data.frame -> num_dat
- #      num_dat[,-1] %<>% round(3)
- #      colnames(num_dat)[1] <- ""
- #      num_dat %>% print(row.names = FALSE)
-	# 	cat("\n")
-	# }
-	# if (sum(isFct) > 0) {
-	# 	cat("Summarize factors:\n")
- #    select(dat, which(isFct)) %>% summary %>% print
-	# 	cat("\n")
-	# }
-	# if (sum(isDate) > 0) {
-	# 	cat("Earliest dates:\n")
- #    select(dat, which(isDate)) %>% summarise_each(funs(min)) %>% print
-	# 	cat("\nFinal dates:\n")
- #    select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
-	# 	cat("\n")
-	# }
-	# if (sum(isChar) > 0) {
-	# 	cat("Summarize character variables:\n")
- #    select(dat, which(isChar)) %>% table %>% print
-	# 	cat("\n")
-	# }
-	# if (sum(isLogic) > 0) {
-	# 	cat("Summarize logical variables:\n")
- #    select(dat, which(isLogic)) %>% table %>% print
-	# 	cat("\n")
-	# }
 })
 
 observe({

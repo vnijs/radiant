@@ -108,6 +108,12 @@ Choose `Remove missing` from the `Transformation type` dropdown to eliminate all
 
  There are several ways to select a subset of the data to view. The `Filter` box on the left (click the checkbox first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators. Type your statement in the `Filter`  box and press CTRL-return (or CMD-return on mac) to see the result on screen or an error below the box if the expression is invalid. It is important to note that filters are _presistent_. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press CTRL-return (or CMD-return on mac) or (2) uncheck the `Filter` checkbox.
 
+|Operator |Description            |
+|:--------|:----------------------|
+|<        |less than              |
+|<=       |less than or equalt to |
+
+
 
 | Operator    |     | Description               |
 | ----------- | --- |:------------------------- |
