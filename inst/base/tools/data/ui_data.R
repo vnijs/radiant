@@ -11,7 +11,6 @@ output$ui_filter_error <- renderUI({
 output$ui_data <- renderUI({
   tagList(
     includeCSS(file.path(r_path,"/base/www/style.css")),
-    includeScript(file.path(r_path,"/base/www/js/jquery-ui.custom.min.js")),
     includeScript(file.path(r_path,"/base/www/js/returnTextAreaBinding.js")),
     sidebarLayout(
       sidebarPanel(

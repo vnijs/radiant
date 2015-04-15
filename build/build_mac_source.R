@@ -9,5 +9,14 @@ build('../shinyAce', binary = TRUE)
 build('../rpivotTable')
 build('../rpivotTable', binary = TRUE)
 
+build('../jsonlite')
+build('../jsonlite', binary = TRUE)
+
+build('../shiny')
+build('../shiny', binary = TRUE)
+
+build('../htmlwidgets')
+build('../htmlwidgets', binary = TRUE)
+
 build('../DT')
 build('../DT', binary = TRUE)
