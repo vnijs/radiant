@@ -19,15 +19,25 @@ rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
 
-# rm $dirsource/shinyAce*
-# rm $dirmac/shinyAce*
-# rm $dirmac_mav/shinyAce*
-# rm $dirwin/shinyAce*
-#
-# rm $dirsource/rpivotTable*
-# rm $dirmac/rpivotTable*
-# rm $dirmac_mav/rpivotTable*
-# rm $dirwin/rpivotTable*
+rm $dirsource/shinyAce*
+rm $dirmac/shinyAce*
+rm $dirmac_mav/shinyAce*
+rm $dirwin/shinyAce*
+
+rm $dirsource/rpivotTable*
+rm $dirmac/rpivotTable*
+rm $dirmac_mav/rpivotTable*
+rm $dirwin/rpivotTable*
+
+rm $dirsource/shiny*
+rm $dirmac/shiny*
+rm $dirmac_mav/shiny*
+rm $dirwin/shiny*
+
+rm $dirsource/DT*
+rm $dirmac/DT*
+rm $dirmac_mav/DT*
+rm $dirwin/DT*
 
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1
