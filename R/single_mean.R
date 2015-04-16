@@ -29,8 +29,6 @@ single_mean <- function(dataset, sm_var,
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res
 
-	# time_main <- now()
-
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
 
@@ -51,8 +49,6 @@ single_mean <- function(dataset, sm_var,
 #' @export
 summary.single_mean <- function(object, ...) {
 
-  # cat("Time - main",object$time_main,"\n")
-  # cat("Time - summary",now(),"\n")
   cat("Single mean test\n")
 	cat("Data     :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")

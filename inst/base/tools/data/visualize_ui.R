@@ -110,6 +110,7 @@ output$ui_Visualize <- renderUI({
                            max = 2000, step = 50,
                            value = state_init("viz_plot_width", r_data$plot_width)))
       )
+      # ,sliderInput("test_test","Test:", min = 0, max = 1, value = .5, step = 0.1)
     ),
     help_and_report(modal_title = "Visualize",
                     fun_name = "visualize",

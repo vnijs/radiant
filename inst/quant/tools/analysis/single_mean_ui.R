@@ -46,7 +46,7 @@ output$ui_single_mean <- renderUI({
     		value = state_init('sm_sig_level',sm_args$sm_sig_level), step = 0.01),
     	numericInput("sm_comp_value", "Comparison value:",
     	  state_init('sm_comp_value',sm_args$sm_comp_value))
-  	),
+    ),
   	help_and_report(modal_title = 'Single mean', fun_name = 'single_mean',
   	                help_file = inclMD(file.path(r_path,"/quant/tools/help/single_mean.md")))
  	)
