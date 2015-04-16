@@ -33,14 +33,12 @@ th, td {
   text-align: left;
 }
 
-/*
 table.dataTable tfoot td, table.dataTable thead td {
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left: 0px;
   padding-right: 0px;
 }
-*/
 
 .modal-dialog {
   width: 800px;

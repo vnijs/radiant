@@ -18,6 +18,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom markdown markdownToHTML
 #' @import htmlwidgets
 #' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
+#' @importFrom DT dataTableAjax datatable
 NULL
 
 #' Exporting the kurtosi function from the psych package

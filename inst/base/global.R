@@ -13,8 +13,8 @@ pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
                "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
                "htmlwidgets")
-# pkgs_gh <- c("shinyAce","rpivotTable","DT")
-pkgs_gh <- c("shinyAce","rpivotTable")
+pkgs_gh <- c("shinyAce","rpivotTable","DT")
+# pkgs_gh <- c("shinyAce","rpivotTable")
 pkgs <- c(pkgs_cran, pkgs_gh)
 rm(pkgs_cran,pkgs_gh)
 
