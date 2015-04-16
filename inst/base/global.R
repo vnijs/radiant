@@ -47,11 +47,12 @@ if (Sys.getenv('SHINY_PORT') == "") {
 addResourcePath("figures", file.path(r_path,"/base/tools/help/figures/"))
 addResourcePath("imgs", file.path(r_path,"/base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"/base/www/js/"))
+# addResourcePath("css", file.path(r_path,"/base/www/css/"))
 
 ### options used for debugging
 # options(warn=0)
 # options(warn=2)
-options(shiny.trace = TRUE)
+# options(shiny.trace = TRUE)
 # options(shiny.error=recover)
 
 # Windows or Mac

@@ -39,13 +39,7 @@ saveStateOnRefresh <- function(session = session) {
 
 .getdata <- reactive({
 
-  # return(r_data[[input$dataset]])
-  # return(mtcars)
-
-
-
-
-  # if (is_empty(input$data_filter) || input$show_filter == FALSE) return(r_data[[input$dataset]])
+  if (is_empty(input$data_filter) || input$show_filter == FALSE) return(r_data[[input$dataset]])
   selcom <- gsub("\\s","", input$data_filter)
   if (selcom != "") {
     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)

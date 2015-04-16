@@ -360,8 +360,7 @@ output$htmlDataExample <- renderText({
   if (is.null(.getdata())) return()
 
   # Show only the first 10 (or 30) rows
-  # r_data[[paste0(input$dataset,"_descr")]] %>%
-  #   { is_empty(.) %>% ifelse(., 30, 10) } %>%
-  #   show_data_snippet(nshow = .)
-    show_data_snippet(nshow = 1)
+  r_data[[paste0(input$dataset,"_descr")]] %>%
+    { is_empty(.) %>% ifelse(., 30, 10) } %>%
+    show_data_snippet(nshow = .)
 })

@@ -335,7 +335,7 @@ output$transform_data <- reactive({
   dat <- transform_main()
   if (is.null(dat)) return(invisible())
   if (is.character(dat)) return(dat)
-  # show_data_snippet(dat)
+  show_data_snippet(dat)
 })
 
 output$transform_summary <- renderPrint({

@@ -17,15 +17,6 @@ output$ui_View <- renderUI({
   )
 })
 
-# output$dataviewer <- renderDataTable({
-
-#   if (not_available(input$view_vars)) return()
-#   select_(.getdata(), .dots = input$view_vars)
-
-# }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
-#                   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
-#                   pageLength = 10, search = list(regex = TRUE)))
-
 output$dataviewer <- DT::renderDataTable({
 
   if (not_available(input$view_vars)) return()
@@ -46,3 +37,29 @@ output$dataviewer <- DT::renderDataTable({
     )
   )
 })
+
+# output$ui_view_vars_old <- renderUI({
+#   vars <- varnames()
+#   selectInput("view_vars_old", "Select variables to show:", choices  = vars,
+#     selected = state_multiple("view_vars_old",vars, vars), multiple = TRUE,
+#     selectize = FALSE, size = min(15, length(vars)))
+# })
+
+# output$ui_View_old <- renderUI({
+#   list(
+#     wellPanel(
+#       uiOutput("ui_view_vars_old")
+#     ),
+#     help_modal('View','viewHelp',inclMD(file.path(r_path,"/base/tools/help/view.md")))
+#   )
+# })
+
+
+# output$dataviewer_old <- shiny::renderDataTable({
+
+#   if (not_available(input$view_vars_old)) return()
+#   select_(.getdata(), .dots = input$view_vars_old)
+
+# }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
+#                   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
+#                   pageLength = 10, search = list(regex = TRUE)))
