@@ -30,6 +30,9 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	vars <- c(cm_var1, cm_var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
 
+	# in case : was used for cm_var2
+	vars <- colnames(dat)
+
 	if (dat[,cm_var1] %>% is.factor) {
 		colnames(dat) <- c("variable","values")
 	} else {
@@ -168,14 +171,15 @@ plot.compare_means <- function(x,
 	    aes_string(x="variable", y="mean", fill="variable")) +
 	    geom_bar(stat="identity")  +
 	 		geom_errorbar(width=.1, aes(ymin=mean-ci, ymax=mean+ci)) +
-	 		geom_errorbar(width=.05, aes(ymin=mean-se, ymax=mean+se), colour = "blue")
+	 		geom_errorbar(width=.05, aes(ymin=mean-se, ymax=mean+se), colour = "blue") +
+	 		theme(legend.position = "none")
 	}
 
 	# graphs on full data
 	if ("box" %in% cm_plots) {
 		plots[[which("box" == cm_plots)]] <-
 			ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) +
-				geom_boxplot(alpha=.7)
+				geom_boxplot(alpha=.7) + theme(legend.position = "none")
 	}
 
 	if ("density" %in% cm_plots) {

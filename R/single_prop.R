@@ -109,6 +109,8 @@ summary.single_prop <- function(object, ...) {
 #' @examples
 #' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 #' plot(result, sp_plots = c("hist", "simulate"))
+#' result <- single_prop("titanic","pclass", sp_levels = "1st")
+#' plot(result, sp_plots = c("hist","simulate"))
 #'
 #' @seealso \code{\link{single_prop}} to generate the result
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
@@ -128,7 +130,8 @@ plot.single_prop <- function(x,
 		plots[[which("hist" == sp_plots)]] <-
 			ggplot(object$dat, aes_string(x = object$sp_var, fill = object$sp_var)) +
 	 			geom_histogram(alpha=.7) +
-	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$sp_var))
+	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$sp_var)) +
+	 	 		theme(legend.position = "none")
 	}
 	if ("simulate" %in% sp_plots) {
 		simdat <- rbinom(1000, prob = object$sp_comp_value, object$n) %>%
@@ -147,8 +150,12 @@ plot.single_prop <- function(x,
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
+		# to avoid problems with levels that start with numbers or contain spaces
+		# http://stackoverflow.com/questions/13445435/ggplot2-aes-string-fails-to-handle-names-starting-with-numbers-or-containing-s
+		names(simdat) <- "col1"
+
 		plots[[which("simulate" == sp_plots)]] <-
-			ggplot(simdat, aes_string(x=lev_name)) +
+			ggplot(simdat, aes(x=col1)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = object$sp_comp_value, color = 'red',
 				           linetype = 'solid', size = 1) +
@@ -156,7 +163,8 @@ plot.single_prop <- function(x,
 				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = ci_perc,
 				           color = 'red', linetype = 'longdash', size = .5) +
-	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$sp_var, ")"))
+	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$sp_var, ")")) +
+	 	 		labs(x = paste0("Level ",lev_name, " in variable ", object$sp_var))
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%

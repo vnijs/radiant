@@ -180,7 +180,8 @@ plot.compare_props <- function(x,
 			ggplot(object$dat_summary, aes_string(x = var1, y = "p", fill = var1)) +
 			geom_bar(stat = "identity") +
 	 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
-	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue")
+	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
+	 		theme(legend.position = "none")
 	}
 
 	if ("counts" %in% cp_plots) {
