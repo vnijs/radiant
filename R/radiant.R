@@ -107,10 +107,14 @@ getdata <- function(dataset,
       paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
         stop %>% return
     }
-  } %>% { if (filt == "") . else filter_(., filt) } %>%
+  } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
+        { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
         { if (slice == "") . else slice_(., slice) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
         { if (na.rm) { if (anyNA(.)) na.omit(.) else . } }
+
+  # use the below when all data is setup as tbl_df
+  # } %>% { if (is.na(groups(.))) . else ungroup(.) } %>%     # ungroup data if needed
 }
 
 #' Change data

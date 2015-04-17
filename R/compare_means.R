@@ -33,19 +33,20 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 	# in case : was used for cm_var2
 	vars <- colnames(dat)
 
-	if (dat[,cm_var1] %>% is.factor) {
+	if (dat[[cm_var1]] %>% is.factor) {
 		colnames(dat) <- c("variable","values")
 	} else {
 		dat %<>% gather_("variable", "values", vars)
-	}
+  }
 
 	# check variances in the data
   if (dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
   	return("Test could not be calculated. Please select another variable.")
 
 	# resetting option to independent if the number of observations is unequal
+  # summary on factor gives counts
   if (cm_paired == "paired")
-    if (summary(dat$variable) %>% { max(.) != min(.) })
+    if (summary(dat[["variable"]]) %>% { max(.) != min(.) })
       cm_paired <- "independent (obs. per level unequal)"
 
 	##############################################
@@ -56,9 +57,10 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                 "greater" = "less")
 	##############################################
 
-	pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
-	                p.adjust.method = cm_adjust, paired = cm_paired == "paired",
-                  alternative = flip_alt[cm_alternative]) %>% tidy -> res
+	# pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
+	res <- pairwise.t.test(dat[["values"]], dat[["variable"]], pool.sd = FALSE,
+	         p.adjust.method = cm_adjust, paired = cm_paired == "paired",
+	         alternative = flip_alt[cm_alternative]) %>% tidy
 
 	##############################################
 	# flip the order of pairwise testing - part 2
@@ -90,7 +92,11 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
-#' summary(result)
+#' dat <<- diamonds %>% tbl_df
+#' result <- compare_means("dat","cut","price")
+#' dat <<- diamonds %>% tbl_df %>% group_by(cut)
+#' result <- compare_means("dat","cut","price")
+#' rm(dat, envir = .GlobalEnv)
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{plot.compare_means}} to plot results

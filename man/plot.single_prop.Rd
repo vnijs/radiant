@@ -24,6 +24,8 @@ See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example i
 \examples{
 result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 plot(result, sp_plots = c("hist", "simulate"))
+result <- single_prop("titanic","pclass", sp_levels = "1st")
+plot(result, sp_plots = c("hist","simulate"))
 }
 \seealso{
 \code{\link{single_prop}} to generate the result

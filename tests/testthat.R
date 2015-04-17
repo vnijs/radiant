@@ -5,4 +5,5 @@ test_check("radiant")
 
 if (interactive()) devtools::run_examples()
 # if (interactive()) devtools::run_examples(start = "regression")
+# if (interactive()) devtools::run_examples(start = "compare_means")
 # warnings()
