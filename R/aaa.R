@@ -1,13 +1,13 @@
 # to avoid 'no visible binding for global variable' NOTE
 globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
-                  "se","ci","height","bump","y","nr_clus",".resid","rnd_number",
-                  "null.deviance"))
+                  "se", "ci", "height", "bump", "y", "col1", "nr_clus",
+                  ".resid", "rnd_number", "null.deviance"))
 
 #' radiant
 #'
 #' @name radiant
 #' @docType package
-#' @import ggplot2 shiny dplyr shinyAce
+#' @import ggplot2 shiny jsonlite dplyr shinyAce
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% set_rownames set_colnames set_names divide_by add
