@@ -29,7 +29,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                     glm_int_var = "",
                     glm_check = "") {
 
-	dat <- getdata(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
+  dat <- getdata(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
 
   if (glm_levels == "")
     glm_levels <- dat[,glm_dep_var] %>% as.character %>% as.factor %>% levels(.) %>% .[1]
@@ -42,21 +42,21 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
   var_check(glm_indep_var, colnames(dat)[-1], glm_int_var) %>%
     { vars <<- .$vars; glm_indep_var <<- .$indep_var; glm_int_var <<- .$int_var }
 
-	if ("standardize" %in% glm_check) {
+  if ("standardize" %in% glm_check) {
     isNum <- sapply(dat, is.numeric)
     if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
   formula <- paste(glm_dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
 
-	if ("stepwise" %in% glm_check) {
+  if ("stepwise" %in% glm_check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-		model <- glm(paste(glm_dep_var, "~ 1") %>% as.formula,
-		             family = binomial(link = glm_link), data = dat) %>%
-      			 step(k = 2, scope = list(upper = formula), direction = 'both')
-	} else {
-		model <- glm(formula, family = binomial(link = glm_link), data = dat)
-	}
+    model <- glm(paste(glm_dep_var, "~ 1") %>% as.formula,
+                 family = binomial(link = glm_link), data = dat) %>%
+             step(k = 2, scope = list(upper = formula), direction = 'both')
+  } else {
+    model <- glm(formula, family = binomial(link = glm_link), data = dat)
+  }
 
   glm_coeff <- tidy(model)
   glm_coeff$` ` <- sig_stars(glm_coeff$p.value)
@@ -108,7 +108,7 @@ summary.glm_reg <- function(object,
                             glm_test_var = "",
                             ...) {
 
-	if (class(object$model)[1] != 'glm') return(object)
+  if (class(object$model)[1] != 'glm') return(object)
 
   cat("Generalized linear model (glm)")
   cat("\nLink function:", object$glm_link)
@@ -119,18 +119,18 @@ summary.glm_reg <- function(object,
   cat("\nLevel                :", object$glm_levels, "in", object$glm_dep_var)
   cat("\nIndependent variables:", paste0(object$glm_indep_var, collapse=", "))
   if ("standardize" %in% object$glm_check)
- 		cat("\nStandardized coefficients shown")
- 	cat("\n\n")
-	print(object$glm_coeff, row.names=FALSE)
+    cat("\nStandardized coefficients shown")
+  cat("\n\n")
+  print(object$glm_coeff, row.names=FALSE)
 
   glm_fit <- glance(object$model)
 
-	# pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
-	glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
+  # pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
+  glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
 
-	# chi-squared test of overall model fit (p-value) - http://www.ats.ucla.edu/stat/r/dae/logit.htm
-	chi_pval <- with(object$model, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
-	chi_pval %<>% { if (. < .001) "< .001" else round(.,3) }
+  # chi-squared test of overall model fit (p-value) - http://www.ats.ucla.edu/stat/r/dae/logit.htm
+  chi_pval <- with(object$model, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
+  chi_pval %<>% { if (. < .001) "< .001" else round(.,3) }
 
   cat("\nPseudo R-squared:", glm_fit$r2)
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
@@ -167,7 +167,7 @@ summary.glm_reg <- function(object,
 
       confint(object$model, level = glm_conf_level) %>%
         as.data.frame %>%
-        magrittr::set_colnames(c("Low","High")) %>%
+        set_colnames(c("Low","High")) %>%
         cbind(select(object$glm_coeff,2),.) %>%
         set_rownames(object$glm_coeff$`  `) -> ci_tab
 
@@ -175,7 +175,7 @@ summary.glm_reg <- function(object,
         ci_tab %>% round(3) %T>%
         # set_rownames(object$glm_coeff$`  `) %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
-        magrittr::set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
+        set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
         print
         cat("\n")
       }
@@ -189,7 +189,7 @@ summary.glm_reg <- function(object,
       odds_tab <- exp(ci_tab) %>% round(3)
       odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
       odds_tab %>%
-        magrittr::set_colnames(c("odds", cl_low, cl_high, "+/-")) %>%
+        set_colnames(c("odds", cl_low, cl_high, "+/-")) %>%
         print
       cat("\n")
     }
@@ -210,22 +210,22 @@ summary.glm_reg <- function(object,
       }
 
       # glm_test_var <- "pclass"
-  		not_selected <- setdiff(vars, glm_test_var)
+      not_selected <- setdiff(vars, glm_test_var)
       if (length(not_selected) > 0) sub_formula <- paste(object$glm_dep_var, "~", paste(not_selected, collapse = " + "))
       #### update with glm_sub NOT working when called from radiant - strange
-  		# glm_sub <- update(object$model, sub_formula, data = object$model$model)
+      # glm_sub <- update(object$model, sub_formula, data = object$model$model)
       glm_sub <- glm(sub_formula, family = binomial(link = object$glm_link), data = object$model$model)
-  		glm_sub_fit <- glance(glm_sub)
-  		glm_sub <- anova(glm_sub, object$model, test='Chi')
+      glm_sub_fit <- glance(glm_sub)
+      glm_sub <- anova(glm_sub, object$model, test='Chi')
 
-  		# pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
-  		glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
-  		glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(.3) }
-  		cat(attr(glm_sub,"heading")[2])
-  		cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
-  		cat(paste0("\nChi-statistic: ", glm_sub$Deviance[2] %>% round(3), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
+      # pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
+      glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
+      glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(.3) }
+      cat(attr(glm_sub,"heading")[2])
+      cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
+      cat(paste0("\nChi-statistic: ", glm_sub$Deviance[2] %>% round(3), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
     }
-	}
+  }
 }
 
 #' Plot method for the glm_reg function
@@ -258,7 +258,7 @@ plot.glm_reg <- function(x,
 
   object <- x; rm(x)
 
-	if (class(object$model)[1] != 'glm') return(object)
+  if (class(object$model)[1] != 'glm') return(object)
 
   if (glm_plots[1] == "")
     return(cat("Please select a glm regression plot from the drop-down menu"))
@@ -266,24 +266,25 @@ plot.glm_reg <- function(x,
   # no plots if aliased coefficients present
   if (anyNA(object$model$coeff)) glm_plots <- return("")
 
-	model <- ggplot2::fortify(object$model)
-	model$.fitted <- predict(object$model, type = 'response')
+  model <- ggplot2::fortify(object$model)
+  model$.fitted <- predict(object$model, type = 'response')
   model$.actual <- as.numeric(object$glm_dv)
-	model$.actual <- model$.actual - max(model$.actual) + 1 	# adjustment in case max > 1
+  model$.actual <- model$.actual - max(model$.actual) + 1   # adjustment in case max > 1
 
   glm_dep_var <- object$glm_dep_var
   glm_indep_var <- object$glm_indep_var
   vars <- c(object$glm_dep_var, object$glm_indep_var)
-	nrCol <- 2
-	plots <- list()
+  nrCol <- 2
+  plots <- list()
 
-	if ("hist" %in% glm_plots)
+  if ("hist" %in% glm_plots)
     for (i in vars) plots[[i]] <- ggplot(model, aes_string(x = i)) + geom_histogram()
 
   if ("coef" %in% glm_plots) {
+    nrCol <- 1
     plots[["coef"]] <- confint(object$model, level = glm_conf_level) %>%
           data.frame %>%
-          magrittr::set_colnames(c("Low","High")) %>%
+          set_colnames(c("Low","High")) %>%
           cbind(select(object$glm_coeff,2),.) %>%
           set_rownames(object$glm_coeff$`  `) %>%
           { if (!glm_coef_int) .[-1,] else . } %>%
@@ -295,38 +296,38 @@ plot.glm_reg <- function(x,
   }
 
   if (glm_plots == "scatter") {
-		for (i in glm_indep_var) {
+    for (i in glm_indep_var) {
       if ('factor' %in% class(model[,i])) {
         plots[[i]] <- ggplot(model, aes_string(x=i, fill=glm_dep_var)) +
                         geom_bar(position = "fill", alpha=.7) +
                         labs(list(y = ""))
-			} else {
+      } else {
         plots[[i]] <- ggplot(model, aes_string(x=glm_dep_var, y=i, fill=glm_dep_var)) +
                         geom_boxplot(alpha = .7) + theme(legend.position = "none")
-			}
-		}
-		nrCol <- 1
-	}
+      }
+    }
+    nrCol <- 1
+  }
 
   if (glm_plots == "dashboard") {
-		plots[[1]] <- ggplot(model, aes_string(x=".fitted", y=".actual")) + geom_point(alpha = .25) +
-					 stat_smooth(method="glm", family="binomial", se=TRUE) +
-					 geom_jitter(position = position_jitter(height = .05)) +
-					 labs(list(title = "Actual vs Fitted values", x = "Fitted values", y = "Actual"))
+    plots[[1]] <- ggplot(model, aes_string(x=".fitted", y=".actual")) + geom_point(alpha = .25) +
+           stat_smooth(method="glm", family="binomial", se=TRUE) +
+           geom_jitter(position = position_jitter(height = .05)) +
+           labs(list(title = "Actual vs Fitted values", x = "Fitted values", y = "Actual"))
 
-		plots[[2]] <- ggplot(model, aes_string(x=".fitted", y=".resid")) + geom_point(alpha = .25) +
-					 geom_hline(yintercept = 0) + geom_smooth(size = .75, linetype = "dotdash", se = TRUE) +
-					 labs(list(title = "Residuals vs Fitted values", x = "Fitted", y = "Residuals"))
+    plots[[2]] <- ggplot(model, aes_string(x=".fitted", y=".resid")) + geom_point(alpha = .25) +
+           geom_hline(yintercept = 0) + geom_smooth(size = .75, linetype = "dotdash", se = TRUE) +
+           labs(list(title = "Residuals vs Fitted values", x = "Fitted", y = "Residuals"))
 
-  	plots[[3]] <- ggplot(model, aes_string(x = ".resid")) + geom_histogram(binwidth = .5) +
+    plots[[3]] <- ggplot(model, aes_string(x = ".resid")) + geom_histogram(binwidth = .5) +
       labs(list(title = "Histogram of residuals", x = "Residuals"))
 
     plots[[4]] <- ggplot(model, aes_string(x=".resid")) + geom_density(alpha=.3, fill = "green") +
       stat_function(fun = dnorm, args = list(mean = mean(model[,".resid"]), sd = sd(model[,".resid"])), color = "blue") +
-  		labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
-	}
+      labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
+  }
 
-	if (length(plots) > 0) {
+  if (length(plots) > 0) {
     sshhr( do.call(arrangeGrob, c(plots, list(ncol = nrCol))) ) %>%
       { if (shiny) . else print(.) }
   }

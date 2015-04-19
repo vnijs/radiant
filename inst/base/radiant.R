@@ -111,7 +111,7 @@ has_duplicates <- function(x)
   if (length(unique(x)) < length(x)) TRUE else FALSE
 
 # is x some type of date variable
-is_date <- function(x) is.Date(x) | is.POSIXct(x) | is.POSIXt(x)
+is_date <- function(x) lubridate::is.Date(x) | lubridate::is.POSIXt(x)
 
 # convert a date variable to character for printing
 d2c <- function(x) if (is_date(x)) as.character(x) else x

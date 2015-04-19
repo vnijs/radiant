@@ -7,31 +7,32 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #'
 #' @name radiant
 #' @docType package
-#' @import ggplot2 shiny jsonlite dplyr shinyAce
+#' @import ggplot2 shiny dplyr htmlwidgets
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
-#' @importFrom magrittr %<>% %T>% set_rownames set_colnames set_names divide_by add
-#' @importFrom lubridate is.Date now
+#' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add
+#' @importFrom lubridate is.Date is.POSIXt now
 #' @importFrom broom tidy glance
 #' @importFrom tidyr gather_
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom markdown markdownToHTML
-#' @import htmlwidgets
+#' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
 #' @importFrom DT dataTableAjax datatable
+NULL
+
+#' Exporting the print.arrange method from the gridExtra package
+#' @details Used to print plots generated using arrangeGrob
+#' @importFrom gridExtra print.arrange
+#' @name print.arrange
+#' @rdname print.arrange
+#' @export
 NULL
 
 #' Exporting the kurtosi function from the psych package
 #' @importFrom psych kurtosi
 #' @name kurtosi
 #' @rdname kurtosi.re
-#' @export
-NULL
-
-#' Exporting the print.arrange method from the gridExtra package
-#' @importFrom gridExtra print.arrange
-#' @name print.arrange
-#' @rdname print.arrange
 #' @export
 NULL
 

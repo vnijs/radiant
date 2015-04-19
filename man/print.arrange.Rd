@@ -6,4 +6,7 @@
 \description{
 Exporting the print.arrange method from the gridExtra package
 }
+\details{
+Used to print plots generated using arrangeGrob
+}
 

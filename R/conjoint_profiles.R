@@ -113,7 +113,7 @@ ff_design <- function(attr,
 
 	for (i in min_profiles:max_profiles) {
 		set.seed(rseed) 		# needs to be in the loop
-		design <- AlgDesign::optFederov(data = experiment, nTrials=i, maxIteration=1000)
+		design <- optFederov(data = experiment, nTrials=i, maxIteration=1000)
 		cor_mat <- cor(data.matrix(design$design))
 		# print(as.dist(cor_mat), digits = 1)
 		# cat('\nD-efficiency:',design$Dea,'\n')
