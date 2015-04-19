@@ -3,9 +3,9 @@
 # set directories
 cd ~/Desktop/GitHub/radiant_dev
 dirsource=../radiant_miniCRAN/src/contrib/
-dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.1/
-dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.1/
-dirwin=../radiant_miniCRAN/bin/windows/contrib/3.1/
+dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.2/
+dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.2/
+dirwin=../radiant_miniCRAN/bin/windows/contrib/3.2/
 
 # updating gh packages
 # cd ../DT
@@ -32,25 +32,25 @@ rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
 
-# rm $dirsource/shinyAce*
-# rm $dirmac/shinyAce*
-# rm $dirmac_mav/shinyAce*
-# rm $dirwin/shinyAce*
-#
-# rm $dirsource/rpivotTable*
-# rm $dirmac/rpivotTable*
-# rm $dirmac_mav/rpivotTable*
-# rm $dirwin/rpivotTable*
-#
-# rm $dirsource/shiny*
-# rm $dirmac/shiny*
-# rm $dirmac_mav/shiny*
-# rm $dirwin/shiny*
-#
-# rm $dirsource/DT*
-# rm $dirmac/DT*
-# rm $dirmac_mav/DT*
-# rm $dirwin/DT*
+rm $dirsource/shinyAce*
+rm $dirmac/shinyAce*
+rm $dirmac_mav/shinyAce*
+rm $dirwin/shinyAce*
+
+rm $dirsource/rpivotTable*
+rm $dirmac/rpivotTable*
+rm $dirmac_mav/rpivotTable*
+rm $dirwin/rpivotTable*
+
+rm $dirsource/shiny*
+rm $dirmac/shiny*
+rm $dirmac_mav/shiny*
+rm $dirwin/shiny*
+
+rm $dirsource/DT*
+rm $dirmac/DT*
+rm $dirmac_mav/DT*
+rm $dirwin/DT*
 
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1
