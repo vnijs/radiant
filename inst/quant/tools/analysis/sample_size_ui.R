@@ -48,7 +48,7 @@ output$ui_sample_size <- renderUI({
 		  		value = state_init("ss_pop_size", 10^6), step = 1000))
 		),
     help_and_report(modal_title = 'Sample size', fun_name = 'sample_size',
-                    help_file = inclRmd(file.path(r_path,"/quant/tools/help/sample_size.Rmd")))
+                    help_file = inclRmd(file.path(r_path,"quant/tools/help/sample_size.Rmd")))
  	)
 })
 

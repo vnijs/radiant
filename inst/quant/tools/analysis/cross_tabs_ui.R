@@ -43,7 +43,7 @@ output$ui_cross_tabs <- renderUI({
 		),
   	help_and_report(modal_title = "Cross-tabs",
   	                fun_name = "cross_tabs",
-  	                help_file = inclMD(file.path(r_path,"/quant/tools/help/cross_tabs.md")))
+  	                help_file = inclMD(file.path(r_path,"quant/tools/help/cross_tabs.md")))
   )
 })
 

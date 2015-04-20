@@ -13,7 +13,7 @@ output$ui_View <- renderUI({
     wellPanel(
       uiOutput("ui_view_vars")
     ),
-    help_modal('View','viewHelp',inclMD(file.path(r_path,"/base/tools/help/view.md")))
+    help_modal('View','viewHelp',inclMD(file.path(r_path,"base/tools/help/view.md")))
   )
 })
 
@@ -50,7 +50,7 @@ output$dataviewer <- DT::renderDataTable({
 #     wellPanel(
 #       uiOutput("ui_view_vars_old")
 #     ),
-#     help_modal('View','viewHelp',inclMD(file.path(r_path,"/base/tools/help/view.md")))
+#     help_modal('View','viewHelp',inclMD(file.path(r_path,"base/tools/help/view.md")))
 #   )
 # })
 

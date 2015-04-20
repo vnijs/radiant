@@ -99,7 +99,7 @@ output$ui_Manage <- renderUI({
         actionButton('removeDataButton', 'Remove data')
       )
     ),
-    help_modal('Manage','manageHelp',inclMD(file.path(r_path,"/base/tools/help/manage.md")))
+    help_modal('Manage','manageHelp',inclMD(file.path(r_path,"base/tools/help/manage.md")))
   )
 })
 

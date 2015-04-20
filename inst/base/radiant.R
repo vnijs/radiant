@@ -21,8 +21,9 @@ saveStateOnRefresh <- function(session = session) {
         )
         if (r_local) rm(r_env, envir = .GlobalEnv)
       } else {
-        if (is.null(input$uploadState))
-          try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
+        if (is.null(input$uploadState)) {
+          if(exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
+        }
       }
     })
   })
@@ -271,12 +272,12 @@ help_and_report <- function(modal_title, fun_name, help_file) {
 # function to render .md files to html
 inclMD <- function(path) {
   markdown::markdownToHTML(path, fragment.only = TRUE, options = c(""),
-                           stylesheet=file.path(r_path,"/base/www/empty.css"))
+                           stylesheet=file.path(r_path,"base/www/empty.css"))
 }
 
 # function to render .Rmd files to html - does not embed image or add css
 inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, options = "",
-                   stylesheet=file.path(r_path,"/base/www/empty.css"))
+                   stylesheet=file.path(r_path,"base/www/empty.css"))
 }

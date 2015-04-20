@@ -2,11 +2,11 @@
 # Other elements in help menu
 #######################################
 output$help_videos <- renderUI({
-  file.path(r_path,"/base/tools/app/tutorials.md") %>% inclMD %>% HTML
+  file.path(r_path,"base/tools/app/tutorials.md") %>% inclMD %>% HTML
 })
 
 output$help_about <- renderUI({
-  file.path(r_path,"/base/tools/app/about.md") %>% inclMD %>% HTML
+  file.path(r_path,"base/tools/app/about.md") %>% inclMD %>% HTML
 })
 
 #######################################
@@ -21,7 +21,7 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
   all_help <- c()
   for (i in names(local_hd)) {
     all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),
-                      inclMD(paste0(help_path,local_hd[i])),
+                      inclMD(file.path(help_path,local_hd[i])),
                       sep="\n")
   }
   mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
@@ -31,18 +31,18 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
 
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
                "Explore" = "explore.md", "Merge" = "merge.md", "Transform" = "transform.md")
-output$help_data <- reactive(append_help("help_data", file.path(r_path,"/base/tools/help/")))
+output$help_data <- reactive(append_help("help_data", file.path(r_path,"base/tools/help/")))
 
 help_sample <- c("Sampling" = "sampling.md", "Sample size" = "sample_size.Rmd")
-output$help_sample <- reactive(append_help("help_sample", file.path(r_path,"/quant/tools/help/"), Rmd = TRUE))
+output$help_sample <- reactive(append_help("help_sample", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
 help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
                     "Single proportion" = "single_prop.md", "Compare proportions" = "compare_props.md",
                     "Cross-tabs" = "cross_tabs.md")
-output$help_base_menu <- reactive(append_help("help_base_menu", file.path(r_path,"/quant/tools/help/")))
+output$help_base_menu <- reactive(append_help("help_base_menu", file.path(r_path,"quant/tools/help/")))
 
 help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.Rmd")
-output$help_regression <- reactive(append_help("help_regression", file.path(r_path,"/quant/tools/help/"), Rmd = TRUE))
+output$help_regression <- reactive(append_help("help_regression", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
 
 help_switch <- function(help_all, help_str, help_on = TRUE) {
@@ -138,22 +138,22 @@ output$help_quant <- renderUI({
 
 
 help_maps <- c("(Dis)similarity" = "mds.md", "Attributes" = "pmap.md")
-output$help_maps <- reactive(append_help("help_maps", file.path(r_path,"/marketing/tools/help/")))
+output$help_maps <- reactive(append_help("help_maps", file.path(r_path,"marketing/tools/help/")))
 observe( help_switch(input$help_maps_all, "help_maps") )
 observe( help_switch(input$help_maps_none, "help_maps", help_on = FALSE) )
 
 help_factor <- c("Pre-factor" = "pre_factor.md", "Factor" = "full_factor.md")
-output$help_factor <- reactive(append_help("help_factor", file.path(r_path,"/marketing/tools/help/")))
+output$help_factor <- reactive(append_help("help_factor", file.path(r_path,"marketing/tools/help/")))
 observe( help_switch(input$help_factor_all, "help_factor") )
 observe( help_switch(input$help_factor_none, "help_factor", help_on = FALSE) )
 
 help_cluster <- c("Hierarchical" = "hier_clus.md", "Kmeans" = "kmeans_clus.md")
-output$help_cluster <- reactive(append_help("help_cluster", file.path(r_path,"/marketing/tools/help/")))
+output$help_cluster <- reactive(append_help("help_cluster", file.path(r_path,"marketing/tools/help/")))
 observe( help_switch(input$help_cluster_all, "help_cluster") )
 observe( help_switch(input$help_cluster_none, "help_cluster", help_on = FALSE) )
 
 help_conjoint <- c("Conjoint" = "conjoint.md", "Conjoint profiles" = "conjoint_profiles.md")
-output$help_conjoint <- reactive(append_help("help_conjoint", file.path(r_path,"/marketing/tools/help/")))
+output$help_conjoint <- reactive(append_help("help_conjoint", file.path(r_path,"marketing/tools/help/")))
 observe( help_switch(input$help_conjoint_all, "help_conjoint") )
 observe( help_switch(input$help_conjoint_none, "help_conjoint", help_on = FALSE) )
 

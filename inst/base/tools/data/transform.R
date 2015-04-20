@@ -171,7 +171,7 @@ output$ui_Transform <- renderUI({
     ),
 	  textInput("tr_dataset", "Save changes to:", input$dataset)
   	),
-		help_modal('Transform','transformHelp',inclMD(file.path(r_path,"/base/tools/help/transform.md")))
+		help_modal('Transform','transformHelp',inclMD(file.path(r_path,"base/tools/help/transform.md")))
 
 	)
 })

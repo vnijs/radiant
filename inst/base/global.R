@@ -44,10 +44,10 @@ if (Sys.getenv('SHINY_PORT') == "") {
 }
 
 # adding the figures path to avoid making a copy of all figures in www/figures
-addResourcePath("figures", file.path(r_path,"/base/tools/help/figures/"))
-addResourcePath("imgs", file.path(r_path,"/base/www/imgs/"))
-addResourcePath("js", file.path(r_path,"/base/www/js/"))
-# addResourcePath("css", file.path(r_path,"/base/www/css/"))
+addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
+addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
+addResourcePath("js", file.path(r_path,"base/www/js/"))
+# addResourcePath("css", file.path(r_path,"base/www/css/"))
 
 ### options used for debugging
 # options(warn=0)

@@ -7,7 +7,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #'
 #' @name radiant
 #' @docType package
-#' @import ggplot2 shiny dplyr htmlwidgets
+#' @import ggplot2 shiny dplyr yaml htmlwidgets
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add

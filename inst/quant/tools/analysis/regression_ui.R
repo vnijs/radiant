@@ -236,7 +236,7 @@ output$ui_regression <- renderUI({
 	  ),
   	help_and_report(modal_title = "Linear regression (OLS)",
   	                fun_name = "regression",
-  	                help_file = inclRmd(file.path(r_path,"/quant/tools/help/regression.Rmd")))
+  	                help_file = inclRmd(file.path(r_path,"quant/tools/help/regression.Rmd")))
 	)
 })
 

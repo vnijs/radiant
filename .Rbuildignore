@@ -6,3 +6,4 @@ radiant.sublime-project
 radiant.sublime-workspace
 build/
 cran-comments.md
+coverage.R

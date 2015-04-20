@@ -56,7 +56,7 @@ output$ui_Merge <- renderUI({
     ),
     help_and_report(modal_title = "Merge",
                     fun_name = "merge",
-                    help_file = inclMD(file.path(r_path, "/base/tools/help/merge.md")))
+                    help_file = inclMD(file.path(r_path, "base/tools/help/merge.md")))
   )
 })
 

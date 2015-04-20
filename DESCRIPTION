@@ -24,6 +24,7 @@ Imports:
 		ggdendro (>= 0.1.15),
 		broom (>= 0.3.6),
 		pryr (>= 0.1),
+		yaml (>= 2.1.13),
 		htmlwidgets (>= 0.3.2),
 		rpivotTable (>= 0.1.3.4),
 		shiny (>= 0.11.1.9004),
