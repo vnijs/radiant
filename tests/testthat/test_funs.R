@@ -1,4 +1,3 @@
-library(radiant)
 
 context("Radiant functions")
 

@@ -7,6 +7,7 @@ setwd("~/gh/radiant_dev")
 
 # define so that examples are not run
 coverage_test <<- TRUE
+
 cov <- package_coverage()
 # print(cov)  # doesn't seem to be working
 shine(cov)

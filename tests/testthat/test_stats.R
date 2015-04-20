@@ -1,4 +1,3 @@
-library(radiant)
 # library(png)
 
 trim_trailing <- function (x) sub("\\s+$", "", x)

@@ -4,9 +4,12 @@ devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shin
 devtools::install_github(c("jeroenooms/jsonlite", "rstudio/shiny"))
 devtools::install_github(c("ramnathv/htmlwidgets","rstudio/DT"))
 
+options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown")
 # install.packages("ggvis")
 # install.packages("testthat")
+# devtools::install_github('rstudio/shinyapps')
+# devtools::install_github("themel/sendmailR")
 # devtools::install_github("jimhester/covr")
 
 library(shinyapps)
