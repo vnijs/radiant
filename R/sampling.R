@@ -20,6 +20,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
                      smp_print_full = TRUE) {
 
   dat <- getdata(dataset, smp_var, filt = data_filter)
+  if (!is.character(dataset)) dataset <- "-----"
 
 	# example list of names obtained from http://listofrandomnames.com
   dat$rnd_number <- runif (nrow(dat), min = 0, max = 1)

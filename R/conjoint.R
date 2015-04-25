@@ -22,6 +22,7 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
                      ca_rev = FALSE) {
 
 	dat <- getdata(dataset, c(ca_dep_var, ca_indep_var))
+	if (!is.character(dataset)) dataset <- "-----"
 
 	# in case : was used to select a range of variables
   var_check(ca_indep_var, colnames(dat)[-1]) %>%

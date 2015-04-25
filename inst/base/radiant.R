@@ -22,7 +22,7 @@ saveStateOnRefresh <- function(session = session) {
         if (r_local) rm(r_env, envir = .GlobalEnv)
       } else {
         if (is.null(input$uploadState)) {
-          if(exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
+          if (exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
         }
       }
     })

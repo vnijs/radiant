@@ -26,6 +26,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
                        reg_check = "") {
 
   dat <- getdata(dataset, c(reg_dep_var, reg_indep_var), filt = data_filter)
+  if (!is.character(dataset)) dataset <- "-----"
 
   vars <- ""
   var_check(reg_indep_var, colnames(dat)[-1], reg_int_var) %>%

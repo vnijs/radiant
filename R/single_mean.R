@@ -25,6 +25,7 @@ single_mean <- function(dataset, sm_var,
                         sm_sig_level = .95) {
 
 	dat <- getdata(dataset, sm_var, filt = data_filter)
+	if (!is.character(dataset)) dataset <- "-----"
 
 	t.test(dat, mu = sm_comp_value, alternative = sm_alternative,
 	       conf.level = sm_sig_level) %>% tidy -> res

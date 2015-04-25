@@ -20,6 +20,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
                        data_filter = "") {
 
 	dat <- getdata(dataset, c(ct_var1, ct_var2), filt = data_filter)
+  if (!is.character(dataset)) dataset <- "-----"
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)

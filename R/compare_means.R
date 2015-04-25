@@ -29,6 +29,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 	vars <- c(cm_var1, cm_var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
+	if (!is.character(dataset)) dataset <- "-----"
 
 	# in case : was used for cm_var2
 	vars <- colnames(dat)
@@ -92,11 +93,11 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
-#' dat <<- diamonds %>% tbl_df
-#' result <- compare_means("dat","cut","price")
-#' dat <<- diamonds %>% tbl_df %>% group_by(cut)
-#' result <- compare_means("dat","cut","price")
-#' rm(dat, envir = .GlobalEnv)
+#' summary(result)
+#' result <- diamonds %>% tbl_df %>% compare_means("x","y")
+#' summary(result)
+#' result <- diamonds %>% tbl_df %>% group_by(cut) %>% compare_means("x",c("x","y"))
+#' summary(result)
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{plot.compare_means}} to plot results

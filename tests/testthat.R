@@ -1,5 +1,6 @@
 # use shift-cmd-t to run all tests
 library(testthat)
+library(radiant)
 
 test_check("radiant")
 

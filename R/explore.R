@@ -30,6 +30,7 @@ explore <- function(dataset, expl_vars = "",
     vars %<>% c(expl_byvar)
 
   dat <- getdata(dataset, vars, filt = data_filter)
+  if (!is.character(dataset)) dataset <- "-----"
 
   # in case : was used
   expl_vars <- colnames(head(dat) %>% select_(.dots = expl_vars))

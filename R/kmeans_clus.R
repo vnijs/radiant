@@ -66,6 +66,8 @@ kmeans_clus <- function(dataset, km_vars,
 
 	nr_obs <- length(km_out$cluster)
 
+	if (!is.character(dataset)) dataset <- "-----"
+
 	environment() %>% as.list %>% set_class(c("kmeans_clus",class(.)))
 }
 

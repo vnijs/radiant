@@ -30,6 +30,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                     glm_check = "") {
 
   dat <- getdata(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
+  if (!is.character(dataset)) dataset <- "-----"
 
   if (glm_levels == "")
     glm_levels <- dat[,glm_dep_var] %>% as.character %>% as.factor %>% levels(.) %>% .[1]

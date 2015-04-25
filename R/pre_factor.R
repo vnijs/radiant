@@ -23,6 +23,8 @@ pre_factor <- function(dataset, pf_var,
 	dat <- getdata(dataset, pf_var, filt = data_filter)
 	nrObs <- nrow(dat)
 
+	if (!is.character(dataset)) dataset <- "-----"
+
 	if (nrObs <= ncol(dat)) {
 		ret <- "Data should have more observations than variables.\nPlease reduce the number of variables." %>%
 						 set_class(c("pre_factor",class(.)))

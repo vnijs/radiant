@@ -30,6 +30,7 @@ full_factor <- function(dataset, ff_var,
                         ff_rotation = "varimax") {
 
 	dat <- getdata(dataset, ff_var, filt = data_filter)
+	if (!is.character(dataset)) dataset <- "-----"
 
 	nrObs <- nrow(dat)
 	if (nrObs <= ncol(dat)) {

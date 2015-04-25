@@ -19,11 +19,11 @@ See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example
 }
 \examples{
 result <- compare_means("diamonds","cut","price")
-dat <<- diamonds \%>\% tbl_df
-result <- compare_means("dat","cut","price")
-dat <<- diamonds \%>\% tbl_df \%>\% group_by(cut)
-result <- compare_means("dat","cut","price")
-rm(dat, envir = .GlobalEnv)
+summary(result)
+result <- diamonds \%>\% tbl_df \%>\% compare_means("x","y")
+summary(result)
+result <- diamonds \%>\% tbl_df \%>\% group_by(cut) \%>\% compare_means("x",c("x","y"))
+summary(result)
 }
 \seealso{
 \code{\link{compare_means}} to calculate results

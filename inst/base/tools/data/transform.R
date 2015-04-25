@@ -56,9 +56,12 @@ inv <- function(x) 1/x
 normalize <- function(x,y) x/y
 
 # use as.character in case x is a factor
-d_mdy <- function(x) { if (is.factor(x)) as.character(x) else x } %>% mdy %>% as.Date
-d_dmy <- function(x) { if (is.factor(x)) as.character(x) else x } %>% dmy %>% as.Date
-d_ymd <- function(x) { if (is.factor(x)) as.character(x) else x } %>% ymd %>% as.Date
+d_mdy <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
+           lubridate::mdy(.) %>% as.Date
+d_dmy <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
+           lubridate::dmy(.) %>% as.Date
+d_ymd <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
+           lubridate::ymd(.) %>% as.Date
 
 # test
 # dat <- read.table(header = TRUE, text = "date	days
@@ -83,7 +86,8 @@ d_ymd <- function(x) { if (is.factor(x)) as.character(x) else x } %>% ymd %>% as
 # dat$date %>% d_dmy %T>% print %>% class
 
 # http://www.noamross.net/blog/2014/2/10/using-times-and-dates-in-r---presentation-code.html
-d_ymd_hms <- function(x) { if (x %>% is.factor) as.character(x) else x } %>% ymd_hms
+d_ymd_hms <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
+               lubridate::ymd_hms(.)
 
 as_int <- function(x) {
 	if (is.factor(x)) {

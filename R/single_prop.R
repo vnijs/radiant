@@ -28,6 +28,7 @@ single_prop <- function(dataset, sp_var,
                         sp_sig_level = .95) {
 
 	dat <- getdata(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
+	if (!is.character(dataset)) dataset <- "-----"
 
 	levs <- levels(dat[,sp_var])
 	if (sp_levels != "") {

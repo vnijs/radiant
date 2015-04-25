@@ -48,12 +48,8 @@ visualize <- function(dataset, viz_xvar,
   if (viz_facet_col != ".") vars %<>% c(., viz_facet_col)
 
   # so you can also pass-in a data.frame
-  if (is.character(dataset)) {
-    dat <- getdata(dataset, vars, filt = data_filter)
-  } else {
-    dat <- dataset
-    dataset <- "dataset"
-  }
+  dat <- getdata(dataset, vars, filt = data_filter)
+  if (!is.character(dataset)) dataset <- "-----"
 
   # if : is used to specify a range of variables
   if (length(vars) < ncol(dat)) {

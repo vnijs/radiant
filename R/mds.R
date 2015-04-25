@@ -30,6 +30,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 
 	mds_dim_number <- as.numeric(mds_dim_number)
 	dat <- getdata(dataset, c(mds_id1, mds_id2, mds_dis), filt = data_filter)
+	if (!is.character(dataset)) dataset <- "-----"
 
 	dis <- dat[,mds_dis]
 	id1 <- dat[,mds_id1] %>% as.character

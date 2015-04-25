@@ -94,17 +94,19 @@ getdata <- function(dataset,
 
   filt %<>% gsub("\\s","", .)
 
-  { if (exists("r_env")) {
+  { if (!is.character(dataset)) {
+      dataset
+    } else if (exists("r_env")) {
       r_env$r_data[[dataset]]
     } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-      if (exists("r_local")) { if (r_local) cat("Dataset", dataset, "loaded from r_data list\n") }
+      if (exists("r_local")) { if (r_local) message("Dataset ", dataset, " loaded from r_data list\n") }
       r_data[[dataset]]
     } else if (exists(dataset)) {
       d_env <- pryr::where(dataset)
-      # cat("Dataset", dataset, "loaded from", environmentName(d_env), "environment\n")
+      # message("Dataset ", dataset, " loaded from ", environmentName(d_env), " environment\n")
       d_env[[dataset]]
     } else {
-      paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
+      message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
         stop %>% return
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed

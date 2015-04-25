@@ -24,8 +24,10 @@ correlation <- function(dataset, cor_var,
                         cor_type = "pearson") {
 
 	# data.matrix as the last step in the chain is about 25% slower system.time
-	getdata(dataset, cor_var, filt = data_filter) %>%
-		mutate_each(funs(as.numeric)) -> dat
+	dat <- getdata(dataset, cor_var, filt = data_filter) %>%
+		mutate_each(funs(as.numeric))
+
+	if (!is.character(dataset)) dataset <- "-----"
 
   environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }

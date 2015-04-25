@@ -28,6 +28,7 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 
 	pmap_dim_number <- as.numeric(pmap_dim_number)
 	dat <- getdata(dataset, c(pmap_brand, pmap_attr), filt = data_filter)
+	if (!is.character(dataset)) dataset <- "-----"
 
 	brands <- dat[,1] %>% as.character %>% gsub("^\\s+|\\s+$", "", .)
 	f_data <- dat[,-1]

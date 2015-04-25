@@ -31,6 +31,8 @@ hier_clus <- function(dataset, hc_vars,
 			}
 		} %>% hclust(d = ., method = hc_meth) -> hc_out
 
+	if (!is.character(dataset)) dataset <- "-----"
+
 	environment() %>% as.list %>% set_class(c("hier_clus",class(.)))
 }
 
