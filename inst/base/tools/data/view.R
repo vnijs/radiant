@@ -44,7 +44,7 @@ output$dataviewer <- DT::renderDataTable({
 #     selected = state_multiple("view_vars_old",vars, vars), multiple = TRUE,
 #     selectize = FALSE, size = min(15, length(vars)))
 # })
-
+#
 # output$ui_View_old <- renderUI({
 #   list(
 #     wellPanel(
@@ -53,13 +53,13 @@ output$dataviewer <- DT::renderDataTable({
 #     help_modal('View','viewHelp',inclMD(file.path(r_path,"base/tools/help/view.md")))
 #   )
 # })
-
-
+#
+#
 # output$dataviewer_old <- shiny::renderDataTable({
-
+#
 #   if (not_available(input$view_vars_old)) return()
 #   select_(.getdata(), .dots = input$view_vars_old)
-
+#
 # }, options = list(orderClasses = TRUE, caseInsensitive = TRUE,
 #                   lengthMenu = list(c(10, 25, 50, -1),c('10','25','50','All')),
 #                   pageLength = 10, search = list(regex = TRUE)))
