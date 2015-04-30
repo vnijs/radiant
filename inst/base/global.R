@@ -25,6 +25,36 @@ expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm
                        "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
                        "# missing" = "nmissing")
 
+# from: http://stackoverflow.com/questions/5076593/how-to-determine-if-you-have-an-internet-connection-in-r
+# hasIP <- function() {
+#   if (.Platform$OS.type == "windows") {
+#     ip <- system("ipconfig", intern = TRUE)
+#   } else {
+#     ip <- system("ifconfig", intern = TRUE)
+#   }
+#
+#   validIP <- "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
+#   any(grep(validIP, ip))
+# }
+#
+# withMathJaxIP <- function(...) {
+#   if(hasIP()) {
+#     withMathJax(...)
+#   } else {
+#     tagList(...)
+#   }
+# }
+
+withMathJaxIP <- withMathJax
+# withMathJaxIP <- function(...)  tagList(...)
+
+# if(havingIP()) {
+#   withMathJaxIP <- withMathJax
+# } else {
+#   withMathJaxIP <- function(...) tagList(...)
+# }
+# if(havingIP()) withMathJaxIP(.) else . }
+
 # environment to hold session information
 r_sessions <- new.env(parent = emptyenv())
 

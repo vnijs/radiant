@@ -268,7 +268,7 @@ help_and_report <- function(modal_title, fun_name, help_file) {
            <i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
            <div style='clear: both;'></div>",
           fun_name, fun_name, fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
-  enc2utf8 %>% HTML %>% withMathJax()
+  enc2utf8 %>% HTML %>% withMathJaxIP
 }
 
 # function to render .md files to html
