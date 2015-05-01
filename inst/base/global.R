@@ -79,10 +79,12 @@ addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
 
 ### options used for debugging
-# options(warn=0)
-# options(warn=2)
 # options(shiny.trace = TRUE)
 # options(shiny.error=recover)
+
+### options used for debugging when warnings are given
+# options(warn=0)
+# options(warn=2)
 
 # Windows or Mac
 # if (.Platform$OS.type == 'windows') {

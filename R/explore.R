@@ -208,6 +208,10 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
 }
 
+###########################################
+## turn functions below into functional ...
+###########################################
+
 #' Number of missing values
 #' @param x Input variable
 #' @return number of missing values

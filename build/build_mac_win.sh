@@ -47,6 +47,16 @@ rm $dirmac/shiny*
 rm $dirmac_mav/shiny*
 rm $dirwin/shiny*
 
+rm $dirsource/htmlwidgets*
+rm $dirmac/htmlwidgets*
+rm $dirmac_mav/htmlwidgets*
+rm $dirwin/htmlwidgets*
+
+rm $dirsource/jsonlite*
+rm $dirmac/jsonlite*
+rm $dirmac_mav/jsonlite*
+rm $dirwin/jsonlite*
+
 rm $dirsource/DT*
 rm $dirmac/DT*
 rm $dirmac_mav/DT*

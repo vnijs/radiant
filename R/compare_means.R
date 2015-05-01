@@ -41,13 +41,13 @@ compare_means <- function(dataset, cm_var1, cm_var2,
   }
 
 	# check variances in the data
-  if (dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
+  if (dat %>% summarise_each(., funs(var(., na.rm = TRUE))) %>% min %>% {. == 0})
   	return("Test could not be calculated. Please select another variable.")
 
 	# resetting option to independent if the number of observations is unequal
   # summary on factor gives counts
   if (cm_paired == "paired")
-    if (summary(dat[["variable"]]) %>% { max(.) != min(.) })
+    if (summary(dat[["variable"]]) %>% {max(.) != min(.)})
       cm_paired <- "independent (obs. per level unequal)"
 
 	##############################################
@@ -71,7 +71,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, n, conf.lev = .95)
-	 	se * qt(conf.lev/2 + .5, n-1)
+	 	se * qt(conf.lev/2 + .5, n - 1)
 
 	dat %>%
 		group_by_("variable") %>%
@@ -80,7 +80,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
                    			ci = ci_calc(se,n,cm_sig_level))) %>%
     rename_(.dots = setNames("variable", " ")) -> dat_summary
 
-	vars <- paste0(vars, collapse=", ")
+	vars <- paste0(vars, collapse = ", ")
   environment() %>% as.list %>% set_class(c("compare_means",class(.)))
 }
 
@@ -175,23 +175,23 @@ plot.compare_means <- function(x,
 		colnames(object$dat_summary)[1] <- "variable"
 		# use of `which` allows the user to change the order of the plots shown
 		plots[[which("bar" == cm_plots)]] <- ggplot(object$dat_summary,
-	    aes_string(x="variable", y="mean", fill="variable")) +
-	    geom_bar(stat="identity")  +
-	 		geom_errorbar(width=.1, aes(ymin=mean-ci, ymax=mean+ci)) +
-	 		geom_errorbar(width=.05, aes(ymin=mean-se, ymax=mean+se), colour = "blue") +
+	    aes_string(x = "variable", y = "mean", fill = "variable")) +
+	    geom_bar(stat = "identity")  +
+	 		geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
+	 		geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), colour = "blue") +
 	 		theme(legend.position = "none")
 	}
 
 	# graphs on full data
 	if ("box" %in% cm_plots) {
 		plots[[which("box" == cm_plots)]] <-
-			ggplot(dat, aes_string(x=var1, y=var2, fill=var1)) +
-				geom_boxplot(alpha=.7) + theme(legend.position = "none")
+			ggplot(dat, aes_string(x = var1, y = var2, fill = var1)) +
+				geom_boxplot(alpha = .7) + theme(legend.position = "none")
 	}
 
 	if ("density" %in% cm_plots) {
 		plots[[which("density" == cm_plots)]] <-
-			ggplot(dat, aes_string(x=var2, fill=var1)) + geom_density(alpha=.7)
+			ggplot(dat, aes_string(x = var2, fill = var1)) + geom_density(alpha = .7)
 	}
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
