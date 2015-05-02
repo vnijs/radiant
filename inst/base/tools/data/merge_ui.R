@@ -73,7 +73,8 @@ observe({
   if (not_pressed(input$merge_report)) return()
   isolate({
     update_report(inp_main = clean_args(merge_inputs(), merge_args),
-                  fun_name = "mergedata", outputs = character(0), figs = FALSE)
+                  fun_name = "mergedata", outputs = character(0), pre_cmd = "",
+                  figs = FALSE)
   })
 })
 
