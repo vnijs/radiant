@@ -16,7 +16,9 @@ file.copy("../radiant_dev/inst/marketing/data/shopping.rda",
           "~/Desktop/shopping.rda",overwrite = TRUE)
 
 system('make')
-setwd('base'); system('make')
+setwd('base/app')
+knitr::knit('merge.Rmd')
+setwd('../../base'); system('make')
 setwd('../marketing'); system('make')
 setwd('../quant'); system('make')
 setwd('../')

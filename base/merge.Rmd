@@ -4,5 +4,5 @@ title: Data > Merge
 
 ***
 
-```{r child='app/merge.Rmd'}
+```{r child='app/merge.md'}
 ```
