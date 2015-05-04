@@ -73,6 +73,13 @@ summary(result)
 plot(result)
 ```
 
+An alternative way to write this code is to use `piping` (see [dplyr](http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html) and [magrittr](http://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html) vignettes):
+
+```{r}
+salary %>% compare_means("rank", "salary") %>%
+  {summary(.); plot(.)}
+```
+
 We can also run regressions and get output that would require writting many lines of code to produce from scratch:
 
 ```{r}

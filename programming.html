@@ -304,6 +304,26 @@ Samples  : independent
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-6-1.png" title="" alt="" width="672" /></p>
+<p>An alternative way to write this code is to use <code>piping</code> (see <a href="http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html">magrittr</a> vignettes):</p>
+<pre class="r"><code>salary %&gt;% compare_means(&quot;rank&quot;, &quot;salary&quot;) %&gt;%
+  {summary(.); plot(.)}</code></pre>
+<pre><code>Pairwise comparisons (no adjustment)
+Data     : ----- 
+Variables: rank, salary 
+Samples  : independent 
+
+                mean   n        sd       se       ci
+  AsstProf  80775.99  67  8174.113  998.627 1993.823
+ AssocProf  93876.44  64 13831.700 1728.962 3455.056
+      Prof 126772.11 266 27718.675 1699.541 3346.322
+
+ Alt. hyp.                         Null hyp.              diff      p.value    
+ AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 &lt; .001  ***
+ AsstProf not equal to Prof        AsstProf = Prof        -45996.12 &lt; .001  ***
+ AssocProf not equal to Prof       AssocProf = Prof       -32895.67 &lt; .001  ***
+
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <p>We can also run regressions and get output that would require writting many lines of code to produce from scratch:</p>
 <pre class="r"><code>result &lt;- regression(&quot;diamonds&quot;, &quot;price&quot;, c(&quot;carat&quot;,&quot;clarity&quot;))
 summary(result, reg_sum_check = &quot;confint&quot;)</code></pre>
@@ -364,9 +384,9 @@ clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
 9      SI1     9  72769.811 70229.110 75310.513 2540.701
 10     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
 <pre class="r"><code>plot(result, reg_plots = &quot;coef&quot;)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
-<pre class="r"><code>plot(result, reg_plots = &quot;dashboard&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" width="672" /></p>
+<pre class="r"><code>plot(result, reg_plots = &quot;dashboard&quot;)</code></pre>
+<p><img src="programming_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" width="672" /></p>
 <p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
 <pre class="r"><code># set working directory to your Desktop
 setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
@@ -396,10 +416,10 @@ Observations: 20 </code></pre>
 # default plots - looks like there is a big jump in the overall within-cluster
 # heterogeneity in the step from 3 to 2 segments
 plot(result)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" width="672" /></p>
+<p><img src="programming_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code># show the dendrogram with cutoff at 0
 plot(result, hc_plots = &quot;dendro&quot;, hc_cutoff = 0)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-9-2.png" title="" alt="" width="672" /></p>
+<p><img src="programming_files/figure-html/unnamed-chunk-10-2.png" title="" alt="" width="672" /></p>
 <pre class="r"><code># plots created above suggest 3 clusters may be  most appropriate
 # use kmeans to create the clusters
 # generate output and save clustermembership to the datafile
@@ -428,7 +448,7 @@ Cluster 3 33.71%
 Between cluster variance accounts for 73.93% of the
 total variance in the data (higher is better).</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-9-3.png" title="" alt="" width="672" /></p>
+<p><img src="programming_files/figure-html/unnamed-chunk-10-3.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>save_membership(result)</code></pre>
 <pre><code>Dataset shopping changed in R_GlobalEnv environment</code></pre>
 <pre class="r"><code># was the data really changed?

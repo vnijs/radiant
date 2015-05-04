@@ -18,6 +18,10 @@ title: R resources
 
 <http://rpackages.ianhowson.com/cran/dplyr/>
 
+## Parsing text data (regular expressions)
+
+<http://cran.r-project.org/web/packages/stringr/vignettes/stringr.html>
+
 ## ggplot2
 
 <http://www.cookbook-r.com/Graphs/>
@@ -31,6 +35,8 @@ title: R resources
 In R(studio) enter: `help(package = "radiant")`
 
 <http://rpackages.ianhowson.com/radiant>
+
+Blog: <http://vnijs.github.io/blog/>
 
 ## News
 

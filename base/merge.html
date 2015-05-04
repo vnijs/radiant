@@ -194,15 +194,578 @@ img {
 
 <hr />
 <blockquote>
-<p>Merge two data file loaded in the Radiant app</p>
+<p>Merge (join) two datasets</p>
 </blockquote>
-<p>There are four merge options in Radiant at this time:</p>
-<ul>
-<li><p>inner_join return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.</p></li>
-<li><p>left_join return all rows from x, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned. semi_join return all rows from x where there are matching values in y, keeping just columns from x.</p></li>
-<li><p>A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, where a semi join will never duplicate rows of x.</p></li>
-<li><p>anti_join return all rows from x where there are not matching values in y, keeping just columns from x</p></li>
-</ul>
+<p>There are four merge options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr">dplyr</a> package developed by Hadley Wickham and Romain Francois on <a href="https://github.com/hadley/dplyr">GitHub</a>.</p>
+<p>We will use two small datasets, <code>superheroes</code> and <code>publishers</code>, created by Jenny Bryan to illustrate the different merge / join types (see source information below).</p>
+<table>
+<caption>Superheroes</caption>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+<th align="left">publisher</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">Marvel</td>
+</tr>
+<tr class="even">
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+</tr>
+<tr class="odd">
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+</tr>
+<tr class="even">
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+</tr>
+<tr class="odd">
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+</tr>
+<tr class="even">
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">DC</td>
+</tr>
+<tr class="odd">
+<td align="left">Hellboy</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">Dark Horse Comics</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Publishers</caption>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="odd">
+<td align="left">Image</td>
+<td align="left">1992</td>
+</tr>
+</tbody>
+</table>
+<p>In the screen-shot of the Data &gt; Merge tab below we see the two datasets. The tables share variable <code>publisher</code> that is automatically select for the merge / join. There are different ways to merge / join the data that we will discuss below.</p>
+<p><img src="figures/merge_heroes_publishers.png" alt="merge" /></p>
+<p><br></p>
+<div id="inner-join-superheroes-publishers" class="section level3">
+<h3>Inner join (superheroes, publishers)</h3>
+<blockquote>
+<p>An inner join return all rows from x with matching values in y, and all columns from both x and y. If there are multiple matches between x and y, all match combinations are returned.</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="even">
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="odd">
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="even">
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+<tr class="odd">
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+<tr class="even">
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+</tbody>
+</table>
+<p>In the table above we lose <em>Hellboy</em> because, although this hero does appear in <code>superheroes</code>, the publisher (<em>Dark Horse Comics</em>) does not appear in <code>publishers</code>. The join result has all variables from <code>superheroes</code>, plus <em>yr_founded</em>, from <code>publishers</code>. We can visualize an inner join with the venn-diagram below:</p>
+<p><img src="figures/inner_join.png" alt="inner_join" /></p>
+<p>Notice that a join can change the row and variable order so you should not rely on these in an analysis. The command that Radiant uses internally is:</p>
+<pre class="r"><code>mergedata(dataset = &quot;superheroes&quot;, dataset2 = &quot;publishers&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;left_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
+<p>The same result can be achieved with the following R-code:</p>
+<pre class="r"><code>merged_superheroes &lt;- inner_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="semi-join-superheroes-publishers" class="section level3">
+<h3>Semi join (superheroes, publishers)</h3>
+<blockquote>
+<p>A semi join keeps only columns from x. Whereas an inner join will return one row of x for each matching row of y, a semi join will never duplicate rows of x.</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+<th align="left">publisher</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+</tr>
+<tr class="even">
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+</tr>
+<tr class="odd">
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">DC</td>
+</tr>
+<tr class="even">
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">Marvel</td>
+</tr>
+<tr class="odd">
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+</tr>
+<tr class="even">
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+</tr>
+</tbody>
+</table>
+<p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The command that Radiant uses internally is:</p>
+<pre class="r"><code>mergedata(dataset = &quot;superheroes&quot;, dataset2 = &quot;publishers&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;semi_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
+<p>The same result can be achieved with the following R-code:</p>
+<pre class="r"><code>merged_superheroes &lt;- semi_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="left-join-superheroes-publishers" class="section level3">
+<h3>Left join (superheroes, publishers)</h3>
+<blockquote>
+<p>A left join returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned.</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="even">
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="odd">
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="even">
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+<tr class="odd">
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+<tr class="even">
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+<tr class="odd">
+<td align="left">Hellboy</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">Dark Horse Comics</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p>We result table contains <code>superheroes</code> with variable <code>yr_founded</code> from <code>publishers</code>. <em>Hellboy</em>, whose publisher does not appear in <code>publishers</code>, has an <code>NA</code> for <em>yr_founded</em>. We can visualize a left join with the venn-diagram below:</p>
+<p><img src="figures/left_join.png" alt="left_join" /></p>
+<p>The command that Radiant uses internally is:</p>
+<pre class="r"><code>mergedata(dataset = &quot;superheroes&quot;, dataset2 = &quot;publishers&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;semi_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
+<p>The same result can be achieved with the following R-code:</p>
+<pre class="r"><code>merged_superheroes &lt;- semi_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="anti-join-superheroes-publishers" class="section level3">
+<h3>Anti join (superheroes, publishers)</h3>
+<blockquote>
+<p>An anti join returns all rows from x without matching values in y, keeping only columns from x</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+<th align="left">publisher</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Hellboy</td>
+<td align="left">good</td>
+<td align="left">male</td>
+<td align="left">Dark Horse Comics</td>
+</tr>
+</tbody>
+</table>
+<p>We now get <strong>only</strong> <em>Hellboy</em> and we do not get the variable <em>yr_founded</em>. We can visualize an anti join with the venn-diagram below:</p>
+<p><img src="figures/anti_join.png" alt="anti_join" /></p>
+<p><br></p>
+</div>
+<div id="dataset-order" class="section level3">
+<h3>Dataset order</h3>
+<p>Note that the order of the datasets matters for semi, left, and anti join. If we setup the Data &gt; Merge tab as below the results are as follow:</p>
+<p><img src="figures/merge_publishers_heroes.png" alt="merge" /></p>
+<p><br></p>
+</div>
+<div id="inner-join-publishers-superheroes" class="section level3">
+<h3>Inner join (publishers, superheroes)</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+</tr>
+<tr class="even">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+</tr>
+<tr class="odd">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+</tr>
+<tr class="odd">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+</tr>
+</tbody>
+</table>
+<p>Every publisher that has a match in <code>superheroes</code> appears multiple times, once for each match. Apart from variable order, this is the same result we had above.</p>
+<p><br></p>
+</div>
+<div id="semi-join-publishers-superheroes" class="section level3">
+<h3>Semi join (publishers, superheroes)</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+</tr>
+<tr class="even">
+<td align="left">DC</td>
+<td align="left">1934</td>
+</tr>
+</tbody>
+</table>
+<p>With semi join the effect of switching the dataset order is more clear. Even though there are multiple matches for each publisher only one is shown. Publisher <em>Image</em> is lost, because it is not in <code>superheroes</code>.</p>
+<p><br></p>
+</div>
+<div id="left-join-publishers-superheroes" class="section level3">
+<h3>Left join (publishers, superheroes)</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+</tr>
+<tr class="even">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+</tr>
+<tr class="odd">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+</tr>
+<tr class="odd">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+</tr>
+<tr class="odd">
+<td align="left">Image</td>
+<td align="left">1992</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p>As before, we get first dataset back (here <code>publishers</code>) but not with added variables from <code>superheroes</code> dataset. Note that, in contrast to the inner join, publisher <em>Image</em> survives, even though no superheroes from <em>Image</em> appear in <code>superheroes</code>. As a result, <em>Image</em> has NAs for variables <em>name</em>, <em>alignment</em>, and <em>gender</em>.</p>
+<p><br></p>
+</div>
+<div id="anti-join-publishers-superheroes" class="section level3">
+<h3>Anti join (publishers, superheroes)</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Image</td>
+<td align="left">1992</td>
+</tr>
+</tbody>
+</table>
+<p>Only publisher <em>Image</em> is retained now and all variables in <code>publishers</code>.</p>
+<p><br></p>
+</div>
+<div id="outer-join-publishers-superheroes" class="section level3">
+<h3>Outer join (publishers, superheroes)</h3>
+<p>An outer join combines two data.frames, keeping rows and columns that appear in either. Note that this join is not currently available in <em>dplyr</em>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="left">yr_founded</th>
+<th align="left">name</th>
+<th align="left">alignment</th>
+<th align="left">gender</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Dark Horse Comics</td>
+<td align="left">NA</td>
+<td align="left">Hellboy</td>
+<td align="left">good</td>
+<td align="left">male</td>
+</tr>
+<tr class="even">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Batman</td>
+<td align="left">good</td>
+<td align="left">male</td>
+</tr>
+<tr class="odd">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Joker</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+</tr>
+<tr class="even">
+<td align="left">DC</td>
+<td align="left">1934</td>
+<td align="left">Catwoman</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+</tr>
+<tr class="odd">
+<td align="left">Image</td>
+<td align="left">1992</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Magneto</td>
+<td align="left">bad</td>
+<td align="left">male</td>
+</tr>
+<tr class="odd">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Storm</td>
+<td align="left">good</td>
+<td align="left">female</td>
+</tr>
+<tr class="even">
+<td align="left">Marvel</td>
+<td align="left">1939</td>
+<td align="left">Mystique</td>
+<td align="left">bad</td>
+<td align="left">female</td>
+</tr>
+</tbody>
+</table>
+<p>In this table we keep <em>Hellboy</em> (even though <em>Dark Horse Comics</em> is not in <code>publishers</code>) and <em>Image</em> (even though the publisher is not listed in <code>superheroes</code>) and get variables from both datasets. Observations without a match are assigned the value NA for variables from the <em>other</em> dataset. We can visualize an outer join with the venn-diagram below:</p>
+<p><img src="figures/outer_join.png" alt="outer_join" /></p>
+<p>The command that Radiant uses internally is:</p>
+<pre class="r"><code>mergedata(dataset = &quot;publishers&quot;, dataset2 = &quot;superheroes&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;outer_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
+<p>The same result can be achieved with the following R-code:</p>
+<pre class="r"><code>merged_superheroes &lt;- merge(superheroes, publishers, by = &quot;publisher&quot;, all = TRUE)</code></pre>
+<p>or if you have the Radiant library loaded with:</p>
+<pre class="r"><code>merged_superheroes &lt;- outer_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<hr />
+<p>Based on <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html">Cheatsheet for dplyr join functions</a> by Jenny Bryan</p>
+</div>
 
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
