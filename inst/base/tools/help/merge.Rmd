@@ -4,11 +4,19 @@ There are four merge options available in Radiant from the [dplyr](http://www.rd
 
 We will use two small datasets, `superheroes` and `publishers`, created by Jenny Bryan to illustrate the different merge / join types (see source information below).
 
-```{r echo = FALSE}
+
+```{r results = 'asis', echo = FALSE}
 suppressPackageStartupMessages(library(radiant))
-knitr::kable(superheroes, align = 'l', caption = "Superheroes")
-knitr::kable(publishers, align = 'l', caption = "Publishers")
+knitr::kable(superheroes, align = 'l', format = 'html', caption = "Superheroes", table.attr = "width='100%'")
 ```
+
+<br>
+
+```{r results = 'asis', echo = FALSE}
+knitr::kable(publishers, align = 'l', format = 'html', caption = "Publishers", table.attr = "width='50%'")
+```
+
+<br>
 
 In the screen-shot of the Data > Merge tab below we see the two datasets. The tables share variable `publisher` that is automatically select for the merge / join. There are different ways to merge / join the data that we will discuss below.
 
@@ -16,14 +24,16 @@ In the screen-shot of the Data > Merge tab below we see the two datasets. The ta
 
 <br>
 
-
 ### Inner join (superheroes, publishers)
 
 > An inner join return all rows from x with matching values in y, and all columns from both x and y. If there are multiple matches between x and y, all match combinations are returned.
 
-```{r echo = FALSE}
-inner_join(superheroes, publishers, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+inner_join(superheroes, publishers, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 In the table above we lose _Hellboy_ because, although this hero does appear in `superheroes`, the publisher (_Dark Horse Comics_) does not appear in `publishers`. The join result has all variables from `superheroes`, plus _yr\_founded_, from `publishers`. We can visualize an inner join with the venn-diagram below:
 
@@ -47,9 +57,12 @@ merged_superheroes <- inner_join(superheroes, publishers, by = "publisher")
 
 > A semi join keeps only columns from x. Whereas an inner join will return one row of x for each matching row of y, a semi join will never duplicate rows of x.
 
-```{r echo = FALSE}
-semi_join(superheroes, publishers, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+semi_join(superheroes, publishers, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 We get a similar table as with `inner_join` but it contains only the variables in `superheroes`. The command that Radiant uses internally is:
 
@@ -69,9 +82,12 @@ merged_superheroes <- semi_join(superheroes, publishers, by = "publisher")
 
 > A left join returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned.
 
- ```{r echo = FALSE}
-left_join(superheroes, publishers, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+left_join(superheroes, publishers, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 We result table contains `superheroes` with variable `yr_founded` from `publishers`. _Hellboy_, whose publisher does not appear in `publishers`, has an `NA` for _yr_founded_. We can visualize a left join with the venn-diagram below:
 
@@ -95,9 +111,12 @@ merged_superheroes <- semi_join(superheroes, publishers, by = "publisher")
 
 > An anti join returns all rows from x without matching values in y, keeping only columns from x
 
-```{r echo = FALSE}
-anti_join(superheroes, publishers, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+anti_join(superheroes, publishers, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 We now get **only** _Hellboy_ and we do not get the variable _yr\_founded_. We can visualize an anti join with the venn-diagram below:
 
@@ -115,9 +134,12 @@ Note that the order of the datasets matters for semi, left, and anti join. If we
 
 ### Inner join (publishers, superheroes)
 
-```{r echo = FALSE}
-inner_join(publishers, superheroes, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+inner_join(publishers, superheroes, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 Every publisher that has a match in `superheroes` appears multiple times, once for each match. Apart from variable order, this is the same result we had above.
 
@@ -125,9 +147,12 @@ Every publisher that has a match in `superheroes` appears multiple times, once f
 
 ### Semi join (publishers, superheroes)
 
-```{r echo = FALSE}
-semi_join(publishers, superheroes, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+semi_join(publishers, superheroes, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='50%'")
 ```
+
+<br>
 
 With semi join the effect of switching the dataset order is more clear. Even though there are multiple matches for each publisher only one is shown. Publisher _Image_ is lost, because it is not in `superheroes`.
 
@@ -135,9 +160,12 @@ With semi join the effect of switching the dataset order is more clear. Even tho
 
 ### Left join (publishers, superheroes)
 
-```{r echo = FALSE}
-left_join(publishers, superheroes, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+left_join(publishers, superheroes, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 As before, we get first dataset back (here `publishers`) but not with added variables from `superheroes` dataset. Note that, in contrast to the inner join, publisher _Image_ survives, even though no superheroes from _Image_ appear in `superheroes`. As a result, _Image_ has NAs for variables _name_, _alignment_, and _gender_.
 
@@ -145,9 +173,12 @@ As before, we get first dataset back (here `publishers`) but not with added vari
 
 ### Anti join (publishers, superheroes)
 
-```{r echo = FALSE}
-anti_join(publishers, superheroes, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+anti_join(publishers, superheroes, by = "publisher") %>%
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='50%'")
 ```
+
+<br>
 
 Only publisher _Image_ is retained now and all variables in `publishers`.
 
@@ -157,9 +188,12 @@ Only publisher _Image_ is retained now and all variables in `publishers`.
 
 An outer join combines two data.frames, keeping rows and columns that appear in either. Note that this join is not currently available in _dplyr_.
 
-```{r echo = FALSE}
-outer_join(publishers, superheroes, by = "publisher") %>% knitr::kable(., align = 'l')
+```{r results = 'asis', echo = FALSE}
+outer_join(publishers, superheroes, by = "publisher") %>% 
+  knitr::kable(., align = 'l', format = 'html', table.attr = "width='100%'")
 ```
+
+<br>
 
 In this table we keep _Hellboy_ (even though _Dark Horse Comics_ is not in `publishers`) and _Image_ (even though the publisher is not listed in `superheroes`) and get variables from both datasets. Observations without a match are assigned the value NA for variables from the _other_ dataset. We can visualize an outer join with the venn-diagram below:
 
