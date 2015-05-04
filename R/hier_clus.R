@@ -31,7 +31,7 @@ hier_clus <- function(dataset, hc_vars,
 			}
 		} %>% hclust(d = ., method = hc_meth) -> hc_out
 
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	environment() %>% as.list %>% set_class(c("hier_clus",class(.)))
 }
@@ -77,6 +77,7 @@ summary.hier_clus <- function(object, ...) {
 #' result <- hier_clus("shopping", hc_vars = c("v1:v6"))
 #' plot(result, hc_plots = c("diff", "scree"), hc_cutoff = .05)
 #' plot(result, hc_plots = "dendro", hc_cutoff = 0)
+#' shopping %>% hier_clus(hc_vars = c("v1:v6")) %>% plot
 #'
 #' @seealso \code{\link{summary.hier_clus}} to summarize results
 #' @seealso \code{\link{plot.hier_clus}} to plot results

@@ -36,6 +36,7 @@ See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example
 }
 \examples{
 result <- compare_means("diamonds","cut","price")
+result <- diamonds \%>\% compare_means("cut","price")
 }
 \seealso{
 \code{\link{summary.compare_means}} to summarize results

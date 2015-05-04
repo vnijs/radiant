@@ -25,6 +25,8 @@ summary(result)
 summary(result, pmap_cutoff = .3)
 result <- pmap("computer","Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business"))
 summary(result)
+computer \%>\% pmap("Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business")) \%>\%
+  summary
 }
 \seealso{
 \code{\link{pmap}} to calculate results

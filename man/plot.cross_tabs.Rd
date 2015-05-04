@@ -24,6 +24,7 @@ See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in
 \examples{
 result <- cross_tabs("newspaper", "Income", "Newspaper")
 plot(result, ct_check = c("observed","expected","chi_sq"))
+newspaper \%>\% cross_tabs("Income", "Newspaper") \%>\% plot(c("observed","expected"))
 }
 \seealso{
 \code{\link{cross_tabs}} to calculate results

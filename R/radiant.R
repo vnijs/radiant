@@ -94,7 +94,8 @@ getdata <- function(dataset,
 
   filt %<>% gsub("\\s","", .)
 
-  { if (!is.character(dataset)) {
+  # { if (!is_string(dataset)) {
+  { if (!is_string(dataset)) {
       dataset
     } else if (exists("r_env")) {
       r_env$r_data[[dataset]]
@@ -199,6 +200,43 @@ getclass <- function(dat) {
 #' @export
 is_empty <- function(x, empty = "") if (is.null(x) || x == empty) TRUE else FALSE
 
+#' Is input a string?
+#'
+#' @details Is input a string
+#'
+#' @param x Input
+#'
+#' @return TRUE if string, else FALSE
+#'
+#' @examples
+#' is_string("")
+#' is_string("data")
+#' is_string(c("data","data"))
+#' is_string(NULL)
+#'
+#' @export
+is_string <- function(x)
+  if (is.character(x) && length(x) == 1 && !is_empty(x)) TRUE else FALSE
+
+#' Outer join
+#'
+#' @details Join two data.frames, keeping rows and columns that appear in either
+#'
+#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset2 Dataset name (string) to merge with `dataset`. This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param by Variables used to merge/join `dataset` and `dataset2`
+#'
+#' @return The merged data.frame
+#'
+#' @examples
+#' outer_join(mtcars[,-1], mtcars[,-5])
+#' outer_join(mtcars[,1:3], mtcars[,2:4])
+#' outer_join(mtcars[,1:3], mtcars[,2:4], by = c("cyl","disp"))
+#'
+#' @export
+outer_join <- function(dataset, dataset2, by = intersect(names(dataset), names(dataset2)))
+  merge(dataset, dataset2, by = by, all = TRUE)
+
 #' Create a launcher for Windows (.bat)
 #'
 #' @details On Windows a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app
@@ -233,7 +271,7 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 
     filename <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/') %>%
                   paste0("radiant.bat")
-    launch_string <- paste0(Sys.which('R'), " -e \"if (!require(radiant)) { options(repos = 'http://vnijs.github.io/radiant_miniCRAN/'); install.packages('radiant'); }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
+    launch_string <- paste0(Sys.which('R'), " -e \"if (!require(radiant)) { install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/') }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
     cat(launch_string, file=filename, sep="\n")
 
     if (file.exists(filename))
@@ -279,7 +317,7 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
     filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-    launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  options(repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n  install.packages('radiant')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
+    launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
     cat(launch_string,file=filename,sep="\n")
     Sys.chmod(filename, mode = "0755")
 

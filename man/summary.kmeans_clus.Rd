@@ -20,6 +20,7 @@ See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an examp
 \examples{
 result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
 summary(result)
+shopping \%>\% kmeans_clus(km_vars = c("v1:v6"), km_nr_clus = 3) \%>\% summary
 }
 \seealso{
 \code{\link{kmeans_clus}} to generate results

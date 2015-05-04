@@ -28,6 +28,7 @@ See \url{http://vnijs.github.io/radiant/marketing/hier_clus.html} for an example
 result <- hier_clus("shopping", hc_vars = c("v1:v6"))
 plot(result, hc_plots = c("diff", "scree"), hc_cutoff = .05)
 plot(result, hc_plots = "dendro", hc_cutoff = 0)
+shopping \%>\% hier_clus(hc_vars = c("v1:v6")) \%>\% plot
 }
 \seealso{
 \code{\link{summary.hier_clus}} to summarize results

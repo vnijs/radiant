@@ -5,13 +5,15 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param dataset2 Dataset name (string) to merge with `dataset`. This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param merge_vars Variables used to merge/join `dataset` and `dataset2`
-#' @param merge_type The main join types from the dplyr package are provided. `inner_join` returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `semi_join` returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping only columns from x
+#' @param merge_type The main join types from the dplyr package are provided. `inner_join` returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `semi_join` returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping only columns from x.
 #' @param merge_name Name for the merged dataset
 #'
 #' @return If (reactive) list `r_data` exists the merged dataset added as `merge_name`. Else the merged dataset will be returned as `merge_name`
 #'
 #' @examples
 #' mergedata("titanic","titanic_pred",c("pclass","sex","age")) %>% head
+#' titanic %>% mergedata("titanic_pred",c("pclass","sex","age")) %>% head
+#' titanic %>% mergedata(titanic_pred,c("pclass","sex","age")) %>% head
 #' rm(merged_titanic, envir = .GlobalEnv)
 #'
 #' @export

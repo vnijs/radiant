@@ -22,6 +22,7 @@ See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example i
 \examples{
 result <- correlation("diamonds",c("price","carat","clarity"))
 summary(result, cor_cutoff = .3)
+diamonds \%>\% correlation("price:clarity") \%>\% summary
 }
 \seealso{
 \code{\link{correlation}} to calculate results

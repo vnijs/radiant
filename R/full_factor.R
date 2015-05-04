@@ -30,7 +30,7 @@ full_factor <- function(dataset, ff_var,
                         ff_rotation = "varimax") {
 
 	dat <- getdata(dataset, ff_var, filt = data_filter)
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	nrObs <- nrow(dat)
 	if (nrObs <= ncol(dat)) {
@@ -80,6 +80,8 @@ full_factor <- function(dataset, ff_var,
 #' summary(result, ff_cutoff = 0, ff_sort = FALSE)
 #' summary(result, ff_cutoff = 0, ff_sort = TRUE)
 #' summary(result, ff_cutoff = .5, ff_sort = TRUE)
+#' diamonds %>% full_factor(c("price","carat","depth","table","x")) %>% summary
+#' diamonds %>% full_factor(c("price","carat","depth","table","x")) %>% summary(ff_cutoff = .5)
 #'
 #' @seealso \code{\link{full_factor}} to calculate results
 #' @seealso \code{\link{plot.full_factor}} to plot results

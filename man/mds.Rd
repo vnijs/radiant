@@ -33,6 +33,7 @@ See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Ra
 }
 \examples{
 result <- mds("city","from","to","distance")
+summary(result)
 result <- mds("diamonds","clarity","cut","price")
 summary(result)
 }

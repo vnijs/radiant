@@ -35,6 +35,7 @@ See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example
 }
 \examples{
 result <- compare_props("titanic", "pclass", "survived")
+result <- titanic \%>\% compare_props("pclass", "survived")
 }
 \seealso{
 \code{\link{summary.compare_props}} to summarize results

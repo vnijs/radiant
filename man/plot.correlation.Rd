@@ -20,6 +20,7 @@ See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example i
 \examples{
 result <- correlation("diamonds",c("price","carat","clarity"))
 plot(result)
+diamonds \%>\% correlation("price:clarity") \%>\% plot
 }
 \seealso{
 \code{\link{correlation}} to calculate results

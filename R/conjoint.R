@@ -11,7 +11,8 @@
 #' @return A list with all variables defined in the function as an object of class conjoint
 #'
 #' @examples
-#' result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+#' result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+#' result <- mp3 %>% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
 #'
 #' @seealso \code{\link{summary.conjoint}} to summarize results
 #' @seealso \code{\link{plot.conjoint}} to plot results
@@ -22,7 +23,7 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
                      ca_rev = FALSE) {
 
 	dat <- getdata(dataset, c(ca_dep_var, ca_indep_var))
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	# in case : was used to select a range of variables
   var_check(ca_indep_var, colnames(dat)[-1]) %>%
@@ -52,8 +53,9 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+#' result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
 #' summary(result, ca_vif = TRUE)
+#' mp3 %>% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape") %>% summary(., ca_vif = TRUE)
 #'
 #' @seealso \code{\link{conjoint}} to generate results
 #' @seealso \code{\link{plot.conjoint}} to plot results

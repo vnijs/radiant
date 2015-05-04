@@ -71,6 +71,14 @@ cp ../*.tgz $dirmac
 mv ../*.tgz $dirmac_mav
 mv ../*.zip $dirwin
 
+rm ../radiant_miniCRAN/bin/macosx/contrib/3.1/radiant*
+rm ../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.1/radiant*
+rm ../radiant_miniCRAN/bin/windows/contrib/3.1/radiant*
+
+cp $dirmac/radiant* ../radiant_miniCRAN/bin/macosx/contrib/3.1/
+cp $dirmac_mav/radiant* ../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.1/
+cp $dirwin/radiant* ../radiant_miniCRAN/bin/windows/contrib/3.1/
+
 # write package files for CRAN structure
 R --save < build/write_package_files.R 2>&1
 

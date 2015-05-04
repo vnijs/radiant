@@ -27,7 +27,7 @@ correlation <- function(dataset, cor_var,
 	dat <- getdata(dataset, cor_var, filt = data_filter) %>%
 		mutate_each(funs(as.numeric))
 
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
   environment() %>% as.list %>% set_class(c("correlation",class(.)))
 }
@@ -43,6 +43,7 @@ correlation <- function(dataset, cor_var,
 #' @examples
 #' result <- correlation("diamonds",c("price","carat","clarity"))
 #' summary(result, cor_cutoff = .3)
+#' diamonds %>% correlation("price:clarity") %>% summary
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation}} to plot results
@@ -89,6 +90,7 @@ summary.correlation <- function(object,
 #' @examples
 #' result <- correlation("diamonds",c("price","carat","clarity"))
 #' plot(result)
+#' diamonds %>% correlation("price:clarity") %>% plot
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation}} to summarize results

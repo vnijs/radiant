@@ -23,7 +23,7 @@ pre_factor <- function(dataset, pf_var,
 	dat <- getdata(dataset, pf_var, filt = data_filter)
 	nrObs <- nrow(dat)
 
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	if (nrObs <= ncol(dat)) {
 		ret <- "Data should have more observations than variables.\nPlease reduce the number of variables." %>%
@@ -65,6 +65,7 @@ pre_factor <- function(dataset, pf_var,
 #' @examples
 #' result <- pre_factor("diamonds",c("price","carat","table"))
 #' summary(result)
+#' diamonds %>% pre_factor(c("price","carat","table")) %>% summary
 #' result <- pre_factor("computer","HighEnd:Business")
 #' summary(result)
 #'

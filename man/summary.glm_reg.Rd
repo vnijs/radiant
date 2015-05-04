@@ -29,6 +29,7 @@ result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
 summary(result, glm_test_var = "pclass")
 res <- glm_reg("titanic", "survived", c("pclass","sex"), glm_int_var="pclass:sex", glm_levels="Yes")
 summary(res, glm_sum_check = c("vif","confint","odds"))
+titanic \%>\% glm_reg("survived", c("pclass","sex","age"), glm_levels = "Yes") \%>\% summary("vif")
 }
 \seealso{
 \code{\link{glm_reg}} to generate the results

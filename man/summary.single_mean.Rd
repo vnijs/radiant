@@ -20,6 +20,7 @@ See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example i
 \examples{
 result <- single_mean("diamonds","price")
 summary(result)
+diamonds \%>\% single_mean("price") \%>\% summary
 }
 \seealso{
 \code{\link{single_mean}} to generate the results

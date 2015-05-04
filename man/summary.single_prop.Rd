@@ -20,6 +20,7 @@ See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example i
 \examples{
 result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 summary(result)
+diamonds \%>\% single_prop("clarity", sp_levels = "IF", sp_comp_value = 0.05) \%>\% summary
 }
 \seealso{
 \code{\link{single_prop}} to generate the results

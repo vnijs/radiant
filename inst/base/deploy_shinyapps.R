@@ -15,11 +15,11 @@ options(repos = "http://cran.rstudio.com")
 library(shinyapps)
 fpath <- "~/gh/radiant_dev/inst/base"
 setwd(fpath)
-deployApp()
+deployApp(account = "vnijs")
 setwd(file.path(fpath,"../quant"))
-deployApp()
+deployApp(account = "vnijs")
 setwd(file.path(fpath,"../marketing"))
-deployApp()
+deployApp(account = "vnijs")
 
 # in case of problems
 # shinyapps::showLogs(entries=1000)

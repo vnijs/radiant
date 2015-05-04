@@ -14,6 +14,7 @@
 #'
 #' @examples
 #' result <- mds("city","from","to","distance")
+#' summary(result)
 #' result <- mds("diamonds","clarity","cut","price")
 #' summary(result)
 #'
@@ -30,7 +31,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 
 	mds_dim_number <- as.numeric(mds_dim_number)
 	dat <- getdata(dataset, c(mds_id1, mds_id2, mds_dis), filt = data_filter)
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	dis <- dat[,mds_dis]
 	id1 <- dat[,mds_id1] %>% as.character
@@ -52,7 +53,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 		mds_dis_mat[lower.tri(mds_dis_mat, diag = TRUE)] <- dis
 	} else {
 		# return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset." %>% set_class(c("mds",class(.))))
-		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset." %>% set_class(c("mds",class(.))))
 	}
 
 	mds_dis_mat %<>% set_rownames(lab) %>%
@@ -91,6 +92,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 #' result <- mds("city","from","to","distance")
 #' summary(result)
 #' summary(result, mds_round = 2)
+#' city %>% mds("from", "to","distance") %>% summary
 #'
 #' @seealso \code{\link{mds}} to calculate results
 #' @seealso \code{\link{plot.mds}} to plot results
@@ -98,7 +100,7 @@ mds <- function(dataset, mds_id1, mds_id2, mds_dis,
 #' @export
 summary.mds <- function(object, mds_round = 1, ...) {
 
-	if (is.character(object)) return(object)
+	if (is.character(object)) return(cat(object))
 
 	cat("(Dis)similarity based brand map (MDS)\n")
 	cat("Data        :", object$dataset, "\n")

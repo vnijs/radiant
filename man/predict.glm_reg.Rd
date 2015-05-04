@@ -25,7 +25,8 @@ See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Ra
 \examples{
 result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 predict(result, glm_predict_cmd = "pclass = levels(pclass)")
-predict(result, glm_predict_cmd = "sex = c('male','female')")
+glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes") \%>\%
+  predict(glm_predict_cmd = "sex = c('male','female')")
 }
 \seealso{
 \code{\link{glm_reg}} to generate the result

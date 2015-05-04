@@ -35,6 +35,7 @@ See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Ra
 }
 \examples{
 result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
+result <- glm_reg("titanic", "survived", c("pclass","sex"))
 }
 \seealso{
 \code{\link{summary.glm_reg}} to summarize the results

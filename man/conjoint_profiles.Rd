@@ -21,7 +21,9 @@ See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an
 \examples{
 ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
 result <- conjoint_profiles("ca_prof")
-rm(ca_prof)
+rm(ca_prof, envir = .GlobalEnv)
+result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) \%>\%
+            conjoint_profiles
 }
 \seealso{
 \code{\link{summary.conjoint_profiles}} to summarize results

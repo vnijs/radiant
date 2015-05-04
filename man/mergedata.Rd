@@ -14,7 +14,7 @@ mergedata(dataset, dataset2, merge_vars = "", merge_type = "inner_join",
 
 \item{merge_vars}{Variables used to merge/join `dataset` and `dataset2`}
 
-\item{merge_type}{The main join types from the dplyr package are provided. `inner_join` returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `semi_join` returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping only columns from x}
+\item{merge_type}{The main join types from the dplyr package are provided. `inner_join` returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `semi_join` returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping only columns from x.}
 
 \item{merge_name}{Name for the merged dataset}
 }
@@ -29,6 +29,8 @@ See \url{http://vnijs.github.io/radiant/base/merge.html} for an example in Radia
 }
 \examples{
 mergedata("titanic","titanic_pred",c("pclass","sex","age")) \%>\% head
+titanic \%>\% mergedata("titanic_pred",c("pclass","sex","age")) \%>\% head
+titanic \%>\% mergedata(titanic_pred,c("pclass","sex","age")) \%>\% head
 rm(merged_titanic, envir = .GlobalEnv)
 }
 

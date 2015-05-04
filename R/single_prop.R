@@ -28,7 +28,7 @@ single_prop <- function(dataset, sp_var,
                         sp_sig_level = .95) {
 
 	dat <- getdata(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	levs <- levels(dat[,sp_var])
 	if (sp_levels != "") {
@@ -60,6 +60,7 @@ single_prop <- function(dataset, sp_var,
 #' @examples
 #' result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
 #' summary(result)
+#' diamonds %>% single_prop("clarity", sp_levels = "IF", sp_comp_value = 0.05) %>% summary
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results

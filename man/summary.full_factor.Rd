@@ -27,6 +27,8 @@ summary(result)
 summary(result, ff_cutoff = 0, ff_sort = FALSE)
 summary(result, ff_cutoff = 0, ff_sort = TRUE)
 summary(result, ff_cutoff = .5, ff_sort = TRUE)
+diamonds \%>\% full_factor(c("price","carat","depth","table","x")) \%>\% summary
+diamonds \%>\% full_factor(c("price","carat","depth","table","x")) \%>\% summary(ff_cutoff = .5)
 }
 \seealso{
 \code{\link{full_factor}} to calculate results

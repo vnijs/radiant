@@ -15,6 +15,7 @@
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
+#' result <- titanic %>% compare_props("pclass", "survived")
 #'
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #' @seealso \code{\link{plot.compare_props}} to plot results
@@ -31,7 +32,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 
 	vars <- c(cp_var1, cp_var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	levs <- levels(dat[,cp_var2])
 	if (cp_levels != "") {
@@ -84,11 +85,11 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 	prop_input %>%
 		data.frame %>%
 		mutate(n = .[,1:2] %>% rowSums, p = .[,1] / n,
-					 se = (p * (1-p) / n) %>% sqrt,
+					 se = (p * (1 - p) / n) %>% sqrt,
        		 ci = ci_calc(se, cp_sig_level)) %>%
-		set_rownames({prop_input %>% rownames})-> dat_summary
+		set_rownames({prop_input %>% rownames}) -> dat_summary
 
-	vars <- paste0(vars, collapse=", ")
+	vars <- paste0(vars, collapse = ", ")
   environment() %>% as.list %>% set_class(c("compare_props",class(.)))
 }
 
@@ -102,6 +103,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
 #' summary(result)
+#' titanic %>% compare_props("pclass", "survived") %>% summary
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{plot.compare_props}} to plot results

@@ -26,7 +26,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
                        reg_check = "") {
 
   dat <- getdata(dataset, c(reg_dep_var, reg_indep_var), filt = data_filter)
-  if (!is.character(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- "-----"
 
   vars <- ""
   var_check(reg_indep_var, colnames(dat)[-1], reg_int_var) %>%
@@ -82,6 +82,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 #' summary(result, reg_sum_check = c("rmse","sumsquares","vif","confint"), reg_test_var = "clarity")
 #' result <- regression("shopping", "v1", c("v2","v3"))
 #' summary(result, reg_test_var = "v2")
+#' shopping %>% regression("v1", "v2:v6") %>% summary
 #'
 #' @seealso \code{\link{regression}} to generate the results
 #' @seealso \code{\link{plot.regression}} to plot results

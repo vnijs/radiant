@@ -20,6 +20,7 @@ See \url{http://vnijs.github.io/radiant/quant/sampling} for an example in Radian
 \examples{
 result <- sampling("rndnames","Names",10)
 summary(result)
+rndnames \%>\% sampling("Names",10) \%>\% summary
 }
 \seealso{
 \code{\link{sampling}} to generate the results

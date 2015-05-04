@@ -15,6 +15,7 @@
 #'
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
+#' result <- glm_reg("titanic", "survived", c("pclass","sex"))
 #'
 #' @seealso \code{\link{summary.glm_reg}} to summarize the results
 #' @seealso \code{\link{plot.glm_reg}} to plot the results
@@ -30,10 +31,10 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
                     glm_check = "") {
 
   dat <- getdata(dataset, c(glm_dep_var, glm_indep_var), filt = data_filter)
-  if (!is.character(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- "-----"
 
   if (glm_levels == "")
-    glm_levels <- dat[,glm_dep_var] %>% as.character %>% as.factor %>% levels(.) %>% .[1]
+    glm_levels <- dat[,glm_dep_var] %>% as.character %>% as.factor %>% levels %>% .[1]
 
   # transformation
   glm_dv <- dat[,glm_dep_var]
@@ -94,6 +95,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 #' summary(result, glm_test_var = "pclass")
 #' res <- glm_reg("titanic", "survived", c("pclass","sex"), glm_int_var="pclass:sex", glm_levels="Yes")
 #' summary(res, glm_sum_check = c("vif","confint","odds"))
+#' titanic %>% glm_reg("survived", c("pclass","sex","age"), glm_levels = "Yes") %>% summary("vif")
 #'
 #' @seealso \code{\link{glm_reg}} to generate the results
 #' @seealso \code{\link{plot.glm_reg}} to plot the results
@@ -346,7 +348,8 @@ plot.glm_reg <- function(x,
 #' @examples
 #' result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
 #' predict(result, glm_predict_cmd = "pclass = levels(pclass)")
-#' predict(result, glm_predict_cmd = "sex = c('male','female')")
+#' glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes") %>%
+#'   predict(glm_predict_cmd = "sex = c('male','female')")
 #'
 #' @seealso \code{\link{glm_reg}} to generate the result
 #' @seealso \code{\link{summary.glm_reg}} to summarize results

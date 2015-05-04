@@ -49,5 +49,6 @@ See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in R
 visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
 visualize("diamonds", "price:x", viz_type = "hist")
 visualize("diamonds", "carat:x", viz_yvar = "price", viz_type = "scatter")
+diamonds \%>\% visualize(c("price","carat","depth"), viz_type = "density")
 }
 

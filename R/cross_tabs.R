@@ -20,7 +20,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
                        data_filter = "") {
 
 	dat <- getdata(dataset, c(ct_var1, ct_var2), filt = data_filter)
-  if (!is.character(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- "-----"
 
 	dnn = c(paste("Group(",ct_var1,")",sep = ""), paste("Variable(",ct_var2,")",sep = ""))
 	tab <- table(dat[,ct_var1], dat[,ct_var2], dnn = dnn)
@@ -47,6 +47,7 @@ cross_tabs <- function(dataset, ct_var1, ct_var2,
 #' @examples
 #' result <- cross_tabs("newspaper", "Income", "Newspaper")
 #' summary(result, ct_check = c("observed","expected","chi_sq"))
+#' newspaper %>% cross_tabs("Income", "Newspaper") %>% summary("observed")
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
@@ -140,6 +141,7 @@ summary.cross_tabs <- function(object,
 #' @examples
 #' result <- cross_tabs("newspaper", "Income", "Newspaper")
 #' plot(result, ct_check = c("observed","expected","chi_sq"))
+#' newspaper %>% cross_tabs("Income", "Newspaper") %>% plot(c("observed","expected"))
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results

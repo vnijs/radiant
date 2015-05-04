@@ -30,7 +30,7 @@ explore <- function(dataset, expl_vars = "",
     vars %<>% c(expl_byvar)
 
   dat <- getdata(dataset, vars, filt = data_filter)
-  if (!is.character(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- "-----"
 
   # in case : was used
   expl_vars <- colnames(head(dat) %>% select_(.dots = expl_vars))
@@ -66,6 +66,8 @@ explore <- function(dataset, expl_vars = "",
 #' summary(result)
 #' result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
 #' summary(result)
+#' diamonds %>% explore("price:x") %>% summary
+#' diamonds %>% explore("price", expl_byvar = "cut", expl_fun = c("length", "skew")) %>% summary
 #'
 #' @seealso \code{\link{explore}} to generate summaries
 #' @seealso \code{\link{plot.explore}} to plot summaries

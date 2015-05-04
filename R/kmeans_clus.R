@@ -66,7 +66,7 @@ kmeans_clus <- function(dataset, km_vars,
 
 	nr_obs <- length(km_out$cluster)
 
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	environment() %>% as.list %>% set_class(c("kmeans_clus",class(.)))
 }
@@ -81,6 +81,7 @@ kmeans_clus <- function(dataset, km_vars,
 #' @examples
 #' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
 #' summary(result)
+#' shopping %>% kmeans_clus(km_vars = c("v1:v6"), km_nr_clus = 3) %>% summary
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results

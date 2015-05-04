@@ -20,7 +20,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
                      smp_print_full = TRUE) {
 
   dat <- getdata(dataset, smp_var, filt = data_filter)
-  if (!is.character(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- "-----"
 
 	# example list of names obtained from http://listofrandomnames.com
   dat$rnd_number <- runif (nrow(dat), min = 0, max = 1)
@@ -41,6 +41,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
 #' @examples
 #' result <- sampling("rndnames","Names",10)
 #' summary(result)
+#' rndnames %>% sampling("Names",10) %>% summary
 #'
 #' @seealso \code{\link{sampling}} to generate the results
 #'

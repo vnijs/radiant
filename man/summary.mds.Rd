@@ -23,6 +23,7 @@ See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Ra
 result <- mds("city","from","to","distance")
 summary(result)
 summary(result, mds_round = 2)
+city \%>\% mds("from", "to","distance") \%>\% summary
 }
 \seealso{
 \code{\link{mds}} to calculate results

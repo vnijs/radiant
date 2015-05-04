@@ -22,6 +22,7 @@
 #' visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
 #' visualize("diamonds", "price:x", viz_type = "hist")
 #' visualize("diamonds", "carat:x", viz_yvar = "price", viz_type = "scatter")
+#' diamonds %>% visualize(c("price","carat","depth"), viz_type = "density")
 #' @export
 visualize <- function(dataset, viz_xvar,
                       viz_yvar = "none",
@@ -49,7 +50,7 @@ visualize <- function(dataset, viz_xvar,
 
   # so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
-  if (!is.character(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- "-----"
 
   # if : is used to specify a range of variables
   if (length(vars) < ncol(dat)) {

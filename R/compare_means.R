@@ -15,6 +15,7 @@
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
+#' result <- diamonds %>% compare_means("cut","price")
 #'
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #' @seealso \code{\link{plot.compare_means}} to plot results
@@ -29,7 +30,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 	vars <- c(cm_var1, cm_var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
-	if (!is.character(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- "-----"
 
 	# in case : was used for cm_var2
 	vars <- colnames(dat)

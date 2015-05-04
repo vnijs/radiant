@@ -9,7 +9,9 @@
 #' @examples
 #' ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
 #' result <- conjoint_profiles("ca_prof")
-#' rm(ca_prof)
+#' rm(ca_prof, envir = .GlobalEnv)
+#' result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
+#'             conjoint_profiles
 #'
 #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
 #'
@@ -58,6 +60,8 @@ conjoint_profiles <- function(dataset) {
 #' result <- conjoint_profiles("ca_prof")
 #' summary(result)
 #' rm(ca_prof, envir = .GlobalEnv)
+#' readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
+#'   conjoint_profiles %>% summary
 #'
 #' @seealso \code{\link{conjoint_profiles}} to calculate results
 #'

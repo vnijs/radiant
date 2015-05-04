@@ -28,7 +28,6 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 
 	pmap_dim_number <- as.numeric(pmap_dim_number)
 	dat <- getdata(dataset, c(pmap_brand, pmap_attr), filt = data_filter)
-	if (!is.character(dataset)) dataset <- "-----"
 
 	brands <- dat[,1] %>% as.character %>% gsub("^\\s+|\\s+$", "", .)
 	f_data <- dat[,-1]
@@ -37,7 +36,7 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 	# in case : is used
 	if (length(pmap_attr) < ncol(f_data)) pmap_attr <- colnames(f_data)
 
-	fres <- sshhr( principal(cov(f_data), nfactors=pmap_dim_number,
+	fres <- sshhr( psych::principal(cov(f_data), nfactors=pmap_dim_number,
 	               rotate='varimax', scores=FALSE, oblique.scores=FALSE) )
 
 	m <- as.data.frame(fres$loadings[,colnames(fres$loadings)]) %>% as.matrix
@@ -54,6 +53,8 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 	}
 
 	rm(dat, f_data, m, cscm)
+
+	if (!is_string(dataset)) dataset <- "-----"
 
 	environment() %>% as.list %>% set_class(c("pmap",class(.)))
 }
@@ -72,6 +73,8 @@ pmap <- function(dataset, pmap_brand, pmap_attr,
 #' summary(result, pmap_cutoff = .3)
 #' result <- pmap("computer","Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business"))
 #' summary(result)
+#' computer %>% pmap("Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business")) %>%
+#'   summary
 #'
 #' @seealso \code{\link{pmap}} to calculate results
 #' @seealso \code{\link{plot.pmap}} to plot results
