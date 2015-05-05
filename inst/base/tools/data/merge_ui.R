@@ -33,7 +33,7 @@ output$ui_merge_vars <- renderUI({
     multiple = TRUE, size = length(vars), selectize = FALSE)
 })
 
-merge_type <- c("inner_join","left_join","semi_join","anti_join","outer_join")
+merge_type <- c("inner_join","left_join","right_join","full_join","semi_join","anti_join")
 
 output$ui_merge_type <- renderUI({
   selectInput("merge_type", "Merge type:", choices  = merge_type,

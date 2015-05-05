@@ -30,16 +30,16 @@ mergedata <- function(dataset, dataset2,
     r_env$r_data[[merge_name]] %>% head %>% print
     r_env$r_data[['datasetlist']] <- c(merge_name, r_env$r_data[['datasetlist']]) %>% unique
     r_env$r_data[[paste0(merge_name,"_descr")]] <-
-      paste0("\n### Merged\n\nDatasets: ", dataset, " and ", dataset2, "\n\nBy: ", paste0(merge_vars, collapse=", "), "\n\nOn: ", now())
-    cat("\nMerged data added as", merge_name)
+      paste0("\n### Merged\n\nDatasets: ", dataset, " and ", dataset2, " (", merge_type, ")\n\nBy: ", paste0(merge_vars, collapse=", "), "\n\nOn: ", now())
+    cat("\nMerged data added as", merge_name, "\n")
   } else if (exists("r_data")) {
     d_env <- pryr::where("r_data")
     d_env$r_data[[merge_name]] <- merge_fun(getdata(dataset), getdata(dataset2), by = merge_vars)
     d_env$r_data[[merge_name]] %>% head %>% print
     d_env$r_data[['datasetlist']] <- c(merge_name, d_env$r_data[['datasetlist']]) %>% unique
     d_env$r_data[[paste0(merge_name,"_descr")]] <-
-      paste0("\n### Merged\n\nDatasets: ", dataset, " and ", dataset2, "\n\nBy: ", paste0(merge_vars, collapse=", "), "\n\nOn: ", now())
-    cat("\nMerged data added to r_data as", merge_name)
+      paste0("\n### Merged\n\nDatasets: ", dataset, " and ", dataset2, " (", merge_type, ")\n\nBy: ", paste0(merge_vars, collapse=", "), "\n\nOn: ", now())
+    cat("\nMerged data added to r_data as", merge_name, "\n")
   } else {
     merge_fun(getdata(dataset), getdata(dataset2), by = merge_vars)
   }
