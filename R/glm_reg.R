@@ -197,7 +197,7 @@ summary.glm_reg <- function(object,
           print
         cat("\n")
       } else if(object$glm_link == "probit") {
-        cat("Odds ratios are not calculated Probit models\n")
+        cat("Odds ratios are not calculated for Probit models\n")
       }
 
     }
