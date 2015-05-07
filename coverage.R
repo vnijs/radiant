@@ -5,7 +5,7 @@ if (!require(covr)) {
 }
 
 setwd("~/gh/radiant_dev")
-library(radiant)
+# library(radiant)
 
 # define so that examples are not run
 # coverage_test <<- TRUE
@@ -14,6 +14,7 @@ library(radiant)
 # test_examples()
 cov <- package_coverage(type="example")
 # cov <- package_coverage(type="all")
+cov
 
 # print(cov)  # doesn't seem to be working
 shine(cov)
