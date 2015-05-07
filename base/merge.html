@@ -194,11 +194,12 @@ img {
 
 <hr />
 <blockquote>
-<p>Merge (join) two datasets</p>
+<p>Combine two datasets</p>
 </blockquote>
+<!-- Change Data > Merge to Data > Combine and add intersect(), union(), setdiff(), bind_rows() and bind_cols(). For intersect etc. another dataset with the same variables would be need (i.e., more publishers or more heroes). Start the discussion with bind_* to show that these may not always give you what you actually want, i.e., you may end up with duplicate rows/columns. -->
 <p>There are six merge (or join) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr">dplyr</a> package developed by Hadley Wickham and Romain Francois on <a href="https://github.com/hadley/dplyr">GitHub</a>.</p>
 <p>The examples below are adapted from <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html">Cheatsheet for dplyr join functions</a> by Jenny Bryan and focus on two small datasets, <code>superheroes</code> and <code>publishers</code>, to illustrate the different merge / join types.</p>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <caption>
 Superheroes
 </caption>
@@ -319,8 +320,7 @@ Dark Horse Comics
 </tr>
 </tbody>
 </table>
-<p><br></p>
-<table width="50%">
+<table class="table table-condensed table-hover" style="width:30%;">
 <caption>
 Publishers
 </caption>
@@ -361,7 +361,6 @@ Image
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>In the screen-shot of the Data &gt; Merge tab below we see the two datasets. The tables share the variable <em>publisher</em> which is automatically selected for the merge / join. Different merge / join options are available from the <code>Merge type</code> dropdown. You can also specify a name for the merged dataset in the <code>Data name</code> text input box.</p>
 <p><img src="figures/merge_heroes_publishers.png" alt="merge" /></p>
 <p><br></p>
@@ -371,7 +370,7 @@ Image
 <blockquote>
 <p>An inner join returns all rows from x with matching values in y, and all columns from both x and y. If there are multiple matches between x and y, all match combinations are returned.</p>
 </blockquote>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -496,11 +495,10 @@ DC
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>In the table above we lose <em>Hellboy</em> because, although this hero does appear in <code>superheroes</code>, the publisher (<em>Dark Horse Comics</em>) does not appear in <code>publishers</code>. The join result has all variables from <code>superheroes</code>, plus <em>yr_founded</em>, from <code>publishers</code>. We can visualize an inner join with the venn-diagram below:</p>
 <p><img src="figures/inner_join.png" alt="inner_join" /></p>
 <p>The command that Radiant uses internally is:</p>
-<pre class="r"><code>mergedata(&quot;superheroes&quot;, &quot;publishers&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;left_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
+<pre class="r"><code>mergedata(&quot;superheroes&quot;, &quot;publishers&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;inner_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
 <p>The same result can be achieved with the following R-code:</p>
 <pre class="r"><code>merged_superheroes &lt;- inner_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
 <p><br></p>
@@ -510,7 +508,7 @@ DC
 <blockquote>
 <p>A left join returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned.</p>
 </blockquote>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -652,7 +650,6 @@ NA
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>The join result contains <code>superheroes</code> with variable <code>yr_founded</code> from <code>publishers</code>. <em>Hellboy</em>, whose publisher does not appear in <code>publishers</code>, has an <code>NA</code> for <em>yr_founded</em>. We can visualize a left join with the venn-diagram below:</p>
 <p><img src="figures/left_join.png" alt="left_join" /></p>
 <p>The command that Radiant uses internally is:</p>
@@ -666,7 +663,7 @@ NA
 <blockquote>
 <p>A right join returns all rows from y, and all columns from y and x. If there are multiple matches between y and x, all match combinations are returned.</p>
 </blockquote>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -808,7 +805,6 @@ Image
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>The join result contains all rows and colums from <code>publishers</code> and all variables from <code>superheroes</code>. We lose <em>Hellboy</em>, whose publisher does not appear in <code>publishers</code>. <em>Image</em> is retained in the table but has <code>NA</code> values for the variables <em>name</em>, <em>alignment</em>, and <em>gender</em> from <code>superheroes</code>. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:</p>
 <p><img src="figures/right_join.png" alt="right_join" /></p>
 <p>The command that Radiant uses internally is:</p>
@@ -822,7 +818,7 @@ Image
 <blockquote>
 <p>A full join combines two datasets, keeping rows and columns that appear in either.</p>
 </blockquote>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -981,7 +977,6 @@ Image
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>In this table we keep <em>Hellboy</em> (even though <em>Dark Horse Comics</em> is not in <code>publishers</code>) and <em>Image</em> (even though the publisher is not listed in <code>superheroes</code>) and get variables from both datasets. Observations without a match are assigned the value NA for variables from the <em>other</em> dataset. We can visualize a full join with the venn-diagram below:</p>
 <p><img src="figures/full_join.png" alt="full_join" /></p>
 <p>The command that Radiant uses internally is:</p>
@@ -994,7 +989,7 @@ Image
 <blockquote>
 <p>A semi join keeps only columns from x. Whereas an inner join will return one row of x for each matching row of y, a semi join will never duplicate rows of x.</p>
 </blockquote>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1098,7 +1093,6 @@ Marvel
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The command that Radiant uses internally is:</p>
 <pre class="r"><code>mergedata(&quot;superheroes&quot;, &quot;publishers&quot;, merge_vars = &quot;publisher&quot;, merge_type = &quot;semi_join&quot;, merge_name = &quot;merged_superheroes&quot;)</code></pre>
 <p>The same result can be achieved with the following R-code:</p>
@@ -1110,7 +1104,7 @@ Marvel
 <blockquote>
 <p>An anti join returns all rows from x without matching values in y, keeping only columns from x</p>
 </blockquote>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1144,7 +1138,6 @@ Dark Horse Comics
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>We now get <strong>only</strong> <em>Hellboy</em>, the only superhero not in <code>publishers</code> and we do not get the variable <em>yr_founded</em> either. We can visualize an anti join with the venn-diagram below:</p>
 <p><img src="figures/anti_join.png" alt="anti_join" /></p>
 <p><br></p>
@@ -1157,7 +1150,7 @@ Dark Horse Comics
 </div>
 <div id="inner-join-publishers-superheroes" class="section level3">
 <h3>Inner join (publishers, superheroes)</h3>
-<table width="100%">
+<table class="table table-condensed table-hover" style="width:70%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1282,7 +1275,6 @@ female
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>Every publisher that has a match in <code>superheroes</code> appears multiple times, once for each match. Apart from variable and row order, this is the same result we had for the inner join shown above.</p>
 <p><br></p>
 </div>
@@ -1298,7 +1290,7 @@ female
 </div>
 <div id="semi-join-publishers-superheroes" class="section level3">
 <h3>Semi join (publishers, superheroes)</h3>
-<table width="50%">
+<table class="table table-condensed table-hover" style="width:30%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1328,13 +1320,12 @@ DC
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>With semi join the effect of switching the dataset order is more clear. Even though there are multiple matches for each publisher only one is shown. Contrast this with an inner join where “If there are multiple matches between x and y, all match combinations are returned.” We see that publisher <em>Image</em> is lost in the table because it is not in <code>superheroes</code>.</p>
 <p><br></p>
 </div>
 <div id="anti-join-publishers-superheroes" class="section level3">
 <h3>Anti join (publishers, superheroes)</h3>
-<table width="50%">
+<table class="table table-condensed table-hover" style="width:30%;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1356,7 +1347,6 @@ Image
 </tr>
 </tbody>
 </table>
-<p><br></p>
 <p>Only publisher <em>Image</em> is retained because both <em>Marvel</em> and <em>DC</em> are in <code>superheroes</code>. We keep only variables in <code>publishers</code>.</p>
 <p><br></p>
 <hr />
