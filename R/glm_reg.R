@@ -189,12 +189,17 @@ summary.glm_reg <- function(object,
     if (object$model$coeff %>% is.na %>% any) {
       cat("There is perfect multi-collinearity in the set of selected independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
-      odds_tab <- exp(ci_tab) %>% round(3)
-      odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
-      odds_tab %>%
-        set_colnames(c("odds", cl_low, cl_high, "+/-")) %>%
-        print
-      cat("\n")
+      if(object$glm_link == "logit") {
+        odds_tab <- exp(ci_tab) %>% round(3)
+        odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
+        odds_tab %>%
+          set_colnames(c("odds", cl_low, cl_high, "+/-")) %>%
+          print
+        cat("\n")
+      } else if(object$glm_link == "probit") {
+        cat("Odds ratios are not calculated Probit models\n")
+      }
+
     }
   }
 
