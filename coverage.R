@@ -13,10 +13,3 @@ cov <- package_coverage()
 shine(cov)
 
 rm(coverage_test)
-
-# add to travis.yml when coverage gets a little higher :)
-# r_github_packages:
-#   - jimhester/covr
-
-# after_success:
-#   - Rscript -e 'library(covr);coveralls()'

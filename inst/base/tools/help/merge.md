@@ -677,3 +677,6 @@ With semi join the effect of switching the dataset order is more clear. Even tho
 Only publisher _Image_ is retained because both _Marvel_ and _DC_ are in `superheroes`. We keep only variables in `publishers`.
 
 <br>
+
+--------
+For additional discussion see <http://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html>

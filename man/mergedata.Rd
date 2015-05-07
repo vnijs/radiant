@@ -5,7 +5,7 @@
 \title{Merge datasets using dplyr's join functions}
 \usage{
 mergedata(dataset, dataset2, merge_vars = "", merge_type = "inner_join",
-  merge_name = paste0("merged_", dataset))
+  merge_name = "merged_data")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -31,6 +31,5 @@ See \url{http://vnijs.github.io/radiant/base/merge.html} for an example in Radia
 mergedata("titanic","titanic_pred",c("pclass","sex","age")) \%>\% head
 titanic \%>\% mergedata("titanic_pred",c("pclass","sex","age")) \%>\% head
 titanic \%>\% mergedata(titanic_pred,c("pclass","sex","age")) \%>\% head
-rm(merged_titanic, envir = .GlobalEnv)
 }
 

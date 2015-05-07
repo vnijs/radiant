@@ -14,16 +14,17 @@
 #' mergedata("titanic","titanic_pred",c("pclass","sex","age")) %>% head
 #' titanic %>% mergedata("titanic_pred",c("pclass","sex","age")) %>% head
 #' titanic %>% mergedata(titanic_pred,c("pclass","sex","age")) %>% head
-#' rm(merged_titanic, envir = .GlobalEnv)
 #'
 #' @export
 mergedata <- function(dataset, dataset2,
                       merge_vars = "",
                       merge_type = "inner_join",
-                      merge_name = paste0("merged_",dataset)) {
+                      merge_name = "merged_data") {
 
   if (merge_vars[1] == "") return(cat("No variables selected to merge datasets"))
   merge_fun <- get(merge_type)
+
+  if(is_string(dataset)) merge_name = paste0("merged_",dataset)
 
   if (exists("r_env")) {
     r_env$r_data[[merge_name]] <- merge_fun(getdata(dataset), getdata(dataset2), by = merge_vars)

@@ -381,7 +381,7 @@ plot.regression <- function(x,
 
   if (exists("plots")) {
     sshhr( do.call(arrangeGrob, c(plots, list(ncol = 2))) ) %>%
-      { if (shiny) . else print(.) }
+        {if (shiny) . else print(.)}
   }
 }
 

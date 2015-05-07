@@ -1,5 +1,5 @@
 language: r
-warnings_are_errors: false
+warnings_are_errors: true
 sudo: required
 
 r_github_packages:
@@ -10,3 +10,6 @@ r_github_packages:
   - rstudio/shiny
   - ramnathv/htmlwidgets
   - rstudio/DT
+
+after_success:
+  - Rscript -e 'library(covr);coveralls()'
