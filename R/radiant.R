@@ -94,7 +94,6 @@ getdata <- function(dataset,
 
   filt %<>% gsub("\\s","", .)
 
-  # { if (!is_string(dataset)) {
   { if (!is_string(dataset)) {
       dataset
     } else if (exists("r_env")) {
