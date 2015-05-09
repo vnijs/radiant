@@ -49,6 +49,7 @@ observeEvent(input$manual_paste, {
 })
 
 output$ui_manual <- renderUI({
+  if(is.null(r_data$manual)) r_data$manual <- FALSE
   actionButton("manual_paste",
     if(r_data$manual) "Manual paste (on)" else "Manual paste (off)")
 })
