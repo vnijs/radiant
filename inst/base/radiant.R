@@ -109,6 +109,9 @@ not_available <- function(x)
 # check if a button was NOT pressed
 not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
 
+# check if a button WAS pressed
+was_pressed <- function(x) if (is.null(x) || x == 0) FALSE else TRUE
+
 # check for duplicate entries
 has_duplicates <- function(x)
   if (length(unique(x)) < length(x)) TRUE else FALSE
@@ -268,7 +271,7 @@ help_and_report <- function(modal_title, fun_name, help_file) {
            <i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input alignright' href='#%s_report' id='%s_report'></i>
            <div style='clear: both;'></div>",
           fun_name, fun_name, fun_name, modal_title, help_file, fun_name, fun_name, fun_name) %>%
-  enc2utf8 %>% HTML %>% withMathJaxIP
+  enc2utf8 %>% HTML %>% withMathJax
 }
 
 # function to render .md files to html

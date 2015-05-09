@@ -2,7 +2,7 @@ shinyUI(
   navbarPage("Radiant - Marketing", id = "nav_radiant", inverse = TRUE,
              collapsible = TRUE,
 
-  tabPanel("Data", withMathJaxIP(), uiOutput('ui_data')),
+  tabPanel("Data", withMathJax(), uiOutput('ui_data')),
 
   navbarMenu("Sample",
     tabPanel("Sampling", uiOutput("sampling")),

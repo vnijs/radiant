@@ -12,7 +12,8 @@ setwd("~/gh/radiant_dev")
 
 # cov <- package_coverage()
 # test_examples()
-cov <- package_coverage(type="example")
+# cov <- package_coverage(type="example")
+cov <- package_coverage(type="all")
 # cov <- package_coverage(type="all")
 cov
 

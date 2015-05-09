@@ -65,8 +65,7 @@ sshh <- function(...) {
 #' sshhr( library(dplyr) )
 #'
 #' @export
-sshhr <- function(...)
-  suppressWarnings( suppressMessages( ... ) )
+sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 
 #' Get data for analysis functions
 #'

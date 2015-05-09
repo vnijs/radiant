@@ -45,7 +45,7 @@ expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm
 #   }
 # }
 
-withMathJaxIP <- withMathJax
+# withMathJaxIP <- withMathJax
 # withMathJaxIP <- function(...)  tagList(...)
 
 # if(havingIP()) {
