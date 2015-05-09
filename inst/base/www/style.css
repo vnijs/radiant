@@ -72,7 +72,7 @@ pre {
 #rmd_report, #rmd_code {
   position: absolute;
   /*top: 95px;*/
-  top: 135px;
+  top: 145px;
   bottom: 0px;
   left: 0%;
   right: 50%;
@@ -83,7 +83,7 @@ pre {
 #rmd_knitted, #rmd_code_output {
   position: absolute;
   /*top: 95px;*/
-  top: 135px;
+  top: 145px;
   bottom: 0px;
   left: 50%;
   right: 0%;
