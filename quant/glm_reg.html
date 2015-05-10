@@ -231,18 +231,18 @@ img {
 <p><img src="figures_quant/glm_reg_summary.png" alt="Summary" /></p>
 <p>In addition to the numerical output provided in the Summary tab we can also evaluate the link between survival, class, gender, and age visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a coefficient plot with confidence intervals. The relative importance of gender and class compared to age clearly stand out. Note: click the check box for standardized coefficients in the Summary tab and see if your conclusion changes.</p>
 <p><img src="figures_quant/glm_reg_plot.png" alt="Plot" /></p>
-<p>Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the <code>Command</code> radio button in the Predict tab, type <code>pclass = levels(pclass)</code> in the <strong>Prediction command</strong> box, and press CTRL-return (CMD-return on mac).</p>
+<p>Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the <code>Command</code> radio button in the Predict tab, type <code>pclass = levels(pclass)</code> in the <strong>Prediction command</strong> box, and press return.</p>
 <p><img src="figures_quant/glm_reg_predict.png" alt="Plot" /></p>
 <p>The figure shows that the probabilities drop sharply between 1st, 2nd, and 3rd class. For males of average age (approx. 30 in the sample) the survival probability was close to 50%. For 3rd class passengers this probability was closer to 9%.</p>
 <pre class="r"><code>    age  sex pclass  pred
  29.881 male    1st 0.499
  29.881 male    2nd 0.217
  29.881 male    3rd 0.092</code></pre>
-<p>To see the effects of gender type <code>sex = levels(sex)</code> in the <strong>Prediction command</strong> box and press CTRL-return (CMD-return on mac). For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 9%.</p>
+<p>To see the effects of gender type <code>sex = levels(sex)</code> in the <strong>Prediction command</strong> box and press return. For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 9%.</p>
 <pre class="r"><code>    age pclass    sex  pred
  29.881    3rd female 0.551
  29.881    3rd   male 0.092</code></pre>
-<p>To see the effects for age type <code>age = seq(0,100, 20)</code> in the <strong>Prediction command</strong> box and press CTRL-return (CMD-return on mac). For male infants in 3rd class the survival probability was around 20%. For 60 year old males in 3rd class the probability drops to around 3%. For the oldest males on board the model predicts a survival probability close to 0%.</p>
+<p>To see the effects for age type <code>age = seq(0,100, 20)</code> in the <strong>Prediction command</strong> box and press return. For male infants in 3rd class the survival probability was around 20%. For 60 year old males in 3rd class the probability drops to around 3%. For the oldest males on board the model predicts a survival probability close to 0%.</p>
 <pre class="r"><code> pclass  sex age  pred
     3rd male   0 0.220
     3rd male  20 0.124

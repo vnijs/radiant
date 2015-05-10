@@ -40,7 +40,7 @@ In addition to the numerical output provided in the Summary tab we can also eval
 
 ![Plot](figures_quant/glm_reg_plot.png)
 
-Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the `Command` radio button in the Predict tab, type `pclass = levels(pclass)` in the **Prediction command** box, and press CTRL-return (CMD-return on mac).
+Probabilities, are more convenient for interpretation than either the coefficients from a logit (probit) model or the odds. To see how survival probabilities change across passenger classes click the `Command` radio button in the Predict tab, type `pclass = levels(pclass)` in the **Prediction command** box, and press return.
 
 ![Plot](figures_quant/glm_reg_predict.png)
 
@@ -53,7 +53,7 @@ The figure shows that the probabilities drop sharply between 1st, 2nd, and 3rd c
  29.881 male    3rd 0.092
 ```
 
-To see the effects of gender type `sex = levels(sex)` in the **Prediction command** box and press CTRL-return (CMD-return on mac). For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 9%.
+To see the effects of gender type `sex = levels(sex)` in the **Prediction command** box and press return. For average age females in 3rd class the survival probability was around 50%. For males with the same age and class characteristics the chance of survival was closer to 9%.
 
 ```r
     age pclass    sex  pred
@@ -61,7 +61,7 @@ To see the effects of gender type `sex = levels(sex)` in the **Prediction comman
  29.881    3rd   male 0.092
 ```
 
-To see the effects for age type `age = seq(0,100, 20)` in the **Prediction command** box and press CTRL-return (CMD-return on mac). For male infants in 3rd class the survival probability was around 20%. For 60 year old males in 3rd class the probability drops to around 3%. For the oldest males on board the model predicts a survival probability close to 0%.
+To see the effects for age type `age = seq(0,100, 20)` in the **Prediction command** box and press return. For male infants in 3rd class the survival probability was around 20%. For 60 year old males in 3rd class the probability drops to around 3%. For the oldest males on board the model predicts a survival probability close to 0%.
 
 ```r
  pclass  sex age  pred
