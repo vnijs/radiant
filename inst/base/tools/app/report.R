@@ -48,7 +48,11 @@ observeEvent(input$manual_paste, {
   isolate(r_data$manual <- r_data$manual == FALSE)
 })
 
+# initialize manual cmd paste to false
+# if(if(exists("r_data") && is.null(r_data$manual))) r_data$manual <- FALSE
+
 output$ui_manual <- renderUI({
+  # initialize manual cmd paste to false
   if(is.null(r_data$manual)) r_data$manual <- FALSE
   actionButton("manual_paste",
     if(r_data$manual) "Manual paste (on)" else "Manual paste (off)")

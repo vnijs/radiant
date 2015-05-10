@@ -30,7 +30,7 @@ output$ui_data <- renderUI({
         conditionalPanel("input.datatabs == 'Pivot'",uiOutput("ui_Pivot")),
         conditionalPanel("input.datatabs == 'Explore'", uiOutput("ui_Explore")),
         conditionalPanel("input.datatabs == 'Transform'", uiOutput("ui_Transform")),
-        conditionalPanel("input.datatabs == 'Merge'", uiOutput("ui_Merge"))),
+        conditionalPanel("input.datatabs == 'Combine'", uiOutput("ui_Combine"))),
       mainPanel(
         tabsetPanel(id = "datatabs",
           tabPanel("Manage", htmlOutput("htmlDataExample"),
@@ -42,7 +42,7 @@ output$ui_data <- renderUI({
           tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
           tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
           tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
-          tabPanel("Merge", htmlOutput("merge_possible"), htmlOutput("mergedata1"), htmlOutput("mergedata2"))
+          tabPanel("Combine", htmlOutput("cmb_possible"), htmlOutput("cmb_data1"), htmlOutput("cmb_data2"))
         )
       )
     )

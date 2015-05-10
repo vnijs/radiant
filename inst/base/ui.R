@@ -1,5 +1,5 @@
-shinyUI(navbarPage("Radiant - Base", id = "nav_radiant", inverse = TRUE,
-        collapsible = TRUE,
+shinyUI(navbarPage("Base", windowTitle = "Radiant", id = "nav_radiant",
+        inverse = TRUE, collapsible = TRUE,
 
   tabPanel("Data", withMathJax(), uiOutput('ui_data')),
 

@@ -151,5 +151,16 @@ NULL
 #' @format A data frame with 7 rows and 4 variables
 NULL
 
+#' Avengers
+#' @details List of avengers. The dataset is used to illustrate data merging / joining. Description provided in attr(avengers,"description")
+#' @docType data
+#' @keywords datasets
+#' @name avengers
+#' @usage data(avengers)
+#' @format A data frame with 7 rows and 4 variables
+NULL
+
+
+
 
 

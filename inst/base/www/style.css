@@ -95,8 +95,43 @@ pre {
   margin-bottom: 5px;
 }
 
-/*
+.navbar .nav > li > a {
+  padding-left: 7px;
+  padding-right: 8px;
+}
 
+/* from http://stackoverflow.com/a/23786766/1974918 */
+@media (min-width: 768px) {
+    /* don't show full menu at 768 */
+    .navbar-header {
+        float: none; }
+    .navbar-toggle {
+        display: block; }
+    .navbar-fixed-top .navbar-collapse,
+    .navbar-static-top .navbar-collapse,
+    .navbar-fixed-bottom .navbar-collapse {
+        padding-right: 15px;
+        padding-left: 15px; }
+    .navbar-collapse.collapse {
+        display: none !important; }
+        .navbar-collapse.collapse.in {
+        display: block!important;
+        margin-top: 0px; }
+}
+
+/* from http://stackoverflow.com/a/23786766/1974918 */
+@media (min-width: 1000px) {
+    .navbar-header {
+        float: left; }
+    .navbar-toggle {
+        display: none; }
+    .navbar-fixed-top .navbar-collapse,
+    .navbar-static-top .navbar-collapse,
+    .navbar-fixed-bottom .navbar-collapse {
+        display: block !important; }
+}
+
+/*
 label {
   margin-bottom: 5px;
 }

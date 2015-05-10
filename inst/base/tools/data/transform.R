@@ -163,7 +163,7 @@ output$ui_Transform <- renderUI({
 	    returnTextAreaInput("tr_rename", "Rename (separate by , ):", '')
     ),
     conditionalPanel(condition = "input.tr_changeType != ''",
-	    actionButton("tr_show_changes", "Show"),
+	    # actionButton("tr_show_changes", "Show"),
 	    actionButton("tr_save_changes", "Save changes")
 	  ),
     conditionalPanel(condition = "input.tr_changeType == 'reorg_cols'",
@@ -401,10 +401,10 @@ observe({
 	isolate({
 		updateTextInput(session = session, inputId = "tr_transform", value = "")
 	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
-	 	updateTextInput(session = session, inputId = "tr_create", value = "")
+	 	# updateTextInput(session = session, inputId = "tr_create", value = "")
 	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
 	 	updateTextInput(session = session, inputId = "tr_copyAndPaste", value = "")
-	 	updateTextInput(session = session, inputId = "tr_subset", value =  "")
+	 	# updateTextInput(session = session, inputId = "tr_subset", value =  "")
 		updateSelectInput(session = session, inputId = "tr_typefunction", selected = "none")
 		updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
 	  updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")

@@ -57,7 +57,7 @@ test_that("tabs are present", {
   webElems <- remDr$findElements("css selector", ".nav a")
   app_tabs <- sapply(webElems, function(x){x$getElementText()})
   app_tabs <- app_tabs[app_tabs != ""] %>% unlist
-  expect_equal(app_tabs, c("Manage","View","Visualize","Pivot","Explore","Transform","Merge"))
+  expect_equal(app_tabs, c("Manage","View","Visualize","Pivot","Explore","Transform","Combine"))
 })
 
 
