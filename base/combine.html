@@ -199,7 +199,8 @@ img {
 <p>Combine two datasets</p>
 </blockquote>
 <p>There are six <em>join</em> (or <em>merge</em>) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr">dplyr</a> package developed by Hadley Wickham and Romain Francois on <a href="https://github.com/hadley/dplyr">GitHub</a>.</p>
-<p>The examples below are adapted from <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html">Cheatsheet for dplyr join functions</a> by Jenny Bryan and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and the other ways to combine datasets in R and Radiant.</p>
+<p>The examples below are adapted from <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html">Cheatsheet for dplyr join functions</a> by Jenny Bryan and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and the other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:</p>
+<p><a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank"><a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" class="uri">https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv</a><a/> <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank"> <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" class="uri">https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv</a><a/> <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank"> <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" class="uri">https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv</a><a/></p>
 <table class="table table-condensed table-hover" style="width:70%;">
 <caption>
 Superheroes
@@ -2044,7 +2045,7 @@ Marvel
 </tr>
 </tbody>
 </table>
-<p>A <code>union</code> of <code>avengers</code> and <code>superheroes</code> will combine the datasets but will omit duplicate rows. Likely what we want here.</p>
+<p>A <code>union</code> of <code>avengers</code> and <code>superheroes</code> will combine the datasets but will omit duplicate rows (i.e., it will keep only one <em>copy</em> of the row for <em>Magneto</em>). Likely what we want here.</p>
 <p>The command used in R and Radiant are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>union</code>.</p>
 <p><br></p>
 </div>
@@ -2070,10 +2071,80 @@ publisher
 <tbody>
 <tr>
 <td style="text-align:left;">
-Magneto
+Thor
 </td>
 <td style="text-align:left;">
-bad
+good
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:left;">
+Marvel
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Iron Man
+</td>
+<td style="text-align:left;">
+good
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:left;">
+Marvel
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hulk
+</td>
+<td style="text-align:left;">
+good
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:left;">
+Marvel
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Hawkeye
+</td>
+<td style="text-align:left;">
+good
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:left;">
+Marvel
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Black Widow
+</td>
+<td style="text-align:left;">
+good
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:left;">
+Marvel
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Captain America
+</td>
+<td style="text-align:left;">
+good
 </td>
 <td style="text-align:left;">
 male

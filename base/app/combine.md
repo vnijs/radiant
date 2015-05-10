@@ -2,7 +2,11 @@
 
 There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
 
-The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and the other ways to combine datasets in R and Radiant.
+The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and the other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
+
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv<a/>
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank"> https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv<a/>
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank"> https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv<a/>
 
 <table class='table table-condensed table-hover' style='width:70%;'>
 <caption>Superheroes</caption>
@@ -990,7 +994,7 @@ The command used in R and Radiant are the same as shown above, except you will n
 </tbody>
 </table>
 
-A `union` of `avengers` and `superheroes` will combine the datasets but will omit duplicate rows. Likely what we want here.
+A `union` of `avengers` and `superheroes` will combine the datasets but will omit duplicate rows (i.e., it will keep only one _copy_ of the row for _Magneto_). Likely what we want here.
 
 The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `union`.
 
@@ -1009,8 +1013,38 @@ The command used in R and Radiant are the same as shown above, except you will n
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> Magneto </td>
-   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> Thor </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Iron Man </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hulk </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hawkeye </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Black Widow </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Captain America </td>
+   <td style="text-align:left;"> good </td>
    <td style="text-align:left;"> male </td>
    <td style="text-align:left;"> Marvel </td>
   </tr>
