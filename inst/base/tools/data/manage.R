@@ -62,7 +62,7 @@ factorizer <- function(dat) {
   toFct <- select(dat, which(isChar)) %>% summarise_each(funs(n_distinct)) %>%
    select(which(. < 100 & ((. / nrow(dat)) < .1))) %>% names
   if (length(toFct) == 0) return(dat)
-  mutate_each_(dat, funs(as.factor), vars = toFct) %>% sapply(class)
+  mutate_each_(dat, funs(as.factor), vars = toFct)
 }
 
 loadUserData <- function(fname, uFile, ext,
@@ -123,6 +123,7 @@ loadUserData <- function(fname, uFile, ext,
 # dat <- read.csv("~/gh/radiant_dev/inst/examples/houseprices.csv", stringsAsFactors = FALSE)
 # getclass(dat)
 # factorizer(dat) %>% getclass
+# dat
 
 # dat <- mtcars
 # dat <- mutate_each(dat, funs(as.character))
