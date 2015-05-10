@@ -1,5 +1,5 @@
 ---
-title: Data > Merge
+title: Data > Combine
 ---
 
 ***

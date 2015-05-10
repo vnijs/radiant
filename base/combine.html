@@ -10,7 +10,7 @@
 
 
 
-<title>Data &gt; Merge</title>
+<title>Data &gt; Combine</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -190,7 +190,7 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Data &gt; Merge</h1>
+<h1 class="title">Data &gt; Combine</h1>
 </div>
 
 
@@ -200,7 +200,9 @@ img {
 </blockquote>
 <p>There are six <em>join</em> (or <em>merge</em>) options available in Radiant from the <a href="http://www.rdocumentation.org/packages/dplyr">dplyr</a> package developed by Hadley Wickham and Romain Francois on <a href="https://github.com/hadley/dplyr">GitHub</a>.</p>
 <p>The examples below are adapted from <a href="http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html">Cheatsheet for dplyr join functions</a> by Jenny Bryan and focus on three small datasets, <code>superheroes</code>, <code>publishers</code>, and <code>avengers</code>, to illustrate the different <em>join</em> types and the other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:</p>
-<p><a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv<a/> <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank">publishers.csv<a/> <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank">avengers.csv<a/></p>
+<p><a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv</a></p>
+<p><a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank">publishers.csv</a></p>
+<p><a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank">avengers.csv</a></p>
 <table class="table table-condensed table-hover" style="width:70%;">
 <caption>
 Superheroes
@@ -1357,6 +1359,7 @@ Image
 <p>When two datasets have the same columns (or rows) there are additional ways in which we can combine them into a new dataset. We have already used the <code>superheroes</code> dataset and will now try to combine it with the <code>avengers</code> data. These two datasets have the same number of rows and columns and the columns have the same names.</p>
 <p>In the screen-shot of the Data &gt; Combine tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in <code>Select variables</code> are ignored in the commands below. Again, you can specify a name for the combined dataset in the <code>Data name</code> text input box.</p>
 <p><img src="figures/combine_avengers_superheroes.png" alt="combine" /></p>
+<p><br></p>
 </div>
 <div id="bind-rows" class="section level3">
 <h3>Bind rows</h3>
@@ -1581,6 +1584,7 @@ Dark Horse Comics
 <pre class="r"><code>combinedata(&quot;avengers&quot;, &quot;superheroes&quot;, cmb_type = &quot;bind_rows&quot;, cmb_name = &quot;cmb_avengers&quot;)</code></pre>
 <p>The same result can be achieved with the following R-code:</p>
 <pre class="r"><code>cmb_avengers &lt;- bind_rows(avengers, superheroes)</code></pre>
+<p><br></p>
 </div>
 <div id="bind-columns" class="section level3">
 <h3>Bind columns</h3>

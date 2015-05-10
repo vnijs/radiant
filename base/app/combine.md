@@ -4,9 +4,11 @@ There are six _join_ (or _merge_) options available in Radiant from the [dplyr](
 
 The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and the other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
 
-<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv<a/>
-<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank">publishers.csv<a/>
-<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank">avengers.csv<a/>
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
+
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank">publishers.csv</a>
+
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank">avengers.csv</a>
 
 <table class='table table-condensed table-hover' style='width:70%;'>
 <caption>Superheroes</caption>
@@ -668,6 +670,8 @@ In the screen-shot of the Data > Combine tab below we see the two datasets. Ther
 
 ![combine](figures/combine_avengers_superheroes.png)
 
+<br>
+
 ### Bind rows
 
 <table class='table table-condensed table-hover' style='width:70%;'>
@@ -780,6 +784,8 @@ The same result can be achieved with the following R-code:
 ```r
 cmb_avengers <- bind_rows(avengers, superheroes)
 ```
+
+<br>
 
 ### Bind columns
 
