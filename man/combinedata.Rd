@@ -31,5 +31,8 @@ See \url{http://vnijs.github.io/radiant/base/combine.html} for an example in Rad
 combinedata("titanic","titanic_pred",c("pclass","sex","age")) \%>\% head
 titanic \%>\% combinedata("titanic_pred",c("pclass","sex","age")) \%>\% head
 titanic \%>\% combinedata(titanic_pred,c("pclass","sex","age")) \%>\% head
+avengers \%>\% combinedata(superheroes, cmb_type = "bind_cols")
+combinedata("avengers", "superheroes", cmb_type = "bind_cols")
+avengers \%>\% combinedata(superheroes, cmb_type = "bind_rows")
 }
 

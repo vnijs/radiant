@@ -30,12 +30,11 @@ output$ui_cmb_vars <- renderUI({
   vars <- vars1[vars1 %in% vars]  # need variable labels from varnames()
   selectInput("cmb_vars", "Select variables:", choices  = vars,
     selected = state_multiple("cmb_vars",vars, vars),
-    multiple = TRUE, size = length(vars), selectize = FALSE)
+    multiple = TRUE, size = min(5,length(vars)), selectize = FALSE)
 })
 
-# cmb_type <- c("bind_rows","bind_cols","intersect","union","setdiff",
-cmb_type <- c("bind_rows","bind_cols","inner_join","left_join","right_join",
-              "full_join","semi_join","anti_join")
+cmb_type <- c("inner_join","left_join","right_join","full_join","semi_join",
+              "anti_join","bind_rows","bind_cols","intersect","union","setdiff")
 
 output$ui_cmb_type <- renderUI({
   selectInput("cmb_type", "Combine type:", choices  = cmb_type,
@@ -96,3 +95,12 @@ output$cmb_data2 <- renderText({
   if (is.null(input$dataset2)) return()
   show_data_snippet(input$dataset2, title = paste("<h3>Data:",input$dataset2,"</h3>"))
 })
+
+output$cmb_data <- renderText({
+  if (is_empty(input$cmb_name)) return()
+  if (!is.null(r_data[[input$cmb_name]]))
+    show_data_snippet(input$cmb_name, nshow = 15,
+                      title = paste("<h3>Combined data:",input$cmb_name,"</h3>"))
+})
+
+

@@ -1,16 +1,20 @@
 > Combine two datasets
 
-<!-- Change Data > Merge to Data > Combine and add intersect(), union(), setdiff(), bind_rows() and bind_cols(). For intersect etc. another dataset with the same variables would be need (i.e., more publishers or more heroes). Start the discussion with bind_* to show that these may not always give you what you actually want, i.e., you may end up with duplicate rows/columns. -->
+There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
 
-There are six merge (or join) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
+The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and the other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
 
-The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on two small datasets, `superheroes` and `publishers`, to illustrate the different merge / join types.
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
+
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank">publishers.csv</a>
+
+<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank">avengers.csv</a>
 
 ```{r results = 'asis', echo = FALSE}
 tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
 tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
 suppressPackageStartupMessages(library(radiant))
-knitr::kable(superheroes, align = 'l', format = 'html', caption = "Superheroes", 
+knitr::kable(superheroes, align = 'l', format = 'html', caption = "Superheroes",
              table.attr = tab_big)
 ```
 
@@ -19,9 +23,9 @@ knitr::kable(publishers, align = 'l', format = 'html', caption = "Publishers",
              table.attr = tab_small)
 ```
 
-In the screen-shot of the Data > Merge tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the merge / join. Different merge / join options are available from the `Merge type` dropdown. You can also specify a name for the merged dataset in the `Data name` text input box.
+In the screen-shot of the Data > Combine tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Data name` text input box.
 
-![merge](figures/merge_heroes_publishers.png)
+![join](figures/join_superheroes_publishers.png)
 
 <br>
 
@@ -43,13 +47,13 @@ In the table above we lose _Hellboy_ because, although this hero does appear in 
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "inner_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "inner_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- inner_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- inner_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -70,13 +74,13 @@ The join result contains `superheroes` with variable `yr_founded` from `publishe
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "left_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "left_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- left_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- left_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -90,20 +94,20 @@ right_join(superheroes, publishers, by = "publisher") %>%
   knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
 ```
 
-The join result contains all rows and colums from `publishers` and all variables from `superheroes`. We lose _Hellboy_, whose publisher does not appear in `publishers`. _Image_ is retained in the table but has `NA` values for the variables _name_, _alignment_, and _gender_ from `superheroes`. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:
+The join result contains all rows and columns from `publishers` and all variables from `superheroes`. We lose _Hellboy_, whose publisher does not appear in `publishers`. _Image_ is retained in the table but has `NA` values for the variables _name_, _alignment_, and _gender_ from `superheroes`. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:
 
 ![right_join](figures/right_join.png)
 
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "right_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "right_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- right_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- right_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -124,13 +128,13 @@ In this table we keep _Hellboy_ (even though _Dark Horse Comics_ is not in `publ
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "full_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "full_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- full_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- full_join(superheroes, publishers, by = "publisher")
 ```
 
 ### Semi join (superheroes, publishers)
@@ -145,13 +149,13 @@ semi_join(superheroes, publishers, by = "publisher") %>%
 We get a similar table as with `inner_join` but it contains only the variables in `superheroes`. The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "semi_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "semi_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- semi_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- semi_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -175,9 +179,9 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 
 ### Dataset order
 
-Note that the order of the datasets selected may matters for a merge / join. If we setup the Data > Merge tab as below the results are as follows:
+Note that the order of the datasets selected may matters for a join. If we setup the Data > Combine tab as below the results are as follows:
 
-![merge](figures/merge_publishers_heroes.png)
+![join order](figures/join_publishers_superheroes.png)
 
 <br>
 
@@ -223,6 +227,89 @@ anti_join(publishers, superheroes, by = "publisher") %>%
 ```
 
 Only publisher _Image_ is retained because both _Marvel_ and _DC_ are in `superheroes`. We keep only variables in `publishers`.
+
+<br>
+
+### Additional tools to combine datasets (avengers, superheroes)
+
+When two datasets have the same columns (or rows) there are additional ways in which we can combine them into a new dataset. We have already used the `superheroes` dataset and will now try to combine it with the `avengers` data. These two datasets have the same number of rows and columns and the columns have the same names.
+
+In the screen-shot of the Data > Combine tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Data name` text input box.
+
+![combine](figures/combine_avengers_superheroes.png)
+
+<br>
+
+### Bind rows
+
+```{r results = 'asis', echo = FALSE}
+bind_rows(avengers, superheroes) %>%
+  knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
+```
+
+If the `avengers` dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the `avengers` dataset (i.e.., _Magneto_ is *not* an _Avenger_) there is a duplicate row in the new combined dataset. Something we probably don't want.
+
+The command that Radiant uses internally is:
+
+```r
+combinedata("avengers", "superheroes", cmb_type = "bind_rows", cmb_name = "cmb_avengers")
+```
+
+The same result can be achieved with the following R-code:
+
+```r
+cmb_avengers <- bind_rows(avengers, superheroes)
+```
+
+<br>
+
+### Bind columns
+
+```{r results = 'asis', echo = FALSE}
+bind_cols(avengers, superheroes) %>%
+  knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
+```
+
+If the dataset had different columns for the same superheroes we could combine the two datasets, side by side. In radiant you will see an error message if you try to bind these columns because they have the same name. Something that we should always avoid. The method can be useful if we *know* the order of the row ids of two dataset are the same but the columns are all different.
+
+<br>
+
+### Intersect
+
+```{r results = 'asis', echo = FALSE}
+intersect(avengers, superheroes) %>%
+  knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
+```
+
+A good way to check if two datasets with the same columns have duplicate rows is to choose `intersect` from the `Combine type` dropdown. There is indeed one row that is identical in the `avengers` and `superheroes` data (i.e., _Magneto_).
+
+The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `intersect`.
+
+<br>
+
+### Union
+
+```{r results = 'asis', echo = FALSE}
+union(avengers, superheroes) %>%
+  knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
+```
+
+A `union` of `avengers` and `superheroes` will combine the datasets but will omit duplicate rows (i.e., it will keep only one _copy_ of the row for _Magneto_). Likely what we want here.
+
+The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `union`.
+
+<br>
+
+### Setdiff
+
+```{r results = 'asis', echo = FALSE}
+setdiff(avengers, superheroes) %>%
+  knitr::kable(., align = 'l', format = 'html', table.attr = tab_big)
+```
+
+Finally, a `setdiff` will keep rows from `avengers` that are not in `superheroes`. If we reverse the inputs (i.e., choose `superheroes` from the `Datasets` dropdown and `superheroes` from the `Combine with` dropdown) we will end up with all rows from `superheroes` that are not in `avengers`. In both cases the entry for _Magneto_ will be omitted.
+
+The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `setdiff`.
 
 <br>
 

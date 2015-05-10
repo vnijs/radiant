@@ -14,6 +14,9 @@
 #' combinedata("titanic","titanic_pred",c("pclass","sex","age")) %>% head
 #' titanic %>% combinedata("titanic_pred",c("pclass","sex","age")) %>% head
 #' titanic %>% combinedata(titanic_pred,c("pclass","sex","age")) %>% head
+#' avengers %>% combinedata(superheroes, cmb_type = "bind_cols")
+#' combinedata("avengers", "superheroes", cmb_type = "bind_cols")
+#' avengers %>% combinedata(superheroes, cmb_type = "bind_rows")
 #'
 #' @export
 combinedata <- function(dataset, dataset2,
@@ -27,31 +30,25 @@ combinedata <- function(dataset, dataset2,
 
   if(is_string(dataset)) cmb_name = paste0("cmb_",dataset)
 
-  # cmb_fun <- get(cmb_type)
   if(is_join) {
     cmb_dat <- get(cmb_type)(getdata(dataset), getdata(dataset2), by = cmb_vars)
-    cmb_message <- paste0("\n### Combined\n\nDatasets: ", dataset, " and ", dataset2, " (", cmb_type, ")\n\nBy: ", paste0(cmb_vars, collapse=", "), "\n\nOn: ", now())
+    cmb_madd <- paste0("\n\nBy: ", paste0(cmb_vars, collapse=", "))
   } else {
     cmb_dat <- get(cmb_type)(getdata(dataset), getdata(dataset2))
-    cmb_message <- paste0("\n### Combined\n\nDatasets: ", dataset, " and ", dataset2, " (", cmb_type, ")\n\nOn: ", now())
+    cmb_madd <- ""
   }
+  cmb_message <- paste0("\n### Combined\n\nDatasets: ", dataset, " and ",
+                        dataset2, " (", cmb_type, ")", cmb_madd, "\n\nOn: ",
+                        lubridate::now())
 
   if (exists("r_env")) {
     c_env <- r_env
   } else if (exists("r_data")) {
     c_env <- pryr::where("r_data")
-    # d_env$r_data[[cmb_name]] <- cmb_fun(getdata(dataset), getdata(dataset2), by = cmb_vars)
-    # d_env$r_data[[cmb_name]] %>% head %>% print
-    # d_env$r_data[['datasetlist']] <- c(cmb_name, d_env$r_data[['datasetlist']]) %>% unique
-    # d_env$r_data[[paste0(cmb_name,"_descr")]] <-
-    #   paste0("\n### Merged\n\nDatasets: ", dataset, " and ", dataset2, " (", cmb_type, ")\n\nBy: ", paste0(cmb_vars, collapse=", "), "\n\nOn: ", now())
-    # cat("\nMerged data added to r_data as", cmb_name, "\n")
   } else {
-    # return(cmb_fun(getdata(dataset), getdata(dataset2), by = cmb_vars))
     return(cmb_dat)
   }
 
-  # c_env$r_data[[cmb_name]] <- cmb_fun(getdata(dataset), getdata(dataset2), by = cmb_vars)
   c_env$r_data[[cmb_name]] <- cmb_dat
   c_env$r_data[[cmb_name]] %>% head %>% print
   c_env$r_data[['datasetlist']] <- c(cmb_name, c_env$r_data[['datasetlist']]) %>% unique

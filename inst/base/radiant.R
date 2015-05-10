@@ -123,7 +123,7 @@ is_date <- function(x) lubridate::is.Date(x) | lubridate::is.POSIXt(x)
 d2c <- function(x) if (is_date(x)) as.character(x) else x
 
 # truncate character fields for show_data_snippet
-trunc_char <- function(x) if (is.character(x)) strtrim(x,15) else x
+trunc_char <- function(x) if (is.character(x)) strtrim(x,17) else x
 
 # show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
