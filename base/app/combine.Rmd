@@ -2,7 +2,7 @@
 
 There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
 
-The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and the other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
+The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
 
 <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
 
