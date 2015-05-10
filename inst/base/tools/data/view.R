@@ -45,11 +45,11 @@ my_dataTablesJSON = function(data, req) {
     if ((k <- col[['search']][['value']]) == '') next
     j = as.integer(j)
     dj = data[, j + 1]
-    ij = if (is.numeric(dj) || is.Date(dj)) {
+    ij = if (is.numeric(dj) || lubridate::is.Date(dj)) {
       r = commaToRange(k)
       if (length(r) != 2)
         stop('The range of a numeric / date / time column must be of length 2')
-      if (is.Date(dj)) {
+      if (lubridate::is.Date(dj)) {
         # r is milliseconds
         r = as.POSIXct(r / 1000, origin = '1970-01-01')
         if (inherits(dj, 'Date')) r = as.Date(r)
@@ -141,7 +141,8 @@ output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return()
 
   dat <- select_(.getdata(), .dots = input$view_vars)
-  action = DT::dataTableAjax(session, dat, rownames = FALSE, toJSONfun = my_dataTablesJSON)
+  # action = DT::dataTableAjax(session, dat, rownames = FALSE, toJSONfun = my_dataTablesJSON)
+  action = DT::dataTableAjax(session, dat, rownames = FALSE)
 
   DT::datatable(dat, filter = "top", rownames = FALSE, server = TRUE,
     # class = "compact",
