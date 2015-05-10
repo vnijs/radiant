@@ -288,54 +288,81 @@ img {
 <div id="filter" class="section level4">
 <h4>Filter</h4>
 <p>There are several ways to select a subset of the data to view. The <code>Filter</code> box on the left (click the checkbox first) can be used with <code>&gt;</code> and <code>&lt;</code> signs and you can also combine subset commands. For example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>and</strong> for which <code>y</code> has values equal to 2. Note that in R <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expression that have an <strong>or</strong> condition. For example, to select rows where <code>Salary</code> is larger than $100,000 or smaller than $20,000 use <code>Salary &lt; 20000 | Salary &gt; 100000</code>. <code>|</code> is the symbol for <strong>or</strong>. The table below gives an overview of common operators. Type your statement in the <code>Filter</code> box and press return to see the result on screen or an error below the box if the expression is invalid. It is important to note that filters are <em>presistent</em>. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press return or (2) uncheck the <code>Filter</code> checkbox.</p>
-<table>
+<table class="table table-condensed table-hover" style="width:30%;">
 <thead>
-<tr class="header">
-<th align="left">Operator</th>
-<th align="left"></th>
-<th align="left">Description</th>
+<tr>
+<th style="text-align:left;">
+Operator
+</th>
+<th style="text-align:left;">
+Description
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">&lt;</td>
-<td align="left"></td>
-<td align="left">less than</td>
+<tr>
+<td style="text-align:left;">
+&lt;
+</td>
+<td style="text-align:left;">
+less than
+</td>
 </tr>
-<tr class="even">
-<td align="left">&lt;=</td>
-<td align="left"></td>
-<td align="left">less than or equal to</td>
+<tr>
+<td style="text-align:left;">
+&lt;=
+</td>
+<td style="text-align:left;">
+less than or equal to
+</td>
 </tr>
-<tr class="odd">
-<td align="left">&gt;</td>
-<td align="left"></td>
-<td align="left">greater than</td>
+<tr>
+<td style="text-align:left;">
+&gt;
+</td>
+<td style="text-align:left;">
+greater than
+</td>
 </tr>
-<tr class="even">
-<td align="left">&gt;=</td>
-<td align="left"></td>
-<td align="left">greater than or equal to</td>
+<tr>
+<td style="text-align:left;">
+&gt;=
+</td>
+<td style="text-align:left;">
+greater than or equal to
+</td>
 </tr>
-<tr class="odd">
-<td align="left">==</td>
-<td align="left"></td>
-<td align="left">exactly equal to</td>
+<tr>
+<td style="text-align:left;">
+==
+</td>
+<td style="text-align:left;">
+exactly equal to
+</td>
 </tr>
-<tr class="even">
-<td align="left">!=</td>
-<td align="left"></td>
-<td align="left">not equal to</td>
+<tr>
+<td style="text-align:left;">
+!=
+</td>
+<td style="text-align:left;">
+not equal to
+</td>
 </tr>
-<tr class="odd">
-<td align="left">x | y</td>
-<td align="left"></td>
-<td align="left">x OR y</td>
+<tr>
+<td style="text-align:left;">
+x | y
+</td>
+<td style="text-align:left;">
+x OR y
+</td>
 </tr>
-<tr class="even">
-<td align="left">x &amp; y</td>
-<td align="left"></td>
-<td align="left">x AND y</td>
+<tr>
+<td style="text-align:left;">
+x &amp; y
+</td>
+<td style="text-align:left;">
+x AND y
+</td>
 </tr>
 </tbody>
 </table>
