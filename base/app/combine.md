@@ -1,10 +1,8 @@
 > Combine two datasets
 
-<!-- Change Data > Merge to Data > Combine and add intersect(), union(), setdiff(), bind_rows() and bind_cols(). For intersect etc. another dataset with the same variables would be need (i.e., more publishers or more heroes). Start the discussion with bind_* to show that these may not always give you what you actually want, i.e., you may end up with duplicate rows/columns. -->
+There are six _join_ (or _merge_) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
 
-There are six merge (or join) options available in Radiant from the [dplyr](http://www.rdocumentation.org/packages/dplyr) package developed by Hadley Wickham and Romain Francois on [GitHub](https://github.com/hadley/dplyr).
-
-The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on two small datasets, `superheroes` and `publishers`, to illustrate the different merge / join types.
+The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and the other ways to combine datasets in R and Radiant.
 
 <table class='table table-condensed table-hover' style='width:70%;'>
 <caption>Superheroes</caption>
@@ -86,9 +84,9 @@ The examples below are adapted from [Cheatsheet for dplyr join functions](http:/
 </tbody>
 </table>
 
-In the screen-shot of the Data > Merge tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the merge / join. Different merge / join options are available from the `Merge type` dropdown. You can also specify a name for the merged dataset in the `Data name` text input box.
+In the screen-shot of the Data > Combine tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Data name` text input box.
 
-![merge](figures/merge_heroes_publishers.png)
+![join](figures/join_superheroes_publishers.png)
 
 <br>
 
@@ -161,13 +159,13 @@ In the table above we lose _Hellboy_ because, although this hero does appear in 
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "inner_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "inner_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- inner_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- inner_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -246,13 +244,13 @@ The join result contains `superheroes` with variable `yr_founded` from `publishe
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "left_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "left_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- left_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- left_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -331,13 +329,13 @@ The join result contains all rows and colums from `publishers` and all variables
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "right_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "right_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- right_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- right_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -423,13 +421,13 @@ In this table we keep _Hellboy_ (even though _Dark Horse Comics_ is not in `publ
 The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "full_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "full_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- full_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- full_join(superheroes, publishers, by = "publisher")
 ```
 
 ### Semi join (superheroes, publishers)
@@ -488,13 +486,13 @@ merged_superheroes <- full_join(superheroes, publishers, by = "publisher")
 We get a similar table as with `inner_join` but it contains only the variables in `superheroes`. The command that Radiant uses internally is:
 
 ```r
-mergedata("superheroes", "publishers", merge_vars = "publisher", merge_type = "semi_join", merge_name = "merged_superheroes")
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "semi_join", cmb_name = "cmb_superheroes")
 ```
 
 The same result can be achieved with the following R-code:
 
 ```r
-merged_superheroes <- semi_join(superheroes, publishers, by = "publisher")
+cmb_superheroes <- semi_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -532,9 +530,9 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 
 ### Dataset order
 
-Note that the order of the datasets selected may matters for a merge / join. If we setup the Data > Merge tab as below the results are as follows:
+Note that the order of the datasets selected may matters for a join. If we setup the Data > Combine tab as below the results are as follows:
 
-![merge](figures/merge_publishers_heroes.png)
+![join order](figures/join_publishers_superheroes.png)
 
 <br>
 
@@ -655,6 +653,373 @@ With semi join the effect of switching the dataset order is more clear. Even tho
 </table>
 
 Only publisher _Image_ is retained because both _Marvel_ and _DC_ are in `superheroes`. We keep only variables in `publishers`.
+
+<br>
+
+### Other tools to combine datasets (avengers, superheroes)
+
+When two datasets have the same columns (or rows) there are additional ways in which we can combine them into a new dataset. We have already used the `superheroes` dataset and will now try to combine it with the `avengers` data. These two datasets have the same number of rows and columns and the columns have the same names.
+
+In the screen-shot of the Data > Combine tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Data name` text input box.
+
+![combine](figures/combine_avengers_superheroes.png)
+
+### Bind rows
+
+<table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Thor </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Iron Man </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hulk </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hawkeye </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Black Widow </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Captain America </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Storm </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Mystique </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Catwoman </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hellboy </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Dark Horse Comics </td>
+  </tr>
+</tbody>
+</table>
+
+If the `avengers` dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the `avengers` dataset (i.e.., _Magneto_ is *not* an _Avenger_) there is a duplicate row in the new combined dataset. Something we probably don't want.
+
+The command that Radiant uses internally is:
+
+```r
+combinedata("avengers", "superheroes", cmb_type = "bind_rows", cmb_name = "cmb_avengers")
+```
+
+The same result can be achieved with the following R-code:
+
+```r
+cmb_avengers <- bind_rows(avengers, superheroes)
+```
+
+### Bind columns
+
+<table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Thor </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Iron Man </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Storm </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hulk </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Mystique </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hawkeye </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Black Widow </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Captain America </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Catwoman </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+   <td style="text-align:left;"> Hellboy </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Dark Horse Comics </td>
+  </tr>
+</tbody>
+</table>
+
+If the dataset had different columns for the same superheroes we could combine the two datasets, side by side. In radiant you will see an error message if you try to bind these columns because they have the same name. Something that we should always avoid. The method can be usefull if we *know* the order of the row ids of two dataset are the same but the columns are all different.
+
+<br>
+
+### Intersect
+
+<table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+</tbody>
+</table>
+
+A good way to check if two datasets with the same columns have duplicate rows is to choose `intersect` from the `Combine type` dropdown. There is indeed one row that is identical in the `avengers` and `superheroes` data (i.e., _Magneto_).
+
+The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `intersect`.
+
+<br>
+
+### Union
+
+<table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Hellboy </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Dark Horse Comics </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Catwoman </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Joker </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Batman </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> DC </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Mystique </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Storm </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Captain America </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Black Widow </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> female </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hawkeye </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Hulk </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Iron Man </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Thor </td>
+   <td style="text-align:left;"> good </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+</tbody>
+</table>
+
+A `union` of `avengers` and `superheroes` will combine the datasets but will omit duplicate rows. Likely what we want here.
+
+The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `union`.
+
+<br>
+
+### Setdiff
+
+<table class='table table-condensed table-hover' style='width:70%;'>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> name </th>
+   <th style="text-align:left;"> alignment </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> publisher </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Magneto </td>
+   <td style="text-align:left;"> bad </td>
+   <td style="text-align:left;"> male </td>
+   <td style="text-align:left;"> Marvel </td>
+  </tr>
+</tbody>
+</table>
+
+Finally, a `setdiff` will keep rows from `avengers` that are not in `superheroes`. If we reverse the inputs (i.e., choose `superheroes` from the `Datasets` dropdown and `superheroes` from the `Combine with` dropdown) we will end up with all rows from `superheroes` that are not in `avengers`. In both cases the entry for _Magneto_ will be omitted.
+
+The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `setdiff`.
 
 <br>
 
