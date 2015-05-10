@@ -328,7 +328,7 @@ cmb_superheroes <- left_join(superheroes, publishers, by = "publisher")
 </tbody>
 </table>
 
-The join result contains all rows and colums from `publishers` and all variables from `superheroes`. We lose _Hellboy_, whose publisher does not appear in `publishers`. _Image_ is retained in the table but has `NA` values for the variables _name_, _alignment_, and _gender_ from `superheroes`. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:
+The join result contains all rows and columns from `publishers` and all variables from `superheroes`. We lose _Hellboy_, whose publisher does not appear in `publishers`. _Image_ is retained in the table but has `NA` values for the variables _name_, _alignment_, and _gender_ from `superheroes`. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:
 
 ![right_join](figures/right_join.png)
 
@@ -662,7 +662,7 @@ Only publisher _Image_ is retained because both _Marvel_ and _DC_ are in `superh
 
 <br>
 
-### Other tools to combine datasets (avengers, superheroes)
+### Additional tools to combine datasets (avengers, superheroes)
 
 When two datasets have the same columns (or rows) there are additional ways in which we can combine them into a new dataset. We have already used the `superheroes` dataset and will now try to combine it with the `avengers` data. These two datasets have the same number of rows and columns and the columns have the same names.
 
@@ -876,7 +876,7 @@ cmb_avengers <- bind_rows(avengers, superheroes)
 </tbody>
 </table>
 
-If the dataset had different columns for the same superheroes we could combine the two datasets, side by side. In radiant you will see an error message if you try to bind these columns because they have the same name. Something that we should always avoid. The method can be usefull if we *know* the order of the row ids of two dataset are the same but the columns are all different.
+If the dataset had different columns for the same superheroes we could combine the two datasets, side by side. In radiant you will see an error message if you try to bind these columns because they have the same name. Something that we should always avoid. The method can be useful if we *know* the order of the row ids of two dataset are the same but the columns are all different.
 
 <br>
 
