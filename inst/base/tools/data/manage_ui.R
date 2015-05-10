@@ -45,7 +45,6 @@ output$ui_clipboard_save <- renderUI({
 output$ui_Manage <- renderUI({
   list(
     wellPanel(
-      # shinyFilesButton('file', 'File select', 'Please select a file', FALSE),
       radioButtons(inputId = "dataType", label = "Load data:",
                    c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard",
                      "examples" = "examples", "state" = "state"),
@@ -53,8 +52,9 @@ output$ui_Manage <- renderUI({
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
         conditionalPanel(condition = "input.dataType == 'csv'",
-          checkboxInput('man_header', 'Header', TRUE),
-          checkboxInput('man_str_as_factor', 'String as Factor', TRUE),
+          with(tags, table(td(checkboxInput('man_header', 'Header', TRUE)),
+            td(HTML("&nbsp;&nbsp;")),
+            td(checkboxInput('man_str_as_factor', 'Str. as Factor', TRUE)))),
           radioButtons('man_sep', "Separator:", c(Comma=',', Semicolon=';', Tab='\t'),
                        ',', inline = TRUE),
           radioButtons('man_dec', "Decimal:", c(Period='.', Comma=','),
@@ -63,7 +63,6 @@ output$ui_Manage <- renderUI({
         uiOutput("ui_fileUpload")
       ),
       conditionalPanel(condition = "input.dataType == 'clipboard'",
-        # actionButton('loadClipData', 'Paste data')
         uiOutput("ui_clipboard_load")
       ),
       conditionalPanel(condition = "input.dataType == 'examples'",
@@ -80,7 +79,6 @@ output$ui_Manage <- renderUI({
                      "state" = "state"), selected = "rda", inline = TRUE),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
-        # actionButton('saveClipData', 'Copy data')
         uiOutput("ui_clipboard_save")
       ),
       conditionalPanel(condition = "input.saveAs != 'clipboard' &&
