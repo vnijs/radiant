@@ -2,7 +2,7 @@
 devtools::install_github("vnijs/radiant")
 devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
 devtools::install_github(c("jeroenooms/jsonlite", "rstudio/shiny"))
-devtools::install_github(c("ramnathv/htmlwidgets","rstudio/DT"))
+devtools::install_github(c("ramnathv/htmlwidgets","vnijs/DT"))
 
 options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown")

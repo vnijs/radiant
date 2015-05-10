@@ -25,5 +25,9 @@ build('../htmlwidgets')
 build('../htmlwidgets', binary = TRUE)
 
 # install('../DT')
-build('../DT')
-build('../DT', binary = TRUE)
+# build('../DT')
+# build('../DT', binary = TRUE)
+
+# install('../DT_vnijs')
+build('../DT_vnijs')
+build('../DT_vnijs', binary = TRUE)

@@ -16,8 +16,10 @@ $.extend(returnTextAreaBinding, {
     },
     subscribe: function(el, callback) {
         $(el).on('keydown.textInputBinding input.textInputBinding', function(event) {
-            if(event.keyCode == 13 && (event.metaKey || event.ctrlKey)) { //if enter key is pressed
-                callback()
+            // if(event.keyCode == 13 && (event.metaKey || event.ctrlKey)) { //if enter key is pressed
+            if(event.keyCode == 13) { //if enter key is pressed
+              event.preventDefault(); // from http://stackoverflow.com/a/30149302/1974918
+              callback()
             }
         });
     },

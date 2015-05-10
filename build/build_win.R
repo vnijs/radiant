@@ -14,6 +14,8 @@ build('../rpivotTable', binary = TRUE)
 build('../jsonlite', binary = TRUE)
 build('../htmlwidgets', binary = TRUE)
 build('../shiny', binary = TRUE)
+build('../DT_vnijs', binary = TRUE)
+# install('../DT_vnijs')
 build('../radiant_dev', binary = TRUE)
 
 setwd('../')
