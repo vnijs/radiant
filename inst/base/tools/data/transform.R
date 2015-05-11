@@ -222,30 +222,25 @@ transform_main <- reactive({
     vars <- colnames(dat)
 
 		if (input$tr_transfunction != 'none') {
-			# dat_tr <- try(dat %>% mutate_each_(funs(input$tr_transfunction), vars), silent = TRUE)
-      # if (is(dat_tr, 'try-error')) dat_tr <- dat * NA
-			# if (is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
-
       fun <- get(input$tr_transfunction)
       dat_tr <- dat %>% mutate_each_(funs(fun), vars)
-			# dat_tr <- dat %>% mutate_each_(input$tr_transfunction, vars)
-
   		cn <- c(vars,paste(input$tr_transfunction,vars, sep="_"))
 			dat <- cbind(dat,dat_tr)
 			colnames(dat) <- cn
 		}
 		if (input$tr_typefunction != 'none') {
       fun <- get(input$tr_typefunction)
-			# dat <- mutate_each_(dat,input$tr_typefunction, vars)
       dat <- mutate_each_(dat,funs(fun), vars)
 		}
     if (!is.null(input$tr_normalizer) && input$tr_normalizer != 'none') {
 
       dc <- getclass(dat)
       isNum <- "numeric" == dc | "integer" == dc
-      if (length(isNum) == 0) return("Please select numerical variables to normalize")
-      dat_tr <- try(dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer], silent = TRUE)
-      if (is(dat_tr, 'try-error')) return(attr(dat_tr,"condition")$message)
+      if (sum(isNum) == 0) return("Please select numerical variables to normalize")
+      dat_tr <- dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer]
+      # dat_tr <- try(dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer], silent = TRUE)
+      # if (is(dat_tr, 'try-error'))
+      # 	return(paste0("The normalization failed. The error message was:\n\n", attr(dat_tr,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile."))
      	cn <- c(vars,paste(vars[isNum],input$tr_normalizer, sep="_"))
 			dat <- cbind(dat,dat_tr)
 			colnames(dat) <- cn
@@ -270,11 +265,12 @@ transform_main <- reactive({
 
 			newvar <- try(do.call(car::recode, list(dat[,input$tr_columns[1]],recom)), silent = TRUE)
 			if (!is(newvar, 'try-error')) {
-
 				cn <- c(colnames(dat),paste("rc",input$tr_columns[1], sep="_"))
 				dat <- cbind(dat,newvar)
 				colnames(dat) <- cn
 				return(dat)
+			} else {
+      	return(paste0("The recode command was not valid. The error message was:\n", attr(newvar,"condition")$message, "\nPlease try again. Examples are shown in the helpfile."))
 			}
 		}
 	}
@@ -305,7 +301,6 @@ transform_main <- reactive({
 
 			fullDat <- .getdata()
 			newvar <- try(do.call(within, list(fullDat,parse(text = recom))), silent = TRUE)
-
 			if (!is(newvar, 'try-error')) {
 				nfull <- ncol(fullDat)
 				nnew <- ncol(newvar)
@@ -317,16 +312,9 @@ transform_main <- reactive({
 				cn <- c(colnames(dat),colnames(newvar))
 				dat <- cbind(dat,newvar)
 				colnames(dat) <- cn
-
 				head(dat)
-			# } else if (is.null(input$tr_columns)) {
 			} else {
-				# the 'create' command did not compile so if there were
-				# no variables selected show ... nothing
-				# print(paste0("Create command:", recom, "did not create a new variable. Please try again."))
-			 	# updateTextInput(session = session, inputId = "tr_transform", label = "Create (e.g., y = x - z):", '')
-				return(paste0("Create command: ", recom, " did not create a new variable. Please try again."))
-				# return()
+      	return(paste0("The create command was not valid. The command entered was:\n\n", recom, "\n\nThe error message was:\n\n", attr(newvar,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile."))
 			}
 		}
 	}
@@ -338,16 +326,15 @@ output$transform_data <- reactive({
 
   dat <- transform_main()
   if (is.null(dat)) return(invisible())
-  if (is.character(dat)) return(dat)
+  # if (is.character(dat)) return(dat)
+  if (is.character(dat)) return(invisible())
   show_data_snippet(dat)
 })
 
 output$transform_summary <- renderPrint({
-
 	dat <- transform_main()
 	if (is.null(dat)) return(invisible())
-	if (is.character(dat)) return(dat)
-	getsummary(dat)
+	if (is.character(dat)) cat(dat) else getsummary(dat)
 })
 
 observe({

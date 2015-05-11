@@ -5,7 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param dataset2 Dataset name (string) to combine with `dataset`. This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param cmb_vars Variables used to combine `dataset` and `dataset2`
-#' @param cmb_type The main bind and join types from the dplyr package are provided. `inner_join` returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `left_join` returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. `right_join` is equivalent to a `left_join` for datasets y and x. `full_join` combines two datasets, keeping rows and columns that appear in either. `semi_join` returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. `anti_join` returns all rows from x without matching values in y, keeping only columns from x.
+#' @param cmb_type The main bind and join types from the dplyr package are provided. \bold{inner_join} returns all rows from x with matching values in y, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{left_join} returns all rows from x, and all columns from x and y. If there are multiple matches between x and y, all match combinations are returned. \bold{right_join} is equivalent to a left join for datasets y and x. \bold{full_join} combines two datasets, keeping rows and columns that appear in either. \bold{semi_join} returns all rows from x with matching values in y, keeping just columns from x. A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, whereas a semi join will never duplicate rows of x. \bold{anti_join} returns all rows from x without matching values in y, keeping only columns from x. \bold{bind_rows} and \bold{bind_cols} are also included, as are \bold{intersect}, \bold{union}, and \bold{setdiff}. See \url{http://vnijs.github.io/radiant/base/combine.html} for further details
 #' @param cmb_name Name for the combined dataset
 #'
 #' @return If list `r_data` exists the combined dataset is added as `cmb_name`. Else the combined dataset will be returned as `cmb_name`
@@ -20,15 +20,16 @@
 #'
 #' @export
 combinedata <- function(dataset, dataset2,
-                      cmb_vars = "",
-                      cmb_type = "bind_rows",
-                      cmb_name = "cmb_data") {
+                        cmb_vars = "",
+                        cmb_type = "bind_rows",
+                        cmb_name = "") {
 
   is_join <- grepl("_join",cmb_type)
   if (is_join && cmb_vars[1] == "")
     return(cat("No variables selected to join datasets"))
 
-  if(is_string(dataset)) cmb_name = paste0("cmb_",dataset)
+  if(cmb_name == "")
+    cmb_name <- if(is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
   if(is_join) {
     cmb_dat <- get(cmb_type)(getdata(dataset), getdata(dataset2), by = cmb_vars)

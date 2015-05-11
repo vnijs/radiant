@@ -36,11 +36,11 @@ output$ui_cmb_vars <- renderUI({
 cmb_type <- c("inner_join","left_join","right_join","full_join","semi_join",
               "anti_join","bind_rows","bind_cols","intersect","union","setdiff")
 
-output$ui_cmb_type <- renderUI({
-  selectInput("cmb_type", "Combine type:", choices  = cmb_type,
-    selected = state_single("cmb_type",cmb_type, "inner_join"),
-    multiple = FALSE)
-})
+# output$ui_cmb_type <- renderUI({
+#   selectInput("cmb_type", "Combine type:", choices  = cmb_type,
+#     selected = state_single("cmb_type",cmb_type, "inner_join"),
+#     multiple = FALSE)
+# })
 
 output$ui_Combine <- renderUI({
   list(
@@ -51,8 +51,12 @@ output$ui_Combine <- renderUI({
       ),
       uiOutput("ui_cmb_vars"),
       conditionalPanel(condition = "output.ui_cmb_vars != null",
-        uiOutput("ui_cmb_type"),
-        textInput("cmb_name", "Data name:", state_init("cmb_name",paste0("cmb_",input$dataset))),
+        # uiOutput("ui_cmb_type"),
+        selectInput("cmb_type", "Combine type:", choices  = cmb_type,
+                    selected = state_single("cmb_type",cmb_type, "inner_join"),
+                    multiple = FALSE),
+        textInput("cmb_name", "Data name:",
+                  state_init("cmb_name",paste0("cmb_",input$dataset))),
         actionButton("cmb_button", "Combine")
       )
     ),
@@ -66,7 +70,13 @@ observe({
   # merging data
   if (not_pressed(input$cmb_button)) return()
   isolate({
-    do.call(combinedata, cmb_inputs())
+    dataset1 <- input$dataset
+    dataset2 <- input$dataset2
+    cmb_result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
+    if (is(cmb_result, 'try-error'))
+      r_data[[input$cmb_name]] <- attr(cmb_result,"condition")$message
+    updateSelectInput(session = session, inputId = "dataset", selected = dataset1)
+    updateSelectInput(session = session, inputId = "dataset2", selected = dataset2)
   })
 })
 
@@ -88,19 +98,25 @@ output$cmb_possible <- renderText({
 
 output$cmb_data1 <- renderText({
   if (is.null(input$dataset2)) return()
-  show_data_snippet(title = paste("<h3>Data:",input$dataset,"</h3>"))
+  show_data_snippet(title = paste("<h3>Dataset 1:",input$dataset,"</h3>"))
 })
 
 output$cmb_data2 <- renderText({
   if (is.null(input$dataset2)) return()
-  show_data_snippet(input$dataset2, title = paste("<h3>Data:",input$dataset2,"</h3>"))
+  show_data_snippet(input$dataset2, title = paste("<h3>Dataset 2:",input$dataset2,"</h3>"))
 })
 
 output$cmb_data <- renderText({
-  if (is_empty(input$cmb_name)) return()
-  if (!is.null(r_data[[input$cmb_name]]))
-    show_data_snippet(input$cmb_name, nshow = 15,
-                      title = paste("<h3>Combined data:",input$cmb_name,"</h3>"))
+  input$cmb_button  # this dependence is needed to update cmb_type when the result is the same
+  cmb_name <- if (is_empty(input$cmb_name)) paste0("cmb_",isolate(input$dataset))
+              else input$cmb_name
+  if (!is.null(r_data[[cmb_name]])) {
+    if (is.character(r_data[[cmb_name]]))
+      HTML(paste0("</br><h4>The combine type selected is not appropriate for these datasets.</br>The error message was:</br></br>\"", r_data[[cmb_name]],"\"</h4>"))
+    else
+      show_data_snippet(cmb_name, nshow = 15, title = paste0("<h3>Combined dataset: ",
+        cmb_name," [<font color='blue'>", isolate(input$cmb_type),"</font>]</h3>"))
+  }
 })
 
 

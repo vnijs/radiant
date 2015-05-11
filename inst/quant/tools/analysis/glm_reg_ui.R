@@ -306,7 +306,7 @@ output$glm_reg <- renderUI({
 .summary_glm_reg <- reactive({
 
   if (not_available(input$glm_dep_var))
-    return("This analysis requires a dependent variable with two levels and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("titanic"))
+    return("This analysis requires a dependent variable with two levels and one\nor more independent variables. If these variables are not available\nplease select another dataset.\n\n" %>% suggest_data("titanic"))
 
   if (not_available(input$glm_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("titanic"))

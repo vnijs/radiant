@@ -371,7 +371,7 @@ predict.glm_reg <- function(object,
   if ("standardize" %in% object$glm_check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (glm_predict_cmd == "" && glm_predict_data == "") {
-    return(cat("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\nMake sure to press CTRL-return (CMD-return on mac) after you finish entering the command.\nIf no results are shown the command was likely invalid\nAlternatively specify a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant"))
+    return(cat("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in Excel and use the\npaste feature in Data > Manage to bring it into Radiant"))
   }
 
   if (glm_predict_cmd != "" && glm_predict_data != "")
@@ -384,7 +384,8 @@ predict.glm_reg <- function(object,
     glm_predict_cmd %<>% gsub("\"","\'", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", glm_predict_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
-      return(cat("The command entered did not generate valid data for prediction. Please try again.\nExamples are shown in the helpfile.\n"))
+      paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile.") %>% cat
+      return()
     }
 
     # adding information to the prediction data.frame
@@ -454,7 +455,7 @@ predict.glm_reg <- function(object,
 
     return(pred %>% set_class(c("glm_predict",class(.))))
   } else {
-    cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+    paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred_val,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile.") %>% cat
   }
 
   return(invisible())

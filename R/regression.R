@@ -158,7 +158,7 @@ summary.regression <- function(object,
         vif (object$model) %>%
           { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
-          round(3) %>%
+          round(2) %>%
           .[order(.$VIF, decreasing=T),] %>%
           { if (nrow(.) < 8) t(.) else . } %>%
           print
@@ -419,7 +419,7 @@ predict.regression <- function(object,
   if ("standardize" %in% object$reg_check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (reg_predict_cmd == "" && reg_predict_data == "") {
-    return(cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. \nMake sure to press CTRL-return (CMD-return on mac) after you finish entering the command.\nIf no results are shown the command was likely invalid\nAlternatively specify a dataset to generate predictions. You could create this in Excel\nand use the paste feature in Data > Manage to bring it into Radiant"))
+    return(cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. Make\nsure to press return after you finish entering the command.\nIf no results are shown the command was likely invalid. Alternatively,\nspecify a dataset to generate predictions. You could create this in\nExcel and use the paste feature in Data > Manage to bring it into\nRadiant"))
   }
 
   if (reg_predict_cmd != "" && reg_predict_data != "")
@@ -431,7 +431,8 @@ predict.regression <- function(object,
     reg_predict_cmd %<>% gsub("\"","\'", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", reg_predict_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
-      return(cat("The command entered did not generate valid data for prediction. Please try again.\nExamples are shown in the helpfile.\n"))
+      paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile.") %>% cat
+      return()
     }
 
     # adding information to the prediction data.frame
@@ -506,7 +507,7 @@ predict.regression <- function(object,
     return(pred %>% set_class(c("reg_predict",class(.))))
 
   } else {
-    cat("The expression entered does not seem to be correct. Please try again.\nExamples are shown in the helpfile.\n")
+    paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred_val,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile.") %>% cat
   }
 }
 
