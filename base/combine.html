@@ -501,10 +501,12 @@ DC
 </table>
 <p>In the table above we lose <em>Hellboy</em> because, although this hero does appear in <code>superheroes</code>, the publisher (<em>Dark Horse Comics</em>) does not appear in <code>publishers</code>. The join result has all variables from <code>superheroes</code>, plus <em>yr_founded</em>, from <code>publishers</code>. We can visualize an inner join with the venn-diagram below:</p>
 <p><img src="figures/inner_join.png" alt="inner_join" /></p>
-<p>The command that Radiant uses internally is:</p>
-<pre class="r"><code>combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;inner_join&quot;, cmb_name = &quot;cmb_superheroes&quot;)</code></pre>
-<p>The same result can be achieved with the following R-code:</p>
-<pre class="r"><code>cmb_superheroes &lt;- inner_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p>The R(adiant) commands are:</p>
+<pre class="r"><code># Radiant
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;inner_join&quot;)
+
+# R
+inner_join(superheroes, publishers, by = &quot;publisher&quot;) </code></pre>
 <p><br></p>
 </div>
 <div id="left-join-superheroes-publishers" class="section level3">
@@ -656,10 +658,12 @@ NA
 </table>
 <p>The join result contains <code>superheroes</code> with variable <code>yr_founded</code> from <code>publishers</code>. <em>Hellboy</em>, whose publisher does not appear in <code>publishers</code>, has an <code>NA</code> for <em>yr_founded</em>. We can visualize a left join with the venn-diagram below:</p>
 <p><img src="figures/left_join.png" alt="left_join" /></p>
-<p>The command that Radiant uses internally is:</p>
-<pre class="r"><code>combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;left_join&quot;, cmb_name = &quot;cmb_superheroes&quot;)</code></pre>
-<p>The same result can be achieved with the following R-code:</p>
-<pre class="r"><code>cmb_superheroes &lt;- left_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p>The R(adiant) commands are:</p>
+<pre class="r"><code># Radiant
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;left_join&quot;)
+
+# R
+left_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="right-join-superheroes-publishers" class="section level3">
@@ -811,10 +815,12 @@ Image
 </table>
 <p>The join result contains all rows and columns from <code>publishers</code> and all variables from <code>superheroes</code>. We lose <em>Hellboy</em>, whose publisher does not appear in <code>publishers</code>. <em>Image</em> is retained in the table but has <code>NA</code> values for the variables <em>name</em>, <em>alignment</em>, and <em>gender</em> from <code>superheroes</code>. Notice that a join can change both the row and variable order so you should not rely on these in your analysis. We can visualize a right join with the venn-diagram below:</p>
 <p><img src="figures/right_join.png" alt="right_join" /></p>
-<p>The command that Radiant uses internally is:</p>
-<pre class="r"><code>combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;right_join&quot;, cmb_name = &quot;cmb_superheroes&quot;)</code></pre>
-<p>The same result can be achieved with the following R-code:</p>
-<pre class="r"><code>cmb_superheroes &lt;- right_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p>The R(adiant) commands are:</p>
+<pre class="r"><code># Radiant
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;right_join&quot;)
+
+# R
+right_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="full-join-superheroes-publishers" class="section level3">
@@ -983,10 +989,12 @@ Image
 </table>
 <p>In this table we keep <em>Hellboy</em> (even though <em>Dark Horse Comics</em> is not in <code>publishers</code>) and <em>Image</em> (even though the publisher is not listed in <code>superheroes</code>) and get variables from both datasets. Observations without a match are assigned the value NA for variables from the <em>other</em> dataset. We can visualize a full join with the venn-diagram below:</p>
 <p><img src="figures/full_join.png" alt="full_join" /></p>
-<p>The command that Radiant uses internally is:</p>
-<pre class="r"><code>combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;full_join&quot;, cmb_name = &quot;cmb_superheroes&quot;)</code></pre>
-<p>The same result can be achieved with the following R-code:</p>
-<pre class="r"><code>cmb_superheroes &lt;- full_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p>The R(adiant) commands are:</p>
+<pre class="r"><code># Radiant
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;full_join&quot;)
+
+# R
+full_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
 </div>
 <div id="semi-join-superheroes-publishers" class="section level3">
 <h3>Semi join (superheroes, publishers)</h3>
@@ -1097,10 +1105,12 @@ Marvel
 </tr>
 </tbody>
 </table>
-<p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The command that Radiant uses internally is:</p>
-<pre class="r"><code>combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;semi_join&quot;, cmb_name = &quot;cmb_superheroes&quot;)</code></pre>
-<p>The same result can be achieved with the following R-code:</p>
-<pre class="r"><code>cmb_superheroes &lt;- semi_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
+<p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The R(adiant) commands are:</p>
+<pre class="r"><code># Radiant
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;semi_join&quot;)
+
+# R
+semi_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="anti-join-superheroes-publishers" class="section level3">
@@ -1580,10 +1590,12 @@ Dark Horse Comics
 </tbody>
 </table>
 <p>If the <code>avengers</code> dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the <code>avengers</code> dataset (i.e.., <em>Magneto</em> is <em>not</em> an <em>Avenger</em>) there is a duplicate row in the new combined dataset. Something we probably don’t want.</p>
-<p>The command that Radiant uses internally is:</p>
-<pre class="r"><code>combinedata(&quot;avengers&quot;, &quot;superheroes&quot;, cmb_type = &quot;bind_rows&quot;, cmb_name = &quot;cmb_avengers&quot;)</code></pre>
-<p>The same result can be achieved with the following R-code:</p>
-<pre class="r"><code>cmb_avengers &lt;- bind_rows(avengers, superheroes)</code></pre>
+<p>The R(adiant) commands are:</p>
+<pre class="r"><code># Radiant
+combinedata(&quot;avengers&quot;, &quot;superheroes&quot;, cmb_type = &quot;bind_rows&quot;)
+
+# R
+bind_rows(avengers, superheroes)</code></pre>
 <p><br></p>
 </div>
 <div id="bind-columns" class="section level3">
@@ -1842,7 +1854,7 @@ Marvel
 </tbody>
 </table>
 <p>A good way to check if two datasets with the same columns have duplicate rows is to choose <code>intersect</code> from the <code>Combine type</code> dropdown. There is indeed one row that is identical in the <code>avengers</code> and <code>superheroes</code> data (i.e., <em>Magneto</em>).</p>
-<p>The command used in R and Radiant are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>intersect</code>.</p>
+<p>The R(adiant) commands are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>intersect</code>.</p>
 <p><br></p>
 </div>
 <div id="union" class="section level3">
@@ -2050,7 +2062,7 @@ Marvel
 </tbody>
 </table>
 <p>A <code>union</code> of <code>avengers</code> and <code>superheroes</code> will combine the datasets but will omit duplicate rows (i.e., it will keep only one <em>copy</em> of the row for <em>Magneto</em>). Likely what we want here.</p>
-<p>The command used in R and Radiant are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>union</code>.</p>
+<p>The R(adiant) commands are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>union</code>.</p>
 <p><br></p>
 </div>
 <div id="setdiff" class="section level3">
@@ -2160,7 +2172,7 @@ Marvel
 </tbody>
 </table>
 <p>Finally, a <code>setdiff</code> will keep rows from <code>avengers</code> that are not in <code>superheroes</code>. If we reverse the inputs (i.e., choose <code>superheroes</code> from the <code>Datasets</code> dropdown and <code>superheroes</code> from the <code>Combine with</code> dropdown) we will end up with all rows from <code>superheroes</code> that are not in <code>avengers</code>. In both cases the entry for <em>Magneto</em> will be omitted.</p>
-<p>The command used in R and Radiant are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>setdiff</code>.</p>
+<p>The R(adiant) commands are the same as shown above, except you will need to replace <code>bind_rows</code> by <code>setdiff</code>.</p>
 <p><br></p>
 <hr />
 <p>For additional discussion see <a href="http://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html" class="uri">http://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html</a></p>

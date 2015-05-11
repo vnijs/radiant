@@ -162,16 +162,14 @@ In the table above we lose _Hellboy_ because, although this hero does appear in 
 
 ![inner_join](figures/inner_join.png)
 
-The command that Radiant uses internally is:
+The R(adiant) commands are:
 
 ```r
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "inner_join", cmb_name = "cmb_superheroes")
-```
+# Radiant
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "inner_join")
 
-The same result can be achieved with the following R-code:
-
-```r
-cmb_superheroes <- inner_join(superheroes, publishers, by = "publisher")
+# R
+inner_join(superheroes, publishers, by = "publisher") 
 ```
 
 <br>
@@ -247,16 +245,14 @@ The join result contains `superheroes` with variable `yr_founded` from `publishe
 
 ![left_join](figures/left_join.png)
 
-The command that Radiant uses internally is:
+The R(adiant) commands are:
 
 ```r
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "left_join", cmb_name = "cmb_superheroes")
-```
+# Radiant
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "left_join")
 
-The same result can be achieved with the following R-code:
-
-```r
-cmb_superheroes <- left_join(superheroes, publishers, by = "publisher")
+# R
+left_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -332,16 +328,14 @@ The join result contains all rows and columns from `publishers` and all variable
 
 ![right_join](figures/right_join.png)
 
-The command that Radiant uses internally is:
+The R(adiant) commands are:
 
 ```r
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "right_join", cmb_name = "cmb_superheroes")
-```
+# Radiant
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "right_join")
 
-The same result can be achieved with the following R-code:
-
-```r
-cmb_superheroes <- right_join(superheroes, publishers, by = "publisher")
+# R
+right_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -424,16 +418,14 @@ In this table we keep _Hellboy_ (even though _Dark Horse Comics_ is not in `publ
 
 ![full_join](figures/full_join.png)
 
-The command that Radiant uses internally is:
+The R(adiant) commands are:
 
 ```r
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "full_join", cmb_name = "cmb_superheroes")
-```
+# Radiant
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "full_join")
 
-The same result can be achieved with the following R-code:
-
-```r
-cmb_superheroes <- full_join(superheroes, publishers, by = "publisher")
+# R
+full_join(superheroes, publishers, by = "publisher")
 ```
 
 ### Semi join (superheroes, publishers)
@@ -489,20 +481,17 @@ cmb_superheroes <- full_join(superheroes, publishers, by = "publisher")
 </tbody>
 </table>
 
-We get a similar table as with `inner_join` but it contains only the variables in `superheroes`. The command that Radiant uses internally is:
+We get a similar table as with `inner_join` but it contains only the variables in `superheroes`. The R(adiant) commands are:
 
 ```r
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "semi_join", cmb_name = "cmb_superheroes")
-```
+# Radiant
+combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "semi_join")
 
-The same result can be achieved with the following R-code:
-
-```r
-cmb_superheroes <- semi_join(superheroes, publishers, by = "publisher")
+# R
+semi_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
-
 
 ### Anti join (superheroes, publishers)
 
@@ -532,7 +521,6 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 ![anti_join](figures/anti_join.png)
 
 <br>
-
 
 ### Dataset order
 
@@ -773,16 +761,14 @@ In the screen-shot of the Data > Combine tab below we see the two datasets. Ther
 
 If the `avengers` dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the `avengers` dataset (i.e.., _Magneto_ is *not* an _Avenger_) there is a duplicate row in the new combined dataset. Something we probably don't want.
 
-The command that Radiant uses internally is:
+The R(adiant) commands are:
 
 ```r
-combinedata("avengers", "superheroes", cmb_type = "bind_rows", cmb_name = "cmb_avengers")
-```
+# Radiant
+combinedata("avengers", "superheroes", cmb_type = "bind_rows")
 
-The same result can be achieved with the following R-code:
-
-```r
-cmb_avengers <- bind_rows(avengers, superheroes)
+# R
+bind_rows(avengers, superheroes)
 ```
 
 <br>
@@ -903,7 +889,7 @@ If the dataset had different columns for the same superheroes we could combine t
 
 A good way to check if two datasets with the same columns have duplicate rows is to choose `intersect` from the `Combine type` dropdown. There is indeed one row that is identical in the `avengers` and `superheroes` data (i.e., _Magneto_).
 
-The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `intersect`.
+The R(adiant) commands are the same as shown above, except you will need to replace `bind_rows` by `intersect`.
 
 <br>
 
@@ -1002,7 +988,7 @@ The command used in R and Radiant are the same as shown above, except you will n
 
 A `union` of `avengers` and `superheroes` will combine the datasets but will omit duplicate rows (i.e., it will keep only one _copy_ of the row for _Magneto_). Likely what we want here.
 
-The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `union`.
+The R(adiant) commands are the same as shown above, except you will need to replace `bind_rows` by `union`.
 
 <br>
 
@@ -1059,7 +1045,7 @@ The command used in R and Radiant are the same as shown above, except you will n
 
 Finally, a `setdiff` will keep rows from `avengers` that are not in `superheroes`. If we reverse the inputs (i.e., choose `superheroes` from the `Datasets` dropdown and `superheroes` from the `Combine with` dropdown) we will end up with all rows from `superheroes` that are not in `avengers`. In both cases the entry for _Magneto_ will be omitted.
 
-The command used in R and Radiant are the same as shown above, except you will need to replace `bind_rows` by `setdiff`.
+The R(adiant) commands are the same as shown above, except you will need to replace `bind_rows` by `setdiff`.
 
 <br>
 
