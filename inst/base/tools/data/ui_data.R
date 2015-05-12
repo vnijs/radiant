@@ -42,8 +42,8 @@ output$ui_data <- renderUI({
           tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
           tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
           tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
-          tabPanel("Combine", htmlOutput("cmb_possible"), htmlOutput("cmb_data1"),
-                   htmlOutput("cmb_data2"), htmlOutput("cmb_data"))
+          tabPanel("Combine", htmlOutput("cmb_data1"),
+                   htmlOutput("cmb_data2"), htmlOutput("cmb_possible"), htmlOutput("cmb_data"))
           # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),
         )
       )

@@ -25,8 +25,9 @@ Calculate correlations for two or more variables
 See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example in Radiant
 }
 \examples{
-result <- correlation("diamonds",c("price","carat","clarity"))
-result <- correlation("diamonds",c("price:table"))
+result <- correlation("diamonds", c("price","carat","clarity"))
+result <- correlation("diamonds", "price:table")
+result <- diamonds \%>\% correlation("price:table")
 }
 \seealso{
 \code{\link{summary.correlation}} to summarize results

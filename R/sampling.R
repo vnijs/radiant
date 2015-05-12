@@ -23,7 +23,7 @@ sampling <- function(dataset, smp_var, smp_sample_size,
   if (!is_string(dataset)) dataset <- "-----"
 
 	# example list of names obtained from http://listofrandomnames.com
-  dat$rnd_number <- runif (nrow(dat), min = 0, max = 1)
+  dat$rnd_number <- runif(nrow(dat), min = 0, max = 1)
   dat %>%
     arrange(desc(rnd_number)) %>%
     slice(1:smp_sample_size) -> seldat

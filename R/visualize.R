@@ -88,9 +88,10 @@ visualize <- function(dataset, viz_xvar,
     }
   } else if (viz_type == "scatter") {
     itt <- 1
+    gs <- if ("jitter" %in% viz_check) geom_blank() else geom_point(alpha = .5)
     for (i in viz_xvar) {
       for (j in viz_yvar) {
-        plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_point(alpha = .5)
+        plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + gs
         itt <- itt + 1
       }
     }
@@ -140,7 +141,7 @@ visualize <- function(dataset, viz_xvar,
       plots[[i]] <- plots[[i]] + aes_string(color=viz_color) + scale_fill_brewer()
 
   if ("jitter" %in% viz_check)
-    for (i in 1:length(plots)) plots[[i]] <- plots[[1]] + geom_jitter()
+    for (i in 1:length(plots)) plots[[i]] <- plots[[1]] + geom_jitter(alpha = .5)
 
   if ("line" %in% viz_check)
     for (i in 1:length(plots))

@@ -4,7 +4,7 @@
 \alias{combinedata}
 \title{Combine datasets using dplyr's bind and join functions}
 \usage{
-combinedata(dataset, dataset2, cmb_vars = "", cmb_type = "bind_rows",
+combinedata(dataset, dataset2, cmb_vars = "", cmb_type = "inner_join",
   cmb_name = "")
 }
 \arguments{

@@ -32,6 +32,7 @@ result <- explore("diamonds", "price:x")
 summary(result)
 result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
 summary(result)
+diamonds \%>\% explore("price", expl_byvar = "cut", expl_fun = c("length", "skew"))
 }
 \seealso{
 \code{\link{summary.explore}} to show summaries

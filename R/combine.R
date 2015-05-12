@@ -21,23 +21,31 @@
 #' @export
 combinedata <- function(dataset, dataset2,
                         cmb_vars = "",
-                        cmb_type = "bind_rows",
+                        cmb_type = "inner_join",
                         cmb_name = "") {
 
   is_join <- grepl("_join",cmb_type)
   if (is_join && cmb_vars[1] == "")
-    return(cat("No variables selected to join datasets"))
+    return(cat("No variables selected to join datasets\n"))
 
-  if(cmb_name == "")
-    cmb_name <- if(is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
+  if (cmb_name == "")
+    cmb_name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
-  if(is_join) {
+#   if (cmb_type == "bind_cols") {
+#     if((intersect(names(getdata(dataset)),names(getdata(dataset2))) %>% length) > 0)
+#       return("Error: found duplicated column name")
+#   }
+
+  if (is_join) {
     cmb_dat <- get(cmb_type)(getdata(dataset), getdata(dataset2), by = cmb_vars)
-    cmb_madd <- paste0("\n\nBy: ", paste0(cmb_vars, collapse=", "))
+    cmb_madd <- paste0("\n\nBy: ", paste0(cmb_vars, collapse = ", "))
   } else {
     cmb_dat <- get(cmb_type)(getdata(dataset), getdata(dataset2))
     cmb_madd <- ""
   }
+
+  if (is.character(cmb_dat)) return(cmb_dat)
+
   cmb_message <- paste0("\n### Combined\n\nDatasets: ", dataset, " and ",
                         dataset2, " (", cmb_type, ")", cmb_madd, "\n\nOn: ",
                         lubridate::now())

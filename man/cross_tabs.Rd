@@ -26,6 +26,7 @@ See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in
 }
 \examples{
 result <- cross_tabs("newspaper", "Income", "Newspaper")
+result <- newspaper \%>\% cross_tabs("Income", "Newspaper")
 }
 \seealso{
 \code{\link{summary.cross_tabs}} to summarize results

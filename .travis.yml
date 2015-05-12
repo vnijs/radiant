@@ -13,3 +13,6 @@ r_github_packages:
 
 after_success:
   - Rscript -e 'library(covr);coveralls()'
+
+
+# use [ci skip] to skip build

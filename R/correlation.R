@@ -10,8 +10,9 @@
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' result <- correlation("diamonds",c("price","carat","clarity"))
-#' result <- correlation("diamonds",c("price:table"))
+#' result <- correlation("diamonds", c("price","carat","clarity"))
+#' result <- correlation("diamonds", "price:table")
+#' result <- diamonds %>% correlation("price:table")
 #'
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #' @seealso \code{\link{plot.correlation}} to plot results
@@ -69,7 +70,7 @@ summary.correlation <- function(object,
 	cat("Data     :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables:", paste0(object$cor_var, collapse=", "), "\n")
+	cat("Variables:", paste0(object$cor_var, collapse = ", "), "\n")
 	cat("Null hyp.: variables x and y are not correlated\n")
 	cat("Alt. hyp.: variables x and y are correlated\n\n")
 
@@ -109,19 +110,36 @@ plot.correlation <- function(x, ...) {
 	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
 	                  symbols = c("***", "**", "*", ".", " "))
 	    r <- ct$estimate
-	    rt <- format(r, digits=2)[1]
+	    rt <- format(r, digits = 2)[1]
 	    cex <- 0.5/strwidth(rt)
 
-	    text(.5, .5, rt, cex=cex * abs(r))
-	    text(.8, .8, sig, cex=cex, col='blue')
+	    text(.5, .5, rt, cex = cex * abs(r))
+	    text(.8, .8, sig, cex = cex, col = 'blue')
 	}
-	panel.smooth <- function (x, y) {
+	panel.smooth <- function(x, y) {
     points(x, y)
     # uncomment the lines below if you want linear and loess lines
     # in the scatter plot matrix
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	object$dat %>% { if (is.null(.)) object else . } %>%
-	pairs(lower.panel=panel.smooth, upper.panel=panel.plot)
+	object$dat %>% {if (is.null(.)) object else .} %>%
+	pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }
+
+#' Print method for the correlation function
+#'
+#' @details Default print method throws an error, "Error in if (p > 1) \{ : argument is of length zero". Setting class to 'list' and printing resolves this error
+#'
+#' @param object Return value from \code{\link{correlation}}
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @examples
+#' correlation("diamonds",c("price","carat","clarity"))
+#'
+#' @seealso \code{\link{correlation}} to calculate results
+#' @seealso \code{\link{summary.correlation}} to print results
+#' @seealso \code{\link{plot.correlation}} to plot results
+#'
+#' @export
+print.correlation <- function(x, ...) x %>% set_class("list") %>% print

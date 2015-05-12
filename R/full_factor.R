@@ -14,7 +14,7 @@
 #' @examples
 #' result <- full_factor("diamonds",c("price","carat","table","x","y"))
 #' result <- full_factor("diamonds",c("price","carat","table","x","y"), ff_meth = "maxlik")
-#' summary(result)
+#' result <- diamonds %>% full_factor(c("price","carat","table","x","y"), ff_meth = "maxlik")
 #'
 #' @seealso \code{\link{summary.full_factor}} to summarize results
 #' @seealso \code{\link{plot.full_factor}} to plot results

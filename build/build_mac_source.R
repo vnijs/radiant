@@ -28,6 +28,6 @@ build('../htmlwidgets', binary = TRUE)
 # build('../DT')
 # build('../DT', binary = TRUE)
 
-# install('../DT_vnijs')
+# devtools::install('../DT_vnijs')
 build('../DT_vnijs')
 build('../DT_vnijs', binary = TRUE)

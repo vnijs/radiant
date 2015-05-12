@@ -32,7 +32,7 @@ See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an examp
 \examples{
 result <- full_factor("diamonds",c("price","carat","table","x","y"))
 result <- full_factor("diamonds",c("price","carat","table","x","y"), ff_meth = "maxlik")
-summary(result)
+result <- diamonds \%>\% full_factor(c("price","carat","table","x","y"), ff_meth = "maxlik")
 }
 \seealso{
 \code{\link{summary.full_factor}} to summarize results

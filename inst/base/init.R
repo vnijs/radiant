@@ -97,9 +97,10 @@ if (r_local) {
   # does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")
 
-  # adding any data.frame in the global environment to r_data should not affect
+  # adding any data.frame from the global environment to r_data should not affect
   # memory usage ... at least until the entry in r_data is changed
-  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>% { names(.[.]) }
+  df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
+    { names(.[.]) }
 
   for (df in df_list) {
     isolate({
@@ -108,7 +109,7 @@ if (r_local) {
       r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
         { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
       r_data$datasetlist %<>% c(df, .) %>% unique
-      rm(list = df, envir = .GlobalEnv)
+      # rm(list = df, envir = .GlobalEnv)
     })
   }
 }

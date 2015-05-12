@@ -11,6 +11,7 @@
 #'
 #' @examples
 #' result <- cross_tabs("newspaper", "Income", "Newspaper")
+#' result <- newspaper %>% cross_tabs("Income", "Newspaper")
 #'
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #' @seealso \code{\link{plot.cross_tabs}} to plot results

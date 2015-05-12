@@ -18,6 +18,7 @@ output$savequit <- renderUI({
                     "Quit")),
       wellPanel(
         checkboxInput('showInput', 'Show input', FALSE),
+        checkboxInput('showRdata', 'Show r_data', FALSE),
         checkboxInput('showState', 'Show state', FALSE)),
 
       help_modal('Quit','quitHelp',inclMD(file.path(r_path,"base/tools/help/quit.md")))
@@ -25,6 +26,9 @@ output$savequit <- renderUI({
     mainPanel(
       conditionalPanel(condition = "input.showInput == true",
         verbatimTextOutput("showInput")
+      ),
+      conditionalPanel(condition = "input.showRdata == true",
+        verbatimTextOutput("showRdata")
       ),
       conditionalPanel(condition = "input.showState == true",
         verbatimTextOutput("showState")
@@ -41,10 +45,20 @@ output$downloadStateQuit <- downloadHandler(
 )
 
 output$showInput <- renderPrint({
+  input$showInput # only update when you toggle the checkbox
   isolate({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
     str(inp[sort(names(inp))])
+  })
+})
+
+output$showRdata <- renderPrint({
+  input$showRdata # only update when you toggle the checkbox
+  isolate({
+    cat("r_data list:\n")
+    reactiveValuesToList(r_data) %>%
+      {str(.[sort(names(.))])}
   })
 })
 

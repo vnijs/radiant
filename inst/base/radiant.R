@@ -126,18 +126,30 @@ d2c <- function(x) if (is_date(x)) as.character(x) else x
 trunc_char <- function(x) if (is.character(x)) strtrim(x,17) else x
 
 # show a few rows of a dataframe
-show_data_snippet <- function(dat = input$dataset, nshow = 5, title = "") {
-  { if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat } %>%
-    slice(1:min(nshow,nrow(.))) %>%
+show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
+  n <- 0
+  # dat <- if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat
+  # if (is.null(dat) || is.character(dat)) return(HTML(paste0("<h3>",dat,"</h3>")))
+  # dat %>%
+  {if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat} %>%
+    { n <<- nrow(.); . } %>%
+    slice(1:min(nshow,n)) %>%
     mutate_each(funs(d2c)) %>%
     mutate_each(funs(trunc_char)) %>%
     xtable::xtable(.) %>%
-    print(type='html',  print.results = FALSE, include.rownames = FALSE) %>%
+    print(type = 'html',  print.results = FALSE, include.rownames = FALSE) %>%
     paste0(title, .) %>%
-    sub("<table border=*.1*.>","<table class='table table-condensed table-hover'>", ., perl = TRUE) %>%
-    paste0(.,'\n<label>',nshow,' (max) rows shown. See View-tab for details.</label>') %>%
+    sub("<table border=*.1*.>","<table class='table table-condensed table-hover'>", .,
+        perl = TRUE) %>%
+    {if (n <= nshow) . else paste0(.,'\n<label>',nshow,' of ', n, ' rows shown. See View-tab for details.</label>')} %>%
     enc2utf8
 }
+
+# show_data_snippet(mtcars)
+# show_data_snippet(mtcars[1:5,])
+# r_data <- list()
+# r_data$mtcars <- mtcars
+# show_data_snippet("mtcars")
 
 suggest_data <- function(text = "", dat = "diamonds")
   paste0(text, "For an example dataset go to Data > Manage, select the 'examples' radio button,\nand press the 'Load examples' button. Then select the \'", dat, "\' dataset")
