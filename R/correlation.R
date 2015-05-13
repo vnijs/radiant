@@ -14,8 +14,8 @@
 #' result <- correlation("diamonds", "price:table")
 #' result <- diamonds %>% correlation("price:table")
 #'
-#' @seealso \code{\link{summary.correlation}} to summarize results
-#' @seealso \code{\link{plot.correlation}} to plot results
+#' @seealso \code{\link{summary.correlation_}} to summarize results
+#' @seealso \code{\link{plot.correlation_}} to plot results
 #'
 #' @importFrom psych corr.test
 #'
@@ -30,8 +30,8 @@ correlation <- function(dataset, cor_var,
 
 	if (!is_string(dataset)) dataset <- "-----"
 
-	# using correlation_r to avoid print method conflict with nlme
-  environment() %>% as.list %>% set_class(c("correlation_r",class(.)))
+	# using correlation_ to avoid print method conflict with nlme
+  environment() %>% as.list %>% set_class(c("correlation_",class(.)))
 }
 
 #' Summary method for the correlation function
@@ -48,10 +48,10 @@ correlation <- function(dataset, cor_var,
 #' diamonds %>% correlation("price:clarity") %>% summary
 #'
 #' @seealso \code{\link{correlation}} to calculate results
-#' @seealso \code{\link{plot.correlation}} to plot results
+#' @seealso \code{\link{plot.correlation_}} to plot results
 #'
 #' @export
-summary.correlation_r <- function(object,
+summary.correlation_ <- function(object,
                                 cor_cutoff = 0,
                                 ...) {
 
@@ -95,10 +95,10 @@ summary.correlation_r <- function(object,
 #' diamonds %>% correlation("price:clarity") %>% plot
 #'
 #' @seealso \code{\link{correlation}} to calculate results
-#' @seealso \code{\link{summary.correlation}} to summarize results
+#' @seealso \code{\link{summary.correlation_}} to summarize results
 #'
 #' @export
-plot.correlation_r <- function(x, ...) {
+plot.correlation_ <- function(x, ...) {
 
 	object <- x; rm(x)
 

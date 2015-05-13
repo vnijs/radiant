@@ -30,8 +30,8 @@ result <- correlation("diamonds", "price:table")
 result <- diamonds \%>\% correlation("price:table")
 }
 \seealso{
-\code{\link{summary.correlation}} to summarize results
+\code{\link{summary.correlation_}} to summarize results
 
-\code{\link{plot.correlation}} to plot results
+\code{\link{plot.correlation_}} to plot results
 }
 

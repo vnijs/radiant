@@ -373,7 +373,7 @@ plot.regression <- function(x,
   }
 
   if ("correlations" %in% reg_plots)
-    return(plot.correlation(object$model$model))
+    return(plot.correlation_(object$model$model))
 
   if ("leverage" %in% reg_plots)
     return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1,
