@@ -6,10 +6,10 @@ readLines(fn) %>%
   gsub("top: 95px;", "top: 145px;", .) %>%
   cat(file = fn, sep = "\n")
 
-Sys.sleep(2)
+Sys.sleep(5)
 
 system("git add --all .")
-system("git commit -m 'Update css for shinyapps.io: `date +\"%m-%d-%Y\"` [ci skip]'")
+system("git commit -m 'Update css for shinyapps.io [ci skip]'")
 system("git push")
 
 # options(repos = "http://cran.rstudio.com")
@@ -41,10 +41,10 @@ readLines(fn) %>%
   gsub("top: 145px;", "top: 95px;", .) %>%
   cat(file = fn, sep = "\n")
 
-Sys.sleep(2)
+Sys.sleep(5)
 
 system("git add --all .")
-system("git commit -m 'Undo css update for shinyapps.io: `date +\"%m-%d-%Y\"` [ci skip]'")
+system("git commit -m 'Undo css change for shinyapps.io [ci skip]'")
 system("git push")
 
 answ <- readline("Did you create binary packages for Windows? (y/n) ")
