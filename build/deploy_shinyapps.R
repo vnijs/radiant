@@ -10,17 +10,14 @@ system("git add --all .")
 system("git commit -m 'Update css for shinyapps.io: `date +\"%m-%d-%Y\"` [ci skip]'")
 system("git push")
 
+# options(repos = "http://cran.rstudio.com")
+# install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
+
 # devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
 # devtools::install_github(c("jeroenooms/jsonlite", "rstudio/shiny", "ramnathv/htmlwidgets"))
+# devtools::install_github(c("rstudio/shinyapps", "themel/sendmailR", "jimhester/covr"))
 devtools::install_github(c("vnijs/radiant","vnijs/DT"))
 
-options(repos = "http://cran.rstudio.com")
-# install.packages("rmarkdown")
-# install.packages("ggvis")
-# install.packages("testthat")
-# devtools::install_github('rstudio/shinyapps')
-# devtools::install_github("themel/sendmailR")
-# devtools::install_github("jimhester/covr")
 
 library(shinyapps)
 fpath <- "~/gh/radiant_dev/inst/base"
@@ -41,11 +38,18 @@ deployApp(account = "vnijs", launch.browser = FALSE)
 fn <- "~/gh/radiant_dev/inst/base/www/style.css"
 readLines(fn) %>%
   gsub("top: 145px;", "top: 95px;", .) %>%
-  cat(file = fn, sep="\n")
+  cat(file = fn, sep = "\n")
 
 system("git add --all .")
 system("git commit -m 'Undo css update for shinyapps.io: `date +\"%m-%d-%Y\"` [ci skip]'")
 system("git push")
+
+
+answ <- readline("Did you create binary package for Windows? (y/n) ")
+if (substr(answ, 1, 1) %in% c("y","Y")) {
+  setwd("~/gh/radiant_dev/")
+  system("sh build/build_mac_win.sh")
+}
 
 rm(list = ls())
 
