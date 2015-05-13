@@ -1,5 +1,6 @@
 # deploy to shinyapps.io
 
+library(magrittr)
 fn <- "~/gh/radiant_dev/inst/base/www/style.css"
 readLines(fn) %>%
   gsub("top: 95px;", "top: 145px;", .) %>%
@@ -9,10 +10,9 @@ system("git add --all .")
 system("git commit -m 'Update css for shinyapps.io: `date +\"%m-%d-%Y\"` [ci skip]'")
 system("git push")
 
-devtools::install_github("vnijs/radiant")
-devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
-devtools::install_github(c("jeroenooms/jsonlite", "rstudio/shiny"))
-devtools::install_github(c("ramnathv/htmlwidgets","vnijs/DT"))
+# devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
+# devtools::install_github(c("jeroenooms/jsonlite", "rstudio/shiny", "ramnathv/htmlwidgets"))
+devtools::install_github(c("vnijs/radiant","vnijs/DT"))
 
 options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown")
@@ -25,14 +25,18 @@ options(repos = "http://cran.rstudio.com")
 library(shinyapps)
 fpath <- "~/gh/radiant_dev/inst/base"
 setwd(fpath)
-deployApp(account = "vnijs")
-Sys.sleep(300)
+
+for (file in list.files("../../../shinyapps/R", pattern="\\.(r|R)$", full.names = TRUE))
+  source(file, local = TRUE)
+source("../../build/deployapp.R", local = TRUE)
+
+deployApp(account = "vnijs", launch.browser = FALSE)
+
 setwd(file.path(fpath,"../quant"))
-deployApp(account = "vnijs")
-Sys.sleep(300)
+deployApp(account = "vnijs", launch.browser = FALSE)
+
 setwd(file.path(fpath,"../marketing"))
-deployApp(account = "vnijs")
-Sys.sleep(300)
+deployApp(account = "vnijs", launch.browser = FALSE)
 
 fn <- "~/gh/radiant_dev/inst/base/www/style.css"
 readLines(fn) %>%
