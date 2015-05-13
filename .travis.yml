@@ -1,5 +1,4 @@
 language: r
-# warnings_are_errors: true
 warnings_are_errors: false
 sudo: required
 
@@ -12,7 +11,3 @@ r_github_packages:
   - ramnathv/htmlwidgets
   - rstudio/DT
 
-after_success:
-  - Rscript -e 'library(covr);coveralls()'
-
-# use [ci skip] to skip build

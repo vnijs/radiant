@@ -21,3 +21,7 @@ cov
 shine(cov)
 
 # rm(coverage_test)
+
+# after_success:
+#   - Rscript -e 'library(covr);coveralls()'
+
