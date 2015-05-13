@@ -41,6 +41,7 @@ readLines(fn) %>%
   gsub("top: 145px;", "top: 95px;", .) %>%
   cat(file = fn, sep = "\n")
 
+setwd("~/gh/radiant_dev/")
 Sys.sleep(5)
 
 system("git add --all .")
@@ -49,7 +50,6 @@ system("git push")
 
 answ <- readline("Did you create binary packages for Windows? (y/n) ")
 if (substr(answ, 1, 1) %in% c("y","Y")) {
-  setwd("~/gh/radiant_dev/")
   system("sh build/build_mac_win.sh")
 }
 
