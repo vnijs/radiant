@@ -30,7 +30,8 @@ correlation <- function(dataset, cor_var,
 
 	if (!is_string(dataset)) dataset <- "-----"
 
-  environment() %>% as.list %>% set_class(c("correlation",class(.)))
+	# using correlation_r to avoid print method conflict with nlme
+  environment() %>% as.list %>% set_class(c("correlation_r",class(.)))
 }
 
 #' Summary method for the correlation function
@@ -50,7 +51,7 @@ correlation <- function(dataset, cor_var,
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @export
-summary.correlation <- function(object,
+summary.correlation_r <- function(object,
                                 cor_cutoff = 0,
                                 ...) {
 
@@ -97,7 +98,7 @@ summary.correlation <- function(object,
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #'
 #' @export
-plot.correlation <- function(x, ...) {
+plot.correlation_r <- function(x, ...) {
 
 	object <- x; rm(x)
 
@@ -126,20 +127,3 @@ plot.correlation <- function(x, ...) {
 	object$dat %>% {if (is.null(.)) object else .} %>%
 	pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }
-
-#' Print method for the correlation function
-#'
-#' @details Default print method throws an error, "Error in if (p > 1) \{ : argument is of length zero". Setting class to 'list' and printing resolves this error
-#'
-#' @param object Return value from \code{\link{correlation}}
-#' @param ... further arguments passed to or from other methods.
-#'
-#' @examples
-#' correlation("diamonds",c("price","carat","clarity"))
-#'
-#' @seealso \code{\link{correlation}} to calculate results
-#' @seealso \code{\link{summary.correlation}} to print results
-#' @seealso \code{\link{plot.correlation}} to plot results
-#'
-#' @export
-print.correlation <- function(x, ...) x %>% set_class("list") %>% print

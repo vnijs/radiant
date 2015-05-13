@@ -47,5 +47,7 @@ system("git add --all .")
 system("git commit -m 'Undo css update for shinyapps.io: `date +\"%m-%d-%Y\"` [ci skip]'")
 system("git push")
 
+rm(list = ls())
+
 # in case of problems
 # shinyapps::showLogs(entries=1000)

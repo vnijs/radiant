@@ -66,35 +66,6 @@ deployApp <- function(appDir = getwd(),
   if (!isStringParam(appDir))
     stop(stringParamErrorMessage("appDir"))
 
-  if (isTRUE(lint)) {
-    lintResults <- lint(appDir)
-
-    if (hasLint(lintResults)) {
-
-      if (interactive()) {
-        message("The following potential problems were identified in the project files:\n")
-        printLinterResults(lintResults)
-        #response <- readline("Do you want to proceed with deployment? [Y/n]: ")
-        response <- "y"
-        if (tolower(substring(response, 1, 1)) != "y") {
-          message("Cancelling deployment.")
-          return(invisible(lintResults))
-        }
-      } else {
-        message("The linter has identified potential problems in the project:\n")
-        printLinterResults(lintResults)
-#         message(
-#           "\nIf you believe these errors are spurious, run:\n\n",
-#           "\tdeployApp(lint = FALSE)\n\n",
-#           "to disable linting."
-#         )
-        message("If your application fails to run post-deployment, please double-check these messages.")
-      }
-
-    }
-
-  }
-
   if (!is.null(appName) && !isStringParam(appName))
     stop(stringParamErrorMessage("appName"))
 
