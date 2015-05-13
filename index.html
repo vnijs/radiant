@@ -233,19 +233,21 @@ img {
 <div id="how-to-install-radiant" class="section level2">
 <h2>How to install Radiant</h2>
 <ul>
-<li>Required: <a href="http://cran.rstudio.com/">R</a> version 3.1.2 or later</li>
+<li>Required: <a href="http://cran.rstudio.com/">R</a> version 3.1.2 or later (3.2 recommended)</li>
 <li>Required: A modern browser (e.g., <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Chrome</a> or Safari). Internet Explorer (version 11 or higher) should work as well</li>
 <li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
 </ul>
 <p>Radiant is available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version with complete documentation for offline access open R(studio) and copy-and-paste the command below:</p>
 <pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)</code></pre>
-<p>Once all packages are installed use the commands below to launch the app:</p>
+<p>If you want to update packages (e.g., after upgrading R) use:</p>
+<pre class="r"><code>update.packages(checkBuilt = TRUE, ask = FALSE, type = &quot;binary&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)</code></pre>
+<p>Once all packages are installed (updated) use the commands below to launch the app (use either “base”, “quant”, or “marketing”):</p>
 <pre class="r"><code>library(radiant)
 radiant(&quot;marketing&quot;)</code></pre>
 <p>See also the <code>Installing Radiant</code> video:</p>
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen>
 </iframe>
-<p>You can create a launcher on your Desktop to start Radiant by typing <code>launcher()</code> in the R-console and pressing return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser.</p>
+<p>You can create a launcher on your Desktop to start Radiant by typing <code>launcher(&quot;marketing&quot;)</code> in the R-console and pressing return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser.</p>
 <p>When Radiant starts you will see data on diamond prices. To close the application click on <code>Quit</code> in the Navigation bar and then click the <code>Quit</code> button on the left of the screen. The Radiant process will stop and the browser window will close (or gray-out).</p>
 </div>
 <div id="documentation" class="section level2">
