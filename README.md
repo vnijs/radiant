@@ -3,6 +3,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
 <!-- [![Coverage Status](https://img.shields.io/coveralls/vnijs/radiant.svg)](https://coveralls.io/r/vnijs/radiant?branch=master) -->
 
+
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please send questions and comments to: radiant@rady.ucsd.edu.
 
 <!-- Version: 0.2.13, Date: 2015-5-12 -->
@@ -42,7 +43,7 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 
 ## How to install Radiant
 
-- Required: [R](http://cran.rstudio.com/) version 3.1.2 or later
+- Required: [R](http://cran.rstudio.com/) version 3.1.2 or later (3.2 recommended)
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
@@ -52,7 +53,13 @@ Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/in
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 ```
 
-Once all packages are installed use the commands below to launch the app:
+If you want to update packages (e.g., after upgrading R) use:
+
+```r
+update.packages(checkBuilt = TRUE, ask = FALSE, type = "binary", repos = "http://vnijs.github.io/radiant_miniCRAN/")
+```
+
+Once all packages are installed (updated) use the commands below to launch the app (use either "base", "quant", or "marketing"):
 
 ```r
 library(radiant)
@@ -63,7 +70,7 @@ See also the `Installing Radiant` video:
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
-You can create a launcher on your Desktop to start Radiant by typing `launcher()` in the R-console and pressing return. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser.
+You can create a launcher on your Desktop to start Radiant by typing `launcher("marketing")` in the R-console and pressing return. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser.
 
 When Radiant starts you will see data on diamond prices. To close the application click on `Quit` in the Navigation bar and then click the `Quit` button on the left of the screen. The Radiant process will stop and the browser window will close (or gray-out).
 
