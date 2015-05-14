@@ -203,14 +203,14 @@ img {
 <h4>Type</h4>
 <p>When you select <code>Type</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the <code>Save changes</code> button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
-<li>As factor: convert a variable to type factor (i.e., as.factor(x))</li>
-<li>As number: convert a variable to type numeric (i.e., as.numeric(x))</li>
-<li>As integer: convert a variable to type integer (i.e., as.integer(x))</li>
-<li>As character: convert a variable to type character (i.e., as.character(x))</li>
-<li>As date (mdy): R will, by default, read dates as factors. Use this function if the dates are ordered as month-day-year</li>
-<li>As date (dmy): R will, by default, read dates as factors. Use this function if the dates are ordered as day-month-year</li>
-<li>As date (ymd): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day</li>
-<li>As date/time (ymd_hms): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day-hour-minute-second</li>
+<li>As factor: convert a variable to type factor (i.e., a categorical variable)</li>
+<li>As number: convert a variable to type numeric</li>
+<li>As integer: convert a variable to type integer</li>
+<li>As character: convert a variable to type character (i.e., strings)</li>
+<li>As date (mdy): convert a character of factor variable to a date if the dates are ordered as month-day-year</li>
+<li>As date (dmy): convert a character of factor variable to a date if the dates are ordered as day-month-year</li>
+<li>As date (dmy): convert a character of factor variable to a date if the dates are ordered as year-month-day</li>
+<li>As date/time (ymd_hms): convert a character of factor variable to a date if the dates are ordered as year-month-day-hour-minute-second</li>
 </ol>
 </div>
 <div id="change" class="section level4">
@@ -233,7 +233,7 @@ img {
 </div>
 <div id="create" class="section level4">
 <h4>Create</h4>
-<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. On the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Save changes</code> to add it to the data.</p>
+<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. On the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Save changes</code> to add it to the dataset.</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new variable z that is the difference between variables x and y in the data</p>
 <p>z = x - y</p></li>
