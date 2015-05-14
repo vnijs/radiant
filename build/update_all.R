@@ -1,5 +1,10 @@
 # deploy to shinyapps.io
 
+library(devtools)
+setwd("~/gh/radiant_dev")
+document(roclets = c('rd', 'collate', 'namespace'))
+install()
+
 library(magrittr)
 fn <- "~/gh/radiant_dev/inst/base/www/style.css"
 readLines(fn) %>%

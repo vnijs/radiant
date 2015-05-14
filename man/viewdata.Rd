@@ -14,4 +14,14 @@ viewdata(dataset, vars = "")
 \description{
 View data
 }
+\details{
+View, search, sort, etc. your data
+}
+\examples{
+if (interactive()) {
+viewdata(mtcars)
+viewdata("mtcars")
+mtcars \%>\% viewdata
+}
+}
 
