@@ -162,6 +162,36 @@ changedata <- function(dataset,
 # dat$new <- NA
 # dat$new[1:10] <- 1:10
 
+#' View data
+#'
+#' @details View, search, sort, etc. your data
+#'
+#' @param dataset Name of the dataframe to change
+#' @param vars Variables to so (default is all)
+#'
+#' @examples
+#' if (interactive()) {
+#' viewdata(mtcars)
+#' viewdata("mtcars")
+#' mtcars %>% viewdata
+#' }
+#' @importFrom DT datatable
+#'
+#' @export
+viewdata <- function(dataset, vars = "") {
+  getdata(dataset, vars) %>%
+  datatable(filter = "top", rownames = FALSE,
+    options = list(
+      search = list(regex = TRUE),
+      columnDefs = list(list(className = 'dt-center', targets = "_all")),
+      autoWidth = TRUE,
+      processing = FALSE,
+      pageLength = 10,
+      lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
+    )
+  )
+}
+
 #' Get variable class
 #'
 #' @details Get variable class information for each column in a data.frame

@@ -4,14 +4,14 @@
 
 When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the `Save changes` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
 
-1. As factor: convert a variable to type factor (i.e., as.factor(x))
-2. As number: convert a variable to type numeric (i.e., as.numeric(x))
-3. As integer: convert a variable to type integer (i.e., as.integer(x))
-4. As character: convert a variable to type character (i.e., as.character(x))
-5. As date (mdy): R will, by default, read dates as factors. Use this function if the dates are ordered as month-day-year
-6. As date (dmy): R will, by default, read dates as factors. Use this function if the dates are ordered as day-month-year
-7. As date (ymd): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day
-8. As date/time (ymd_hms): R will, by default, read dates as factors. Use this function if the dates are ordered as year-month-day-hour-minute-second
+1. As factor: convert a variable to type factor (i.e., a categorical variable)
+2. As number: convert a variable to type numeric 
+3. As integer: convert a variable to type integer 
+4. As character: convert a variable to type character (i.e., strings)
+5. As date (mdy): convert a character of factor variable to a date if the dates are ordered as month-day-year
+6. As date (dmy): convert a character of factor variable to a date if the dates are ordered as day-month-year
+7. As date (dmy): convert a character of factor variable to a date if the dates are ordered as year-month-day
+8. As date/time (ymd_hms): convert a character of factor variable to a date if the dates are ordered as year-month-day-hour-minute-second
 
 #### Change
 
@@ -32,7 +32,7 @@ Choose `Normalize` from the `Transformation type` drop-down standardize one or m
 
 #### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Save changes` to add it to the data.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Save changes` to add it to the dataset.
 
 1. Create a new variable z that is the difference between variables x and y in the data
 

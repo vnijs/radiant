@@ -56,7 +56,7 @@ if (substr(answ, 1, 1) %in% c("y","Y")) {
 # in case of problems
 # shinyapps::showLogs(entries=1000)
 
-system("osascript ~/Desktop/update.scpt")
+system("osascript ~/gh/update.scpt")
 
 # for major pull problems
 # git fetch --all
