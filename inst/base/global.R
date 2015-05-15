@@ -55,28 +55,39 @@ expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm
 # }
 # if(havingIP()) withMathJaxIP(.) else . }
 
+
+
 # environment to hold session information
 r_sessions <- new.env(parent = emptyenv())
 
 if (Sys.getenv('SHINY_PORT') == "") {
 
   r_local <- TRUE
-  options(shiny.maxRequestSize=-1) # no limit to filesize locally
+  options(shiny.maxRequestSize = -1) # no limit to filesize locally
 
   # if radiant package was not loaded load dependencies
   if (!"package:radiant" %in% search())
-    sapply(pkgs, require, character.only=TRUE)
+    sapply(pkgs, require, character.only = TRUE)
 
 } else {
   r_local <- FALSE
-  options(shiny.maxRequestSize=5*1024^2) # limit upload filesize on server (5MB)
-  sapply(pkgs, require, character.only=TRUE)
+  options(shiny.maxRequestSize = 5 * 1024^2) # limit upload filesize on server (5MB)
+  sapply(pkgs, require, character.only = TRUE)
 }
 
 # adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
 addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
+addResourcePath("MathJax", file.path(r_path,"base/www/MathJax/"))
+
+if (exists("MathJax/MathJax.js")) {
+  withMathJax <- function(...)  {
+    path <- file.path(r_path,"MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+    tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+            ..., tags$script(HTML("MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
+  }
+}
 
 ### options used for debugging
 # options(shiny.trace = TRUE)
