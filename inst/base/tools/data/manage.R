@@ -26,21 +26,23 @@ upload_error_handler <- function(objname, ret) {
 
 loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep = "\t") {
 
-  if (Sys.info()["sysname"] == "Windows") {
-    dat <- try(read.table("clipboard", header = header, sep = sep), silent = TRUE)
-  } else if (Sys.info()["sysname"] == "Darwin") {
-    dat <- try(read.table(pipe("pbpaste"), header = header, sep = sep), silent = TRUE)
-  } else {
-    dat <- try(read.table(text = input$load_cdata, header = header, sep = sep), silent = TRUE)
-  }
+  dat <- sshhr(try(
+         {if (Sys.info()["sysname"] == "Windows") {
+            read.table("clipboard", header = header, sep = sep, as.is = TRUE)
+          } else if (Sys.info()["sysname"] == "Darwin") {
+            read.table(pipe("pbpaste"), header = header, sep = sep, as.is = TRUE)
+          } else {
+            if (!is_empty(input$load_cdata))
+              read.table(text = input$load_cdata, header = header, sep = sep, as.is = TRUE)
+          }} %>% as.data.frame(check.names = FALSE), silent = TRUE))
 
-  if (is(dat, 'try-error')) {
+  if (is(dat, 'try-error') || nrow(dat) == 0) {
     if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
     upload_error_handler(objname,ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on", lubridate::now())
-    r_data[[objname]] <- data.frame(dat, check.names = FALSE)
-    r_data[[paste0(objname,"description")]] <- ret
+    r_data[[objname]] <- dat
+    r_data[[paste0(objname,"_descr")]] <- ret
   }
   r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique
 }

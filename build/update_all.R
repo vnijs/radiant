@@ -3,7 +3,7 @@
 library(devtools)
 setwd("~/gh/radiant_dev")
 document(roclets = c('rd', 'collate', 'namespace'))
-install()
+# install()
 
 library(magrittr)
 fn <- "~/gh/radiant_dev/inst/base/www/style.css"
@@ -66,5 +66,4 @@ system("osascript ~/gh/update.scpt")
 # for major pull problems
 # git fetch --all
 # git reset --hard origin/master
-
-rm(list = ls())
+# rm(list = ls())

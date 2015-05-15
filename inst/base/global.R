@@ -81,7 +81,7 @@ addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
 addResourcePath("MathJax", file.path(r_path,"base/www/MathJax/"))
 
-if (exists("MathJax/MathJax.js")) {
+if (r_local && exists("MathJax/MathJax.js")) {
   withMathJax <- function(...)  {
     path <- file.path(r_path,"MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
     tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
