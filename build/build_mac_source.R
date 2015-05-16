@@ -32,6 +32,6 @@ build('../htmlwidgets', binary = TRUE)
 build('../DT_vnijs')
 build('../DT_vnijs', binary = TRUE)
 
-build('../MathJaxR')
-build('../MathJaxR', binary = TRUE)
+# build('../MathJaxR')
+# build('../MathJaxR', binary = TRUE)
 
