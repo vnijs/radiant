@@ -10,4 +10,4 @@ r_github_packages:
   - rstudio/shiny
   - ramnathv/htmlwidgets
   - rstudio/DT
-
+  - vnijs/MathJaxR

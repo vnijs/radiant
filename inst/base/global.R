@@ -79,11 +79,11 @@ if (Sys.getenv('SHINY_PORT') == "") {
 addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
 addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
-addResourcePath("MathJax", file.path(r_path,"base/www/MathJax/"))
 
-if (r_local && exists("MathJax/MathJax.js")) {
+if (r_local) {
   withMathJax <- function(...)  {
-    path <- file.path(r_path,"MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+    addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "www/MathJax/"))
+    path <- "MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
             ..., tags$script(HTML("MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
   }

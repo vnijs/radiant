@@ -8,7 +8,7 @@ build('../radiant_dev', binary = TRUE)
 build('../shinyAce')
 build('../shinyAce', binary = TRUE)
 
-# install('../rpivotTable')
+# devtools::install('../rpivotTable')
 build('../rpivotTable')
 build('../rpivotTable', binary = TRUE)
 
@@ -31,3 +31,7 @@ build('../htmlwidgets', binary = TRUE)
 # devtools::install('../DT_vnijs')
 build('../DT_vnijs')
 build('../DT_vnijs', binary = TRUE)
+
+build('../MathJaxR')
+build('../MathJaxR', binary = TRUE)
+
