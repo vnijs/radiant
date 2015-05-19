@@ -89,7 +89,7 @@ output$report <- renderUI({
 valsRmd <- reactiveValues(knit = 0)
 
 knitIt <- function(text) {
-  knitr::knit2html(text = text, quiet = TRUE,
+  knitr::knit2html(text = text, quiet = TRUE, , envir = r_env,
                    options=c("mathjax", "base64_images"),
                    stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>% HTML
 }
@@ -98,7 +98,7 @@ knitIt <- function(text) {
 # knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
 
 knitIt2 <- function(text) {
-  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
+  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
 }
@@ -312,7 +312,7 @@ output$rmd_code_output <- renderUI({
                   else input$rmd_code_selection
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
-        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE) %>%
+        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
         HTML
     } else {
       HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")

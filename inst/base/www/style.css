@@ -1,3 +1,7 @@
+.table {
+  width: auto;
+}
+
 .well {
   padding: 8px;
   margin-bottom: 5px;
@@ -7,18 +11,14 @@
   max-width: 300px;
 }
 
-.nav-tabs {
-  margin-bottom: 10px;
-}
-
 .checkbox {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .form-group {
   margin-top: 5px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .radio-inline+.radio-inline, .checkbox-inline+.checkbox-inline {
@@ -69,8 +69,8 @@ pre {
 #rmd_report, #rmd_code {
   position: absolute;
   top: 95px;
-  bottom: 0px;
-  left: 0%;
+  bottom: 0;
+  left: 0;
   right: 50%;
   padding-right: 10px;
 }
@@ -79,9 +79,9 @@ pre {
 #rmd_knitted, #rmd_code_output {
   position: absolute;
   top: 95px;
-  bottom: 0px;
+  bottom: 0;
   left: 50%;
-  right: 0%;
+  right: 0;
   padding-left: 10px;
   overflow-y: scroll;
 }
@@ -93,6 +93,10 @@ pre {
 .navbar .nav > li > a {
   padding-left: 7px;
   padding-right: 8px;
+}
+
+.nav-tabs {
+  margin-bottom: 10px;
 }
 
 /* from http://stackoverflow.com/a/23786766/1974918 */
@@ -111,7 +115,7 @@ pre {
         display: none !important; }
         .navbar-collapse.collapse.in {
         display: block!important;
-        margin-top: 0px; }
+        margin-top: 0; }
 }
 
 /* from http://stackoverflow.com/a/23786766/1974918 */
