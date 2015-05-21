@@ -37,7 +37,7 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 
 ## How to install Radiant
 
-- Required: [R](http://cran.rstudio.com/) version 3.1.2 or later (3.2 recommended)
+- Required: [R](http://cran.rstudio.com/) version 3.2 or later
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 

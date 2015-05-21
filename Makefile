@@ -4,7 +4,6 @@ HTML_FILES := $(patsubst %.Rmd, %.html ,$(wildcard *.Rmd)) \
 
 all: clean html
 
-
 html: $(HTML_FILES)
 
 %.html: %.Rmd
