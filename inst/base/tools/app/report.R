@@ -62,7 +62,7 @@ output$report <- renderUI({
   tagList(
     with(tags,
       table(
-            td(help_modal('Report','reportHelp',
+            td(help_modal('Report','report_help',
                        inclMD(file.path(r_path,"base/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Update")),
@@ -106,6 +106,8 @@ knitIt2 <- function(text) {
 observe({
   input$runKeyRmd
   if (!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
+
+
 })
 
 output$rmd_knitted <- renderUI({
@@ -272,7 +274,7 @@ output$rcode <- renderUI({
   tagList(
     with(tags,
       table(
-            td(help_modal('Code','codeHelp',
+            td(help_modal('Code','code_help',
                        inclMD(file.path(r_path,"base/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("rEval", "Run")),
