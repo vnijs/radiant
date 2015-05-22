@@ -13,22 +13,22 @@ build('../rpivotTable')
 build('../rpivotTable', binary = TRUE)
 
 # install('../jsonlite')
-build('../jsonlite')
-build('../jsonlite', binary = TRUE)
+# build('../jsonlite')
+# build('../jsonlite', binary = TRUE)
 
 # install('../shiny')
-build('../shiny')
-build('../shiny', binary = TRUE)
+# build('../shiny')
+# build('../shiny', binary = TRUE)
 
 # install('../htmlwidgets')
-build('../htmlwidgets')
-build('../htmlwidgets', binary = TRUE)
+# build('../htmlwidgets')
+# build('../htmlwidgets', binary = TRUE)
 
 # install('../DT')
 # build('../DT')
 # build('../DT', binary = TRUE)
 
-# devtools::install('../DT_vnijs')
+devtools::install('../DT_vnijs')
 build('../DT_vnijs')
 build('../DT_vnijs', binary = TRUE)
 

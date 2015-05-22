@@ -50,7 +50,7 @@ output$ui_pmap_pref <- renderUI({
  	if (length(vars) > 0) vars <- vars[-which(vars %in% input$pmap_attr)]
   selectInput(inputId = "pmap_pref", label = "Preferences:", choices = vars,
    	selected = state_multiple("pmap_pref",vars), multiple = TRUE,
-  	size = min(5, length(vars)), selectize = FALSE)
+  	size = max(1, min(5, length(vars))), selectize = FALSE)
 })
 
 output$ui_pmap_plot <- renderUI({

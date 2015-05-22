@@ -62,7 +62,7 @@ output$report <- renderUI({
   tagList(
     with(tags,
       table(
-            td(help_modal('Report','reportHelp',
+            td(help_modal('Report','report_help',
                        inclMD(file.path(r_path,"base/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Update")),
@@ -80,8 +80,7 @@ output$report <- renderUI({
               height = "auto",
               selectionId = "rmd_selection",
               value = state_init("rmd_report",rmd_example),
-              hotkeys = list(runKeyRmd = list(win = "Ctrl-R|Ctrl-Shift-Enter",
-                             mac = "CMD-ENTER|CMD-SHIFT-ENTER"))),
+              hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     htmlOutput("rmd_knitted")
   )
 })
@@ -89,7 +88,7 @@ output$report <- renderUI({
 valsRmd <- reactiveValues(knit = 0)
 
 knitIt <- function(text) {
-  knitr::knit2html(text = text, quiet = TRUE,
+  knitr::knit2html(text = text, quiet = TRUE, , envir = r_env,
                    options=c("mathjax", "base64_images"),
                    stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>% HTML
 }
@@ -98,7 +97,7 @@ knitIt <- function(text) {
 # knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
 
 knitIt2 <- function(text) {
-  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE),
+  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
 }
@@ -106,6 +105,8 @@ knitIt2 <- function(text) {
 observe({
   input$runKeyRmd
   if (!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
+
+
 })
 
 output$rmd_knitted <- renderUI({
@@ -272,7 +273,7 @@ output$rcode <- renderUI({
   tagList(
     with(tags,
       table(
-            td(help_modal('Code','codeHelp',
+            td(help_modal('Code','code_help',
                        inclMD(file.path(r_path,"base/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("rEval", "Run")),
@@ -289,8 +290,8 @@ output$rcode <- renderUI({
                         selectionId = "rmd_code_selection",
                         value = state_init("rmd_code",r_example),
                         hotkeys = list(runKeyCode =
-                                       list(win ="Ctrl-R|Ctrl-Shift-Enter",
-                                            mac ="CMD-ENTER|CMD-SHIFT-ENTER"))),
+                                       list(win ="CTRL-ENTER",
+                                            mac ="CMD-ENTER"))),
     htmlOutput("rmd_code_output")
   )
 })
@@ -312,7 +313,7 @@ output$rmd_code_output <- renderUI({
                   else input$rmd_code_selection
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
-        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE) %>%
+        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
         HTML
     } else {
       HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")

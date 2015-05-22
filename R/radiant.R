@@ -112,7 +112,7 @@ getdata <- function(dataset,
         { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
         { if (slice == "") . else slice_(., slice) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
-        { if (na.rm) { if (anyNA(.)) na.omit(.) else . } }
+        { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
 
   # use the below when all data is setup as tbl_df
   # } %>% { if (is.na(groups(.))) . else ungroup(.) } %>%     # ungroup data if needed

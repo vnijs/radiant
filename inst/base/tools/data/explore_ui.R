@@ -72,6 +72,7 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- reactive({
+  # if (not_available(input$expl_vars) && not_available(input$expl_byvar)) return()
   if (not_available(input$expl_vars)) return()
   withProgress(message = 'Calculating', value = 0, {
     do.call(explore, expl_inputs())

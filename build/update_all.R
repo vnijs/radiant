@@ -21,7 +21,6 @@ system("git push")
 # install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
 
 # devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
-# devtools::install_github(c("jeroenooms/jsonlite", "rstudio/shiny", "ramnathv/htmlwidgets"))
 # devtools::install_github(c("rstudio/shinyapps", "themel/sendmailR", "jimhester/covr"))
 devtools::install_github(c("vnijs/radiant","vnijs/DT", "vnijs/MathJaxR"))
 

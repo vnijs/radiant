@@ -108,7 +108,7 @@ summary.mds <- function(object, mds_round = 1, ...) {
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(c(object$mds_id1, object$mds_id2, object$mds_dis), collapse=", "), "\n")
 	cat("# dimensions:", object$mds_dim_number, "\n")
-	meth <- if (object$mds_method == "metric") "Non-metric" else "Metric"
+	meth <- if (object$mds_method == "non-metric") "Non-metric" else "Metric"
 	cat("Method      :", meth, "\n")
 	cat("Observations:", object$nrObs, "\n")
 
