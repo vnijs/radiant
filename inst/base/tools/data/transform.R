@@ -184,10 +184,10 @@ output$ui_Transform <- renderUI({
 find_env <- function(dataset) {
 	if (exists("r_env")) {
 	  r_env
-	} else if (exists("r_data")) {
-		 pryr::where("r_data")
+	} else if (exists("r_data") && !is.null(r_data[[dataset]])) {
+		pryr::where("r_data")
 	} else if (exists(dataset)) {
-		 pryr::where(dataset)
+		pryr::where(dataset)
 	}
 }
 

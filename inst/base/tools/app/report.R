@@ -80,8 +80,7 @@ output$report <- renderUI({
               height = "auto",
               selectionId = "rmd_selection",
               value = state_init("rmd_report",rmd_example),
-              hotkeys = list(runKeyRmd = list(win = "Ctrl-R|Ctrl-Shift-Enter",
-                             mac = "CMD-ENTER|CMD-SHIFT-ENTER"))),
+              hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     htmlOutput("rmd_knitted")
   )
 })
@@ -291,8 +290,8 @@ output$rcode <- renderUI({
                         selectionId = "rmd_code_selection",
                         value = state_init("rmd_code",r_example),
                         hotkeys = list(runKeyCode =
-                                       list(win ="Ctrl-R|Ctrl-Shift-Enter",
-                                            mac ="CMD-ENTER|CMD-SHIFT-ENTER"))),
+                                       list(win ="CTRL-ENTER",
+                                            mac ="CMD-ENTER"))),
     htmlOutput("rmd_code_output")
   )
 })
