@@ -175,20 +175,43 @@ changedata <- function(dataset,
 #' viewdata("mtcars")
 #' mtcars %>% viewdata
 #' }
-#' @importFrom DT datatable
+#'
+#' @importFrom shiny shinyApp fluidPage fluidRow
+#' @importFrom DT dataTableOutput dataTableAjax datatable renderDataTable
 #'
 #' @export
-viewdata <- function(dataset, vars = "") {
-  getdata(dataset, vars) %>%
-  datatable(filter = "top", rownames = FALSE,
-    options = list(
-      search = list(regex = TRUE),
-      columnDefs = list(list(className = 'dt-center', targets = "_all")),
-      autoWidth = TRUE,
-      processing = FALSE,
-      pageLength = 10,
-      lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
-    )
+viewdata <- function(dataset, vars = "", filt = "") {
+  # library(shiny)
+  # library(DT)
+
+  # based on http://rstudio.github.io/DT/server.html
+  dat <- getdata(dataset, vars, filt = filt)
+  title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
+
+  shinyApp(
+    ui = fluidPage(title = title,
+      fluidRow(dataTableOutput("tbl")),
+      tags$button(id = 'stop', type = "button",
+                  class = "btn btn-danger action-button shiny-bound-input",
+                  onclick = "window.close();", "Stop")
+    ),
+    server = function(input, output, session) {
+      action <- dataTableAjax(session, dat, rownames = FALSE)
+      widget <- datatable(dat, filter = "top", rownames = FALSE, server = TRUE,
+        options = list(
+          ajax = list(url = action),
+          search = list(regex = TRUE),
+          columnDefs = list(list(className = 'dt-center', targets = "_all")),
+          autoWidth = TRUE,
+          processing = FALSE,
+          pageLength = 10,
+          lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
+        )
+      )
+
+      output$tbl <- renderDataTable(widget)
+      observeEvent(input$stop, { stopApp() })
+    }
   )
 }
 
