@@ -127,7 +127,7 @@ output$ui_reg_int_var <- renderUI({
     vars <- input$reg_indep_var
     if (not_available(vars) || length(vars) < 2) return()
     # vector of possible interaction terms to sel from glm_reg
-    choices <- int_vec(vars, input$reg_show_interactions)       # create list of interactions to show user
+    choices <- iterms(vars, input$reg_show_interactions)       # create list of interactions to show user
   }
 	selectInput("reg_int_var", label = NULL, choices = choices,
   	selected = state_multiple("reg_int_var", choices),

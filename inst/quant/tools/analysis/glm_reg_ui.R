@@ -123,16 +123,6 @@ output$ui_glm_show_interactions <- renderUI({
                selected = state_init("glm_show_interactions"), inline = TRUE)
  })
 
-# create vector of possible interaction terms
-int_vec <- function(vars, nway) {
-  if (nway == "") return(character(0))
-  int_vec <- c()
-  for (i in 2:nway) {
-    int_vec %<>% {c(., combn(vars, i) %>% apply( 2, paste, collapse = ":" ))}
-  }
-  int_vec
-}
-
 output$ui_glm_int_var <- renderUI({
   if (is_empty(input$glm_show_interactions)) {
     choices <- character(0)
@@ -140,7 +130,7 @@ output$ui_glm_int_var <- renderUI({
     vars <- input$glm_indep_var
     if (not_available(vars) || length(vars) < 2) return()
     # vector of possible interaction terms to sel from glm_reg
-    choices <- int_vec(vars, input$glm_show_interactions)
+    choices <- iterms(vars, input$glm_show_interactions)
   }
 	selectInput("glm_int_var", label = NULL, choices = choices,
   	selected = state_multiple("glm_int_var", choices),

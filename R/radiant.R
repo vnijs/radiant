@@ -316,6 +316,28 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   }
 }
 
+#' Create a vector of interaction terms
+#'
+#' @param vars Variables lables to use
+#' @param nway 2-way (2) or 3-way (3) interactions labels to create
+#' @param sep Separator between variable names (default is :)
+#'
+#' @return Character vector of interaction term labels
+#'
+#' @examples
+#' paste0("var",1:3) %>% iterms(2)
+#' paste0("var",1:3) %>% iterms(3)
+#' paste0("var",1:3) %>% iterms(2, sep = ".")
+#'
+#' @export
+iterms <- function(vars, nway, sep = ":") {
+  if (!nway %in% c(2,3)) return(character(0))
+  it <- c()
+  for (i in 2:nway)
+    it %<>% {c(., combn(vars, i) %>% apply(2, paste, collapse = sep))}
+  it
+}
+
 #' Create a launcher for Mac (.command)
 #'
 #' @details On Mac a file named 'radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app
