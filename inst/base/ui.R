@@ -11,8 +11,8 @@ shinyUI(navbarPage("Base", windowTitle = "Radiant", id = "nav_radiant",
   tabPanel("Quit", uiOutput("savequit")),
 
   navbarMenu("Help",
-    tabPanel("Radiant help", uiOutput("help_base")),
-    tabPanel("Radiant videos", uiOutput("help_videos")),
+    tabPanel("Help", uiOutput("help_base")),
+    tabPanel("Videos", uiOutput("help_videos")),
     tabPanel("About", uiOutput("help_about"))
   ),
 

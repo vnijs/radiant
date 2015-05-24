@@ -168,6 +168,7 @@ changedata <- function(dataset,
 #'
 #' @param dataset Name of the dataframe to change
 #' @param vars Variables to so (default is all)
+#' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #'
 #' @examples
 #' if (interactive()) {
@@ -176,13 +177,8 @@ changedata <- function(dataset,
 #' mtcars %>% viewdata
 #' }
 #'
-#' @importFrom shiny shinyApp fluidPage fluidRow
-#' @importFrom DT dataTableOutput dataTableAjax datatable renderDataTable
-#'
 #' @export
 viewdata <- function(dataset, vars = "", filt = "") {
-  # library(shiny)
-  # library(DT)
 
   # based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt)
@@ -190,14 +186,14 @@ viewdata <- function(dataset, vars = "", filt = "") {
 
   shinyApp(
     ui = fluidPage(title = title,
-      fluidRow(dataTableOutput("tbl")),
+      fluidRow(DT::dataTableOutput("tbl")),
       tags$button(id = 'stop', type = "button",
                   class = "btn btn-danger action-button shiny-bound-input",
                   onclick = "window.close();", "Stop")
     ),
     server = function(input, output, session) {
-      action <- dataTableAjax(session, dat, rownames = FALSE)
-      widget <- datatable(dat, filter = "top", rownames = FALSE, server = TRUE,
+      action <- DT::dataTableAjax(session, dat, rownames = FALSE)
+      widget <- DT::datatable(dat, filter = "top", rownames = FALSE, server = TRUE,
         options = list(
           ajax = list(url = action),
           search = list(regex = TRUE),
@@ -209,8 +205,8 @@ viewdata <- function(dataset, vars = "", filt = "") {
         )
       )
 
-      output$tbl <- renderDataTable(widget)
-      observeEvent(input$stop, { stopApp() })
+      output$tbl <- DT::renderDataTable(widget)
+      observeEvent(input$stop, {stopApp()})
     }
   )
 }

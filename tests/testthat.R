@@ -1,4 +1,4 @@
-# use shift-cmd-t to run all tests
+## use shift-cmd-t to run all tests
 library(testthat)
 library(radiant)
 
@@ -8,5 +8,8 @@ test_check("radiant")
 # if (interactive()) devtools::run_examples(start = "regression")
 # warnings()
 
-# capture.output(devtools::run_examples(), file = "~/Desktop/radiant-Ex.Rout.save")
+## https://github.com/hadley/testthat/issues/255
+## See tests/Examples/create-examples.sh
 
+## https://github.com/hadley/testthat/issues/255
+## Next step: Explore https://github.com/wch/vtest to test plots

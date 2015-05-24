@@ -40,16 +40,13 @@ visualize(dataset = 'diamonds', viz_xvar = 'carat', viz_yvar = 'price',
 ```
 "
 
-knitr::opts_knit$set(progress = TRUE)
-knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE,
-                      warning=FALSE, fig.path = "~/radiant_figures/")
+# observeEvent(input$manual_paste, {
+#   isolate(r_data$manual <- r_data$manual == FALSE)
+# })
 
 observeEvent(input$manual_paste, {
-  isolate(r_data$manual <- r_data$manual == FALSE)
+  isolate(r_data$manual %<>% {. == FALSE})
 })
-
-# initialize manual cmd paste to false
-# if(if(exists("r_data") && is.null(r_data$manual))) r_data$manual <- FALSE
 
 output$ui_manual <- renderUI({
   # initialize manual cmd paste to false
@@ -87,27 +84,24 @@ output$report <- renderUI({
 
 valsRmd <- reactiveValues(knit = 0)
 
+observe({
+  input$runKeyRmd
+  if (!is.null(input$evalRmd)) isolate(valsRmd$knit %<>% add(1))
+})
+
+## Knit to save html
 knitIt <- function(text) {
   knitr::knit2html(text = text, quiet = TRUE, , envir = r_env,
                    options=c("mathjax", "base64_images"),
                    stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>% HTML
 }
 
-# rmarkdown requires pandoc install
-# knitIt <- function(text) rmarkdown::render(input = tmpfile(text))
-
+## Knit for report in Radiant
 knitIt2 <- function(text) {
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
 }
-
-observe({
-  input$runKeyRmd
-  if (!is.null(input$evalRmd)) isolate(valsRmd$knit <- valsRmd$knit + 1)
-
-
-})
 
 output$rmd_knitted <- renderUI({
   if (valsRmd$knit == 1) return()
@@ -203,8 +197,6 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
 
 update_report_fun <- function(cmd) {
 
-  # if (!is.null(input$manualPaste) && input$manualPaste) {
-  # if (r_data$manual) {
   if (isolate(r_data$manual)) {
     os_type <- Sys.info()["sysname"]
     if (os_type == 'Windows') {
@@ -213,9 +205,8 @@ update_report_fun <- function(cmd) {
       cat(cmd, file = pipe("pbcopy"))
     } else if (os_type == "Linux") {
       cat("Clipboard not supported on linux")
-      # nothing yet
     }
-    # by setting cmd to "" nothing is added to the report
+    ## nothing is added to report
     cmd <- ""
   }
 
@@ -235,108 +226,3 @@ update_report_fun <- function(cmd) {
   # move to the report panel
   updateTabsetPanel(session, "nav_radiant", selected = "Report")
 }
-
-
-################################################################
-# Run R-code within Radiant using the shinyAce editor
-################################################################
-r_example <- "# get the active dataset and show the first few observations
-.getdata() %>% head
-
-# access a specific dataset by name
-r_data[['diamonds']] %>% select(price, clarity) %>% head
-
-# add a variable to the diamonds data
-dat <- r_data[['diamonds']]
-dat$log_price <- log(dat$price)
-
-# show the first observations
-dat %>% select(price, log_price) %>% head
-
-# create a histogram of prices
-dat %>% ggplot(aes(x = price)) + geom_histogram()
-
-# and a histogram of log-prices
-dat %>% ggplot(aes(x = log_price)) + geom_histogram()
-
-# open help in the R-studio viewer from Radiant
-help(package = 'radiant')
-
-# if you are familiar with Shiny you can call reactives here
-# for example, if you just transformed some variables in Data > Transform
-# you can call the transform_main reacive to see the latest result
-# this can very useful for debugging
-transform_main() %>% head"
-
-output$rcode <- renderUI({
-
-  tagList(
-    with(tags,
-      table(
-            td(help_modal('Code','code_help',
-                       inclMD(file.path(r_path,"base/tools/help/code.md")))),
-            td(HTML("&nbsp;&nbsp;")),
-            td(actionButton("rEval", "Run")),
-            td(downloadButton('saveCode', 'Save')),
-            td(HTML("<div class='form-group shiny-input-container'>
-                <input id='load_code' name='load_code' type='file' accept='.r,.R'/>
-              </div>"))
-            #, td(fileInput('sourceCode', 'Source R-code', multiple=TRUE))
-      )
-    ),
-
-    shinyAce::aceEditor("rmd_code", mode = "r",
-                        height="auto",
-                        selectionId = "rmd_code_selection",
-                        value = state_init("rmd_code",r_example),
-                        hotkeys = list(runKeyCode =
-                                       list(win ="CTRL-ENTER",
-                                            mac ="CMD-ENTER"))),
-    htmlOutput("rmd_code_output")
-  )
-})
-
-valsCode <- reactiveValues(code = 0)
-
-observe({
-  input$runKeyCode
-  if (!is.null(input$rEval)) isolate(valsCode$code <- valsCode$code + 1)
-})
-
-# output$rmd_code_output <- renderPrint({
-output$rmd_code_output <- renderUI({
-
-  if (valsCode$code == 1) return()
-  isolate({
-    if (r_local) {
-      rmd_code <- if(is_empty(input$rmd_code_selection)) input$rmd_code
-                  else input$rmd_code_selection
-
-      paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
-        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
-        HTML
-    } else {
-      HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")
-    }
-  })
-})
-
-output$saveCode <- downloadHandler(
-  filename = function() {"rcode.R"},
-  content = function(file) {
-    isolate({
-      cat(input$rmd_code,file=file,sep="\n")
-    })
-  }
-)
-
-# loading r-code from disk
-observe({
-  inFile <- input$load_code
-  if (!is.null(inFile)) {
-    isolate({
-      paste0(readLines(inFile$datapath), collapse = "\n") %>%
-        shinyAce::updateAceEditor(session, "rmd_code", value = .)
-    })
-  }
-})

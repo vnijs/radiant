@@ -26,7 +26,7 @@ dep_list <- function() {
 	# get list of packages()
 	devtools::source_url("https://raw.githubusercontent.com/vnijs/radiant_miniCRAN/gh-pages/pkgs.R")
 
-	# setwd("~/Desktop/GitHub/radiant_dev")
+	# setwd("~/Desktop/GitHub/radiant")
 	# for (i in pkgs)
 	# 	devtools::use_package(i)
 
@@ -48,7 +48,7 @@ dep_list <- function() {
 
 # install.packages(devtools)
 # devtools::install_github(c("ramnathv/htmlwidgets", "smartinsightsfromdata/rpivotTable"))
-# shiny::runApp("~/gh/radiant_dev/inst/marketing")
+# shiny::runApp("~/gh/radiant/inst/marketing")
 
 # avoid .DS_Store files in git
 # find . -name .DS_Store -print0 | xargs -0 git rm --ignore-unmatch

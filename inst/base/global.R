@@ -1,10 +1,10 @@
-# path to use for local and server use
+## path to use for local and server use
 r_path <- ifelse(file.exists("../base") && file.exists("../quant"), "..",
                  system.file(package = "radiant"))
 if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 
-# reactive programming in Shiny requires (some) use of global variables
-# currently these are r_env, r_data, r_state, r_local, r_path, r_sessions, r_ssuid
+## reactive programming in Shiny requires (some) use of global variables
+## currently these are r_env, r_data, r_state, r_local, r_path, r_sessions, r_ssuid
 
 options("width"=200)
 options("scipen"=100)
@@ -14,7 +14,6 @@ pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
                "htmlwidgets")
 pkgs_gh <- c("shinyAce","rpivotTable","DT")
-# pkgs_gh <- c("shinyAce","rpivotTable")
 pkgs <- c(pkgs_cran, pkgs_gh)
 rm(pkgs_cran,pkgs_gh)
 
@@ -25,37 +24,10 @@ expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm
                        "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
                        "# missing" = "nmissing")
 
-# from: http://stackoverflow.com/questions/5076593/how-to-determine-if-you-have-an-internet-connection-in-r
-# hasIP <- function() {
-#   if (.Platform$OS.type == "windows") {
-#     ip <- system("ipconfig", intern = TRUE)
-#   } else {
-#     ip <- system("ifconfig", intern = TRUE)
-#   }
-#
-#   validIP <- "((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
-#   any(grep(validIP, ip))
-# }
-#
-# withMathJaxIP <- function(...) {
-#   if(hasIP()) {
-#     withMathJax(...)
-#   } else {
-#     tagList(...)
-#   }
-# }
-
-# withMathJaxIP <- withMathJax
-# withMathJaxIP <- function(...)  tagList(...)
-
-# if(havingIP()) {
-#   withMathJaxIP <- withMathJax
-# } else {
-#   withMathJaxIP <- function(...) tagList(...)
-# }
-# if(havingIP()) withMathJaxIP(.) else . }
-
-
+# for report and code
+knitr::opts_knit$set(progress = TRUE)
+knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE,
+                      warning=FALSE, fig.path = "~/radiant_figures/")
 
 # environment to hold session information
 r_sessions <- new.env(parent = emptyenv())
@@ -81,23 +53,19 @@ addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
 
 if (r_local) {
-  withMathJax <- function(...)  {
-    addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "www/MathJax/"))
-    path <- "MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
-            ..., tags$script(HTML("MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
-  }
+  addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
+  withMathJax <- MathJaxR::withMathJaxR
 }
 
-### options used for debugging
+## options used for debugging
 # options(shiny.trace = TRUE)
 # options(shiny.error=recover)
 
-### options used for debugging when warnings are given
+## options used for debugging when warnings are given
 # options(warn=0)
 # options(warn=2)
 
-# Windows or Mac
+## Windows or Mac
 # if (.Platform$OS.type == 'windows') {
 #   Sys.setlocale(category = 'LC_ALL','English_United States.1252')
 # } else {

@@ -31,8 +31,8 @@ shinyUI(
   tabPanel("Quit", uiOutput("savequit")),
 
   navbarMenu("Help",
-    tabPanel("Radiant help", uiOutput("help_quant")),
-    tabPanel("Radiant videos", uiOutput("help_videos")),
+    tabPanel("Help", uiOutput("help_quant")),
+    tabPanel("Videos", uiOutput("help_videos")),
     tabPanel("About", uiOutput("help_about"))
   ),
 

@@ -17,21 +17,21 @@ output$savequit <- renderUI({
                     onclick = "window.close();",
                     "Quit")),
       wellPanel(
-        checkboxInput('showInput', 'Show input', FALSE),
-        checkboxInput('showRdata', 'Show r_data', FALSE),
-        checkboxInput('showState', 'Show state', FALSE)),
+        checkboxInput('show_input', 'Show input', FALSE),
+        checkboxInput('show_data', 'Show r_data', FALSE),
+        checkboxInput('show_state', 'Show state', FALSE)),
 
       help_modal('Quit','quit_help',inclMD(file.path(r_path,"base/tools/help/quit.md")))
     ),
     mainPanel(
-      conditionalPanel(condition = "input.showInput == true",
-        verbatimTextOutput("showInput")
+      conditionalPanel(condition = "input.show_input == true",
+        verbatimTextOutput("show_input")
       ),
-      conditionalPanel(condition = "input.showRdata == true",
-        verbatimTextOutput("showRdata")
+      conditionalPanel(condition = "input.show_data == true",
+        verbatimTextOutput("show_data")
       ),
-      conditionalPanel(condition = "input.showState == true",
-        verbatimTextOutput("showState")
+      conditionalPanel(condition = "input.show_state == true",
+        verbatimTextOutput("show_state")
       )
     )
   )
@@ -44,8 +44,8 @@ output$downloadStateQuit <- downloadHandler(
   }
 )
 
-output$showInput <- renderPrint({
-  input$showInput # only update when you toggle the checkbox
+output$show_input <- renderPrint({
+  input$show_input # only update when you toggle the checkbox
   isolate({
     cat("Input list:\n")
     inp <- reactiveValuesToList(input)
@@ -53,8 +53,8 @@ output$showInput <- renderPrint({
   })
 })
 
-output$showRdata <- renderPrint({
-  input$showRdata # only update when you toggle the checkbox
+output$show_data <- renderPrint({
+  input$show_data # only update when you toggle the checkbox
   isolate({
     cat("r_data list:\n")
     reactiveValuesToList(r_data) %>%
@@ -62,7 +62,7 @@ output$showRdata <- renderPrint({
   })
 })
 
-output$showState <- renderPrint({
+output$show_state <- renderPrint({
   cat("State list:\n")
   if (is.null(r_state)) return()
   if (length(r_state) == 0) return("[empty]")
@@ -79,8 +79,6 @@ observe({
       assign("r_state", reactiveValuesToList(input), envir = .GlobalEnv)
       assign("r_data", reactiveValuesToList(r_data), envir = .GlobalEnv)
       stop_message <- "\nStopping Radiant. State available as 'r_state' and 'r_data'.\n"
-      # if (!is.null(input$rmd_report) && input$rmd_report != "") {
-
 
       if (!is_empty(input$rmd_report)) {
 
@@ -98,7 +96,7 @@ observe({
         }
       }
       try(rm(r_env, envir = .GlobalEnv), silent = TRUE) # removing the reference to the shiny environment
-      try(rm(r_sessions, envir = .GlobalEnv), silent = TRUE) # removing the r_sessions
+      try(rm(r_sessions, envir = .GlobalEnv), silent = TRUE) # removing r_sessions
       try(unlink("~/radiant_figures/", recursive = TRUE), silent = TRUE) # removing temp knitr figures directory
       cat(stop_message)
       stopApp("-- stop successful --")

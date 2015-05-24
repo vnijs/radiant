@@ -1,12 +1,12 @@
 # deploy to shinyapps.io
 
 library(devtools)
-setwd("~/gh/radiant_dev")
+setwd("~/gh/radiant")
 document(roclets = c('rd', 'collate', 'namespace'))
 # install()
 
 library(magrittr)
-fn <- "~/gh/radiant_dev/inst/base/www/style.css"
+fn <- "~/gh/radiant/inst/base/www/style.css"
 readLines(fn) %>%
   gsub("top: 95px;", "top: 145px;", .) %>%
   cat(file = fn, sep = "\n")
@@ -25,7 +25,7 @@ system("git push")
 devtools::install_github(c("vnijs/radiant","vnijs/DT", "vnijs/MathJaxR"))
 
 library(shinyapps)
-fpath <- "~/gh/radiant_dev/inst/base"
+fpath <- "~/gh/radiant/inst/base"
 setwd(fpath)
 
 for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
@@ -40,12 +40,12 @@ deployApp(account = "vnijs", launch.browser = FALSE)
 setwd(file.path(fpath,"../marketing"))
 deployApp(account = "vnijs", launch.browser = FALSE)
 
-fn <- "~/gh/radiant_dev/inst/base/www/style.css"
+fn <- "~/gh/radiant/inst/base/www/style.css"
 readLines(fn) %>%
   gsub("top: 145px;", "top: 95px;", .) %>%
   cat(file = fn, sep = "\n")
 
-setwd("~/gh/radiant_dev/")
+setwd("~/gh/radiant/")
 Sys.sleep(5)
 
 system("git add --all .")

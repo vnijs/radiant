@@ -122,7 +122,7 @@ loadUserData <- function(fname, uFile, ext,
   r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique
 }
 
-# dat <- read.csv("~/gh/radiant_dev/inst/examples/houseprices.csv", stringsAsFactors = FALSE)
+# dat <- read.csv("~/gh/radiant/inst/examples/houseprices.csv", stringsAsFactors = FALSE)
 # getclass(dat)
 # factorizer(dat) %>% getclass
 # dat

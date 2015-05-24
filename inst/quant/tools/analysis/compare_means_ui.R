@@ -12,6 +12,7 @@ cm_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for (i in names(cm_args))
     cm_args[[i]] <- input[[i]]
+  if (!input$show_filter) cm_args$data_filter = ""
   cm_args
 })
 

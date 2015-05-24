@@ -1,8 +1,8 @@
 # devtools::install_github('hadley/devtools')
 library(devtools)
 document(roclets=c('rd', 'collate', 'namespace'))
-build('../radiant_dev')
-build('../radiant_dev', binary = TRUE)
+build('../radiant')
+build('../radiant', binary = TRUE)
 
 # install('../shinyAce')
 build('../shinyAce')

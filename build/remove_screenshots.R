@@ -1,5 +1,5 @@
 # based on https://gist.github.com/mages/1544009
-setwd("~/gh/radiant_dev/inst/quant/tools/help")
+setwd("~/gh/radiant/inst/quant/tools/help")
 list.files("figures")
 unlink("figures/*.png")
 list.files("figures")
@@ -13,7 +13,7 @@ for ( f in filenames ){
   cat(changed, file=f, sep="\n")
 }
 
-setwd("~/gh/radiant_dev/inst/marketing/tools/help")
+setwd("~/gh/radiant/inst/marketing/tools/help")
 list.files("figures")
 unlink("figures/*.png")
 list.files("figures")

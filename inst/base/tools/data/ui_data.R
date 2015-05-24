@@ -36,6 +36,7 @@ output$ui_data <- renderUI({
           tabPanel("Manage", htmlOutput("htmlDataExample"),
             conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
             conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
+          # tabPanel("View", DT::dataTableOutput("dataviewer"), verbatimTextOutput("tbl_state")),
           tabPanel("View", DT::dataTableOutput("dataviewer")),
           # tabPanel("View_old", shiny::dataTableOutput("dataviewer_old")),
           tabPanel("Visualize",plotOutput("visualize", width = "100%", height = "100%")),

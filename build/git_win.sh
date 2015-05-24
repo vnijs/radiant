@@ -3,7 +3,7 @@
 cd ~/Desktop/GitHub
 #git clone git@github.com:smartinsightsfromdata/rpivotTable.git
 #git clone git@github.com:trestletech/shinyAce.git
-cd radiant_dev
+cd radiant
 git pull
 cd ../shinyAce
 git pull

@@ -11,6 +11,7 @@ cp_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for (i in names(cp_args))
     cp_args[[i]] <- input[[i]]
+  if (!input$show_filter) cp_args$data_filter = ""
   cp_args
 })
 

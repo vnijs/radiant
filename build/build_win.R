@@ -5,7 +5,7 @@
 # install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 
 # next line not working - run from git terminal
-#system("sh C:/Users/vnijs/Desktop/GitHub/radiant_dev/build/git_win.sh")
+#system("sh C:/Users/vnijs/Desktop/GitHub/radiant/build/git_win.sh")
 
 library(devtools)
 document(roclets = c('rd', 'collate', 'namespace'))
@@ -18,11 +18,11 @@ build('../rpivotTable', binary = TRUE)
 # build('../MathJaxR', binary = TRUE)
 # install('../DT_vnijs')
 build('../DT_vnijs', binary = TRUE)
-build('../radiant_dev', binary = TRUE)
+build('../radiant', binary = TRUE)
 
 setwd('../')
 rfile <- Sys.glob("*zip")
-setwd('radiant_dev')
+setwd('radiant')
 
 # file.copy(paste0("../",rfile),"Z:/Desktop/GitHub")
 # file.remove(paste0("../",rfile))

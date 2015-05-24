@@ -4,24 +4,11 @@ if (!require(covr)) {
  	library(covr)
 }
 
-setwd("~/gh/radiant_dev")
-# library(radiant)
+setwd("~/gh/radiant")
 
-# define so that examples are not run
-# coverage_test <<- TRUE
-
-# cov <- package_coverage()
-# test_examples()
-# cov <- package_coverage(type="example")
-cov <- package_coverage(type="all")
-# cov <- package_coverage(type="all")
-cov
-
-# print(cov)  # doesn't seem to be working
+cov <- package_coverage(type = "example")
+# cov <- package_coverage(type = "all")
 shine(cov)
 
-# rm(coverage_test)
-
 # after_success:
-#   - Rscript -e 'library(covr);coveralls()'
-
+#   - Rscript -e 'library(covr); coveralls()'

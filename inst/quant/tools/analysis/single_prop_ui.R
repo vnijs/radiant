@@ -14,6 +14,7 @@ sp_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for (i in names(sp_args))
     sp_args[[i]] <- input[[i]]
+  if (!input$show_filter) sp_args$data_filter = ""
   sp_args
 })
 

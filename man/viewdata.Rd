@@ -4,12 +4,14 @@
 \alias{viewdata}
 \title{View data}
 \usage{
-viewdata(dataset, vars = "")
+viewdata(dataset, vars = "", filt = "")
 }
 \arguments{
 \item{dataset}{Name of the dataframe to change}
 
 \item{vars}{Variables to so (default is all)}
+
+\item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
 }
 \description{
 View data

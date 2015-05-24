@@ -39,9 +39,9 @@ sampling <- function(dataset, smp_var, smp_sample_size,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
+#' set.seed(1234)
 #' result <- sampling("rndnames","Names",10)
 #' summary(result)
-#' rndnames %>% sampling("Names",10) %>% summary
 #'
 #' @seealso \code{\link{sampling}} to generate the results
 #'

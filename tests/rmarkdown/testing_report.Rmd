@@ -5,7 +5,7 @@ title: Testing Radiant
 ```{r echo = FALSE}
 knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
 suppressMessages(library(radiant))
-load("~/gh/radiant_dev/tests/rmarkdown/testing_state.rda")
+load("~/gh/radiant/tests/rmarkdown/testing_state.rda")
 ```
 ```{r fig.width=7, fig.height=4.31}
 result <- single_mean(dataset = "anscombe", sm_var = "y1")
