@@ -29,12 +29,12 @@ output$dataviewer <- DT::renderDataTable({
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   action = DT::dataTableAjax(session, dat, rownames = FALSE)
 
-  DT::datatable(dat, filter = "top", rownames = FALSE, server = TRUE,
-    # class = "compact",
+  DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
+    rownames = FALSE, server = TRUE,
     options = list(
       ajax = list(url = action),
       search = list(regex = TRUE),
-      # stateSave = TRUE,
+      stateSave = TRUE,
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
       autoWidth = TRUE,
       processing = FALSE,
@@ -44,7 +44,7 @@ output$dataviewer <- DT::renderDataTable({
   )
 })
 
-output$tbl_state = renderPrint(str(input$dataviewer_state))
+# output$tbl_state = renderPrint(str(input$dataviewer_state))
 
 # output$ui_view_vars_old <- renderUI({
 #   vars <- varnames()

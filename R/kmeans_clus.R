@@ -38,15 +38,13 @@ kmeans_clus <- function(dataset, vars,
 		getdata(dataset, vars, filt = data_filter) %>%
 			mutate(clus_var = clus_var) %>%
 			mutate_each(funs(scale)) %T>%
-			{
-				group_by(., clus_var) %>%
+			{ group_by(., clus_var) %>%
 				summarise_each(funs(mean)) %>%
 				select(-clus_var) %>%
 				as.matrix  ->> hc_cent
 			} %>% select(-clus_var) %>%
 		kmeans(centers = hc_cent, iter.max = 500) -> km_out
 		rm(init, hc_cent)
-		# { hc_cent <<- as.matrix(aggregate(., list(clus_var),mean)[-1]) } %>%
 	} else {
 		set.seed(seed)
 		getdata(dataset, vars, filt = data_filter) %>%

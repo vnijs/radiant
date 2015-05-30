@@ -30,7 +30,7 @@ Imports:
 		shiny (>= 0.12),
 		shinyAce (>= 0.2.1),
 		lubridate (>= 1.3.3),
-		DT (>= 0.0.44),
+		DT (>= 0.0.56),
 		MathJaxR (>= 0.11)
 Suggests:
 		rmarkdown (>= 0.4.2),

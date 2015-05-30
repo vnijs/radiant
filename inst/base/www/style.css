@@ -1,5 +1,14 @@
 .table {
   width: auto;
+  overflow-x: auto;
+}
+
+th, td {
+  text-align: left;
+}
+
+table.dataTable tfoot td, table.dataTable thead td {
+  padding: 0 0 0 0;
 }
 
 .well {
@@ -27,14 +36,6 @@
 
 .radio-inline, .checkbox-inline {
   margin-right: 10px;
-}
-
-th, td {
-  text-align: left;
-}
-
-table.dataTable tfoot td, table.dataTable thead td {
-  padding: 0 0 0 0;
 }
 
 .modal-dialog {

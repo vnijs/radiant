@@ -39,7 +39,7 @@ output$ui_data <- renderUI({
           # tabPanel("View", DT::dataTableOutput("dataviewer"), verbatimTextOutput("tbl_state")),
           tabPanel("View", DT::dataTableOutput("dataviewer")),
           # tabPanel("View_old", shiny::dataTableOutput("dataviewer_old")),
-          tabPanel("Visualize",plotOutput("visualize", width = "100%", height = "100%")),
+          tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
           tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),
           tabPanel("Explore", verbatimTextOutput("expl_summary"), plotOutput("expl_plots", width = "100%", height = "100%")),
           tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),

@@ -24,7 +24,7 @@ build('../radiant', binary = TRUE)
 # build('../htmlwidgets')
 # build('../htmlwidgets', binary = TRUE)
 
-# install('../DT')
+devtools::install('../DT')
 # build('../DT')
 # build('../DT', binary = TRUE)
 
