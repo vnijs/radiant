@@ -43,7 +43,7 @@ unlink('radiant.pdf')
 # create pdf of documentation
 setwd("~")
 unlink('radiant.pdf')
-system("R CMD Rd2pdf radiant --no-preview")
+system("R CMD Rd2pdf gh/radiant --no-preview")
 system("rm -rf .Rd2pdf*")
 setwd("~/gh/radiant_gh-pages/")
 file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
