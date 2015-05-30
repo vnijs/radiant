@@ -12,7 +12,7 @@
 
 
 # set directories
-cd ~/Desktop/GitHub/radiant_dev
+cd ~/Desktop/GitHub/radiant
 dirsource=../radiant_miniCRAN/src/contrib/
 dirmac=../radiant_miniCRAN/bin/macosx/contrib/3.1/
 dirmac_mav=../radiant_miniCRAN/bin/macosx/mavericks/contrib/3.1/
@@ -58,4 +58,4 @@ git add --all .
 # from http://stackoverflow.com/questions/4654437/how-to-set-current-date-as-git-commit-message
 git commit -m "radiant package update: `date +\"%m-%d-%Y\"`"
 git push
-cd ../radiant_dev
+cd ../radiant

@@ -7,7 +7,7 @@ suppressMessages(library(radiant))
 knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
 
 # change path as needed
-fpath <- "~/gh/radiant_dev/inst/base/data/"
+fpath <- "~/gh/radiant/inst/base/data/"
 load(file.path(fpath,"diamonds.rda"))
 load(file.path(fpath,"salary.rda"))
 load(file.path(fpath,"../../marketing/data/shopping.rda"))
@@ -27,8 +27,8 @@ plot(result)
 You can also call functions for visualization (see below) and access help from the console using `?visualize`
 
 ```{r}
-visualize(dataset = "diamonds", viz_xvar = "carat", viz_yvar = "price",
-          viz_type = "scatter", viz_facet_row = "clarity", viz_color = "clarity")
+visualize(dataset = "diamonds", xvar = "carat", yvar = "price",
+          type = "scatter", facet_row = "clarity", color = "clarity")
 ```
 
 As an example, you can render the [`single_mean.Rmd`](https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example.
@@ -45,9 +45,9 @@ This will load the library and the required packages. To see the index of functi
 Lets start by comparing the mean of a variable to a (population) value using the built-in `mtcars` dataset. This functionality is in the Radiant menu `Base > Single mean`. The analysis is conducted in function `single_mean`. Calling the `summary` method on the result object will show tabular output. Calling `plot` on the same result will produce plots to help evaluate the hypothesis.
 
 ```{r}
-result <- single_mean("mtcars", "mpg", sm_comp_value = 20, sm_alternative = "greater")
+result <- single_mean("mtcars", "mpg", comp_value = 20, alternative = "greater")
 summary(result)
-plot(result, sm_plots = c("hist","simulate"))
+plot(result, plots = c("hist","simulate"))
 ```
 
 To compare the mean price of diamonds across different levels of clarity we can call the `compare_means` function:
@@ -55,7 +55,7 @@ To compare the mean price of diamonds across different levels of clarity we can 
 ```{r}
 result <- compare_means("diamonds", "clarity", "price")
 summary(result)
-plot(result, cm_plots = c("bar","density"))
+plot(result, plots = c("bar","density"))
 ```
 
 These datasets are available after loading the radiant library. We can also load data through Radiant's web interface and then access the data from the console after closing the app. Start radiant using the command below and then click `examples > Load examples` in the `	Data > Manage` tab. Then close the app using `Quit > Quit`.
@@ -84,12 +84,12 @@ We can also run regressions and get output that would require writting many line
 
 ```{r}
 result <- regression("diamonds", "price", c("carat","clarity"))
-summary(result, reg_sum_check = "confint")
-predict(result, reg_predict_cmd = "carat = 1:10")
-plot(result, reg_plots = "coef")
+summary(result, sum_check = "confint")
+predict(result, predict_cmd = "carat = 1:10")
+plot(result, plots = "coef")
 ```
 ```{r fig.height=8}
-plot(result, reg_plots = "dashboard")
+plot(result, plots = "dashboard")
 ```
 
 As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
@@ -120,12 +120,12 @@ summary(result)
 plot(result)
 
 # show the dendrogram with cutoff at 0
-plot(result, hc_plots = "dendro", hc_cutoff = 0)
+plot(result, plots = "dendro", cutoff = 0.1)
 
 # plots created above suggest 3 clusters may be  most appropriate
 # use kmeans to create the clusters
 # generate output and save clustermembership to the datafile
-result <- kmeans_clus("shopping", km_vars = "v1:v6", km_nr_clus = 3)
+result <- kmeans_clus("shopping", vars = "v1:v6", nr_clus = 3)
 summary(result)
 plot(result)
 save_membership(result)

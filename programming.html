@@ -201,18 +201,19 @@ img {
 <pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
-Data     : diamonds 
-Variable : price 
-Null hyp.: the mean of price = 0 
-Alt. hyp.: the mean of price is not equal to 0 
+Data      : diamonds 
+Variable  : price 
+Confidence: 0.95 
+Null hyp. : the mean of price = 0 
+Alt. hyp. : the mean of price is not equal to 0 
 
      mean t.value p.value   df     2.5%    97.5%       sd    n
  3907.186  54.084  &lt; .001 2999 3765.535 4048.837 3956.915 3000</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-2-1.png" title="" alt="" width="672" /></p>
 <p>You can also call functions for visualization (see below) and access help from the console using <code>?visualize</code></p>
-<pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, viz_xvar = &quot;carat&quot;, viz_yvar = &quot;price&quot;,
-          viz_type = &quot;scatter&quot;, viz_facet_row = &quot;clarity&quot;, viz_color = &quot;clarity&quot;)</code></pre>
+<pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, xvar = &quot;carat&quot;, yvar = &quot;price&quot;,
+          type = &quot;scatter&quot;, facet_row = &quot;clarity&quot;, color = &quot;clarity&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-3-1.png" title="" alt="" width="672" /></p>
 <p>As an example, you can render the <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example.</p>
 <p>Radiant is available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:</p>
@@ -220,25 +221,28 @@ Alt. hyp.: the mean of price is not equal to 0
 library(radiant)</code></pre>
 <p>This will load the library and the required packages. To see the index of functions currently available from the Radiant package using the <code>help(package = &quot;radiant&quot;)</code> command</p>
 <p>Lets start by comparing the mean of a variable to a (population) value using the built-in <code>mtcars</code> dataset. This functionality is in the Radiant menu <code>Base &gt; Single mean</code>. The analysis is conducted in function <code>single_mean</code>. Calling the <code>summary</code> method on the result object will show tabular output. Calling <code>plot</code> on the same result will produce plots to help evaluate the hypothesis.</p>
-<pre class="r"><code>result &lt;- single_mean(&quot;mtcars&quot;, &quot;mpg&quot;, sm_comp_value = 20, sm_alternative = &quot;greater&quot;)
+<pre class="r"><code>result &lt;- single_mean(&quot;mtcars&quot;, &quot;mpg&quot;, comp_value = 20, alternative = &quot;greater&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
-Data     : mtcars 
-Variable : mpg 
-Null hyp.: the mean of mpg = 20 
-Alt. hyp.: the mean of mpg is &gt; 20 
+Data      : mtcars 
+Variable  : mpg 
+Confidence: 0.95 
+Null hyp. : the mean of mpg = 20 
+Alt. hyp. : the mean of mpg is &gt; 20 
 
    mean t.value p.value df   2.5% 97.5%    sd  n
  20.091   0.085   0.466 31 18.284   Inf 6.027 32</code></pre>
-<pre class="r"><code>plot(result, sm_plots = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
+<pre class="r"><code>plot(result, plots = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-4-1.png" title="" alt="" width="672" /></p>
 <p>To compare the mean price of diamonds across different levels of clarity we can call the <code>compare_means</code> function:</p>
 <pre class="r"><code>result &lt;- compare_means(&quot;diamonds&quot;, &quot;clarity&quot;, &quot;price&quot;)
 summary(result)</code></pre>
-<pre><code>Pairwise comparisons (no adjustment)
-Data     : diamonds 
-Variables: clarity, price 
-Samples  : independent 
+<pre><code>Pairwise mean comparisons
+Data      : diamonds 
+Variables : clarity, price 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
 
           mean   n       sd      se      ci
    I1 4194.775  40 2519.678 398.396 805.832
@@ -281,7 +285,7 @@ Samples  : independent
  VVS1 not equal to IF     VVS1 = IF      196.763 0.621      
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<pre class="r"><code>plot(result, cm_plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
+<pre class="r"><code>plot(result, plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-5-1.png" title="" alt="" width="672" /></p>
 <p>These datasets are available after loading the radiant library. We can also load data through Radiant’s web interface and then access the data from the console after closing the app. Start radiant using the command below and then click <code>examples &gt; Load examples</code> in the <code>Data &gt; Manage</code> tab. Then close the app using <code>Quit &gt; Quit</code>.</p>
 <pre class="r"><code># start radiant, load the example data, then Quit &gt; Quit
@@ -289,10 +293,12 @@ radiant()</code></pre>
 <p>We can now use the <code>compare_means</code> function to evaluate salary data for professors of different ranks using:</p>
 <pre class="r"><code>result &lt;- compare_means(&quot;salary&quot;, &quot;rank&quot;, &quot;salary&quot;)
 summary(result)</code></pre>
-<pre><code>Pairwise comparisons (no adjustment)
-Data     : salary 
-Variables: rank, salary 
-Samples  : independent 
+<pre><code>Pairwise mean comparisons
+Data      : salary 
+Variables : rank, salary 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
 
                 mean   n        sd       se       ci
   AsstProf  80775.99  67  8174.113  998.627 1993.823
@@ -310,10 +316,12 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <p>An alternative way to write this code is to use <code>piping</code> (see <a href="http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html">magrittr</a> vignettes):</p>
 <pre class="r"><code>salary %&gt;% compare_means(&quot;rank&quot;, &quot;salary&quot;) %&gt;%
   {summary(.); plot(.)}</code></pre>
-<pre><code>Pairwise comparisons (no adjustment)
-Data     : ----- 
-Variables: rank, salary 
-Samples  : independent 
+<pre><code>Pairwise mean comparisons
+Data      : ----- 
+Variables : rank, salary 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
 
                 mean   n        sd       se       ci
   AsstProf  80775.99  67  8174.113  998.627 1993.823
@@ -329,7 +337,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <p>We can also run regressions and get output that would require writting many lines of code to produce from scratch:</p>
 <pre class="r"><code>result &lt;- regression(&quot;diamonds&quot;, &quot;price&quot;, c(&quot;carat&quot;,&quot;clarity&quot;))
-summary(result, reg_sum_check = &quot;confint&quot;)</code></pre>
+summary(result, sum_check = &quot;confint&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
 Data     : diamonds 
 Dependent variable   : price 
@@ -350,46 +358,20 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 
 R-squared: 0.904,  Adjusted R-squared: 0.904 
 F-statistic: 3530.024 df(9,2991), p.value &lt; .001
-Nr obs: 3000
-
-               coefficient      2.5%     97.5%     +/-
-(Intercept)      -6780.993 -7182.855 -6379.131 401.862
-carat             8438.030  8337.834  8538.227 100.197
-clarity &gt; SI2     2790.760  2395.873  3185.646 394.886
-clarity &gt; SI1     3608.531  3215.384  4001.679 393.148
-clarity &gt; VS2     4249.906  3854.604  4645.208 395.302
-clarity &gt; VS1     4461.956  4060.801  4863.111 401.155
-clarity &gt; VVS2    5109.476  4697.311  5521.640 412.164
-clarity &gt; VVS1    5027.669  4607.574  5447.764 420.095
-clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
-<pre class="r"><code>predict(result, reg_predict_cmd = &quot;carat = 1:10&quot;)</code></pre>
-<pre><code>Predicted values for:
- clarity carat Prediction      2.5%     97.5%      +/-
-     SI1     1   5265.569  2859.633  7671.505 2405.936
-     SI1     2  13703.599 11294.952 16112.246 2408.647
-     SI1     3  22141.629 19726.114 24557.145 2415.515
-     SI1     4  30579.660 28153.155 33006.165 2426.505
-     SI1     5  39017.690 36576.130 41459.250 2441.560
-     SI1     6  47455.720 44995.114 49916.327 2460.607
-     SI1     7  55893.751 53410.198 58377.303 2483.552
-     SI1     8  64331.781 61821.491 66842.072 2510.291
-     SI1     9  72769.811 70229.110 75310.513 2540.701
-     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
-<pre><code>   clarity carat Prediction      2.5%     97.5%      +/-
-1      SI1     1   5265.569  2859.633  7671.505 2405.936
-2      SI1     2  13703.599 11294.952 16112.246 2408.647
-3      SI1     3  22141.629 19726.114 24557.145 2415.515
-4      SI1     4  30579.660 28153.155 33006.165 2426.505
-5      SI1     5  39017.690 36576.130 41459.250 2441.560
-6      SI1     6  47455.720 44995.114 49916.327 2460.607
-7      SI1     7  55893.751 53410.198 58377.303 2483.552
-8      SI1     8  64331.781 61821.491 66842.072 2510.291
-9      SI1     9  72769.811 70229.110 75310.513 2540.701
-10     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
-<pre class="r"><code>plot(result, reg_plots = &quot;coef&quot;)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" width="672" /></p>
-<pre class="r"><code>plot(result, reg_plots = &quot;dashboard&quot;)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" width="672" /></p>
+Nr obs: 3000</code></pre>
+<pre class="r"><code>predict(result, predict_cmd = &quot;carat = 1:10&quot;)</code></pre>
+<pre><code>Please specify a command to generate predictions. For example,
+carat = seq(.5, 1.5, .1) would produce predictions for values of
+carat starting at .5, increasing to 1.5 in increments of .1. Make
+sure to press return after you finish entering the command.
+If no results are shown the command was likely invalid. Alternatively,
+specify a dataset to generate predictions. You could create this in
+Excel and use the paste feature in Data &gt; Manage to bring it into
+Radiant</code></pre>
+<pre class="r"><code>plot(result, plots = &quot;coef&quot;)</code></pre>
+<pre><code>Please select a regression plot from the drop-down menu</code></pre>
+<pre class="r"><code>plot(result, plots = &quot;dashboard&quot;)</code></pre>
+<pre><code>Please select a regression plot from the drop-down menu</code></pre>
 <p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
 <pre class="r"><code># set working directory to your Desktop
 # setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
@@ -421,12 +403,12 @@ Observations: 20 </code></pre>
 plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code># show the dendrogram with cutoff at 0
-plot(result, hc_plots = &quot;dendro&quot;, hc_cutoff = 0)</code></pre>
+plot(result, plots = &quot;dendro&quot;, cutoff = 0.1)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-10-2.png" title="" alt="" width="672" /></p>
 <pre class="r"><code># plots created above suggest 3 clusters may be  most appropriate
 # use kmeans to create the clusters
 # generate output and save clustermembership to the datafile
-result &lt;- kmeans_clus(&quot;shopping&quot;, km_vars = &quot;v1:v6&quot;, km_nr_clus = 3)
+result &lt;- kmeans_clus(&quot;shopping&quot;, vars = &quot;v1:v6&quot;, nr_clus = 3)
 summary(result)</code></pre>
 <pre><code>K-means cluster analysis
 Data        : shopping 

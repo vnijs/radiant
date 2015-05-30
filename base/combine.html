@@ -504,10 +504,10 @@ DC
 <p><img src="figures/inner_join.png" alt="inner_join" /></p>
 <p>The R(adiant) commands are:</p>
 <pre class="r"><code># Radiant
-combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;inner_join&quot;)
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, by = &quot;publisher&quot;, type = &quot;inner_join&quot;)
 
 # R
-inner_join(superheroes, publishers, by = &quot;publisher&quot;) </code></pre>
+inner_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="left-join-superheroes-publishers" class="section level3">
@@ -661,7 +661,7 @@ NA
 <p><img src="figures/left_join.png" alt="left_join" /></p>
 <p>The R(adiant) commands are:</p>
 <pre class="r"><code># Radiant
-combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;left_join&quot;)
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, by = &quot;publisher&quot;, type = &quot;left_join&quot;)
 
 # R
 left_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
@@ -818,7 +818,7 @@ Image
 <p><img src="figures/right_join.png" alt="right_join" /></p>
 <p>The R(adiant) commands are:</p>
 <pre class="r"><code># Radiant
-combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;right_join&quot;)
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, by = &quot;publisher&quot;, type = &quot;right_join&quot;)
 
 # R
 right_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
@@ -992,7 +992,7 @@ Image
 <p><img src="figures/full_join.png" alt="full_join" /></p>
 <p>The R(adiant) commands are:</p>
 <pre class="r"><code># Radiant
-combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;full_join&quot;)
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, by = &quot;publisher&quot;, type = &quot;full_join&quot;)
 
 # R
 full_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
@@ -1108,7 +1108,7 @@ Marvel
 </table>
 <p>We get a similar table as with <code>inner_join</code> but it contains only the variables in <code>superheroes</code>. The R(adiant) commands are:</p>
 <pre class="r"><code># Radiant
-combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, cmb_vars = &quot;publisher&quot;, cmb_type = &quot;semi_join&quot;)
+combinedata(&quot;superheroes&quot;, &quot;publishers&quot;, by = &quot;publisher&quot;, type = &quot;semi_join&quot;)
 
 # R
 semi_join(superheroes, publishers, by = &quot;publisher&quot;)</code></pre>
@@ -1593,7 +1593,7 @@ Dark Horse Comics
 <p>If the <code>avengers</code> dataset were meant to extend the list of superheroes we could just stack the two datasets, one below the other. The new datasets has 14 rows and 4 columns. Due to a coding error in the <code>avengers</code> dataset (i.e.., <em>Magneto</em> is <em>not</em> an <em>Avenger</em>) there is a duplicate row in the new combined dataset. Something we probably don’t want.</p>
 <p>The R(adiant) commands are:</p>
 <pre class="r"><code># Radiant
-combinedata(&quot;avengers&quot;, &quot;superheroes&quot;, cmb_type = &quot;bind_rows&quot;)
+combinedata(&quot;avengers&quot;, &quot;superheroes&quot;, type = &quot;bind_rows&quot;)
 
 # R
 bind_rows(avengers, superheroes)</code></pre>

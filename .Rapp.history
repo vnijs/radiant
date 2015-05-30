@@ -511,8 +511,8 @@ plot.hier_clus <- function(result, hc_plots = c("scree","diff"), hc_cutoff = 0.0
     sshh( do.call(grid.arrange, c(plots, list(ncol = 1))) )#
 }
 result <- hier_clus("shopping", hc_vars = c("v1:v6"))
-load("/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/data/data_rady/toothpaste.rda")
-load("/Users/vnijs/Desktop/GitHub/radiant_dev/inst/marketing/data/data_rady/shopping.rda")
+load("/Users/vnijs/Desktop/GitHub/radiant/inst/marketing/data/data_rady/toothpaste.rda")
+load("/Users/vnijs/Desktop/GitHub/radiant/inst/marketing/data/data_rady/shopping.rda")
 result <- hier_clus("shopping", hc_vars = c("v1:v6"))
 plot(result, hc_plots = c("diff", "dendro"), hc_cutoff = 0)
 library(ggdendro)

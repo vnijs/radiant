@@ -166,10 +166,10 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "inner_join")
+combinedata("superheroes", "publishers", by = "publisher", type = "inner_join")
 
 # R
-inner_join(superheroes, publishers, by = "publisher") 
+inner_join(superheroes, publishers, by = "publisher")
 ```
 
 <br>
@@ -249,7 +249,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "left_join")
+combinedata("superheroes", "publishers", by = "publisher", type = "left_join")
 
 # R
 left_join(superheroes, publishers, by = "publisher")
@@ -332,7 +332,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "right_join")
+combinedata("superheroes", "publishers", by = "publisher", type = "right_join")
 
 # R
 right_join(superheroes, publishers, by = "publisher")
@@ -422,7 +422,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "full_join")
+combinedata("superheroes", "publishers", by = "publisher", type = "full_join")
 
 # R
 full_join(superheroes, publishers, by = "publisher")
@@ -485,7 +485,7 @@ We get a similar table as with `inner_join` but it contains only the variables i
 
 ```r
 # Radiant
-combinedata("superheroes", "publishers", cmb_vars = "publisher", cmb_type = "semi_join")
+combinedata("superheroes", "publishers", by = "publisher", type = "semi_join")
 
 # R
 semi_join(superheroes, publishers, by = "publisher")
@@ -765,7 +765,7 @@ The R(adiant) commands are:
 
 ```r
 # Radiant
-combinedata("avengers", "superheroes", cmb_type = "bind_rows")
+combinedata("avengers", "superheroes", type = "bind_rows")
 
 # R
 bind_rows(avengers, superheroes)

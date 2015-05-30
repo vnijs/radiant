@@ -1,4 +1,4 @@
-Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please send questions and comments to: radiant@rady.ucsd.edu.
+Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/vnijs/radiant/issues. For other questions and comments please use radiant@rady.ucsd.edu.
 
 <!-- `r sprintf("Version: %s, Date: %s", packageVersion("radiant"), packageDescription("radiant", fields = "Date"))` -->
 
@@ -22,7 +22,7 @@ Radiant works on Windows, Mac, or Linux. It can run without an Internet connecti
 
 #### Reproducible
 
-Simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another omputer. Share state files with others and create reproducible reports using [Rmarkdown](http://rmarkdown.rstudio.com/). See also the section on `Saving and loading state` below
+Simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another computer. Share state files with others and create reproducible reports using [Rmarkdown](http://rmarkdown.rstudio.com/). See also the section on `Saving and loading state` below
 
 If you are using Radiant on a server you can even share the url (include the SSUID) with others so they can see what you are working on. Thanks for this feature go to [Joe Cheng](https://github.com/jcheng5).
 
@@ -41,7 +41,7 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access open R(studio) and copy-and-paste the command below:
+Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for off-line access open R(studio) and copy-and-paste the command below:
 
 ```r
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
@@ -74,6 +74,10 @@ Documentation and tutorials are available at <http://vnijs.github.io/radiant/> a
 
 Want some help getting started? Watch the tutorials on the [documentation site](http://vnijs.github.io/radiant/tutorials.html)
 
+## Reporting issues
+
+Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> if you have any problems with Radiant.
+
 ## Online
 
 Not ready to install Radiant on your computer? Try it online at the links below:
@@ -84,6 +88,17 @@ Not ready to install Radiant on your computer? Try it online at the links below:
 
 <a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a>
 
+## Running Radiant on shinyapps.io / shiny-server
+
+You can run Radiant on a (linux) server. See links above as evidence. There are also (slightly older) instances you can access that will not affect my personal usage of shinyapps.io:
+
+<a href="https://gallery.shinyapps.io/base" target="_blank">gallery.shinyapps.io/base</a>
+
+<a href="https://gallery.shinyapps.io/quant" target="_blank">gallery.shinyapps.io/quant</a>
+
+<a href="https://gallery.shinyapps.io/marketing" target="_blank">gallery.shinyapps.io/marketing</a>
+
+To run your own server instance copy/fork the repo from github and [deploy to shinyapps.io as usual](http://shiny.rstudio.com/articles/shinyapps.html). Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. You can also host Radiant using [shiny-server](http://www.rstudio.com/products/rstudio/download-server/). Just point shiny-server to the directory in inst/ you want to use. As a courtesy, please let me know if you intend to use on a server.
 
 ## Saving and loading state
 
@@ -93,12 +108,13 @@ A related feature in Radiant is that state is maintained if you accidentally nav
 
 Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use Quit > Quit to stop the app, lists called `r_data` and `r_state` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file directly into Rstudio it will be used when you start Radiant to recreate a previous state.
 
-**Technical note**: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `r_state`. If there is, this value is used. The `r_state` list is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `r_state` can be used. `sm_args$sm_comp_value` is the default value specified in the `single_mean` function call.
+**Technical note**: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called `r_state`. If there is, this value is used. The `r_state` list is created when saving state using `reactiveValuesToList(input)`. An example of a call to numericInput is given below where the `state_init` function from `radiant.R` is used to check if a value from `r_state` can be used. `sm_args$comp_value` is the default value specified in the `single_mean` function call.
 
 ```r
-numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm_args$sm_comp_value))
+numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm_args$comp_value))
 ```
 
 ## Source code
 
-Three (related) apps are included in the inst/ directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools. The `quant` app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The `marketing` app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc.
+The source code is available on GitHub at <https://github.com/vnijs/radiant>. Three (related) apps are included in the inst/ directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. This app is used in the _Quantitative Analysis_ class at the Rady School of Management (UCSD). Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools. The `quant` app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The `marketing` app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc. This app is used in the _Research for Marketing Decisions_ class at Rady (UCSD).
+
