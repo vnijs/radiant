@@ -3,7 +3,7 @@
 #' @details See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param pf_var Variables to include in the analysis
+#' @param vars Variables to include in the analysis
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list with all variables defined in the function as an object of class pre_factor
@@ -17,10 +17,10 @@
 #' @importFrom psych KMO cortest.bartlett
 #'
 #' @export
-pre_factor <- function(dataset, pf_var,
+pre_factor <- function(dataset, vars,
                        data_filter = "") {
 
-	dat <- getdata(dataset, pf_var, filt = data_filter)
+	dat <- getdata(dataset, vars, filt = data_filter)
 	nrObs <- nrow(dat)
 
 	if (!is_string(dataset)) dataset <- "-----"
@@ -86,7 +86,7 @@ summary.pre_factor <- function(object, ...) {
 	cat("Data        :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables   :", paste0(object$pf_var, collapse=", "), "\n")
+	cat("Variables   :", paste0(object$vars, collapse=", "), "\n")
 	cat("Observations:", object$nrObs, "\n")
 
 	btest <- object$btest

@@ -1,30 +1,32 @@
 ###############################
 # Pre-factor analysis
 ###############################
-# list of function arguments
+
+## list of function arguments
 pf_args <- as.list(formals(pre_factor))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 pf_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(pf_args))
-    pf_args[[i]] <- input[[i]]
-  if (!input$show_filter) pf_args$data_filter = ""
+  pf_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  pf_args$dataset <- input$dataset
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in r_drop(names(pf_args)))
+    pf_args[[i]] <- input[[paste0("pf_",i)]]
   pf_args
 })
 
-output$ui_pf_var <- renderUI({
+output$ui_pf_vars <- renderUI({
 	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
-  selectInput(inputId = "pf_var", label = "Variables:", choices = vars,
-  	selected = state_multiple("pf_var",vars),
+  selectInput(inputId = "pf_vars", label = "Variables:", choices = vars,
+  	selected = state_multiple("pf_vars",vars),
   	multiple = TRUE, size = min(15, length(vars)), selectize = FALSE)
 })
 
 output$ui_pre_factor <- renderUI({
   list(
   	wellPanel(
-	  	uiOutput("ui_pf_var")
+	  	uiOutput("ui_pf_vars")
 	  ),
     help_and_report(modal_title = "Pre-factor analysis",
                     fun_name = "pre_factor",
@@ -66,16 +68,16 @@ output$pre_factor <- renderUI({
 })
 
 .summary_pre_factor <- reactive({
-	if (not_available(input$pf_var))
+	if (not_available(input$pf_vars))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
-	if (length(input$pf_var) < 2) return("Please select two or more numeric variables")
+	if (length(input$pf_vars) < 2) return("Please select two or more numeric variables")
 
   summary(.pre_factor())
 })
 
 .plot_pre_factor <- reactive({
 
-  if (not_available(input$pf_var) || length(input$pf_var) < 2)
+  if (not_available(input$pf_vars) || length(input$pf_vars) < 2)
     return(invisible())
 
   plot(.pre_factor())

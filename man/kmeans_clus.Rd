@@ -4,26 +4,25 @@
 \alias{kmeans_clus}
 \title{K-means cluster analysis}
 \usage{
-kmeans_clus(dataset, km_vars, data_filter = "", km_hc_init = TRUE,
-  km_dist = "sq.euclidian", km_meth = "ward.D", km_seed = 1234,
-  km_nr_clus = 2)
+kmeans_clus(dataset, vars, hc_init = TRUE, distance = "sq.euclidian",
+  method = "ward.D", seed = 1234, nr_clus = 2, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{km_vars}{Vector of variables to include in the analysis}
+\item{vars}{Vector of variables to include in the analysis}
+
+\item{hc_init}{Use centers from hier_clus as the starting point}
+
+\item{distance}{Distance for hier_clus}
+
+\item{method}{Method for hier_clus}
+
+\item{seed}{Random see to use for kmeans if hc_init is FALSE}
+
+\item{nr_clus}{Number of clusters to extract}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{km_hc_init}{Use centers from hier_clus as the starting point}
-
-\item{km_dist}{Distance for hier_clus}
-
-\item{km_meth}{Method for hier_clus}
-
-\item{km_seed}{Random see to use for kmeans if km_hc_init is FALSE}
-
-\item{km_nr_clus}{Number of clusters to extract}
 }
 \value{
 A list of all variables used in kmeans_clus as an object of class kmeans_clus

@@ -3,13 +3,13 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param cm_var1 A numeric variable or factor selected for comparison
-#' @param cm_var2 One or more numeric variables for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of cm_var1
+#' @param var1 A numeric variable or factor selected for comparison
+#' @param var2 One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r
+#' @param samples Are samples indepent ("independent") or not ("paired")
+#' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
+#' @param conf_lev Span of the confidence interval
+#' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param cm_paired Are samples indepent ("independent") or not ("paired")
-#' @param cm_alternative The alternative hypothesis ("two.sided", "greater" or "less")
-#' @param cm_sig_level Span of the confidence interval
-#' @param cm_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #'
 #' @return A list of all variables defined in the function as an object of class compare_means
 #'
@@ -21,21 +21,21 @@
 #' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-compare_means <- function(dataset, cm_var1, cm_var2,
-                          data_filter = "",
-                          cm_paired = "independent",
-                          cm_alternative = "two.sided",
-                          cm_sig_level = .95,
-                          cm_adjust = "none") {
+compare_means <- function(dataset, var1, var2,
+                          samples = "independent",
+                          alternative = "two.sided",
+                          conf_lev = .95,
+                          adjust = "none",
+                          data_filter = "") {
 
-	vars <- c(cm_var1, cm_var2)
+	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
 	if (!is_string(dataset)) dataset <- "-----"
 
-	# in case : was used for cm_var2
+	# in case : was used for var2
 	vars <- colnames(dat)
 
-	if (dat[[cm_var1]] %>% is.factor) {
+	if (dat[[var1]] %>% is.factor) {
 		colnames(dat) <- c("variable","values")
 	} else {
 		dat %<>% gather_("variable", "values", vars)
@@ -47,9 +47,9 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 	# resetting option to independent if the number of observations is unequal
   # summary on factor gives counts
-  if (cm_paired == "paired")
+  if (samples == "paired")
     if (summary(dat[["variable"]]) %>% {max(.) != min(.)})
-      cm_paired <- "independent (obs. per level unequal)"
+      samples <- "independent (obs. per level unequal)"
 
 	##############################################
 	# flip the order of pairwise testing - part 1
@@ -61,8 +61,8 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 
 	# pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
 	res <- pairwise.t.test(dat[["values"]], dat[["variable"]], pool.sd = FALSE,
-	         p.adjust.method = cm_adjust, paired = cm_paired == "paired",
-	         alternative = flip_alt[cm_alternative]) %>% tidy
+	         p.adjust.method = adjust, paired = samples == "paired",
+	         alternative = flip_alt[alternative]) %>% tidy
 
 	##############################################
 	# flip the order of pairwise testing - part 2
@@ -78,7 +78,7 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 		group_by_("variable") %>%
     summarise_each(funs(mean, n = length(.), sd,
                    			se = sd/sqrt(n),
-                   			ci = ci_calc(se,n,cm_sig_level))) %>%
+                   			ci = ci_calc(se,n,conf_lev))) %>%
     rename_(.dots = setNames("variable", " ")) -> dat_summary
 
 	vars <- paste0(vars, collapse = ", ")
@@ -107,17 +107,14 @@ compare_means <- function(dataset, cm_var1, cm_var2,
 summary.compare_means <- function(object, ...) {
 
 	# result <- object
-  if (object$cm_adjust == "bonf") {
-    cat("Pairwise comparisons (bonferroni adjustment)\n")
-  } else {
-	  cat("Pairwise comparisons (no adjustment)\n")
-  }
-
-	cat("Data     :", object$dataset, "\n")
+  cat("Pairwise mean comparisons\n")
+	cat("Data      :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables:", object$vars, "\n")
-	cat("Samples  :", object$cm_paired, "\n\n")
+		cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables :", object$vars, "\n")
+	cat("Samples   :", object$samples, "\n")
+	cat("Confidence:", object$conf_lev, "\n")
+	cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
   object$dat_summary[,-1] %<>% round(3)
   print(object$dat_summary %>% as.data.frame, row.names = FALSE)
@@ -125,7 +122,7 @@ summary.compare_means <- function(object, ...) {
 
   hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
-                  "greater" = ">")[object$cm_alternative]
+                  "greater" = ">")[object$alternative]
 
   means <- object$dat_summary$mean
   names(means) <- object$dat_summary$` ` %>% as.character
@@ -147,35 +144,35 @@ summary.compare_means <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_means}}
-#' @param cm_plots One or more plots ("bar", "box", or "density")
+#' @param plots One or more plots ("bar", "box", or "density")
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_means("diamonds","cut","price")
-#' plot(result, cm_plots = c("bar","density"))
+#' plot(result, plots = c("bar","density"))
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #'
 #' @export
 plot.compare_means <- function(x,
-                               cm_plots = "bar",
+                               plots = "bar",
                                shiny = FALSE,
                                ...) {
 
 	object <- x; rm(x)
 
 	dat <- object$dat
-	var1 <- colnames(dat)[1]
-	var2 <- colnames(dat)[-1]
+	v1 <- colnames(dat)[1]
+	v2 <- colnames(dat)[-1]
 
 	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-	plots <- list()
-	if ("bar" %in% cm_plots) {
+	plot_list <- list()
+	if ("bar" %in% plots) {
 		colnames(object$dat_summary)[1] <- "variable"
 		# use of `which` allows the user to change the order of the plots shown
-		plots[[which("bar" == cm_plots)]] <- ggplot(object$dat_summary,
+		plot_list[[which("bar" == plots)]] <- ggplot(object$dat_summary,
 	    aes_string(x = "variable", y = "mean", fill = "variable")) +
 	    geom_bar(stat = "identity")  +
 	 		geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
@@ -184,18 +181,18 @@ plot.compare_means <- function(x,
 	}
 
 	# graphs on full data
-	if ("box" %in% cm_plots) {
-		plots[[which("box" == cm_plots)]] <-
-			ggplot(dat, aes_string(x = var1, y = var2, fill = var1)) +
+	if ("box" %in% plots) {
+		plot_list[[which("box" == plots)]] <-
+			ggplot(dat, aes_string(x = v1, y = v2, fill = v1)) +
 				geom_boxplot(alpha = .7) + theme(legend.position = "none")
 	}
 
-	if ("density" %in% cm_plots) {
-		plots[[which("density" == cm_plots)]] <-
-			ggplot(dat, aes_string(x = var2, fill = var1)) + geom_density(alpha = .7)
+	if ("density" %in% plots) {
+		plot_list[[which("density" == plots)]] <-
+			ggplot(dat, aes_string(x = v2, fill = v1)) + geom_density(alpha = .7)
 	}
 
-	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }
 
 }

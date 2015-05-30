@@ -35,6 +35,8 @@ To add a linear or non-linear regression line to a scatter plot check the Line a
 
 The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data > Transform) and easier to estimate. Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the `Log X` and/or `Log Y` boxes.
 
+By default the scale of the y-axis is the same across sub-plots when using `Facet row`. To allow the y-axis to be specific to each sub-plot click the `Scale-y` check-box.
+
 #### Flip axes
 
 To switch the variable on the X- and Y-axis check the `Flip` box.

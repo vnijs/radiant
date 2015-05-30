@@ -10,9 +10,10 @@ ca_args <- as.list(formals(conjoint))
 # list of function inputs selected by user
 ca_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(ca_args))
-    ca_args[[i]] <- input[[i]]
-  if (!input$show_filter) ca_args$data_filter = ""
+  ca_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  ca_args$dataset <- input$dataset
+  for (i in r_drop(names(ca_args)))
+    ca_args[[i]] <- input[[paste0("ca_",i)]]
   ca_args
 })
 
@@ -37,19 +38,20 @@ output$ui_conjoint <- renderUI({
   		wellPanel(
 	      selectInput("ca_plots", "Conjoint plots:", choices = ca_plots,
 	  	  	selected = state_single("ca_plots", ca_plots, "pw")),
-		    checkboxInput(inputId = "ca_scale_plot", label = "Scale PW plots",
-			  	value = state_init('ca_scale_plot',FALSE))
+	  		conditionalPanel(condition = "input.ca_plots == 'pw'",
+			    checkboxInput(inputId = "ca_scale_plot", label = "Scale PW plots",
+				  	value = state_init('ca_scale_plot',FALSE)))
   		)
 	  ),
   	wellPanel(
 	    uiOutput("ui_ca_dep_var"),
 	    uiOutput("ui_ca_indep_var"),
       conditionalPanel(condition = "input.ca_indep_var != null",
-			  checkboxInput("ca_rev", label = "Reverse evaluation scores",
-			  	value = state_init('ca_rev',FALSE)),
+			  checkboxInput("ca_reverse", label = "Reverse evaluation scores",
+			  	value = state_init('ca_reverse',FALSE)),
 		    conditionalPanel(condition = "input.tabs_conjoint == 'Summary'",
-			    checkboxInput(inputId = "ca_vif", label = "VIF",
-				  	value = state_init('ca_vif',FALSE)),
+			    checkboxInput(inputId = "ca_mc_diag", label = "VIF",
+				  	value = state_init('ca_mc_diag',FALSE)),
 			  	downloadButton('downloadPWs', 'Save PWs')
 		  	)
 		  )
@@ -113,7 +115,7 @@ output$conjoint <- renderUI({
 	if (not_available(input$ca_indep_var))
 		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
-  summary(.conjoint(), ca_vif = input$ca_vif)
+  summary(.conjoint(), mc_diag = input$ca_mc_diag)
 })
 
 .predict_conjoint <- reactive({
@@ -128,8 +130,8 @@ output$conjoint <- renderUI({
 	if (not_available(input$ca_indep_var))
 		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
 
-  plot(.conjoint(), ca_plots = input$ca_plots,
-       							ca_scale_plot = input$ca_scale_plot,
+  plot(.conjoint(), plots = input$ca_plots,
+       							scale_plot = input$ca_scale_plot,
        							shiny = TRUE)
 })
 
@@ -138,8 +140,8 @@ observe({
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list()
-    inp_out[[1]] <- list(ca_vif = input$ca_vif)
-  	inp_out[[2]] <- list(ca_plots = input$ca_plots, ca_scale_plot = input$ca_scale_plot)
+    inp_out[[1]] <- list(mc_diag = input$ca_mc_diag)
+  	inp_out[[2]] <- list(plots = input$ca_plots, scale_plot = input$ca_scale_plot)
     figs <- TRUE
     if (length(input$ca_plots) == 0) {
       figs <- FALSE

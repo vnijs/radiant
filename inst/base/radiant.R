@@ -85,7 +85,7 @@ varnames <- reactive({
     set_names(., paste0(., " {", .getclass(), "}"))
 })
 
-# cleaning up the arguments for data_filter and defaults passed to report
+## cleaning up the arguments for data_filter and defaults passed to report
 clean_args <- function(rep_args, rep_default = list()) {
   if (!is.null(rep_args$data_filter)) {
     if (rep_args$data_filter == "")
@@ -96,41 +96,41 @@ clean_args <- function(rep_args, rep_default = list()) {
 
   if (length(rep_default) == 0) rep_default[names(rep_args)] <- ""
 
-  # removing default arguments before sending to report feature
+  ## removing default arguments before sending to report feature
   for (i in names(rep_args))
     if (all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
   rep_args
 }
 
-# check if a variable is null or not in the selected data.frame
+## check if a variable is null or not in the selected data.frame
 not_available <- function(x)
   if (any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
 
-# check if a button was NOT pressed
+## check if a button was NOT pressed
 not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
 
-# check if a button WAS pressed
+## check if a button WAS pressed
 was_pressed <- function(x) if (is.null(x) || x == 0) FALSE else TRUE
 
-# check for duplicate entries
+## check for duplicate entries
 has_duplicates <- function(x)
   if (length(unique(x)) < length(x)) TRUE else FALSE
 
-# is x some type of date variable
+## is x some type of date variable
 is_date <- function(x) lubridate::is.Date(x) | lubridate::is.POSIXt(x)
 
-# convert a date variable to character for printing
+## drop elements from .._args variables
+r_drop <- function(x, drop = c("dataset","data_filter")) x[-which(x %in% drop)]
+
+## convert a date variable to character for printing
 d2c <- function(x) if (is_date(x)) as.character(x) else x
 
-# truncate character fields for show_data_snippet
+## truncate character fields for show_data_snippet
 trunc_char <- function(x) if (is.character(x)) strtrim(x,17) else x
 
-# show a few rows of a dataframe
+## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
   n <- 0
-  # dat <- if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat
-  # if (is.null(dat) || is.character(dat)) return(HTML(paste0("<h3>",dat,"</h3>")))
-  # dat %>%
   {if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat} %>%
     { n <<- nrow(.); . } %>%
     slice(1:min(nshow,n)) %>%

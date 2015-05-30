@@ -10,15 +10,7 @@ dirwin=../radiant_miniCRAN/bin/windows/contrib/3.2/
 # updating gh packages
 # cd ../DT
 # git pull
-# cd ../jsonlite
-# git pull
-# cd ../shiny
-# git pull
-# cd ../htmlwidgets
-# git pull
 # cd ../rpivotTable
-# git pull
-# cd ../radiant
 
 # removing all files in miniCRAN
 # rm $dirsource/*
@@ -32,35 +24,25 @@ rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
 
-rm $dirsource/shinyAce*
-rm $dirmac/shinyAce*
-rm $dirmac_mav/shinyAce*
-rm $dirwin/shinyAce*
-
-rm $dirsource/rpivotTable*
-rm $dirmac/rpivotTable*
-rm $dirmac_mav/rpivotTable*
-rm $dirwin/rpivotTable*
-
-# rm $dirsource/shiny*
-# rm $dirmac/shiny*
-# rm $dirmac_mav/shiny*
-# rm $dirwin/shiny*
+# rm $dirsource/shinyAce*
+# rm $dirmac/shinyAce*
+# rm $dirmac_mav/shinyAce*
+# rm $dirwin/shinyAce*
 #
-# rm $dirsource/htmlwidgets*
-# rm $dirmac/htmlwidgets*
-# rm $dirmac_mav/htmlwidgets*
-# rm $dirwin/htmlwidgets*
-#
-# rm $dirsource/jsonlite*
-# rm $dirmac/jsonlite*
-# rm $dirmac_mav/jsonlite*
-# rm $dirwin/jsonlite*
+# rm $dirsource/rpivotTable*
+# rm $dirmac/rpivotTable*
+# rm $dirmac_mav/rpivotTable*
+# rm $dirwin/rpivotTable*
 
 rm $dirsource/DT*
 rm $dirmac/DT*
 rm $dirmac_mav/DT*
 rm $dirwin/DT*
+
+rm $dirsource/MathJaxR*
+rm $dirmac/MathJaxR*
+rm $dirmac_mav/MathJaxR*
+rm $dirwin/MathJaxR*
 
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1

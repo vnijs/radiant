@@ -4,21 +4,21 @@
 \alias{full_factor}
 \title{Factor analysis (PCA)}
 \usage{
-full_factor(dataset, ff_var, data_filter = "", ff_meth = "PCA",
-  ff_number = 2, ff_rotation = "varimax")
+full_factor(dataset, vars, meth = "PCA", nr_fact = 2,
+  rotation = "varimax", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{ff_var}{Variables to include in the analysis}
+\item{vars}{Variables to include in the analysis}
+
+\item{meth}{Factor extraction method to use}
+
+\item{nr_fact}{Number of factors to extract}
+
+\item{rotation}{Apply varimax rotation or no rotation ("varimax" or "none")}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{ff_meth}{Factor extraction method to use}
-
-\item{ff_number}{Number of factors to extract}
-
-\item{ff_rotation}{Apply varimax rotation or no rotation ("varimax" or "none")}
 }
 \value{
 A list with all variables defined in the function as an object of class full_factor
@@ -31,8 +31,8 @@ See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an examp
 }
 \examples{
 result <- full_factor("diamonds",c("price","carat","table","x","y"))
-result <- full_factor("diamonds",c("price","carat","table","x","y"), ff_meth = "maxlik")
-result <- diamonds \%>\% full_factor(c("price","carat","table","x","y"), ff_meth = "maxlik")
+result <- full_factor("diamonds",c("price","carat","table","x","y"), meth = "maxlik")
+result <- diamonds \%>\% full_factor(c("price","carat","table","x","y"), meth = "maxlik")
 }
 \seealso{
 \code{\link{summary.full_factor}} to summarize results

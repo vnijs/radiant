@@ -4,14 +4,14 @@
 \alias{summary.full_factor}
 \title{Summary method for the full_factor function}
 \usage{
-\method{summary}{full_factor}(object, ff_cutoff = 0, ff_sort = FALSE, ...)
+\method{summary}{full_factor}(object, cutoff = 0, fsort = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{full_factor}}}
 
-\item{ff_cutoff}{Show only loadings with (absolute) values above ff_cutoff (default = 0)}
+\item{cutoff}{Show only loadings with (absolute) values above cutoff (default = 0)}
 
-\item{ff_sort}{Sort factor loadings}
+\item{fsort}{Sort factor loadings}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -24,11 +24,11 @@ See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an examp
 \examples{
 result <- full_factor("diamonds",c("price","carat","depth","table","x"))
 summary(result)
-summary(result, ff_cutoff = 0, ff_sort = FALSE)
-summary(result, ff_cutoff = 0, ff_sort = TRUE)
-summary(result, ff_cutoff = .5, ff_sort = TRUE)
+summary(result, cutoff = 0, fsort = FALSE)
+summary(result, cutoff = 0, fsort = TRUE)
+summary(result, cutoff = .5, fsort = TRUE)
 diamonds \%>\% full_factor(c("price","carat","depth","table","x")) \%>\% summary
-diamonds \%>\% full_factor(c("price","carat","depth","table","x")) \%>\% summary(ff_cutoff = .5)
+diamonds \%>\% full_factor(c("price","carat","depth","table","x")) \%>\% summary(cutoff = .5)
 }
 \seealso{
 \code{\link{full_factor}} to calculate results

@@ -5,12 +5,12 @@ build('../radiant')
 build('../radiant', binary = TRUE)
 
 # install('../shinyAce')
-build('../shinyAce')
-build('../shinyAce', binary = TRUE)
+# build('../shinyAce')
+# build('../shinyAce', binary = TRUE)
 
 # devtools::install('../rpivotTable')
-build('../rpivotTable')
-build('../rpivotTable', binary = TRUE)
+# build('../rpivotTable')
+# build('../rpivotTable', binary = TRUE)
 
 # install('../jsonlite')
 # build('../jsonlite')
@@ -32,6 +32,7 @@ devtools::install('../DT_vnijs')
 build('../DT_vnijs')
 build('../DT_vnijs', binary = TRUE)
 
-# build('../MathJaxR')
-# build('../MathJaxR', binary = TRUE)
+# devtools::install('../MathJaxR')
+build('../MathJaxR')
+build('../MathJaxR', binary = TRUE)
 

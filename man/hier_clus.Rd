@@ -4,19 +4,19 @@
 \alias{hier_clus}
 \title{Hierarchical cluster analysis}
 \usage{
-hier_clus(dataset, hc_vars, data_filter = "", hc_dist = "sq.euclidian",
-  hc_meth = "ward.D")
+hier_clus(dataset, vars, distance = "sq.euclidian", method = "ward.D",
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{hc_vars}{Vector of variables to include in the analysis}
+\item{vars}{Vector of variables to include in the analysis}
+
+\item{distance}{Distance}
+
+\item{method}{Method}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{hc_dist}{Distance}
-
-\item{hc_meth}{Method}
 }
 \value{
 A list of all variables used in hier_clus as an object of class hier_clus
@@ -28,7 +28,7 @@ Hierarchical cluster analysis
 See \url{http://vnijs.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 }
 \examples{
-result <- hier_clus("shopping", hc_vars = c("v1:v6"))
+result <- hier_clus("shopping", vars = c("v1:v6"))
 }
 \seealso{
 \code{\link{summary.hier_clus}} to summarize results

@@ -3,13 +3,13 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param cp_var1 A grouping variable to split the data for comparisons
-#' @param cp_var2 The variable to calculate proportions for
+#' @param var1 A grouping variable to split the data for comparisons
+#' @param var2 The variable to calculate proportions for
+#' @param levs The factor level selected for the proportion comparison
+#' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
+#' @param conf_lev Span of the confidence interval
+#' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param cp_levels The factor level selected for the proportion comparison
-#' @param cp_alternative The alternative hypothesis ("two.sided", "greater" or "less")
-#' @param cp_sig_level Span of the confidence interval
-#' @param cp_adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #'
 #' @return A list of all variables defined in the function as an object of class compare_props
 #'
@@ -23,23 +23,23 @@
 #' @importFrom tidyr spread_
 #'
 #' @export
-compare_props <- function(dataset, cp_var1, cp_var2,
-                         data_filter = "",
-                         cp_levels = "",
-                         cp_alternative = "two.sided",
-                         cp_sig_level = .95,
-                         cp_adjust = "none") {
+compare_props <- function(dataset, var1, var2,
+                         levs = "",
+                         alternative = "two.sided",
+                         conf_lev = .95,
+                         adjust = "none",
+                         data_filter = "") {
 
-	vars <- c(cp_var1, cp_var2)
+	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
 	if (!is_string(dataset)) dataset <- "-----"
 
-	levs <- levels(dat[,cp_var2])
-	if (cp_levels != "") {
-		# levs <- levels(dat[,cp_var2])
-		if (cp_levels %in% levs && levs[1] != cp_levels) {
-			dat[,cp_var2] %<>% as.character %>% as.factor %>% relevel(cp_levels)
-			levs <- levels(dat[,cp_var2])
+	lv <- levels(dat[,var2])
+	if (levs != "") {
+		# lv <- levels(dat[,var2])
+		if (levs %in% lv && lv[1] != levs) {
+			dat[,var2] %<>% as.character %>% as.factor %>% relevel(levs)
+			lv <- levels(dat[,var2])
 		}
 	}
 
@@ -49,11 +49,10 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 
   rn <- ""
   dat %>%
-  group_by_(cp_var1, cp_var2) %>%
+  group_by_(var1, var2) %>%
   summarise(n = n()) %>%
-  spread_(cp_var2, "n") %>%
-  {
-  	.[,1][[1]] %>% as.character ->> rn
+  spread_(var2, "n") %>%
+  { .[,1][[1]] %>% as.character ->> rn
 	  select(., -1) %>%
 	  as.matrix %>%
 	  set_rownames(rn)
@@ -62,13 +61,11 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 	##############################################
 	# flip the order of pairwise testing - part 1
 	##############################################
-  flip_alt <- c("two.sided" = "two.sided",
-                "less" = "greater",
-                "greater" = "less")
+  flip_alt <- c("two.sided" = "two.sided", "less" = "greater", "greater" = "less")
 	##############################################
 
-	sshhr( pairwise.prop.test(prop_input, p.adjust.method = cp_adjust,
-	       alternative = flip_alt[cp_alternative]) ) %>% tidy -> res
+	res <- sshhr( pairwise.prop.test(prop_input, p.adjust.method = adjust,
+	              alternative = flip_alt[alternative]) ) %>% tidy
 
 	##############################################
 	# flip the order of pairwise testing - part 2
@@ -86,7 +83,7 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 		data.frame %>%
 		mutate(n = .[,1:2] %>% rowSums, p = .[,1] / n,
 					 se = (p * (1 - p) / n) %>% sqrt,
-       		 ci = ci_calc(se, cp_sig_level)) %>%
+       		 ci = ci_calc(se, conf_lev)) %>%
 		set_rownames({prop_input %>% rownames}) -> dat_summary
 
 	vars <- paste0(vars, collapse = ", ")
@@ -111,17 +108,14 @@ compare_props <- function(dataset, cp_var1, cp_var2,
 #' @export
 summary.compare_props <- function(object, ...) {
 
-  if (object$cp_adjust == "bonf") {
-    cat("Pairwise comparisons (bonferroni adjustment)\n")
-  } else {
-	  cat("Pairwise comparisons (no adjustment)\n")
-  }
-
-	cat("Data     :", object$dataset, "\n")
+  cat("Pairwise proportion comparisons\n")
+	cat("Data      :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables:", object$vars, "\n")
-	cat("Level    :", object$cp_levels, "in", object$cp_var2, "\n\n")
+		cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
+	cat("Variables :", object$vars, "\n")
+	cat("Level     :", object$levs, "in", object$var2, "\n")
+	cat("Confidence:", object$conf_lev, "\n")
+	cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
   object$dat_summary[,-1] %<>% round(3)
   print(object$dat_summary %>% as.data.frame, row.names = FALSE)
@@ -129,7 +123,7 @@ summary.compare_props <- function(object, ...) {
 
   hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
-                  "greater" = ">")[object$cp_alternative]
+                  "greater" = ">")[object$alternative]
 
   props <- object$dat_summary$p
   names(props) <- object$rn
@@ -150,49 +144,49 @@ summary.compare_props <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_props}}
-#' @param cp_plots One or more plots of proportions or counts ("props" or "counts")
+#' @param plots One or more plots of proportions or counts ("props" or "counts")
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
-#' plot(result, cp_plots = c("props","counts"))
+#' plot(result, plots = c("props","counts"))
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
 #' @export
 plot.compare_props <- function(x,
-                               cp_plots = "props",
+                               plots = "props",
                                shiny = FALSE,
                                ...) {
 
 	object <- x; rm(x)
 
 	dat <- object$dat
-	var1 <- colnames(dat)[1]
-	var2 <- colnames(dat)[-1]
-	object$dat_summary[,var1] <- object$rn
-	lev_name <- object$levs[1]
+	v1 <- colnames(dat)[1]
+	v2 <- colnames(dat)[-1]
+	object$dat_summary[,v1] <- object$rn
+	lev_name <- object$lv[1]
 
-	# from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
-	plots <- list()
-	if ("props" %in% cp_plots) {
-		# use of `which` allows the user to change the order of the plots shown
-		plots[[which("props" == cp_plots)]] <-
-			ggplot(object$dat_summary, aes_string(x = var1, y = "p", fill = var1)) +
+	## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
+	plot_list <- list()
+	if ("props" %in% plots) {
+		## use of `which` allows the user to change the order of the plots shown
+		plot_list[[which("props" == plots)]] <-
+			ggplot(object$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
 			geom_bar(stat = "identity") +
 	 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
 	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
 	 		theme(legend.position = "none")
 	}
 
-	if ("counts" %in% cp_plots) {
-		plots[[which("counts" == cp_plots)]] <-
-			ggplot(object$dat, aes_string(x = var1, fill = var2)) +
+	if ("counts" %in% plots) {
+		plot_list[[which("counts" == plots)]] <-
+			ggplot(object$dat, aes_string(x = v1, fill = v2)) +
 			geom_bar(position = "dodge")
 	}
 
-	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }
 }

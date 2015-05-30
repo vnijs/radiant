@@ -4,15 +4,15 @@
 \alias{plot.conjoint}
 \title{Plot method for the conjoint function}
 \usage{
-\method{plot}{conjoint}(x, ca_plots = "pw", ca_scale_plot = FALSE,
+\method{plot}{conjoint}(x, plots = "pw", scale_plot = FALSE,
   shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{conjoint}}}
 
-\item{ca_plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
+\item{plots}{Show either the part-worth ("pw") or importance-weights ("iw") plot}
 
-\item{ca_scale_plot}{Scale the axes of the part-worth plots to the same range}
+\item{scale_plot}{Scale the axes of the part-worth plots to the same range}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -25,9 +25,9 @@ Plot method for the conjoint function
 See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-plot(result, ca_scale_plot = TRUE)
-plot(result, ca_plots = "iw")
+result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+plot(result, scale_plot = TRUE)
+plot(result, plots = "iw")
 }
 \seealso{
 \code{\link{conjoint}} to generate results

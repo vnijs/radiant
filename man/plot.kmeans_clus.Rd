@@ -20,7 +20,7 @@ Plot method for kmeans_clus
 See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 }
 \examples{
-result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+result <- kmeans_clus("shopping", vars = c("v1:v6"))
 plot(result)
 }
 \seealso{

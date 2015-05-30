@@ -3,13 +3,13 @@
 #' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param km_vars Vector of variables to include in the analysis
+#' @param vars Vector of variables to include in the analysis
+#' @param hc_init Use centers from hier_clus as the starting point
+#' @param distance Distance for hier_clus
+#' @param method Method for hier_clus
+#' @param seed Random see to use for kmeans if hc_init is FALSE
+#' @param nr_clus Number of clusters to extract
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param km_hc_init Use centers from hier_clus as the starting point
-#' @param km_dist Distance for hier_clus
-#' @param km_meth Method for hier_clus
-#' @param km_seed Random see to use for kmeans if km_hc_init is FALSE
-#' @param km_nr_clus Number of clusters to extract
 #'
 #' @return A list of all variables used in kmeans_clus as an object of class kmeans_clus
 #'
@@ -21,21 +21,21 @@
 #' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
 #'
 #' @export
-kmeans_clus <- function(dataset, km_vars,
-                        data_filter = "",
-                        km_hc_init = TRUE,
-                        km_dist = "sq.euclidian",
-                        km_meth = "ward.D",
-                        km_seed = 1234,
-                        km_nr_clus = 2) {
+kmeans_clus <- function(dataset, vars,
+                        hc_init = TRUE,
+                        distance = "sq.euclidian",
+                        method = "ward.D",
+                        seed = 1234,
+                        nr_clus = 2,
+                        data_filter = "") {
 
-	if (km_hc_init) {
-		hc_init <- hier_clus(dataset, km_vars, data_filter = data_filter,
-		                     hc_dist = km_dist, hc_meth = km_meth)
+	if (hc_init) {
+		init <- hier_clus(dataset, vars, data_filter = data_filter,
+		                  distance = distance, method = method)
 
-		clus_var <- cutree(hc_init$hc_out, k = km_nr_clus)
+		clus_var <- cutree(init$hc_out, k = nr_clus)
 		hc_cent <- c()
-		getdata(dataset, km_vars, filt = data_filter) %>%
+		getdata(dataset, vars, filt = data_filter) %>%
 			mutate(clus_var = clus_var) %>%
 			mutate_each(funs(scale)) %T>%
 			{
@@ -45,17 +45,17 @@ kmeans_clus <- function(dataset, km_vars,
 				as.matrix  ->> hc_cent
 			} %>% select(-clus_var) %>%
 		kmeans(centers = hc_cent, iter.max = 500) -> km_out
-		rm(hc_init, hc_cent)
+		rm(init, hc_cent)
 		# { hc_cent <<- as.matrix(aggregate(., list(clus_var),mean)[-1]) } %>%
 	} else {
-		set.seed(km_seed)
-		getdata(dataset, km_vars, filt = data_filter) %>%
+		set.seed(seed)
+		getdata(dataset, vars, filt = data_filter) %>%
 			mutate_each(funs(scale)) %>%
-			kmeans(centers = km_nr_clus, nstart = 10, iter.max = 500) -> km_out
+			kmeans(centers = nr_clus, nstart = 10, iter.max = 500) -> km_out
 	}
 
-	clus_names <- paste("Cluster",1:km_nr_clus)
-	getdata(dataset, km_vars, filt = data_filter) %>%
+	clus_names <- paste("Cluster",1:nr_clus)
+	getdata(dataset, vars, filt = data_filter) %>%
 		mutate(clus_var = km_out$cluster) %>%
 		group_by(clus_var) %>%
 		summarise_each(funs(mean)) %>%
@@ -79,9 +79,9 @@ kmeans_clus <- function(dataset, km_vars,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+#' result <- kmeans_clus("shopping", vars = c("v1:v6"))
 #' summary(result)
-#' shopping %>% kmeans_clus(km_vars = c("v1:v6"), km_nr_clus = 3) %>% summary
+#' shopping %>% kmeans_clus(vars = c("v1:v6"), nr_clus = 3) %>% summary
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
@@ -94,13 +94,13 @@ summary.kmeans_clus <- function(object, ...) {
 	cat("Data        :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables   :", paste0(object$km_vars, collapse=", "), "\n")
-	if (object$km_hc_init) {
-		cat("Method      :", object$km_meth, "\n")
-		cat("Distance    :", object$km_dist, "\n")
+	cat("Variables   :", paste0(object$vars, collapse=", "), "\n")
+	if (object$hc_init) {
+		cat("Method      :", object$method, "\n")
+		cat("Distance    :", object$distance, "\n")
 	}
 	cat("Observations:", object$nr_obs, "\n")
-	cat("Generated   :", object$km_nr_clus, "clusters of sizes", paste0(object$km_out$size, collapse=", "),"\n\n")
+	cat("Generated   :", object$nr_clus, "clusters of sizes", paste0(object$km_out$size, collapse=", "),"\n\n")
 
 	cat("Cluster means:\n")
 	print(object$clus_means)
@@ -131,7 +131,7 @@ summary.kmeans_clus <- function(object, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+#' result <- kmeans_clus("shopping", vars = c("v1:v6"))
 #' plot(result)
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
@@ -146,7 +146,7 @@ plot.kmeans_clus <- function(x,
 	object <- x; rm(x)
 
 	# reloading the data
-	with(object, getdata(dataset, km_vars, filt = data_filter)) %>%
+	with(object, getdata(dataset, vars, filt = data_filter)) %>%
 	mutate(clus_var = as.factor(object$km_out$cluster)) -> dat
 	vars <- colnames(dat) %>% .[-length(.)]
 
@@ -169,7 +169,7 @@ plot.kmeans_clus <- function(x,
 #'
 #' @examples
 #' \donttest{
-#' result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+#' result <- kmeans_clus("shopping", vars = c("v1:v6"))
 #' save_membership(result)
 #' head(shopping)
 #' }
@@ -182,5 +182,5 @@ save_membership <- function(object) {
 	if (object$data_filter != "")
     return("Please deactivate data filters before trying to save cluster membership")
 	as.factor(object$km_out$cluster) %>%
-	changedata(object$dataset, vars = ., var_names = paste0("kclus",object$km_nr_clus))
+	changedata(object$dataset, vars = ., var_names = paste0("kclus",object$nr_clus))
 }

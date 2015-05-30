@@ -12,9 +12,10 @@ sm_args <- as.list(formals(single_mean))
 # list of function inputs selected by user
 sm_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(sm_args))
-    sm_args[[i]] <- input[[i]]
-  if (!input$show_filter) sm_args$data_filter = ""
+  sm_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  sm_args$dataset <- input$dataset
+  for (i in r_drop(names(sm_args)))
+    sm_args[[i]] <- input[[paste0("sm_",i)]]
   sm_args
 })
 
@@ -40,12 +41,12 @@ output$ui_single_mean <- renderUI({
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
-        selected = state_single("sm_alternative", sm_alt, sm_args$sm_alternative),
+        selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
   	  	multiple = FALSE),
-    	sliderInput('sm_sig_level',"Significance level:", min = 0.85, max = 0.99,
-    		value = state_init('sm_sig_level',sm_args$sm_sig_level), step = 0.01),
+    	sliderInput('sm_conf_lev',"Significance level:", min = 0.85, max = 0.99,
+    		value = state_init('sm_conf_lev',sm_args$conf_lev), step = 0.01),
     	numericInput("sm_comp_value", "Comparison value:",
-    	  state_init('sm_comp_value',sm_args$sm_comp_value))
+    	  state_init('sm_comp_value',sm_args$comp_value))
     ),
   	help_and_report(modal_title = 'Single mean', fun_name = 'single_mean',
   	                help_file = inclMD(file.path(r_path,"quant/tools/help/single_mean.md")))
@@ -120,9 +121,9 @@ observe({
   if (not_pressed(input$single_mean_report)) return()
   isolate({
     outputs <- c("summary","plot")
-    inp_out <- list(sm_plots = input$sm_plots) %>% list("",.)
+    inp_out <- list(plots = input$sm_plots) %>% list("",.)
     figs <- TRUE
-    if (length(input$sm_plots) == 0) {
+    if (length(input$plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")

@@ -14,13 +14,15 @@ compare_output <- function(res1, res2) {
   }
 }
 
+library(radiant)
+
 ######### tests ########
 
 context("Compare means")
 
 test_that("compare_means 1", {
   result <- compare_means("diamonds","cut","price")
-  res1 <- capture.output(summary(result))[15] %>% trim
+  res1 <- capture.output(summary(result))[17] %>% trim
   # cat(paste0(res1, "\n"))
   res2 <- "Fair not equal to Very Good      Fair = Very Good       545.322 0.177"
   expect_equal(res1,res2)
@@ -30,7 +32,7 @@ context("Compare proportions")
 
 test_that("compare_props 2", {
   result <- compare_props("titanic", "pclass", "survived")
-  res1 <- capture.output(summary(result))[7] %>% trim
+  res1 <- capture.output(summary(result))[9] %>% trim
   # cat(paste0(res1, "\n"))
   res2 <- "200 123 323 0.619 0.027 0.053"
   expect_equal(res1,res2)

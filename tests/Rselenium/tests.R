@@ -38,30 +38,104 @@ appURL <- "http://vnijs.rady.ucsd.edu:3838/marketing"
 
 test_that("can connect to app", {
   remDr$navigate(appURL)
-  appTitle <- remDr$getTitle()[[1]]
-  expect_equal(appTitle, "Radiant - Marketing")
+  remDr$getTitle()[[1]] %>% expect_equal("Radiant")
 })
 
 test_that("controls are present", {
-  webElems <- remDr$findElements("css selector", "label")
-  jsonedit(webElems)
-  webElems %>% class
-  webElems
-  app_labs <- sapply(webElems, function(x){x$getElementText()})
-  app_labs <- app_labs[app_labs != ""] %>% unlist
+  app_labs <- remDr$findElements("css selector", "label") %>%
+    sapply(function(x){x$getElementText()}) %>%
+    .[. != ""] %>% unlist
   expect_equal(app_labs[1:10], c("Datasets:","Add/edit data description","Rename data","Load data:","rda","csv","clipboard","examples","state","Save data:"))
   expect_equal(app_labs[11:15], c("rda","csv","clipboard","state","Remove data from memory"))
 })
 
 test_that("tabs are present", {
-  webElems <- remDr$findElements("css selector", ".nav a")
-  app_tabs <- sapply(webElems, function(x){x$getElementText()})
-  app_tabs <- app_tabs[app_tabs != ""] %>% unlist
-  expect_equal(app_tabs, c("Manage","View","Visualize","Pivot","Explore","Transform","Combine"))
+  remDr$findElements("css selector", ".nav a") %>%
+    sapply(function(x){x$getElementText()}) %>%
+    .[. != ""] %>% unlist %>%
+    expect_equal(c("Manage","View","Visualize","Pivot","Explore","Transform","Combine"))
 })
 
+## got here
+## not working
 
-# got here
+remDr$open()
+# remDr$navigate(paste0("http://", host, ":", port))
+remDr$navigate(appUrl)
+# click the navbar button
+# necessary as the tab names dont seem to populate untill they are needed
+# webElem <- remDr$findElement(value = "//*[@class='btn btn-navbar']")
+# webElem$clickElement()
+
+remDr$findElements("css selector", ".nav a") %>%
+
+remDr$findElements("css selector", "#nav_radiant li a") %>%
+  sapply(function(x){x$getElementText()})
+
+#nav_radiant
+  #nav_radiant
+  v
+
+  %>%
+    .[. != ""] %>% unlist %>%
+    expect_equal(c("Manage","View","Visualize","Pivot","Explore","Transform","Combine"))
+
+webElem <- remDr$findElements(value = "//*[@id = 'nav_radiant']/li/a")
+tabTitles <- sapply(webElem, function(x){x$getElementText()})
+tabTitles
+
+  # WebElem <- remDr$findElements("css selector", ".nav a")
+  webElem <- remDr$findElements(value = "//*[@id = 'nav_radiant']/li/a")
+  webElem
+  tabTitles <- sapply(webElem, function(x){x$getElementText()})
+  tabTitles
+
+  regressElem <- webElem[[which(tabTitles == 'Regression')]]
+  regressElem$clickElement()
+
+webElem <- regressElem$findChildElements(value = "..//*[@class = 'dropdown-menu']//a")
+subTitles <- sapply(webElem, function(x){x$getElementText()})
+correlationElem <- webElem[[which(subTitles == 'Correlation')]]
+correlationElem$clickElement()
+str(correlationElem)
+
+webElem <- correlationElem$findElements(value = "//*[@id = 'summary_correlation']")
+webElem <- correlationElem$findElements(value = "//*[@class = 'tab-pane active']//pre")
+webElem <- correlationElem$findElements(value = "//*[@class = 'tab-pane active']")
+
+sapply(webElem, function(x){x$getElementText()})
+sapply(webElem, function(x){x$getPageSource()})
+
+
+webElem <- correlationElem$findChildElements(value = "..//*[@id = 'summary_correlation']")
+webElem <- correlationElem$findChildElements(value = "..//*[@class = 'tab-pane active']")
+str(webElem)
+
+
+webElem <- correlationElem$findElements(value = "//*[@id = 'plots_correlation']")
+subTitles <- sapply(webElem, function(x){x$getElementText()})
+corrPlotsElem <- webElem[[which(subTitles == 'plots_correlation')]]
+corrPlotsElem$clickElement()
+
+
+
+subTitles <- sapply(webElem, function(x){x$getElementText()})
+correlationElem <- webElem[[which(subTitles == 'Correlation')]]
+correlationElem$clickElement()
+
+
+
+
+
+
+
+
+
+
+
+webElem <- remDr$findElements("css selector", ".nav a")
+webElem[[1]]
+regressElem <- webElem[[4]]
 regressElem <- webElem[[which(tabTitles == 'Regression')]]
 regressElem$clickElement()
 

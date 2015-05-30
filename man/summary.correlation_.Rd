@@ -4,12 +4,12 @@
 \alias{summary.correlation_}
 \title{Summary method for the correlation function}
 \usage{
-\method{summary}{correlation_}(object, cor_cutoff = 0, ...)
+\method{summary}{correlation_}(object, cutoff = 0, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{correlation}}}
 
-\item{cor_cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
+\item{cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -21,7 +21,7 @@ See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example i
 }
 \examples{
 result <- correlation("diamonds",c("price","carat","clarity"))
-summary(result, cor_cutoff = .3)
+summary(result, cutoff = .3)
 diamonds \%>\% correlation("price:clarity") \%>\% summary
 }
 \seealso{

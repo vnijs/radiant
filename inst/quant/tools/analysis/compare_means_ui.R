@@ -1,18 +1,19 @@
-# choice lists for compare means
+## choice lists for compare means
 cm_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
-cm_paired <- c("independent" = "independent", "paired" = "paired")
+cm_samples <- c("independent" = "independent", "paired" = "paired")
 cm_adjust <- c("None" = "none", "Bonferroni" = "bonf")
 cm_plots <- c("Bar" = "bar", "Box" = "box", "Density" = "density")
 
-# list of function arguments
+## list of function arguments
 cm_args <- as.list(formals(compare_means))
 
 # list of function inputs selected by user
 cm_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(cm_args))
-    cm_args[[i]] <- input[[i]]
-  if (!input$show_filter) cm_args$data_filter = ""
+  cm_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  cm_args$dataset <- input$dataset
+  for (i in r_drop(names(cm_args)))
+    cm_args[[i]] <- input[[paste0("cm_",i)]]
   cm_args
 })
 
@@ -71,14 +72,14 @@ output$ui_compare_means <- renderUI({
         selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:",
                     choices = cm_alt,
                     selected = state_single("cm_alternative", cm_alt,
-                                               cm_args$cm_alternative)),
-        sliderInput('cm_sig_level',"Significance level:", min = 0.85, max = 0.99,
-          value = state_init("cm_sig_level",cm_args$cm_sig_level), step = 0.01),
-        radioButtons(inputId = "cm_paired", label = "Sample type:", cm_paired,
-          selected = state_init("cm_paired", cm_args$cm_paired),
+                                               cm_args$alternative)),
+        sliderInput('cm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
+          value = state_init("cm_conf_lev",cm_args$conf_lev), step = 0.01),
+        radioButtons(inputId = "cm_samples", label = "Sample type:", cm_samples,
+          selected = state_init("cm_samples", cm_args$samples),
           inline = TRUE),
         radioButtons(inputId = "cm_adjust", label = "Multiple comp. adjustment:", cm_adjust,
-          selected = state_init("cm_adjust", cm_args$cm_adjust),
+          selected = state_init("cm_adjust", cm_args$adjust),
           inline = TRUE)
       )
     ),
@@ -145,25 +146,25 @@ output$compare_means <- renderUI({
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if (input$cm_var1 %in% input$cm_var2) return(" ")
 
-  plot(.compare_means(), cm_plots = input$cm_plots, shiny = TRUE)
+  plot(.compare_means(), plots = input$cm_plots, shiny = TRUE)
 })
 
 observe({
   if (not_pressed(input$compare_means_report)) return()
   isolate({
-    outputs <- c("summary","plot")
-    inp_out <- list(cm_plots = input$cm_plots) %>% list("",.)
-    figs <- TRUE
     if (length(input$cm_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")
+    } else {
+      outputs <- c("summary","plot")
+      inp_out <- list(plots = input$cm_plots) %>% list("",.)
+      figs <- TRUE
     }
+
     update_report(inp_main = clean_args(cm_inputs(), cm_args),
                   fun_name = "compare_means",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
+                  inp_out = inp_out, outputs = outputs, figs = figs,
                   fig.width = round(7 * cm_plot_width()/650,2),
                   fig.height = round(7 * cm_plot_height()/650,2))
   })

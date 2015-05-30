@@ -3,43 +3,43 @@
 #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param ca_dep_var The dependent variable (e.g., profile ratings)
-#' @param ca_indep_var Independent variables in the regression
+#' @param dep_var The dependent variable (e.g., profile ratings)
+#' @param indep_var Independent variables in the regression
+#' @param reverse Reverse the values of the dependent variable (`dep_var`)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
-#' @param ca_rev Reverse the values of the dependent variable (`ca_dep_var`)
 #'
 #' @return A list with all variables defined in the function as an object of class conjoint
 #'
 #' @examples
-#' result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-#' result <- mp3 %>% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+#' result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+#' result <- mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape")
 #'
 #' @seealso \code{\link{summary.conjoint}} to summarize results
 #' @seealso \code{\link{plot.conjoint}} to plot results
 #'
 #' @export
-conjoint <- function(dataset, ca_dep_var, ca_indep_var,
-                     data_filter = "",
-                     ca_rev = FALSE) {
+conjoint <- function(dataset, dep_var, indep_var,
+                     reverse = FALSE,
+                     data_filter = "") {
 
-	dat <- getdata(dataset, c(ca_dep_var, ca_indep_var))
+	dat  <- getdata(dataset, c(dep_var, indep_var))
 	if (!is_string(dataset)) dataset <- "-----"
 
 	# in case : was used to select a range of variables
-  var_check(ca_indep_var, colnames(dat)[-1]) %>%
-    { ca_indep_var <<- .$indep_var }
+  var_check(indep_var, colnames(dat)[-1]) %>%
+    { indep_var <<- .$iv }
 
-	formula <- paste(ca_dep_var, "~", paste(ca_indep_var, collapse = " + "))
+	formula <- paste(dep_var, "~", paste(indep_var, collapse = " + "))
 
-	if (ca_rev) {
-		ca_dep <- dat[,ca_dep_var]
-		dat[,ca_dep_var] <- abs(ca_dep - max(ca_dep)) + 1
+	if (reverse) {
+		ca_dep <- dat[,dep_var]
+		dat[,dep_var] <- abs(ca_dep - max(ca_dep)) + 1
 	}
 
 	lm_mod <- lm(formula, data = dat)
 	model <- lm_mod %>% tidy
 
-	the_table <- ca_the_table(model, dat, ca_indep_var)
+	the_table <- the_table(model, dat, indep_var)
 
 	environment() %>% as.list %>% set_class(c("conjoint",class(.)))
 }
@@ -49,13 +49,13 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
 #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{conjoint}}
-#' @param ca_vif Shows multicollinearity diagnostics.
+#' @param mc_diag Shows multicollinearity diagnostics.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-#' summary(result, ca_vif = TRUE)
-#' mp3 %>% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape") %>% summary(., ca_vif = TRUE)
+#' result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+#' summary(result, mc_diag = TRUE)
+#' mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape") %>% summary(., mc_diag = TRUE)
 #'
 #' @seealso \code{\link{conjoint}} to generate results
 #' @seealso \code{\link{plot.conjoint}} to plot results
@@ -64,36 +64,35 @@ conjoint <- function(dataset, ca_dep_var, ca_indep_var,
 #'
 #' @export
 summary.conjoint <- function(object,
-                             ca_vif = FALSE,
+                             mc_diag = FALSE,
                              ...) {
 
 	cat("Conjoint analysis\n")
   cat("Data     :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-  cat("Dependent variable   :", object$ca_dep_var, "\n")
-  cat("Independent variables:", paste0(object$ca_indep_var, collapse=", "), "\n\n")
+  cat("Dependent variable   :", object$dep_var, "\n")
+  cat("Independent variables:", paste0(object$indep_var, collapse=", "), "\n\n")
 
 	object$the_table %>%
-	{
-		cat("Conjoint part-worths:\n")
+	{ cat("Conjoint part-worths:\n")
 		print(.$PW, row.names = FALSE)
 		cat("\nConjoint importance weights:\n")
 		print(.$IW, row.names = FALSE)
 	}
 
-	cat("\nConjoint regression coefficients:\n")
-  for (i in object$ca_indep_var) object$model$term %<>% gsub(i, paste0(i," > "), .)
+	cat("\nConjoint regression results:\n")
+  for (i in object$indep_var) object$model$term %<>% gsub(i, paste0(i," > "), .)
 	object$model$estimate %>% data.frame %>% round(3) %>%
-	  set_colnames("coefficients") %>%
-	  set_rownames(object$model$term) %>% print
+	  set_colnames("coefficient") %>%
+	  set_rownames(object$model$term) %>% print(.)
 	cat("\n")
 
-	if (ca_vif) {
+	if (mc_diag) {
 
-    if (length(object$ca_indep_var) > 1) {
-      cat("Variance Inflation Factors\n")
-      vif (object$lm_mod) %>%
+    if (length(object$indep_var) > 1) {
+      cat("Multicollinearity diagnostics:\n")
+      vif(object$lm_mod) %>%
         { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
         data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
         round(3) %>%
@@ -110,23 +109,23 @@ summary.conjoint <- function(object,
 #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{conjoint}}
-#' @param ca_plots Show either the part-worth ("pw") or importance-weights ("iw") plot
-#' @param ca_scale_plot Scale the axes of the part-worth plots to the same range
+#' @param plots Show either the part-worth ("pw") or importance-weights ("iw") plot
+#' @param scale_plot Scale the axes of the part-worth plots to the same range
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-#' plot(result, ca_scale_plot = TRUE)
-#' plot(result, ca_plots = "iw")
+#' result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+#' plot(result, scale_plot = TRUE)
+#' plot(result, plots = "iw")
 #'
 #' @seealso \code{\link{conjoint}} to generate results
 #' @seealso \code{\link{summary.conjoint}} to summarize results
 #'
 #' @export
 plot.conjoint <- function(x,
-                          ca_plots = "pw",
-                          ca_scale_plot = FALSE,
+                          plots = "pw",
+                          scale_plot = FALSE,
                           shiny = FALSE,
                           ...) {
 
@@ -134,12 +133,12 @@ plot.conjoint <- function(x,
 
 	the_table <- object$the_table
 	plot_ylim <- the_table$plot_ylim
-	plots <- list()
+	plot_list <- list()
 
-	if ("pw" %in% ca_plots) {
+	if ("pw" %in% plots) {
 		PW.df <- the_table[["PW"]]
 
-		for (var in object$ca_indep_var) {
+		for (var in object$indep_var) {
 			PW.var <- PW.df[PW.df[,"Attributes"] == var,]
 
 			# setting the levels in the same order as in the_table. Without this
@@ -152,20 +151,20 @@ plot.conjoint <- function(x,
 		  	  labs(list(title = paste("Part-worths for", var), x = ""))
 		  	  # theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-		  if (ca_scale_plot) p <- p + ylim(plot_ylim[var,"Min"],plot_ylim[var,"Max"])
-			plots[[var]] <- p
+		  if (scale_plot) p <- p + ylim(plot_ylim[var,"Min"],plot_ylim[var,"Max"])
+			plot_list[[var]] <- p
 		}
 	}
 
-	if ("iw" %in% ca_plots) {
+	if ("iw" %in% plots) {
 		IW.df <- the_table[['IW']]
-		plots[["iw"]] <- ggplot(IW.df, aes_string(x="Attributes", y="IW", fill = "Attributes")) +
+		plot_list[["iw"]] <- ggplot(IW.df, aes_string(x="Attributes", y="IW", fill = "Attributes")) +
 		                   geom_bar(stat = "identity", alpha = .5) +
 		                   theme(legend.position = "none") +
 		                   labs(list(title = "Importance weights"))
 	}
 
-	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
 	 	{ if (shiny) . else print(.) }
 }
 
@@ -175,21 +174,21 @@ plot.conjoint <- function(x,
 #'
 #' @param model Tidied model results (broom) output from \code{\link{conjoint}} passed on by summary.conjoint
 #' @param dat Conjoint data
-#' @param ca_indep_var Independent variables used in the conjoint regression
+#' @param indep_var Independent variables used in the conjoint regression
 #'
 #' @examples
-#' result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-#' ca_the_table(result$model, result$dat, result$ca_indep_var)
+#' result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+#' the_table(result$model, result$dat, result$indep_var)
 #'
 #' @seealso \code{\link{conjoint}} to generate results
 #' @seealso \code{\link{summary.conjoint}} to summarize results
 #' @seealso \code{\link{plot.conjoint}} to plot results
 #'
 #' @export
-ca_the_table <- function(model, dat, ca_indep_var) {
+the_table <- function(model, dat, indep_var) {
 	if (is.character(model)) return(list("PW" = "No attributes selected."))
 
-	attr <- select_(dat, .dots = ca_indep_var)
+	attr <- select_(dat, .dots = indep_var)
 	isFct <- sapply(attr, is.factor)
 	if (sum(isFct) < ncol(attr)) return(list("PW" = "Only factors can be used.", "IW" = "Only factors can be used."))
 	levs <- lapply(attr[,isFct, drop = FALSE],levels)

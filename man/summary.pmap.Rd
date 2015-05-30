@@ -4,12 +4,12 @@
 \alias{summary.pmap}
 \title{Summary method for the pmap function}
 \usage{
-\method{summary}{pmap}(object, pmap_cutoff = 0, ...)
+\method{summary}{pmap}(object, pm_cutoff = 0, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pmap}}}
 
-\item{pmap_cutoff}{Show only loadings with (absolute) values above pmap_cutoff (default = 0)}
+\item{pm_cutoff}{Show only loadings with (absolute) values above pm_cutoff (default = 0)}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -22,10 +22,10 @@ See \url{http://vnijs.github.io/radiant/marketing/pmap.html} for an example in R
 \examples{
 result <- pmap("computer","Brand","HighEnd:Business")
 summary(result)
-summary(result, pmap_cutoff = .3)
-result <- pmap("computer","Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business"))
+summary(result, pm_cutoff = .3)
+result <- pmap("computer","Brand","HighEnd:Dated", pm_pref = c("Innovative","Business"))
 summary(result)
-computer \%>\% pmap("Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business")) \%>\%
+computer \%>\% pmap("Brand","HighEnd:Dated", pm_pref = c("Innovative","Business")) \%>\%
   summary
 }
 \seealso{

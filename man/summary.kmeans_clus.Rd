@@ -18,9 +18,9 @@ Summary method for kmeans_clus
 See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 }
 \examples{
-result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+result <- kmeans_clus("shopping", vars = c("v1:v6"))
 summary(result)
-shopping \%>\% kmeans_clus(km_vars = c("v1:v6"), km_nr_clus = 3) \%>\% summary
+shopping \%>\% kmeans_clus(vars = c("v1:v6"), nr_clus = 3) \%>\% summary
 }
 \seealso{
 \code{\link{kmeans_clus}} to generate results

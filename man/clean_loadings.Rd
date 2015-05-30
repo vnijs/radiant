@@ -4,16 +4,16 @@
 \alias{clean_loadings}
 \title{Sort and clean loadings}
 \usage{
-clean_loadings(ff_loadings, ff_cutoff = 0, ff_sort = FALSE, ff_round = 8)
+clean_loadings(floadings, cutoff = 0, fsort = FALSE, fround = 8)
 }
 \arguments{
-\item{ff_loadings}{Data.frame with loadings}
+\item{floadings}{Data frame with loadings}
 
-\item{ff_cutoff}{Show only loadings with (absolute) values above ff_cutoff (default = 0)}
+\item{cutoff}{Show only loadings with (absolute) values above cutoff (default = 0)}
 
-\item{ff_sort}{Sort factor loadings}
+\item{fsort}{Sort factor loadings}
 
-\item{ff_round}{Number of digits to show}
+\item{fround}{Number of digits to show}
 }
 \description{
 Sort and clean loadings
@@ -23,6 +23,6 @@ See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an examp
 }
 \examples{
 result <- full_factor("diamonds",c("price","carat","table","x","y"))
-clean_loadings(result$ff_loadings, TRUE, .5, 2)
+clean_loadings(result$floadings, TRUE, .5, 2)
 }
 

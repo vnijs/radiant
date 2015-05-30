@@ -4,12 +4,12 @@
 \alias{plot.single_mean}
 \title{Plot method for the single_mean function}
 \usage{
-\method{plot}{single_mean}(x, sm_plots = "hist", shiny = FALSE, ...)
+\method{plot}{single_mean}(x, plots = "hist", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_mean}}}
 
-\item{sm_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (sm_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
+\item{plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -22,8 +22,8 @@ Plot method for the single_mean function
 See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example in Radiant
 }
 \examples{
-result <- single_mean("diamonds","price", sm_comp_value = 3500)
-plot(result, sm_plots = c("hist", "simulate"))
+result <- single_mean("diamonds","price", comp_value = 3500)
+plot(result, plots = c("hist", "simulate"))
 }
 \seealso{
 \code{\link{single_mean}} to generate the result

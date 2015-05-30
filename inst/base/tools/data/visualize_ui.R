@@ -1,17 +1,29 @@
 viz_type <- c("Histogram" = "hist", "Density" = "density", "Scatter" = "scatter",
               "Line" = "line", "Bar" = "bar", "Box-plot" = "box")
 viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
-viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y")
+viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
+               "Scale-y" = "scale_y")
 
 # list of function arguments
 viz_args <- as.list(formals(visualize))
 
+# # list of function inputs selected by user
+# viz_inputs <- reactive({
+#   # loop needed because reactive values don't allow single bracket indexing
+#   for (i in names(viz_args))
+#     viz_args[[i]] <- input[[i]]
+#   if (!input$show_filter) viz_args$data_filter = ""
+#   viz_args
+# })
+
 # list of function inputs selected by user
 viz_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(viz_args))
-    viz_args[[i]] <- input[[i]]
-  if (!input$show_filter) viz_args$data_filter = ""
+  viz_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  viz_args$dataset <- input$dataset
+  viz_args$shiny <- input$shiny
+  for (i in r_drop(names(viz_args)))
+    viz_args[[i]] <- input[[paste0("viz_",i)]]
   viz_args
 })
 
@@ -76,6 +88,8 @@ output$ui_viz_axes <- renderUI({
   if (is.null(input$viz_type)) return()
   ind <- 1
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
+  # if (paste(input$viz_facet_row, '~', input$viz_facet_col) != '. ~ .')
+  if (!is_empty(input$viz_facet_row, ".")) ind <- c(ind, 4)
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
     selected = state_init("viz_axes"),
     inline = TRUE)

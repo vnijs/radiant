@@ -9,3 +9,10 @@ cd ../shinyAce
 git pull
 cd ../rpivotTable
 git pull
+cd ../DT
+git pull
+cd ../DT_vnijs
+git pull
+## check DT_vnijs/README.md to merge changes in DT into DT_vnijs
+
+

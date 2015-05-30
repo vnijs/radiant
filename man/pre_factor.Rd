@@ -4,12 +4,12 @@
 \alias{pre_factor}
 \title{Evaluate if data are appropriate for PCA / Factor analysis}
 \usage{
-pre_factor(dataset, pf_var, data_filter = "")
+pre_factor(dataset, vars, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{pf_var}{Variables to include in the analysis}
+\item{vars}{Variables to include in the analysis}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

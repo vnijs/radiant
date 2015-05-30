@@ -60,7 +60,8 @@ if (substr(answ, 1, 1) %in% c("y","Y")) {
 # in case of problems
 # shinyapps::showLogs(entries=1000)
 
-system("osascript ~/gh/update.scpt")
+## Uncomment when rsm server has been upgraded to R 3.2.0
+# system("osascript ~/gh/update.scpt")
 
 # for major pull problems
 # git fetch --all

@@ -4,15 +4,15 @@
 \alias{plot.hier_clus}
 \title{Plot method for the hier_clus function}
 \usage{
-\method{plot}{hier_clus}(x, hc_plots = c("scree", "diff"), hc_cutoff = 0.02,
+\method{plot}{hier_clus}(x, plots = c("scree", "diff"), cutoff = 0.02,
   shiny = TRUE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{hier_clus}}}
 
-\item{hc_plots}{Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity}
+\item{plots}{Plots to return. "diff" shows the percentage change in within-cluster heterogeneity as respondents are group into different number of clusters, "dendro" shows the dendrogram, "scree" shows a scree plot of within-cluster heterogeneity}
 
-\item{hc_cutoff}{For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., 0.05 percent) the initial steps in hierachical cluster analysis are removed from the plot}
+\item{cutoff}{For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., 0.05 percent) the initial steps in hierachical cluster analysis are removed from the plot}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -25,10 +25,10 @@ Plot method for the hier_clus function
 See \url{http://vnijs.github.io/radiant/marketing/hier_clus.html} for an example in Radiant
 }
 \examples{
-result <- hier_clus("shopping", hc_vars = c("v1:v6"))
-plot(result, hc_plots = c("diff", "scree"), hc_cutoff = .05)
-plot(result, hc_plots = "dendro", hc_cutoff = 0)
-shopping \%>\% hier_clus(hc_vars = c("v1:v6")) \%>\% plot
+result <- hier_clus("shopping", vars = c("v1:v6"))
+plot(result, plots = c("diff", "scree"), cutoff = .05)
+plot(result, plots = "dendro", cutoff = 0)
+shopping \%>\% hier_clus(vars = c("v1:v6")) \%>\% plot
 }
 \seealso{
 \code{\link{summary.hier_clus}} to summarize results

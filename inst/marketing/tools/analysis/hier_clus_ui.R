@@ -1,7 +1,7 @@
-hc_meth <- list("Ward's" = "ward.D", "Single" = "single", "Complete" = "complete", "Average" = "average",
+hc_method <- list("Ward's" = "ward.D", "Single" = "single", "Complete" = "complete", "Average" = "average",
 	"McQuitty" =  "mcquitty", "Median" = "median", "Centroid" = "centroid")
 
-hc_dist <- c("Squared euclidean" = "sq.euclidian", "Euclidian" = "euclidean",
+hc_distance <- c("Squared euclidean" = "sq.euclidian", "Euclidian" = "euclidean",
 	"Maximum" = "maximum", "Manhattan" = "manhattan", "Canberra" = "canberra", "Binary" = "binary", "Minkowski" = "minkowski")
 
 hc_plots <- c("Scree" = "scree", "Difference" = "diff", "Dendrogram" = "dendro")
@@ -9,14 +9,15 @@ hc_plots <- c("Scree" = "scree", "Difference" = "diff", "Dendrogram" = "dendro")
 # list of function arguments
 hc_args <- as.list(formals(hier_clus))
 
-# list of function inputs selected by user
 hc_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(hc_args))
-    hc_args[[i]] <- input[[i]]
-  if (!input$show_filter) hc_args$data_filter = ""
+  hc_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  hc_args$dataset <- input$dataset
+  for (i in r_drop(names(hc_args)))
+    hc_args[[i]] <- input[[paste0("hc_",i)]]
   hc_args
 })
+
 
 ###############################################################
 # Hierarchical clustering
@@ -35,11 +36,11 @@ output$ui_hier_clus <- renderUI({
   tagList(
   	wellPanel(
 	    uiOutput("ui_hc_vars"),
-	    selectInput("hc_dist", label = "Distance measure:", choices =hc_dist ,
-	     	selected = state_single("hc_dist",hc_dist , "sq.euclidean"),
+	    selectInput("hc_distance", label = "Distance measure:", choices =hc_distance ,
+	     	selected = state_single("hc_distance",hc_distance , "sq.euclidean"),
 	     	multiple = FALSE),
-	    selectInput("hc_meth", label = "Method:", choices = hc_meth,
-	     	selected = state_single("hc_meth", hc_meth, "ward.D"), multiple = FALSE),
+	    selectInput("hc_method", label = "Method:", choices = hc_method,
+	     	selected = state_single("hc_method", hc_method, "ward.D"), multiple = FALSE),
  			selectizeInput("hc_plots", label = "Plot(s):", choices = hc_plots,
                selected = state_multiple("hc_plots", hc_plots, c("scree","diff")),
                multiple = TRUE,
@@ -103,13 +104,11 @@ output$hier_clus <- renderUI({
   if (not_available(input$hc_vars))
 		return(" ")
 
-    # return(invisible())
-
   .hier_clus() %>%
     { if ("dendro" %in% input$hc_plots && length(.$hc_out$height) > 100) {
-        capture_plot( plot(., hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff) )
+        capture_plot( plot(., plots = input$hc_plots, cutoff = input$hc_cutoff) )
       } else {
-        plot(., hc_plots = input$hc_plots, hc_cutoff = input$hc_cutoff, shiny = TRUE)
+        plot(., plots = input$hc_plots, cutoff = input$hc_cutoff, shiny = TRUE)
       }
     }
 })
@@ -118,7 +117,7 @@ observe({
   if (not_pressed(input$hier_clus_report)) return()
   isolate({
     if (length(input$hc_plots) > 0) {
-      inp_out <- list(hc_plots = input$hc_plots) %>% list("",.)
+      inp_out <- list(plots = input$hc_plots) %>% list("",.)
       outputs <- c("summary","plot")
       figs <- TRUE
     } else {

@@ -5,12 +5,12 @@
 # list of function arguments
 km_args <- as.list(formals(kmeans_clus))
 
-# list of function inputs selected by user
 km_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(km_args))
-    km_args[[i]] <- input[[i]]
-  if (!input$show_filter) km_args$data_filter = ""
+  km_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  km_args$dataset <- input$dataset
+  for (i in r_drop(names(km_args)))
+    km_args[[i]] <- input[[paste0("km_",i)]]
   km_args
 })
 
@@ -31,10 +31,10 @@ output$ui_kmeans_clus <- renderUI({
       	value = state_init('km_hc_init',TRUE)),
 	  	conditionalPanel(condition = "input.km_hc_init == true",
 	  		wellPanel(
-		  		selectInput("km_dist", label = "Distance measure:", choices = hc_dist,
-			     	selected = state_single("km_dist", hc_dist, "sq.euclidian"), multiple = FALSE),
-	  			selectInput("km_meth", label = "Method:", choices = hc_meth,
-			     	selected = state_single("km_meth", hc_meth, "ward.D"), multiple = FALSE)
+		  		selectInput("km_distance", label = "Distance measure:", choices = hc_distance,
+			     	selected = state_single("km_distance", hc_distance, "sq.euclidian"), multiple = FALSE),
+	  			selectInput("km_method", label = "Method:", choices = hc_method,
+			     	selected = state_single("km_method", hc_method, "ward.D"), multiple = FALSE)
 	  		)
 	  	),
 	  	conditionalPanel(condition = "input.km_hc_init == false",

@@ -1,27 +1,28 @@
 ff_meth <- c('Principal components' = 'PCA', 'Maximum Likelihood' = "maxlik")
 ff_rotation <- c('Varimax' = 'varimax', 'None' = 'none')
 
-# list of function arguments
+## list of function arguments
 ff_args <- as.list(formals(full_factor))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 ff_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(ff_args))
-    ff_args[[i]] <- input[[i]]
-  if (!input$show_filter) ff_args$data_filter = ""
+  ff_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  ff_args$dataset <- input$dataset
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in r_drop(names(ff_args)))
+    ff_args[[i]] <- input[[paste0("ff_",i)]]
   ff_args
 })
 
 ###############################
 # Factor analysis
 ###############################
-output$ui_ff_var <- renderUI({
+output$ui_ff_vars <- renderUI({
 
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
-  selectInput(inputId = "ff_var", label = "Variables:", choices = vars,
-  	selected = state_multiple("ff_var", vars, input$pf_var),
+  selectInput(inputId = "ff_vars", label = "Variables:", choices = vars,
+  	selected = state_multiple("ff_vars", vars, input$pf_vars),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -29,24 +30,24 @@ output$ui_full_factor <- renderUI({
 	# for ui
 	list(
     wellPanel(
-      uiOutput("ui_ff_var"),
+      uiOutput("ui_ff_vars"),
       selectInput("ff_meth", label = "Method:", choices = ff_meth,
       	selected = state_single("ff_meth", ff_meth, "PCA")),
 			div(class="row",
- 	    	div(class="col-xs-6", numericInput("ff_number",
+ 	    	div(class="col-xs-6", numericInput("ff_nr_fact",
  	    	    label = "# of factors:", min = 1,
- 	    	    value = state_init('ff_number',1))),
+ 	    	    value = state_init('ff_nr_fact',1))),
 	    	div(class="col-xs-6", numericInput("ff_cutoff",
 	    	    label = "Cutt-off", min = 0, max = 1,
 	    	    value = state_init('ff_cutoff',0), step = .05))
   	  ),
   	  conditionalPanel(condition = "input.tabs_full_factor == 'Summary'",
-        checkboxInput("ff_sort", "Sort", value = state_init('ff_sort',FALSE))
+        checkboxInput("ff_fsort", "Sort", value = state_init("ff_fsort",FALSE))
       ),
       radioButtons("ff_rotation", label = "Rotation:", ff_rotation,
       	selected = state_init("ff_rotation", "varimax"),
       	inline = TRUE),
-      conditionalPanel(condition = "input.ff_var != null",
+      conditionalPanel(condition = "input.ff_vars != null",
         HTML("<label>Save:</label>"), br(),
         downloadButton("ff_save_loadings", "Loadings"),
         actionButton("ff_save_scores", "Scores")
@@ -59,7 +60,7 @@ output$ui_full_factor <- renderUI({
 })
 
 ff_plot <- reactive({
- 	nrPlots <- (input$ff_number * (input$ff_number - 1)) / 2
+ 	nrPlots <- (input$ff_nr_fact * (input$ff_nr_fact - 1)) / 2
 
 	plot_height <- plot_width <- 350
 	if (nrPlots > 2)
@@ -101,21 +102,21 @@ output$full_factor <- renderUI({
 })
 
 .summary_full_factor <- reactive({
-  if (not_available(input$ff_var))
+  if (not_available(input$ff_vars))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
 
-	if (length(input$ff_var) < 2) return("Please select two or more variables")
-	if (is.null(input$ff_number)) return("Number of factors should be > 1.")
+	if (length(input$ff_vars) < 2) return("Please select two or more variables")
+	if (is.null(input$ff_nr_fact)) return("Number of factors should be > 1.")
 
-  summary(.full_factor(), ff_cutoff = input$ff_cutoff, ff_sort = input$ff_sort)
+  summary(.full_factor(), cutoff = input$ff_cutoff, fsort = input$ff_fsort)
 })
 
 .plot_full_factor <- reactive({
-  if (not_available(input$ff_var))
+  if (not_available(input$ff_vars))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
 
-	if (length(input$ff_var) < 2) return("Please select two or more variables")
-	if (is.null(input$ff_number)) return("Number of factors should be > 1.")
+	if (length(input$ff_vars) < 2) return("Please select two or more variables")
+	if (is.null(input$ff_nr_fact)) return("Number of factors should be > 1.")
 
   plot(.full_factor(), shiny = TRUE)
 })
@@ -125,9 +126,10 @@ observe({
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list()
-    inp_out[[1]] <- list(ff_cutoff = input$ff_cutoff, ff_sort = input$ff_sort)
+    inp_out[[1]] <- list(cutoff = input$ff_cutoff, fsort = input$ff_fsort)
   	inp_out[[2]] <- ""
-    xcmd = paste0("# save_factors(result)\n#clean_loadings(result$ff_loadings,", input$ff_cutoff, ",", input$ff_sort, ") %>% write.csv(file = '~/kmeans.csv')")
+    xcmd = paste0("# save_factors(result)\n# clean_loadings(result$floadings,", input$ff_cutoff, ",", input$ff_fsort, ") %>% write.csv(file = '~/factor_loadings.csv')")
+
     update_report(inp_main = clean_args(ff_inputs(), ff_args),
                    fun_name = "full_factor",
                    inp_out = inp_out,
@@ -142,8 +144,8 @@ output$ff_save_loadings <- downloadHandler(
   filename = function() { "loadings.csv" },
   content = function(file) {
     .full_factor() %>%
-      { if (is.list(.)) .$ff_loadings else return() } %>%
-      clean_loadings(input$ff_cutoff, input$ff_sort) %>%
+      { if (is.list(.)) .$floadings else return() } %>%
+      clean_loadings(input$ff_cutoff, input$ff_fsort) %>%
       write.csv(file)
   }
 )

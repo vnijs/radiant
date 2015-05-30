@@ -4,12 +4,12 @@
 \alias{plot.compare_means}
 \title{Plot method for the compare_means function}
 \usage{
-\method{plot}{compare_means}(x, cm_plots = "bar", shiny = FALSE, ...)
+\method{plot}{compare_means}(x, plots = "bar", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{compare_means}}}
 
-\item{cm_plots}{One or more plots ("bar", "box", or "density")}
+\item{plots}{One or more plots ("bar", "box", or "density")}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -23,7 +23,7 @@ See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example
 }
 \examples{
 result <- compare_means("diamonds","cut","price")
-plot(result, cm_plots = c("bar","density"))
+plot(result, plots = c("bar","density"))
 }
 \seealso{
 \code{\link{compare_means}} to calculate results

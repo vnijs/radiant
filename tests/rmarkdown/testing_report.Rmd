@@ -14,30 +14,30 @@ plot(result, sm_plots = "hist")
 ```
 
 ```{r fig.width=7, fig.height=4}
-result <- compare_means(dataset = "anscombe", cm_var1 = "y1", cm_var2 = c("x2", "y3"), cm_paired = "independent", cm_alternative = "two.sided", cm_sig_level = 0.95, cm_adjust = "none")
+result <- compare_means(dataset = "anscombe", var1 = "y1", var2 = c("x2", "y3"), samples = "independent", alternative = "two.sided", conf_level = 0.95, adjust = "none")
 summary(result)
 plot(result, cm_plots = "bar")
 ```
 
 ```{r fig.width=7, fig.height=4}
-result <- regression(dataset = "anscombe", "y1", "x2")
+result <- regression("anscombe", "y1", "x2")
 summary(result)
 plot(result, reg_plots = "coef")
 ```
 
 
 ```{r fig.width=7, fig.height=4}
-result <- regression(dataset = "ideal", "y", "x2")
+result <- regression("ideal", "y", "x2")
 summary(result)
 plot(result, reg_plots = "coef")
 ```
 
 ```{r fig.width=6.46, fig.height=8.4}
-result <- visualize(dataset = "diamonds", viz_xvar = "carat", viz_yvar = "price", viz_type = "scatter", viz_color = "clarity", viz_check = c("line", "loess"), viz_axes = c("log_x", "log_y"))
+result <- visualize("diamonds", xvar = "carat", yvar = "price", type = "scatter", color = "clarity", check = c("line", "loess"), axes = c("log_x", "log_y"))
 ```
 
 ```{r}
-result <- sampling(dataset = "rndnames", smp_var = "Names", smp_sample_size = 6)
+result <- sampling("rndnames", var = "Names", sample_size = 6)
 summary(result)
 ```
 

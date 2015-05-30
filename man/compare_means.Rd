@@ -4,26 +4,26 @@
 \alias{compare_means}
 \title{Compare means for two or more variables}
 \usage{
-compare_means(dataset, cm_var1, cm_var2, data_filter = "",
-  cm_paired = "independent", cm_alternative = "two.sided",
-  cm_sig_level = 0.95, cm_adjust = "none")
+compare_means(dataset, var1, var2, samples = "independent",
+  alternative = "two.sided", conf_lev = 0.95, adjust = "none",
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{cm_var1}{A numeric variable or factor selected for comparison}
+\item{var1}{A numeric variable or factor selected for comparison}
 
-\item{cm_var2}{One or more numeric variables for comparison. If cm_var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of cm_var1}
+\item{var2}{One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r}
+
+\item{samples}{Are samples indepent ("independent") or not ("paired")}
+
+\item{alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
+
+\item{conf_lev}{Span of the confidence interval}
+
+\item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{cm_paired}{Are samples indepent ("independent") or not ("paired")}
-
-\item{cm_alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
-
-\item{cm_sig_level}{Span of the confidence interval}
-
-\item{cm_adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 }
 \value{
 A list of all variables defined in the function as an object of class compare_means

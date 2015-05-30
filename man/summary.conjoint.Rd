@@ -4,12 +4,12 @@
 \alias{summary.conjoint}
 \title{Summary method for the conjoint function}
 \usage{
-\method{summary}{conjoint}(object, ca_vif = FALSE, ...)
+\method{summary}{conjoint}(object, mc_diag = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{conjoint}}}
 
-\item{ca_vif}{Shows multicollinearity diagnostics.}
+\item{mc_diag}{Shows multicollinearity diagnostics.}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -20,9 +20,9 @@ Summary method for the conjoint function
 See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-summary(result, ca_vif = TRUE)
-mp3 \%>\% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape") \%>\% summary(., ca_vif = TRUE)
+result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+summary(result, mc_diag = TRUE)
+mp3 \%>\% conjoint(dep_var = "Rating", indep_var = "Memory:Shape") \%>\% summary(., mc_diag = TRUE)
 }
 \seealso{
 \code{\link{conjoint}} to generate results

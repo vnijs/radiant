@@ -17,7 +17,7 @@ See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an examp
 }
 \examples{
 \donttest{
-result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+result <- kmeans_clus("shopping", vars = c("v1:v6"))
 save_membership(result)
 head(shopping)
 }

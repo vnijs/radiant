@@ -18,10 +18,10 @@ Summary method for the conjoint_profiles function
 See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 }
 \examples{
-ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-result <- conjoint_profiles("ca_prof")
+cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+result <- conjoint_profiles("cp")
 summary(result)
-rm(ca_prof, envir = .GlobalEnv)
+rm(cp, envir = .GlobalEnv)
 readLines(system.file("examples/profiles-movie.txt", package='radiant')) \%>\%
   conjoint_profiles \%>\% summary
 }

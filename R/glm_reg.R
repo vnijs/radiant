@@ -42,7 +42,7 @@ glm_reg <- function(dataset, glm_dep_var, glm_indep_var,
 
   vars <- ""
   var_check(glm_indep_var, colnames(dat)[-1], glm_int_var) %>%
-    { vars <<- .$vars; glm_indep_var <<- .$indep_var; glm_int_var <<- .$int_var }
+    { vars <<- .$vars; glm_indep_var <<- .$iv; glm_int_var <<- .$intv }
 
   if ("standardize" %in% glm_check) {
     isNum <- sapply(dat, is.numeric)

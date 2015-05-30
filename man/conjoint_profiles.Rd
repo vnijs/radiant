@@ -19,9 +19,9 @@ Create fractional factorial design for conjoint analysis
 See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 }
 \examples{
-ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-result <- conjoint_profiles("ca_prof")
-rm(ca_prof, envir = .GlobalEnv)
+cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+result <- conjoint_profiles("cp")
+rm(cp, envir = .GlobalEnv)
 result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) \%>\%
             conjoint_profiles
 }

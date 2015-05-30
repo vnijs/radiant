@@ -7,9 +7,9 @@
 #' @return A list with all variables defined in the function as an object of class conjoint_profiles
 #'
 #' @examples
-#' ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-#' result <- conjoint_profiles("ca_prof")
-#' rm(ca_prof, envir = .GlobalEnv)
+#' cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+#' result <- conjoint_profiles("cp")
+#' rm(cp, envir = .GlobalEnv)
 #' result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
 #'             conjoint_profiles
 #'
@@ -18,20 +18,19 @@
 #' @export
 conjoint_profiles <- function(dataset) {
 
-	ca_str <- getdata(dataset)
-	cmd <- "ca_attr <- list(c()"
-	for (l in ca_str) {
+	cp <- getdata(dataset)
+	cmd <- "cap_attr <- list(c()"
+	for (l in cp) {
 		if (l != "") cmd <- paste(cmd, ",", l)
 	}
 	cmd <- paste(cmd, ")")
 	eval(parse(text = cmd))
-	ca_attr <- ca_attr[-1]
-	cn <- names(ca_attr)
+	cap_attr <- cap_attr[-1]
+	cn <- names(cap_attr)
 
 	# reordering the attributes affects the number of profiles generated - strange
 	for (itt in 1:20) {
-		ret <- sample(ca_attr) %>%
-						 ff_design(itt)
+		ret <- sample(cap_attr) %>% ff_design(itt)
 		if (!is.null(ret)) break
 	}
 
@@ -56,10 +55,10 @@ conjoint_profiles <- function(dataset) {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-#' result <- conjoint_profiles("ca_prof")
+#' cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+#' result <- conjoint_profiles("cp")
 #' summary(result)
-#' rm(ca_prof, envir = .GlobalEnv)
+#' rm(cp, envir = .GlobalEnv)
 #' readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
 #'   conjoint_profiles %>% summary
 #'
@@ -73,7 +72,7 @@ summary.conjoint_profiles <- function(object, ...) {
 	cat("# profiles:", nrow(object$frac))
 
 	cat("\n\nAttributes and levels:\n")
-	cat(paste0(object$ca_str, collapse="\n"),"\n")
+	cat(paste0(object$cp, collapse="\n"),"\n")
 
 	cat("\nFractional factorial design correlations:\n")
 	print(object$prof_cor, row.names = FALSE)

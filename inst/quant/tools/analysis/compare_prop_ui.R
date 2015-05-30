@@ -1,17 +1,18 @@
-# choice lists for compare means
+## choice lists for compare means
 cp_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 cp_adjust <- c("None" = "none", "Bonferroni" = "bonf")
 cp_plots <- c("Proportions" = "props", "Counts" = "counts")
 
-# list of function arguments
+## list of function arguments
 cp_args <- as.list(formals(compare_props))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 cp_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(cp_args))
-    cp_args[[i]] <- input[[i]]
-  if (!input$show_filter) cp_args$data_filter = ""
+  ## loop needed because reactive values don't allow single bracket indexing
+  cp_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  cp_args$dataset <- input$dataset
+  for (i in r_drop(names(cp_args)))
+    cp_args[[i]] <- input[[paste0("cp_",i)]]
   cp_args
 })
 
@@ -36,15 +37,15 @@ output$ui_cp_var2 <- renderUI({
               multiple = FALSE)
 })
 
-output$ui_cp_levels <- renderUI({
+output$ui_cp_levs <- renderUI({
   if (not_available(input$cp_var2))
     levs <- c()
   else
     levs <- .getdata()[1,input$cp_var2] %>% as.factor %>% levels
 
-  selectInput(inputId = "cp_levels", label = "Choose level:",
+  selectInput(inputId = "cp_levs", label = "Choose level:",
               choices = levs,
-              selected = state_single("cp_levels",levs), multiple = FALSE)
+              selected = state_single("cp_levs",levs), multiple = FALSE)
 })
 
 output$ui_compare_props <- renderUI({
@@ -61,16 +62,16 @@ output$ui_compare_props <- renderUI({
     wellPanel(
       uiOutput("ui_cp_var1"),
       uiOutput("ui_cp_var2"),
-      uiOutput("ui_cp_levels"),
+      uiOutput("ui_cp_levs"),
       conditionalPanel(condition = "input.tabs_compare_props == 'Summary'",
         selectInput(inputId = "cp_alternative", label = "Alternative hypothesis:",
                     choices = cp_alt,
                     selected = state_single("cp_alternative", cp_alt,
-                                               cp_args$cp_alternative)),
-        sliderInput("cp_sig_level","Significance level:", min = 0.85, max = 0.99,
-          value = state_init("cp_sig_level",cp_args$cp_sig_level), step = 0.01),
+                                               cp_args$alternative)),
+        sliderInput("cp_conf_lev","Significance level:", min = 0.85, max = 0.99,
+          value = state_init("cp_conf_lev",cp_args$conf_lev), step = 0.01),
         radioButtons(inputId = "cp_adjust", label = "Multiple comp. adjustment:", cp_adjust,
-          selected = state_init("cp_adjust", cp_args$cp_adjust),
+          selected = state_init("cp_adjust", cp_args$adjust),
           inline = TRUE)
       )
     ),
@@ -133,25 +134,24 @@ output$compare_props <- renderUI({
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
   if (input$cp_var1 %in% input$cp_var2) return(" ")
 
-  plot(.compare_props(), cp_plots = input$cp_plots, shiny = TRUE)
+  plot(.compare_props(), plots = input$cp_plots, shiny = TRUE)
 })
 
 observe({
   if (not_pressed(input$compare_props_report)) return()
   isolate({
-    outputs <- c("summary","plot")
-    inp_out <- list(cp_plots = input$cp_plots) %>% list("",.)
-    figs <- TRUE
     if (length(input$cp_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")
+    } else {
+      outputs <- c("summary","plot")
+      inp_out <- list(plots = input$cp_plots) %>% list("",.)
+      figs <- TRUE
     }
     update_report(inp_main = clean_args(cp_inputs(), cp_args),
                   fun_name = "compare_props",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
+                  inp_out = inp_out, outputs = outputs, figs = figs,
                   fig.width = round(7 * cp_plot_width()/650,2),
                   fig.height = round(7 * cp_plot_height()/650,2))
   })

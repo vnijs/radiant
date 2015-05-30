@@ -30,7 +30,7 @@ regression <- function(dataset, reg_dep_var, reg_indep_var,
 
   vars <- ""
   var_check(reg_indep_var, colnames(dat)[-1], reg_int_var) %>%
-    { vars <<- .$vars; reg_indep_var <<- .$indep_var; reg_int_var <<- .$int_var }
+    { vars <<- .$vars; reg_indep_var <<- .$iv; reg_int_var <<- .$intv }
 
   if ("standardize" %in% reg_check) {
     isNum <- sapply(dat, is.numeric)
@@ -599,33 +599,33 @@ save_reg_resid <- function(object) {
 #' If ':' is used to select a range _indep_var_ is updated
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param indep_var List of independent variables provided to _regression_ or _glm_
+#' @param iv List of independent variables provided to _regression_ or _glm_
 #' @param cn Column names for all independent variables in _dat_
-#' @param int_var Interaction terms specified
+#' @param intv Interaction terms specified
 #'
-#' @return 'vars' is a vector of right-hand side variables, possibly with interactions, 'indep_var' is the list of indepdent variables, and int_var are interaction terms
+#' @return 'vars' is a vector of right-hand side variables, possibly with interactions, 'iv' is the list of independent variables, and intv are interaction terms
 #'
 #' @examples
 #' var_check("a:d", c("a","b","c","d"))
 #' var_check(c("a","b"), c("a","b"), "a:c")
 #'
 #' @export
-var_check <- function(indep_var, cn, int_var = "") {
+var_check <- function(iv, cn, intv = "") {
 
   # if : is used to select a range of variables reg_indep_var is updated
-  vars <- indep_var
-  if (length(vars) < length(cn)) vars <- indep_var <- cn
+  vars <- iv
+  if (length(vars) < length(cn)) vars <- iv <- cn
 
-  if (int_var != "" && length(vars) > 1) {
-    if ({int_var %>% strsplit(":") %>% unlist} %in% vars %>% all) {
-      vars <- c(vars, int_var)
+  if (intv != "" && length(vars) > 1) {
+    if ({intv %>% strsplit(":") %>% unlist} %in% vars %>% all) {
+      vars <- c(vars, intv)
     } else{
       cat("Interaction terms contain variables not selected as main effects.\nRemoving all interactions from the estimation")
-      int_var <- ""
+      intv <- ""
     }
   }
 
-  list(vars = vars, indep_var = indep_var, int_var = int_var)
+  list(vars = vars, iv = iv, intv = intv)
 }
 
 #' Add interaction terms to list of test variables if needed

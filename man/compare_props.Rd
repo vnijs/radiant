@@ -4,25 +4,25 @@
 \alias{compare_props}
 \title{Compare proportions across groups}
 \usage{
-compare_props(dataset, cp_var1, cp_var2, data_filter = "", cp_levels = "",
-  cp_alternative = "two.sided", cp_sig_level = 0.95, cp_adjust = "none")
+compare_props(dataset, var1, var2, levs = "", alternative = "two.sided",
+  conf_lev = 0.95, adjust = "none", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{cp_var1}{A grouping variable to split the data for comparisons}
+\item{var1}{A grouping variable to split the data for comparisons}
 
-\item{cp_var2}{The variable to calculate proportions for}
+\item{var2}{The variable to calculate proportions for}
+
+\item{levs}{The factor level selected for the proportion comparison}
+
+\item{alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
+
+\item{conf_lev}{Span of the confidence interval}
+
+\item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{cp_levels}{The factor level selected for the proportion comparison}
-
-\item{cp_alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
-
-\item{cp_sig_level}{Span of the confidence interval}
-
-\item{cp_adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 }
 \value{
 A list of all variables defined in the function as an object of class compare_props

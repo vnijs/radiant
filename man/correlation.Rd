@@ -4,16 +4,16 @@
 \alias{correlation}
 \title{Calculate correlations for two or more variables}
 \usage{
-correlation(dataset, cor_var, data_filter = "", cor_type = "pearson")
+correlation(dataset, vars, type = "pearson", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{cor_var}{Variables to include in the analysis}
+\item{vars}{Variables to include in the analysis}
+
+\item{type}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{cor_type}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
 }
 \value{
 A list with all variables defined in the function as an object of class compare_means
