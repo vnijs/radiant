@@ -18,7 +18,7 @@ document(roclets = c('rd', 'collate', 'namespace'))
 build('../MathJaxR', binary = TRUE)
 # install('../DT_vnijs')
 # build('../DT_vnijs', binary = TRUE)
-install('../DT')
+# install('../DT')
 build('../DT', binary = TRUE)
 build('../radiant', binary = TRUE)
 

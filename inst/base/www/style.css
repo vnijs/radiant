@@ -78,7 +78,7 @@ pre {
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
 #rmd_report, #rmd_code {
   position: absolute;
-  top: 95px;
+  top: 145px;
   bottom: 0;
   left: 0;
   right: 50%;
@@ -88,7 +88,7 @@ pre {
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
 #rmd_knitted, #rmd_code_output {
   position: absolute;
-  top: 95px;
+  top: 145px;
   bottom: 0;
   left: 50%;
   right: 0;
