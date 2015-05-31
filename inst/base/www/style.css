@@ -1,7 +1,16 @@
 .table {
   width: auto;
+}
+
+[data-value="View"] {
   overflow-x: auto;
 }
+
+/*
+table.dataTable {
+  overflow-x: auto;
+}
+*/
 
 th, td {
   text-align: left;

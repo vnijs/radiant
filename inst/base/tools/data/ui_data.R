@@ -38,6 +38,7 @@ output$ui_data <- renderUI({
             conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
           # tabPanel("View", DT::dataTableOutput("dataviewer"), verbatimTextOutput("tbl_state")),
           tabPanel("View", DT::dataTableOutput("dataviewer")),
+          # tabPanel("View", div(DT::dataTableOutput("tbl"), style = 'overflow-x: auto')),
           # tabPanel("View_old", shiny::dataTableOutput("dataviewer_old")),
           tabPanel("Visualize", plotOutput("visualize", width = "100%", height = "100%")),
           tabPanel("Pivot", rpivotTable::rpivotTableOutput("pivotData")),

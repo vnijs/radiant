@@ -30,7 +30,7 @@ output$dataviewer <- DT::renderDataTable({
   action = DT::dataTableAjax(session, dat, rownames = FALSE)
 
   DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
-    rownames = FALSE, server = TRUE,
+    rownames = FALSE, server = TRUE, style = "bootstrap",
     options = list(
       ajax = list(url = action),
       search = list(regex = TRUE),
