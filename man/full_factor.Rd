@@ -4,7 +4,7 @@
 \alias{full_factor}
 \title{Factor analysis (PCA)}
 \usage{
-full_factor(dataset, vars, meth = "PCA", nr_fact = 2,
+full_factor(dataset, vars, method = "PCA", nr_fact = 2,
   rotation = "varimax", data_filter = "")
 }
 \arguments{
@@ -12,7 +12,7 @@ full_factor(dataset, vars, meth = "PCA", nr_fact = 2,
 
 \item{vars}{Variables to include in the analysis}
 
-\item{meth}{Factor extraction method to use}
+\item{method}{Factor extraction method to use}
 
 \item{nr_fact}{Number of factors to extract}
 
@@ -31,8 +31,8 @@ See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an examp
 }
 \examples{
 result <- full_factor("diamonds",c("price","carat","table","x","y"))
-result <- full_factor("diamonds",c("price","carat","table","x","y"), meth = "maxlik")
-result <- diamonds \%>\% full_factor(c("price","carat","table","x","y"), meth = "maxlik")
+result <- full_factor("diamonds",c("price","carat","table","x","y"), method = "maxlik")
+result <- diamonds \%>\% full_factor(c("price","carat","table","x","y"), method = "maxlik")
 }
 \seealso{
 \code{\link{summary.full_factor}} to summarize results

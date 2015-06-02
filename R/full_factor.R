@@ -4,7 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars Variables to include in the analysis
-#' @param meth Factor extraction method to use
+#' @param method Factor extraction method to use
 #' @param nr_fact Number of factors to extract
 #' @param rotation Apply varimax rotation or no rotation ("varimax" or "none")
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -13,8 +13,8 @@
 #'
 #' @examples
 #' result <- full_factor("diamonds",c("price","carat","table","x","y"))
-#' result <- full_factor("diamonds",c("price","carat","table","x","y"), meth = "maxlik")
-#' result <- diamonds %>% full_factor(c("price","carat","table","x","y"), meth = "maxlik")
+#' result <- full_factor("diamonds",c("price","carat","table","x","y"), method = "maxlik")
+#' result <- diamonds %>% full_factor(c("price","carat","table","x","y"), method = "maxlik")
 #'
 #' @seealso \code{\link{summary.full_factor}} to summarize results
 #' @seealso \code{\link{plot.full_factor}} to plot results
@@ -24,7 +24,7 @@
 #'
 #' @export
 full_factor <- function(dataset, vars,
-                        meth = "PCA",
+                        method = "PCA",
                         nr_fact = 2,
                         rotation = "varimax",
                         data_filter = "") {
@@ -45,7 +45,7 @@ full_factor <- function(dataset, vars,
 		nrFac <- ncol(dat)
 	}
 
-	if (meth == "PCA") {
+	if (method == "PCA") {
 		fres <- principal(dat, nfactors = nrFac, rotate = rotation, scores = TRUE,
 		                  oblique.scores = FALSE)
 	} else {
@@ -102,7 +102,7 @@ summary.full_factor <- function(object,
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables   :", paste0(object$vars, collapse = ", "), "\n")
 	cat("# factors   :", object$nr_fact, "\n")
-	cat("Method      :", object$meth, "\n")
+	cat("Method      :", object$method, "\n")
 	cat("Rotation    :", object$rotation, "\n")
 	cat("Observations:", object$nrObs, "\n")
 

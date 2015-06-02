@@ -31,12 +31,11 @@ combinedata <- function(dataset, cmb_dataset,
   if (name == "")
     name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
-
   if (is_join) {
-    dat <- get(type)(getdata(dataset), getdata(cmb_dataset), by = by)
+    dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE), by = by)
     madd <- paste0("\n\nBy: ", paste0(by, collapse = ", "))
   } else {
-    dat <- get(type)(getdata(dataset), getdata(cmb_dataset))
+    dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE))
     madd <- ""
   }
 

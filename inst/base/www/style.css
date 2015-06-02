@@ -2,13 +2,14 @@
   width: auto;
 }
 
+/*
 [data-value="View"] {
   overflow-x: auto;
 }
 
-/*
-table.dataTable {
-  overflow-x: auto;
+.row {
+  margin-right: auto;
+  margin-left: auto;
 }
 */
 

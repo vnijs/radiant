@@ -127,10 +127,10 @@ plot.hier_clus <- function(x,
 					theme(axis.text.x  = element_text(angle=90, size=6)) -> plot_list[['dendro']]
 
 			} else {
-				cutoff = .02
 				object$hc_out %>% dendro_data(type="rectangle") %>%
 					segment %>% filter(y > cutoff) %>%
 					ggplot(.) + geom_segment(aes_string(x="x", y="y", xend="xend", yend="yend")) +
+					  # scale_y_continuous(limits=c(cutoff, 1)) +
 					  labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
 					  theme_bw() + theme(axis.text.x = element_blank()) -> plot_list[['dendro']]
 			}

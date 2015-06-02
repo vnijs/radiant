@@ -32,9 +32,12 @@ output$dataviewer <- DT::renderDataTable({
   DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
     rownames = FALSE, server = TRUE, style = "bootstrap",
     options = list(
+      # search = list(search = rnorm(1)),
+      #               order = list(list(2, 'asc'), list(1, 'desc')),
+      #               columns = list(list(1, '1000 ... 5000')),
+      # stateSave = TRUE,   # maintains but does not show column filter settings
       ajax = list(url = action),
       search = list(regex = TRUE),
-      stateSave = TRUE,
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
       autoWidth = TRUE,
       processing = FALSE,
@@ -44,7 +47,9 @@ output$dataviewer <- DT::renderDataTable({
   )
 })
 
-# output$tbl_state = renderPrint(str(input$dataviewer_state))
+# search = list(search = 'Ma'), order = list(list(2, 'asc'), list(1, 'desc'))
+
+output$tbl_state = renderPrint(str(input$dataviewer_state))
 
 # output$ui_view_vars_old <- renderUI({
 #   vars <- varnames()

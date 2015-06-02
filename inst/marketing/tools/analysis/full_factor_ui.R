@@ -1,4 +1,4 @@
-ff_meth <- c('Principal components' = 'PCA', 'Maximum Likelihood' = "maxlik")
+ff_method <- c('Principal components' = 'PCA', 'Maximum Likelihood' = "maxlik")
 ff_rotation <- c('Varimax' = 'varimax', 'None' = 'none')
 
 ## list of function arguments
@@ -31,8 +31,8 @@ output$ui_full_factor <- renderUI({
 	list(
     wellPanel(
       uiOutput("ui_ff_vars"),
-      selectInput("ff_meth", label = "Method:", choices = ff_meth,
-      	selected = state_single("ff_meth", ff_meth, "PCA")),
+      selectInput("ff_method", label = "Method:", choices = ff_method,
+      	selected = state_single("ff_method", ff_method, "PCA")),
 			div(class="row",
  	    	div(class="col-xs-6", numericInput("ff_nr_fact",
  	    	    label = "# of factors:", min = 1,

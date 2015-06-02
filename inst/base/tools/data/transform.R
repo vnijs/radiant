@@ -34,13 +34,15 @@ output$ui_tr_reorg_levs <- renderUI({
                    plugins = list('remove_button', 'drag_drop')))
 })
 
-# standardize variable
-st <- function(x)
-	if (is.numeric(x)) scale(x) else x
-
 # center variable
 cent <- function(x)
 	if (is.numeric(x)) { x - mean(x, na.rm = TRUE) } else x
+
+# standardize variable
+st <- function(x)
+	if (is.numeric(x)) { cent(x) / sd_rm(x) } else x
+
+# if (is.numeric(x)) scale(x) else x
 
 # median split
 msp <- function(x) cut(x, breaks = quantile(x,c(0,.5,1)),

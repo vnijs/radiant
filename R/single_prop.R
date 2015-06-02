@@ -4,11 +4,11 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param sp_var The variable selected for the proportion comparison
-#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param sp_levels The factor level selected for the proportion comparison
 #' @param sp_comp_value Population value to compare to the sample proportion
 #' @param sp_alternative The alternative hypothesis ("two.sided", "greater", or "less")
 #' @param sp_sig_level Span of the confidence interval
+#' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
@@ -21,11 +21,11 @@
 #'
 #' @export
 single_prop <- function(dataset, sp_var,
-                        data_filter = "",
                         sp_levels = "",
                         sp_comp_value = 0.5,
                         sp_alternative = "two.sided",
-                        sp_sig_level = .95) {
+                        sp_sig_level = .95,
+                        data_filter = "") {
 
 	dat <- getdata(dataset, sp_var, filt = data_filter) %>% mutate_each(funs(as.factor))
 	if (!is_string(dataset)) dataset <- "-----"
