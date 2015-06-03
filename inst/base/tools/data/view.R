@@ -49,7 +49,7 @@ output$dataviewer <- DT::renderDataTable({
 
 # search = list(search = 'Ma'), order = list(list(2, 'asc'), list(1, 'desc'))
 
-output$tbl_state = renderPrint(str(input$dataviewer_state))
+# output$tbl_state = renderPrint(str(input$dataviewer_state))
 
 # output$ui_view_vars_old <- renderUI({
 #   vars <- varnames()
