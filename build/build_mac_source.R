@@ -12,7 +12,7 @@ build('../radiant', binary = TRUE)
 # build('../rpivotTable')
 # build('../rpivotTable', binary = TRUE)
 
-devtools::install('../DT')
+# devtools::install('~/gh/DT')
 build('../DT')
 build('../DT', binary = TRUE)
 

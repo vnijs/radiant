@@ -194,11 +194,11 @@ viewdata <- function(dataset, vars = "", filt = "") {
                   onclick = "window.close();", "Stop")
     ),
     server = function(input, output, session) {
-      action <- DT::dataTableAjax(session, dat, rownames = FALSE)
+      # action <- DT::dataTableAjax(session, dat, rownames = FALSE)
       widget <- DT::datatable(dat, rownames = FALSE, style = "bootstrap",
         filter = list(position = "top", clear = FALSE, plain = FALSE),
         options = list(
-          ajax = list(url = action),
+          # ajax = list(url = action),
           search = list(regex = TRUE),
           columnDefs = list(list(className = 'dt-center', targets = "_all")),
           autoWidth = TRUE,
