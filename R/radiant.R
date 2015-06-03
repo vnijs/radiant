@@ -195,7 +195,7 @@ viewdata <- function(dataset, vars = "", filt = "") {
     ),
     server = function(input, output, session) {
       action <- DT::dataTableAjax(session, dat, rownames = FALSE)
-      widget <- DT::datatable(dat, rownames = FALSE, server = TRUE, style = "bootstrap",
+      widget <- DT::datatable(dat, rownames = FALSE, style = "bootstrap",
         filter = list(position = "top", clear = FALSE, plain = FALSE),
         options = list(
           ajax = list(url = action),
