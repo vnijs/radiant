@@ -24,17 +24,17 @@ my_dataTablesFilter = function(data, req) {
 output$dataviewer <- DT::renderDataTable({
 
   if (not_available(input$view_vars)) return()
-
   dat <- select_(.getdata(), .dots = input$view_vars)
+  # if (!is.data.frame(dat)) return()
+
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   action = DT::dataTableAjax(session, dat, rownames = FALSE)
 
   DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
-    rownames = FALSE, server = TRUE, style = "bootstrap",
+    rownames = FALSE, style = "bootstrap",
     options = list(
       # search = list(search = rnorm(1)),
       #               order = list(list(2, 'asc'), list(1, 'desc')),
-      #               columns = list(list(1, '1000 ... 5000')),
       # stateSave = TRUE,   # maintains but does not show column filter settings
       ajax = list(url = action),
       search = list(regex = TRUE),

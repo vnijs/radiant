@@ -187,7 +187,8 @@ viewdata <- function(dataset, vars = "", filt = "") {
   shinyApp(
     ui = fluidPage(title = title,
       includeCSS(file.path(system.file(package = "radiant"),"base/www/style.css")),
-      fluidRow(column(12, tags$div(DT::dataTableOutput("tbl"), style = 'overflow-x: auto'))),
+      # fluidRow(column(12, tags$div(DT::dataTableOutput("tbl"), style = 'overflow-x: auto'))),
+      fluidRow(DT::dataTableOutput("tbl")),
       tags$button(id = "stop", type = "button",
                   class = "btn btn-danger action-button shiny-bound-input",
                   onclick = "window.close();", "Stop")
