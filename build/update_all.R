@@ -19,6 +19,7 @@ system("git push")
 
 # options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
+# install.packages("jsonlite"); install.packages("RcppEigen")
 
 # devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
 # devtools::install_github(c("rstudio/shinyapps", "themel/sendmailR", "jimhester/covr"))
