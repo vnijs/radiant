@@ -25,11 +25,8 @@ output$dataviewer <- DT::renderDataTable({
 
   if (not_available(input$view_vars)) return()
   dat <- select_(.getdata(), .dots = input$view_vars)
-  # if (!is.data.frame(dat)) return()
 
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
-  # action = DT::dataTableAjax(session, dat, rownames = FALSE)
-
   DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
     rownames = FALSE, style = "bootstrap",
     options = list(

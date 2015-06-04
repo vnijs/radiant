@@ -242,29 +242,22 @@ the_table <- function(model, dat, indep_var) {
 	list('PW' = PW.df, 'IW' = IW, 'plot_ylim' = plot_ylim)
 }
 
-# code for 'exploded logistic regression' when ranking data is provided
-# require(MASS)
-# greenwind$rnk <- ordered(as.factor(19 - greenwind$rank))
-# levels(greenwind$rnk)
-# greenwind$rnk
-# head(greenwind)
-# greenwind$price <- factor(greenwind$price, levels = c("1.59","1.39","1.19"))
-# greenwind$brand <- factor(greenwind$brand, levels = c("Glory","K2R","Bissell"))
-# levels(greenwind$brand)
-# greenwind$brand
-
-# m <- polr(rnk ~ design + brand + price + ghks + mbg, data = greenwind, Hess = TRUE)
-# summary(m)
-# cf <- coef(m)
-# cf <- cf / max(abs(cf))
-# cf
-
-# greenwind$rnk_lm <- 19 - greenwind$rank
-# l <- lm(rnk_lm ~ design + brand + price + ghks + mbg, data = greenwind)
-# summary(l)
-# cl <- coef(l)
-# cl <- cl / max(abs(cl))
-# cl
-
-# df <- data.frame('cf' = cf, 'cl' = cl[-1])
-# print(round(df,1), digits = 1)
+## code for 'exploded logistic regression' when ranking data is provided
+# library(MASS)
+# library(dplyr)
+# library(magrittr)
+#
+# load("~/gh/radiant/inst/base/data/carpet.rda")
+# # carpet %<>% {bind_rows(list(.,.,.))}
+# carpet$rev_ranking <- ordered(as.factor(19 - carpet$ranking))
+# carpet$price <- factor(carpet$price, levels = c("1.59","1.39","1.19"))
+# carpet$brand <- factor(carpet$brand, levels = c("Glory","K2R","Bissell"))
+#
+# m <- polr(rev_ranking ~ design + brand + price + seal + money_back, data = carpet, Hess = FALSE)
+# # coef(m) %>% {. / max(abs(.))}
+# coef(m) %>% {. / abs(.["designB"])}
+#
+# carpet$ranking_lm <- 19 - carpet$ranking
+# l <- lm(ranking_lm ~ design + brand + price + seal + money_back, data = carpet)
+# # coef(l) %>% {./ max(abs(.))}
+# coef(l) %>% {. / abs(.["designB"])} %>% .[-1]

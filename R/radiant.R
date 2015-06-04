@@ -157,7 +157,10 @@ changedata <- function(dataset,
   }
 }
 
-# adding variable when filter is active?
+## use ensurer to check if nrow(vars) == nrow(dataset)
+## http://cran.r-project.org/web/packages/ensurer/vignettes/ensurer.html
+
+## adding variable when filter is active?
 # dat <- mtcars
 # dat$new <- NA
 # dat$new[1:10] <- 1:10
@@ -187,18 +190,15 @@ viewdata <- function(dataset, vars = "", filt = "") {
   shinyApp(
     ui = fluidPage(title = title,
       includeCSS(file.path(system.file(package = "radiant"),"base/www/style.css")),
-      # fluidRow(column(12, tags$div(DT::dataTableOutput("tbl"), style = 'overflow-x: auto'))),
       fluidRow(DT::dataTableOutput("tbl")),
       tags$button(id = "stop", type = "button",
                   class = "btn btn-danger action-button shiny-bound-input",
                   onclick = "window.close();", "Stop")
     ),
     server = function(input, output, session) {
-      # action <- DT::dataTableAjax(session, dat, rownames = FALSE)
       widget <- DT::datatable(dat, rownames = FALSE, style = "bootstrap",
         filter = list(position = "top", clear = FALSE, plain = FALSE),
         options = list(
-          # ajax = list(url = action),
           search = list(regex = TRUE),
           columnDefs = list(list(className = 'dt-center', targets = "_all")),
           autoWidth = TRUE,
