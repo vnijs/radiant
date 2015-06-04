@@ -12,7 +12,8 @@ build('../radiant', binary = TRUE)
 # build('../rpivotTable')
 # build('../rpivotTable', binary = TRUE)
 
-# devtools::install('~/gh/DT')
+devtools::install('~/gh/DT')
+# packageVersion("DT")
 build('../DT')
 build('../DT', binary = TRUE)
 

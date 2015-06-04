@@ -1,6 +1,7 @@
 # deploy to shinyapps.io
 
 library(devtools)
+library(magrittr)
 setwd("~/gh/radiant")
 document(roclets = c('rd', 'collate', 'namespace'))
 # install()
