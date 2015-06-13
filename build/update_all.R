@@ -1,4 +1,4 @@
-# deploy to shinyapps.io
+## deploy to shinyapps.io
 
 library(devtools)
 library(magrittr)
@@ -59,13 +59,13 @@ if (substr(answ, 1, 1) %in% c("y","Y")) {
   system("sh build/build_mac_win.sh")
 }
 
-# in case of problems
+## in case of problems
 # shinyapps::showLogs(entries=1000)
 
 ## Uncomment when rsm server has been upgraded to R 3.2.0
-# system("osascript ~/gh/update.scpt")
+system("osascript ~/gh/update.scpt")
 
-# for major pull problems
+## for major pull problems
 # git fetch --all
 # git reset --hard origin/master
 # rm(list = ls())

@@ -76,20 +76,26 @@ if (r_local) {
   }
 }
 
-# (re)start the session and push the id into the url
+## (re)start the session and push the id into the url
 session$sendCustomMessage("session_start", r_ssuid)
 
-# load previous state if available
+## load previous state if available
 if (exists("r_state") && exists("r_data")) {
-  r_data <- do.call(reactiveValues, r_data)
+  r_data  <- do.call(reactiveValues, r_data)
   r_state <- r_state
   rm(r_data, r_state, envir = .GlobalEnv)
 } else if (!is.null(r_sessions[[r_ssuid]]$r_data)) {
-  r_data <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
+  r_data  <- do.call(reactiveValues, r_sessions[[r_ssuid]]$r_data)
   r_state <- r_sessions[[r_ssuid]]$r_state
+} else if (file.exists(paste0("~/r_sessions/r_", r_ssuid, ".rds"))) {
+  ## read from file if not in global
+  rs <- readRDS(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+  r_data  <- do.call(reactiveValues, rs$r_data)
+  r_state <- rs$r_state
+  rm(rs)
 } else {
+  r_data  <- init_state(reactiveValues())
   r_state <- list()
-  r_data <- init_state(reactiveValues())
 }
 
 if (r_local) {

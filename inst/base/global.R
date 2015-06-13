@@ -6,9 +6,11 @@ if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local 
 ## reactive programming in Shiny requires (some) use of global variables
 ## currently these are r_env, r_data, r_state, r_local, r_path, r_sessions, r_ssuid
 
+## print options
 options("width"=200)
 options("scipen"=100)
 
+## pkgs used
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
                "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
@@ -17,53 +19,67 @@ pkgs_gh <- c("shinyAce","rpivotTable","DT")
 pkgs <- c(pkgs_cran, pkgs_gh)
 rm(pkgs_cran,pkgs_gh)
 
-# list of function arguments
+## list of function arguments
 expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm",
                        "min" = "min_rm", "max" = "max_rm", "25%" = "p25",
                        "75%" = "p75", "sd" = "sd_rm", "se" = "serr",
                        "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
                        "# missing" = "nmissing")
 
-# for report and code
+## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE,
                       warning=FALSE, fig.path = "~/radiant_figures/")
 
-# environment to hold session information
-r_sessions <- new.env(parent = emptyenv())
+## using DT rather than Shiny versions of datatable
+renderDataTable <- DT::renderDataTable
+dataTableOutput <- DT::dataTableOutput
+datatable       <- DT::datatable
 
+## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
 
   r_local <- TRUE
-  options(shiny.maxRequestSize = -1) # no limit to filesize locally
+  options(shiny.maxRequestSize = -1) ## no limit to filesize locally
 
-  # if radiant package was not loaded load dependencies
+  ## if radiant package was not loaded load dependencies
   if (!"package:radiant" %in% search())
     sapply(pkgs, require, character.only = TRUE)
 
 } else {
   r_local <- FALSE
-  options(shiny.maxRequestSize = 5 * 1024^2) # limit upload filesize on server (5MB)
+  options(shiny.maxRequestSize = 5 * 1024^2)   ## limit upload filesize on server (5MB)
   sapply(pkgs, require, character.only = TRUE)
 }
 
-# adding the figures path to avoid making a copy of all figures in www/figures
+## environment to hold session information
+r_sessions <- new.env(parent = emptyenv())
+
+## create directory to hold session files
+if (!r_local)
+  "~/r_sessions/" %>% { if (!file.exists(.)) dir.create(., recursive = TRUE) }
+
+## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
 addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
 
-if (r_local) {
+## using local mathjax if available
+if ("MathJaxR" %in% installed.packages()[,"Package"]) {
   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
   withMathJax <- MathJaxR::withMathJaxR
 }
 
+# if (r_local) {
+#   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
+#   withMathJax <- MathJaxR::withMathJaxR
+# }
+
 ## options used for debugging
 # options(shiny.trace = TRUE)
 # options(shiny.error=recover)
-
-## options used for debugging when warnings are given
-# options(warn=0)
 # options(warn=2)
+# options(warn=0)
 
 ## Windows or Mac
 # if (.Platform$OS.type == 'windows') {

@@ -15,11 +15,16 @@ saveStateOnRefresh <- function(session = session) {
       if (not_pressed(input$resetState) && not_pressed(input$quitApp) &&
          is.null(input$uploadState)) {
         r_sessions[[r_ssuid]] <- list(
-          r_data = reactiveValuesToList(r_data),
-          r_state = reactiveValuesToList(input),
+          r_data    = reactiveValuesToList(r_data),
+          r_state   = reactiveValuesToList(input),
           timestamp = Sys.time()
         )
-        if (r_local) rm(r_env, envir = .GlobalEnv)
+        if (r_local) {
+          rm(r_env, envir = .GlobalEnv)
+        } else {
+          ## saving session information to file
+          saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+        }
       } else {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)

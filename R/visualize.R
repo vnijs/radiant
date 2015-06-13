@@ -90,6 +90,8 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       for (j in yvar) {
         plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + gs
+        if ("log_x" %in% axes) plots[[itt]] <- plots[[itt]] + xlab(paste("log", i))
+        if ("log_y" %in% axes) plots[[itt]] <- plots[[itt]] + ylab(paste("log", j))
         itt <- itt + 1
       }
     }
@@ -105,6 +107,8 @@ visualize <- function(dataset, xvar,
         } else {
           plots[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
         }
+        if ("log_x" %in% axes) plots[[itt]] <- plots[[itt]] + xlab(paste("log", i))
+        if ("log_y" %in% axes) plots[[itt]] <- plots[[itt]] + ylab(paste("log", j))
         itt <- itt + 1
       }
     }

@@ -1,13 +1,10 @@
 language: r
-warnings_are_errors: false
+warnings_are_errors: true
 sudo: required
 
 r_github_packages:
   - smartinsightsfromdata/rpivotTable
   - trestletech/shinyAce
   - jimhester/covr
-  - jeroenooms/jsonlite
-  - rstudio/shiny
-  - ramnathv/htmlwidgets
   - rstudio/DT
   - vnijs/MathJaxR

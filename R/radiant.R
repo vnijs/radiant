@@ -198,6 +198,7 @@ viewdata <- function(dataset, vars = "", filt = "") {
     server = function(input, output, session) {
       widget <- DT::datatable(dat, rownames = FALSE, style = "bootstrap",
         filter = list(position = "top", clear = FALSE, plain = FALSE),
+        escape = FALSE,
         options = list(
           search = list(regex = TRUE),
           columnDefs = list(list(className = 'dt-center', targets = "_all")),

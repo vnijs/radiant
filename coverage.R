@@ -6,8 +6,8 @@ if (!require(covr)) {
 
 setwd("~/gh/radiant")
 
-cov <- package_coverage(type = "example")
-# cov <- package_coverage(type = "all")
+# cov <- package_coverage(type = "example")
+cov <- package_coverage(type = "all")
 shine(cov)
 
 # after_success:

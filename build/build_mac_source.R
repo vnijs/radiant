@@ -1,8 +1,14 @@
 # devtools::install_github('hadley/devtools')
 library(devtools)
-document(roclets=c('rd', 'collate', 'namespace'))
+document(roclets = c('rd', 'collate', 'namespace'))
+
 build('../radiant')
 build('../radiant', binary = TRUE)
+
+# devtools::install('~/gh/DT')
+# packageVersion("DT")
+build('../DT')
+build('../DT', binary = TRUE)
 
 # install('../shinyAce')
 # build('../shinyAce')
@@ -12,16 +18,7 @@ build('../radiant', binary = TRUE)
 # build('../rpivotTable')
 # build('../rpivotTable', binary = TRUE)
 
-devtools::install('~/gh/DT')
-# packageVersion("DT")
-build('../DT')
-build('../DT', binary = TRUE)
-
-# devtools::install('../DT_vnijs')
-# build('../DT_vnijs')
-# build('../DT_vnijs', binary = TRUE)
 
 # devtools::install('../MathJaxR')
-build('../MathJaxR')
-build('../MathJaxR', binary = TRUE)
-
+# build('../MathJaxR')
+# build('../MathJaxR', binary = TRUE)
