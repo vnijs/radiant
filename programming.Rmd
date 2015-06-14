@@ -131,7 +131,7 @@ summary(result)
 plot(result)
 save_membership(result)
 
-# was the data really changed?
+## was the data really changed?
 getdata("shopping") %>% head
 ```
 
