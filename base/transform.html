@@ -199,8 +199,8 @@ img {
 <blockquote>
 <p>Modify type, change, normalize, create, add, reorder, and remove variables in the data.</p>
 </blockquote>
-<div id="type" class="section level4">
-<h4>Type</h4>
+<div id="type" class="section level3">
+<h3>Type</h3>
 <p>When you select <code>Type</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the <code>Save changes</code> button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>As factor: convert a variable to type factor (i.e., a categorical variable)</li>
@@ -213,8 +213,8 @@ img {
 <li>As date/time (ymd_hms): convert a character of factor variable to a date if the dates are ordered as year-month-day-hour-minute-second</li>
 </ol>
 </div>
-<div id="change" class="section level4">
-<h4>Change</h4>
+<div id="change" class="section level3">
+<h3>Change</h3>
 <p>When you select <code>Change</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose <code>Log</code> from the <code>Apply function</code> menu. A new variable is created with the prefix <code>log_</code>. Click the <code>Save changes</code> button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>Log: create a log-transformed version of the selected variable (i.e., log(x))</li>
@@ -227,12 +227,12 @@ img {
 <li>Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, …, 90th percentiles.</li>
 </ol>
 </div>
-<div id="normalize" class="section level4">
-<h4>Normalize</h4>
+<div id="normalize" class="section level3">
+<h3>Normalize</h3>
 <p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. Then click the <code>Save changes</code> button.</p>
 </div>
-<div id="create" class="section level4">
-<h4>Create</h4>
+<div id="create" class="section level3">
+<h3>Create</h3>
 <p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. On the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Save changes</code> to add it to the dataset.</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new variable z that is the difference between variables x and y in the data</p>
@@ -246,18 +246,18 @@ img {
 <li><p>Create a variable z that is equal to x lagged by 3 periods</p>
 <p>z = lag(x,3)</p></li>
 <li><p>Create a categorical variable with two levels</p>
-<p>z = ifelse(x &lt; y, ‘x &lt; y’, ‘x &lt; y’)</p></li>
+<p>z = ifelse(x &lt; y, ‘smaller’, ‘bigger’)</p></li>
 <li><p>Create a categorical variable with three levels</p>
-<p>z = ifelse(x &lt; 60, ‘x &lt; 60’, ifelse(x &gt; 65, ‘x &gt; 65’, ‘60-65’))</p></li>
+<p>z = ifelse(x &lt; 60, ‘&lt; 60’, ifelse(x &gt; 65, ‘&gt; 65’, ‘60-65’))</p></li>
 </ol>
 <p>Note: For 6 and 7 you may need to convert the new variable to a factor for analysis (see <code>Type</code> above)</p>
 </div>
-<div id="clipboard" class="section level4">
-<h4>Clipboard</h4>
+<div id="clipboard" class="section level3">
+<h3>Clipboard</h3>
 <p>It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data &gt; Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> dropdown and paste your new data into the <code>Paste from Excel</code> box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click <code>Save changes</code>.</p>
 </div>
-<div id="recode" class="section level4">
-<h4>Recode</h4>
+<div id="recode" class="section level3">
+<h3>Recode</h3>
 <p>To use the recode feature select the variable you want to change and choose <code>Recode</code> from the <code>Transformation type</code> dropdown. Provide one or more recode commands (separate the commands by a <code>;</code>) and press return to see the newly created variable. Click <code>Save changes</code> to add the new variable to the data. Some examples are given below.</p>
 <ol style="list-style-type: decimal">
 <li><p>All values below 20 are set to ‘Low’ and all others to ‘High’</p>
@@ -270,24 +270,24 @@ img {
 <p>400 = NA</p></li>
 </ol>
 </div>
-<div id="rename" class="section level4">
-<h4>Rename</h4>
+<div id="rename" class="section level3">
+<h3>Rename</h3>
 <p>Choose <code>Rename</code> from the <code>Transformation type</code> dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a <code>,</code>. Press return to see the variables with their new names on screen and press <code>Save changes</code> to alter the variable names in the original data.</p>
 </div>
-<div id="reorder-or-remove-columns" class="section level4">
-<h4>Reorder or remove columns</h4>
+<div id="reorder-or-remove-columns" class="section level3">
+<h3>Reorder or remove columns</h3>
 <p>Choose <code>Reorder/Remove columns</code> from the <code>Transformation type</code> dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press <code>Save changes</code> to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data &gt; Manage page.</p>
 </div>
-<div id="reorder-or-remove-levels" class="section level4">
-<h4>Reorder or remove levels</h4>
+<div id="reorder-or-remove-levels" class="section level3">
+<h3>Reorder or remove levels</h3>
 <p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press <code>Save changes</code> to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data &gt; Manage tab. To temporarily remove levels from the data use the <code>Filter</code> option discussed below.</p>
 </div>
-<div id="remove-missing" class="section level4">
-<h4>Remove missing</h4>
+<div id="remove-missing-values" class="section level3">
+<h3>Remove missing values</h3>
 <p>Choose <code>Remove missing</code> from the <code>Transformation type</code> dropdown to eliminate all rows with one or more missing values. Press <code>Save changes</code> to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of <em>n</em> changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data &gt; Manage page.</p>
 </div>
-<div id="filter" class="section level4">
-<h4>Filter</h4>
+<div id="filter" class="section level3">
+<h3>Filter</h3>
 <p>There are several ways to select a subset of the data to view. The <code>Filter</code> box on the left (click the checkbox first) can be used with <code>&gt;</code> and <code>&lt;</code> signs and you can also combine subset commands. For example, <code>x &gt; 3 &amp; y == 2</code> would show only those rows for which the variable <code>x</code> has values larger than 3 <strong>and</strong> for which <code>y</code> has values equal to 2. Note that in R <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expression that have an <strong>or</strong> condition. For example, to select rows where <code>Salary</code> is larger than $100,000 or smaller than $20,000 use <code>Salary &lt; 20000 | Salary &gt; 100000</code>. <code>|</code> is the symbol for <strong>or</strong>. The table below gives an overview of common operators.</p>
 <p>You can also use string matching to select rows. For example, type <code>grepl(&quot;ood&quot;,cut)</code> to select rows with <code>Good</code> or <code>Very good</code> cut. This search is case sensitive by default. For case insentive search you would use <code>grepl(&quot;GOOD&quot;,cut, ignore.case = TRUE)</code>. Type your statement in the <code>Filter</code> box and press return to see the result on screen or an error below the box if the expression is invalid.</p>
 <p>It is important to note that filters are <em>presistent</em>. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press return or (2) uncheck the <code>Filter</code> checkbox.</p>

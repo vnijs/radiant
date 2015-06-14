@@ -200,8 +200,8 @@ img {
 <p>Reduce data dimensionality without significant loss of information</p>
 </blockquote>
 <p>As stated in the documentation for pre-factor analysis, the goal is to reduce the dimensionality of the data without significant loss of information. The tool tries to achieve this goal by looking for structure in the correlation matrix of the variables included in the analysis. The researcher will usually try to link each of the original variables to an underlying factor and then provide a descriptive label for each factor (i.e., a name).</p>
-<div id="example-toothpaste" class="section level1">
-<h1>Example: Toothpaste</h1>
+<div id="example-toothpaste" class="section level3">
+<h3>Example: Toothpaste</h3>
 <p>Click the ‘examples’ radio button on the Data &gt; Manage page and click ‘Load examples’ then choose the toothpaste data from the Datasets dropdown. The data set contains information from 60 consumers who were asked to respond to six questions to determine their attitudes towards toothpaste. The scores shown for variables v1-v6 indicate the level of agreement with the statement indicated on a 7-point scale where 1 = strongly disagree and 7 = strongly agree.</p>
 <p>Once we have determined the number of factors we can extract and rotate them. The factors are rotated to generate a solution where, to the extent possible, a variable has a high loading on only one factor. This is an important benefit because it makes it easier to interpret what the factor represents. While there are numerous algorithms to rotate a factor loadings matrix the most commonly used is Varimax rotation.</p>
 <p><img src="figures_marketing/full_factor_summary.png" alt="Summary" /></p>
@@ -220,6 +220,7 @@ v2        0.85</code></pre>
 <p>The best way to see what rotation does is to toggle the radio buttons <code>Rotation</code> between Varimax and None and inspect what changes in the output. Click on the Plots tab and set the radio button to None. The image shown below depicts the loadings of the variables on the two factors. Variable 5 falls somewhat in between the lines for factor 1 and factor 2. When we select Varimax rotation, however, the label for v5 lines up nicely with the horizontal axis. This change in alignment is also reflected in the factor loadings. The unrotated factor loadings for v5 are -0.869 for factor 1 and -0.351 for factor 2. The rotated factor loadings for v5 are -0.934 for factor 1 and -0.079 for factor 2.</p>
 <p><img src="figures_marketing/full_factor_plot.png" alt="Plot" /> <img src="figures_marketing/full_factor_plot_rotation.png" alt="Plot - rotation" /></p>
 <p>The final step is to generate the factor scores. You can think of these scores as a weighted average of the variables that are linked to a factor. They approximate the scores that a respondent would have provided if we could have asked about the factor in a single question, i.e., the respondents inferred ratings on the factors. By clicking on the ‘Save scores’ button two new variables will be added to the toothpaste data file. You can see them by going to Data &gt; View. We can use factor scores in other analyses (e.g., cluster analysis or regression). You can rename the new variables, e.g., to ‘health’ and ‘social’ through Data &gt; Transform by selecting ‘Rename’ from the Transformation type dropdown.</p>
+</div>
 <div id="summary" class="section level3">
 <h3>Summary</h3>
 <ol style="list-style-type: decimal">
@@ -235,7 +236,6 @@ v2        0.85</code></pre>
 </ol>
 <p>If you want more practice open the ‘shopping’ data set and see if you can reproduce the results shown in the screen capture of the Summary tab below. Use Pre-factor to determine if the correct number of factors were selected. Do you agree? Why (not)?</p>
 <p><img src="figures_marketing/full_factor_summary_shopping.png" alt="Summary - shopping" /></p>
-</div>
 </div>
 
 

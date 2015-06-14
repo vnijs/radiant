@@ -199,28 +199,28 @@ img {
 <blockquote>
 <p>Manage data and state: Load data into Radiant, Save data to disk, Remove a dataset from memory, or Save/Load the full state of the app</p>
 </blockquote>
-<div id="load-data" class="section level4">
-<h4>Load data</h4>
+<div id="load-data" class="section level3">
+<h3>Load data</h3>
 <p>An easy way to store data and get in and out of Radiant (and R) is to use the R-data format (rda). These are binary files that can be stored compactly and read into R quickly. Choose the rda radio button and click <code>Choose Files</code> to locate the file you want to load.</p>
 <p>You can get data from Excel into Radiant in two ways. First, you can save data from Excel in csv format and then, in Radiant, choose the <code>csv</code> radio button. Most likely you will have a header row in the csv file for variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click ‘Choose files’ and locate the file on your computer.</p>
 <p>Alternatively, you can select and copy the data in Excel using CTRL-C (or CMD-C on mac), go to Radiant, choose the <code>clipboard</code> radio-button, and click the <code>Paste data</code> button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted. If the data is not transferred cleanly to Radiant try saving the data in csv format and loading it into Radiant as described above.</p>
 <p>To access all data files bundled with Radiant choose the examples radio button and click <code>Load examples</code>. These files are used to illustrate the various analysis tools in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., Regression &gt; Linear (OLS)).</p>
 </div>
-<div id="save-data" class="section level4">
-<h4>Save data</h4>
+<div id="save-data" class="section level3">
+<h3>Save data</h3>
 <p>As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rda). Choose the rda radio button and click the <code>Save data</code> button to store the data on your computer.</p>
 <p>It is good practice to add a description of the data and variables to each file you use. For the files that are part of Radiant you will see a brief overview of the variables etc. below the table of the first 10 rows of the data. If you would like to add a description for your own data check the ‘Add/edit data description’ check-box. A window will open below that data table where you can add text in <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The descriptions of the data included with Radiant should serve as a good starting point. When you save the data as an rda file the description you created (or edited) will automatically be added to the file.</p>
 <p>Getting data from Radiant into Excel can also be achieved in two ways. First, you can save data in csv format and load it into Excel (i.e., choose the csv radio button and click <code>Save data</code>). Alternatively, you can copy the data from Radiant into the clipboard by choosing the clipboard radio button and clicking the <code>Copy data</code> button. Paste the data from Radiant into a worksheet in Excel using CTRL-V (or CMD-V on mac).</p>
 </div>
-<div id="save-and-load-state" class="section level4">
-<h4>Save and load state</h4>
+<div id="save-and-load-state" class="section level3">
+<h3>Save and load state</h3>
 <p>You can save and load the state of the Radiant app just as you would a data file. The state file (extension rda) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the R-menu. Save the state-file to your hard-disk and when you are ready to continue simply load it by selecting the state radio button and clicking the <code>Choose file</code> button.</p>
 <p>This is convenient if you want to save your work to be completed at another time, perhaps on another computer, or to review any assignments you completed using Radiant. You can also share the file with others that would like to replicate your analyses. As an example, download and then load the state_file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true"><code>RadiantState.rda</code></a>. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings loaded from the statefile. There is also a report in <code>R &gt; Report</code> created using the Radiant interface. The html file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true"><code>RadiantState.html</code></a> contains the output.</p>
 <p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use <code>Quit &gt; Reset</code> to return to a clean/new state.</p>
 <p>Loading and saving state also works with R(studio). If you start Radiant from Rstudio and use <code>Quit &gt; Quit</code> to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists (i.e., <code>r_data</code> and <code>r_state</code>) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a statefile in Rstudio it will be used when you start Radiant to recreate a previous state.</p>
 </div>
-<div id="remove-data-from-memory" class="section level4">
-<h4>Remove data from memory</h4>
+<div id="remove-data-from-memory" class="section level3">
+<h3>Remove data from memory</h3>
 <p>If data are loaded that you no longer need access to in the current session you can select them and click the <code>Remove data</code> button. One datafile will always remain open.</p>
 </div>
 

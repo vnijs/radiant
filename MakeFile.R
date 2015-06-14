@@ -4,7 +4,7 @@ setwd("~/gh/radiant_gh-pages/")
 # local_dir <- .libPaths()[1]
 # global_dir <- .libPaths()[2]
 
-# installing packages to global_dir
+## installing packages to global_dir
 # repos <- "http://cran.rstudio.com"
 # options(repos = c(CRAN = repos))
 # install.packages("rmarkdown", lib = global_dir)
@@ -23,7 +23,7 @@ setwd('../marketing'); system('make')
 setwd('../quant'); system('make')
 setwd('../')
 
-# making the README.md file after clean-up
+## making the README.md file after clean-up
 
 library(knitr)
 knitr::knit("README.Rmd")
@@ -38,9 +38,8 @@ setwd('../')
 unlink("~/Desktop/shopping.rda")
 system('sh rsync_base2app.sh')
 
-# create documentation pdf
+## create documentation pdf
 unlink('radiant.pdf')
-# create pdf of documentation
 setwd("~")
 unlink('radiant.pdf')
 system("R CMD Rd2pdf gh/radiant --no-preview")

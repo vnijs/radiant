@@ -4,7 +4,7 @@ The single mean (or one-sample) t-test is used to compare the mean of a variable
 
 We can perform either a one-tailed test (i.e., less than or greater than) or two-tailed test (see 'Alternative hypothesis'). We use one-tailed tests to evaluate if the available data provide evidence that a variable or effect is larger (or smaller) than some base-value (i.e., the value specified in the null-hypothesis).
 
-#### Example
+### Example
 
 We have access to data from a random sample of grocery stores in the UK. Management will consider entering this geographical market if consumer demand for the product category exceeds 100M units, or, approximately, 1750 units per store. The average demand per store in the sample is equal to 1953. While this number is larger than 1750 we need to determine if the difference could be attributed to sampling error.
 

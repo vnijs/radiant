@@ -82,21 +82,21 @@ Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant
 
 Not ready to install Radiant on your computer? Try it online at the links below:
 
-<a href="https://vnijs.shinyapps.io/base" target="_blank">vnijs.shinyapps.io/base</a>
+<a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a>
 
 <a href="https://vnijs.shinyapps.io/quant" target="_blank">vnijs.shinyapps.io/quant</a>
 
-<a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a>
+<a href="https://vnijs.shinyapps.io/base" target="_blank">vnijs.shinyapps.io/base</a>
 
 ## Running Radiant on shinyapps.io / shiny-server
 
 You can run Radiant on a (linux) server. See links above as evidence. There are also (slightly older) instances you can access that will not affect my personal usage of shinyapps.io:
 
-<a href="https://gallery.shinyapps.io/base" target="_blank">gallery.shinyapps.io/base</a>
+<a href="https://gallery.shinyapps.io/marketing" target="_blank">gallery.shinyapps.io/marketing</a>
 
 <a href="https://gallery.shinyapps.io/quant" target="_blank">gallery.shinyapps.io/quant</a>
 
-<a href="https://gallery.shinyapps.io/marketing" target="_blank">gallery.shinyapps.io/marketing</a>
+<a href="https://gallery.shinyapps.io/base" target="_blank">gallery.shinyapps.io/base</a>
 
 To run your own server instance copy/fork the repo from github and [deploy to shinyapps.io as usual](http://shiny.rstudio.com/articles/shinyapps.html). Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. You can also host Radiant using [shiny-server](http://www.rstudio.com/products/rstudio/download-server/). Just point shiny-server to the directory in inst/ you want to use. As a courtesy, please let me know if you intend to use on a server.
 

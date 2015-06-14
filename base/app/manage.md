@@ -1,6 +1,6 @@
 > Manage data and state: Load data into Radiant, Save data to disk, Remove a dataset from memory, or Save/Load the full state of the app
 
-#### Load data
+### Load data
 
 An easy way to store data and get in and out of Radiant (and R) is to use the R-data format (rda). These are binary files that can be stored compactly and read into R quickly. Choose the rda radio button and click `Choose Files` to locate the file you want to load.
 
@@ -10,7 +10,7 @@ Alternatively, you can select and copy the data in Excel using CTRL-C (or CMD-C 
 
 To access all data files bundled with Radiant choose the examples radio button and click `Load examples`. These files are used to illustrate the various analysis tools in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., Regression > Linear (OLS)).
 
-#### Save data
+### Save data
 
 As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rda). Choose the rda radio button and click the `Save data` button to store the data on your computer.
 
@@ -19,7 +19,7 @@ It is good practice to add a description of the data and variables to each file 
 
 Getting data from Radiant into Excel can also be achieved in two ways. First, you can save data in csv format and load it into Excel (i.e., choose the csv radio button and click `Save data`). Alternatively, you can copy the data from Radiant into the clipboard by choosing the clipboard radio button and clicking the `Copy data` button. Paste the data from Radiant into a worksheet in Excel using CTRL-V (or CMD-V on mac).
 
-#### Save and load state
+### Save and load state
 
 You can save and load the state of the Radiant app just as you would a data file. The state file (extension rda) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the R-menu. Save the state-file to your hard-disk and when you are ready to continue simply load it by selecting the state radio button and clicking the `Choose file` button.
 
@@ -29,6 +29,6 @@ A related feature in Radiant is that state is maintained if you accidentally nav
 
 Loading and saving state also works with R(studio). If you start Radiant from Rstudio and use `Quit > Quit` to stop the app, lists called `r_data` and `r_state` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists (i.e., `r_data` and `r_state`) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a statefile in Rstudio it will be used when you start Radiant to recreate a previous state.
 
-#### Remove data from memory
+### Remove data from memory
 
 If data are loaded that you no longer need access to in the current session you can select them and click the `Remove data` button. One datafile will always remain open.

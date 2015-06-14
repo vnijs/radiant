@@ -198,7 +198,7 @@ img {
 <p>Radiant’s goal is to provide access to the power of R for business analytics. Although Radiant’s web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Update</code> button on the <code>R &gt; Report</code> page to render the report to HTML. See <a href="/radiant/base/report.html">Report</a> page for details. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.</p>
 <p>You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.</p>
 <p>If you close Radiant using <code>Quit &gt; Quit</code> after launching it from R(studio) you can can paste the commands below into the command console to get the same output as in the browser interface.</p>
-<pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;,&quot;price&quot;)
+<pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;, &quot;price&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
 Data      : diamonds 
@@ -288,7 +288,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <pre class="r"><code>plot(result, plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-5-1.png" title="" alt="" width="672" /></p>
 <p>These datasets are available after loading the radiant library. We can also load data through Radiant’s web interface and then access the data from the console after closing the app. Start radiant using the command below and then click <code>examples &gt; Load examples</code> in the <code>Data &gt; Manage</code> tab. Then close the app using <code>Quit &gt; Quit</code>.</p>
-<pre class="r"><code># start radiant, load the example data, then Quit &gt; Quit
+<pre class="r"><code>## start radiant, load the example data, then Quit &gt; Quit
 radiant()</code></pre>
 <p>We can now use the <code>compare_means</code> function to evaluate salary data for professors of different ranks using:</p>
 <pre class="r"><code>result &lt;- compare_means(&quot;salary&quot;, &quot;rank&quot;, &quot;salary&quot;)
@@ -358,38 +358,64 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 
 R-squared: 0.904,  Adjusted R-squared: 0.904 
 F-statistic: 3530.024 df(9,2991), p.value &lt; .001
-Nr obs: 3000</code></pre>
-<pre class="r"><code>predict(result, predict_cmd = &quot;carat = 1:10&quot;)</code></pre>
-<pre><code>Please specify a command to generate predictions. For example,
-carat = seq(.5, 1.5, .1) would produce predictions for values of
-carat starting at .5, increasing to 1.5 in increments of .1. Make
-sure to press return after you finish entering the command.
-If no results are shown the command was likely invalid. Alternatively,
-specify a dataset to generate predictions. You could create this in
-Excel and use the paste feature in Data &gt; Manage to bring it into
-Radiant</code></pre>
-<pre class="r"><code>plot(result, plots = &quot;coef&quot;)</code></pre>
-<pre><code>Please select a regression plot from the drop-down menu</code></pre>
-<pre class="r"><code>plot(result, plots = &quot;dashboard&quot;)</code></pre>
-<pre><code>Please select a regression plot from the drop-down menu</code></pre>
-<p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
-<pre class="r"><code># set working directory to your Desktop
-# setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
+Nr obs: 3000
 
-# get the data from the link below and save it to your desktop
+               coefficient      2.5%     97.5%     +/-
+(Intercept)      -6780.993 -7182.855 -6379.131 401.862
+carat             8438.030  8337.834  8538.227 100.197
+clarity &gt; SI2     2790.760  2395.873  3185.646 394.886
+clarity &gt; SI1     3608.531  3215.384  4001.679 393.148
+clarity &gt; VS2     4249.906  3854.604  4645.208 395.302
+clarity &gt; VS1     4461.956  4060.801  4863.111 401.155
+clarity &gt; VVS2    5109.476  4697.311  5521.640 412.164
+clarity &gt; VVS1    5027.669  4607.574  5447.764 420.095
+clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
+<pre class="r"><code>predict(result, pred_cmd = &quot;carat = 1:10&quot;)</code></pre>
+<pre><code>Predicted values for:
+ clarity carat Prediction      2.5%     97.5%      +/-
+     SI1     1   5265.569  2859.633  7671.505 2405.936
+     SI1     2  13703.599 11294.952 16112.246 2408.647
+     SI1     3  22141.629 19726.114 24557.145 2415.515
+     SI1     4  30579.660 28153.155 33006.165 2426.505
+     SI1     5  39017.690 36576.130 41459.250 2441.560
+     SI1     6  47455.720 44995.114 49916.327 2460.607
+     SI1     7  55893.751 53410.198 58377.303 2483.552
+     SI1     8  64331.781 61821.491 66842.072 2510.291
+     SI1     9  72769.811 70229.110 75310.513 2540.701
+     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
+<pre><code>   clarity carat Prediction      2.5%     97.5%      +/-
+1      SI1     1   5265.569  2859.633  7671.505 2405.936
+2      SI1     2  13703.599 11294.952 16112.246 2408.647
+3      SI1     3  22141.629 19726.114 24557.145 2415.515
+4      SI1     4  30579.660 28153.155 33006.165 2426.505
+5      SI1     5  39017.690 36576.130 41459.250 2441.560
+6      SI1     6  47455.720 44995.114 49916.327 2460.607
+7      SI1     7  55893.751 53410.198 58377.303 2483.552
+8      SI1     8  64331.781 61821.491 66842.072 2510.291
+9      SI1     9  72769.811 70229.110 75310.513 2540.701
+10     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
+<pre class="r"><code>plot(result, plots = &quot;coef&quot;)</code></pre>
+<p><img src="programming_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" width="672" /></p>
+<pre class="r"><code>plot(result, plots = &quot;dashboard&quot;)</code></pre>
+<p><img src="programming_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" width="672" /></p>
+<p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
+<pre class="r"><code>## set working directory to your Desktop
+## setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
+
+## get the data from the link below and save it to your desktop
 browseURL(&quot;https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
 
-# load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
+## load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
 load(&quot;~/Desktop/shopping.rda&quot;) # or load(&quot;~/Documents/Desktop/shopping.rda&quot;)
 
-# load the radiant library (not needed if run in Radiant&#39;s R &gt; Code tab)
+## load the radiant library (not needed if run in Radiant&#39;s R &gt; Code tab)
 library(radiant)
 
-# start with hierarchical clustering, view help
-# run hierarchical cluster analysis on the shopping data, variables v1 through v6
-result &lt;- hier_clus(&quot;shopping&quot;, c(&quot;v1:v6&quot;))
+## start with hierarchical clustering, view help
+## run hierarchical cluster analysis on the shopping data, variables v1 through v6
+result &lt;- hier_clus(&quot;shopping&quot;, &quot;v1:v6&quot;)
 
-# summary - not much here - plots are more important
+## summary - not much here - plots are more important
 summary(result)</code></pre>
 <pre><code>Hierarchical cluster analysis
 Data        : shopping 
@@ -397,17 +423,17 @@ Variables   : v1:v6
 Method      : ward.D 
 Distance    : sq.euclidian 
 Observations: 20 </code></pre>
-<pre class="r"><code># check the help file on how to plot results from hierarchical cluster analysis
-# default plots - looks like there is a big jump in the overall within-cluster
-# heterogeneity in the step from 3 to 2 segments
+<pre class="r"><code>## check the help file on how to plot results from hierarchical cluster analysis
+## default plots - looks like there is a big jump in the overall within-cluster
+## heterogeneity in the step from 3 to 2 segments
 plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="672" /></p>
-<pre class="r"><code># show the dendrogram with cutoff at 0
+<pre class="r"><code>## show the dendrogram with cutoff at 0
 plot(result, plots = &quot;dendro&quot;, cutoff = 0.1)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-10-2.png" title="" alt="" width="672" /></p>
-<pre class="r"><code># plots created above suggest 3 clusters may be  most appropriate
-# use kmeans to create the clusters
-# generate output and save clustermembership to the datafile
+<pre class="r"><code>## plots created above suggest 3 clusters may be  most appropriate
+## use kmeans to create the clusters
+## generate output and save clustermembership to the datafile
 result &lt;- kmeans_clus(&quot;shopping&quot;, vars = &quot;v1:v6&quot;, nr_clus = 3)
 summary(result)</code></pre>
 <pre><code>K-means cluster analysis
@@ -434,9 +460,9 @@ Between cluster variance accounts for 73.93% of the
 total variance in the data (higher is better).</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-10-3.png" title="" alt="" width="672" /></p>
-<pre class="r"><code>save_membership(result)</code></pre>
-<pre><code>Dataset shopping changed in R_GlobalEnv environment</code></pre>
-<pre class="r"><code># was the data really changed?
+<pre class="r"><code>save_membership(result)
+
+# was the data really changed?
 getdata(&quot;shopping&quot;) %&gt;% head</code></pre>
 <pre><code>  id v1 v2 v3 v4 v5 v6 kclus3
 1  1  6  4  7  3  2  3      1

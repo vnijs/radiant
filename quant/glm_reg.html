@@ -199,8 +199,8 @@ img {
 <blockquote>
 <p>Estimate a Logit (Probit) model</p>
 </blockquote>
-<div id="functionality" class="section level4">
-<h4>Functionality</h4>
+<div id="functionality" class="section level3">
+<h3>Functionality</h3>
 <p>Selecting a binary dependent variable and one or more independents variables. Also specify the level of the dependent variable to use as <em>success</em> (i.e., the <code>Choose level:</code> dropdown). In the example data file <code>titanic</code>, success for the variable <code>survived</code> would be the level <code>Yes</code>.</p>
 <p>Predicting probabilities for different values of the independent variable(s) is a very common operation for GLM models. First, select the type of input for prediction using the <code>Prediction</code> radio buttons. Choose either an existing dataset for prediction (“Data”) or specify a command (“Command”) to generate the prediction inputs. If you choose to enter a command you must specify at least one variable and one value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent level will be used. It is only possible to predict outcomes based on variables used in the model (e.g., <code>age</code> must be one of the selected independent variables to predict survival probability for a 90 year old passenger).</p>
 <ul>
@@ -219,8 +219,8 @@ img {
 <li>Variables to test: We can test if two or more variables together add significantly to the fit of a model. This function can be very useful to test if the overall influence of a variable of type <code>factor</code> is significant.</li>
 </ul>
 </div>
-<div id="example" class="section level4">
-<h4>Example</h4>
+<div id="example" class="section level3">
+<h3>Example</h3>
 <p>We will use a dataset that describes the survival status of individual passengers on the Titanic. The principal source for data about Titanic passengers is the Encyclopedia Titanic. One of the original sources is Eaton &amp; Haas (1994) Titanic: Triumph and Tragedy, Patrick Stephens Ltd, which includes a passenger list created by many researchers and edited by Michael A. Findlay. Suppose we want to investigate which factors are most strongly associated with the chance of surviving the sinking of the Titanic. Lets focus on four variables in the database:</p>
 <ul>
 <li>survived = a factor with levels <code>Yes</code> and <code>No</code></li>

@@ -12,6 +12,7 @@ load(file.path(fpath,"diamonds.rda"))
 load(file.path(fpath,"salary.rda"))
 load(file.path(fpath,"../../marketing/data/shopping.rda"))
 ```
+
 Radiant's goal is to provide access to the power of R for business analytics. Although Radiant's web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown](http://rmarkdown.rstudio.com/) document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Update` button on the `R > Report` page to render the report to HTML. See <a href="/radiant/base/report.html">Report</a> page for details. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.
 
 You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.
@@ -19,7 +20,7 @@ You can also use Rstudio to render and edit Rmarkdown documents generated in Rad
 If you close Radiant using `Quit > Quit` after launching it from R(studio) you can can paste the commands below into the command console to get the same output as in the browser interface.
 
 ```{r}
-result <- single_mean("diamonds","price")
+result <- single_mean("diamonds", "price")
 summary(result)
 plot(result)
 ```
@@ -61,7 +62,7 @@ plot(result, plots = c("bar","density"))
 These datasets are available after loading the radiant library. We can also load data through Radiant's web interface and then access the data from the console after closing the app. Start radiant using the command below and then click `examples > Load examples` in the `	Data > Manage` tab. Then close the app using `Quit > Quit`.
 
 ```r
-# start radiant, load the example data, then Quit > Quit
+## start radiant, load the example data, then Quit > Quit
 radiant()
 ```
 
@@ -85,7 +86,7 @@ We can also run regressions and get output that would require writting many line
 ```{r}
 result <- regression("diamonds", "price", c("carat","clarity"))
 summary(result, sum_check = "confint")
-predict(result, predict_cmd = "carat = 1:10")
+predict(result, pred_cmd = "carat = 1:10")
 plot(result, plots = "coef")
 ```
 ```{r fig.height=8}
@@ -95,36 +96,36 @@ plot(result, plots = "dashboard")
 As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
 
 ```{r}
-# set working directory to your Desktop
-# setwd("~/Desktop") # or setwd("~/Documents/Desktop")
+## set working directory to your Desktop
+## setwd("~/Desktop") # or setwd("~/Documents/Desktop")
 
-# get the data from the link below and save it to your desktop
+## get the data from the link below and save it to your desktop
 browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
 
-# load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
+## load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
 load("~/Desktop/shopping.rda") # or load("~/Documents/Desktop/shopping.rda")
 
-# load the radiant library (not needed if run in Radiant's R > Code tab)
+## load the radiant library (not needed if run in Radiant's R > Code tab)
 library(radiant)
 
-# start with hierarchical clustering, view help
-# run hierarchical cluster analysis on the shopping data, variables v1 through v6
-result <- hier_clus("shopping", c("v1:v6"))
+## start with hierarchical clustering, view help
+## run hierarchical cluster analysis on the shopping data, variables v1 through v6
+result <- hier_clus("shopping", "v1:v6")
 
-# summary - not much here - plots are more important
+## summary - not much here - plots are more important
 summary(result)
 
-# check the help file on how to plot results from hierarchical cluster analysis
-# default plots - looks like there is a big jump in the overall within-cluster
-# heterogeneity in the step from 3 to 2 segments
+## check the help file on how to plot results from hierarchical cluster analysis
+## default plots - looks like there is a big jump in the overall within-cluster
+## heterogeneity in the step from 3 to 2 segments
 plot(result)
 
-# show the dendrogram with cutoff at 0
+## show the dendrogram with cutoff at 0
 plot(result, plots = "dendro", cutoff = 0.1)
 
-# plots created above suggest 3 clusters may be  most appropriate
-# use kmeans to create the clusters
-# generate output and save clustermembership to the datafile
+## plots created above suggest 3 clusters may be  most appropriate
+## use kmeans to create the clusters
+## generate output and save clustermembership to the datafile
 result <- kmeans_clus("shopping", vars = "v1:v6", nr_clus = 3)
 summary(result)
 plot(result)
