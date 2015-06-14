@@ -1,0 +1,136 @@
+```{r echo = FALSE}
+knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
+suppressMessages(library(radiant))
+# uncomment the lines above to 'knit' the Rmd file in Rstudio
+# you will also need to load the data using load()
+load("~/gh/radiant/tests/rmarkdown/testing_state.rda")
+```
+
+```{r fig.width=6.46, fig.height=8.4}
+visualize(dataset = "diamonds", xvar = "carat", yvar = "price", type = "scatter",
+          color = "clarity", check = c("line", "loess"), axes = c("log_x", "log_y"))
+
+
+```{r}
+result <- sampling(dataset = "rndnames", var = "Names", sample_size = 6)
+summary(result)
+```
+
+```{r}
+result <- sample_size()
+summary(result)
+```
+
+```{r fig.width=7, fig.height=8.62}
+result <- single_mean(dataset = "demand_uk", var = "demand_uk", comp_value = 1750)
+summary(result)
+plot(result, plots = c("hist", "simulate"))
+```
+
+```{r fig.width=7, fig.height=12.92}
+result <- compare_means(dataset = "diamonds", var1 = "cut", var2 = "price", adjust = "bonf")
+summary(result)
+plot(result, plots = c("bar", "box", "density"))
+```
+
+```{r fig.width=7, fig.height=8.62}
+result <- single_prop(dataset = "diamonds", var = "clarity", lev = "I1", comp_value = 0.05)
+summary(result)
+plot(result, plots = c("hist", "simulate"))
+```
+
+```{r fig.width=7, fig.height=8.62}
+result <- compare_props(dataset = "titanic", var1 = "pclass", var2 = "survived", lev = "Yes")
+summary(result)
+plot(result, plots = c("props", "counts"))
+```
+
+```{r fig.width=7, fig.height=21.54}
+result <- cross_tabs(dataset = "titanic", var1 = "pclass", var2 = "survived")
+summary(result, check = c("observed", "expected", "chi_sq", "dev_std", "dev_perc"))
+plot(result, check = c("observed", "expected", "chi_sq", "dev_std", "dev_perc"))
+```
+
+```{r fig.width=9.15, fig.height=9.15}
+result <- correlation(dataset = "titanic", var = c("pclass", "survived", "sex", "age", "sibsp", "parch"))
+summary(result, cutoff = .3)
+plot(result)
+```
+
+```{r fig.width=7, fig.height=8.08}
+result <- regression(dataset = "diamonds", dep_var = "price", indep_var = c("carat", "clarity"))
+summary(result, sum_check = c("rmse", "confint"), conf_lev = 0.99)
+save_reg_resid(result)
+plot(result, plots = "dashboard", lines = "line", conf_lev = 0.99)
+pred <- predict(result, pred_data = "diamonds", conf_lev = 0.99)
+print(pred)
+write.csv(pred, file = '~/reg_sav_pred.csv', row.names = FALSE)
+```
+
+```{r fig.width=7, fig.height=4.74}
+result <- glm_reg(dataset = "titanic", dep_var = "survived", indep_var = c("pclass", "sex", "age"),
+                  lev = "Yes", int_var = "pclass:sex")
+summary(result, sum_check = "vif", test_var = "sex")
+# save_glm_resid(result)
+plot(result, plots = "coef")
+pred <- predict(result, pred_cmd = "pclass = levels(pclass), sex = levels(sex), age = seq(0, 100, 20)")
+plot(pred, xvar = "age", facet_col = "pclass", color = "sex")
+write.csv(pred, file = '~/glm_sav_pred.csv', row.names = FALSE)
+```
+
+```{r fig.width=7, fig.height=21}
+result <- mds(dataset = "tpbrands", id1 = "id1", id2 = "id2", dis = "dissimilarity",
+              method = "non-metric", nr_dim = "3")
+summary(result)
+plot(result, rev_dim = c("2", "3"))
+```
+
+```{r fig.width=7, fig.height=21}
+result <- pmap(dataset = "computer", brand = "brand", attr = c("high_end", "stylish", "modern", "value", "dated", "innovative", "business"), nr_dim = "3")
+summary(result)
+plot(result, plots = c("brand", "attr"))
+# save_factors(result)
+```
+
+```{r fig.width=7, fig.height=7}
+result <- pre_factor(dataset = "toothpaste", vars = "v1:v6")
+summary(result)
+plot(result)
+```
+
+```{r fig.width=3.77, fig.height=3.77}
+result <- full_factor(dataset = "toothpaste", vars = "v1:v6")
+summary(result, cutoff = 0.2, fsort = TRUE)
+plot(result)
+save_factors(result)
+```
+
+```{r fig.width=7, fig.height=12.92}
+result <- hier_clus(dataset = "toothpaste", vars = "v1:v6")
+summary(result)
+plot(result, plots = c("scree", "diff", "dendro"))
+```
+
+```{r fig.width=8.08, fig.height=9.69}
+result <- kmeans_clus(dataset = "toothpaste", vars = "v1:v6", nr_clus = 3)
+summary(result)
+plot(result)
+save_membership(result)
+write.csv(result$clus_means, file = '~/kmeans.csv')
+```
+
+```{r}
+## should work inside Radiant
+result <- conjoint_profiles(dataset = "cap_attr")
+summary(result)
+write.csv(result$frac, file = '~/conjoint_profiles.csv', row.names = FALSE)
+```
+
+```{r fig.width=7, fig.height=10.5}
+result <- conjoint(dataset = "mp3", dep_var = "Rating",
+                   indep_var = c("Memory", "Radio", "Size", "Price", "Shape"))
+summary(result, mc_diag = TRUE)
+plot(result, plots = "pw", scale_plot = TRUE)
+```
+
+

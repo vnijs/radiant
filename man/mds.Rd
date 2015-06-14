@@ -32,9 +32,9 @@ A list of all variables defined in the function as an object of class mds
 See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Radiant
 }
 \examples{
-result <- mds("city","from","to","distance")
+result <- mds("city", "from", "to", "distance")
 summary(result)
-result <- mds("diamonds","clarity","cut","price")
+result <- mds("diamonds", "clarity", "cut", "price")
 summary(result)
 }
 \seealso{

@@ -46,7 +46,7 @@ pmap <- function(dataset, brand, attr,
 	rownames(fres$scores) <- brands
 
 	if (!is.null(pref) && pref != "") {
-		pref_cor <- getdata(dataset, pref, filt = data_filter) %>%
+		pref_cor <- sshhr(getdata(dataset, pref, filt = data_filter)) %>%
 								  cor(fres$scores) %>%
 								  data.frame
 		pref_cor$communalities <- rowSums(pref_cor^2)

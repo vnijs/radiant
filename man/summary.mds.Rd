@@ -20,10 +20,10 @@ Summary method for the mds function
 See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Radiant
 }
 \examples{
-result <- mds("city","from","to","distance")
+result <- mds("city", "from", "to", "distance")
 summary(result)
 summary(result, dec = 2)
-city \%>\% mds("from", "to","distance") \%>\% summary
+city \%>\% mds("from", "to", "distance") \%>\% summary
 }
 \seealso{
 \code{\link{mds}} to calculate results
