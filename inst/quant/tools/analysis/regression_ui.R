@@ -17,52 +17,53 @@ reg_plots <- c("None" = "", "Histograms" = "hist",
 
 reg_args <- as.list(formals(regression))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 reg_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(reg_args))
-    reg_args[[i]] <- input[[i]]
-  if (!input$show_filter) reg_args$data_filter <- ""
+  ## loop needed because reactive values don't allow single bracket indexing
+  reg_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  reg_args$dataset <- input$dataset
+  for (i in r_drop(names(reg_args)))
+    reg_args[[i]] <- input[[paste0("reg_",i)]]
   reg_args
 })
 
 reg_sum_args <- as.list(if (exists("summary.regression")) formals(summary.regression)
                         else formals(radiant:::summary.regression))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 reg_sum_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(reg_sum_args))
-    reg_sum_args[[i]] <- input[[i]]
+    reg_sum_args[[i]] <- input[[paste0("reg_",i)]]
   reg_sum_args
 })
 
 reg_plot_args <- as.list(if (exists("plot.regression")) formals(plot.regression)
                          else formals(radiant:::plot.regression))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 reg_plot_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(reg_plot_args))
-    reg_plot_args[[i]] <- input[[i]]
+    reg_plot_args[[i]] <- input[[paste0("reg_",i)]]
   reg_plot_args
 })
 
 reg_pred_args <- as.list(if (exists("predict.regression")) formals(predict.regression)
                          else formals(radiant:::predict.regression))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 reg_pred_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(reg_pred_args))
-    reg_pred_args[[i]] <- input[[i]]
+    reg_pred_args[[i]] <- input[[paste0("glm_",i)]]
 
-  reg_pred_args$reg_predict_cmd <- reg_pred_args$reg_predict_data <- ""
+  reg_pred_args$pred_cmd <- reg_pred_args$pred_data <- ""
   if (input$reg_predict == "cmd")
-    reg_pred_args$reg_predict_cmd <- gsub("\\s", "", input$reg_predict_cmd)
+    reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd)
 
   if (input$reg_predict == "data")
-    reg_pred_args$reg_predict_data <- input$reg_predict_data
+    reg_pred_args$pred_data <- input$reg_pred_data
 
   reg_pred_args
 })
@@ -70,11 +71,11 @@ reg_pred_inputs <- reactive({
 reg_pred_plot_args <- as.list(if (exists("plot.reg_predict")) formals(plot.reg_predict)
                          else formals(radiant:::plot.reg_predict))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 reg_pred_plot_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(reg_pred_plot_args))
-    reg_pred_plot_args[[i]] <- input[[i]]
+    reg_pred_plot_args[[i]] <- input[[paste0("reg_",i)]]
   reg_pred_plot_args
 })
 
@@ -172,13 +173,13 @@ output$ui_regression <- renderUI({
         radioButtons(inputId = "reg_predict", label = "Prediction:", reg_predict,
           selected = state_init("reg_predict", ""), inline = TRUE),
         conditionalPanel(condition = "input.reg_predict == 'cmd'",
-          returnTextAreaInput("reg_predict_cmd", "Prediction command:",
-            value = state_init("reg_predict_cmd", ""))
+          returnTextAreaInput("reg_pred_cmd", "Prediction command:",
+            value = state_init("reg_pred_cmd", ""))
         ),
         conditionalPanel(condition = "input.reg_predict == 'data'",
-          selectizeInput(inputId = "reg_predict_data", label = "Predict for profiles:",
+          selectizeInput(inputId = "reg_pred_data", label = "Predict for profiles:",
                       choices = c("None" = "",r_data$datasetlist),
-                      selected = state_init("reg_predict_data", ""), multiple = FALSE)
+                      selected = state_init("reg_pred_data", ""), multiple = FALSE)
         ),
         conditionalPanel(condition = "input.reg_predict != ''",
           uiOutput("ui_reg_xvar"),
@@ -225,8 +226,8 @@ output$ui_regression <- renderUI({
                          input.reg_predict == 'data' |
   	                     (input.reg_sum_check && input.reg_sum_check.indexOf('confint') >= 0) |
   	                     input.reg_plots == 'coef'",
-   					 sliderInput("reg_conf_level", "Adjust confidence level:", min = 0.70,
-   					             max = 0.99, value = state_init("reg_conf_level",.95),
+   					 sliderInput("reg_conf_lev", "Adjust confidence level:", min = 0.70,
+   					             max = 0.99, value = state_init("reg_conf_lev",.95),
    					             step = 0.01)
   		  ),
         conditionalPanel(condition = "input.tabs_regression == 'Summary'",
@@ -357,7 +358,6 @@ output$regression <- renderUI({
 observe({
   if (not_pressed(input$regression_report)) return()
   isolate({
-    # outputs <- c("summary")
     outputs <- c("summary","# save_reg_resid")
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
@@ -369,7 +369,6 @@ observe({
     }
     xcmd <- ""
     if (!is.null(r_data$reg_pred)) {
-    # if (!is_empty(input$reg_predict)) {
       inp_out[[3 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
       xcmd <- paste0("# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
@@ -380,10 +379,8 @@ observe({
       }
     }
     update_report(inp_main = clean_args(reg_inputs(), reg_args),
-                  fun_name = "regression",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
+                  fun_name = "regression", inp_out = inp_out,
+                  outputs = outputs, figs = figs,
                   fig.width = round(7 * reg_plot_width()/650,2),
                   fig.height = round(7 * reg_plot_height()/650,2),
                   xcmd = xcmd)

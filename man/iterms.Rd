@@ -20,8 +20,8 @@ Character vector of interaction term labels
 Create a vector of interaction terms
 }
 \examples{
-paste0("var",1:3) \%>\% iterms(2)
-paste0("var",1:3) \%>\% iterms(3)
-paste0("var",1:3) \%>\% iterms(2, sep = ".")
+paste0("var", 1:3) \%>\% iterms(2)
+paste0("var", 1:3) \%>\% iterms(3)
+paste0("var", 1:3) \%>\% iterms(2, sep = ".")
 }
 

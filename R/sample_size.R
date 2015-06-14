@@ -5,47 +5,47 @@
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/sample_size.html} for an example in Radiant
 #'
-#' @param ss_type Choose "mean" or "proportion"
-#' @param ss_mean_err Acceptable Error for Mean
-#' @param ss_mean_s Standard deviation for Mean
-#' @param ss_prop_err Acceptable Error for Proportion
-#' @param ss_prop_p Initial proportion estimate for Proportion
-#' @param ss_z Z-value
-#' @param ss_incidence Incidence rate (i.e., fraction of valid respondents)
-#' @param ss_response Response rate
-#' @param ss_pop_correction Apply correction for population size ("yes","no")
-#' @param ss_pop_size Population size
+#' @param type Choose "mean" or "proportion"
+#' @param err_mean Acceptable Error for Mean
+#' @param sd_mean Standard deviation for Mean
+#' @param err_prop Acceptable Error for Proportion
+#' @param p_prop Initial proportion estimate for Proportion
+#' @param zval Z-value
+#' @param incidence Incidence rate (i.e., fraction of valid respondents)
+#' @param response Response rate
+#' @param pop_correction Apply correction for population size ("yes","no")
+#' @param pop_size Population size
 #'
 #' @return A list of variables defined in sample_size as an object of class sample_size
 #'
 #' @examples
-#' result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
+#' result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 #'
 #' @seealso \code{\link{summary.sample_size}} to summarize results
 #' @export
-sample_size <- function(ss_type = "mean",
-                        ss_mean_err = 2,
-                        ss_mean_s = 10,
-                        ss_prop_err = .1,
-                        ss_prop_p = .5,
-                        ss_z = 1.96,
-                        ss_incidence = 1,
-                        ss_response = 1,
-                        ss_pop_correction = "no",
-                        ss_pop_size = 1000000) {
+sample_size <- function(type = "mean",
+                        err_mean = 2,
+                        sd_mean = 10,
+                        err_prop = .1,
+                        p_prop = .5,
+                        zval = 1.96,
+                        incidence = 1,
+                        response = 1,
+                        pop_correction = "no",
+                        pop_size = 1000000) {
 
-	if (ss_type == 'mean') {
-		if (is.na(ss_mean_err)) return("Please select an error value greater 0.")
+	if (type == 'mean') {
+		if (is.na(err_mean)) return("Please select an error value greater 0.")
 
-		n <- (ss_z^2 * ss_mean_s^2) / ss_mean_err^2
+		n <- (zval^2 * sd_mean^2) / err_mean^2
 	} else {
 
-		if (is.na(ss_prop_err)) return("Please select an error value greater 0.")
-		n <- (ss_z^2 * ss_prop_p * (1 - ss_prop_p)) / ss_prop_err^2
+		if (is.na(err_prop)) return("Please select an error value greater 0.")
+		n <- (zval^2 * p_prop * (1 - p_prop)) / err_prop^2
 	}
 
-	if (ss_pop_correction == 'yes')
-		n <- n * ss_pop_size / ((n - 1) + ss_pop_size)
+	if (pop_correction == 'yes')
+		n <- n * pop_size / ((n - 1) + pop_size)
 
 	n <- ceiling(n)
 
@@ -60,7 +60,7 @@ sample_size <- function(ss_type = "mean",
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
+#' result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 #' summary(result)
 #'
 #' @seealso \code{\link{sample_size}} to generate the results
@@ -69,31 +69,31 @@ sample_size <- function(ss_type = "mean",
 summary.sample_size <- function(object, ...) {
 	cat("Sample size calculation\n")
 
-	if (object$ss_type == "mean") {
+	if (object$type == "mean") {
 	  cat("Calculation type     : Mean\n")
-		cat("Acceptable Error     :", object$ss_mean_err, "\n")
-		cat("Sample std. deviation:", object$ss_mean_s, "\n")
+		cat("Acceptable Error     :", object$err_mean, "\n")
+		cat("Sample std. deviation:", object$sd_mean, "\n")
 	} else {
 	  cat("Type: Proportion\n")
-		cat("Acceptable Error     :", object$ss_prop_err, "\n")
-		cat("Sample proportion    :", object$ss_prop_p, "\n")
+		cat("Acceptable Error     :", object$err_prop, "\n")
+		cat("Sample proportion    :", object$p_prop, "\n")
 	}
 
-	cat("Confidence level     :", object$ss_z, "\n")
-	cat("Incidence rate       :", object$ss_incidence, "\n")
-	cat("Response rate        :", object$ss_response, "\n")
+	cat("Confidence level     :", object$zval, "\n")
+	cat("Incidence rate       :", object$incidence, "\n")
+	cat("Response rate        :", object$response, "\n")
 
-	if (object$ss_pop_correction == "no") {
+	if (object$pop_correction == "no") {
 		cat("Population correction: None\n")
 	} else {
 		cat("Population correction: Yes\n")
-		cat("Population size      :", format(object$ss_pop_size, big.mark = ",",
+		cat("Population size      :", format(object$pop_size, big.mark = ",",
 		    																 scientific = FALSE), "\n")
 	}
 
 	cat("\nRequired sample size     :", format(object$n, big.mark = ",",
 	    																			 scientific = FALSE))
-	cat("\nRequired contact attempts:", format(ceiling(object$n / object$ss_incidence / object$ss_response),
+	cat("\nRequired contact attempts:", format(ceiling(object$n / object$incidence / object$response),
 	    																			 big.mark = ",", scientific = FALSE))
 	cat("\n\nChoose a Z-value:\n")
 

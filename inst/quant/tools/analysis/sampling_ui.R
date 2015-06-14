@@ -2,15 +2,16 @@
 # Sampling
 ###############################
 
-# list of function arguments
+## list of function arguments
 smp_args <- as.list(formals(sampling))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 smp_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(smp_args))
-    smp_args[[i]] <- input[[i]]
-  if (!input$show_filter) smp_args$data_filter = ""
+  ## loop needed because reactive values don't allow single bracket indexing
+  smp_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  smp_args$dataset <- input$dataset
+  for (i in r_drop(names(smp_args)))
+    smp_args[[i]] <- input[[paste0("smp_",i)]]
   smp_args
 })
 
@@ -37,7 +38,7 @@ output$sampling <- renderUI({
 
     register_print_output("summary_sampling", ".summary_sampling")
 
-    # one output with components stacked
+    ## one output with components stacked
     smp_output_panels <- tagList(
        tabPanel("Summary", verbatimTextOutput("summary_sampling"))
     )
@@ -61,7 +62,7 @@ output$sampling <- renderUI({
   if (is.na(input$smp_sample_size)) return("Please select a sample size of 1 or greater.")
   if (has_duplicates(getdata(input$dataset, vars = input$smp_var))) return(rt)
 
-  summary(.sampling())
+  summary(.sampling(), print_sf = TRUE)
 })
 
 observe({

@@ -4,7 +4,7 @@
 \alias{clean_loadings}
 \title{Sort and clean loadings}
 \usage{
-clean_loadings(floadings, cutoff = 0, fsort = FALSE, fround = 8)
+clean_loadings(floadings, cutoff = 0, fsort = FALSE, dec = 8)
 }
 \arguments{
 \item{floadings}{Data frame with loadings}
@@ -13,7 +13,7 @@ clean_loadings(floadings, cutoff = 0, fsort = FALSE, fround = 8)
 
 \item{fsort}{Sort factor loadings}
 
-\item{fround}{Number of digits to show}
+\item{dec}{Number of decimals to show}
 }
 \description{
 Sort and clean loadings

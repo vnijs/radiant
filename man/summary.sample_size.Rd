@@ -18,7 +18,7 @@ Summary method for the sample_size function
 See \url{http://vnijs.github.io/radiant/quant/sample_size} for an example in Radiant
 }
 \examples{
-result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
+result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 summary(result)
 }
 \seealso{

@@ -141,15 +141,15 @@ changedata <- function(dataset,
                        var_names = names(vars)) {
 
   if (exists("r_env")) {
-    cat("Dataset", dataset, "changed in r_env\n")
+    message("Dataset ", dataset, " changed in r_env\n")
     r_env$r_data[[dataset]][,var_names] <- vars
   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
-    if (exists("r_local")) { if (r_local) cat("Dataset", dataset, "changed in r_data list\n") }
+    if (exists("r_local")) { if (r_local) message("Dataset ", dataset, " changed in r_data list\n") }
     d_env <- pryr::where("r_data")
     d_env$r_data[[dataset]][,var_names] <- vars
   } else if (exists(dataset)) {
     d_env <- pryr::where(dataset)
-    cat("Dataset", dataset, "changed in", environmentName(d_env), "environment\n")
+    message("Dataset ", dataset, " changed in ", environmentName(d_env), " environment\n")
     d_env[[dataset]][,var_names] <- vars
   } else {
     paste0("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
@@ -183,7 +183,7 @@ changedata <- function(dataset,
 #' @export
 viewdata <- function(dataset, vars = "", filt = "") {
 
-  # based on http://rstudio.github.io/DT/server.html
+  ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
 
@@ -293,7 +293,7 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   if (!interactive()) stop("This function can only be used in an interactive R session")
 
   if (Sys.info()["sysname"] != "Windows")
-    return(cat("This function is for Windows only. For Mac use the mac_launcher() function"))
+    return(message("This function is for Windows only. For Mac use the mac_launcher() function"))
 
   answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
@@ -307,12 +307,12 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
     cat(launch_string, file=filename, sep="\n")
 
     if (file.exists(filename))
-      cat("Done! Look for a file named radiant.bat on your desktop. Double-click it to start Radiant in your default browser.\n")
+      message("Done! Look for a file named radiant.bat on your desktop. Double-click it to start Radiant in your default browser.\n")
     else
-      cat("Something went wrong. No shortcut was created.")
+      message("Something went wrong. No shortcut was created.")
 
   } else {
-    cat("No shortcut was created.\n")
+    message("No shortcut was created.\n")
   }
 }
 
@@ -325,9 +325,9 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 #' @return Character vector of interaction term labels
 #'
 #' @examples
-#' paste0("var",1:3) %>% iterms(2)
-#' paste0("var",1:3) %>% iterms(3)
-#' paste0("var",1:3) %>% iterms(2, sep = ".")
+#' paste0("var", 1:3) %>% iterms(2)
+#' paste0("var", 1:3) %>% iterms(3)
+#' paste0("var", 1:3) %>% iterms(2, sep = ".")
 #'
 #' @export
 iterms <- function(vars, nway, sep = ":") {
@@ -362,7 +362,7 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
   if (!interactive()) stop("This function can only be used in an interactive R session")
 
   if (Sys.info()["sysname"] != "Darwin")
-    return(cat("This function is for Mac only. For windows use the win_launcher() function"))
+    return(message("This function is for Mac only. For windows use the win_launcher() function"))
 
   answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
@@ -376,12 +376,12 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
     Sys.chmod(filename, mode = "0755")
 
     if (file.exists(filename))
-      cat("Done! Look for a file named radiant.command on your desktop. Double-click it to start Radiant in your default browser.\n")
+      message("Done! Look for a file named radiant.command on your desktop. Double-click it to start Radiant in your default browser.\n")
     else
-      cat("Something went wrong. No shortcut was created.")
+      message("Something went wrong. No shortcut was created.")
 
   } else {
-    cat("No shortcut was created.\n")
+    message("No shortcut was created.\n")
   }
 }
 
@@ -409,7 +409,7 @@ lin_launcher <- function(app = c("marketing", "quant", "base")) {
   if (!interactive()) stop("This function can only be used in an interactive R session")
 
   if (Sys.info()["sysname"] != "Linux")
-    return(cat("This function is for Linux only. For windows use the win_launcher() function and for mac use the mac_launcher() function"))
+    return(message("This function is for Linux only. For windows use the win_launcher() function and for mac use the mac_launcher() function"))
 
   answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
@@ -423,12 +423,12 @@ lin_launcher <- function(app = c("marketing", "quant", "base")) {
     Sys.chmod(filename, mode = "0755")
 
     if (file.exists(filename))
-      cat("Done! Look for a file named radiant.sh on your desktop. Double-click it to start Radiant in your default browser.\n")
+      message("Done! Look for a file named radiant.sh on your desktop. Double-click it to start Radiant in your default browser.\n")
     else
-      cat("Something went wrong. No shortcut was created.")
+      message("Something went wrong. No shortcut was created.")
 
   } else {
-    cat("No shortcut was created.\n")
+    message("No shortcut was created.\n")
   }
 }
 
@@ -452,7 +452,7 @@ launcher <- function(app = c("marketing", "quant", "base")) {
   else if (Sys.info()["sysname"] == "Linux")
     lin_launcher(app[1])
   else
-    return(cat("This function is not available for your platform."))
+    return(message("This function is not available for your platform."))
 }
 
 #' Source for package functions
@@ -549,7 +549,7 @@ copy_all <- function(.from) {
 #'
 #' @export
 state_init <- function(inputvar, init = "") {
-  if (!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
 }
 
@@ -579,7 +579,7 @@ state_init <- function(inputvar, init = "") {
 #'
 #' @export
 state_single <- function(inputvar, vals, init = character(0)) {
-  if (!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   r_state %>% { if (is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
 }
 
@@ -611,7 +611,7 @@ state_single <- function(inputvar, vals, init = character(0)) {
 #'
 #' @export
 state_multiple <- function(inputvar, vals, init = character(0)) {
-  if (!exists("r_state")) stop(cat("Make sure to use copy_from inside shinyServer for the state_* functions"))
+  if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   r_state %>%
     { if (is.null(.[[inputvar]]))
         # "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)

@@ -4,14 +4,14 @@
 \alias{cross_tabs}
 \title{Evaluate associations between categorical variables}
 \usage{
-cross_tabs(dataset, ct_var1, ct_var2, data_filter = "")
+cross_tabs(dataset, var1, var2, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{ct_var1}{A categorical variable}
+\item{var1}{A categorical variable}
 
-\item{ct_var2}{Another categorical variable}
+\item{var2}{Another categorical variable}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

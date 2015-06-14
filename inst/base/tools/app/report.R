@@ -28,28 +28,24 @@ By clicking the update button, the output from the analysis will be recreated. Y
 Below is some code created in Radiant that will generate regression outputfor the _diamonds_ data. These are histograms and a scatterplot / heatmap of the price of diamonds versus carats. The colors in the plot reflect the clarity of the diamond.
 
 ```{r fig.width=7, fig.height=4}
-result <- regression(dataset = 'diamonds', reg_dep_var = 'price',
-                     reg_indep_var = 'carat')
+result <- regression(dataset = 'diamonds', dep_var = 'price',
+                     indep_var = 'carat')
 summary(result)
-plot(result, reg_plots = 'hist')
+plot(result, plots = 'hist')
 ```
 
 ```{r fig.width=7, fig.height=7}
-visualize(dataset = 'diamonds', viz_xvar = 'carat', viz_yvar = 'price',
-          viz_type = 'scatter', viz_color = 'clarity')
+visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
+          type = 'scatter', color = 'clarity')
 ```
 "
-
-# observeEvent(input$manual_paste, {
-#   isolate(r_data$manual <- r_data$manual == FALSE)
-# })
 
 observeEvent(input$manual_paste, {
   isolate(r_data$manual %<>% {. == FALSE})
 })
 
 output$ui_manual <- renderUI({
-  # initialize manual cmd paste to false
+  ## initialize manual cmd paste to false
   if(is.null(r_data$manual)) r_data$manual <- FALSE
   actionButton("manual_paste",
     if(r_data$manual) "Manual paste (on)" else "Manual paste (off)")
@@ -112,7 +108,6 @@ output$rmd_knitted <- renderUI({
     }
     if (input$rmd_report != "") {
       withProgress(message = 'Knitting report', value = 0, {
-        # return(knitIt2(input$rmd_report))
         ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
                return(knitIt2(input$rmd_report)),
                return(knitIt2(input$rmd_selection)))
@@ -126,7 +121,6 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if (r_local) {
       isolate({
-        # text <- input$rmd_report
         ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
                text <- input$rmd_report, text <- input$rmd_selection)
         knitIt(text) %>% cat(.,file=file,sep="\n")
@@ -146,7 +140,7 @@ output$saveRmd <- downloadHandler(
 )
 
 observe({
-  # loading rmd report from disk
+  ## loading rmd report from disk
   inFile <- input$load_rmd
   if (!is.null(inFile) && !is.na(inFile)) {
     isolate({
@@ -156,7 +150,7 @@ observe({
   }
 })
 
-# updating the report when called
+## updating the report when called
 update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
                           pre_cmd = "result <- ", post_cmd = "", xcmd = "",
                           outputs = c("summary", "plot"),
@@ -164,7 +158,6 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
 
   cmd <- ""
   if (inp_main[1] != "") {
-    # cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
     cmd <- deparse(inp_main, control = c("keepNA"), width.cutoff = 500L) %>%
              paste(collapse="") %>%
              sub("list", fun_name, .) %>%
@@ -223,6 +216,6 @@ update_report_fun <- function(cmd) {
     }
   }
 
-  # move to the report panel
+  ## move to the report panel so see the commands created
   updateTabsetPanel(session, "nav_radiant", selected = "Report")
 }

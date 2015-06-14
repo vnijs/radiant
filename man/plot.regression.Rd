@@ -4,19 +4,19 @@
 \alias{plot.regression}
 \title{Plot method for the regression function}
 \usage{
-\method{plot}{regression}(x, reg_plots = "", reg_lines = "",
-  reg_conf_level = 0.95, reg_coef_int = FALSE, shiny = FALSE, ...)
+\method{plot}{regression}(x, plots = "", lines = "", conf_lev = 0.95,
+  intercept = FALSE, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{regression}}}
 
-\item{reg_plots}{Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable}
+\item{plots}{Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable}
 
-\item{reg_lines}{Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")}
+\item{lines}{Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")}
 
-\item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
+\item{conf_lev}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
-\item{reg_coef_int}{Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default}
+\item{intercept}{Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -30,15 +30,15 @@ See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in
 }
 \examples{
 result <- regression("diamonds", "price", c("carat","clarity"))
-plot(result, reg_plots = "dashboard")
-plot(result, reg_plots = "dashboard", reg_lines = c("line","loess"))
-plot(result, reg_plots = "coef", reg_coef_int = TRUE)
-plot(result, reg_plots = "coef", reg_conf_level = .99, reg_coef_int = TRUE)
-plot(result, reg_plots = "hist")
-plot(result, reg_plots = "scatter", reg_lines = c("line","loess"))
-plot(result, reg_plots = "correlations")
-plot(result, reg_plots = "leverage")
-plot(result, reg_plots = "resid_pred", reg_lines = "line")
+plot(result, plots = "dashboard")
+plot(result, plots = "dashboard", lines = c("line","loess"))
+plot(result, plots = "coef", intercept = TRUE)
+plot(result, plots = "coef", conf_lev = .99, intercept = TRUE)
+plot(result, plots = "hist")
+plot(result, plots = "scatter", lines = c("line","loess"))
+plot(result, plots = "correlations")
+plot(result, plots = "leverage")
+plot(result, plots = "resid_pred", lines = "line")
 }
 \seealso{
 \code{\link{regression}} to generate the results

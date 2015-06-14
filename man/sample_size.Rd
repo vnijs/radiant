@@ -4,30 +4,30 @@
 \alias{sample_size}
 \title{Sample size calculation}
 \usage{
-sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10,
-  ss_prop_err = 0.1, ss_prop_p = 0.5, ss_z = 1.96, ss_incidence = 1,
-  ss_response = 1, ss_pop_correction = "no", ss_pop_size = 1000000)
+sample_size(type = "mean", err_mean = 2, sd_mean = 10, err_prop = 0.1,
+  p_prop = 0.5, zval = 1.96, incidence = 1, response = 1,
+  pop_correction = "no", pop_size = 1000000)
 }
 \arguments{
-\item{ss_type}{Choose "mean" or "proportion"}
+\item{type}{Choose "mean" or "proportion"}
 
-\item{ss_mean_err}{Acceptable Error for Mean}
+\item{err_mean}{Acceptable Error for Mean}
 
-\item{ss_mean_s}{Standard deviation for Mean}
+\item{sd_mean}{Standard deviation for Mean}
 
-\item{ss_prop_err}{Acceptable Error for Proportion}
+\item{err_prop}{Acceptable Error for Proportion}
 
-\item{ss_prop_p}{Initial proportion estimate for Proportion}
+\item{p_prop}{Initial proportion estimate for Proportion}
 
-\item{ss_z}{Z-value}
+\item{zval}{Z-value}
 
-\item{ss_incidence}{Incidence rate (i.e., fraction of valid respondents)}
+\item{incidence}{Incidence rate (i.e., fraction of valid respondents)}
 
-\item{ss_response}{Response rate}
+\item{response}{Response rate}
 
-\item{ss_pop_correction}{Apply correction for population size ("yes","no")}
+\item{pop_correction}{Apply correction for population size ("yes","no")}
 
-\item{ss_pop_size}{Population size}
+\item{pop_size}{Population size}
 }
 \value{
 A list of variables defined in sample_size as an object of class sample_size
@@ -39,7 +39,7 @@ Sample size calculation
 See \url{http://vnijs.github.io/radiant/quant/sample_size.html} for an example in Radiant
 }
 \examples{
-result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
+result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 }
 \seealso{
 \code{\link{summary.sample_size}} to summarize results

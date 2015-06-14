@@ -2,7 +2,7 @@
 
 The compare proportions test is used to evaluate if the frequency of occurrence of some event, behavior, intention, etc. differs across groups. We can perform either a one-tailed test (i.e., less-than or greater-than) or two-tailed test (see `Alternative hypothesis`). A one-tailed test is useful if we want to evaluate if the available data suggest that, for example, the proportion of dropped calls is larger (or smaller) for one wireless provider compared to others.
 
-#### Example
+### Example
 
 We will use a dataset that describes the survival status of individual passengers on the Titanic. The principal source for data about Titanic passengers is the Encyclopedia Titanic. One of the original sources is Eaton & Haas (1994) Titanic: Triumph and Tragedy, Patrick Stephens Ltd, which includes a passenger list created by many researchers and edited by Michael A. Findlay. Lets focus on two variables in the database:
 

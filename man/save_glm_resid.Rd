@@ -17,7 +17,7 @@ See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Ra
 }
 \examples{
 \donttest{
-result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
+result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
 save_glm_resid(result)
 head(titanic)
 }

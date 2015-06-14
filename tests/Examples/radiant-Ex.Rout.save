@@ -53,57 +53,6 @@ The following object is masked from ‘package:ggplot2’:
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
-> nameEx("ca_the_table")
-> ### * ca_the_table
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: ca_the_table
-> ### Title: Function to calculate the PW and IW table for conjoint
-> ### Aliases: ca_the_table
-> 
-> ### ** Examples
-> 
-> result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-> ca_the_table(result$model, result$dat, result$ca_indep_var)
-$PW
-                   Attributes      Levels      PW
-Memory4GB              Memory         4GB   0.000
-Memory6GB              Memory         6GB   7.667
-Memory8GB              Memory         8GB  29.667
-RadioNo                 Radio          No   0.000
-RadioYes                Radio         Yes   6.111
-SizeLarge                Size       Large   0.000
-SizeMedium               Size      Medium   6.333
-SizeSmall                Size       Small   8.500
-Price$50                Price         $50   0.000
-Price$100               Price        $100  -6.833
-Price$150               Price        $150 -33.833
-ShapeCircular           Shape    Circular   0.000
-ShapeRectangular        Shape Rectangular -27.833
-ShapeSquare             Shape      Square -13.333
-15               Base utility           ~  58.111
-
-$IW
-  Attributes    IW
-1     Memory 0.280
-2      Radio 0.058
-3       Size 0.080
-4      Price 0.319
-5      Shape 0.263
-
-$plot_ylim
-             Min      Max
-Memory   0.00000 34.17167
-Radio    0.00000 34.17167
-Size     0.00000 34.17167
-Price  -34.17167  0.00000
-Shape  -34.17167  0.00000
-
-> 
-> 
-> 
-> cleanEx()
 > nameEx("changedata")
 > ### * changedata
 > 
@@ -131,7 +80,7 @@ Shape  -34.17167  0.00000
 > ### ** Examples
 > 
 > result <- full_factor("diamonds",c("price","carat","table","x","y"))
-> clean_loadings(result$ff_loadings, TRUE, .5, 2)
+> clean_loadings(result$floadings, TRUE, .5, 2)
       PC1 PC2
 carat        
 y            
@@ -159,25 +108,25 @@ table
 2    1st      Yes         Bonnell, Miss. Caroline female  30     0     0  36928 164.8667      C7 Southampton
 3    1st      Yes            Cherry, Miss. Gladys female  30     0     0 110152  86.5000     B77 Southampton
 4    1st       No Foreman, Mr. Benjamin Laventall   male  30     0     0 113051  27.7500    C111   Cherbourg
-5    1st       No      Loring, Mr. Joseph Holland   male  30     0     0 113801  45.5000         Southampton
-6    1st       No        Maguire, Mr. John Edward   male  30     0     0 110469  26.0000    C106 Southampton
+5    1st      Yes  Francatelli, Miss. Laura Mabel female  30     0     0     NA  56.9292     E36   Cherbourg
+6    1st      Yes             LeRoy, Miss. Bertha female  30     0     0     NA 106.4250           Cherbourg
 > titanic %>% combinedata("titanic_pred",c("pclass","sex","age")) %>% head
   pclass survived                            name    sex age sibsp parch ticket     fare   cabin    embarked
 1    1st       No Allison, Mr. Hudson Joshua Crei   male  30     1     2 113781 151.5500 C22 C26 Southampton
 2    1st      Yes         Bonnell, Miss. Caroline female  30     0     0  36928 164.8667      C7 Southampton
 3    1st      Yes            Cherry, Miss. Gladys female  30     0     0 110152  86.5000     B77 Southampton
 4    1st       No Foreman, Mr. Benjamin Laventall   male  30     0     0 113051  27.7500    C111   Cherbourg
-5    1st       No      Loring, Mr. Joseph Holland   male  30     0     0 113801  45.5000         Southampton
-6    1st       No        Maguire, Mr. John Edward   male  30     0     0 110469  26.0000    C106 Southampton
+5    1st      Yes  Francatelli, Miss. Laura Mabel female  30     0     0     NA  56.9292     E36   Cherbourg
+6    1st      Yes             LeRoy, Miss. Bertha female  30     0     0     NA 106.4250           Cherbourg
 > titanic %>% combinedata(titanic_pred,c("pclass","sex","age")) %>% head
   pclass survived                            name    sex age sibsp parch ticket     fare   cabin    embarked
 1    1st       No Allison, Mr. Hudson Joshua Crei   male  30     1     2 113781 151.5500 C22 C26 Southampton
 2    1st      Yes         Bonnell, Miss. Caroline female  30     0     0  36928 164.8667      C7 Southampton
 3    1st      Yes            Cherry, Miss. Gladys female  30     0     0 110152  86.5000     B77 Southampton
 4    1st       No Foreman, Mr. Benjamin Laventall   male  30     0     0 113051  27.7500    C111   Cherbourg
-5    1st       No      Loring, Mr. Joseph Holland   male  30     0     0 113801  45.5000         Southampton
-6    1st       No        Maguire, Mr. John Edward   male  30     0     0 110469  26.0000    C106 Southampton
-> avengers %>% combinedata(superheroes, cmb_type = "bind_cols")
+5    1st      Yes  Francatelli, Miss. Laura Mabel female  30     0     0     NA  56.9292     E36   Cherbourg
+6    1st      Yes             LeRoy, Miss. Bertha female  30     0     0     NA 106.4250           Cherbourg
+> avengers %>% combinedata(superheroes, type = "bind_cols")
              name alignment gender publisher     name alignment gender         publisher
 1            Thor      good   male    Marvel  Magneto       bad   male            Marvel
 2        Iron Man      good   male    Marvel    Storm      good female            Marvel
@@ -186,7 +135,7 @@ table
 5     Black Widow      good female    Marvel    Joker       bad   male                DC
 6 Captain America      good   male    Marvel Catwoman       bad female                DC
 7         Magneto       bad   male    Marvel  Hellboy      good   male Dark Horse Comics
-> combinedata("avengers", "superheroes", cmb_type = "bind_cols")
+> combinedata("avengers", "superheroes", type = "bind_cols")
              name alignment gender publisher     name alignment gender         publisher
 1            Thor      good   male    Marvel  Magneto       bad   male            Marvel
 2        Iron Man      good   male    Marvel    Storm      good female            Marvel
@@ -195,7 +144,7 @@ table
 5     Black Widow      good female    Marvel    Joker       bad   male                DC
 6 Captain America      good   male    Marvel Catwoman       bad female                DC
 7         Magneto       bad   male    Marvel  Hellboy      good   male Dark Horse Comics
-> avengers %>% combinedata(superheroes, cmb_type = "bind_rows")
+> avengers %>% combinedata(superheroes, type = "bind_rows")
 Source: local data frame [14 x 4]
 
               name alignment gender         publisher
@@ -262,8 +211,8 @@ Source: local data frame [14 x 4]
 > 
 > ### ** Examples
 > 
-> result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-> result <- mp3 %>% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
+> result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+> result <- mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape")
 > 
 > 
 > 
@@ -279,9 +228,9 @@ Source: local data frame [14 x 4]
 > 
 > ### ** Examples
 > 
-> ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-> result <- conjoint_profiles("ca_prof")
-> rm(ca_prof, envir = .GlobalEnv)
+> cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+> result <- conjoint_profiles("cp")
+> rm(cp, envir = .GlobalEnv)
 > result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
 +             conjoint_profiles
 > 
@@ -404,7 +353,7 @@ Summarize numeric variables:
   VVS2   :284   Ideal    :1176   H:454  
   VVS1   :224                    I:284  
   (Other):139                    J:164  
-> result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+> result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > summary(result)
 Data     : diamonds 
 
@@ -426,7 +375,7 @@ Function used:  skew
 4   Premium 1.413
 5     Ideal 1.799
 
-> diamonds %>% explore("price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+> diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew"))
 $gf
 function (x, na.rm = TRUE, type = 3) 
 {
@@ -504,23 +453,23 @@ $res$skew
 5     Ideal 1.798660
 
 
-$vars
+$tvars
 [1] "price" "cut"  
 
 $dataset
 [1] "-----"
 
-$expl_vars
+$vars
 [1] "price"
+
+$byvar
+[1] "cut"
+
+$fun
+[1] "length" "skew"  
 
 $data_filter
 [1] ""
-
-$expl_byvar
-[1] "cut"
-
-$expl_fun
-[1] "length" "skew"  
 
 attr(,"class")
 [1] "explore" "list"   
@@ -540,8 +489,8 @@ attr(,"class")
 > ### ** Examples
 > 
 > result <- full_factor("diamonds",c("price","carat","table","x","y"))
-> result <- full_factor("diamonds",c("price","carat","table","x","y"), ff_meth = "maxlik")
-> result <- diamonds %>% full_factor(c("price","carat","table","x","y"), ff_meth = "maxlik")
+> result <- full_factor("diamonds",c("price","carat","table","x","y"), method = "maxlik")
+> result <- diamonds %>% full_factor(c("price","carat","table","x","y"), method = "maxlik")
 > 
 > 
 > 
@@ -590,7 +539,7 @@ attr(,"class")
 > 
 > ### ** Examples
 > 
-> result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
+> result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
 > result <- glm_reg("titanic", "survived", c("pclass","sex"))
 > 
 > 
@@ -607,7 +556,7 @@ attr(,"class")
 > 
 > ### ** Examples
 > 
-> result <- hier_clus("shopping", hc_vars = c("v1:v6"))
+> result <- hier_clus("shopping", vars = c("v1:v6"))
 > 
 > 
 > 
@@ -665,11 +614,11 @@ attr(,"class")
 > 
 > ### ** Examples
 > 
-> paste0("var",1:3) %>% iterms(2)
+> paste0("var", 1:3) %>% iterms(2)
 [1] "var1:var2" "var1:var3" "var2:var3"
-> paste0("var",1:3) %>% iterms(3)
+> paste0("var", 1:3) %>% iterms(3)
 [1] "var1:var2"      "var1:var3"      "var2:var3"      "var1:var2:var3"
-> paste0("var",1:3) %>% iterms(2, sep = ".")
+> paste0("var", 1:3) %>% iterms(2, sep = ".")
 [1] "var1.var2" "var1.var3" "var2.var3"
 > 
 > 
@@ -935,7 +884,7 @@ Please choose another brand variable or another dataset.>
 > ### ** Examples
 > 
 > result <- compare_means("diamonds","cut","price")
-> plot(result, cm_plots = c("bar","density"))
+> plot(result, plots = c("bar","density"))
 > 
 > 
 > 
@@ -952,7 +901,7 @@ Please choose another brand variable or another dataset.>
 > ### ** Examples
 > 
 > result <- compare_props("titanic", "pclass", "survived")
-> plot(result, cp_plots = c("props","counts"))
+> plot(result, plots = c("props","counts"))
 > 
 > 
 > 
@@ -968,9 +917,9 @@ Please choose another brand variable or another dataset.>
 > 
 > ### ** Examples
 > 
-> result <- conjoint(dataset = "mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-> plot(result, ca_scale_plot = TRUE)
-> plot(result, ca_plots = "iw")
+> result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+> plot(result, scale_plot = TRUE)
+> plot(result, plots = "iw")
 > 
 > 
 > 
@@ -1005,7 +954,7 @@ Please choose another brand variable or another dataset.>
 > ### ** Examples
 > 
 > result <- cross_tabs("newspaper", "Income", "Newspaper")
-> plot(result, ct_check = c("observed","expected","chi_sq"))
+> plot(result, check = c("observed","expected","chi_sq"))
 > newspaper %>% cross_tabs("Income", "Newspaper") %>% plot(c("observed","expected"))
 > 
 > 
@@ -1022,7 +971,7 @@ Please choose another brand variable or another dataset.>
 > 
 > ### ** Examples
 > 
-> result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+> result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > plot(result)
 > 
 > 
@@ -1041,7 +990,7 @@ Please choose another brand variable or another dataset.>
 > 
 > result <- full_factor("diamonds",c("price","carat","table"))
 > plot(result)
-> result <- full_factor("computer","HighEnd:Business")
+> result <- full_factor("computer","high_end:business")
 > summary(result)
 Data should have more observations than variables.
 Please reduce the number of variables.> 
@@ -1059,15 +1008,15 @@ Please reduce the number of variables.>
 > 
 > ### ** Examples
 > 
-> result <- glm_reg("titanic", "survived", c("pclass","sex","age"), glm_levels = "Yes")
-> pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+> result <- glm_reg("titanic", "survived", c("pclass","sex","age"), lev = "Yes")
+> pred <- predict(result, pred_cmd = "pclass = levels(pclass)")
 Predicted values for:
       age  sex pclass Prediction  std.error
  29.88113 male    1st  0.4991301 0.04145468
  29.88113 male    2nd  0.2168618 0.02811439
  29.88113 male    3rd  0.0916927 0.01297580
-> plot(pred, glm_xvar = "pclass")
-> pred <- predict(result, glm_predict_cmd = "age = 0:100")
+> plot(pred, xvar = "pclass")
+> pred <- predict(result, pred_cmd = "age = 0:100")
 Predicted values for:
  pclass  sex age  Prediction   std.error
     3rd male   0 0.220040356 0.034816651
@@ -1171,8 +1120,8 @@ Predicted values for:
     3rd male  98 0.009603594 0.004787530
     3rd male  99 0.009281925 0.004684367
     3rd male 100 0.008970932 0.004582738
-> plot(pred, glm_xvar = "age")
-> pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex)")
+> plot(pred, xvar = "age")
+> pred <- predict(result, pred_cmd = "pclass = levels(pclass), sex = levels(sex)")
 Predicted values for:
       age pclass    sex Prediction  std.error
  29.88113    1st female  0.9237459 0.01447867
@@ -1181,8 +1130,8 @@ Predicted values for:
  29.88113    1st   male  0.4991301 0.04145468
  29.88113    2nd   male  0.2168618 0.02811439
  29.88113    3rd   male  0.0916927 0.01297580
-> plot(pred, glm_xvar = "pclass", glm_color = "sex")
-> pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
+> plot(pred, xvar = "pclass", color = "sex")
+> pred <- predict(result, pred_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
 Predicted values for:
   sex pclass age  Prediction   std.error
  male    1st   0 0.735795605 0.057596963
@@ -1203,9 +1152,9 @@ Predicted values for:
  male    1st 100 0.082028941 0.030779005
  male    2nd 100 0.024229335 0.011474982
  male    3rd 100 0.008970932 0.004582738
-> plot(pred, glm_xvar = "pclass", glm_color = "age")
-> plot(pred, glm_xvar = "age", glm_color = "pclass")
-> pred <- predict(result, glm_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
+> plot(pred, xvar = "pclass", color = "age")
+> plot(pred, xvar = "age", color = "pclass")
+> pred <- predict(result, pred_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
 Predicted values for:
  pclass    sex age  Prediction   std.error
     1st female   0 0.971309358 0.009104370
@@ -1244,9 +1193,9 @@ Predicted values for:
     1st   male 100 0.082028941 0.030779005
     2nd   male 100 0.024229335 0.011474982
     3rd   male 100 0.008970932 0.004582738
-> plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
-> plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
-> pred <- predict(result, glm_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
+> plot(pred, xvar = "age", color = "sex", facet_col = "pclass")
+> plot(pred, xvar = "age", color = "pclass", facet_col = "sex")
+> pred <- predict(result, pred_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
 Predicted values for:
  pclass    sex age  Prediction   std.error
     1st female   0 0.971309358 0.009104370
@@ -1375,8 +1324,8 @@ Predicted values for:
     1st   male 100 0.082028941 0.030779005
     2nd   male 100 0.024229335 0.011474982
     3rd   male 100 0.008970932 0.004582738
-> plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
-> plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
+> plot(pred, xvar = "age", color = "sex", facet_col = "pclass")
+> plot(pred, xvar = "age", color = "pclass", facet_col = "sex")
 > 
 > 
 > 
@@ -1392,8 +1341,8 @@ Predicted values for:
 > 
 > ### ** Examples
 > 
-> result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-> plot(result, glm_plots = "coef")
+> result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
+> plot(result, plots = "coef")
 Waiting for profiling to be done...
 > 
 > 
@@ -1410,10 +1359,10 @@ Waiting for profiling to be done...
 > 
 > ### ** Examples
 > 
-> result <- hier_clus("shopping", hc_vars = c("v1:v6"))
-> plot(result, hc_plots = c("diff", "scree"), hc_cutoff = .05)
-> plot(result, hc_plots = "dendro", hc_cutoff = 0)
-> shopping %>% hier_clus(hc_vars = c("v1:v6")) %>% plot
+> result <- hier_clus("shopping", vars = c("v1:v6"))
+> plot(result, plots = c("diff", "scree"), cutoff = .05)
+> plot(result, plots = "dendro", cutoff = 0)
+> shopping %>% hier_clus(vars = c("v1:v6")) %>% plot
 > 
 > 
 > 
@@ -1429,7 +1378,7 @@ Waiting for profiling to be done...
 > 
 > ### ** Examples
 > 
-> result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+> result <- kmeans_clus("shopping", vars = c("v1:v6"))
 > plot(result)
 > 
 > 
@@ -1448,8 +1397,8 @@ Waiting for profiling to be done...
 > 
 > result <- mds("city","from","to","distance")
 > plot(result)
-> plot(result, mds_rev_dim = 1:2)
-> plot(result, mds_rev_dim = 1:2, mds_fontsz = 2)
+> plot(result, rev_dim = 1:2)
+> plot(result, rev_dim = 1:2, fontsz = 2)
 > 
 > 
 > 
@@ -1465,14 +1414,14 @@ Waiting for profiling to be done...
 > 
 > ### ** Examples
 > 
-> result <- pmap("computer","Brand","HighEnd:Business")
-> plot(result, pmap_plot = "brand")
-> plot(result, pmap_plot = c("brand","attr"))
-> plot(result, pmap_plot = c("brand","attr"))
-> plot(result, pmap_scaling = 1, pmap_plot = c("brand","attr"))
-> result <- pmap("computer","Brand","HighEnd:Dated",
-+               pmap_pref = c("Innovative","Business"))
-> plot(result, pmap_plot = c("brand","attr","pref"))
+> result <- pmap("computer", "brand", "high_end:business")
+> plot(result, plots = "brand")
+> plot(result, plots = c("brand", "attr"))
+> plot(result, plots = c("brand", "attr"))
+> plot(result, scaling = 1, plots = c("brand", "attr"))
+> result <- pmap("computer", "brand", "high_end:dated",
++                pref = c("innovative", "business"))
+> plot(result, plots = c("brand", "attr", "pref"))
 > 
 > 
 > 
@@ -1506,7 +1455,7 @@ Waiting for profiling to be done...
 > ### ** Examples
 > 
 > result <- regression("diamonds", "price", c("carat","clarity"))
-> pred <- predict(result, reg_predict_cmd = "carat = 1:10")
+> pred <- predict(result, pred_cmd = "carat = 1:10")
 Predicted values for:
  clarity carat Prediction      2.5%     97.5%      +/-
      SI1     1   5265.569  2859.633  7671.505 2405.936
@@ -1519,10 +1468,10 @@ Predicted values for:
      SI1     8  64331.781 61821.491 66842.072 2510.291
      SI1     9  72769.811 70229.110 75310.513 2540.701
      SI1    10  81207.842 78633.187 83782.496 2574.655
-> plot(pred, reg_xvar = "carat")
-> result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
+> plot(pred, xvar = "carat")
+> result <- regression("diamonds", "price", c("carat","clarity"), int_var = "carat:clarity")
 > dpred <<- getdata("diamonds") %>% slice(1:100)
-> pred <- predict(result, reg_predict_data = "dpred")
+> pred <- predict(result, pred_data = "dpred")
 Predicted values for profiles from dataset: 
  carat clarity   Prediction       2.5%     97.5%      +/-
   0.32     VS1   240.945939 -2069.1374  2551.029 2310.083
@@ -1625,7 +1574,7 @@ Predicted values for profiles from dataset:
   0.90     SI2  3685.448409  1377.9543  5992.943 2307.494
   0.54     VS1  2173.672675  -134.5032  4481.849 2308.176
   1.28      IF 11428.689524  9010.2432 13847.136 2418.446
-> plot(pred, reg_xvar = "carat", reg_color = "clarity")
+> plot(pred, xvar = "carat", color = "clarity")
 > rm(dpred, envir = .GlobalEnv)
 > 
 > 
@@ -1643,23 +1592,15 @@ Predicted values for profiles from dataset:
 > ### ** Examples
 > 
 > result <- regression("diamonds", "price", c("carat","clarity"))
-> plot(result, reg_plots = "dashboard")
-stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-> plot(result, reg_plots = "dashboard", reg_lines = c("line","loess"))
-geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
-geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
-geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
-stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-> plot(result, reg_plots = "coef", reg_coef_int = TRUE)
-> plot(result, reg_plots = "coef", reg_conf_level = .99, reg_coef_int = TRUE)
-> plot(result, reg_plots = "hist")
-stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
-> plot(result, reg_plots = "scatter", reg_lines = c("line","loess"))
-geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
-> plot(result, reg_plots = "correlations")
-> plot(result, reg_plots = "leverage")
-> plot(result, reg_plots = "resid_pred", reg_lines = "line")
+> plot(result, plots = "dashboard")
+> plot(result, plots = "dashboard", lines = c("line","loess"))
+> plot(result, plots = "coef", intercept = TRUE)
+> plot(result, plots = "coef", conf_lev = .99, intercept = TRUE)
+> plot(result, plots = "hist")
+> plot(result, plots = "scatter", lines = c("line","loess"))
+> plot(result, plots = "correlations")
+> plot(result, plots = "leverage")
+> plot(result, plots = "resid_pred", lines = "line")
 > 
 > 
 > 
@@ -1678,8 +1619,8 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > 
 > ### ** Examples
 > 
-> result <- single_mean("diamonds","price", sm_comp_value = 3500)
-> plot(result, sm_plots = c("hist", "simulate"))
+> result <- single_mean("diamonds","price", comp_value = 3500)
+> plot(result, plots = c("hist", "simulate"))
 > 
 > 
 > 
@@ -1695,10 +1636,10 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > 
 > ### ** Examples
 > 
-> result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
-> plot(result, sp_plots = c("hist", "simulate"))
-> result <- single_prop("titanic","pclass", sp_levels = "1st")
-> plot(result, sp_plots = c("hist","simulate"))
+> result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
+> plot(result, plots = c("hist", "simulate"))
+> result <- single_prop("titanic","pclass", lev = "1st")
+> plot(result, plots = c("hist","simulate"))
 > 
 > 
 > 
@@ -1714,7 +1655,7 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > 
 > ### ** Examples
 > 
-> result <- pmap("computer","Brand","HighEnd:Business")
+> result <- pmap("computer","brand","high_end:business")
 > 
 > 
 > 
@@ -1746,8 +1687,8 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > 
 > ### ** Examples
 > 
-> result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-> predict(result, glm_predict_cmd = "pclass = levels(pclass)")
+> result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
+> predict(result, pred_cmd = "pclass = levels(pclass)")
 Predicted values for:
   sex pclass Prediction  std.error
  male    1st  0.3999027 0.03296987
@@ -1757,8 +1698,8 @@ Predicted values for:
 1 male    1st  0.3999027 0.03296987
 2 male    2nd  0.2164129 0.02643573
 3 male    3rd  0.1063100 0.01204523
-> glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes") %>%
-+   predict(glm_predict_cmd = "sex = c('male','female')")
+> glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes") %>%
++   predict(pred_cmd = "sex = c('male','female')")
 Predicted values for:
  pclass    sex Prediction  std.error
     3rd   male  0.1063100 0.01204523
@@ -1782,7 +1723,7 @@ Predicted values for:
 > ### ** Examples
 > 
 > result <- regression("diamonds", "price", c("carat","clarity"))
-> predict(result, reg_predict_cmd = "carat = 1:10")
+> predict(result, pred_cmd = "carat = 1:10")
 Predicted values for:
  clarity carat Prediction      2.5%     97.5%      +/-
      SI1     1   5265.569  2859.633  7671.505 2405.936
@@ -1806,7 +1747,7 @@ Predicted values for:
 8      SI1     8  64331.781 61821.491 66842.072 2510.291
 9      SI1     9  72769.811 70229.110 75310.513 2540.701
 10     SI1    10  81207.842 78633.187 83782.496 2574.655
-> predict(result, reg_predict_cmd = "clarity = levels(clarity)")
+> predict(result, pred_cmd = "clarity = levels(clarity)")
 Predicted values for:
      carat clarity Prediction      2.5%    97.5%      +/-
  0.7942833      I1  -78.80608 -2513.424 2355.812 2434.618
@@ -1826,9 +1767,9 @@ Predicted values for:
 6 0.7942833    VVS2 5030.66955  2622.135 7439.205 2408.535
 7 0.7942833    VVS1 4948.86305  2539.120 7358.606 2409.743
 8 0.7942833      IF 5186.36425  2769.806 7602.923 2416.559
-> result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
+> result <- regression("diamonds", "price", c("carat","clarity"), int_var = c("carat:clarity"))
 > dpred <<- getdata("diamonds") %>% slice(1:10)
-> predict(result, reg_predict_data = "dpred")
+> predict(result, pred_data = "dpred")
 Predicted values for profiles from dataset: 
  carat clarity  Prediction       2.5%    97.5%      +/-
   0.32     VS1  240.945939 -2069.1374 2551.029 2310.083
@@ -1889,7 +1830,7 @@ Predicted values for profiles from dataset:
 > ### ** Examples
 > 
 > result <- regression("diamonds", "price", c("carat","clarity"))
-> result <- regression("diamonds", "price", c("carat","clarity"), reg_check = "standardize")
+> result <- regression("diamonds", "price", c("carat","clarity"), check = "standardize")
 > 
 > 
 > 
@@ -1905,7 +1846,7 @@ Predicted values for profiles from dataset:
 > 
 > ### ** Examples
 > 
-> result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
+> result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 > 
 > 
 > 
@@ -5076,20 +5017,20 @@ $dat
 $dataset
 [1] "diamonds"
 
-$sm_var
+$var
 [1] "price"
+
+$comp_value
+[1] 0
+
+$alternative
+[1] "two.sided"
+
+$conf_lev
+[1] 0.95
 
 $data_filter
 [1] ""
-
-$sm_comp_value
-[1] 0
-
-$sm_alternative
-[1] "two.sided"
-
-$sm_sig_level
-[1] 0.95
 
 attr(,"class")
 [1] "single_mean" "list"       
@@ -5109,7 +5050,7 @@ attr(,"class")
 > ### ** Examples
 > 
 > result <- single_prop("diamonds","cut")
-> result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
+> result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
 > 
 > 
 > 
@@ -5302,10 +5243,12 @@ attr(,"class")
 > 
 > result <- compare_means("diamonds","cut","price")
 > summary(result)
-Pairwise comparisons (no adjustment)
-Data     : diamonds 
-Variables: cut, price 
-Samples  : independent 
+Pairwise mean comparisons
+Data      : diamonds 
+Variables : cut, price 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
 
                mean    n       sd      se      ci
       Fair 4505.238  101 3749.540 373.093 740.206
@@ -5329,10 +5272,12 @@ Samples  : independent
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > result <- diamonds %>% tbl_df %>% compare_means("x","y")
 > summary(result)
-Pairwise comparisons (no adjustment)
-Data     : ----- 
-Variables: x, y 
-Samples  : independent 
+Pairwise mean comparisons
+Data      : ----- 
+Variables : x, y 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
 
     mean    n    sd    se   ci
  x 5.722 3000 1.124 0.021 0.04
@@ -5344,10 +5289,12 @@ Samples  : independent
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > result <- diamonds %>% tbl_df %>% group_by(cut) %>% compare_means("x",c("x","y"))
 > summary(result)
-Pairwise comparisons (no adjustment)
-Data     : ----- 
-Variables: x, y 
-Samples  : independent 
+Pairwise mean comparisons
+Data      : ----- 
+Variables : x, y 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
 
     mean    n    sd    se   ci
  x 5.722 3000 1.124 0.021 0.04
@@ -5374,10 +5321,12 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > result <- compare_props("titanic", "pclass", "survived")
 > summary(result)
-Pairwise comparisons (no adjustment)
-Data     : titanic 
-Variables: pclass, survived 
-Level    :  in survived 
+Pairwise proportion comparisons
+Data      : titanic 
+Variables : pclass, survived 
+Level     :  in survived 
+Confidence: 0.95 
+Adjustment: None 
 
  Yes  No   n     p    se    ci
  200 123 323 0.619 0.027 0.053
@@ -5391,10 +5340,12 @@ Level    :  in survived
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > titanic %>% compare_props("pclass", "survived") %>% summary
-Pairwise comparisons (no adjustment)
-Data     : ----- 
-Variables: pclass, survived 
-Level    :  in survived 
+Pairwise proportion comparisons
+Data      : ----- 
+Variables : pclass, survived 
+Level     :  in survived 
+Confidence: 0.95 
+Adjustment: None 
 
  Yes  No   n     p    se    ci
  200 123 323 0.619 0.027 0.053
@@ -5422,8 +5373,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > ### ** Examples
 > 
-> result <- conjoint("mp3", ca_dep_var = "Rating", ca_indep_var = "Memory:Shape")
-> summary(result, ca_vif = TRUE)
+> result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+> summary(result, mc_diag = TRUE)
 Conjoint analysis
 Data     : mp3 
 Dependent variable   : Rating 
@@ -5455,24 +5406,24 @@ Conjoint importance weights:
       Price 0.319
       Shape 0.263
 
-Conjoint regression coefficients:
-                    coefficients
-(Intercept)               58.111
-Memory > 6GB               7.667
-Memory > 8GB              29.667
-Radio > Yes                6.111
-Size > Medium              6.333
-Size > Small               8.500
-Price > $100              -6.833
-Price > $150             -33.833
-Shape > Rectangular      -27.833
-Shape > Square           -13.333
+Conjoint regression results:
+                    coefficient
+(Intercept)              58.111
+Memory > 6GB              7.667
+Memory > 8GB             29.667
+Radio > Yes               6.111
+Size > Medium             6.333
+Size > Small              8.500
+Price > $100             -6.833
+Price > $150            -33.833
+Shape > Rectangular     -27.833
+Shape > Square          -13.333
 
-Variance Inflation Factors
+Multicollinearity diagnostics:
     Memory Radio Size Price Shape
 VIF      1     1    1     1     1
 Rsq      0     0    0     0     0
-> mp3 %>% conjoint(ca_dep_var = "Rating", ca_indep_var = "Memory:Shape") %>% summary(., ca_vif = TRUE)
+> mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape") %>% summary(., mc_diag = TRUE)
 Conjoint analysis
 Data     : ----- 
 Dependent variable   : Rating 
@@ -5504,20 +5455,20 @@ Conjoint importance weights:
       Price 0.319
       Shape 0.263
 
-Conjoint regression coefficients:
-                    coefficients
-(Intercept)               58.111
-Memory > 6GB               7.667
-Memory > 8GB              29.667
-Radio > Yes                6.111
-Size > Medium              6.333
-Size > Small               8.500
-Price > $100              -6.833
-Price > $150             -33.833
-Shape > Rectangular      -27.833
-Shape > Square           -13.333
+Conjoint regression results:
+                    coefficient
+(Intercept)              58.111
+Memory > 6GB              7.667
+Memory > 8GB             29.667
+Radio > Yes               6.111
+Size > Medium             6.333
+Size > Small              8.500
+Price > $100             -6.833
+Price > $150            -33.833
+Shape > Rectangular     -27.833
+Shape > Square          -13.333
 
-Variance Inflation Factors
+Multicollinearity diagnostics:
     Memory Radio Size Price Shape
 VIF      1     1    1     1     1
 Rsq      0     0    0     0     0
@@ -5536,11 +5487,11 @@ Rsq      0     0    0     0     0
 > 
 > ### ** Examples
 > 
-> ca_prof <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-> result <- conjoint_profiles("ca_prof")
+> cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+> result <- conjoint_profiles("cp")
 > summary(result)
 Generate conjoint profiles
-Data      : ca_prof 
+Data      : cp 
 # profiles: 18
 
 Attributes and levels:
@@ -5743,7 +5694,7 @@ Full factorial design:
      160   $16 Not Staggered      Large seat, cupholder Large screen, digital sound              No food
      161   $16 Not Staggered      Large seat, cupholder Large screen, digital sound Hot dogs and popcorn
      162   $16 Not Staggered      Large seat, cupholder Large screen, digital sound         Gourmet food
-> rm(ca_prof, envir = .GlobalEnv)
+> rm(cp, envir = .GlobalEnv)
 > readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
 +   conjoint_profiles %>% summary
 Generate conjoint profiles
@@ -5966,7 +5917,7 @@ Full factorial design:
 > ### ** Examples
 > 
 > result <- correlation("diamonds",c("price","carat","clarity"))
-> summary(result, cor_cutoff = .3)
+> summary(result, cutoff = .3)
 Correlation
 Data     : diamonds 
 Variables: price, carat, clarity 
@@ -6014,7 +5965,7 @@ clarity 0     0
 > ### ** Examples
 > 
 > result <- cross_tabs("newspaper", "Income", "Newspaper")
-> summary(result, ct_check = c("observed","expected","chi_sq"))
+> summary(result, check = c("observed","expected","chi_sq"))
 Cross-tabs
 Data     : newspaper 
 Variables: Income, Newspaper 
@@ -6092,7 +6043,7 @@ Summarize numeric variables:
   VVS2   :284   Ideal    :1176   H:454  
   VVS1   :224                    I:284  
   (Other):139                    J:164  
-> result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+> result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > summary(result)
 Data     : diamonds 
 
@@ -6134,7 +6085,7 @@ Summarize numeric variables:
   VVS2   :284   Ideal    :1176   H:454  
   VVS1   :224                    I:284  
   (Other):139                    J:164  
-> diamonds %>% explore("price", expl_byvar = "cut", expl_fun = c("length", "skew")) %>% summary
+> diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew")) %>% summary
 Data     : ----- 
 
 Results grouped by:  cut 
@@ -6212,7 +6163,7 @@ Factor scores (max 10 shown):
   0.29  0.03
  -0.48 -0.83
   0.42 -0.82
-> summary(result, ff_cutoff = 0, ff_sort = FALSE)
+> summary(result, cutoff = 0, fsort = FALSE)
 Factor analysis
 Data        : diamonds 
 Variables   : price, carat, depth, table, x 
@@ -6253,7 +6204,7 @@ Factor scores (max 10 shown):
   0.29  0.03
  -0.48 -0.83
   0.42 -0.82
-> summary(result, ff_cutoff = 0, ff_sort = TRUE)
+> summary(result, cutoff = 0, fsort = TRUE)
 Factor analysis
 Data        : diamonds 
 Variables   : price, carat, depth, table, x 
@@ -6294,7 +6245,7 @@ Factor scores (max 10 shown):
   0.29  0.03
  -0.48 -0.83
   0.42 -0.82
-> summary(result, ff_cutoff = .5, ff_sort = TRUE)
+> summary(result, cutoff = .5, fsort = TRUE)
 Factor analysis
 Data        : diamonds 
 Variables   : price, carat, depth, table, x 
@@ -6376,7 +6327,7 @@ Factor scores (max 10 shown):
   0.29  0.03
  -0.48 -0.83
   0.42 -0.82
-> diamonds %>% full_factor(c("price","carat","depth","table","x")) %>% summary(ff_cutoff = .5)
+> diamonds %>% full_factor(c("price","carat","depth","table","x")) %>% summary(cutoff = .5)
 Factor analysis
 Data        : ----- 
 Variables   : price, carat, depth, table, x 
@@ -6432,8 +6383,8 @@ Factor scores (max 10 shown):
 > 
 > ### ** Examples
 > 
-> result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
-> summary(result, glm_test_var = "pclass")
+> result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
+> summary(result, test_var = "pclass")
 Generalized linear model (glm)
 Link function: logit
 Data         : titanic
@@ -6454,8 +6405,8 @@ Nr obs:  1309
 Model 1: survived ~ 1
 Model 2: survived ~ pclass
 Pseudo R-squared, Model 1 vs 2: 0 0.073
-Chi-statistic: 127.765 df(2), p.value < .001> res <- glm_reg("titanic", "survived", c("pclass","sex"), glm_int_var="pclass:sex", glm_levels="Yes")
-> summary(res, glm_sum_check = c("vif","confint","odds"))
+Chi-statistic: 127.765 df(2), p.value < .001> res <- glm_reg("titanic", "survived", c("pclass","sex"), int_var="pclass:sex", lev="Yes")
+> summary(res, sum_check = c("vif","confint","odds"))
 Generalized linear model (glm)
 Link function: logit
 Data         : titanic
@@ -6498,7 +6449,7 @@ sex > male               0.019  0.006  0.044  0.038
 pclass > 2nd:sex > male  1.176  0.369  4.200  3.831
 pclass > 3rd:sex > male 10.014  3.947 30.962 27.015
 
-> titanic %>% glm_reg("survived", c("pclass","sex","age"), glm_levels = "Yes") %>% summary("vif")
+> titanic %>% glm_reg("survived", c("pclass","sex","age"), lev = "Yes") %>% summary("vif")
 Generalized linear model (glm)
 Link function: logit
 Data         : -----
@@ -6538,7 +6489,7 @@ Rsq  0.293 0.262 0.049
 > 
 > ### ** Examples
 > 
-> result <- hier_clus("shopping", hc_vars = c("v1:v6"))
+> result <- hier_clus("shopping", vars = c("v1:v6"))
 > summary(result)
 Hierarchical cluster analysis
 Data        : shopping 
@@ -6561,7 +6512,7 @@ Observations: 20
 > 
 > ### ** Examples
 > 
-> result <- kmeans_clus("shopping", km_vars = c("v1:v6"))
+> result <- kmeans_clus("shopping", vars = c("v1:v6"))
 > summary(result)
 K-means cluster analysis
 Data        : shopping 
@@ -6582,7 +6533,7 @@ Cluster 1 17.66%
 Cluster 2 82.34%
 
 Between cluster variance accounts for 40.52% of the
-total variance in the data (higher is better).> shopping %>% kmeans_clus(km_vars = c("v1:v6"), km_nr_clus = 3) %>% summary
+total variance in the data (higher is better).> shopping %>% kmeans_clus(vars = c("v1:v6"), nr_clus = 3) %>% summary
 K-means cluster analysis
 Data        : ----- 
 Variables   : v1:v6 
@@ -6662,7 +6613,7 @@ SF       1697.23  131.69
 LA       1464.05  560.58
 Denver    522.49   13.40
 
-Stress: 0.02> summary(result, mds_round = 2)
+Stress: 0.02> summary(result, dec = 2)
 (Dis)similarity based brand map (MDS)
 Data        : city 
 Variables   : from, to, distance 
@@ -6761,11 +6712,11 @@ Stress: 0.02>
 > 
 > ### ** Examples
 > 
-> result <- pmap("computer","Brand","HighEnd:Business")
+> result <- pmap("computer","brand","high_end:business")
 > summary(result)
 Attribute based brand map
 Data        : computer 
-Attributes  : HighEnd, Stylish, Modern, Value, Dated, Innovative, Business 
+Attributes  : high_end, stylish, modern, value, dated, innovative, business 
 # dimensions: 2 
 Rotation    : varimax
 Observations: 5 
@@ -6780,13 +6731,13 @@ Sony     0.73 -0.60
 
 Attribute - Factor loadings:
              PC1   PC2
-HighEnd     0.94 -0.16
-Stylish     0.98  0.06
-Modern      0.99  0.03
-Value      -0.93 -0.28
-Dated      -0.97  0.21
-Innovative  0.86  0.19
-Business    0.02  0.99
+high_end    0.94 -0.16
+stylish     0.98  0.06
+modern      0.99  0.03
+value      -0.93 -0.28
+dated      -0.97  0.21
+innovative  0.86  0.19
+business    0.02  0.99
 
 Fit measures:
               PC1  PC2
@@ -6795,17 +6746,17 @@ Variance %   0.76 0.17
 Cumulative % 0.76 0.93
 
 Attribute communalities:               
-HighEnd    0.91
-Stylish    0.97
-Modern     0.97
-Value      0.94
-Dated      0.99
-Innovative 0.77
-Business   0.97
-> summary(result, pmap_cutoff = .3)
+high_end   0.91
+stylish    0.97
+modern     0.97
+value      0.94
+dated      0.99
+innovative 0.77
+business   0.97
+> summary(result, cutoff = .3)
 Attribute based brand map
 Data        : computer 
-Attributes  : HighEnd, Stylish, Modern, Value, Dated, Innovative, Business 
+Attributes  : high_end, stylish, modern, value, dated, innovative, business 
 # dimensions: 2 
 Rotation    : varimax
 Observations: 5 
@@ -6820,13 +6771,13 @@ Sony     0.73 -0.60
 
 Attribute - Factor loadings:
              PC1  PC2
-HighEnd     0.94     
-Stylish     0.98     
-Modern      0.99     
-Value      -0.93     
-Dated      -0.97     
-Innovative  0.86     
-Business         0.99
+high_end    0.94     
+stylish     0.98     
+modern      0.99     
+value      -0.93     
+dated      -0.97     
+innovative  0.86     
+business         0.99
 
 Fit measures:
               PC1  PC2
@@ -6835,19 +6786,19 @@ Variance %   0.76 0.17
 Cumulative % 0.76 0.93
 
 Attribute communalities:               
-HighEnd    0.91
-Stylish    0.97
-Modern     0.97
-Value      0.94
-Dated      0.99
-Innovative 0.77
-Business   0.97
-> result <- pmap("computer","Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business"))
+high_end   0.91
+stylish    0.97
+modern     0.97
+value      0.94
+dated      0.99
+innovative 0.77
+business   0.97
+> result <- pmap("computer","brand","high_end:dated", pref = c("innovative","business"))
 > summary(result)
 Attribute based brand map
 Data        : computer 
-Attributes  : HighEnd, Stylish, Modern, Value, Dated 
-Preferences : Innovative, Business 
+Attributes  : high_end, stylish, modern, value, dated 
+Preferences : innovative, business 
 # dimensions: 2 
 Rotation    : varimax
 Observations: 5 
@@ -6861,17 +6812,17 @@ HP      -1.32  0.67
 Sony     0.66  0.53
 
 Attribute - Factor loadings:
-          PC1   PC2
-HighEnd  0.89  0.44
-Stylish  0.58  0.81
-Modern   0.77  0.62
-Value   -0.44 -0.89
-Dated   -0.82 -0.55
+           PC1   PC2
+high_end  0.89  0.44
+stylish   0.58  0.81
+modern    0.77  0.62
+value    -0.44 -0.89
+dated    -0.82 -0.55
 
 Preference correlations:
              PC1  PC2 communalities
-Innovative  0.44 0.72          0.70
-Business   -0.38 0.44          0.34
+innovative  0.44 0.72          0.70
+business   -0.38 0.44          0.34
 
 Fit measures:
               PC1  PC2
@@ -6879,18 +6830,18 @@ Eigenvalues  2.60 2.33
 Variance %   0.52 0.47
 Cumulative % 0.52 0.99
 
-Attribute communalities:            
-HighEnd 0.99
-Stylish 0.99
-Modern  0.98
-Value   0.99
-Dated   0.98
-> computer %>% pmap("Brand","HighEnd:Dated", pmap_pref = c("Innovative","Business")) %>%
+Attribute communalities:             
+high_end 0.99
+stylish  0.99
+modern   0.98
+value    0.99
+dated    0.98
+> computer %>% pmap("brand","high_end:dated", pref = c("innovative","business")) %>%
 +   summary
 Attribute based brand map
 Data        : ----- 
-Attributes  : HighEnd, Stylish, Modern, Value, Dated 
-Preferences : Innovative, Business 
+Attributes  : high_end, stylish, modern, value, dated 
+Preferences : innovative, business 
 # dimensions: 2 
 Rotation    : varimax
 Observations: 5 
@@ -6904,17 +6855,17 @@ HP      -1.32  0.67
 Sony     0.66  0.53
 
 Attribute - Factor loadings:
-          PC1   PC2
-HighEnd  0.89  0.44
-Stylish  0.58  0.81
-Modern   0.77  0.62
-Value   -0.44 -0.89
-Dated   -0.82 -0.55
+           PC1   PC2
+high_end  0.89  0.44
+stylish   0.58  0.81
+modern    0.77  0.62
+value    -0.44 -0.89
+dated    -0.82 -0.55
 
 Preference correlations:
              PC1  PC2 communalities
-Innovative  0.44 0.72          0.70
-Business   -0.38 0.44          0.34
+innovative  0.44 0.72          0.70
+business   -0.38 0.44          0.34
 
 Fit measures:
               PC1  PC2
@@ -6922,12 +6873,12 @@ Eigenvalues  2.60 2.33
 Variance %   0.52 0.47
 Cumulative % 0.52 0.99
 
-Attribute communalities:            
-HighEnd 0.99
-Stylish 0.99
-Modern  0.98
-Value   0.99
-Dated   0.98
+Attribute communalities:             
+high_end 0.99
+stylish  0.99
+modern   0.98
+value    0.99
+dated    0.98
 > 
 > 
 > 
@@ -6990,7 +6941,7 @@ table 0.05
       1        1.98       0.66         0.66
       2        0.95       0.32         0.98
       3        0.07       0.02         1.00
-> result <- pre_factor("computer","HighEnd:Business")
+> result <- pre_factor("computer","high_end:business")
 > summary(result)
 Data should have more observations than variables.
 Please reduce the number of variables.> 
@@ -7009,7 +6960,7 @@ Please reduce the number of variables.>
 > ### ** Examples
 > 
 > result <- regression("diamonds", "price", c("carat","clarity"))
-> summary(result, reg_sum_check = c("rmse","sumsquares","vif","confint"), reg_test_var = "clarity")
+> summary(result, sum_check = c("rmse","sumsquares","vif","confint"), test_var = "clarity")
 Linear regression (OLS)
 Data     : diamonds 
 Dependent variable   : price 
@@ -7060,7 +7011,7 @@ Model 1: price ~ carat
 Model 2: price ~ carat + clarity
 R-squared, Model 1 vs 2: 0.86 0.904
 F-statistic: 197.585 df(2998,2991), p.value < .001> result <- regression("shopping", "v1", c("v2","v3"))
-> summary(result, reg_test_var = "v2")
+> summary(result, test_var = "v2")
 Linear regression (OLS)
 Data     : shopping 
 Dependent variable   : v1 
@@ -7115,7 +7066,7 @@ Nr obs: 20
 > 
 > ### ** Examples
 > 
-> result <- sample_size(ss_type = "mean", ss_mean_err = 2, ss_mean_s = 10)
+> result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 > summary(result)
 Sample size calculation
 Calculation type     : Mean
@@ -7151,7 +7102,7 @@ Choose a Z-value:
 > ### ** Examples
 > 
 > set.seed(1234)
-> result <- sampling("rndnames","Names",10)
+> result <- sampling("rndnames", "Names", 10)
 > summary(result)
 Sampling (simple random)
 Data       : rndnames 
@@ -7159,120 +7110,120 @@ ID variable: Names
 Sample size: 10 
 
 Selected:
-                 Names rnd_number
-1         Jarrod Jolly  0.9921504
-2  Matilda Mcgillivray  0.9264005
-3       Beau Bannerman  0.9234335
-4         Tomas Tupper  0.9146582
-5      Bernardine Bohr  0.9004246
-6           Nona Nosal  0.8985805
-7         Janey Jetton  0.8961858
-8      Amberly Ahumada  0.8928364
-9         Latisha Lutz  0.8648338
-10           Jc Julius  0.8609154
+               Names rnd_number
+        Jarrod Jolly      0.992
+ Matilda Mcgillivray      0.926
+      Beau Bannerman      0.923
+        Tomas Tupper      0.915
+     Bernardine Bohr      0.900
+          Nona Nosal      0.899
+        Janey Jetton      0.896
+     Amberly Ahumada      0.893
+        Latisha Lutz      0.865
+           Jc Julius      0.861
 
-Sampling frame (max 100 shown):
-                  Names  rnd_number
-1        Ervin Escalona 0.113703411
-2        Allan Ammerman 0.622299405
-3     Milton Mothershed 0.609274733
-4          Deshawn Dawn 0.623379442
-5             Jc Julius 0.860915384
-6          Denver Delph 0.640310605
-7           Jed Jameson 0.009495756
-8        Zachariah Zeno 0.232550506
-9           Cyril Class 0.666083758
-10         Lauren Lukas 0.514251141
-11        Hershel Hentz 0.693591292
-12      Darrell Draheim 0.544974836
-13         Shawn Salmon 0.282733584
-14       Beau Bannerman 0.923433484
-15       Stephen Slough 0.292315840
-16         Cole Cropper 0.837295628
-17   Stacy Schrecengost 0.286223285
-18         Kent Keasler 0.266820780
-19           Omar Ogden 0.186722790
-20         Perry Pearcy 0.232225911
-21     Courtney Carmody 0.316612455
-22         Derek Dorsch 0.302693371
-23      Napoleon Norman 0.159046003
-24         Rodney Regis 0.039995918
-25          Hubert Hyer 0.218799541
-26        Foster Fugate 0.810598552
-27       Emery Etchison 0.525697547
-28         Tomas Tupper 0.914658166
-29         Robin Ramsay 0.831345047
-30           Tom Tomita 0.045770263
-31      Travis Thornley 0.456091482
-32         Hank Heavner 0.265186672
-33           Ahmed Avey 0.304672203
-34   Sanford Steinfeldt 0.507306870
-35    Douglass Daddario 0.181096208
-36        Dominic Duhon 0.759670635
-37       Emanuel Esquer 0.201248038
-38     Federico Fillion 0.258809819
-39         Jarrod Jolly 0.992150418
-40   Lawrence Levasseur 0.807352340
-41        Kurtis Kieser 0.553333591
-42            Ty Troyer 0.646406094
-43          Bryce Billy 0.311824307
-44          Brooks Buie 0.621819198
-45         Maximo Manzi 0.329770176
-46            Lino Luse 0.501997473
-47       Mark Mccloskey 0.677094527
-48          Tory Tilman 0.484991239
-49           Angel Aker 0.243928827
-50          Jean Joseph 0.765459788
-51        Susann Sauers 0.073779880
-52      Deborah Deckard 0.309686602
-53           Many Mcvey 0.717271743
-54      Dalene Dubreuil 0.504545912
-55   Gabriella Gurganus 0.152998959
-56       Kellie Kealoha 0.503933488
-57            Amie Asay 0.493960923
-58        Robbi Randell 0.751200197
-59      Jacquelin James 0.174649824
-60     Jennefer Jansson 0.848392410
-61         Latisha Lutz 0.864833832
-62        Glenda Garris 0.041857275
-63       Elana Eslinger 0.317182155
-64     Margene Martelli 0.013749939
-65        Breana Ballou 0.239025727
-66     Christal Chaires 0.706494617
-67       Carlotta Clack 0.308094757
-68        Doretha Dever 0.508547566
-69            Eden Epps 0.051646619
-70         Essie Elwood 0.564569840
-71       Antonina Alers 0.121480187
-72      Amberly Ahumada 0.892836382
-73  Bernadette Basnight 0.014627256
-74  Christine Chevalier 0.783121104
-75        Shemeka Solar 0.089961333
-76    Antonietta Alfano 0.519189981
-77    Rozanne Raulerson 0.384266688
-78           Willa Well 0.070052497
-79      Jazmin Jeffcoat 0.320644422
-80      Marcell Meisner 0.668495397
-81  Matilda Mcgillivray 0.926400476
-82    Davida Derrickson 0.471909721
-83     Clarita Calandra 0.142615343
-84      Angelita Archer 0.544269755
-85        Dorinda Dehne 0.196174652
-86           Nona Nosal 0.898580489
-87        Jesusa Jordon 0.389499785
-88        Elinore Elmer 0.310870780
-89           Leanne Lew 0.160028663
-90         Janey Jetton 0.896185850
-91       Linette Lavery 0.166393780
-92      Bernardine Bohr 0.900424596
-93      Dagny Distefano 0.134078195
-94       Racheal Ravelo 0.131614134
-95      Kayla Krajewski 0.105287503
-96    Marylee Malatesta 0.511583581
-97          Janna Jacob 0.300199054
-98          Alita Aikin 0.026716895
-99        Junko Jungers 0.309647431
-100         Denese Diem 0.742119657
+Sampling frame:
+               Names rnd_number
+      Ervin Escalona      0.114
+      Allan Ammerman      0.622
+   Milton Mothershed      0.609
+        Deshawn Dawn      0.623
+           Jc Julius      0.861
+        Denver Delph      0.640
+         Jed Jameson      0.009
+      Zachariah Zeno      0.233
+         Cyril Class      0.666
+        Lauren Lukas      0.514
+       Hershel Hentz      0.694
+     Darrell Draheim      0.545
+        Shawn Salmon      0.283
+      Beau Bannerman      0.923
+      Stephen Slough      0.292
+        Cole Cropper      0.837
+  Stacy Schrecengost      0.286
+        Kent Keasler      0.267
+          Omar Ogden      0.187
+        Perry Pearcy      0.232
+    Courtney Carmody      0.317
+        Derek Dorsch      0.303
+     Napoleon Norman      0.159
+        Rodney Regis      0.040
+         Hubert Hyer      0.219
+       Foster Fugate      0.811
+      Emery Etchison      0.526
+        Tomas Tupper      0.915
+        Robin Ramsay      0.831
+          Tom Tomita      0.046
+     Travis Thornley      0.456
+        Hank Heavner      0.265
+          Ahmed Avey      0.305
+  Sanford Steinfeldt      0.507
+   Douglass Daddario      0.181
+       Dominic Duhon      0.760
+      Emanuel Esquer      0.201
+    Federico Fillion      0.259
+        Jarrod Jolly      0.992
+  Lawrence Levasseur      0.807
+       Kurtis Kieser      0.553
+           Ty Troyer      0.646
+         Bryce Billy      0.312
+         Brooks Buie      0.622
+        Maximo Manzi      0.330
+           Lino Luse      0.502
+      Mark Mccloskey      0.677
+         Tory Tilman      0.485
+          Angel Aker      0.244
+         Jean Joseph      0.765
+       Susann Sauers      0.074
+     Deborah Deckard      0.310
+          Many Mcvey      0.717
+     Dalene Dubreuil      0.505
+  Gabriella Gurganus      0.153
+      Kellie Kealoha      0.504
+           Amie Asay      0.494
+       Robbi Randell      0.751
+     Jacquelin James      0.175
+    Jennefer Jansson      0.848
+        Latisha Lutz      0.865
+       Glenda Garris      0.042
+      Elana Eslinger      0.317
+    Margene Martelli      0.014
+       Breana Ballou      0.239
+    Christal Chaires      0.706
+      Carlotta Clack      0.308
+       Doretha Dever      0.509
+           Eden Epps      0.052
+        Essie Elwood      0.565
+      Antonina Alers      0.121
+     Amberly Ahumada      0.893
+ Bernadette Basnight      0.015
+ Christine Chevalier      0.783
+       Shemeka Solar      0.090
+   Antonietta Alfano      0.519
+   Rozanne Raulerson      0.384
+          Willa Well      0.070
+     Jazmin Jeffcoat      0.321
+     Marcell Meisner      0.668
+ Matilda Mcgillivray      0.926
+   Davida Derrickson      0.472
+    Clarita Calandra      0.143
+     Angelita Archer      0.544
+       Dorinda Dehne      0.196
+          Nona Nosal      0.899
+       Jesusa Jordon      0.389
+       Elinore Elmer      0.311
+          Leanne Lew      0.160
+        Janey Jetton      0.896
+      Linette Lavery      0.166
+     Bernardine Bohr      0.900
+     Dagny Distefano      0.134
+      Racheal Ravelo      0.132
+     Kayla Krajewski      0.105
+   Marylee Malatesta      0.512
+         Janna Jacob      0.300
+         Alita Aikin      0.027
+       Junko Jungers      0.310
+         Denese Diem      0.742
 > 
 > 
 > 
@@ -7291,19 +7242,21 @@ Sampling frame (max 100 shown):
 > result <- single_mean("diamonds","price")
 > summary(result)
 Single mean test
-Data     : diamonds 
-Variable : price 
-Null hyp.: the mean of price = 0 
-Alt. hyp.: the mean of price is not equal to 0 
+Data      : diamonds 
+Variable  : price 
+Confidence: 0.95 
+Null hyp. : the mean of price = 0 
+Alt. hyp. : the mean of price is not equal to 0 
 
      mean t.value p.value   df     2.5%    97.5%       sd    n
  3907.186  54.084  < .001 2999 3765.535 4048.837 3956.915 3000
 > diamonds %>% single_mean("price") %>% summary
 Single mean test
-Data     : ----- 
-Variable : price 
-Null hyp.: the mean of price = 0 
-Alt. hyp.: the mean of price is not equal to 0 
+Data      : ----- 
+Variable  : price 
+Confidence: 0.95 
+Null hyp. : the mean of price = 0 
+Alt. hyp. : the mean of price is not equal to 0 
 
      mean t.value p.value   df     2.5%    97.5%       sd    n
  3907.186  54.084  < .001 2999 3765.535 4048.837 3956.915 3000
@@ -7322,22 +7275,24 @@ Alt. hyp.: the mean of price is not equal to 0
 > 
 > ### ** Examples
 > 
-> result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
+> result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
 > summary(result)
 Single proportion test
-Data     : diamonds 
-Variable : clarity 
-Null hyp.: the proportion of IF in clarity = 0.05 
-Alt. hyp.: the proportion of IF in clarity not equal to 0.05 
+Data      : diamonds 
+Variable  : clarity 
+Confidence: 0.95 
+Null hyp. : the proportion of IF in clarity = 0.05 
+Alt. hyp. : the proportion of IF in clarity not equal to 0.05 
 
   prop chisq.value p.value df  2.5% 97.5% ns    n
  0.033      18.253  < .001  1 0.027  0.04 99 3000
-> diamonds %>% single_prop("clarity", sp_levels = "IF", sp_comp_value = 0.05) %>% summary
+> diamonds %>% single_prop("clarity", lev = "IF", comp_value = 0.05) %>% summary
 Single proportion test
-Data     : ----- 
-Variable : clarity 
-Null hyp.: the proportion of IF in clarity = 0.05 
-Alt. hyp.: the proportion of IF in clarity not equal to 0.05 
+Data      : ----- 
+Variable  : clarity 
+Confidence: 0.95 
+Null hyp. : the proportion of IF in clarity = 0.05 
+Alt. hyp. : the proportion of IF in clarity not equal to 0.05 
 
   prop chisq.value p.value df  2.5% 97.5% ns    n
  0.033      18.253  < .001  1 0.027  0.04 99 3000
@@ -7356,11 +7311,62 @@ Alt. hyp.: the proportion of IF in clarity not equal to 0.05
 > 
 > ### ** Examples
 > 
-> test_specs("a", c("a:b","b:c"))
+> test_specs("a", c("a:b", "b:c"))
 Interaction terms contain variables specified for testing.
 Relevant interaction terms are included in the requested test.
 
 [1] "a"   "a:b"
+> 
+> 
+> 
+> cleanEx()
+> nameEx("the_table")
+> ### * the_table
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: the_table
+> ### Title: Function to calculate the PW and IW table for conjoint
+> ### Aliases: the_table
+> 
+> ### ** Examples
+> 
+> result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+> the_table(result$model, result$dat, result$indep_var)
+$PW
+                   Attributes      Levels      PW
+Memory4GB              Memory         4GB   0.000
+Memory6GB              Memory         6GB   7.667
+Memory8GB              Memory         8GB  29.667
+RadioNo                 Radio          No   0.000
+RadioYes                Radio         Yes   6.111
+SizeLarge                Size       Large   0.000
+SizeMedium               Size      Medium   6.333
+SizeSmall                Size       Small   8.500
+Price$50                Price         $50   0.000
+Price$100               Price        $100  -6.833
+Price$150               Price        $150 -33.833
+ShapeCircular           Shape    Circular   0.000
+ShapeRectangular        Shape Rectangular -27.833
+ShapeSquare             Shape      Square -13.333
+15               Base utility           ~  58.111
+
+$IW
+  Attributes    IW
+1     Memory 0.280
+2      Radio 0.058
+3       Size 0.080
+4      Price 0.319
+5      Shape 0.263
+
+$plot_ylim
+             Min      Max
+Memory   0.00000 34.17167
+Radio    0.00000 34.17167
+Size     0.00000 34.17167
+Price  -34.17167  0.00000
+Shape  -34.17167  0.00000
+
 > 
 > 
 > 
@@ -7381,21 +7387,21 @@ Relevant interaction terms are included in the requested test.
 $vars
 [1] "a" "b" "c" "d"
 
-$indep_var
+$iv
 [1] "a" "b" "c" "d"
 
-$int_var
+$intv
 [1] ""
 
-> var_check(c("a","b"), c("a","b"), "a:c")
+> var_check(c("a", "b"), c("a", "b"), "a:c")
 Interaction terms contain variables not selected as main effects.
 Removing all interactions from the estimation$vars
 [1] "a" "b"
 
-$indep_var
+$iv
 [1] "a" "b"
 
-$int_var
+$intv
 [1] ""
 
 > 
@@ -7434,11 +7440,10 @@ $int_var
 > 
 > ### ** Examples
 > 
-> visualize("diamonds", "carat", "price", viz_type = "scatter", viz_check = "loess")
-geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
-> visualize("diamonds", "price:x", viz_type = "hist")
-> visualize("diamonds", "carat:x", viz_yvar = "price", viz_type = "scatter")
-> diamonds %>% visualize(c("price","carat","depth"), viz_type = "density")
+> visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
+> visualize("diamonds", "price:x", type = "hist")
+> visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
+> diamonds %>% visualize(c("price","carat","depth"), type = "density")
 > 
 > 
 > 
@@ -7474,7 +7479,7 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  17.7 0.37 11480.52 0 0 
+Time elapsed:  17.234 0.327 17.879 0 0 
 > grDevices::dev.off()
 null device 
           1 

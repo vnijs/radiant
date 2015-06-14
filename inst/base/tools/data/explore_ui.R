@@ -2,21 +2,21 @@
 # Explore datasets
 #######################################
 
-# expl_args <- as.list(formals(explore))
-expl_args <- list(dataset = "", expl_vars = "", data_filter = "",
-                  expl_byvar = "", expl_fun = c("length", "mean_rm"))
+expl_args <- as.list(formals(explore))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 expl_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(expl_args))
-    expl_args[[i]] <- input[[i]]
-  if (!input$show_filter) expl_args$data_filter = ""
+  ## loop needed because reactive values don't allow single bracket indexing
+  expl_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  expl_args$dataset <- input$dataset
+  for (i in r_drop(names(expl_args)))
+    expl_args[[i]] <- input[[paste0("expl_",i)]]
 
-  if (is_empty(input$expl_byvar)) expl_args$expl_fun <- c("length", "mean_rm")
+  if (is_empty(input$expl_byvar)) expl_args$fun <- c("length", "mean_rm")
 
-  expl_args   # expl_args is only changed inside this function
+  expl_args
 })
+
 
 # UI-elements for explore
 output$ui_expl_vars <- renderUI({
@@ -72,7 +72,6 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- reactive({
-  # if (not_available(input$expl_vars) && not_available(input$expl_byvar)) return()
   if (not_available(input$expl_vars)) return()
   withProgress(message = 'Calculating', value = 0, {
     do.call(explore, expl_inputs())
@@ -98,7 +97,6 @@ output$expl_plots <- renderPlot({
 observe({
   if (not_pressed(input$explore_report)) return()
   isolate({
-    # if (!is.null(input$expl_viz) && input$expl_viz == TRUE) {
     if (!is_empty(input$expl_byvar) && input$expl_viz == TRUE) {
       inp_out <- list("","")
       outputs <- c("summary","plot")

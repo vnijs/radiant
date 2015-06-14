@@ -4,17 +4,17 @@
 \alias{summary.glm_reg}
 \title{Summary method for the glm_reg function}
 \usage{
-\method{summary}{glm_reg}(object, glm_sum_check = "", glm_conf_level = 0.95,
-  glm_test_var = "", ...)
+\method{summary}{glm_reg}(object, sum_check = "", conf_lev = 0.95,
+  test_var = "", ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{glm_reg}}}
 
-\item{glm_sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
+\item{sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
 
-\item{glm_conf_level}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
+\item{conf_lev}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
 
-\item{glm_test_var}{Variables to evaluate in model comparison (i.e., a competing models Chi-squared test)}
+\item{test_var}{Variables to evaluate in model comparison (i.e., a competing models Chi-squared test)}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -25,11 +25,11 @@ Summary method for the glm_reg function
 See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 }
 \examples{
-result <- glm_reg("titanic", "survived", "pclass", glm_levels = "Yes")
-summary(result, glm_test_var = "pclass")
-res <- glm_reg("titanic", "survived", c("pclass","sex"), glm_int_var="pclass:sex", glm_levels="Yes")
-summary(res, glm_sum_check = c("vif","confint","odds"))
-titanic \%>\% glm_reg("survived", c("pclass","sex","age"), glm_levels = "Yes") \%>\% summary("vif")
+result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
+summary(result, test_var = "pclass")
+res <- glm_reg("titanic", "survived", c("pclass","sex"), int_var="pclass:sex", lev="Yes")
+summary(res, sum_check = c("vif","confint","odds"))
+titanic \%>\% glm_reg("survived", c("pclass","sex","age"), lev = "Yes") \%>\% summary("vif")
 }
 \seealso{
 \code{\link{glm_reg}} to generate the results

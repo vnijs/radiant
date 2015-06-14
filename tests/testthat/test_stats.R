@@ -41,18 +41,19 @@ test_that("compare_props 2", {
 context("Single proportion")
 
 test_that("single_prop 1", {
-  result <- single_prop("diamonds","color")
-  expect_equal(result$sp_levels,"D")
-  res1 <- capture.output(summary(result))[8] %>% trim
+  result <- single_prop("diamonds", "color")
+  # expect_equal(result$sp_levels,"D")
+  expect_equal(result$lev, "D")
+  res1 <- capture.output(summary(result))[9] %>% trim
   # cat(paste0(res1, "\n"))
   res2 <- "0.127    1666.565  < .001  1 0.116  0.14 382 3000"
   expect_equal(res1,res2)
 })
 
 test_that("single_prop 2", {
-  result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
-  expect_equal(result$sp_levels,"IF")
-  res1 <- capture.output(summary(result))[8] %>% trim
+  result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
+  expect_equal(result$lev, "IF")
+  res1 <- capture.output(summary(result))[9] %>% trim
   # cat(paste0(res1, "\n"))
   res2 <- "0.033      18.253  < .001  1 0.027  0.04 99 3000"
   expect_equal(res1,res2)
@@ -76,7 +77,7 @@ test_that("regression", {
 
 test_that("regression - plots", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
-  grb <- plot(result, reg_plots = "dashboard", shiny = TRUE)
+  grb <- plot(result, plots = "dashboard", shiny = TRUE)
   expect_true(all(c("arrange","ggplot") %in% class(grb)))
   expect_equal(try(print(grb), silent = TRUE), NULL)
   # expect_true(file.exists("Rplots.pdf"))  # not always created it seems

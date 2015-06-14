@@ -6,16 +6,16 @@ setwd("~/gh/radiant")
 document(roclets = c('rd', 'collate', 'namespace'))
 # install()
 
-library(magrittr)
-fn <- "~/gh/radiant/inst/base/www/style.css"
-readLines(fn) %>%
-  gsub("top: 95px;", "top: 145px;", .) %>%
-  cat(file = fn, sep = "\n")
-
-Sys.sleep(5)
+# fn <- "~/gh/radiant/inst/base/www/style.css"
+# readLines(fn) %>%
+#   gsub("top: 95px;", "top: 145px;", .) %>%
+#   cat(file = fn, sep = "\n")
+#
+# Sys.sleep(5)
 
 system("git add --all .")
-system("git commit -m 'Update css for shinyapps.io [ci skip]'")
+# system("git commit -m 'Update css for shinyapps.io [ci skip]'")
+system("git commit -m 'Update [ci skip]'")
 system("git push")
 
 # options(repos = "http://cran.rstudio.com")
@@ -42,17 +42,17 @@ deployApp(account = "vnijs", launch.browser = FALSE)
 setwd(file.path(fpath,"../marketing"))
 deployApp(account = "vnijs", launch.browser = FALSE)
 
-fn <- "~/gh/radiant/inst/base/www/style.css"
-readLines(fn) %>%
-  gsub("top: 145px;", "top: 95px;", .) %>%
-  cat(file = fn, sep = "\n")
+# fn <- "~/gh/radiant/inst/base/www/style.css"
+# readLines(fn) %>%
+#   gsub("top: 145px;", "top: 95px;", .) %>%
+#   cat(file = fn, sep = "\n")
 
 setwd("~/gh/radiant/")
 Sys.sleep(5)
 
-system("git add --all .")
-system("git commit -m 'Undo css change for shinyapps.io [ci skip]'")
-system("git push")
+# system("git add --all .")
+# system("git commit -m 'Undo css change for shinyapps.io [ci skip]'")
+# system("git push")
 
 answ <- readline("Did you create binary packages for Windows? (y/n) ")
 if (substr(answ, 1, 1) %in% c("y","Y")) {

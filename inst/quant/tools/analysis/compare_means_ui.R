@@ -7,9 +7,9 @@ cm_plots <- c("Bar" = "bar", "Box" = "box", "Density" = "density")
 ## list of function arguments
 cm_args <- as.list(formals(compare_means))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 cm_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   cm_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cm_args$dataset <- input$dataset
   for (i in r_drop(names(cm_args)))

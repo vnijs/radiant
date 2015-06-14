@@ -4,7 +4,7 @@ To setup a conjoint study from scratch we need to determine the attributes and a
 
 Once data is available from respondents their evaluations are analyzed to determine Part Worths (PW) and Importance Weights (IW).
 
-#### Example: Carpet cleaner
+### Example: Carpet cleaner
 
 A respondent was presented 18 product profiles for a carpet cleaning product described on five attributes in a conjoint study (dataset: carpet.rda is part of the example datasets). The attributes are:
 

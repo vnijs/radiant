@@ -123,16 +123,14 @@ observe({
     outputs <- c("summary","plot")
     inp_out <- list(plots = input$sm_plots) %>% list("",.)
     figs <- TRUE
-    if (length(input$plots) == 0) {
+    if (length(input$sm_plots) == 0) {
       figs <- FALSE
       outputs <- c("summary")
       inp_out <- list("","")
     }
     update_report(inp_main = clean_args(sm_inputs(), sm_args),
-                  fun_name = "single_mean",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
+                  fun_name = "single_mean", inp_out = inp_out,
+                  outputs = outputs, figs = figs,
                   fig.width = round(7 * sm_plot_width()/650,2),
                   fig.height = round(7 * sm_plot_height()/650,2))
   })

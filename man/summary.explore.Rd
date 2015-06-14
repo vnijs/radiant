@@ -20,10 +20,10 @@ See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Rad
 \examples{
 result <- explore("diamonds", "price:x")
 summary(result)
-result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 summary(result)
 diamonds \%>\% explore("price:x") \%>\% summary
-diamonds \%>\% explore("price", expl_byvar = "cut", expl_fun = c("length", "skew")) \%>\% summary
+diamonds \%>\% explore("price", byvar = "cut", fun = c("length", "skew")) \%>\% summary
 }
 \seealso{
 \code{\link{explore}} to generate summaries

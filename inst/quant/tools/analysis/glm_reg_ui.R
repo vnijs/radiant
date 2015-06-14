@@ -9,38 +9,38 @@ glm_plots <- c("None" = "", "Histograms" = "hist",
                "Scatter" = "scatter", "Dashboard" = "dashboard",
                "Coefficient plot" = "coef")
 
-# list of function arguments
+## list of function arguments
 glm_args <- as.list(formals(glm_reg))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 glm_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(glm_args))
-    glm_args[[i]] <- input[[i]]
-  if (!input$show_filter) glm_args$data_filter = ""
+  ## loop needed because reactive values don't allow single bracket indexing
+  glm_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  glm_args$dataset <- input$dataset
+  for (i in r_drop(names(glm_args)))
+    glm_args[[i]] <- input[[paste0("glm_",i)]]
   glm_args
 })
 
 glm_sum_args <- as.list(if (exists("summary.glm_reg")) formals(summary.glm_reg)
                         else formals(radiant:::summary.glm_reg))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 glm_sum_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_sum_args))
-    glm_sum_args[[i]] <- input[[i]]
+    glm_sum_args[[i]] <- input[[paste0("glm_",i)]]
   glm_sum_args
 })
 
 glm_plot_args <- as.list(if (exists("plot.glm_reg")) formals(plot.glm_reg)
                          else formals(radiant:::plot.glm_reg))
 
-
-# list of function inputs selected by user
+## list of function inputs selected by user
 glm_plot_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_plot_args))
-    glm_plot_args[[i]] <- input[[i]]
+    glm_plot_args[[i]] <- input[[paste0("glm_",i)]]
   glm_plot_args
 })
 
@@ -51,14 +51,14 @@ glm_pred_args <- as.list(if (exists("predict.glm_reg")) formals(predict.glm_reg)
 glm_pred_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_pred_args))
-    glm_pred_args[[i]] <- input[[i]]
+    glm_pred_args[[i]] <- input[[paste0("glm_",i)]]
 
-  glm_pred_args$glm_predict_cmd <- glm_pred_args$glm_predict_data <- ""
+  glm_pred_args$pred_cmd <- glm_pred_args$pred_data <- ""
   if (input$glm_predict == "cmd")
-    glm_pred_args$glm_predict_cmd <- gsub('\\s', '', input$glm_predict_cmd)
+    glm_pred_args$pred_cmd <- gsub('\\s', '', input$glm_pred_cmd)
 
   if (input$glm_predict == "data")
-    glm_pred_args$glm_predict_data <- input$glm_predict_data
+    glm_pred_args$pred_data <- input$glm_pred_data
 
   glm_pred_args
 })
@@ -70,7 +70,7 @@ glm_pred_plot_args <- as.list(if (exists("plot.glm_predict")) formals(plot.glm_p
 glm_pred_plot_inputs <- reactive({
   # loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_pred_plot_args))
-    glm_pred_plot_args[[i]] <- input[[i]]
+    glm_pred_plot_args[[i]] <- input[[paste0("glm_",i)]]
   glm_pred_plot_args
 })
 
@@ -80,13 +80,13 @@ output$ui_glm_dep_var <- renderUI({
   	selected = state_single("glm_dep_var",vars), multiple = FALSE)
 })
 
-output$ui_glm_levels <- renderUI({
+output$ui_glm_lev <- renderUI({
   levs <- c()
   if (!not_available(input$glm_dep_var))
     levs <- .getdata()[,input$glm_dep_var] %>% as.factor %>% levels
-  selectInput(inputId = "glm_levels", label = "Choose level:",
+  selectInput(inputId = "glm_lev", label = "Choose level:",
               choices = levs,
-              selected = state_single("glm_levels",levs), multiple = FALSE)
+              selected = state_single("glm_lev",levs), multiple = FALSE)
 })
 
 output$ui_glm_indep_var <- renderUI({
@@ -175,13 +175,13 @@ output$ui_glm_reg <- renderUI({
         radioButtons(inputId = "glm_predict", label = "Prediction:", glm_predict,
           selected = state_init("glm_predict", ""), inline = TRUE),
         conditionalPanel(condition = "input.glm_predict == 'cmd'",
-          returnTextAreaInput("glm_predict_cmd", "Prediction command:",
-            value = state_init("glm_predict_cmd",""))
+          returnTextAreaInput("glm_pred_cmd", "Prediction command:",
+            value = state_init("glm_pred_cmd",""))
         ),
         conditionalPanel(condition = "input.glm_predict == 'data'",
-          selectizeInput(inputId = "glm_predict_data", label = "Predict for profiles:",
+          selectizeInput(inputId = "glm_pred_data", label = "Predict for profiles:",
                       choices = c("None" = "",r_data$datasetlist),
-                      selected = state_init("glm_predict_data"), multiple = FALSE)
+                      selected = state_init("glm_pred_data"), multiple = FALSE)
         ),
         conditionalPanel(condition = "input.glm_predict != ''",
           uiOutput("ui_glm_xvar"),
@@ -197,14 +197,14 @@ output$ui_glm_reg <- renderUI({
         selectInput("glm_plots", "GLM plots:", choices = glm_plots,
           selected = state_single("glm_plots", glm_plots)),
         conditionalPanel(condition = "input.glm_plots == 'coef'",
-          checkboxInput("glm_coef_int", "Include intercept", state_init("glm_coef_int", FALSE)))
+          checkboxInput("intercept", "Include intercept", state_init("intercept", FALSE)))
       )
     ),
     wellPanel(
     	radioButtons(inputId = "glm_link", label = NULL, glm_link,
     		selected = state_init("glm_link","logit"), inline = TRUE),
 	    uiOutput("ui_glm_dep_var"),
-      uiOutput("ui_glm_levels"),
+      uiOutput("ui_glm_lev"),
 	    uiOutput("ui_glm_indep_var"),
 
       conditionalPanel(condition = "input.glm_indep_var != null",
@@ -224,8 +224,8 @@ output$ui_glm_reg <- renderUI({
                          input.glm_sum_check.indexOf('confint') >= 0)) |
   	                     input.glm_plots == 'coef' |
                          input.tabs_glm_reg == 'Predict'",
-   					 sliderInput("glm_conf_level", "Adjust confidence level:", min = 0.70,
-   					             max = 0.99, value = state_init("glm_conf_level",.95),
+   					 sliderInput("glm_conf_lev", "Adjust confidence level:", min = 0.70,
+   					             max = 0.99, value = state_init("glm_conf_lev",.95),
    					             step = 0.01)
   		  ),
         conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",

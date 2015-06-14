@@ -4,21 +4,21 @@
 \alias{single_prop}
 \title{Compare a sample proportion to a population proportion}
 \usage{
-single_prop(dataset, sp_var, sp_levels = "", sp_comp_value = 0.5,
-  sp_alternative = "two.sided", sp_sig_level = 0.95, data_filter = "")
+single_prop(dataset, var, lev = "", comp_value = 0.5,
+  alternative = "two.sided", conf_lev = 0.95, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{sp_var}{The variable selected for the proportion comparison}
+\item{var}{The variable selected for the proportion comparison}
 
-\item{sp_levels}{The factor level selected for the proportion comparison}
+\item{lev}{The factor level selected for the proportion comparison}
 
-\item{sp_comp_value}{Population value to compare to the sample proportion}
+\item{comp_value}{Population value to compare to the sample proportion}
 
-\item{sp_alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
+\item{alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
 
-\item{sp_sig_level}{Span of the confidence interval}
+\item{conf_lev}{Span of the confidence interval}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
@@ -33,7 +33,7 @@ See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example i
 }
 \examples{
 result <- single_prop("diamonds","cut")
-result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
+result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
 }
 \seealso{
 \code{\link{summary.single_prop}} to summarize the results

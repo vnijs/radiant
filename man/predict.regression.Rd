@@ -4,17 +4,17 @@
 \alias{predict.regression}
 \title{Predict method for the regression function}
 \usage{
-\method{predict}{regression}(object, reg_predict_cmd = "",
-  reg_predict_data = "", reg_conf_level = 0.95, ...)
+\method{predict}{regression}(object, pred_cmd = "", pred_data = "",
+  conf_lev = 0.95, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}
 
-\item{reg_predict_cmd}{Command used to generate data for prediction}
+\item{pred_cmd}{Command used to generate data for prediction}
 
-\item{reg_predict_data}{Name of the dataset to use for prediction}
+\item{pred_data}{Name of the dataset to use for prediction}
 
-\item{reg_conf_level}{Confidence level used to estimate confidence intervals (.95 is the default)}
+\item{conf_lev}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -26,11 +26,11 @@ See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in
 }
 \examples{
 result <- regression("diamonds", "price", c("carat","clarity"))
-predict(result, reg_predict_cmd = "carat = 1:10")
-predict(result, reg_predict_cmd = "clarity = levels(clarity)")
-result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = c("carat:clarity"))
+predict(result, pred_cmd = "carat = 1:10")
+predict(result, pred_cmd = "clarity = levels(clarity)")
+result <- regression("diamonds", "price", c("carat","clarity"), int_var = c("carat:clarity"))
 dpred <<- getdata("diamonds") \%>\% slice(1:10)
-predict(result, reg_predict_data = "dpred")
+predict(result, pred_data = "dpred")
 rm(dpred, envir = .GlobalEnv)
 }
 \seealso{

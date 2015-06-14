@@ -21,7 +21,7 @@ See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an exampl
 result <- pre_factor("diamonds",c("price","carat","table"))
 summary(result)
 diamonds \%>\% pre_factor(c("price","carat","table")) \%>\% summary
-result <- pre_factor("computer","HighEnd:Business")
+result <- pre_factor("computer","high_end:business")
 summary(result)
 }
 \seealso{

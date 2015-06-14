@@ -4,17 +4,16 @@
 \alias{plot.pmap}
 \title{Plot method for the pmap function}
 \usage{
-\method{plot}{pmap}(x, pm_plot = "", pm_scaling = 2.1, pm_fontsz = 1.3,
-  ...)
+\method{plot}{pmap}(x, plots = "", scaling = 2.1, fontsz = 1.3, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{pmap}}}
 
-\item{pm_plot}{Components to include in the plot ("brand", "attr"). If data on preferences is available use "pref" to add preference arrows to the plot}
+\item{plots}{Components to include in the plot ("brand", "attr"). If data on preferences is available use "pref" to add preference arrows to the plot}
 
-\item{pm_scaling}{Arrow scaling in the brand map}
+\item{scaling}{Arrow scaling in the brand map}
 
-\item{pm_fontsz}{Font size to use in plots}
+\item{fontsz}{Font size to use in plots}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -25,14 +24,14 @@ Plot method for the pmap function
 See \url{http://vnijs.github.io/radiant/marketing/pmap.html} for an example in Radiant
 }
 \examples{
-result <- pmap("computer","Brand","HighEnd:Business")
-plot(result, pm_plot = "brand")
-plot(result, pm_plot = c("brand","attr"))
-plot(result, pm_plot = c("brand","attr"))
-plot(result, pm_scaling = 1, pm_plot = c("brand","attr"))
-result <- pmap("computer","Brand","HighEnd:Dated",
-              pm_pref = c("Innovative","Business"))
-plot(result, pm_plot = c("brand","attr","pref"))
+result <- pmap("computer", "brand", "high_end:business")
+plot(result, plots = "brand")
+plot(result, plots = c("brand", "attr"))
+plot(result, plots = c("brand", "attr"))
+plot(result, scaling = 1, plots = c("brand", "attr"))
+result <- pmap("computer", "brand", "high_end:dated",
+               pref = c("innovative", "business"))
+plot(result, plots = c("brand", "attr", "pref"))
 }
 \seealso{
 \code{\link{pmap}} to calculate results

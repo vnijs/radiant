@@ -4,21 +4,21 @@
 \alias{plot.reg_predict}
 \title{Plot method for the predict.regression function}
 \usage{
-\method{plot}{reg_predict}(x, reg_xvar = "", reg_facet_row = ".",
-  reg_facet_col = ".", reg_color = "none", reg_conf_level = 0.95, ...)
+\method{plot}{reg_predict}(x, xvar = "", facet_row = ".", facet_col = ".",
+  color = "none", conf_lev = 0.95, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{predict.regression}}.}
 
-\item{reg_xvar}{Variable to display along the X-axis of the plot}
+\item{xvar}{Variable to display along the X-axis of the plot}
 
-\item{reg_facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
+\item{facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
 
-\item{reg_facet_col}{Create horizontally arranged subplots for each level of the selected factor variable}
+\item{facet_col}{Create horizontally arranged subplots for each level of the selected factor variable}
 
-\item{reg_color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
+\item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
 
-\item{reg_conf_level}{Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.}
+\item{conf_lev}{Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -30,12 +30,12 @@ See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in
 }
 \examples{
 result <- regression("diamonds", "price", c("carat","clarity"))
-pred <- predict(result, reg_predict_cmd = "carat = 1:10")
-plot(pred, reg_xvar = "carat")
-result <- regression("diamonds", "price", c("carat","clarity"), reg_int_var = "carat:clarity")
+pred <- predict(result, pred_cmd = "carat = 1:10")
+plot(pred, xvar = "carat")
+result <- regression("diamonds", "price", c("carat","clarity"), int_var = "carat:clarity")
 dpred <<- getdata("diamonds") \%>\% slice(1:100)
-pred <- predict(result, reg_predict_data = "dpred")
-plot(pred, reg_xvar = "carat", reg_color = "clarity")
+pred <- predict(result, pred_data = "dpred")
+plot(pred, xvar = "carat", color = "clarity")
 rm(dpred, envir = .GlobalEnv)
 }
 \seealso{

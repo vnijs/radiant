@@ -4,19 +4,16 @@
 \alias{sampling}
 \title{Simple random sampling}
 \usage{
-sampling(dataset, smp_var, smp_sample_size, data_filter = "",
-  smp_print_full = TRUE)
+sampling(dataset, var, sample_size, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{smp_var}{The variable to sample from}
+\item{var}{The variable to sample from}
 
-\item{smp_sample_size}{Number of units to select}
+\item{sample_size}{Number of units to select}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{smp_print_full}{Print full sampling frame. Default is TRUE}
 }
 \value{
 A list of variables defined in sampling as an object of class sampling

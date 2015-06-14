@@ -7,12 +7,12 @@
 test_specs(test_var, int_var)
 }
 \arguments{
-\item{test_var}{List of variables to use for testing for _regression_ or _glm_}
+\item{test_var}{List of variables to use for testing for regression or glm_reg}
 
 \item{int_var}{Interaction terms specified}
 }
 \value{
-'test_var' is a vector of variables to test
+A vector of variables names to test
 }
 \description{
 Add interaction terms to list of test variables if needed
@@ -21,6 +21,6 @@ Add interaction terms to list of test variables if needed
 See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
-test_specs("a", c("a:b","b:c"))
+test_specs("a", c("a:b", "b:c"))
 }
 

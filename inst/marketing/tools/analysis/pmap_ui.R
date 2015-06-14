@@ -2,29 +2,29 @@
 # Perceptual map using factor analysis
 #########################################
 
-pm_dim_number <- c("2-dims" = 2, "3-dims" = 3)
+pm_nr_dim <- c("2-dims" = 2, "3-dims" = 3)
 
-# list of function arguments
+## list of function arguments
 pm_args <- as.list(formals(pmap))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 pm_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
-  for (i in names(pm_args))
-    pm_args[[i]] <- input[[i]]
-  if (!input$show_filter) pm_args$data_filter = ""
+  ## loop needed because reactive values don't allow single bracket indexing
+  pm_args$data_filter <- if (input$show_filter) input$data_filter else ""
+  pm_args$dataset <- input$dataset
+  for (i in r_drop(names(pm_args)))
+    pm_args[[i]] <- input[[paste0("pm_",i)]]
   pm_args
 })
 
 pm_plot_args <- as.list(if (exists("plot.pmap")) formals(plot.pmap)
                           else formals(radiant:::plot.pmap))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 pm_plot_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(pm_plot_args))
-    pm_plot_args[[i]] <- input[[i]]
-  if (!input$show_filter) pm_plot_args$data_filter = ""
+    pm_plot_args[[i]] <- input[[paste0("pm_",i)]]
   pm_plot_args
 })
 
@@ -53,11 +53,11 @@ output$ui_pm_pref <- renderUI({
   	size = max(1, min(5, length(vars))), selectize = FALSE)
 })
 
-output$ui_pm_plot <- renderUI({
+output$ui_pm_plots <- renderUI({
 	plot_list <- c("Brands" = "brand", "Attributes" = "attr")
   if (!is.null(input$pm_pref)) plot_list <- c(plot_list, c("Preferences" = "pref"))
-	checkboxGroupInput("pm_plot", NULL, plot_list,
-   	selected = state_init("pm_plot"),
+	checkboxGroupInput("pm_plots", NULL, plot_list,
+   	selected = state_init("pm_plots"),
    	inline = TRUE)
 })
 
@@ -67,11 +67,11 @@ output$ui_pmap <- renderUI({
 	  	uiOutput("ui_pm_brand"),
 	  	uiOutput("ui_pm_attr"),
 	  	uiOutput("ui_pm_pref"),
-		  radioButtons(inputId = "pm_dim_number", label = NULL, pm_dim_number,
-		   	selected = state_init("pm_dim_number",2),
+		  radioButtons(inputId = "pm_nr_dim", label = NULL, pm_nr_dim,
+		   	selected = state_init("pm_nr_dim",2),
 		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Plot'",
-		  	uiOutput("ui_pm_plot"),
+		  	uiOutput("ui_pm_plots"),
 	 	    div(class="row",
 		    	div(class="col-xs-6", numericInput("pm_scaling", "Arrow scale:",
 		    	    state_init("pm_scaling",2.1), .5, 4, .1)),
@@ -94,7 +94,7 @@ output$ui_pmap <- renderUI({
 })
 
 pm_plot <- reactive({
-	nrDim <- as.numeric(input$pm_dim_number)
+	nrDim <- as.numeric(input$pm_nr_dim)
 	nrPlots <- (nrDim * (nrDim - 1)) / 2
   list(plot_width = 650, plot_height = 650 * nrPlots)
 })
@@ -137,7 +137,7 @@ output$pmap <- renderUI({
 
 	if (length(input$pm_attr) < 2) return("Please select two or more attribute variables")
 
-  summary(.pmap(), pm_cutoff = input$pm_cutoff)
+  summary(.pmap(), cutoff = input$pm_cutoff)
 })
 
 .plot_pmap <- reactive({
@@ -155,7 +155,7 @@ output$pmap <- renderUI({
 })
 
 observe({
- if (not_pressed(input$pm_report)) return()
+ if (not_pressed(input$pmap_report)) return()
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list("","")

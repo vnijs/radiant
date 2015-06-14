@@ -4,21 +4,20 @@
 \alias{pmap}
 \title{Attribute based brand maps}
 \usage{
-pmap(dataset, pm_brand, pm_attr, data_filter = "", pm_pref = "",
-  pm_dim_number = 2)
+pmap(dataset, brand, attr, pref = "", nr_dim = 2, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{pm_brand}{A character variable with brand names}
+\item{brand}{A character variable with brand names}
 
-\item{pm_attr}{Names of numeric variables}
+\item{attr}{Names of numeric variables}
+
+\item{pref}{Names of numeric brand preference measures}
+
+\item{nr_dim}{Number of dimensions}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{pm_pref}{Names of numeric brand preference measures}
-
-\item{pm_dim_number}{Number of dimensions}
 }
 \value{
 A list of all variables defined in the function as an object of class pmap
@@ -30,7 +29,7 @@ Attribute based brand maps
 See \url{http://vnijs.github.io/radiant/marketing/pmap.html} for an example in Radiant
 }
 \examples{
-result <- pmap("computer","Brand","HighEnd:Business")
+result <- pmap("computer","brand","high_end:business")
 }
 \seealso{
 \code{\link{summary.pmap}} to summarize results

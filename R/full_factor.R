@@ -147,7 +147,7 @@ summary.full_factor <- function(object,
 #' @examples
 #' result <- full_factor("diamonds",c("price","carat","table"))
 #' plot(result)
-#' result <- full_factor("computer","HighEnd:Business")
+#' result <- full_factor("computer","high_end:business")
 #' summary(result)
 #'
 #' @seealso \code{\link{full_factor}} to calculate results
@@ -162,7 +162,7 @@ plot.full_factor <- function(x,
 
 	object <- x; rm(x)
 
-	# when no analysis was conducted (e.g., no variables selected)
+	## when no analysis was conducted (e.g., no variables selected)
 	if (is.character(object))
 		return(plot(x = 1, type = 'n', main = object, axes = FALSE, xlab = "", ylab = ""))
 
@@ -171,7 +171,6 @@ plot.full_factor <- function(x,
 		return(plot(x = 1, type = 'n', main = object, axes = FALSE, xlab = "", ylab = ""))
 	}
 
-	# df <- round(as.data.frame(object$fres$loadings[]),3)
 	df <- object$floadings
 	rnames <- rownames(df)
 	cnames <- colnames(df)
@@ -221,7 +220,7 @@ save_factors <- function(object) {
 #' @param floadings Data frame with loadings
 #' @param fsort Sort factor loadings
 #' @param cutoff Show only loadings with (absolute) values above cutoff (default = 0)
-#' @param fround Number of digits to show
+#' @param dec Number of decimals to show
 #'
 #' @examples
 #' result <- full_factor("diamonds",c("price","carat","table","x","y"))
@@ -231,16 +230,16 @@ save_factors <- function(object) {
 clean_loadings <- function(floadings,
                            cutoff = 0,
                            fsort = FALSE,
-                           fround = 8) {
+                           dec = 8) {
 
 	floadings %<>%
 		{if (fsort) select(fa.sort(.), -order) else .}
 
 	if (cutoff == 0) {
-	  floadings %<>% round(fround)
+	  floadings %<>% round(dec)
   } else {
   	ind <- abs(floadings) < cutoff
-  	floadings %<>% round(fround)
+  	floadings %<>% round(dec)
   	floadings[ind] <- ""
   }
   floadings

@@ -34,14 +34,14 @@ for the _diamonds_ data. These are histograms and a scatterplot
 reflect the clarity of the diamond.
 
 ```{r fig.width=7, fig.height=4}
-result <- regression(dataset = 'diamonds', reg_dep_var = 'price',
-                     reg_indep_var = 'carat')
+result <- regression(dataset = 'diamonds', dep_var = 'price',
+                     indep_var = 'carat')
 summary(result)
-plot(result, reg_plots = 'hist')
+plot(result, plots = 'hist')
 ```
 
 ```{r fig.width=7, fig.height=7}
-visualize(dataset = 'diamonds', viz_xvar = 'carat', viz_yvar = 'price',
-          viz_type = 'scatter', viz_color = 'clarity')
+visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
+          type = 'scatter', color = 'clarity')
 ```
 </pre>

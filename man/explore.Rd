@@ -4,19 +4,19 @@
 \alias{explore}
 \title{Explore data}
 \usage{
-explore(dataset, expl_vars = "", data_filter = "", expl_byvar = "",
-  expl_fun = c("length", "mean_rm"))
+explore(dataset, vars = "", byvar = "", fun = c("length", "mean_rm"),
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{expl_vars}{(Numerical) variables to summaries}
+\item{vars}{(Numerical) variables to summaries}
+
+\item{byvar}{Variable(s) to group data by before summarizing}
+
+\item{fun}{Functions to use for summarizing}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{expl_byvar}{Variable(s) to group data by before summarizing}
-
-\item{expl_fun}{Functions to use for summarizing}
 }
 \value{
 A list of all variables defined in the function as an object of class explore
@@ -30,9 +30,9 @@ See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Rad
 \examples{
 result <- explore("diamonds", "price:x")
 summary(result)
-result <- explore("diamonds", "price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 summary(result)
-diamonds \%>\% explore("price", expl_byvar = "cut", expl_fun = c("length", "skew"))
+diamonds \%>\% explore("price", byvar = "cut", fun = c("length", "skew"))
 }
 \seealso{
 \code{\link{summary.explore}} to show summaries

@@ -1,32 +1,32 @@
 ################################################################
 # Run R-code within Radiant using the shinyAce editor
 ################################################################
-r_example <- "# get the active dataset and show the first few observations
+r_example <- "## get the active dataset and show the first few observations
 .getdata() %>% head
 
-# access a specific dataset by name
+## access a specific dataset by name
 r_data[['diamonds']] %>% select(price, clarity) %>% head
 
-# add a variable to the diamonds data
+## add a variable to the diamonds data
 dat <- r_data[['diamonds']]
 dat$log_price <- log(dat$price)
 
-# show the first observations
+## show the first observations
 dat %>% select(price, log_price) %>% head
 
-# create a histogram of prices
+## create a histogram of prices
 dat %>% ggplot(aes(x = price)) + geom_histogram()
 
-# and a histogram of log-prices
+## and a histogram of log-prices
 dat %>% ggplot(aes(x = log_price)) + geom_histogram()
 
-# open help in the R-studio viewer from Radiant
+## open help in the R-studio viewer from Radiant
 help(package = 'radiant')
 
-# if you are familiar with Shiny you can call reactives here
-# for example, if you just transformed some variables in Data > Transform
-# you can call the transform_main reacive to see the latest result
-# this can very useful for debugging
+## if you are familiar with Shiny you can call reactives here
+## for example, if you just transformed some variables in Data > Transform
+## you can call the transform_main reacive to see the latest result
+## this can very useful for debugging
 transform_main() %>% head"
 
 output$rcode <- renderUI({
@@ -64,7 +64,6 @@ observe({
   if (!is.null(input$rEval)) isolate(valsCode$code <- valsCode$code + 1)
 })
 
-# output$rmd_code_output <- renderPrint({
 output$rmd_code_output <- renderUI({
 
   if (valsCode$code == 1) return()
@@ -91,7 +90,7 @@ output$saveCode <- downloadHandler(
   }
 )
 
-# loading r-code from disk
+## loading r-code from disk
 observe({
   inFile <- input$load_code
   if (!is.null(inFile)) {

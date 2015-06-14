@@ -4,10 +4,12 @@
 \alias{summary.sampling}
 \title{Summary method for the sampling function}
 \usage{
-\method{summary}{sampling}(object, ...)
+\method{summary}{sampling}(object, print_sf = TRUE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{sampling}}}
+
+\item{print_sf}{Print full sampling frame. Default is TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -19,7 +21,7 @@ See \url{http://vnijs.github.io/radiant/quant/sampling} for an example in Radian
 }
 \examples{
 set.seed(1234)
-result <- sampling("rndnames","Names",10)
+result <- sampling("rndnames", "Names", 10)
 summary(result)
 }
 \seealso{

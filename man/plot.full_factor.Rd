@@ -22,7 +22,7 @@ See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an examp
 \examples{
 result <- full_factor("diamonds",c("price","carat","table"))
 plot(result)
-result <- full_factor("computer","HighEnd:Business")
+result <- full_factor("computer","high_end:business")
 summary(result)
 }
 \seealso{

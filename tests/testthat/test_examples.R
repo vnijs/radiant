@@ -1,3 +1,3 @@
-# context("Radiant examples")
-#
-# test_examples()
+context("Radiant examples")
+
+test_examples()

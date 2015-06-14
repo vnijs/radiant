@@ -4,17 +4,17 @@
 \alias{plot.glm_reg}
 \title{Plot method for the glm_reg function}
 \usage{
-\method{plot}{glm_reg}(x, glm_plots = "", glm_conf_level = 0.95,
-  glm_coef_int = FALSE, shiny = FALSE, ...)
+\method{plot}{glm_reg}(x, plots = "", conf_lev = 0.95, intercept = FALSE,
+  shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{glm_reg}}}
 
-\item{glm_plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
+\item{plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
 
-\item{glm_conf_level}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
+\item{conf_lev}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
 
-\item{glm_coef_int}{Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default}
+\item{intercept}{Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -27,8 +27,8 @@ Plot method for the glm_reg function
 See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 }
 \examples{
-result <- glm_reg("titanic", "survived", c("pclass","sex"), glm_levels = "Yes")
-plot(result, glm_plots = "coef")
+result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
+plot(result, plots = "coef")
 }
 \seealso{
 \code{\link{glm_reg}} to generate results

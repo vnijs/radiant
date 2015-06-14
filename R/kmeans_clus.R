@@ -53,7 +53,7 @@ kmeans_clus <- function(dataset, vars,
 	}
 
 	clus_names <- paste("Cluster",1:nr_clus)
-	getdata(dataset, vars, filt = data_filter) %>%
+	sshhr(getdata(dataset, vars, filt = data_filter)) %>%
 		mutate(clus_var = km_out$cluster) %>%
 		group_by(clus_var) %>%
 		summarise_each(funs(mean)) %>%
@@ -144,7 +144,7 @@ plot.kmeans_clus <- function(x,
 	object <- x; rm(x)
 
 	# reloading the data
-	with(object, getdata(dataset, vars, filt = data_filter)) %>%
+	with(object, sshhr(getdata(dataset, vars, filt = data_filter))) %>%
 	mutate(clus_var = as.factor(object$km_out$cluster)) -> dat
 	vars <- colnames(dat) %>% .[-length(.)]
 

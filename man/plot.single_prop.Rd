@@ -4,12 +4,12 @@
 \alias{plot.single_prop}
 \title{Plot method for the single_prop function}
 \usage{
-\method{plot}{single_prop}(x, sp_plots = "hist", shiny = FALSE, ...)
+\method{plot}{single_prop}(x, plots = "hist", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_prop}}}
 
-\item{sp_plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (sp_comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
+\item{plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -22,10 +22,10 @@ Plot method for the single_prop function
 See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 }
 \examples{
-result <- single_prop("diamonds","clarity", sp_levels = "IF", sp_comp_value = 0.05)
-plot(result, sp_plots = c("hist", "simulate"))
-result <- single_prop("titanic","pclass", sp_levels = "1st")
-plot(result, sp_plots = c("hist","simulate"))
+result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
+plot(result, plots = c("hist", "simulate"))
+result <- single_prop("titanic","pclass", lev = "1st")
+plot(result, plots = c("hist","simulate"))
 }
 \seealso{
 \code{\link{single_prop}} to generate the result

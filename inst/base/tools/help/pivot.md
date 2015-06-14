@@ -6,10 +6,10 @@ For example, with the `diamonds` data loaded drag-and-drop `cut` to the column o
 
 ![pivot table](figures/pivot.png)
 
-#### Filter
+### Filter
 
 Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for Data > View for details.
 
-#### Source
+### Source
 
 The functionality in the pivot tab was developed by [Nicolas Kructen](http://nicolas.kruchten.com/pivottable/examples/). The binding that allows R to communicate with the javascript library was written by [Enzo Martoglio](https://github.com/smartinsightsfromdata).

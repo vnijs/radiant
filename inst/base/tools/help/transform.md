@@ -1,19 +1,19 @@
 > Modify type, change, normalize, create, add, reorder, and remove variables in the data.
 
-#### Type
+### Type
 
 When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the `Save changes` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
 
 1. As factor: convert a variable to type factor (i.e., a categorical variable)
-2. As number: convert a variable to type numeric 
-3. As integer: convert a variable to type integer 
+2. As number: convert a variable to type numeric
+3. As integer: convert a variable to type integer
 4. As character: convert a variable to type character (i.e., strings)
 5. As date (mdy): convert a character of factor variable to a date if the dates are ordered as month-day-year
 6. As date (dmy): convert a character of factor variable to a date if the dates are ordered as day-month-year
 7. As date (dmy): convert a character of factor variable to a date if the dates are ordered as year-month-day
 8. As date/time (ymd_hms): convert a character of factor variable to a date if the dates are ordered as year-month-day-hour-minute-second
 
-#### Change
+### Change
 
 When you select `Change` from the `Transformation type` drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose `Log` from the `Apply function` menu. A new variable is created with the prefix `log_`. Click the `Save changes` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
@@ -26,11 +26,11 @@ When you select `Change` from the `Transformation type` drop-down another drop-d
 7. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
 8. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
 
-#### Normalize
+### Normalize
 
 Choose `Normalize` from the `Transformation type` drop-down standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. Then click the `Save changes` button.
 
-#### Create
+### Create
 
 Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Save changes` to add it to the dataset.
 
@@ -56,19 +56,19 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 6. Create a categorical variable with two levels
 
-	z = ifelse(x < y, 'x < y', 'x < y')
+	z = ifelse(x < y, 'smaller', 'bigger')
 
 7. Create a categorical variable with three levels
 
-	z = ifelse(x < 60, 'x < 60', ifelse(x > 65, 'x > 65', '60-65'))
+	z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
 
 Note: For 6 and 7 you may need to convert the new variable to a factor for analysis (see `Type` above)
 
-#### Clipboard
+### Clipboard
 
 It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` dropdown and paste your new data into the `Paste from Excel` box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click `Save changes`.
 
-#### Recode
+### Recode
 
 To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` dropdown. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Click `Save changes` to add the new variable to the data. Some examples are given below.
 
@@ -88,27 +88,27 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	400 = NA
 
-#### Rename
+### Rename
 
 Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Save changes` to alter the variable names in the original data.
 
-#### Reorder or remove columns
+### Reorder or remove columns
 
 Choose `Reorder/Remove columns` from the `Transformation type` dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Save changes` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data > Manage page.
 
-#### Reorder or remove levels
+### Reorder or remove levels
 
 If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Save changes` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data > Manage tab. To temporarily remove levels from the data use the `Filter` option discussed below.
 
-#### Remove missing
+### Remove missing values
 
 Choose `Remove missing` from the `Transformation type` dropdown to eliminate all rows with one or more missing values. Press `Save changes` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
 
-#### Filter
+### Filter
 
-There are several ways to select a subset of the data to view. The `Filter` box on the left (click the checkbox first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators. 
+There are several ways to select a subset of the data to view. The `Filter` box on the left (click the checkbox first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators.
 
-You can also use string matching to select rows. For example, type `grepl("ood",cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insentive search you would use `grepl("GOOD",cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid. 
+You can also use string matching to select rows. For example, type `grepl("ood",cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insentive search you would use `grepl("GOOD",cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid.
 
 It is important to note that filters are _presistent_. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press return or (2) uncheck the `Filter` checkbox.
 

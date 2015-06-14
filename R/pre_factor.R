@@ -66,7 +66,7 @@ pre_factor <- function(dataset, vars,
 #' result <- pre_factor("diamonds",c("price","carat","table"))
 #' summary(result)
 #' diamonds %>% pre_factor(c("price","carat","table")) %>% summary
-#' result <- pre_factor("computer","HighEnd:Business")
+#' result <- pre_factor("computer","high_end:business")
 #' summary(result)
 #'
 #' @seealso \code{\link{pre_factor}} to calculate results

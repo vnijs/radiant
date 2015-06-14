@@ -4,12 +4,12 @@
 \alias{summary.mds}
 \title{Summary method for the mds function}
 \usage{
-\method{summary}{mds}(object, mds_round = 1, ...)
+\method{summary}{mds}(object, dec = 1, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{mds}}}
 
-\item{mds_round}{Rounding to use for output (default = 0). +1 used for coordinates. +2 used for stress measure. Not currently accessible in Radiant}
+\item{dec}{Rounding to use for output (default = 0). +1 used for coordinates. +2 used for stress measure. Not currently accessible in Radiant}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -22,7 +22,7 @@ See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Ra
 \examples{
 result <- mds("city","from","to","distance")
 summary(result)
-summary(result, mds_round = 2)
+summary(result, dec = 2)
 city \%>\% mds("from", "to","distance") \%>\% summary
 }
 \seealso{

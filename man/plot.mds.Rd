@@ -4,14 +4,14 @@
 \alias{plot.mds}
 \title{Plot method for the mds function}
 \usage{
-\method{plot}{mds}(x, mds_rev_dim = "", mds_fontsz = 1.3, ...)
+\method{plot}{mds}(x, rev_dim = "", fontsz = 1.3, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{mds}}}
 
-\item{mds_rev_dim}{Flip the axes in plots}
+\item{rev_dim}{Flip the axes in plots}
 
-\item{mds_fontsz}{Font size to use in plots}
+\item{fontsz}{Font size to use in plots}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -24,8 +24,8 @@ See \url{http://vnijs.github.io/radiant/marketing/mds.html} for an example in Ra
 \examples{
 result <- mds("city","from","to","distance")
 plot(result)
-plot(result, mds_rev_dim = 1:2)
-plot(result, mds_rev_dim = 1:2, mds_fontsz = 2)
+plot(result, rev_dim = 1:2)
+plot(result, rev_dim = 1:2, fontsz = 2)
 }
 \seealso{
 \code{\link{mds}} to calculate results

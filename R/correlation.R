@@ -103,8 +103,8 @@ plot.correlation_ <- function(x, ...) {
 
 	object <- x; rm(x)
 
-	# using correlation_ to avoid print method conflict with nlme
-	# based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
+	## using correlation_ to avoid print method conflict with nlme
+	## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
 	panel.plot <- function(x, y) {
 	    usr <- par("usr"); on.exit(par(usr))
 	    par(usr = c(0, 1, 0, 1))

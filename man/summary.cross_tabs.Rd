@@ -4,12 +4,12 @@
 \alias{summary.cross_tabs}
 \title{Summary method for the cross_tabs function}
 \usage{
-\method{summary}{cross_tabs}(object, ct_check = "", ...)
+\method{summary}{cross_tabs}(object, check = "", ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{cross_tabs}}}
 
-\item{ct_check}{Show table(s) for variables ct_var1 and ct_var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)}
+\item{check}{Show table(s) for variables var1 and var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -21,7 +21,7 @@ See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in
 }
 \examples{
 result <- cross_tabs("newspaper", "Income", "Newspaper")
-summary(result, ct_check = c("observed","expected","chi_sq"))
+summary(result, check = c("observed","expected","chi_sq"))
 newspaper \%>\% cross_tabs("Income", "Newspaper") \%>\% summary("observed")
 }
 \seealso{

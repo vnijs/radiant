@@ -4,21 +4,21 @@
 \alias{regression}
 \title{Linear regression using OLS}
 \usage{
-regression(dataset, reg_dep_var, reg_indep_var, data_filter = "",
-  reg_int_var = "", reg_check = "")
+regression(dataset, dep_var, indep_var, int_var = "", check = "",
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{reg_dep_var}{The dependent variable in the regression}
+\item{dep_var}{The dependent variable in the regression}
 
-\item{reg_indep_var}{Independent variables in the regression}
+\item{indep_var}{Independent variables in the regression}
+
+\item{int_var}{Interaction terms to include in the model}
+
+\item{check}{"standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
-
-\item{reg_int_var}{Interaction terms to include in the model}
-
-\item{reg_check}{"standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation}
 }
 \value{
 A list of all variables used in regression as an object of class regression
@@ -31,7 +31,7 @@ See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in
 }
 \examples{
 result <- regression("diamonds", "price", c("carat","clarity"))
-result <- regression("diamonds", "price", c("carat","clarity"), reg_check = "standardize")
+result <- regression("diamonds", "price", c("carat","clarity"), check = "standardize")
 }
 \seealso{
 \code{\link{summary.regression}} to summarize results

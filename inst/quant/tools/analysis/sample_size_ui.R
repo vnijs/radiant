@@ -4,14 +4,14 @@
 ss_type <- c("Mean" = "mean", "Proportion" = "proportion")
 ss_pop_correction <- c("Yes" = "yes", "No" = "no")
 
-# list of function arguments
+## list of function arguments
 ss_args <- as.list(formals(sample_size))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 ss_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(ss_args))
-    ss_args[[i]] <- input[[i]]
+    ss_args[[i]] <- input[[paste0("ss_",i)]]
   ss_args
 })
 
@@ -21,19 +21,19 @@ output$ui_sample_size <- renderUI({
 		  radioButtons(inputId = "ss_type", label = NULL, choices = ss_type,
 	  	  selected = state_init("ss_type", "mean"), inline = TRUE),
 		  conditionalPanel(condition = "input.ss_type == 'mean'",
-		    numericInput("ss_mean_err", "Acceptable Error (e.g., $10):", min = 0,
-		  		value = state_init("ss_mean_err", 2), step = .1),
-		    numericInput("ss_mean_s", "Sample std. deviation:", min = 0,
-		  		value = state_init("ss_mean_s", 10), step = .1)
+		    numericInput("ss_err_mean", "Acceptable Error (e.g., $10):", min = 0,
+		  		value = state_init("ss_err_mean", 2), step = .1),
+		    numericInput("ss_sd_mean", "Sample std. deviation:", min = 0,
+		  		value = state_init("ss_sd_mean", 10), step = .1)
 	  	),
 		  conditionalPanel(condition = "input.ss_type != 'mean'",
-		  	numericInput("ss_prop_err", "Acceptable Error (e.g., .03):", min = 0,
-          max = 1, value = state_init("ss_prop_err", .1), step = .01),
-		    numericInput("ss_prop_p", "Sample proportion:", min = 0, max = 1,
-		  		value = state_init("ss_prop_p", .5), step = .05)
+		  	numericInput("ss_err_prop", "Acceptable Error (e.g., .03):", min = 0,
+          max = 1, value = state_init("ss_err_prop", .1), step = .01),
+		    numericInput("ss_p_prop", "Sample proportion:", min = 0, max = 1,
+		  		value = state_init("ss_p_prop", .5), step = .05)
 	  	),
-	    numericInput("ss_z", "Confidence level (z-value):", min = 0,
-	  		value = state_init("ss_z", 1.96), step = .1),
+	    numericInput("ss_zval", "Confidence level (z-value):", min = 0,
+	  		value = state_init("ss_zval", 1.96), step = .1),
 	    numericInput("ss_incidence", "Incidence rate:", min = 0, max = 1,
 	  		value = state_init("ss_incidence", 1), step = .05),
 	    numericInput("ss_response", "Response rate:", min = 0, max = 1,
@@ -56,7 +56,7 @@ output$sample_size <- renderUI({
 
     register_print_output("summary_sample_size", ".summary_sample_size")
 
-    # one output with components stacked
+    ## one output with components stacked
     ss_output_panels <- tagList(
        tabPanel("Summary", verbatimTextOutput("summary_sample_size"))
     )

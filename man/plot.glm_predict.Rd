@@ -4,21 +4,21 @@
 \alias{plot.glm_predict}
 \title{Plot method for the predict.glm_reg function}
 \usage{
-\method{plot}{glm_predict}(x, glm_xvar = "", glm_facet_row = ".",
-  glm_facet_col = ".", glm_color = "none", glm_conf_level = 0.95, ...)
+\method{plot}{glm_predict}(x, xvar = "", facet_row = ".", facet_col = ".",
+  color = "none", conf_lev = 0.95, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{predict.glm_reg}}.}
 
-\item{glm_xvar}{Variable to display along the X-axis of the plot}
+\item{xvar}{Variable to display along the X-axis of the plot}
 
-\item{glm_facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
+\item{facet_row}{Create vertically arranged subplots for each level of the selected factor variable}
 
-\item{glm_facet_col}{Create horizontally arranged subplots for each level of the selected factor variable}
+\item{facet_col}{Create horizontally arranged subplots for each level of the selected factor variable}
 
-\item{glm_color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
+\item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
 
-\item{glm_conf_level}{Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.}
+\item{conf_lev}{Confidence level to use for prediction intervals (.95 is the default). Note that the error bars for predicitions are approximations at this point.}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -29,22 +29,22 @@ Plot method for the predict.glm_reg function
 See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 }
 \examples{
-result <- glm_reg("titanic", "survived", c("pclass","sex","age"), glm_levels = "Yes")
-pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass)")
-plot(pred, glm_xvar = "pclass")
-pred <- predict(result, glm_predict_cmd = "age = 0:100")
-plot(pred, glm_xvar = "age")
-pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), sex = levels(sex)")
-plot(pred, glm_xvar = "pclass", glm_color = "sex")
-pred <- predict(result, glm_predict_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
-plot(pred, glm_xvar = "pclass", glm_color = "age")
-plot(pred, glm_xvar = "age", glm_color = "pclass")
-pred <- predict(result, glm_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
-plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
-plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
-pred <- predict(result, glm_predict_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
-plot(pred, glm_xvar = "age", glm_color = "sex", glm_facet_col = "pclass")
-plot(pred, glm_xvar = "age", glm_color = "pclass", glm_facet_col = "sex")
+result <- glm_reg("titanic", "survived", c("pclass","sex","age"), lev = "Yes")
+pred <- predict(result, pred_cmd = "pclass = levels(pclass)")
+plot(pred, xvar = "pclass")
+pred <- predict(result, pred_cmd = "age = 0:100")
+plot(pred, xvar = "age")
+pred <- predict(result, pred_cmd = "pclass = levels(pclass), sex = levels(sex)")
+plot(pred, xvar = "pclass", color = "sex")
+pred <- predict(result, pred_cmd = "pclass = levels(pclass), age = seq(0,100,20)")
+plot(pred, xvar = "pclass", color = "age")
+plot(pred, xvar = "age", color = "pclass")
+pred <- predict(result, pred_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,20)")
+plot(pred, xvar = "age", color = "sex", facet_col = "pclass")
+plot(pred, xvar = "age", color = "pclass", facet_col = "sex")
+pred <- predict(result, pred_cmd="pclass=levels(pclass), sex=levels(sex), age=seq(0,100,5)")
+plot(pred, xvar = "age", color = "sex", facet_col = "pclass")
+plot(pred, xvar = "age", color = "pclass", facet_col = "sex")
 }
 \seealso{
 \code{\link{glm_reg}} to generate the result

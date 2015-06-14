@@ -1,6 +1,6 @@
 > Estimate a Logit (Probit) model
 
-#### Functionality
+### Functionality
 
 Selecting a binary dependent variable and one or more independents variables. Also specify the level of the dependent variable to use as _success_ (i.e., the `Choose level:` dropdown). In the example data file `titanic`, success for the variable `survived` would be the level `Yes`.
 
@@ -23,7 +23,7 @@ Various additional outputs and options can be selected:
 * Step-wise: A data-mining approach to select the best fitting model
 * Variables to test: We can test if two or more variables together add significantly to the fit of a model. This function can be very useful to test if the overall influence of a variable of type `factor` is significant.
 
-#### Example
+### Example
 
 We will use a dataset that describes the survival status of individual passengers on the Titanic. The principal source for data about Titanic passengers is the Encyclopedia Titanic. One of the original sources is Eaton & Haas (1994) Titanic: Triumph and Tragedy, Patrick Stephens Ltd, which includes a passenger list created by many researchers and edited by Michael A. Findlay. Suppose we want to investigate which factors are most strongly associated with the chance of surviving the sinking of the Titanic. Lets focus on four variables in the database:
 
