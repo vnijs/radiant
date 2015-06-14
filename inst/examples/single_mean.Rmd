@@ -11,10 +11,8 @@ Below is the output from Radiant used to evaluate if the average price in a samp
 
 ```{r echo=FALSE, comment=NA, fig.width=7, fig.height=7}
 suppressMessages(library(radiant))
-
-result <- single_mean(dataset = "diamonds", sm_var = "price",
-                      sm_comp_value = 1000, sm_alternative = "greater",
-                      sm_sig_level = 0.95)
+result <- single_mean(dataset = "diamonds", var = "price", comp_value = 1000,
+                      alternative = "greater", conf_lev = 0.95)
 summary(result)
 plot(result)
 ```

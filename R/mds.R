@@ -13,9 +13,9 @@
 #' @return A list of all variables defined in the function as an object of class mds
 #'
 #' @examples
-#' result <- mds("city","from","to","distance")
+#' result <- mds("city", "from", "to", "distance")
 #' summary(result)
-#' result <- mds("diamonds","clarity","cut","price")
+#' result <- mds("diamonds", "clarity", "cut", "price")
 #' summary(result)
 #'
 #' @seealso \code{\link{summary.mds}} to summarize results
@@ -35,12 +35,12 @@ mds <- function(dataset, id1, id2, dis,
 	if (!is_string(dataset)) dataset <- "-----"
 
 	d <- dat[,dis]
-	id1_dat <- dat[,id1] %>% as.character
-	id2_dat <- dat[,id2] %>% as.character
+	id1_dat <- dat[ ,id1] %>% as.character
+	id2_dat <- dat[ ,id2] %>% as.character
 	rm(dat)
 
 	## ids
-	lab <- unique(c(id1_dat,id2_dat))
+	lab <- unique(c(id1_dat, id2_dat))
 	nrLev <- length(lab)
 
 	lower <- (nrLev * (nrLev -1)) / 2
@@ -53,7 +53,6 @@ mds <- function(dataset, id1, id2, dis,
 	} else if ((lower + nrLev) == nrObs) {
 		mds_dis_mat[lower.tri(mds_dis_mat, diag = TRUE)] <- d
 	} else {
-		# return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset." %>% set_class(c("mds",class(.))))
 		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset." %>% set_class(c("mds",class(.))))
 	}
 
@@ -90,10 +89,10 @@ mds <- function(dataset, id1, id2, dis,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- mds("city","from","to","distance")
+#' result <- mds("city", "from", "to", "distance")
 #' summary(result)
 #' summary(result, dec = 2)
-#' city %>% mds("from", "to","distance") %>% summary
+#' city %>% mds("from", "to", "distance") %>% summary
 #'
 #' @seealso \code{\link{mds}} to calculate results
 #' @seealso \code{\link{plot.mds}} to plot results
@@ -107,7 +106,7 @@ summary.mds <- function(object, dec = 1, ...) {
 	cat("Data        :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables   :", paste0(c(object$id1, object$id2, object$dis), collapse=", "), "\n")
+	cat("Variables   :", paste0(c(object$id1, object$id2, object$dis), collapse = ", "), "\n")
 	cat("# dimensions:", object$nr_dim, "\n")
 	meth <- if (object$method == "non-metric") "Non-metric" else "Metric"
 	cat("Method      :", meth, "\n")
@@ -160,10 +159,10 @@ plot.mds <- function(x,
 
 	## set plot space
 	if (object$nr_dim == 3) {
-		op <- par(mfrow=c(3,1))
+		op <- par(mfrow = c(3, 1))
 		fontsz <- fontsz + .6
 	} else {
-		op <- par(mfrow=c(1,1))
+		op <- par(mfrow = c(1, 1))
 	}
 
 	## reverse selected dimensions
@@ -173,18 +172,16 @@ plot.mds <- function(x,
 	}
 
 	## plot maps
-	for (i in 1:(object$nr_dim-1)) {
-		for (j in (i+1):object$nr_dim) {
-			plot(c(-lim,lim),type = "n",xlab='', ylab='', axes = F, asp = 1,
-			     yaxt = 'n', xaxt = 'n', ylim=c(-lim, lim), xlim=c(-lim,lim))
-			title(paste("Dimension",i,"vs Dimension",j), cex.main = fontsz)
-			points(object$res$points[,i], object$res$points[,j], pch = 16, cex = .6)
-			# text(object$res$points[,i], object$res$points[,j], object$lab,
-			#      col=rainbow(object$nrLev,start=.6,end=.1), adj = c(0.4,-.4))
-			wordcloud::textplot(object$res$points[,i], object$res$points[,j]+(.04*lim),
-			                    object$lab, col=rainbow(object$nrLev,start=.6,end=.1),
+	for (i in 1:(object$nr_dim - 1)) {
+		for (j in (i + 1):object$nr_dim) {
+			plot(c(-lim, lim), type = "n", xlab= "", ylab = "", axes = FALSE, asp = 1,
+			     yaxt = "n", xaxt = "n", ylim = c(-lim, lim), xlim = c(-lim, lim))
+			title(paste("Dimension", i, "vs Dimension", j), cex.main = fontsz)
+			points(object$res$points[ ,i], object$res$points[ ,j], pch = 16, cex = .6)
+			wordcloud::textplot(object$res$points[ ,i], object$res$points[ ,j] +
+			                    (.04 * lim), object$lab, col = rainbow(object$nrLev, start = .6, end = .1),
 			                    cex = fontsz, new = FALSE)
-			abline(v=0, h=0)
+			abline(v = 0, h = 0)
 		}
 	}
 	par(op)
