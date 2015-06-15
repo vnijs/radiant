@@ -8,7 +8,7 @@ Radiant is a platform-independent browser-based interface for business analytics
 
 ## Breaking change (6/15/2015)
 
-If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>. Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> for questions/comments.
+If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>. 
 
 ## Key features
 
@@ -128,7 +128,7 @@ The source code is available on GitHub at <https://github.com/vnijs/radiant>. Th
 
 ## Credits
 
-Radiant would not be possible without [R](http://cran.rstudio.com/) and [Shiny](http://shiny.rstudio.com/). I would like to thank [Joe Cheng](https://github.com/jcheng5), [Winston Chang](https://github.com/wch), and [Yihui Xie](https://github.com/yihui) for answering questions, providing suggestions, and providing amazing tools for the R community. For an overview of other packages that Radiant relies on please see <a href="http://vnijs.github.io/radiant/about.html">vnijs.github.io/radiant/about.html</a>.
+Radiant would not be possible without [R](http://cran.rstudio.com/) and [Shiny](http://shiny.rstudio.com/). I would like to thank [Joe Cheng](https://github.com/jcheng5), [Winston Chang](https://github.com/wch), and [Yihui Xie](https://github.com/yihui) for answering questions, providing suggestions, and creating amazing tools for the R community. For an overview of other packages that Radiant relies on please see the <a href="http://vnijs.github.io/radiant/about.html" target="_blank">about</a> page.
 
 
 ## License
