@@ -135,6 +135,8 @@ trunc_char <- function(x) if (is.character(x)) strtrim(x,17) else x
 
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
+
+
   n <- 0
   {if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat} %>%
     { n <<- nrow(.); . } %>%
@@ -142,12 +144,15 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
     mutate_each(funs(d2c)) %>%
     mutate_each(funs(trunc_char)) %>%
     xtable::xtable(.) %>%
-    print(type = 'html',  print.results = FALSE, include.rownames = FALSE) %>%
+    print(type = 'html',  print.results = FALSE, include.rownames = FALSE,
+          sanitize.text.function = identity,
+          html.table.attributes = "class='table table-condensed table-hover'") %>%
+    # sub("<table border=*.1*.>","<table class='table table-condensed table-hover'>", .,
+    #     perl = TRUE) %>%
     paste0(title, .) %>%
-    sub("<table border=*.1*.>","<table class='table table-condensed table-hover'>", .,
-        perl = TRUE) %>%
     {if (n <= nshow) . else paste0(.,'\n<label>',nshow,' of ', n, ' rows shown. See View-tab for details.</label>')} %>%
     enc2utf8
+
 }
 
 # show_data_snippet(mtcars)

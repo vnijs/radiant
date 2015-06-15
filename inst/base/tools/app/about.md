@@ -6,7 +6,9 @@
 
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/vnijs/radiant/issues. For other questions and comments please use radiant@rady.ucsd.edu.
 
-<!-- Version: 0.2.30, Date: 2015-6-14 -->
+## Breaking change (6/15/2015)
+
+If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>. Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> for questions/comments.
 
 ## Key features
 
@@ -123,6 +125,10 @@ numericInput("sm_comp_value", "Comparison value:", state_init('sm_comp_value',sm
 ## Source code
 
 The source code is available on GitHub at <https://github.com/vnijs/radiant>. Three (related) apps are included in the inst/ directory. `Base`, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The `quant` app sources the code from base and extends it. This app is used in the _Quantitative Analysis_ class at the Rady School of Management (UCSD). Finally, the `marketing` app sources the code from `base` and `quant` and extends it with additional tools. The `quant` app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The `marketing` app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc. This app is used in the _Research for Marketing Decisions_ class at Rady (UCSD).
+
+## Credits
+
+Radiant would not be possible without [R](http://cran.rstudio.com/) and [Shiny](http://shiny.rstudio.com/). I would like to thank [Joe Cheng](https://github.com/jcheng5), [Winston Chang](https://github.com/wch), and [Yihui Xie](https://github.com/yihui) for answering questions, providing suggestions, and providing amazing tools for the R community. For an overview of other packages that Radiant relies on please see <a href="http://vnijs.github.io/radiant/about.html">vnijs.github.io/radiant/about.html</a>.
 
 
 ## License
