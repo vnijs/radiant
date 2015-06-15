@@ -2,7 +2,7 @@ Radiant is a platform-independent browser-based interface for business analytics
 
 ## Breaking change (6/15/2015)
 
-If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>. Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> for questions/comments.
+If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>. 
 
 ## Key features
 
