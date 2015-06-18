@@ -72,7 +72,7 @@ explore <- function(dataset, vars = "",
     ##################################################
 
     for (f in fun)
-      res[[f]] <- dat %>% summarise_each(as.formula(paste0("~",f))) %>% as_data_frame
+      res[[f]] <- dat %>% summarise_each(as.formula(paste0("~",f))) %>% as.data.frame
   }
 
   ## dat no longer needed
