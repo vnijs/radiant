@@ -26,6 +26,19 @@ explore <- function(dataset, vars = "",
                     fun = c("length", "mean_rm"),
                     data_filter = "") {
 
+# https://github.com/hadley/dplyr/issues/893
+# structure(list(price = c(580L, 650L, 630L, 706L, 1080L, 3082L,
+# 3328L, 4229L, 1895L, 3546L, 752L, 13003L, 814L, 6115L, 645L,
+# 3749L, 2926L, 765L, 1140L, 1158L), cut = structure(c(2L, 4L,
+# 4L, 2L, 3L, 2L, 2L, 3L, 4L, 1L, 1L, 3L, 2L, 4L, 3L, 3L, 1L, 2L,
+# 2L, 2L), .Label = c("Good", "Ideal", "Premium", "Very Good"), class = "factor")), row.names = c(NA,
+# -20L), .Names = c("price", "cut"), class = "data.frame") %>%
+  # diamonds %>%
+  # group_by(cut) %>%
+  # select(price) %>%
+  # # mutate_each("as.numeric") %>%
+  # summarise(price = median(price))
+
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar)
 
@@ -39,20 +52,33 @@ explore <- function(dataset, vars = "",
     res <- capture.output(getsummary(dat))
   } else {
     res <- list()
-    if (!is.factor(dat[[byvar]])) dat[[byvar]] %<>% as.factor
+    for(bv in byvar)
+      if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
     dc <- getclass(dat)
     isNum <- "numeric" == dc | "integer" == dc
-    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum))
-    for (f in fun) {
-      gf <- get(f)
-      res[[f]] <- dat %>% summarise_each(funs(gf)) %>% as.data.frame
-    }
+
+    ##################################################
+    ##################################################
+    ##################################################
+    ##################################################
+    # remove mutate_each in next line one the median fix comes out in 0.5.0
+    ##################################################
+    ##################################################
+    ##################################################
+    ##################################################
+    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
+    ##################################################
+    ##################################################
+    ##################################################
+
+    for (f in fun)
+      res[[f]] <- dat %>% summarise_each(as.formula(paste0("~",f))) %>% as_data_frame
   }
 
   ## dat no longer needed
   rm(dat)
 
-  environment() %>% as.list %>% set_class(c("explore",class(.)))
+  environment() %>% as.list %>% set_class(c("explore", class(.)))
 }
 
 #' Summary method for the explore function

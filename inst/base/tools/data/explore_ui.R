@@ -38,9 +38,14 @@ output$ui_expl_byvar <- renderUI({
 
 output$ui_expl_fun <- renderUI({
   if (is_empty(input$expl_byvar)) return()
+
+  sel <- if(is_empty(input$expl_fun)) state_multiple("expl_fun", expl_functions, c("length","mean_rm"))
+         else input$expl_fun
+
   selectizeInput("expl_fun", label = "Apply function(s):",
                  choices = expl_functions,
-                 selected = state_multiple("expl_fun", expl_functions, c("length","mean_rm")),
+                 # selected = state_multiple("expl_fun", expl_functions, c("length","mean_rm")),
+                 selected = sel,
                  multiple = TRUE,
                  options = list(placeholder = 'Select functions',
                                 plugins = list('remove_button', 'drag_drop'))
