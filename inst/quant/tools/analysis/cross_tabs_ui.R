@@ -58,7 +58,7 @@ ct_plot_width <- function()
 ct_plot_height <- function()
 	ct_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
-# output is called from the main radiant ui.R
+## output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
 
 		register_print_output("summary_cross_tabs", ".summary_cross_tabs")
@@ -66,7 +66,7 @@ output$cross_tabs <- renderUI({
                          height_fun = "ct_plot_height",
                          width_fun = "ct_plot_width")
 
-		# two separate tabs
+		## two separate tabs
 		ct_output_panels <- tabsetPanel(
 	    id = "tabs_cross_tabs",
 	    tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),

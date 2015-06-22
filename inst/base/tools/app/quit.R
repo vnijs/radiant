@@ -24,6 +24,7 @@ output$savequit <- renderUI({
       help_modal('Quit','quit_help',inclMD(file.path(r_path,"base/tools/help/quit.md")))
     ),
     mainPanel(
+      # verbatimTextOutput("show_session"),
       conditionalPanel(condition = "input.show_input == true",
         verbatimTextOutput("show_input")
       ),
@@ -43,6 +44,15 @@ output$downloadStateQuit <- downloadHandler(
     saveState(file)
   }
 )
+
+# observe({
+#   updateTabsetPanel(session, "nav_radiant", selected = "Quit")
+# })
+
+# output$show_session <- renderPrint({
+#   cat("Session list:\n")
+#   reactiveValuesToList(session$clientData)
+# })
 
 output$show_input <- renderPrint({
   input$show_input # only update when you toggle the checkbox
