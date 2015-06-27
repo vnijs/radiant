@@ -127,5 +127,5 @@ plot.correlation_ <- function(x, ...) {
 		# lines(stats::lowess(y~x), col="blue")
 	}
 	object$dat %>% {if (is.null(.)) object else .} %>%
-	pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
+	  pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }
