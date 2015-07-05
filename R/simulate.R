@@ -47,17 +47,17 @@ simulater <- function(const = "",
   ## parsing constant
   # const <- "non_labor_cost = 3995\n\ncost = 11\n   \n \n\n\n\n\n   "
   const %<>% cleaner
-  if(const != "") {
+  if (const != "") {
     s <- const %>% spliter
-    for(i in 1:length(s))
+    for (i in 1:length(s))
       dat[[s[[i]][1]]] <- as.numeric(s[[i]][2]) %>% rep(,nr)
   }
 
   ## parsing uniform
   unif %<>% cleaner
-  if(unif != "") {
+  if (unif != "") {
     s <- unif %>% spliter
-    for(i in 1:length(s)) {
+    for (i in 1:length(s)) {
       par <- s[[i]][2] %>% sub("c\\(","",.) %>% sub(")","",.) %>% strsplit(.,",") %>%
         extract2(1) %>% as.numeric
       dat[[s[[i]][1]]] <- runif(nr, par[1], par[2])
@@ -66,10 +66,10 @@ simulater <- function(const = "",
 
   ## parsing normal
   norm %<>% cleaner
-  if(norm != "") {
+  if (norm != "") {
     # s <- norm %>% strsplit(., "\n") %>% extract2(1) %>% strsplit(., "=")
     s <- norm %>% spliter
-    for(i in 1:length(s)) {
+    for (i in 1:length(s)) {
       par <- s[[i]][2] %>% sub("c\\(","",.) %>% sub(")","",.) %>% strsplit(.,",") %>%
         extract2(1) %>% as.numeric
       # assign(s[[i]][1], rnorm(nr, par[1], par[2]))
@@ -79,9 +79,9 @@ simulater <- function(const = "",
 
   ## parsing discrete
   discrete %<>% cleaner
-  if(discrete != "") {
+  if (discrete != "") {
     s <- discrete %>% spliter
-    for(i in 1:length(s)) {
+    for (i in 1:length(s)) {
       par <- s[[i]][2] %>% sub("c\\(","",.) %>% sub(")","",.) %>% strsplit(.,",") %>%
         extract2(1) %>% as.numeric %>% matrix(nrow = 2)
       dat[[s[[i]][1]]] <- sample(par[1,], nr, replace = TRUE, prob = par[2,])
@@ -90,9 +90,9 @@ simulater <- function(const = "",
 
   ## parsing formula
   form %<>% cleaner
-  if(form != "") {
+  if (form != "") {
     s <- form %>% spliter
-    for(i in 1:length(s)) {
+    for (i in 1:length(s)) {
       objective <- s[[i]][1]
       out <- try(do.call(with, list(dat, parse(text = s[[i]][2]))), silent = TRUE)
       if (!is(out, 'try-error')) {
@@ -186,7 +186,7 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
     ## plot results
     plots[[i]] <- ggplot(dat, aes_string(x = i)) +
       geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
-      geom_density(adjust=1.5, color = "blue", alpha=.3)
+      geom_density(adjust = 1.5, color = "blue")
   }
 
   sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%

@@ -24,7 +24,11 @@ system("git push")
 # devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
 # devtools::install_github(c("rstudio/shinyapps", "themel/sendmailR", "jimhester/covr"))
 # devtools::install_github(c("vnijs/radiant","rstudio/DT", "vnijs/MathJaxR"))
-devtools::install_github(c("vnijs/radiant","rstudio/DT"))
+# devtools::install_github(c("vnijs/radiant","rstudio/DT"))
+devtools::install_github("vnijs/radiant")
+devtools::install_github("trestletech/shinyAce")
+# library(radiant)
+# radiant()
 
 library(shinyapps)
 fpath <- "~/gh/radiant/inst/base"
