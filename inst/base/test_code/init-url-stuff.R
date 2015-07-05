@@ -3,13 +3,13 @@
 ## when available
 ################################################################################
 
-init_state <- function(r_data) {
-
-  ## initial plot height and width
-  r_data$plot_height <- 600
-  r_data$plot_width <- 600
-
-  r_data$manual <- FALSE
+# init_state <- function(r_data) {
+#
+#   ## initial plot height and width
+#   r_data$plot_height <- 600
+#   r_data$plot_width <- 600
+#
+#   r_data$manual <- FALSE
 
   ## Joe Cheng: "Datasets can change over time (i.e. the changedata function).
 #   ## Therefore, the data need to be a reactive value so the other reactive
