@@ -24,13 +24,14 @@ correlation <- function(dataset, vars,
                         type = "pearson",
                         data_filter = "") {
 
-	# data.matrix as the last step in the chain is about 25% slower system.time
+	## data.matrix as the last step in the chain is about 25% slower using
+	## system.time but results (using diamonds and mtcars) are identical
 	dat <- getdata(dataset, vars, filt = data_filter) %>%
 		mutate_each(funs(as.numeric))
 
 	if (!is_string(dataset)) dataset <- "-----"
 
-	# using correlation_ to avoid print method conflict with nlme
+	## using correlation_ to avoid print method conflict with nlme
   environment() %>% as.list %>% set_class(c("correlation_",class(.)))
 }
 
@@ -55,8 +56,8 @@ summary.correlation_ <- function(object,
                                 cutoff = 0,
                                 ...) {
 
-	# using correlation_ to avoid print method conflict with nlme
-	# calculate the correlation matrix with p.values using the psych package
+	## using correlation_ to avoid print method conflict with nlme
+	## calculate the correlation matrix with p.values using the psych package
 	cmat <- sshhr( corr.test(object$dat, method = object$type) )
 
 	cr <- format(round(cmat$r,2))
@@ -121,8 +122,8 @@ plot.correlation_ <- function(x, ...) {
 	}
 	panel.smooth <- function(x, y) {
     points(x, y)
-    # uncomment the lines below if you want linear and loess lines
-    # in the scatter plot matrix
+    ## uncomment the lines below if you want linear and loess lines
+    ## in the scatter plot matrix
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}

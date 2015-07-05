@@ -4,21 +4,12 @@ viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
                "Scale-y" = "scale_y")
 
-# list of function arguments
+## list of function arguments
 viz_args <- as.list(formals(visualize))
 
-# # list of function inputs selected by user
-# viz_inputs <- reactive({
-#   # loop needed because reactive values don't allow single bracket indexing
-#   for (i in names(viz_args))
-#     viz_args[[i]] <- input[[i]]
-#   if (!input$show_filter) viz_args$data_filter = ""
-#   viz_args
-# })
-
-# list of function inputs selected by user
+## list of function inputs selected by user
 viz_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   viz_args$data_filter <- if (input$show_filter) input$data_filter else ""
   viz_args$dataset <- input$dataset
   viz_args$shiny <- input$shiny
@@ -36,23 +27,24 @@ output$ui_viz_type <- renderUI({
     multiple = FALSE)
 })
 
-# X - variable
+## X - variable
 output$ui_viz_xvar <- renderUI({
   if (is.null(input$viz_type)) return()
-  vars <- varnames()
-  # if (input$viz_type %in% c("density","line")) vars <- vars["factor" != .getclass()]
-  if (input$viz_type %in% c("density")) vars <- vars["factor" != .getclass()]
+  # vars <- varnames()
+  vars <- varying_vars()
+  if (input$viz_type %in% c("density")) vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("viz_xvar",vars),
     multiple = TRUE, size = min(5, length(vars)), selectize = FALSE)
 })
 
-# Y - variable
+## Y - variable
 output$ui_viz_yvar <- renderUI({
   if (is.null(input$viz_type)) return()
-  vars <- varnames()
-  if (input$viz_type %in% c("line")) vars <- vars["factor" != .getclass()]
+  # vars <- varnames()
+  vars <- varying_vars()
+  if (input$viz_type %in% c("line")) vars <- vars["factor" != .getclass()[vars]]
   selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
                  choices = c("None" = "none", vars),
                  selected = state_single("viz_yvar", vars, "none"),
@@ -76,7 +68,7 @@ output$ui_viz_facet_col <- renderUI({
 })
 
 output$ui_viz_color <- renderUI({
-  if (not_available(input$viz_yvar)) return()  # can't have an XY plot without an X
+  if (not_available(input$viz_yvar)) return()  ## can't have an XY plot without an X
   vars <- c("None" = "none", varnames())
   sel <- state_single("viz_color", vars, "none")
   selectizeInput("viz_color", "Color", vars,
@@ -124,7 +116,6 @@ output$ui_Visualize <- renderUI({
                            max = 2000, step = 50,
                            value = state_init("viz_plot_width", r_data$plot_width)))
       )
-      # ,sliderInput("test_test","Test:", min = 0, max = 1, value = .5, step = 0.1)
     ),
     help_and_report(modal_title = "Visualize",
                     fun_name = "visualize",
@@ -163,7 +154,7 @@ output$visualize <- renderPlot({
 }, width = viz_plot_width, height = viz_plot_height)
 
 .visualize <- reactive({
-  # need dependency on ..
+  ## need dependency on ..
   input$viz_plot_height; input$viz_plot_width
 
   if (not_available(input$viz_xvar)) return()

@@ -77,10 +77,20 @@ groupable_vars <- reactive({
     varnames()[.]
 })
 
+## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
     summarise_each(funs(n_distinct)) %>%
     { . == 2 } %>%
+    which(.) %>%
+    varnames()[.]
+})
+
+## used in visualize - don't plot variables that have zero sd
+varying_vars <- reactive({
+  .getdata() %>%
+    summarise_each(funs(sd_rm)) %>%
+    { . > 0 } %>%
     which(.) %>%
     varnames()[.]
 })
@@ -297,12 +307,12 @@ help_and_report <- function(modal_title, fun_name, help_file) {
 # function to render .md files to html
 inclMD <- function(path) {
   markdown::markdownToHTML(path, fragment.only = TRUE, options = "",
-                           stylesheet="")
+                           stylesheet = "")
 }
 
 # function to render .Rmd files to html - does not embed image or add css
 inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, options = "",
-                   stylesheet="")
+                   stylesheet = "")
 }

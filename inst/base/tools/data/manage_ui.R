@@ -20,10 +20,10 @@ output$ui_clipboard_load <- renderUI({
   if (r_local) {
     actionButton('loadClipData', 'Paste data')
   } else {
-    tagList(tags$textarea(class="form-control",
-      id="load_cdata", rows="5"
-    ),
-    actionButton('loadClipData', 'Paste data'))
+    tagList(
+      tags$textarea(class="form-control", id="load_cdata", rows="5"),
+      actionButton('loadClipData', 'Paste data')
+    )
   }
 })
 

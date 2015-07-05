@@ -29,7 +29,7 @@ expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo=FALSE, comment=NA, cache=FALSE, message=FALSE,
-                      warning=FALSE, fig.path = "~/radiant_figures/")
+                      warning=FALSE, fig.path = "~/r_figures/")
 
 ## using DT rather than Shiny versions of datatable
 renderDataTable <- DT::renderDataTable
@@ -64,16 +64,13 @@ addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
 addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
 
-## using local mathjax if available
-if ("MathJaxR" %in% installed.packages()[,"Package"]) {
+## using local mathjax if available to avoid shiny bug
+## https://github.com/rstudio/shiny/issues/692
+## however, only use for local due to problems with mathjax rendering in IE
+if (!r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
   withMathJax <- MathJaxR::withMathJaxR
 }
-
-# if (r_local) {
-#   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
-#   withMathJax <- MathJaxR::withMathJaxR
-# }
 
 ## options used for debugging
 # options(shiny.trace = TRUE)
