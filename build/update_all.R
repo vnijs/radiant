@@ -14,7 +14,6 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # Sys.sleep(5)
 
 system("git add --all .")
-# system("git commit -m 'Update css for shinyapps.io [ci skip]'")
 system("git commit -m 'Update [ci skip]'")
 system("git push")
 
@@ -24,7 +23,8 @@ system("git push")
 
 # devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
 # devtools::install_github(c("rstudio/shinyapps", "themel/sendmailR", "jimhester/covr"))
-devtools::install_github(c("vnijs/radiant","rstudio/DT", "vnijs/MathJaxR"))
+# devtools::install_github(c("vnijs/radiant","rstudio/DT", "vnijs/MathJaxR"))
+devtools::install_github(c("vnijs/radiant","rstudio/DT"))
 
 library(shinyapps)
 fpath <- "~/gh/radiant/inst/base"
