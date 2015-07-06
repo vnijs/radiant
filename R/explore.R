@@ -335,3 +335,11 @@ max_rm <- function(x) max(x, na.rm = TRUE)
 #' @export
 sd_rm <- function(x) sd(x, na.rm = TRUE)
 
+#' Sum with na.rm = TRUE
+#' @param x Input variable
+#' @return Sum of input values
+#' @examples
+#' sum_rm(1:200)
+#'
+#' @export
+sum_rm <- function(x) sum(x, na.rm = TRUE)

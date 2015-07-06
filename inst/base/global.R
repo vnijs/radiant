@@ -20,11 +20,11 @@ pkgs <- c(pkgs_cran, pkgs_gh)
 rm(pkgs_cran,pkgs_gh)
 
 ## list of function arguments
-expl_functions <- list("n" = "length", "mean" = "mean_rm", "median" = "median_rm",
-                       "min" = "min_rm", "max" = "max_rm", "25%" = "p25",
-                       "75%" = "p75", "sd" = "sd_rm", "se" = "serr",
-                       "cv" = "cv", "skew" = "skew", "kurtosis" = "kurtosi",
-                       "# missing" = "nmissing")
+expl_functions <-
+  list("n" = "length", "mean" = "mean_rm", "median" = "median_rm",
+       "sum" = "sum_rm", "min" = "min_rm", "max" = "max_rm", "25%" = "p25",
+       "75%" = "p75", "sd" = "sd_rm", "se" = "serr", "cv" = "cv",
+       "skew" = "skew", "kurtosis" = "kurtosi", "# missing" = "nmissing")
 
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)

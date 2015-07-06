@@ -63,6 +63,7 @@ output$sample_size <- renderUI({
 
     stat_tab_panel(menu = "Sample",
                   tool = "Sample size",
+                  data = NULL,
                   tool_ui = "ui_sample_size",
                   output_panels = ss_output_panels)
 })

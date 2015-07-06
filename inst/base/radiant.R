@@ -1,13 +1,13 @@
 observe({
-  # reset r_state on dataset change ... when you are not on the
-  # Manage > Data tab
+  ## reset r_state on dataset change ... when you are not on the
+  ## Manage > Data tab
   if (is.null(r_state$dataset) || is.null(input$dataset)) return()
   if (input$tabs_data != "Manage" || input$nav_radiant != "Data")
     if (r_state$dataset != input$dataset) r_state <<- list()
 })
 
 ################################################################################
-# function to save app state on refresh or crash
+## function to save app state on refresh or crash
 ################################################################################
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
@@ -35,14 +35,17 @@ saveStateOnRefresh <- function(session = session) {
 }
 
 ################################################################
-# functions used across tools in radiant
+## functions used across tools in radiant
 ################################################################
+
+## add variables to the data
 .changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
 	if (nrow(r_data[[dataset]]) == new_col %>% nrow &&
      new_col_name[1] != "")
     r_data[[dataset]][,new_col_name] <- new_col
 }
 
+## get active dataset and apply data-filter if available
 .getdata <- reactive({
 
   if (is_empty(input$data_filter) || input$show_filter == FALSE)
@@ -66,13 +69,14 @@ saveStateOnRefresh <- function(session = session) {
 })
 
 .getclass <- reactive({
-  r_data[[input$dataset]] %>% head %>% getclass
+  head(r_data[[input$dataset]]) %>% getclass
 })
 
+## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
     summarise_each(funs(n_distinct)) %>%
-    { . < 10 } %>%
+    {. < 11 & . > 1} %>%
     which(.) %>%
     varnames()[.]
 })
@@ -95,6 +99,7 @@ varying_vars <- reactive({
     varnames()[.]
 })
 
+## getting variable names in active dataset and their class
 varnames <- reactive({
   .getclass() %>% names %>%
     set_names(., paste0(., " {", .getclass(), "}"))
@@ -163,16 +168,10 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
     enc2utf8
 }
 
-# show_data_snippet(mtcars)
-# show_data_snippet(mtcars[1:5,])
-# r_data <- list()
-# r_data$mtcars <- mtcars
-# show_data_snippet("mtcars")
-
 suggest_data <- function(text = "", dat = "diamonds")
   paste0(text, "For an example dataset go to Data > Manage, select the 'examples' radio button,\nand press the 'Load examples' button. Then select the \'", dat, "\' dataset")
 
-# function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
+## function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
 capture_plot <- function(expr, env = parent.frame()) {
   structure(
     list(expr = substitute(expr), env = env),
@@ -180,15 +179,16 @@ capture_plot <- function(expr, env = parent.frame()) {
   )
 }
 
-# function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
+## function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
 print.capture_plot <- function(x, ...) {
   eval(x$expr, x$env)
 }
 
 ################################################################
-# functions used to create Shiny in and outputs
+## functions used to create Shiny in and outputs
 ################################################################
 
+## textarea where the return key submits the content
 returnTextAreaInput <- function(inputId, label = NULL, value = "") {
   tagList(
     tags$label(label, `for` = inputId),br(),
@@ -203,15 +203,15 @@ plot_width <- function()
 plot_height <- function()
   if (is.null(input$viz_plot_height)) r_data$plot_height else input$viz_plot_height
 
-# fun_name is a string of the main function name
-# rfun_name is a string of the reactive wrapper that calls the main function
-# out_name is the name of the output, set to fun_name by default
+## fun_name is a string of the main function name
+## rfun_name is a string of the reactive wrapper that calls the main function
+## out_name is the name of the output, set to fun_name by default
 register_print_output <- function(fun_name, rfun_name,
                                   out_name = fun_name) {
 
-  # Generate output for the summary tab
+  ## Generate output for the summary tab
   output[[out_name]] <- renderPrint({
-    # when no analysis was conducted (e.g., no variables selected)
+    ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>%
     { if (is.character(.)) cat(.,"\n") else . } %>% rm
 
@@ -226,10 +226,10 @@ register_plot_output <- function(fun_name, rfun_name,
                                  width_fun = "plot_width",
                                  height_fun = "plot_height") {
 
-  # Generate output for the plots tab
+  ## Generate output for the plots tab
   output[[out_name]] <- renderPlot({
 
-    # when no analysis was conducted (e.g., no variables selected)
+    ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>% { if (is.null(.)) " " else . } %>%
     { if (is.character(.)) {
         plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
@@ -262,7 +262,7 @@ stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
 }
 
 ################################################################
-# functions used for app help
+## functions used for app help
 ################################################################
 help_modal <- function(modal_title, link, help_file) {
   sprintf("<div class='modal fade' id='%s' tabindex='-1' role='dialog' aria-labelledby='%s_label' aria-hidden='true'>
@@ -304,13 +304,13 @@ help_and_report <- function(modal_title, fun_name, help_file) {
   enc2utf8 %>% HTML %>% withMathJax
 }
 
-# function to render .md files to html
+## function to render .md files to html
 inclMD <- function(path) {
   markdown::markdownToHTML(path, fragment.only = TRUE, options = "",
                            stylesheet = "")
 }
 
-# function to render .Rmd files to html - does not embed image or add css
+## function to render .Rmd files to html - does not embed image or add css
 inclRmd <- function(path) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, options = "",

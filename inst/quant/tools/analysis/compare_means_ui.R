@@ -111,7 +111,6 @@ output$compare_means <- renderUI({
       id = "tabs_compare_means",
       tabPanel("Summary", verbatimTextOutput("summary_compare_means")),
       tabPanel("Plot", plotOutput("plot_compare_means", height = "100%"))
-      # , selected = ifelse(is_empty(r_state$url$tab), "Summary", r_state$url$tab)
     )
 
     stat_tab_panel(menu = "Base",

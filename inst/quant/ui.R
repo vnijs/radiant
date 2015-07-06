@@ -23,6 +23,10 @@ shinyUI(
     tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
+  navbarMenu("Decide",
+    tabPanel("Simulate", uiOutput("simulater"))
+  ),
+
   navbarMenu("R",
     tabPanel("Report", uiOutput("report")),
     tabPanel("Code", uiOutput("rcode"))

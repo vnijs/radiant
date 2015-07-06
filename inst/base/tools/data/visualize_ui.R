@@ -52,16 +52,18 @@ output$ui_viz_yvar <- renderUI({
 })
 
 output$ui_viz_facet_row <- renderUI({
-  isFct <- "factor" == .getclass()
-  vars <- c("None" = ".", varnames()[isFct])
+  # isFct <- "factor" == .getclass()
+  # vars <- c("None" = ".", varnames()[isFct])
+  vars <- c("None" = ".", groupable_vars())
   selectizeInput("viz_facet_row", "Facet row", vars,
                  selected = state_single("viz_facet_row", vars, "."),
                  multiple = FALSE)
 })
 
 output$ui_viz_facet_col <- renderUI({
-  isFct <- "factor" == .getclass()
-  vars <- c("None" = ".", varnames()[isFct])
+  # isFct <- "factor" == .getclass()
+  # vars <- c("None" = ".", varnames()[isFct])
+  vars <- c("None" = ".", groupable_vars())
   selectizeInput("viz_facet_col", 'Facet column', vars,
                  selected = state_single("viz_facet_col", vars, "."),
                  multiple = FALSE)
