@@ -165,8 +165,8 @@ summary.simulater <- function(object, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- simulater(const = "cost = 3", norm = "demand = c(2000,1000)",
-#'                     discrete = "price = c(5, .3, 8, .7)",
+#' result <- simulater(const = "cost 3", norm = "demand 2000 1000",
+#'                     discrete = "price 5 .3 8 .7",
 #'                     form = "profit = demand * (price - cost)")
 #' plot(result)
 #'
@@ -178,14 +178,13 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
 
   object <- x$dat; rm(x)
 
-  plots <- list()
+  plot_list <- list()
   for (i in colnames(object)) {
-
     dat <- select_(object, .dots = i)
     if (sd(object[[i]]) == 0) {
       ## plot constants - keep??
       dat$sim <- 1:nrow(dat)
-      plots[[i]] <- ggplot(dat, aes_string(x = "sim", y = i)) +
+      plot_list[[i]] <- ggplot(dat, aes_string(x = "sim", y = i)) +
         geom_line(color = "blue")
       next
     }
@@ -193,12 +192,13 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
     bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
 
     ## plot results
-    plots[[i]] <- ggplot(dat, aes_string(x = i)) +
+    plot_list[[i]] <-
+      ggplot(dat, aes_string(x = i)) +
       geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
       geom_density(adjust = 1.5, color = "blue")
   }
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 

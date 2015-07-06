@@ -20,8 +20,8 @@ Plot method for the simulater function
 See \url{http://vnijs.github.io/radiant/base/simulater} for an example in Radiant
 }
 \examples{
-result <- simulater(const = "cost = 3", norm = "demand = c(2000,1000)",
-                    discrete = "price = c(5, .3, 8, .7)",
+result <- simulater(const = "cost 3", norm = "demand 2000 1000",
+                    discrete = "price 5 .3 8 .7",
                     form = "profit = demand * (price - cost)")
 plot(result)
 }

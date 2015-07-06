@@ -18,7 +18,7 @@ Summary method for the simulater function
 See \url{http://vnijs.github.io/radiant/base/simulater.html} for an example in Radiant
 }
 \examples{
-result <- simulater(norm = "demand = c(2000,1000)")
+result <- simulater(norm = "demand 2000 1000")
 summary(result)
 }
 \seealso{
