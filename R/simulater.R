@@ -49,6 +49,10 @@ simulater <- function(const = "",
   # norm = "demand 1000 100"
   # discrete = "price 6 .30 8 .70"
   # form = "profit = demand*(price - var_cost) - fixed_cost"
+  # const = "var_cost 5;fixed_cost 1000"
+  # norm = "demand 1000 100"
+  # discrete = "price 6 .30 8 .70"
+  # form = "demand = demand -50*price;profit = demand*(price-var_cost) - fixed_cost"
 
   ## remove any non-numbers from seed, including spaces
   seed %>% gsub("[^0-9]","",.) %>% { if(. != "") set.seed(seed) }
@@ -101,12 +105,17 @@ simulater <- function(const = "",
 
   ## parsing formula
   # form <- "profit = (price - cost)*nr_meals - labor_cost - non_labor_cost\n ; \n margin = price - cost ;;;   ; \n  \n  "
+  # form = "demand = demand -50*price;profit = demand*(price-var_cost) - fixed_cost"
+  # form = "demand = demand - .1*lag(demand, 0);profit = demand*(price-var_cost) - fixed_cost"
+  # form = "demand = demand - .1*lag(demand, default=0);profit = demand*(price-var_cost) - fixed_cost"
   form %<>% cleaner
   if (form != "") {
     s <- form %>% gsub(" ","",.) %>% spliter("=")
     for (i in 1:length(s)) {
       obj <- s[[i]][1]
-      out <- try(do.call(with, list(dat, parse(text = s[[i]][2]))), silent = TRUE)
+      fobj <- s[[i]][-1]
+      if(length(fobj) > 1) fobj <- paste0(fobj, collapse = "=")
+      out <- try(do.call(with, list(dat, parse(text = fobj))), silent = TRUE)
       if (!is(out, 'try-error')) {
         dat[[obj]] <- out
       } else {
@@ -373,3 +382,7 @@ plot.repeater <- function(x,
 #   geom_density(adjust=1.5, color = "blue", alpha=.3) + labs(y = "") +
 #   theme(axis.text.y = element_blank())
 
+
+# demand <- rnorm(10, 1000,100)
+# dyn <- demand + lag(demand, default = 0)
+# dyn
