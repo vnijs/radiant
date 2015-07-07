@@ -4,10 +4,12 @@
 \alias{repeater}
 \title{Repeat simulation}
 \usage{
-repeater(nr = 12, seed = "", sim = "")
+repeater(nr = 12, vars = "", seed = "", sim = "")
 }
 \arguments{
 \item{nr}{Number times to repeat the simulation}
+
+\item{vars}{Variables to use in repeated simulation}
 
 \item{seed}{To repeat a simulation with the same randomly generated values enter a number into Random seed input box.}
 

@@ -14,6 +14,7 @@
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
 #' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
 #' @param nr Number of simulation runs
+#' @param dat Data list from previous simulation. Used by repeater function
 #'
 #' @return A data.frame with the created variables
 #'
@@ -32,7 +33,8 @@ simulater <- function(const = "",
                       form = "",
                       seed = "",
                       name = "",
-                      nr = 1000) {
+                      nr = 1000,
+                      dat = NULL) {
 
   # rm(list = ls())
   # const <- "non_labor_cost 3995; cost 11"
@@ -50,7 +52,8 @@ simulater <- function(const = "",
 
   ## remove any non-numbers from seed, including spaces
   seed %>% gsub("[^0-9]","",.) %>% { if(. != "") set.seed(seed) }
-  dat <- list()
+
+  if(is.null(dat)) dat <- list()
 
   cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
     gsub("[ ]*[\n;]+[ ]*",";",.) %>%
@@ -65,7 +68,8 @@ simulater <- function(const = "",
   if (const != "") {
     s <- const %>% spliter
     for (i in 1:length(s))
-      dat[[s[[i]][1]]] <- as.numeric(s[[i]][2]) %>% rep(,nr)
+      # dat[[s[[i]][1]]] <- as.numeric(s[[i]][2]) %>% rep(,nr)
+      s[[i]] %>% { dat[[.[1]]] <<- as.numeric(.[2]) %>% rep(,nr) }
   }
 
   ## parsing uniform
@@ -112,7 +116,6 @@ simulater <- function(const = "",
     }
   }
 
-  # dat %<>% as.data.frame
   ret <- list(dat = dat %>% as.data.frame, sim_call = as.list(match.call())[-1]) %>%
     set_class(c("simulater", class(.)))
 
@@ -208,12 +211,13 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
 #' Repeat simulation
 #'
 #' @param nr Number times to repeat the simulation
+#' @param vars Variables to use in repeated simulation
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
 #' @param sim Return value from the simulater function
 #'
 #' @export
 repeater <- function(nr = 12,
-                     # grid = "",
+                     vars = "",
                      seed = "",
                      sim = "") {
 
@@ -235,12 +239,27 @@ repeater <- function(nr = 12,
   # sim <- result
   # sim$sim_call
 
+  seed %>% gsub("[^0-9]","",.) %>% { if(. != "") set.seed(seed) }
+
   nr_sim <- nrow(sim$dat)
+  sc <- sim$sim_call
+
+  # vars <- c("demand","cost")
+  if (vars == "") return()
+
+  ## cleaning up the sim call
+  sc$name <- ""
+  sc$seed <- ""
+  ## from http://stackoverflow.com/a/7664655/1974918
+  sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
+  sc[1:which(names(sc) == "form")] <- ""
+  sc[names(sc_keep)] <- sc_keep
+  sc$dat <- sim$dat %>% as.list
 
   rep_sim <- function(run_nr) {
     bind_cols(
-      data_frame(run = rep(run_nr,nr_sim), sim = 1:nr_sim),
-      do.call(simulater, sim$sim_call)$dat
+      data_frame(run = rep(run_nr, nr_sim), sim = 1:nr_sim),
+      do.call(simulater, sc)$dat
     )
   }
 
@@ -248,56 +267,87 @@ repeater <- function(nr = 12,
 }
 
 # object <- repeater(sim = result)
+# object
 # str(object)
 
 #' Summarize repeated simulation
 #'
 #' @param object Return value from \code{\link{simulater}}
+#' @param sum_vars (Numerical) variables to summaries
+#' @param byvar Variable(s) to group data by before summarizing
+#' @param fun Functions to use for summarizing
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.repeater <- function(object, ...) {
+summary.repeater <- function(object,
+                             sum_vars = "",
+                             byvar = "",
+                             fun = c("sum_rm", "mean_rm", "sd_rm"),
+                             ...) {
   ## show results
-  print(object); cat("\n")
+  # print(object); cat("\n")
   getsummary(object)
+  # %>% print
+  # print(sum_vars)
+  # print(byvar)
+  # print(fun)
+
+  # sum_vars <- "profit"
+  # byvar <- "sim"
+
+  # explore(object, sum_vars, byvar = byvar, fun = fun) %>% summary %>% print
+
+  # object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
+  #   select(total_profit)
+
 }
 
 #' Plot repeated simulation
 #'
 #' @param x Return value from \code{\link{simulater}}
+#' @param sum_vars (Numerical) variables to summaries
+#' @param byvar Variable(s) to group data by before summarizing
+#' @param fun Functions to use for summarizing
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.repeater <- function(x, shiny = FALSE, ...) {
+plot.repeater <- function(x,
+                          sum_vars = "",
+                          byvar = "",
+                          fun = c("sum_rm", "mean_rm", "sd_rm"),
+                          shiny = FALSE, ...) {
 
   object <- x; rm(x)
 
+  # sum_vars <- c("profit","nr_meals")
+  # sum_vars <- c("profit","demand")
+  # byvar <- "sim"
+  # fun = c("sum", "mean")
+
+  # org_obj <- object
+  # object <- org_obj
+
+  object <- explore(object, sum_vars, byvar = byvar, fun = fun)
   # object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
   #   select(total_profit)
 
-  plots <- list()
-  for (i in colnames(object)) {
+  plot_list <- list()
+  for (l in names(object$res)) {
+    for (i in colnames(object$res[[l]]) %>% .[!. %in% byvar]) {
 
-    dat <- select_(object, .dots = i)
-    if (sd(object[[i]]) == 0) {
-      ## plot constants - keep??
-      dat$sim <- 1:nrow(dat)
-      plots[[i]] <- ggplot(dat, aes_string(x = "sim", y = i)) +
-        geom_line(color = "blue")
-      next
+      dat <- select_(object$res[[l]], .dots = i)
+      bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
+
+      ## plot results
+      plot_list[[paste0(l,"_",i)]] <- ggplot(dat, aes_string(x = i)) +
+        geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
+        geom_density(adjust = 1.5, color = "blue") +
+        xlab(paste0(i," (",l,")"))
     }
-
-    bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
-
-    ## plot results
-    plots[[i]] <- ggplot(dat, aes_string(x = i)) +
-      geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
-      geom_density(adjust = 1.5, color = "blue")
   }
-  plots[[i]]
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 

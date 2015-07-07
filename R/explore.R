@@ -21,7 +21,8 @@
 #' @seealso \code{\link{plot.explore}} to plot summaries
 #'
 #' @export
-explore <- function(dataset, vars = "",
+explore <- function(dataset,
+                    vars = "",
                     byvar = "",
                     fun = c("length", "mean_rm"),
                     data_filter = "") {

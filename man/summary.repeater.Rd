@@ -4,10 +4,17 @@
 \alias{summary.repeater}
 \title{Summarize repeated simulation}
 \usage{
-\method{summary}{repeater}(object, ...)
+\method{summary}{repeater}(object, sum_vars = "", byvar = "",
+  fun = c("sum_rm", "mean_rm", "sd_rm"), ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{simulater}}}
+
+\item{sum_vars}{(Numerical) variables to summaries}
+
+\item{byvar}{Variable(s) to group data by before summarizing}
+
+\item{fun}{Functions to use for summarizing}
 
 \item{...}{further arguments passed to or from other methods}
 }

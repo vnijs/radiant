@@ -4,10 +4,17 @@
 \alias{plot.repeater}
 \title{Plot repeated simulation}
 \usage{
-\method{plot}{repeater}(x, shiny = FALSE, ...)
+\method{plot}{repeater}(x, sum_vars = "", byvar = "", fun = c("sum_rm",
+  "mean_rm", "sd_rm"), shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{simulater}}}
+
+\item{sum_vars}{(Numerical) variables to summaries}
+
+\item{byvar}{Variable(s) to group data by before summarizing}
+
+\item{fun}{Functions to use for summarizing}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 

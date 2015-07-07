@@ -5,7 +5,7 @@
 \title{Simulate data for decision analysis}
 \usage{
 simulater(const = "", norm = "", unif = "", discrete = "", form = "",
-  seed = "", name = "", nr = 1000)
+  seed = "", name = "", nr = 1000, dat = NULL)
 }
 \arguments{
 \item{const}{A string listing the constants to include in the analysis (e.g., "cost = 3; size = 4")}
@@ -23,6 +23,8 @@ simulater(const = "", norm = "", unif = "", discrete = "", form = "",
 \item{name}{To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.}
 
 \item{nr}{Number of simulation runs}
+
+\item{dat}{Data list from previous simulation. Used by repeater function}
 }
 \value{
 A data.frame with the created variables
