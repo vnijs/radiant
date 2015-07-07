@@ -14,7 +14,7 @@ List the random variables with a discrete distribution in the `Discrete variable
 
 To perform a calculation using the variables specified in the various text input boxes create a formula in the `Formula` input box (e.g., "profit = demand * (price - cost)"). Note that you can enter multiple formulas. If, for example, you would also like to calculate the margin for each simulation press `return` (or use `;`) after the first formula and type "margin = price - cost".
 
-The value shown in the `# runs` input determines the number of simulation runs that will be used. If you need to repeat an analysis with the same randomly generate values enter a number into `Random seed` input.
+The value shown in the `# runs` input determines the number of simulation runs that will be used. To repeat a simulation with the same randomly generated values enter a number into `Random seed` input.
 
 To save the simulated data for further analysis in Radiant specify a name in the `Sim name` input box. You can then investigate the simulated data by choosing the specified name from the `Datasets` dropdown in any of the other Data tabs.
 

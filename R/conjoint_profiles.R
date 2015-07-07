@@ -7,11 +7,13 @@
 #' @return A list with all variables defined in the function as an object of class conjoint_profiles
 #'
 #' @examples
+#' \donttest{
 #' cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
 #' result <- conjoint_profiles("cp")
 #' rm(cp, envir = .GlobalEnv)
 #' result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
 #'             conjoint_profiles
+#' }
 #'
 #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
 #'

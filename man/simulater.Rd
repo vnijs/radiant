@@ -17,6 +17,12 @@ simulater(const = "", norm = "", unif = "", discrete = "", form = "",
 \item{discrete}{A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability}
 
 \item{form}{A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")}
+
+\item{seed}{To repeat a simulation with the same randomly generated values enter a number into Random seed input box.}
+
+\item{name}{To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.}
+
+\item{nr}{Number of simulation runs}
 }
 \value{
 A data.frame with the created variables

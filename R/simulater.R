@@ -11,6 +11,9 @@
 #' @param unif A string listing the uniformly distributed random variables to include in the analysis (e.g., "demand 0 1" where the first number is the minimum value and the second is the maximum value)
 #' @param discrete A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability
 #' @param form A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")
+#' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
+#' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
+#' @param nr Number of simulation runs
 #'
 #' @return A data.frame with the created variables
 #'
@@ -202,12 +205,17 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
     { if (shiny) . else print(.) }
 }
 
-
+#' Repeat simulation
+#'
+#' @param nr Number times to repeat the simulation
+#' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
+#' @param sim Return value from the simulater function
+#'
+#' @export
 repeater <- function(nr = 12,
                      # grid = "",
                      seed = "",
                      sim = "") {
-
 
   # sim <- result
   # nr <- 12
@@ -242,19 +250,31 @@ repeater <- function(nr = 12,
 # object <- repeater(sim = result)
 # str(object)
 
+#' Summarize repeated simulation
+#'
+#' @param object Return value from \code{\link{simulater}}
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
 summary.repeater <- function(object, ...) {
   ## show results
   print(object); cat("\n")
   getsummary(object)
 }
 
+#' Plot repeated simulation
+#'
+#' @param x Return value from \code{\link{simulater}}
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
 plot.repeater <- function(x, shiny = FALSE, ...) {
 
   object <- x; rm(x)
-  object
 
-  object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
-    select(total_profit)
+  # object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
+  #   select(total_profit)
 
   plots <- list()
   for (i in colnames(object)) {
