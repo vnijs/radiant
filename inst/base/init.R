@@ -117,106 +117,45 @@ if (r_local) {
   }
 }
 
+#####################################
+## url processing to share results
+#####################################
+
 ## relevant links
 # http://stackoverflow.com/questions/25306519/shiny-saving-url-state-subpages-and-tabs/25385474#25385474
 # https://groups.google.com/forum/#!topic/shiny-discuss/Xgxq08N8HBE
 # https://gist.github.com/jcheng5/5427d6f264408abf3049
 
-#####################################
-## url stuff
-#####################################
+url_list <-
+  list("Data"        = list("tabs_data" = list("Manage"  = "data/",
+                                               "View"    = "data/view/",
+                                               "Combine" = "data/combine/")),
+       "Sampling"    = "sample/sampling/",
+       "Sample size" = "sample/sample-size/",
+       "Single mean" = list("tabs_single_mean" = list("Summary" = "base/single-mean/",
+                                                      "Plot"    = "base/single-mean/plot/")),
+       "Correlation" = list("tabs_correlation" = list("Summary" = "regression/correlation/",
+                                                      "Plot"    = "regression/correlation/plot/")),
+       "Simulate"    = list("tabs_simulate"    = list("Model"   = "decide/simulate/",
+                                                      "Repeat"  = "decide/simulate/repeat/"))
+  )
 
-url_patterns <- list(
-  "data/"         = list("nav_radiant" = "Data", "tabs_data" = "Manage"),
-  "data/view/"    = list("nav_radiant" = "Data", "tabs_data" = "View"),
-  "data/combine/" = list("nav_radiant" = "Data", "tabs_data" = "Combine"),
-  "sample/sampling/"    = list("nav_radiant" = "Sampling"),
-  "sample/sample-size/" = list("nav_radiant" = "Sample size"),
+## generate url patterns for navigation
+url_patterns <- list()
+for (i in names(url_list)) {
+  res <- url_list[[i]]
+  if(!is.list(res)) {
+    url_patterns[[res]] <- list("nav_radiant" = i)
+  } else {
+    tabs <- names(res)
+    for (j in names(res[[tabs]])) {
+      url <- res[[tabs]][[j]]
+      url_patterns[[url]] <- setNames(list(i,j), c("nav_radiant",tabs))
+    }
+  }
+}
 
-  "base/single-mean/"        = list("nav_radiant" = "Single mean", "tabs_single_mean" = "Summary"),
-  "base/single-mean/plot/"   = list("nav_radiant" = "Single mean", "tabs_single_mean" = "Plot"),
-  "base/compare-means/"      = list("nav_radiant" = "Compare means", "tabs_compare_means" = "Summary"),
-  "base/compare-means/plot/" = list("nav_radiant" = "Compare means", "tabs_compare_means" = "Plot"),
-
-  "regression/correlation/"      = list("nav_radiant" = "Correlation"),
-  "regression/correlation/plot/" = list("nav_radiant" = "Correlation", "tabs_correlation" = "Plot"),
-  "regression/linear/"           = list("nav_radiant" = "Linear (OLS)"),
-  "regression/linear/predict/"   = list("nav_radiant" = "Linear (OLS)", "tabs_regression" = "Predict"),
-  "regression/linear/plot/"      = list("nav_radiant" = "Linear (OLS)", "tabs_regression" = "Plot"),
-  "regression/glm/"              = list("nav_radiant" = "GLM"),
-  "regression/glm/predict/"      = list("nav_radiant" = "GLM", "tabs_glm_reg" = "Predict"),
-  "regression/glm/plot/"         = list("nav_radiant" = "GLM", "tabs_glm_reg" = "Plot")
-)
-
-# url_patterns <- list(
-#   "base/single-mean/" = list("nav_radiant" = "Single mean", "tabs_single_mean" = "Summary"),
-#   "base/single-mean/plot/" = list("nav_radiant" = "Single mean", "tabs_single_mean" = "Plot"),
-#   "regression/correlation/" = list("nav_radiant" = "Correlation", "tabs_correlation" = "Summary"),
-#   "regression/correlation/plot/" = list("nav_radiant" = "Correlation", "tabs_correlation" = "Plot"),
-#   "sample/sampling/"    = list("nav_radiant" = "Sampling"),
-#   "sample/sample-size/" = list("nav_radiant" = "Sample size")
-# )
-
-# library(data.table);
-# url_patterns
-# urlDT <- rbindlist(url_patterns,fill=TRUE); urlDT[,patt:=names(url_patterns)]
-# urlDT
-
-# url_list <-
-#   list("Data" = list("tabs_data" =
-#                      list("Manage" = "data/",
-#                           "View" = "data/view/",
-#                           "Combine" = "data/combine/")),
-#        "Single mean" = list("tabs_single_mean" =
-#                             list("Summary" = "base/single-mean/",
-#                                  "Plot" = "base/single-mean/plot/")),
-#        "Correlation" = list("tabs_correlation" =
-#                             list("Summary" = "regression/correlation/",
-#                                  "Plot" = "regression/correlation/plot/")),
-#        "Sampling" = "sample/sampling/",
-#        "Sample size"= "sample/sample-size/")
-
-# names(url_list)
-# length(url_list[["Single mean"]])
-# is.list(url_list[["Single mean"]])
-# length(url_list[["Sampling"]])
-
-# url_patterns_re <- list()
-# for (i in names(url_list)) {
-#   res <- url_list[[i]]
-#   if(!is.list(res)) {
-#     url_patterns_re[[res]] <- list("nav_radiant" = i)
-#   } else {
-#     tabs <- names(res)
-#     for (j in names(res[[tabs]])) {
-#       url <- res[[tabs]][[j]]
-#       url_patterns_re[[url]] <- setNames(list(i,j), c("nav_radiant",tabs))
-#     }
-#   }
-# }
-
-# all(unlist(url_patterns) == unlist(url_patterns_re))
-
-# observe({
-#   url_query <- parseQueryString(session$clientData$url_search)
-#   if (!"url" %in% names(url_query)) return()
-#   isolate(r_data$url <- url_query$url)
-# })
-
-# observe({
-  # reactlist <- reactiveValuesToList(input)
-  # reactvals <- grep("^ss-|^shiny-", names(reactlist), value=TRUE, invert=TRUE) # strip shiny related URL parameters
-  # reactstr <- lapply(reactlist[reactvals], as.character) # handle conversion of special data types
-  # input$nav_radiant
-  # session$sendCustomMessage(type='setURL', reactstr)
-# })
-
-# session <- list()
-# session$clientData <- list()
-# session$clientData$url_search <- "?url=data/combine/&SSUID=local"
-# session$clientData$url_search <- "?data/combine/&SSUID=local"
-# parseQueryString(session$clientData$url_search) %>% {.[which(names(.) %in% names(url_patterns))] %>% names}
-
+## parse the url and use updateTabsetPanel to navigate to the desired tab
 observe({
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {

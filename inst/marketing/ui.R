@@ -23,9 +23,9 @@ shinyUI(
     tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
-  # navbarMenu("Decide",
-  #   tabPanel("Simulate", uiOutput("simulater"))
-  # ),
+  navbarMenu("Decide",
+    tabPanel("Simulate", uiOutput("simulater"))
+  ),
 
   navbarMenu("Maps",
     tabPanel("(Dis)similarity", uiOutput("mds")),
