@@ -126,16 +126,46 @@ if (r_local) {
 # https://groups.google.com/forum/#!topic/shiny-discuss/Xgxq08N8HBE
 # https://gist.github.com/jcheng5/5427d6f264408abf3049
 
+## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
+
 url_list <-
-  list("Data"        = list("tabs_data" = list("Manage"  = "data/",
-                                               "View"    = "data/view/",
-                                               "Combine" = "data/combine/")),
+  list("Data" = list("tabs_data" = list("Manage"    = "data/",
+                                        "View"      = "data/view/",
+                                        "Visualize" = "data/visualize/",
+                                        "Pivot"     = "data/pivot/",
+                                        "Explore"   = "data/explore/",
+                                        "Transform" = "data/transform/",
+                                        "Combine"   = "data/combine/")),
+
        "Sampling"    = "sample/sampling/",
        "Sample size" = "sample/sample-size/",
+
        "Single mean" = list("tabs_single_mean" = list("Summary" = "base/single-mean/",
                                                       "Plot"    = "base/single-mean/plot/")),
+
+       "Compare means" = list("tabs_compare_means" = list("Summary" = "base/compare-means/",
+                                                          "Plot"    = "base/compare-means/plot/")),
+
+       "Single proportion" = list("tabs_single_prop" = list("Summary" = "base/single-prop/",
+                                                            "Plot"    = "base/single-prop/plot/")),
+
+       "Compare proportions" = list("tabs_compare_props" = list("Summary" = "base/compare-props/",
+                                                                "Plot"    = "base/compare-props/plot/")),
+
+       "Cross-tabs" = list("tabs_cross_tabs" = list("Summary" = "base/cross-tabs/",
+                                                     "Plot"    = "base/cross-tabs/plot/")),
+
        "Correlation" = list("tabs_correlation" = list("Summary" = "regression/correlation/",
                                                       "Plot"    = "regression/correlation/plot/")),
+
+       "Linear (OLS)" = list("tabs_regression" = list("Summary" = "regression/linear/",
+                                                      "Predict" = "regression/linear/predict/",
+                                                      "Plot"    = "regression/linear/plot/")),
+
+       "GLM" = list("tabs_glm_reg" = list("Summary" = "regression/glm/",
+                                          "Predict" = "regression/glm/predict/",
+                                          "Plot"    = "regression/glm/plot/")),
+
        "Simulate"    = list("tabs_simulate"    = list("Model"   = "decide/simulate/",
                                                       "Repeat"  = "decide/simulate/repeat/"))
   )
@@ -154,6 +184,18 @@ for (i in names(url_list)) {
     }
   }
 }
+
+## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
+# unlink("~/gh/radiant/tests/urls/urls.Rmd")
+# urls <- grep("/", url_list %>% unlist, value = TRUE)
+# for(u in urls) {
+#   cat(paste0("http://127.0.0.1:6452/?url=", u, "&SSUID=local<br>\n"),
+#       file = "~/gh/radiant/tests/urls/urls.Rmd", append = TRUE)
+# }
+# knitr::knit2html("~/gh/radiant/tests/urls/urls.Rmd", output = "~/gh/radiant/tests/urls/urls.html")
+
+
+## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 observe({
