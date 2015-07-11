@@ -29,6 +29,7 @@ output$dataviewer <- DT::renderDataTable({
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
     rownames = FALSE, style = "bootstrap", escape = FALSE,
+    # extensions = 'KeyTable',
     options = list(
       # search = list(search = rnorm(1)), order = list(list(2, 'asc'), list(1, 'desc')),
       # stateSave = TRUE,   # maintains but does not show column filter settings

@@ -213,7 +213,7 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
       geom_density(adjust = 1.5, color = "blue")
   }
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
+  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 
@@ -356,7 +356,7 @@ plot.repeater <- function(x,
     }
   }
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
+  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 

@@ -194,9 +194,6 @@ for (i in names(url_list)) {
 # }
 # knitr::knit2html("~/gh/radiant/tests/urls/urls.Rmd", output = "~/gh/radiant/tests/urls/urls.html")
 
-
-## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
-
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 observe({
   url_query <- parseQueryString(session$clientData$url_search)

@@ -198,9 +198,11 @@ viewdata <- function(dataset, vars = "", filt = "") {
                   onclick = "window.close();", "Stop")
     ),
     server = function(input, output, session) {
-      widget <- DT::datatable(dat, rownames = FALSE, style = "bootstrap",
+      widget <- DT::datatable(dat,
+        rownames = FALSE, style = "bootstrap",
         filter = list(position = "top", clear = FALSE, plain = FALSE),
         escape = FALSE,
+        # extensions = 'KeyTable'# ,
         options = list(
           search = list(regex = TRUE),
           columnDefs = list(list(className = 'dt-center', targets = "_all")),
@@ -210,7 +212,6 @@ viewdata <- function(dataset, vars = "", filt = "") {
           lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
         )
       )
-
       output$tbl <- DT::renderDataTable(widget)
       observeEvent(input$stop, {stopApp()})
     }
