@@ -87,7 +87,12 @@ if (exists("r_state") && exists("r_data")) {
 } else if (file.exists(paste0("~/r_sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
   rs <- readRDS(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-  r_data  <- do.call(reactiveValues, rs$r_data)
+
+  if (length(rs$r_data) == 0)
+    r_data  <- init_state(reactiveValues())
+  else
+    r_data  <- do.call(reactiveValues, rs$r_data)
+
   r_state <- rs$r_state
   rm(rs)
 } else {
