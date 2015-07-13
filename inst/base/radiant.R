@@ -23,8 +23,8 @@ saveSession <- function(session = session) {
 
 refreshSession <- function() {
   r_sessions[[r_ssuid]] <- list(
-    r_data    = list()
-    r_state   = list()
+    r_data    = list(),
+    r_state   = list(),
     timestamp = Sys.time()
   )
   saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
