@@ -32,8 +32,8 @@ saveSession <- function(session = session) {
 
 observeEvent(input$refresh_radiant, {
   fn <- normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-  if (exists(fn)) {
-    Sys.chmod(fn, mode = "0777")
+  if (file.exists(fn)) {
+    #Sys.chmod(fn, mode = "0777")
     unlink(fn, force = TRUE)
   }
 })
