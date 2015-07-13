@@ -61,7 +61,7 @@ if (!r_local) {
 
 
 
-  remove_sessions_files <- function(st = Sys.time())
+  remove_sessions_files <- function(st = Sys.time()) {
     fl <- list.files(normalizePath("~/r_sessions/"), pattern = "*.rds",
                      full.names = TRUE)
 
