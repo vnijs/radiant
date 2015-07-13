@@ -82,7 +82,7 @@ visualize <- function(dataset, xvar,
   } else if (type == "density") {
     for (i in xvar) {
       plots[[i]] <- ggplot(dat, aes_string(x=i)) +
-                    geom_density(adjust=smooth, fill = "green", alpha=.3)
+                    geom_density(adjust = smooth, fill = "green", alpha = .3)
     }
   } else if (type == "scatter") {
     itt <- 1

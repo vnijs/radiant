@@ -73,7 +73,7 @@ output$rmd_code_output <- renderUI({
                   else input$rmd_code_selection
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
-        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
+        knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_data$r_knitr) %>%
         HTML
     } else {
       HTML("<h2>Code is not evaluated when running Radiant on a server</h2>")

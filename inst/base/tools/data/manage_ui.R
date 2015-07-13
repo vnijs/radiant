@@ -87,7 +87,7 @@ output$ui_Manage <- renderUI({
       ),
       conditionalPanel(condition = "input.saveAs == 'state'",
         HTML("<label>Save current app state:</label><br/>"),
-        downloadButton('downloadState', 'Save')
+        downloadButton('saveState', 'Save')
       )
     ),
     wellPanel(
@@ -296,8 +296,8 @@ saveState <- function(filename) {
   })
 }
 
-output$downloadState <- downloadHandler(
-  filename = function() { paste0("RadiantState-",Sys.Date(),".rda") },
+output$saveState <- downloadHandler(
+  filename = function() { paste0("radiant-state-",Sys.Date(),".rda") },
   content = function(file) {
     saveState(file)
   }

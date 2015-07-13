@@ -84,3 +84,47 @@ if (!r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
 # } else {
 #   Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
 # }
+
+nav_ui <-
+  list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
+       collapsible = TRUE, tabPanel("Data", withMathJax(), uiOutput("ui_data")))
+
+shared_ui <-
+  tagList(
+    navbarMenu("R",
+      tabPanel("Report", uiOutput("report")),
+      tabPanel("Code", uiOutput("rcode"))
+    ),
+
+    navbarMenu(title = "", id = "State", icon = icon("save"),
+      tabPanel(downloadLink("saveStateNav", " Save state", class = "fa fa-download")),
+      # tabPanel(downloadLink("loadState", "Load state"), icon = icon("folder-open")),
+      tabPanel(actionLink("shareState", "Share state", icon = icon("share"))),
+      tabPanel("View state", uiOutput("view_state"), icon = icon("user"))
+    ),
+
+    ## works but badly aligned in navbar
+    # tabPanel(tags$a(id = "quitApp", href = "#", class = "action-button",
+    #          list(icon("power-off"), ""), onclick = "window.close();")),
+
+    ## stop app *and* close browser window
+    navbarMenu(title = "", id = "Stop", icon = icon("power-off"),
+      tabPanel(tags$a(id = "stop_radiant", href = "#", class = "action-button",
+               list(icon("stop"), "Stop"), onclick = "window.close();")),
+      tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
+               list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"))
+    ),
+
+    navbarMenu(title = "", id = "Help", icon = icon("question-circle"),
+      tabPanel("Help", uiOutput("help_quant"), icon = icon("question")),
+      tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
+      tabPanel("About", uiOutput("help_about"), icon = icon("info"))
+    ),
+
+    tags$head(
+      tags$script(src = "js/session.js"),
+      tags$script(src = "js/video_reset.js"),
+      tags$link(rel = "shortcut icon", href="imgs/icon.png")
+    )
+  )
+

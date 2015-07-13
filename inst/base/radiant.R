@@ -9,22 +9,25 @@ observe({
 ################################################################################
 ## function to save app state on refresh or crash
 ################################################################################
+
+saveSession <- function(session = session) {
+  r_sessions[[r_ssuid]] <- list(
+    r_data    = reactiveValuesToList(r_data),
+    r_state   = reactiveValuesToList(input),
+    timestamp = Sys.time()
+  )
+  ## saving session information to file
+  if (!r_local)
+    saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+}
+
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     isolate({
-      if (not_pressed(input$resetState) && not_pressed(input$quitApp) &&
-         is.null(input$uploadState)) {
-        r_sessions[[r_ssuid]] <- list(
-          r_data    = reactiveValuesToList(r_data),
-          r_state   = reactiveValuesToList(input),
-          timestamp = Sys.time()
-        )
-        if (r_local) {
-          rm(r_env, envir = .GlobalEnv)
-        } else {
-          ## saving session information to file
-          saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-        }
+      if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
+          is.null(input$uploadState)) {
+        saveSession(session)
+        if (r_local) rm(r_env, envir = .GlobalEnv)
       } else {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
@@ -48,8 +51,10 @@ saveStateOnRefresh <- function(session = session) {
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
 
+  if (is.null(input$dataset)) return()
+
   if (is_empty(input$data_filter) || input$show_filter == FALSE)
-    if(is.null(input$dataset)) return() else return(r_data[[input$dataset]])
+    if (is.null(input$dataset)) return() else return(r_data[[input$dataset]])
 
   selcom <- gsub("\\s","", input$data_filter)
   if (selcom != "") {

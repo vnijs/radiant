@@ -194,6 +194,19 @@ for (i in names(url_list)) {
 # }
 # knitr::knit2html("~/gh/radiant/tests/urls/urls.Rmd", output = "~/gh/radiant/tests/urls/urls.html")
 
+## environment to results from code run through knitr
+# r_knitr <- new.env(parent = emptyenv())
+if (is.null(isolate(r_data$r_knitr))) {
+  isolate({
+    r_data$r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
+  })
+  # new.env(parent = r_env)
+  # if (exists("r_env"))
+  #   r_data$r_knitr <- new.env(parent = r_env)
+  # else
+  #   r_data$r_knitr <- new.env()
+}
+
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
 observe({
   url_query <- parseQueryString(session$clientData$url_search)
@@ -205,18 +218,52 @@ observe({
 
   ## create an observer and suspend when done
   url_observe <- observe({
-    if(is.null(input$dataset)) return()
+    if (is.null(input$dataset)) return()
     url <- url_patterns[[r_data$url]]
     if (is.null(url)) {
       ## if pattern not found suspend observer
       url_observe$suspend()
       return()
     }
-    for(u in names(url)) {
-      if(is.null(input[[u]])) return()
-      if(input[[u]] != url[[u]])
+    ## move through the url
+    for (u in names(url)) {
+      if (is.null(input[[u]])) return()
+      if (input[[u]] != url[[u]])
         updateTabsetPanel(session, u, selected = url[[u]])
-      if(names(tail(url,1)) == u) url_observe$suspend()
+      if (names(tail(url,1)) == u) url_observe$suspend()
     }
   })
 })
+
+## keeping track of the main tab we are on
+observe({
+  if (is_empty(input$nav_radiant)) return()
+  if (input$nav_radiant != "Stop" && input$nav_radiant != "Refresh")
+    r_data$nav_radiant <- input$nav_radiant
+})
+
+## Jump to the page you were on
+## only goes two layers deep at this point
+if (!is.null(r_state$nav_radiant)) {
+
+  ## don't return-to-the-spot if that was quit or stop
+  if (r_state$nav_radiant %in% c("Refresh","Stop")) return()
+
+  ## naming the observer so we can suspend it when done
+  nav_observe <- observe({
+    ## needed to avoid errors when no data is available yet
+    if(is.null(input$dataset)) return()
+    updateTabsetPanel(session, "nav_radiant", selected = r_state$nav_radiant)
+
+    ## check if shiny set the main tab to the desired value
+    if (is.null(input$nav_radiant)) return()
+    if (input$nav_radiant != r_state$nav_radiant) return()
+    nav_radiant_tab <- url_list[[r_state$nav_radiant]] %>% names
+
+    if (!is.null(nav_radiant_tab) && !is.null(r_state[[nav_radiant_tab]]))
+      updateTabsetPanel(session, nav_radiant_tab, selected = r_state[[nav_radiant_tab]])
+
+    ## once you arrive at the desired tab suspend the observer
+    nav_observe$suspend()
+  })
+}
