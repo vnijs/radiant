@@ -31,7 +31,8 @@ saveStateOnRefresh <- function(session = session) {
       } else {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
-          unlink("~/r_sessions/r_", r_ssuid, ".rds")
+          # saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+          if (!r_local) unlink("~/r_sessions/r_", r_ssuid, ".rds", force = TRUE)
         }
       }
     })
