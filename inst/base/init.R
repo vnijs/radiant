@@ -56,8 +56,32 @@ if (!r_local) {
       state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
   }
 
+  fl <- list.files(normalizePath("~/r_sessions/"),
+                 pattern = "*.rds", full.names = TRUE)
+
+
+
+  remove_sessions_files <- function(st = Sys.time())
+    fl <- list.files(normalizePath("~/r_sessions/"), pattern = "*.rds",
+                     full.names = TRUE)
+
+    for (f in fl) {
+      if (difftime(st, file.mtime(f), units = "days") > .007)
+        unlink(f, force = TRUE)
+    }
+  }
+
+  remove_sessions_files()
+
+  # fn <- normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+  # if (file.exists(fn)) {
+  #   # Sys.chmod(fn, mode = "0777")
+  #   unlink(fn, force = TRUE)
+  # }
+
   ## are there any state files dumped more than 1 minute ago?
   # check_age_and_size()
+
 }
 
 ## from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R

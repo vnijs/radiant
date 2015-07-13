@@ -21,19 +21,10 @@ saveSession <- function(session = session) {
     saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
 }
 
-# refreshSession <- function() {
-#   r_sessions[[r_ssuid]] <- list(
-#     r_data    = list(),
-#     r_state   = list(),
-#     timestamp = Sys.time()
-#   )
-#   saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-# }
-
 observeEvent(input$refresh_radiant, {
   fn <- normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
   if (file.exists(fn)) {
-    #Sys.chmod(fn, mode = "0777")
+    # Sys.chmod(fn, mode = "0777")
     unlink(fn, force = TRUE)
   }
 })
@@ -47,12 +38,8 @@ saveStateOnRefresh <- function(session = session) {
         if (r_local) rm(r_env, envir = .GlobalEnv)
       } else {
         if (is.null(input$uploadState)) {
-          if (exists("r_sessions")) try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
-          # if (!r_local) refreshSession()
-          # saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-          # if (!r_local) unlink("~/r_sessions/r_", r_ssuid, ".rds", force = TRUE)
-          #   ?unlink
-          # if (!r_local) file.remove("~/r_sessions/r_", r_ssuid, ".rds")
+          if (exists("r_sessions"))
+            try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
         }
       }
     })
