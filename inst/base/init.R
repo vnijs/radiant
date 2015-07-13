@@ -66,7 +66,7 @@ if (!r_local) {
                      full.names = TRUE)
 
     for (f in fl) {
-      if (difftime(st, file.mtime(f), units = "days") > .007)
+      if (difftime(st, file.mtime(f), units = "days") > 7)
         unlink(f, force = TRUE)
     }
   }
