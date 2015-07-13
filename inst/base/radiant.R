@@ -16,7 +16,7 @@ saveSession <- function(session = session) {
     r_state   = reactiveValuesToList(input),
     timestamp = Sys.time()
   )
-  ## saving session information to file
+  ## saving session information to file on server
   if (!r_local)
     saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
 }
