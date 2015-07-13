@@ -57,7 +57,7 @@ if (!r_local) {
   }
 
   ## are there any state files dumped more than 1 minute ago?
-  check_age_and_size()
+  # check_age_and_size()
 }
 
 ## from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R
