@@ -28,3 +28,9 @@ Shiny.addCustomMessageHandler("session_start", function(data) {
   history.replaceState(null, null, path + search);
 
 })
+
+// Not working as intended
+Shiny.addCustomMessageHandler("new_session", function(data) {
+  var path = location.pathname.replace(/\/.+/, '');
+  history.replaceState(null, null, path);
+})

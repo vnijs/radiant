@@ -92,7 +92,8 @@ isolate({
 ## set the session id
 r_ssuid <-
   if (r_local) {
-    "local"
+    # "local"
+    ifelse(is.null(prevSSUID), paste0("local-",shiny:::createUniqueId(3)), prevSSUID)
   } else {
     ifelse(is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
   }

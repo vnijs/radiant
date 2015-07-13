@@ -29,6 +29,11 @@ observeEvent(input$refresh_radiant, {
   }
 })
 
+## Not working as intended
+# observeEvent(input$new_session, {
+#   session$sendCustomMessage("new_session","")
+# })
+
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     isolate({

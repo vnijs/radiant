@@ -112,7 +112,12 @@ shared_ui <-
       tabPanel(tags$a(id = "stop_radiant", href = "#", class = "action-button",
                list(icon("stop"), "Stop"), onclick = "window.close();")),
       tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
-               list(icon("refresh"), "Refresh"), onclick = "window.location.reload();"))
+               list(icon("refresh"), "Refresh"), onclick = "window.location.reload();")),
+      tabPanel(tags$a(id = "new_session", href = "#", class = "action-button",
+               list(icon("plus"), "New session"),
+               onclick = "var path = location.pathname.replace(/\\/.+/, '');
+                          history.replaceState(null, null, path);
+                          window.location.reload();"))
     ),
 
     navbarMenu(title = "", id = "Help", icon = icon("question-circle"),
