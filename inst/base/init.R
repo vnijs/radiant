@@ -73,15 +73,8 @@ if (!r_local) {
 
   remove_session_files()
 
-  # fn <- normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-  # if (file.exists(fn)) {
-  #   # Sys.chmod(fn, mode = "0777")
-  #   unlink(fn, force = TRUE)
-  # }
-
   ## are there any state files dumped more than 1 minute ago?
   # check_age_and_size()
-
 }
 
 ## from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R
@@ -230,11 +223,6 @@ if (is.null(isolate(r_data$r_knitr))) {
   isolate({
     r_data$r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
   })
-  # new.env(parent = r_env)
-  # if (exists("r_env"))
-  #   r_data$r_knitr <- new.env(parent = r_env)
-  # else
-  #   r_data$r_knitr <- new.env()
 }
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab

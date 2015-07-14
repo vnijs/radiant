@@ -7,12 +7,12 @@ output$view_state <- renderUI({
       wellPanel(
         checkboxInput('show_input', 'Show input', FALSE),
         checkboxInput('show_data', 'Show r_data', FALSE),
-        checkboxInput('show_state', 'Show state', FALSE)),
-
+        checkboxInput('show_state', 'Show state', FALSE),
+        checkboxInput('show_session', 'Show session', FALSE)
+      ),
       help_modal('View state','state_help',inclMD(file.path(r_path,"base/tools/help/state.md")))
     ),
     mainPanel(
-      # verbatimTextOutput("show_session"),
       conditionalPanel(condition = "input.show_input == true",
         verbatimTextOutput("show_input")
       ),
@@ -21,6 +21,9 @@ output$view_state <- renderUI({
       ),
       conditionalPanel(condition = "input.show_state == true",
         verbatimTextOutput("show_state")
+      ),
+      conditionalPanel(condition = "input.show_session == true",
+        verbatimTextOutput("show_session")
       )
     )
   )
@@ -37,10 +40,14 @@ observeEvent(input$shareState, {
   saveSession(session)
 })
 
-# output$show_session <- renderPrint({
-#   cat("Session list:\n")
-#   reactiveValuesToList(session$clientData)
-# })
+output$show_session <- renderPrint({
+  input$show_session ## only update when you toggle the checkbox
+  isolate({
+    cat("Session list:\n")
+    s <- reactiveValuesToList(session$clientData)
+    str(s[sort(names(s))])
+  })
+})
 
 output$show_input <- renderPrint({
   input$show_input ## only update when you toggle the checkbox

@@ -4,6 +4,10 @@ shinyServer(function(input, output, session) {
 	source("init.R", local = TRUE)
 	source("radiant.R", local = TRUE)
 
+#   url_current <- function(session = session) {
+#     with(session$clientdata, paste0(url_protocol, url_hostname, ifelse(url_port == "", "", paste0(":", url_port)), url_pathname))
+#   }
+
 	# for shiny-server
  	if (!"package:radiant" %in% search()) {
  		if (r_path == "..") {

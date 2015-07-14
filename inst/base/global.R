@@ -92,15 +92,15 @@ nav_ui <-
 shared_ui <-
   tagList(
     navbarMenu("R",
-      tabPanel("Report", uiOutput("report")),
-      tabPanel("Code", uiOutput("rcode"))
+               tabPanel("Report", uiOutput("report")),
+               tabPanel("Code", uiOutput("rcode"))
     ),
 
     navbarMenu(title = "", id = "State", icon = icon("save"),
-      tabPanel(downloadLink("saveStateNav", " Save state", class = "fa fa-download")),
-      # tabPanel(downloadLink("loadState", "Load state"), icon = icon("folder-open")),
-      tabPanel(actionLink("shareState", "Share state", icon = icon("share"))),
-      tabPanel("View state", uiOutput("view_state"), icon = icon("user"))
+               tabPanel(downloadLink("saveStateNav", " Save state", class = "fa fa-download")),
+               # tabPanel(downloadLink("loadState", "Load state"), icon = icon("folder-open")),
+               tabPanel(actionLink("shareState", "Share state", icon = icon("share"))),
+               tabPanel("View state", uiOutput("view_state"), icon = icon("user"))
     ),
 
     ## works but badly aligned in navbar
@@ -109,27 +109,26 @@ shared_ui <-
 
     ## stop app *and* close browser window
     navbarMenu(title = "", id = "Stop", icon = icon("power-off"),
-      tabPanel(tags$a(id = "stop_radiant", href = "#", class = "action-button",
-               list(icon("stop"), "Stop"), onclick = "window.close();")),
-      tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
-               list(icon("refresh"), "Refresh"), onclick = "window.location.reload();")),
-      tabPanel(tags$a(id = "new_session", href = "#", class = "action-button",
-               list(icon("plus"), "New session"),
-               onclick = "var path = location.pathname.replace(/\\/.+/, '');
-                          history.replaceState(null, null, path);
-                          window.location.reload();"))
+               tabPanel(tags$a(id = "stop_radiant", href = "#", class = "action-button",
+                               list(icon("stop"), "Stop"), onclick = "window.close();")),
+               tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
+                               list(icon("refresh"), "Refresh"), onclick = "window.location.reload();")),
+               ## had to remove class = "action-button" to make this work
+               tabPanel(tags$a(id = "new_session", href = "/", target = "_blank",
+                               list(icon("plus"), "New session")))
     ),
 
     navbarMenu(title = "", id = "Help", icon = icon("question-circle"),
-      tabPanel("Help", uiOutput("help_quant"), icon = icon("question")),
-      tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
-      tabPanel("About", uiOutput("help_about"), icon = icon("info"))
+               tabPanel("Help", uiOutput("help_quant"), icon = icon("question")),
+               tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
+               tabPanel("About", uiOutput("help_about"), icon = icon("info")),
+               tabPanel(tags$a("", href = "http://vnijs.github.io/radiant/", target = "_blank",
+                               list(icon("globe"), "Radiant docs")))
     ),
 
     tags$head(
       tags$script(src = "js/session.js"),
       tags$script(src = "js/video_reset.js"),
-      tags$link(rel = "shortcut icon", href="imgs/icon.png")
+      tags$link(rel = "shortcut icon", href = "imgs/icon.png")
     )
   )
-
