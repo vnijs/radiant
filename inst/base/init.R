@@ -10,6 +10,7 @@ init_state <- function(r_data) {
   r_data$plot_width <- 600
 
   r_data$manual <- FALSE
+  r_data$vim_keys <- FALSE
 
   ## Joe Cheng: "Datasets can change over time (i.e. the changedata function).
   ## Therefore, the data need to be a reactive value so the other reactive

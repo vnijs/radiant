@@ -51,6 +51,17 @@ output$ui_manual <- renderUI({
     if(r_data$manual) "Manual paste (on)" else "Manual paste (off)")
 })
 
+observeEvent(input$vim_keys, {
+  isolate(r_data$vim_keys %<>% {. == FALSE})
+})
+
+output$ui_vim <- renderUI({
+  ## initialize manual cmd paste to false
+  if(is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
+  actionButton("vim_keys",
+    if(r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
+})
+
 output$report <- renderUI({
   tagList(
     with(tags,
@@ -60,6 +71,7 @@ output$report <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Update")),
             td(uiOutput("ui_manual")),
+            td(uiOutput("ui_vim")),
             td(downloadButton("saveHTML", "Save HTML")),
             td(downloadButton("saveRmd", "Save Rmd")),
             td(HTML("<div class='form-group shiny-input-container'>
@@ -69,6 +81,7 @@ output$report <- renderUI({
     ),
 
     shinyAce::aceEditor("rmd_report", mode = "markdown",
+              vimKeyBinding = ifelse(is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
               wordWrap = TRUE,
               height = "auto",
               selectionId = "rmd_selection",
