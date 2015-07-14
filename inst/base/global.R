@@ -114,7 +114,7 @@ shared_ui <-
                tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
                                list(icon("refresh"), "Refresh"), onclick = "window.location.reload();")),
                ## had to remove class = "action-button" to make this work
-               tabPanel(tags$a(id = "new_session", href = "/", target = "_blank",
+               tabPanel(tags$a(id = "new_session", href = "./", target = "_blank",
                                list(icon("plus"), "New session")))
     ),
 
@@ -132,3 +132,5 @@ shared_ui <-
       tags$link(rel = "shortcut icon", href = "imgs/icon.png")
     )
   )
+
+
