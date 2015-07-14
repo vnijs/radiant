@@ -92,8 +92,8 @@ nav_ui <-
 shared_ui <-
   tagList(
     navbarMenu("R",
-               tabPanel("Report", uiOutput("report")),
-               tabPanel("Code", uiOutput("rcode"))
+               tabPanel("Report", uiOutput("report"), icon = icon("edit")),
+               tabPanel("Code", uiOutput("rcode"), icon = icon("code"))
     ),
 
     navbarMenu(title = "", id = "State", icon = icon("save"),
