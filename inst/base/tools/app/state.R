@@ -9,6 +9,7 @@ output$view_state <- renderUI({
         checkboxInput('show_data', 'Show r_data', FALSE),
         checkboxInput('show_state', 'Show state', FALSE),
         checkboxInput('show_session', 'Show session', FALSE)
+        # , actionButton("stop_radiant_test", "Stop")
       ),
       help_modal('View state','state_help',inclMD(file.path(r_path,"base/tools/help/state.md")))
     ),
@@ -73,3 +74,11 @@ output$show_state <- renderPrint({
   if (length(r_state) == 0) return("[empty]")
   str(r_state[sort(names(r_state))])
 })
+
+#######################################
+# Stop menu
+#######################################
+# observeEvent(input$stop_radiant_test, {
+#   stopApp("Stopped Radiant")
+#   # q("no")
+# })

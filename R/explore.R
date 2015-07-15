@@ -58,19 +58,9 @@ explore <- function(dataset,
     dc <- getclass(dat)
     isNum <- "numeric" == dc | "integer" == dc
 
-    ##################################################
-    ##################################################
-    ##################################################
-    ##################################################
-    # remove mutate_each in next line one the median fix comes out in 0.5.0
-    ##################################################
-    ##################################################
-    ##################################################
-    ##################################################
-    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
-    ##################################################
-    ##################################################
-    ##################################################
+    ## for median issue in dplyr < .5
+    # dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
+    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum))
 
     for (f in fun)
       res[[f]] <- dat %>% summarise_each(as.formula(paste0("~",f))) %>% as.data.frame

@@ -213,7 +213,7 @@ viewdata <- function(dataset, vars = "", filt = "") {
         )
       )
       output$tbl <- DT::renderDataTable(widget)
-      observeEvent(input$stop, {stopApp()})
+      observeEvent(input$stop, {stopApp("Stopped viewdata")})
     }
   )
 }
