@@ -633,10 +633,8 @@ state_multiple <- function(inputvar, vals, init = character(0)) {
 #'
 #' @return A plot
 #'
-#' @importFrom grid grid.draw
-#'
 #' @export
 print.gtable <- function(x, ...) {
   if (is.ggplot(x)) x <- ggplotGrob(x)
-  grid.draw(x)
+  grid::grid.draw(x)
 }
