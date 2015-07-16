@@ -22,14 +22,6 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom MathJaxR withMathJaxR
 NULL
 
-#' Exporting the print.arrange method from the gridExtra package
-#' @details Used to print plots generated using arrangeGrob
-#' @importFrom gridExtra print.arrange
-#' @name print.arrange
-#' @rdname print.arrange
-#' @export
-NULL
-
 #' Exporting the kurtosi function from the psych package
 #' @importFrom psych kurtosi
 #' @name kurtosi

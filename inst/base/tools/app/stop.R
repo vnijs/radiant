@@ -33,16 +33,13 @@ stop_radiant <- function() {
           # cat(input$rmd_report, file = pipe("pbcopy"))
         }
       }
-      try(rm(r_env, envir = .GlobalEnv), silent = TRUE) # removing the reference to the shiny environment
-      try(rm(r_sessions, envir = .GlobalEnv), silent = TRUE) # removing r_sessions
-      try(unlink("~/r_figures/", recursive = TRUE), silent = TRUE) # removing temp knitr figures directory
+      sshh(rm(r_env, r_sessions, envir = .GlobalEnv)) # removing r_sessions
+      unlink("~/r_figures/", recursive = TRUE)
       cat(stop_message)
-
-      # tags$script(type = "text/javascript", "window.close();")
-      stopApp("-- stop successful --")
+      stopApp("-- Stopped Radiant --")
     })
   } else {
-    stopApp("Stopped Radiant")
+    stopApp("-- Stopped Radiant --")
     q("no")
   }
 }

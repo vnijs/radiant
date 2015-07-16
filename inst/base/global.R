@@ -67,10 +67,10 @@ addResourcePath("js", file.path(r_path,"base/www/js/"))
 ## using local mathjax if available to avoid shiny bug
 ## https://github.com/rstudio/shiny/issues/692
 ## however, only use for local due to problems with mathjax rendering in IE
-if (!r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
-  addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
-  withMathJax <- MathJaxR::withMathJaxR
-}
+# if (!r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
+#   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
+#   withMathJax <- MathJaxR::withMathJaxR
+# }
 
 ## options used for debugging
 # options(shiny.trace = TRUE)
@@ -109,8 +109,8 @@ shared_ui <-
 
     ## stop app *and* close browser window
     navbarMenu(title = "", id = "Stop", icon = icon("power-off"),
-               tabPanel(tags$a(id = "stop_radiant", href = "#", class = "action-button",
-                               list(icon("stop"), "Stop"), onclick = "window.close();")),
+               tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
+                                   onclick = "setTimeout(function(){window.close();}, 100); ")),
                tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
                                list(icon("refresh"), "Refresh"), onclick = "window.location.reload();")),
                ## had to remove class = "action-button" to make this work

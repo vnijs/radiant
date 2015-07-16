@@ -78,7 +78,9 @@ test_that("regression", {
 test_that("regression - plots", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
   grb <- plot(result, plots = "dashboard", shiny = TRUE)
-  expect_true(all(c("arrange","ggplot") %in% class(grb)))
+  class(grb)
+  library(testthat)
+  expect_true(all(c("gtable","grob") %in% class(grb)))
   expect_equal(try(print(grb), silent = TRUE), NULL)
   # expect_true(file.exists("Rplots.pdf"))  # not always created it seems
   unlink("Rplots.pdf")

@@ -22,11 +22,8 @@ saveSession <- function(session = session) {
 }
 
 observeEvent(input$refresh_radiant, {
-  fn <- normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-  if (file.exists(fn)) {
-    # Sys.chmod(fn, mode = "0777")
-    unlink(fn, force = TRUE)
-  }
+  fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
+  if (file.exists(fn)) unlink(fn, force = TRUE)
 })
 
 ## Not working as intended
@@ -40,7 +37,8 @@ saveStateOnRefresh <- function(session = session) {
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
           is.null(input$uploadState)) {
         saveSession(session)
-        if (r_local) rm(r_env, envir = .GlobalEnv)
+        # if (r_local) try(rm(r_env, envir = .GlobalEnv), silent = TRUE)
+        if (r_local) sshh( rm(r_env, envir = .GlobalEnv) )
       } else {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions"))

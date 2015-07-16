@@ -151,7 +151,7 @@ output$visualize <- renderPlot({
     )
 
   withProgress(message = 'Making plot', value = 0, {
-    .visualize() %>% { if (!"ggplot" %in% class(.)) return() else . } %>% print
+    .visualize() %>% { if (grid::is.grob(.)) . else return(invisible()) } %>% print
   })
 }, width = viz_plot_width, height = viz_plot_height)
 

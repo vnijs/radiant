@@ -30,7 +30,13 @@ Shiny.addCustomMessageHandler("session_start", function(data) {
 })
 
 // Not working as intended
-Shiny.addCustomMessageHandler("new_session", function(data) {
-  var path = location.pathname.replace(/\/.+/, '');
-  history.replaceState(null, null, path);
-})
+// Shiny.addCustomMessageHandler("new_session", function(data) {
+//   var path = location.pathname.replace(/\/.+/, '');
+//   history.replaceState(null, null, path);
+// })
+
+// for firefox and chrome? Doesn't seem to work
+// function window_close() {
+//   window.open("","_parent","");
+//   window.close();
+// }
