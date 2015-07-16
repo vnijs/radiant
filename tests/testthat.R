@@ -1,7 +1,7 @@
 ## use shift-cmd-t to run all tests
 # setwd("~/gh/radiant")
 library(testthat)
-library(radiant)
+#library(radiant)
 
 test_check("radiant")
 
