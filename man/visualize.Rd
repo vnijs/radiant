@@ -23,7 +23,7 @@ visualize(dataset, xvar, yvar = "none", type = "hist", facet_row = ".",
 
 \item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
 
-\item{bins}{Number of bins used for a histogram (not accessible in Radiant)}
+\item{bins}{Number of bins used for a histogram (1 - 50)}
 
 \item{smooth}{Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)}
 

@@ -2,7 +2,7 @@ viz_type <- c("Histogram" = "hist", "Density" = "density", "Scatter" = "scatter"
               "Line" = "line", "Bar" = "bar", "Box-plot" = "box")
 viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
-               "Scale-y" = "scale_y")
+               "Scale-y" = "scale_y", "Density" = "density")
 
 ## list of function arguments
 viz_args <- as.list(formals(visualize))
@@ -27,62 +27,53 @@ output$ui_viz_type <- renderUI({
     multiple = FALSE)
 })
 
+## Y - variable
+output$ui_viz_yvar <- renderUI({
+  if (is.null(input$viz_type)) return()
+  vars <- varying_vars()
+  if (input$viz_type == "line") vars <- vars["factor" != .getclass()[vars]]
+  selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
+    choices = c("None" = "none", vars),
+    selected = state_single("viz_yvar", vars, "none"),
+    multiple = FALSE)
+})
+
 ## X - variable
 output$ui_viz_xvar <- renderUI({
   if (is.null(input$viz_type)) return()
-  # vars <- varnames()
   vars <- varying_vars()
-  if (input$viz_type %in% c("density")) vars <- vars["factor" != .getclass()[vars]]
+  if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
+  if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("viz_xvar",vars),
     multiple = TRUE, size = min(5, length(vars)), selectize = FALSE)
 })
 
-## Y - variable
-output$ui_viz_yvar <- renderUI({
-  if (is.null(input$viz_type)) return()
-  # vars <- varnames()
-  vars <- varying_vars()
-  if (input$viz_type %in% c("line")) vars <- vars["factor" != .getclass()[vars]]
-  selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
-                 choices = c("None" = "none", vars),
-                 selected = state_single("viz_yvar", vars, "none"),
-                 multiple = FALSE)
-})
-
 output$ui_viz_facet_row <- renderUI({
-  # isFct <- "factor" == .getclass()
-  # vars <- c("None" = ".", varnames()[isFct])
   vars <- c("None" = ".", groupable_vars())
   selectizeInput("viz_facet_row", "Facet row", vars,
-                 selected = state_single("viz_facet_row", vars, "."),
-                 multiple = FALSE)
+    selected = state_single("viz_facet_row", vars, "."), multiple = FALSE)
 })
 
 output$ui_viz_facet_col <- renderUI({
-  # isFct <- "factor" == .getclass()
-  # vars <- c("None" = ".", varnames()[isFct])
   vars <- c("None" = ".", groupable_vars())
   selectizeInput("viz_facet_col", 'Facet column', vars,
-                 selected = state_single("viz_facet_col", vars, "."),
-                 multiple = FALSE)
+    selected = state_single("viz_facet_col", vars, "."), multiple = FALSE)
 })
 
 output$ui_viz_color <- renderUI({
   if (not_available(input$viz_yvar)) return()  ## can't have an XY plot without an X
   vars <- c("None" = "none", varnames())
   sel <- state_single("viz_color", vars, "none")
-  selectizeInput("viz_color", "Color", vars,
-                 selected = sel,
-                 multiple = FALSE)
+  selectizeInput("viz_color", "Color", vars, selected = sel, multiple = FALSE)
 })
 
 output$ui_viz_axes <- renderUI({
   if (is.null(input$viz_type)) return()
   ind <- 1
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
-  # if (paste(input$viz_facet_row, '~', input$viz_facet_col) != '. ~ .')
+  if (input$viz_type == "hist") ind <- c(ind, 5)
   if (!is_empty(input$viz_facet_row, ".")) ind <- c(ind, 4)
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
     selected = state_init("viz_axes"),
@@ -106,6 +97,11 @@ output$ui_Visualize <- renderUI({
         checkboxGroupInput("viz_check", NULL, viz_check,
           selected = state_init("viz_check"),
           inline = TRUE)
+      ),
+      conditionalPanel(condition = "input.viz_type == 'hist'",
+        sliderInput("viz_bins", label = "Number of bins:",
+          min = 1, max = 50, value = state_init("viz_bins",10),
+          step = 1)
       ),
       uiOutput("ui_viz_axes"),
       div(class="row",

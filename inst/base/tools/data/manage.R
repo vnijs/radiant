@@ -1,8 +1,8 @@
 descr_out <- function(descr, ret_type = 'html') {
-   # if there is no data description
+   ## if there is no data description
   if (descr %>% is_empty) return("")
 
-  # if there is a data description and we want html output
+  ## if there is a data description and we want html output
   if (ret_type == 'html')
     descr <- markdown::markdownToHTML(text = descr, stylesheet=file.path(r_path,"base/www/empty.css"))
 
@@ -19,7 +19,7 @@ descr_out <- function(descr, ret_type = 'html') {
 #### end test
 
 upload_error_handler <- function(objname, ret) {
-  # create an empty data.frame and return error message as description
+  ## create an empty data.frame and return error message as description
   r_data[[paste0(objname,"_descr")]] <- ret
   r_data[[objname]] <- data.frame(matrix(rep("",12), nrow = 2))
 }
@@ -61,8 +61,12 @@ saveClipboardData <- function() {
 factorizer <- function(dat) {
   isChar <- sapply(dat,is.character)
   if (sum(isChar) == 0) return(dat)
-  toFct <- select(dat, which(isChar)) %>% summarise_each(funs(n_distinct)) %>%
-   select(which(. < 100 & ((. / nrow(dat)) < .1))) %>% names
+    toFct <-
+      select(dat, which(isChar)) %>%
+      summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < .1)) %>%
+      select(which(. == TRUE)) %>% names
+    # summarise_each(funs(n_distinct)) %>%
+    # select(which(. < 100 & ((. / nrow(dat)) < .1))) %>% names
   if (length(toFct) == 0) return(dat)
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
@@ -74,10 +78,10 @@ loadUserData <- function(fname, uFile, ext,
                          dec = ".") {
 
   filename <- basename(fname)
-  # objname is used as the name of the data.frame
+  ## objname is used as the name of the data.frame
   objname <- sub(paste0(".",ext,"$"),"", filename)
 
-  # if ext isn't in the filename ...
+  ## if ext isn't in the filename ...
   if (objname == filename) {
     fext <- tools::file_ext(filename) %>% tolower
 
@@ -92,7 +96,7 @@ loadUserData <- function(fname, uFile, ext,
   }
 
   if (ext == 'rda') {
-    # objname will hold the name of the object(s) inside the R datafile
+    ## objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent=TRUE)
     if (is(robjname, 'try-error')) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
@@ -109,14 +113,20 @@ loadUserData <- function(fname, uFile, ext,
   }
 
   if (ext == 'csv') {
-    # r_data[[objname]] <- read.csv(uFile, header=header, sep=sep, dec=dec,
-    # r_data[[objname]] <- readr::read_csv(uFile, col_names=header)
-    # stringsAsFactors=man_str_as_factor), silent = TRUE) %>%
-    r_data[[objname]] <- try(read.table(uFile, header=header, sep=sep, dec=dec,
-      stringsAsFactors=FALSE), silent = TRUE) %>%
-      { if (is(., 'try-error')) upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+    r_data[[objname]] <- try(read_delim(uFile, sep, col_names=header), silent = TRUE) %>%
+      { if (is(., 'try-error'))
+          try(read.table(uFile, header = header, sep = sep, dec = dec, stringsAsFactors = FALSE), silent = TRUE)
         else . } %>%
-      { if (man_str_as_factor) factorizer(.) else . } # %>% tbl_df
+      { if (is(., 'try-error'))
+          upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+        else . } %>%
+      { if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
+
+    # r_data[[objname]] <- try(read.table(uFile, header=header, sep=sep, dec=dec,
+    #   stringsAsFactors=FALSE), silent = TRUE) %>%
+    #   { if (is(., 'try-error')) upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+    #     else . } %>%
+    #   { if (man_str_as_factor) factorizer(.) else . } # %>% tbl_df
   }
 
   r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique

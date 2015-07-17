@@ -189,8 +189,8 @@ output$downloadData <- downloadHandler(
         save(list = robj, file = file)
       }
     } else if (ext == 'csv') {
-      assign(robj, .getdata())
-      write.csv(get(robj), file)
+      # write.csv(.getdata(), file, row.names = FALSE)
+      write_csv(.getdata(), file)
     }
   }
 )

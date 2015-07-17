@@ -14,8 +14,8 @@ options("scipen"=100)
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
                "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
                "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
-               "htmlwidgets")
-pkgs_gh <- c("shinyAce","rpivotTable","DT")
+               "htmlwidgets", "readr")
+pkgs_gh <- c("shinyAce","rpivotTable")
 pkgs <- c(pkgs_cran, pkgs_gh)
 rm(pkgs_cran,pkgs_gh)
 
@@ -67,10 +67,10 @@ addResourcePath("js", file.path(r_path,"base/www/js/"))
 ## using local mathjax if available to avoid shiny bug
 ## https://github.com/rstudio/shiny/issues/692
 ## however, only use for local due to problems with mathjax rendering in IE
-# if (!r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
-#   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
-#   withMathJax <- MathJaxR::withMathJaxR
-# }
+if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
+  addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
+  withMathJax <- MathJaxR::withMathJaxR
+}
 
 ## options used for debugging
 # options(shiny.trace = TRUE)

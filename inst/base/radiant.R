@@ -92,9 +92,8 @@ saveStateOnRefresh <- function(session = session) {
 ## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(n_distinct)) %>%
-    {. < 11 & . > 1} %>%
-    which(.) %>%
+    summarise_each(funs(is.factor(.) | n_distinct(.) %in% 2:20)) %>%
+    {which(. == TRUE)} %>%
     varnames()[.]
 })
 
