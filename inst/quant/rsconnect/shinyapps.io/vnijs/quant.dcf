@@ -1,4 +1,5 @@
 name: quant
 account: vnijs
-bundleId: 221197
+bundleId: 221728
 url: https://vnijs.shinyapps.io/quant
+server: shinyapps.io

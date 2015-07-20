@@ -74,3 +74,10 @@ system("osascript ~/gh/update.scpt")
 # git fetch --all
 # git reset --hard origin/master
 # rm(list = ls())
+
+library(radiant)
+
+```{r fig.width=6.46, fig.height=8.4}
+x <- visualize(dataset = "diamonds", xvar = "price", shiny = FALSE)
+class(x)
+```

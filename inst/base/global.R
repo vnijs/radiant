@@ -74,7 +74,7 @@ if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
 
 ## options used for debugging
 # options(shiny.trace = TRUE)
-# options(shiny.error=recover)
+# options(shiny.error = recover)
 # options(warn=2)
 # options(warn=0)
 

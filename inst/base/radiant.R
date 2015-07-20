@@ -326,9 +326,12 @@ inclMD <- function(path) {
                            stylesheet = "")
 }
 
-## function to render .Rmd files to html - does not embed image or add css
-inclRmd <- function(path) {
+inclRmd <- function(path, r_env = parent.frame()) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
-  knitr::knit2html(text = ., fragment.only = TRUE, options = "",
-                   stylesheet = "")
+  knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
+    envir = r_env, options = "", stylesheet = "") %>%
+    # gsub("&lt;!--/html_preserve--&gt;","",.) %>%  ## knitr adds this
+    # gsub("&lt;!--html_preserve--&gt;","",.) %>%   ## knitr adds this
+    HTML %>%
+    withMathJax
 }

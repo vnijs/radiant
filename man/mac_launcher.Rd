@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{mac_launcher}
 \alias{mac_launcher}
-\title{Create a launcher for Mac (.command)}
+\title{Create a launcher and updater for Mac (.command)}
 \usage{
 mac_launcher(app = c("marketing", "quant", "base"))
 }
@@ -10,10 +10,10 @@ mac_launcher(app = c("marketing", "quant", "base"))
 \item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
 \description{
-Create a launcher for Mac (.command)
+Create a launcher and updater for Mac (.command)
 }
 \details{
-On Mac a file named 'radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app
+On Mac a file named 'radiant.command' and one named 'update_radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 }
 \examples{
 if (interactive()) {

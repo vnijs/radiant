@@ -272,9 +272,31 @@ is_empty <- function(x, empty = "") if (is.null(x) || x == empty) TRUE else FALS
 is_string <- function(x)
   if (is.character(x) && length(x) == 1 && !is_empty(x)) TRUE else FALSE
 
-#' Create a launcher for Windows (.bat)
+#' Create a vector of interaction terms
 #'
-#' @details On Windows a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @param vars Variables lables to use
+#' @param nway 2-way (2) or 3-way (3) interactions labels to create
+#' @param sep Separator between variable names (default is :)
+#'
+#' @return Character vector of interaction term labels
+#'
+#' @examples
+#' paste0("var", 1:3) %>% iterms(2)
+#' paste0("var", 1:3) %>% iterms(3)
+#' paste0("var", 1:3) %>% iterms(2, sep = ".")
+#'
+#' @export
+iterms <- function(vars, nway, sep = ":") {
+  if (!nway %in% c(2,3)) return(character(0))
+  it <- c()
+  for (i in 2:nway)
+    it %<>% {c(., combn(vars, i) %>% apply(2, paste, collapse = sep))}
+  it
+}
+
+#' Create a launcher and updater for Windows (.bat)
+#'
+#' @details On Windows a file named 'radiant.bat' and one named 'update_radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
@@ -298,52 +320,34 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
   if (Sys.info()["sysname"] != "Windows")
     return(message("This function is for Windows only. For Mac use the mac_launcher() function"))
 
-  answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
+  answ <- readline("Do you want to create shortcuts for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
 
     local_dir <- Sys.getenv("R_LIBS_USER")
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-    filename <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/') %>%
-                  paste0("radiant.bat")
+    pt <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
+    fn1 <- paste0(pt, "radiant.bat")
     launch_string <- paste0(Sys.which('R'), " -e \"if (!require(radiant)) { install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/') }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
-    cat(launch_string, file=filename, sep="\n")
+    cat(launch_string, file=fn1, sep="\n")
 
-    if (file.exists(filename))
-      message("Done! Look for a file named radiant.bat on your desktop. Double-click it to start Radiant in your default browser.\n")
+    fn2 <- paste0(pt, "update_radiant.bat")
+    launch_string <- paste0(Sys.which('R'), " -e \"install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\"")
+    cat(launch_string,file=fn2,sep="\n")
+    Sys.chmod(fn2, mode = "0755")
+
+    if (file.exists(fn1) & file.exists(fn2))
+      message("Done! Look for a file named radiant.bat on your desktop. Double-click it to start Radiant in your default browser. There is also a file called update_radiant.bat you can double click to update the version of Radiant on your computer.\n")
     else
-      message("Something went wrong. No shortcut was created.")
-
+      message("Something went wrong. No shortcuts were created.")
   } else {
-    message("No shortcut was created.\n")
+    message("No shortcuts were created.\n")
   }
 }
 
-#' Create a vector of interaction terms
+#' Create a launcher and updater for Mac (.command)
 #'
-#' @param vars Variables lables to use
-#' @param nway 2-way (2) or 3-way (3) interactions labels to create
-#' @param sep Separator between variable names (default is :)
-#'
-#' @return Character vector of interaction term labels
-#'
-#' @examples
-#' paste0("var", 1:3) %>% iterms(2)
-#' paste0("var", 1:3) %>% iterms(3)
-#' paste0("var", 1:3) %>% iterms(2, sep = ".")
-#'
-#' @export
-iterms <- function(vars, nway, sep = ":") {
-  if (!nway %in% c(2,3)) return(character(0))
-  it <- c()
-  for (i in 2:nway)
-    it %<>% {c(., combn(vars, i) %>% apply(2, paste, collapse = sep))}
-  it
-}
-
-#' Create a launcher for Mac (.command)
-#'
-#' @details On Mac a file named 'radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @details On Mac a file named 'radiant.command' and one named 'update_radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
@@ -367,30 +371,35 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
   if (Sys.info()["sysname"] != "Darwin")
     return(message("This function is for Mac only. For windows use the win_launcher() function"))
 
-  answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
+  answ <- readline("Do you want to create shortcuts for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
 
     local_dir <- Sys.getenv("R_LIBS_USER")
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-    filename <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
+    fn1 <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
     launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
-    cat(launch_string,file=filename,sep="\n")
-    Sys.chmod(filename, mode = "0755")
+    cat(launch_string,file=fn1,sep="\n")
+    Sys.chmod(fn1, mode = "0755")
 
-    if (file.exists(filename))
-      message("Done! Look for a file named radiant.command on your desktop. Double-click it to start Radiant in your default browser.\n")
+    fn2 <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/update_radiant.command")
+    launch_string <- paste0("#!/usr/bin/env Rscript\ninstall.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')")
+    cat(launch_string,file=fn2,sep="\n")
+    Sys.chmod(fn2, mode = "0755")
+
+    if (file.exists(fn1) & file.exists(fn2))
+      message("Done! Look for a file named radiant.command  on your desktop. Double-click it to start Radiant in your default browser. There is also a file called update_radiant.command you can double click to update the version of Radiant on your computer.\n")
     else
-      message("Something went wrong. No shortcut was created.")
+      message("Something went wrong. No shortcuts were created.")
 
   } else {
-    message("No shortcut was created.\n")
+    message("No shortcuts were created.\n")
   }
 }
 
-#' Create a launcher for Linux (.sh)
+#' Create a launcher and updater for Linux (.sh)
 #'
-#' @details On Linux a file named 'radiant.sh' will be put on the desktop. Double-click the file to launch the specified Radiant app
+#' @details On Linux a file named 'radiant.sh' and one named 'update_radiant.sh' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 #'
 #' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
 #'
@@ -414,24 +423,29 @@ lin_launcher <- function(app = c("marketing", "quant", "base")) {
   if (Sys.info()["sysname"] != "Linux")
     return(message("This function is for Linux only. For windows use the win_launcher() function and for mac use the mac_launcher() function"))
 
-  answ <- readline("Do you want to create a shortcut for Radiant on your Desktop? (y/n) ")
+  answ <- readline("Do you want to create shortcuts for Radiant on your Desktop? (y/n) ")
   if (substr(answ, 1, 1) %in% c("y","Y")) {
 
     local_dir <- Sys.getenv("R_LIBS_USER")
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-    filename <- paste0("/home/",Sys.getenv("USER"),"/Desktop/radiant.sh")
+    fn1 <- paste0("/home/",Sys.getenv("USER"),"/Desktop/radiant.sh")
     launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
-    cat(launch_string,file=filename,sep="\n")
-    Sys.chmod(filename, mode = "0755")
+    cat(launch_string,file=fn1,sep="\n")
+    Sys.chmod(fn1, mode = "0755")
 
-    if (file.exists(filename))
-      message("Done! Look for a file named radiant.sh on your desktop. Double-click it to start Radiant in your default browser.\n")
+    fn2 <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/update_radiant.sh")
+    launch_string <- paste0("#!/usr/bin/env Rscript\ninstall.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')")
+    cat(launch_string,file=fn2,sep="\n")
+    Sys.chmod(fn2, mode = "0755")
+
+    if (file.exists(fn1) & file.exists(fn2))
+      message("Done! Look for a file named radiant.sh on your desktop. Double-click it to start Radiant in your default browser. There is also a file called update_radiant.sh you can double click to update the version of Radiant on your computer.\n")
     else
-      message("Something went wrong. No shortcut was created.")
+      message("Something went wrong. No shortcuts were created.")
 
   } else {
-    message("No shortcut was created.\n")
+    message("No shortcuts were created.\n")
   }
 }
 

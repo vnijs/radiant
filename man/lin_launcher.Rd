@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{lin_launcher}
 \alias{lin_launcher}
-\title{Create a launcher for Linux (.sh)}
+\title{Create a launcher and updater for Linux (.sh)}
 \usage{
 lin_launcher(app = c("marketing", "quant", "base"))
 }
@@ -10,10 +10,10 @@ lin_launcher(app = c("marketing", "quant", "base"))
 \item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
 \description{
-Create a launcher for Linux (.sh)
+Create a launcher and updater for Linux (.sh)
 }
 \details{
-On Linux a file named 'radiant.sh' will be put on the desktop. Double-click the file to launch the specified Radiant app
+On Linux a file named 'radiant.sh' and one named 'update_radiant.sh' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 }
 \examples{
 if (interactive()) {

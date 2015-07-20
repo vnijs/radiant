@@ -5,4 +5,3 @@ output$ui_Pivot <- renderUI({
 output$pivotData <- rpivotTable::renderRpivotTable({
   rpivotTable::rpivotTable(data = .getdata())
 })
-

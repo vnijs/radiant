@@ -156,7 +156,7 @@ url_list <-
   list("Data" = list("tabs_data" = list("Manage"    = "data/",
                                         "View"      = "data/view/",
                                         "Visualize" = "data/visualize/",
-                                        "Pivot"     = "data/pivot/",
+                                        "Pivotr"     = "data/pivotr/",
                                         "Explore"   = "data/explore/",
                                         "Transform" = "data/transform/",
                                         "Combine"   = "data/combine/")),

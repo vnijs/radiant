@@ -6,7 +6,8 @@
 \usage{
 visualize(dataset, xvar, yvar = "none", type = "hist", facet_row = ".",
   facet_col = ".", color = "none", bins = 10, smooth = 1, check = "",
-  axes = "", data_filter = "", shiny = FALSE)
+  axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
+  custom = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -31,9 +32,13 @@ visualize(dataset, xvar, yvar = "none", type = "hist", facet_row = ".",
 
 \item{axes}{Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")}
 
+\item{alpha}{Opacity for plot elements (0 to 1)}
+
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
-\item{shiny}{Did the function call originate inside a shiny app}
+\item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
+
+\item{custom}{Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.}
 }
 \value{
 Generated plots
@@ -48,6 +53,10 @@ See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in R
 visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 visualize("diamonds", "price:x", type = "hist")
 visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
+visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
+  ggtitle("A scatterplot") + xlab("price in $")
+visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%
+  {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
 diamonds \%>\% visualize(c("price","carat","depth"), type = "density")
 }
 

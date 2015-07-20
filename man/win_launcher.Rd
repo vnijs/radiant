@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{win_launcher}
 \alias{win_launcher}
-\title{Create a launcher for Windows (.bat)}
+\title{Create a launcher and updater for Windows (.bat)}
 \usage{
 win_launcher(app = c("marketing", "quant", "base"))
 }
@@ -10,10 +10,10 @@ win_launcher(app = c("marketing", "quant", "base"))
 \item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
 }
 \description{
-Create a launcher for Windows (.bat)
+Create a launcher and updater for Windows (.bat)
 }
 \details{
-On Windows a file named 'radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app
+On Windows a file named 'radiant.bat' and one named 'update_radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 }
 \examples{
 if (interactive()) {

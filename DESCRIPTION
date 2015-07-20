@@ -1,7 +1,7 @@
 Package: radiant
 Title: Business Analytics using R and Shiny
-Version: 0.2.45
-Date: 2015-7-17
+Version: 0.2.50
+Date: 2015-7-19
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description:
 	A platform-independent browser-based interface for business analytics in R, based on the Shiny package.
@@ -26,11 +26,11 @@ Imports:
 		pryr (>= 0.1),
 		yaml (>= 2.1.13),
 		htmlwidgets (>= 0.4),
-		rpivotTable (>= 0.1.3.4),
-		shiny (>= 0.12.1),
+	  shiny (>= 0.12.1),
 		shinyAce (>= 0.2.1),
 		lubridate (>= 1.3.3),
-		DT (>= 0.1),
+    rpivotTable (>= 0.1.3.4),
+		DT (>= 0.1.26),
 		MathJaxR (>= 0.11),
 		readr (>= 0.1.1)
 Suggests:

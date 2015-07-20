@@ -6,7 +6,7 @@
 \usage{
 compare_means(dataset, var1, var2, samples = "independent",
   alternative = "two.sided", conf_lev = 0.95, adjust = "none",
-  data_filter = "")
+  test = "t", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}

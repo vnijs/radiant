@@ -59,8 +59,8 @@ explore <- function(dataset,
     isNum <- "numeric" == dc | "integer" == dc
 
     ## for median issue in dplyr < .5
-    # dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
-    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum))
+    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
+    # dat %<>% group_by_(.dots = byvar) %>% select(which(isNum))
 
     for (f in fun)
       res[[f]] <- dat %>% summarise_each(as.formula(paste0("~",f))) %>% as.data.frame

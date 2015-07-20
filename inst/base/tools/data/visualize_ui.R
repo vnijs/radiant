@@ -104,6 +104,8 @@ output$ui_Visualize <- renderUI({
           step = 1)
       ),
       uiOutput("ui_viz_axes"),
+      sliderInput("viz_alpha", label = "Opacity:", min = 0, max = 1,
+        value = state_init("viz_alpha",.5), step = .01),
       div(class="row",
           div(class="col-xs-6",
               numericInput("viz_plot_height", label = "Plot height:", min = 100,

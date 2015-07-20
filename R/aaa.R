@@ -23,6 +23,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom readr read_delim write_csv
 NULL
 
+
 #' Exporting the kurtosi function from the psych package
 #' @importFrom psych kurtosi
 #' @name kurtosi

@@ -98,20 +98,28 @@ observe({
   if (!is.null(input$evalRmd)) isolate(valsRmd$knit %<>% add(1))
 })
 
+scrub <-
+  . %>%
+  gsub("&lt;!--/html_preserve--&gt;","",.) %>%
+  gsub("&lt;!--html_preserve--&gt;","",.) %>%
+  gsub("&lt;!&ndash;html_preserve&ndash;&gt;","",.) %>%
+  gsub("&lt;!&ndash;/html_preserve&ndash;&gt;","",.)  ## knitr adds this
+
 ## Knit to save html
 knitIt <- function(text) {
   knitr::knit2html(text = text, quiet = TRUE, envir = r_data$r_knitr,
-  # knitr::knit2html(text = text, quiet = TRUE,
                    options=c("mathjax", "base64_images"),
-                   stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>% HTML
+                   stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>%
+  scrub %>% HTML
 }
 
 ## Knit for report in Radiant
 knitIt2 <- function(text) {
   # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
-  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_data$r_knitr),
+  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
+        envir = r_data$r_knitr), stylesheet = "",
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-        "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% HTML
+        "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }
 
 output$rmd_knitted <- renderUI({
