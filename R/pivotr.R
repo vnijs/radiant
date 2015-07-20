@@ -231,6 +231,7 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
   dt_tab <- tab %>%
   DT::datatable(container = sketch, filter = list(position = "top", clear = FALSE, plain = TRUE),
     rownames = FALSE, style = ifelse(pvt$shiny, "bootstrap", "default"),
+    # rownames = FALSE, style = "bootstrap",
     options = list(
       search = list(regex = TRUE),
       # autoWidth = TRUE,
@@ -261,3 +262,20 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
   ## can use this in R > Report inside Radiant but doesn't export
   # renderDataTable({make_dt(result)})
 }
+
+# install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
+# library(radiant)
+
+# result <- pivotr("diamonds", cvars = "cut")
+# result$shiny <- TRUE
+# make_dt(result)
+
+# DT::datatable(iris, style = 'bootstrap')
+
+# library(DT)
+# iris2 = head(iris, 20)
+# options(DT.options = list(pageLength = 5))
+# # default Bootstrap style in DT
+# datatable(iris2, style = 'bootstrap')
+
+

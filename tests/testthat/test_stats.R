@@ -21,10 +21,11 @@ library(radiant)
 context("Compare means")
 
 test_that("compare_means 1", {
+  library(radiant)
   result <- compare_means("diamonds","cut","price")
   res1 <- capture.output(summary(result))[17] %>% trim
   # cat(paste0(res1, "\n"))
-  res2 <- "Fair not equal to Very Good      Fair = Very Good       545.322 0.177"
+  res2 <- "Fair not equal to Very Good      Fair = Very Good       545.322 0.195"
   expect_equal(res1,res2)
 })
 
