@@ -26,7 +26,8 @@ system("git push")
 # devtools::install_github(c("vnijs/radiant","rstudio/DT", "vnijs/MathJaxR"))
 # devtools::install_github("vnijs/MathJaxR")
 # devtools::install_github(c("vnijs/radiant","rstudio/DT"))
-devtools::install_github("vnijs/radiant")
+# devtools::install_github("vnijs/radiant")
+devtools::install_github(c("vnijs/radiant","rstudio/DT"))
 # devtools::install_github("trestletech/shinyAce")
 # library(radiant)
 # radiant()
@@ -74,10 +75,3 @@ system("osascript ~/gh/update.scpt")
 # git fetch --all
 # git reset --hard origin/master
 # rm(list = ls())
-
-library(radiant)
-
-```{r fig.width=6.46, fig.height=8.4}
-x <- visualize(dataset = "diamonds", xvar = "price", shiny = FALSE)
-class(x)
-```
