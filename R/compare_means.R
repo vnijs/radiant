@@ -9,6 +9,7 @@
 #' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param conf_lev Span of the confidence interval
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
+#' @param test T-test ("t") or Wilcox ("wilcox")
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_means

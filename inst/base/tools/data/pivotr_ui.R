@@ -16,7 +16,7 @@ output$ui_pvt_nvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- c("None", varnames()[isNum])
   # vars <- varnames()[isNum]
-  selectizeInput("pvt_nvar", label = "Select variable:", choices = vars,
+  selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,
     selected = state_single("pvt_nvar",vars), multiple = FALSE,
     options = list(placeholder = 'Select numeric variable'))
 })
@@ -37,7 +37,7 @@ output$ui_pvt_normalize  <- renderUI({
   if(length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-2]
 
   sel <- if(is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
-  selectizeInput("pvt_normalize", label = "Normalize:",
+  selectizeInput("pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
     # selected = state_single("pvt_normalize", pvt_normalize, "None"),
     selected = sel,

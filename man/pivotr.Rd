@@ -21,8 +21,6 @@ pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 
 \item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
-
-\item{normalize}{Normalize the table by "row" total,"colum" totals, or overall "total"}
 }
 \description{
 Create a pivot table using dplyr

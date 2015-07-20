@@ -23,6 +23,8 @@ compare_means(dataset, var1, var2, samples = "independent",
 
 \item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
+\item{test}{T-test ("t") or Wilcox ("wilcox")}
+
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
 \value{

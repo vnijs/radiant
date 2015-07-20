@@ -7,7 +7,6 @@
 #' @param nvar Numerical variable
 #' @param fun Function to apply to numerical variable
 #' @param normalize Normalize the table by "row" total,"colum" totals, or overall "total"
-#' @param normalize Normalize the table by "row" total,"colum" totals, or overall "total"
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
@@ -117,7 +116,6 @@ pivotr <- function(dataset,
 
   rm(cv, isNum, dat, sfun, sel, i, levs, total, ind)
 
-  # tab %>% set_class(c("pivotr", class(.)))
   environment() %>% as.list %>% set_class(c("pivotr",class(.)))
 }
 
@@ -153,11 +151,6 @@ summary.pivotr <- function(object, ...) {
   print(object$tab, row.names = FALSE)
 }
 
-# result <- pivotr("diamonds", cvars = "cut")
-# result <- pivotr("diamonds", cvars = "cut")
-# result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")
-# str(result)
-
 #' Make a pivot tabel in DT
 #'
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
@@ -182,7 +175,8 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
 
   if(length(cvars) == 1 && cvar == cvars) {
-    sketch = htmltools::withTags(table(
+    # sketch = htmltools::withTags(table(
+    sketch = withTags(table(
       thead(
         tr(lapply(c(cvars,cn), th))
       ),
@@ -198,7 +192,8 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
     else
       tf <- round(ctot, 3)
 
-    sketch = htmltools::withTags(table(
+    # sketch = htmltools::withTags(table(
+    sketch = withTags(table(
       thead(
         tr(
           # lapply(cvars, th),
@@ -277,5 +272,3 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
 # options(DT.options = list(pageLength = 5))
 # # default Bootstrap style in DT
 # datatable(iris2, style = 'bootstrap')
-
-

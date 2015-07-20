@@ -1,8 +1,10 @@
-> Summarize, explore, and pivot your data
+> Create pivot tables to explore your data
 
-If you have used pivot-tables in Excel the functionality provided in the Pivot tab should be familiar to you. Similar to the Explore tab, you can generate summary statistics for one or more variables in your data. You can also easily generate frequency tables. Again, the most powerful feature in Pivot is that you can easy describe the data _by_ one or more other variables.
+If you have used pivot-tables in Excel the functionality provided in the Pivotr tab should be familiar to you. Similar to the Explore tab, you can generate summary statistics for variables in your data. You can also easily generate frequency tables. Perhaps the most powerful feature in Pivotr is that you can easy describe the data _by_ one or more other variables.
 
-For example, with the `diamonds` data loaded drag-and-drop `cut` to the column on the left. Next drag-and-drop `color` one row down. This will create a frequency table of diamonds with different levels of cut and color. Choose `Heatmap` rather than `Table` to emphasize the highest frequency counts (for fun also try `Treemap`). Now select `Average` rather than `Count` and choose `Price` from the new dropdown shown. This will produce the graphic below.
+For example, with the `diamonds` data select `clarity` and `cut` from the Categorical variables drop-down. You can drag-and-drop the selected variables to change their order. The categories for first variable will be the column headers. After selecting these two variables a frequency table of diamonds with different levels of clarity and quality of cut. Check `Color bar` to emphasize the highest frequency counts. We can also summarize numerical variables. Select `price` from the Numerical variables drop-down. This will table shown below. Just as in the View tab you can sort the table by clicking on the column headers. You can also use sliders (click in the input box below `I1`) to limit the view to values in a specified range. To view only information for diamonds with `Fair` or `Good` cut quality click in the input box below the `cut` header.
+
+![pivotr table](figures/pivotr.png)
 
 ### Filter
 
