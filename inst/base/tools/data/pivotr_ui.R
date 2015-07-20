@@ -20,7 +20,6 @@ output$ui_pvt_cvars <- renderUI({
 output$ui_pvt_nvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- c("None", varnames()[isNum])
-  # vars <- varnames()[isNum]
   selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,
     selected = state_single("pvt_nvar",vars), multiple = FALSE,
     options = list(placeholder = 'Select numeric variable'))
@@ -55,8 +54,6 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_normalize"),
       checkboxGroupInput("pvt_check", NULL, pvt_check,
         selected = state_init("pvt_check"), inline = TRUE)
-      # checkboxInput(inputId = "pvt_color_bar", label = "Color bar",
-      #   value = state_init("pvt_color_bar",FALSE))
     ),
     help_and_report(modal_title = "Pivotr",
                     fun_name = "pivotr",
@@ -87,14 +84,6 @@ pvt_inputs <- reactive({
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
   if(is.null(pvt)) return()
-
-  # color_bar <- input$pvt_color_bar == TRUE
-  # perc <- FALSE
-  # if(!is.null(input$pvt_normalize) && input$pvt_normalize != "None" &&
-  #    input$pvt_nvar == "None") perc <- TRUE
-
-  # check <- c("color_bar","perc")[c(color_bar, perc)]
-  # check <- c("color_bar","perc")[c(color_bar, perc)]
   pvt$shiny <- TRUE
   make_dt(pvt, check = input$pvt_check)
 })

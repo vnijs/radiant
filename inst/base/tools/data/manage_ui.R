@@ -215,7 +215,7 @@ observe({
   }
 })
 
-# loading all examples files (linked to helpfiles)
+# loading all examples files (linked to help files)
 observe({
   if (not_pressed(input$loadExampleData)) return()
   isolate({

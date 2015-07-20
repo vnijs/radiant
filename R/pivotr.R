@@ -97,7 +97,7 @@ pivotr <- function(dataset,
   ## resetting factor levels
   ind <- ifelse(length(cvars) > 1, -1, 1)
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
-  for(i in cvars[ind])
+  for (i in cvars[ind])
     tab[[i]] <- factor(tab[[i]], levels = c(levs[[i]],"Total"))
 
   isNum <- -which(names(tab) %in% cvars)
@@ -112,7 +112,7 @@ pivotr <- function(dataset,
     # tab[,isNum] %<>% mutate_each_(funs(h = . / .[which(tab[,1] == "Total")]), vars = colnames(.)) %>% round(3)
   }
 
-  if(!shiny) tab <- as.data.frame(tab, as.is = TRUE)
+  if (!shiny) tab <- as.data.frame(tab, as.is = TRUE)
 
   rm(cv, isNum, dat, sfun, sel, i, levs, total, ind)
 
@@ -160,7 +160,9 @@ summary.pivotr <- function(object, ...) {
 #'
 #' @examples
 #' pivotr("diamonds", cvars = "cut") %>% make_dt
-#' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(color_bar = TRUE)
+#' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(check = "color_bar")
+#' pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
+#'   make_dt(check = c("perc","color_bar"))
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #' @seealso \code{\link{summary.pivotr}} to print a plain table
@@ -179,7 +181,7 @@ make_dt <- function(pvt, check = "") {
   else
     tot <- round(tot, 3)
 
-  if(length(cvars) == 1 && cvar == cvars) {
+  if (length(cvars) == 1 && cvar == cvars) {
 
     # if (perc)
     #   tf <- sprintf("%.2f%%", tail(tab,1)*100)
@@ -234,20 +236,19 @@ make_dt <- function(pvt, check = "") {
 
   dt_tab <- tab %>%
   DT::datatable(container = sketch, filter = list(position = "top", clear = FALSE, plain = TRUE),
-    rownames = FALSE, style = ifelse(pvt$shiny, "bootstrap", "default"),
+    rownames = FALSE,
+    style = ifelse(pvt$shiny, "bootstrap", "default"),
     # style = "bootstrap",
     options = list(
       search = list(regex = TRUE),
-      # autoWidth = TRUE,
-      # columnDefs = list(list(className = 'dt-center', targets = "_all")),
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
     )
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey")
 
-  if("color_bar" %in% check) {
-    for(i in cn) {
+  if ("color_bar" %in% check) {
+    for (i in cn) {
       dt_tab %<>% DT::formatStyle(i,
           background = DT::styleColorBar(tab[[i]], 'lightblue'),
           backgroundSize = '98% 88%',
@@ -256,8 +257,8 @@ make_dt <- function(pvt, check = "") {
     }
   }
 
-  if("perc" %in% check) {
-    for(i in cn)
+  if ("perc" %in% check) {
+    for (i in cn)
       dt_tab %<>% DT::formatPercentage(., i, 2)
   }
 
@@ -267,6 +268,7 @@ make_dt <- function(pvt, check = "") {
   # renderDataTable({make_dt(result)})
 }
 
+## client-side with bootstrap not working yet https://github.com/rstudio/DT/issues/143
 # install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 # library(radiant)
 

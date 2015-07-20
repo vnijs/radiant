@@ -384,7 +384,7 @@ predict.glm_reg <- function(object,
     pred_cmd %<>% gsub("\"","\'", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
-      paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile.") %>% cat
+      paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
       return()
     }
 
@@ -455,7 +455,7 @@ predict.glm_reg <- function(object,
 
     return(pred %>% set_class(c("glm_predict",class(.))))
   } else {
-    paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred_val,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile.") %>% cat
+    paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred_val,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
   }
 
   return(invisible())

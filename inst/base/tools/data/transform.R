@@ -334,7 +334,7 @@ transform_main <- reactive({
       dat_tr <- dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer]
       # dat_tr <- try(dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer], silent = TRUE)
       # if (is(dat_tr, 'try-error'))
-      # 	return(paste0("The normalization failed. The error message was:\n\n", attr(dat_tr,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile."))
+      # 	return(paste0("The normalization failed. The error message was:\n\n", attr(dat_tr,"condition")$message, "\n\nPlease try again. Examples are shown in the help file."))
      	cn <- c(vars,paste(vars[isNum],input$tr_normalizer, sep="_"))
 			dat <- cbind(dat,dat_tr)
 			colnames(dat) <- cn
@@ -364,7 +364,7 @@ transform_main <- reactive({
 				colnames(dat) <- cn
 				return(dat)
 			} else {
-      	return(paste0("The recode command was not valid. The error message was:\n", attr(newvar,"condition")$message, "\nPlease try again. Examples are shown in the helpfile."))
+      	return(paste0("The recode command was not valid. The error message was:\n", attr(newvar,"condition")$message, "\nPlease try again. Examples are shown in the help file."))
 			}
 		}
 	}
@@ -408,7 +408,7 @@ transform_main <- reactive({
 				colnames(dat) <- cn
 				head(dat)
 			} else {
-      	return(paste0("The create command was not valid. The command entered was:\n\n", recom, "\n\nThe error message was:\n\n", attr(newvar,"condition")$message, "\n\nPlease try again. Examples are shown in the helpfile."))
+      	return(paste0("The create command was not valid. The command entered was:\n\n", recom, "\n\nThe error message was:\n\n", attr(newvar,"condition")$message, "\n\nPlease try again. Examples are shown in the help file."))
 			}
 		}
 	}

@@ -19,7 +19,9 @@ See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radi
 }
 \examples{
 pivotr("diamonds", cvars = "cut") \%>\% make_dt
-pivotr("diamonds", cvars = c("cut","clarity")) \%>\% make_dt(color_bar = TRUE)
+pivotr("diamonds", cvars = c("cut","clarity")) \%>\% make_dt(check = "color_bar")
+pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\%
+  make_dt(check = c("perc","color_bar"))
 }
 \seealso{
 \code{\link{pivotr}} to create the pivot-table using dplyr

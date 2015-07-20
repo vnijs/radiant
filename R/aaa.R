@@ -8,7 +8,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #'
 #' @name radiant
 #' @docType package
-#' @import ggplot2 shiny dplyr yaml htmlwidgets
+#' @import ggplot2 shiny dplyr
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
@@ -18,10 +18,10 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom markdown markdownToHTML
 #' @importFrom shinyAce aceEditor updateAceEditor
-#' @importFrom rpivotTable rpivotTable rpivotTableOutput renderRpivotTable
 #' @importFrom DT dataTableAjax datatable
 #' @importFrom MathJaxR withMathJaxR
 #' @importFrom readr read_delim write_csv
+#' @importFrom rmarkdown render
 NULL
 
 
