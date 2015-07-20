@@ -128,6 +128,7 @@ shared_ui <-
 
     tags$head(
       tags$script(src = "js/session.js"),
+      tags$script(src = "js/jquery-ui.custom.min.js"),
       tags$script(src = "js/video_reset.js"),
       tags$link(rel = "shortcut icon", href = "imgs/icon.png")
     )

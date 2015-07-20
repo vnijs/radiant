@@ -4,14 +4,12 @@
 \alias{make_dt}
 \title{Make a pivot tabel in DT}
 \usage{
-make_dt(pvt, color_bar = FALSE, perc = FALSE)
+make_dt(pvt, check = "")
 }
 \arguments{
 \item{pvt}{Return value from \code{\link{pivotr}}}
 
-\item{color_bar}{Show color bar in tabel (TRUE, FALSE)}
-
-\item{perc}{Show percentage (e.g., when normalizing)}
+\item{check}{Show "color_bar" and/or display numbers as percentages ("perc")}
 }
 \description{
 Make a pivot tabel in DT

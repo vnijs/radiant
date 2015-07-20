@@ -156,8 +156,7 @@ summary.pivotr <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
 #'
 #' @param pvt Return value from \code{\link{pivotr}}
-#' @param color_bar Show color bar in tabel (TRUE, FALSE)
-#' @param perc Show percentage (e.g., when normalizing)
+#' @param check Show "color_bar" and/or display numbers as percentages ("perc")
 #'
 #' @examples
 #' pivotr("diamonds", cvars = "cut") %>% make_dt
@@ -167,30 +166,40 @@ summary.pivotr <- function(object, ...) {
 #' @seealso \code{\link{summary.pivotr}} to print a plain table
 #'
 #' @export
-make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
+make_dt <- function(pvt, check = "") {
 
   tab <- pvt$tab
   cvar <- pvt$cvars[1]
   cvars <- pvt$cvars %>% {if(length(.) > 1) .[-1] else .}
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
 
+  tot <- tail(tab,1)[-(1:length(cvars))]
+  if ("perc" %in% check)
+    tot <- sprintf("%.2f%%", tot*100)
+  else
+    tot <- round(tot, 3)
+
   if(length(cvars) == 1 && cvar == cvars) {
+
+    # if (perc)
+    #   tf <- sprintf("%.2f%%", tail(tab,1)*100)
+    # else
+    #   tf <- round(tail(tab,1), 3)
     # sketch = htmltools::withTags(table(
     sketch = withTags(table(
       thead(
         tr(lapply(c(cvars,cn), th))
       ),
       tfoot(
-        tr(lapply(tail(tab,1), th))
+        tr(lapply(c("Total",tot), th))
       )
     ))
   } else {
-
-    ctot <- tail(tab,1)[-(1:length(cvars))]
-    if (perc)
-      tf <- sprintf("%.2f%%", ctot*100)
-    else
-      tf <- round(ctot, 3)
+    # tot <- tot[-(1:length(cvars))]
+    # if (perc)
+    #   tf <- sprintf("%.2f%%", tot*100)
+    # else
+    #   tf <- round(tot, 3)
 
     # sketch = htmltools::withTags(table(
     sketch = withTags(table(
@@ -208,7 +217,7 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
       tfoot(
         tr(
           th(colspan = length(cvars), "Total"),
-          lapply(tf, th)
+          lapply(tot, th)
         )
       )
     ))
@@ -226,7 +235,7 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
   dt_tab <- tab %>%
   DT::datatable(container = sketch, filter = list(position = "top", clear = FALSE, plain = TRUE),
     rownames = FALSE, style = ifelse(pvt$shiny, "bootstrap", "default"),
-    # rownames = FALSE, style = "bootstrap",
+    # style = "bootstrap",
     options = list(
       search = list(regex = TRUE),
       # autoWidth = TRUE,
@@ -237,7 +246,7 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
     )
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey")
 
-  if(color_bar) {
+  if("color_bar" %in% check) {
     for(i in cn) {
       dt_tab %<>% DT::formatStyle(i,
           background = DT::styleColorBar(tab[[i]], 'lightblue'),
@@ -247,7 +256,7 @@ make_dt <- function(pvt, color_bar = FALSE, perc = FALSE) {
     }
   }
 
-  if(perc) {
+  if("perc" %in% check) {
     for(i in cn)
       dt_tab %<>% DT::formatPercentage(., i, 2)
   }

@@ -2,6 +2,11 @@
 ## Pivotr - combination of Explore and View
 ############################################
 
+pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
+                   "Total" = "total")
+
+pvt_check <- c("Color bar" = "color_bar", "Percentage" = "perc")
+
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
@@ -29,12 +34,9 @@ output$ui_pvt_fun <- renderUI({
                  multiple = FALSE)
 })
 
-pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
-                   "Total" = "total")
-
 output$ui_pvt_normalize  <- renderUI({
   if(is.null(input$pvt_cvars)) return()
-  if(length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-2]
+  if(length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
 
   sel <- if(is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
   selectizeInput("pvt_normalize", label = "Normalize by:",
@@ -51,8 +53,10 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_nvar"),
       uiOutput("ui_pvt_fun"),
       uiOutput("ui_pvt_normalize"),
-      checkboxInput(inputId = "pvt_color_bar", label = "Color bar",
-        value = state_init("pvt_color_bar",FALSE))
+      checkboxGroupInput("pvt_check", NULL, pvt_check,
+        selected = state_init("pvt_check"), inline = TRUE)
+      # checkboxInput(inputId = "pvt_color_bar", label = "Color bar",
+      #   value = state_init("pvt_color_bar",FALSE))
     ),
     help_and_report(modal_title = "Pivotr",
                     fun_name = "pivotr",
@@ -83,14 +87,16 @@ pvt_inputs <- reactive({
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
   if(is.null(pvt)) return()
-  color_bar <- input$pvt_color_bar == TRUE
 
-  perc <- FALSE
-  if(!is.null(input$pvt_normalize) && input$pvt_normalize != "None" &&
-     input$pvt_nvar == "None") perc <- TRUE
+  # color_bar <- input$pvt_color_bar == TRUE
+  # perc <- FALSE
+  # if(!is.null(input$pvt_normalize) && input$pvt_normalize != "None" &&
+  #    input$pvt_nvar == "None") perc <- TRUE
 
+  # check <- c("color_bar","perc")[c(color_bar, perc)]
+  # check <- c("color_bar","perc")[c(color_bar, perc)]
   pvt$shiny <- TRUE
-  make_dt(pvt, color_bar = color_bar, perc = perc)
+  make_dt(pvt, check = input$pvt_check)
 })
 
 observe({
