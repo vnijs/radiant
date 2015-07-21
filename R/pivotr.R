@@ -156,24 +156,28 @@ summary.pivotr <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
 #'
 #' @param pvt Return value from \code{\link{pivotr}}
-#' @param check Show "color_bar" and/or display numbers as percentages ("perc")
+#' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
+#' @param check Display numbers as percentages ("perc")
 #'
 #' @examples
 #' pivotr("diamonds", cvars = "cut") %>% make_dt
-#' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(check = "color_bar")
+#' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(format = "color_bar")
 #' pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
-#'   make_dt(check = c("perc","color_bar"))
+#'   make_dt(format = "color_bar", check = "perc")
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #' @seealso \code{\link{summary.pivotr}} to print a plain table
 #'
 #' @export
-make_dt <- function(pvt, check = "") {
+make_dt <- function(pvt, format = "none", check = "") {
 
   tab <- pvt$tab
   cvar <- pvt$cvars[1]
   cvars <- pvt$cvars %>% {if(length(.) > 1) .[-1] else .}
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
+
+  ## column names without total
+  cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
   tot <- tail(tab,1)[-(1:length(cvars))]
   if ("perc" %in% check)
@@ -187,8 +191,8 @@ make_dt <- function(pvt, check = "") {
     #   tf <- sprintf("%.2f%%", tail(tab,1)*100)
     # else
     #   tf <- round(tail(tab,1), 3)
-    # sketch = htmltools::withTags(table(
-    sketch = withTags(table(
+    sketch = shiny::withTags(table(
+    # sketch = withTags(table(
       thead(
         tr(lapply(c(cvars,cn), th))
       ),
@@ -203,8 +207,8 @@ make_dt <- function(pvt, check = "") {
     # else
     #   tf <- round(tot, 3)
 
-    # sketch = htmltools::withTags(table(
-    sketch = withTags(table(
+    sketch = shiny::withTags(table(
+    # sketch = withTags(table(
       thead(
         tr(
           # lapply(cvars, th),
@@ -240,20 +244,32 @@ make_dt <- function(pvt, check = "") {
     style = ifelse(pvt$shiny, "bootstrap", "default"),
     # style = "bootstrap",
     options = list(
+      # stateSave = TRUE,
       search = list(regex = TRUE),
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
     )
-  ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey")
+  ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
+        {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = 'bold') else .}
 
-  if ("color_bar" %in% check) {
-    for (i in cn) {
+  if (format == "color_bar") {
+    rng <- range(tab[,cn_nt])
+    for (i in cn_nt) {
       dt_tab %<>% DT::formatStyle(i,
-          background = DT::styleColorBar(tab[[i]], 'lightblue'),
+          background = DT::styleColorBar(rng, 'lightblue'),
           backgroundSize = '98% 88%',
           backgroundRepeat = 'no-repeat',
           backgroundPosition = 'center')
+    }
+  }
+
+  if (format == "heat") {
+    brks <- quantile(tab[,cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
+    rgb_nr <- round(seq(255,40,length.out = 20), 0)
+    clrs <- paste0("rgb(255,",rgb_nr,",",rgb_nr,")")
+    for (i in cn_nt) {
+       dt_tab %<>% DT::formatStyle(i, backgroundColor = DT::styleInterval(brks, clrs))
     }
   }
 

@@ -5,7 +5,9 @@
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 
-pvt_check <- c("Color bar" = "color_bar", "Percentage" = "perc")
+pvt_check <- c("Percentage" = "perc")
+
+pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
@@ -34,14 +36,23 @@ output$ui_pvt_fun <- renderUI({
 })
 
 output$ui_pvt_normalize  <- renderUI({
+
   if(is.null(input$pvt_cvars)) return()
   if(length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
 
   sel <- if(is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
+
   selectizeInput("pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
     # selected = state_single("pvt_normalize", pvt_normalize, "None"),
     selected = sel,
+    multiple = FALSE)
+})
+
+output$ui_pvt_format  <- renderUI({
+  selectizeInput("pvt_format", label = "Conditional formatting:",
+    choices = pvt_format,
+    selected = state_single("pvt_format", pvt_format, "none"),
     multiple = FALSE)
 })
 
@@ -52,6 +63,7 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_nvar"),
       uiOutput("ui_pvt_fun"),
       uiOutput("ui_pvt_normalize"),
+      uiOutput("ui_pvt_format"),
       checkboxGroupInput("pvt_check", NULL, pvt_check,
         selected = state_init("pvt_check"), inline = TRUE)
     ),
@@ -75,7 +87,7 @@ pvt_inputs <- reactive({
 })
 
 .pivotr <- reactive({
-  if(not_available(input$pvt_cvars)) return()
+  if (not_available(input$pvt_cvars)) return()
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(pivotr, pvt_inputs()) )
   })
@@ -83,13 +95,12 @@ pvt_inputs <- reactive({
 
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
-  if(is.null(pvt)) return()
+  if (is.null(pvt)) return()
   pvt$shiny <- TRUE
-  make_dt(pvt, check = input$pvt_check)
+  make_dt(pvt, format = input$pvt_format, check = input$pvt_check)
 })
 
-observe({
-  if (not_pressed(input$pivotr_report)) return()
+observeEvent(input$pivotr_report, {
   isolate({
     update_report(inp_main = clean_args(pvt_inputs(), pvt_args),
                   fun_name = "pivotr", outputs = "summary",

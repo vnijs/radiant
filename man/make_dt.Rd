@@ -4,12 +4,14 @@
 \alias{make_dt}
 \title{Make a pivot tabel in DT}
 \usage{
-make_dt(pvt, check = "")
+make_dt(pvt, format = "none", check = "")
 }
 \arguments{
 \item{pvt}{Return value from \code{\link{pivotr}}}
 
-\item{check}{Show "color_bar" and/or display numbers as percentages ("perc")}
+\item{format}{Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")}
+
+\item{check}{Display numbers as percentages ("perc")}
 }
 \description{
 Make a pivot tabel in DT
@@ -19,9 +21,9 @@ See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radi
 }
 \examples{
 pivotr("diamonds", cvars = "cut") \%>\% make_dt
-pivotr("diamonds", cvars = c("cut","clarity")) \%>\% make_dt(check = "color_bar")
+pivotr("diamonds", cvars = c("cut","clarity")) \%>\% make_dt(format = "color_bar")
 pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\%
-  make_dt(check = c("perc","color_bar"))
+  make_dt(format = "color_bar", check = "perc")
 }
 \seealso{
 \code{\link{pivotr}} to create the pivot-table using dplyr
