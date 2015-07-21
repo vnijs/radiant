@@ -239,8 +239,8 @@ make_dt <- function(pvt, format = "none", check = "") {
     # dt_fun <- DT::renderDataTable
 
   dt_tab <- tab %>%
-  DT::datatable(container = sketch, filter = list(position = "top", clear = FALSE, plain = TRUE),
-    rownames = FALSE,
+  DT::datatable(container = sketch, rownames = FALSE,
+    filter = list(position = "top", clear = FALSE, plain = TRUE),
     style = ifelse(pvt$shiny, "bootstrap", "default"),
     # style = "bootstrap",
     options = list(
@@ -248,35 +248,27 @@ make_dt <- function(pvt, format = "none", check = "") {
       search = list(regex = TRUE),
       processing = FALSE,
       pageLength = 10,
-      lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
+      lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
     )
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
-        {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = 'bold') else .}
+        {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 
+  ## heat map with red or color_bar
   if (format == "color_bar") {
-    rng <- range(tab[,cn_nt])
-    for (i in cn_nt) {
-      dt_tab %<>% DT::formatStyle(i,
-          background = DT::styleColorBar(rng, 'lightblue'),
-          backgroundSize = '98% 88%',
-          backgroundRepeat = 'no-repeat',
-          backgroundPosition = 'center')
-    }
+    dt_tab %<>% DT::formatStyle(cn_nt,
+      background = DT::styleColorBar(range(tab[ , cn_nt]), "lightblue"),
+      backgroundSize = "98% 88%",
+      backgroundRepeat = "no-repeat",
+      backgroundPosition = "center")
+  } else if (format == "heat") {
+    brks <- quantile(tab[ , cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
+    clrs <- seq(255,40,length.out = length(brks) + 1) %>% round(0) %>%
+      {paste0("rgb(255,", ., ",", .,")")}
+    dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
   }
 
-  if (format == "heat") {
-    brks <- quantile(tab[,cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
-    rgb_nr <- round(seq(255,40,length.out = 20), 0)
-    clrs <- paste0("rgb(255,",rgb_nr,",",rgb_nr,")")
-    for (i in cn_nt) {
-       dt_tab %<>% DT::formatStyle(i, backgroundColor = DT::styleInterval(brks, clrs))
-    }
-  }
-
-  if ("perc" %in% check) {
-    for (i in cn)
-      dt_tab %<>% DT::formatPercentage(., i, 2)
-  }
+  ## show percentage
+  if ("perc" %in% check) dt_tab %<>% DT::formatPercentage(cn, 2)
 
   dt_tab
 
