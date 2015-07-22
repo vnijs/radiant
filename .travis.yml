@@ -3,6 +3,7 @@ warnings_are_errors: false
 sudo: required
 
 r_github_packages:
+  - smartinsightsfromdata/rpivotTable
   - trestletech/shinyAce
   - jimhester/covr
   - rstudio/DT
