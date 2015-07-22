@@ -34,8 +34,14 @@ pivotr <- function(dataset,
 
   if (nvar == "None") nvar <- "n"
 
+  ## use loop or mutate_each?
   for (cv in cvars)
     if (!is.factor(dat[[cv]])) dat[[cv]] %<>% as.factor
+
+  ## convert categorical variables to factors if needed
+  ## using [] seems weird but drop = FALSE doesn't wor
+  # dat[cvars] %<>% mutate_each(funs({if(is.factor(.)) . else as.factor(.)}))
+
   ind <- ifelse(length(cvars) > 1, -1, 1)
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
@@ -55,7 +61,8 @@ pivotr <- function(dataset,
     sfun(nvar, cvars, fun)
 
   ## total
-  total <- dat %>% sel(nvar) %>% sfun(nvar, fun = fun)
+  total <-
+    dat %>% sel(nvar) %>% sfun(nvar, fun = fun)
 
   ## row and colum totals
   if (length(cvars) == 1) {
@@ -186,13 +193,7 @@ make_dt <- function(pvt, format = "none", check = "") {
     tot <- round(tot, 3)
 
   if (length(cvars) == 1 && cvar == cvars) {
-
-    # if (perc)
-    #   tf <- sprintf("%.2f%%", tail(tab,1)*100)
-    # else
-    #   tf <- round(tail(tab,1), 3)
     sketch = shiny::withTags(table(
-    # sketch = withTags(table(
       thead(
         tr(lapply(c(cvars,cn), th))
       ),
@@ -201,29 +202,18 @@ make_dt <- function(pvt, format = "none", check = "") {
       )
     ))
   } else {
-    # tot <- tot[-(1:length(cvars))]
-    # if (perc)
-    #   tf <- sprintf("%.2f%%", tot*100)
-    # else
-    #   tf <- round(tot, 3)
-
     sketch = shiny::withTags(table(
-    # sketch = withTags(table(
       thead(
         tr(
-          # lapply(cvars, th),
-          # th(colspan = length(cn), cvar, class = "text-center")
           th(colspan = length(c(cvars,cn)), cvar, class = "text-center")
         ),
         tr(
-          # lapply(c(rep("",length(cvars)),cn), th)
           lapply(c(cvars,cn), th)
         )
       ),
       tfoot(
         tr(
-          th(colspan = length(cvars), "Total"),
-          lapply(tot, th)
+          th(colspan = length(cvars), "Total"), lapply(tot, th)
         )
       )
     ))
@@ -233,10 +223,6 @@ make_dt <- function(pvt, format = "none", check = "") {
   ## should perhaps be part of pivotr but convenient for for now in tfoot
   ## and for external calls to pivotr
   tab <- filter(tab, tab[,1] != "Total")
-
-  # if (pvt$shiny) {
-    # dt_fun <- DT::datatable
-    # dt_fun <- DT::renderDataTable
 
   dt_tab <- tab %>%
   DT::datatable(container = sketch, rownames = FALSE,
@@ -256,13 +242,14 @@ make_dt <- function(pvt, format = "none", check = "") {
   ## heat map with red or color_bar
   if (format == "color_bar") {
     dt_tab %<>% DT::formatStyle(cn_nt,
-      background = DT::styleColorBar(range(tab[ , cn_nt]), "lightblue"),
+      background = DT::styleColorBar(range(tab[ , cn_nt], na.rm = TRUE), "lightblue"),
       backgroundSize = "98% 88%",
       backgroundRepeat = "no-repeat",
       backgroundPosition = "center")
   } else if (format == "heat") {
-    brks <- quantile(tab[ , cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
-    clrs <- seq(255,40,length.out = length(brks) + 1) %>% round(0) %>%
+    brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
+    clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
+      round(0) %>%
       {paste0("rgb(255,", ., ",", .,")")}
     dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
   }
