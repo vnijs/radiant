@@ -97,7 +97,7 @@ loadUserData <- function(fname, uFile, ext,
 
   if (ext == 'rda') {
     ## objname will hold the name of the object(s) inside the R datafile
-    robjname <- try(load(uFile), silent=TRUE)
+    robjname <- try(load(uFile), silent = TRUE)
     if (is(robjname, 'try-error')) {
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
     } else if (length(robjname) > 1) {
@@ -114,13 +114,13 @@ loadUserData <- function(fname, uFile, ext,
 
   if (ext == 'csv') {
     r_data[[objname]] <- try(read_delim(uFile, sep, col_names=header), silent = TRUE) %>%
-      { if (is(., 'try-error'))
+      {if (is(., 'try-error'))
           try(read.table(uFile, header = header, sep = sep, dec = dec, stringsAsFactors = FALSE), silent = TRUE)
         else . } %>%
-      { if (is(., 'try-error'))
+      {if (is(., 'try-error'))
           upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
         else . } %>%
-      { if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
+      {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
 
     # r_data[[objname]] <- try(read.table(uFile, header=header, sep=sep, dec=dec,
     #   stringsAsFactors=FALSE), silent = TRUE) %>%
@@ -129,5 +129,5 @@ loadUserData <- function(fname, uFile, ext,
     #   { if (man_str_as_factor) factorizer(.) else . } # %>% tbl_df
   }
 
-  r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique
+  r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
 }

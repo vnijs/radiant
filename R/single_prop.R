@@ -30,11 +30,11 @@ single_prop <- function(dataset, var,
 	dat <- getdata(dataset, var, filt = data_filter) %>% mutate_each(funs(as.factor))
 	if (!is_string(dataset)) dataset <- "-----"
 
-	levs <- levels(dat[,var])
+	levs <- levels(dat[[var]])
 	if (lev != "") {
 		if (lev %in% levs && levs[1] != lev) {
-			dat[,var] %<>% as.character %>% as.factor %>% relevel(lev)
-			levs <- levels(dat[,var])
+			dat[[var]] %<>% as.character %>% as.factor %>% relevel(lev)
+			levs <- levels(dat[[var]])
 		}
 	} else {
 		lev <- levs[1]
@@ -85,7 +85,7 @@ summary.single_prop <- function(object, ...) {
 	    object$comp_value, "\n\n")
 
 	## determine lower and upper % for ci
-	{100 * (1-object$conf_lev)/2} %>%
+	{100 * (1 - object$conf_lev)/2} %>%
 		c(., 100 - .) %>%
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
@@ -132,7 +132,7 @@ plot.single_prop <- function(x,
 	if ("hist" %in% plots) {
 		plot_list[[which("hist" == plots)]] <-
 			ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
-	 			geom_histogram(alpha=.7) +
+	 			geom_histogram(alpha = .7) +
 	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$var)) +
 	 	 		theme(legend.position = "none")
 	}
@@ -142,14 +142,14 @@ plot.single_prop <- function(x,
 							  data.frame %>%
 							  set_colnames(lev_name)
 
-		ci_perc <- { if (object$alternative == 'two.sided') {
-									{(1-object$conf_lev)/2}  %>% c(., 1 - .)
+		ci_perc <- {if (object$alternative == 'two.sided') {
+									{(1 - object$conf_lev)/2}  %>% c(., 1 - .)
 								 } else if (object$alternative == 'less') {
-									{1-object$conf_lev}
+									{1 - object$conf_lev}
 								 } else {
 									object$conf_lev
 								 }
-							 } %>% quantile(simdat[,lev_name], probs = . )
+							 } %>% quantile(simdat[[lev_name]], probs = . )
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
@@ -158,7 +158,7 @@ plot.single_prop <- function(x,
 		names(simdat) <- "col1"
 
 		plot_list[[which("simulate" == plots)]] <-
-			ggplot(simdat, aes(x=col1)) +
+			ggplot(simdat, aes(x = col1)) +
 				geom_histogram(colour = 'black', fill = 'blue', binwidth = bw, alpha = .1) +
 				geom_vline(xintercept = object$comp_value, color = 'red',
 				           linetype = 'solid', size = 1) +

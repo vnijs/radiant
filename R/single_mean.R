@@ -27,7 +27,7 @@ single_mean <- function(dataset, var,
 	dat <- getdata(dataset, var, filt = data_filter)
 	if (!is_string(dataset)) dataset <- "-----"
 
-	t.test(dat, mu = comp_value, alternative = alternative,
+	t.test(dat[[var]], mu = comp_value, alternative = alternative,
 	       conf.level = conf_lev) %>% tidy -> res
 
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
@@ -72,7 +72,7 @@ summary.single_mean <- function(object, ...) {
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
 
-	object$res$sd <- sd(object$dat[,object$var])
+	object$res$sd <- sd(object$dat[[object$var]])
 	object$res$n <- nrow(object$dat)
 	res <- round(object$res, 3) 	# restrict to 3 decimals
 	names(res)[1:6] <- c("mean","t.value","p.value","df", ci_perc[1], ci_perc[2])
@@ -124,7 +124,7 @@ plot.single_mean <- function(x,
 
 		simdat <- matrix(0, nrow = 1000)
 		for (i in 1:nrow(simdat)) {
-			simdat[i] <- object$dat[,object$var] %>%
+			simdat[i] <- object$dat[[object$var]] %>%
 										 sample(., length(.), replace = TRUE) %>%
 										 mean
 		}
@@ -139,7 +139,7 @@ plot.single_mean <- function(x,
 								} else {
 									object$conf_lev
 								}} %>%
-									quantile(simdat[,object$var], probs = .)
+									quantile(simdat[[object$var]], probs = .)
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
