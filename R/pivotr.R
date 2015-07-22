@@ -278,3 +278,12 @@ make_dt <- function(pvt, format = "none", check = "") {
 # options(DT.options = list(pageLength = 5))
 # # default Bootstrap style in DT
 # datatable(iris2, style = 'bootstrap')
+
+## create tab for issue https://github.com/rstudio/DT/issues/150
+# library(radiant)
+# dat <- pivotr("diamonds", cvars = c("clarity","cut"), normalize = "total")$tab %>% filter(cut != "Total")
+# dput(dat)
+# DT::datatable(dat, filter = list(position = "top", clear = FALSE))
+
+
+

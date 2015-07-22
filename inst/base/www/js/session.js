@@ -20,13 +20,16 @@ Shiny.addCustomMessageHandler("session_start", function(data) {
     search += "SSUID=" + encodeURIComponent(data);
   }
 
-  // prior version
-  // history.replaceState(null, null, search);
-
   // Work around ShinyApps.io/SSP/RSC base href silliness
-  var path = location.pathname.replace(/\/_w_(\w+)/, '');
+  // var path = location.pathname.replace(/\/_w_(\w+)/, '');
+
+  // Use window.top to accomodate iframes on shinyapps.io
+  // https://groups.google.com/d/msg/shinyapps-users/YrLV52e_InY/K11pYWxZ8G8J
+  var path = window.top.location.pathname.replace(/\/_w_(\w+)/, "");
   history.replaceState(null, null, path + search);
 
+  // prior version
+  // history.replaceState(null, null, search);
 })
 
 // Not working as intended
