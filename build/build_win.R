@@ -4,7 +4,7 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # build('../shinyAce', binary = TRUE)
 # build('../rpivotTable', binary = TRUE)
 # build('../MathJaxR', binary = TRUE)
-devtools::install('../DT')
+# devtools::install('../DT')
 build('../DT', binary = TRUE)
 build('../radiant', binary = TRUE)
 
