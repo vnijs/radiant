@@ -1,3 +1,6 @@
+## turn off warnings globally
+#options(warn=-1)
+
 ## encoding
 options(encoding = "native.enc") ## default
 # options(encoding = "UTF-8")      ## for chines
