@@ -85,7 +85,8 @@ output$single_prop <- renderUI({
 		sp_output_panels <- tabsetPanel(
 	    id = "tabs_single_prop",
 	    tabPanel("Summary", verbatimTextOutput("summary_single_prop")),
-	    tabPanel("Plot", plotOutput("plot_single_prop", height = "100%"))
+	    tabPanel("Plot", plotOutput("plot_single_prop", height = "100%"),
+               plot_downloader("single_prop", height = sp_plot_height()))
 	  )
 
 		stat_tab_panel(menu = "Base",

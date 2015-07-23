@@ -70,7 +70,8 @@ output$cross_tabs <- renderUI({
 		ct_output_panels <- tabsetPanel(
 	    id = "tabs_cross_tabs",
 	    tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
-	    tabPanel("Plot", plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
+	    tabPanel("Plot", plot_downloader("cross_tabs", height = ct_plot_height()),
+	             plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Base",

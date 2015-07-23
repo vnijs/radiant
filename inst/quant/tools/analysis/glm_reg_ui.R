@@ -277,9 +277,12 @@ output$glm_reg <- renderUI({
 		glm_output_panels <- tabsetPanel(
 	    id = "tabs_glm_reg",
 	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg")),
-      tabPanel("Predict", plotOutput("predict_plot_glm_reg", width = "100%", height = "100%"),
+      tabPanel("Predict",
+               plot_downloader("glm_reg", height = glm_pred_plot_height(), po = "dlp_", pre = ".predict_plot_"),
+               plotOutput("predict_plot_glm_reg", width = "100%", height = "100%"),
                verbatimTextOutput("predict_glm_reg")),
-	    tabPanel("Plot", plotOutput("plot_glm_reg", width = "100%", height = "100%"))
+	    tabPanel("Plot", plot_downloader("glm_reg", height = glm_plot_height()),
+               plotOutput("plot_glm_reg", width = "100%", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Regression",

@@ -254,9 +254,37 @@ register_plot_output <- function(fun_name, rfun_name,
       }
     }
 
-    return(invisible())
+    # return(invisible())
 
   }, width=get(width_fun), height=get(height_fun))
+
+  return(invisible())
+}
+
+plot_downloader <- function(plot_name, width = plot_width(),
+                            height = plot_height(), pre = ".plot_", po = "dl_") {
+
+  ## link and output name
+  lnm <- paste0(po, plot_name)
+
+  # psize <- . %>% {7 * ./650} %>% round(2)
+  # fext <- . %>% tools::file_ext(.) %>% tolower
+
+  ## create an output
+  output[[lnm]] <- downloadHandler(
+    filename = function() { paste0(plot_name, ".png") },
+    content = function(file) {
+        # if(fext(file) == "svg") svg(file=file, width = psize(width), height = psize(height))
+        # if(fext(file) == "pdf") pdf(file=file, width = psize(width), height = psize(height))
+
+        ## needed to get the image quality at the same level as shiny
+        pr <- session$clientData$pixelratio
+        png(file=file, width = width*pr, height = height*pr, res=72*pr)
+          print(get(paste0(pre, plot_name))())
+        dev.off()
+    }
+  )
+  downloadLink(lnm, "", class = "fa fa-download alignright")
 }
 
 stat_tab_panel <- function(menu, tool, tool_ui, output_panels,

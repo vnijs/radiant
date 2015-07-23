@@ -283,9 +283,12 @@ output$regression <- renderUI({
 		reg_output_panels <- tabsetPanel(
 	    id = "tabs_regression",
 	    tabPanel("Summary", verbatimTextOutput("summary_regression")),
-      tabPanel("Predict", plotOutput("predict_plot_regression", width = "100%", height = "100%"),
+      tabPanel("Predict",
+               plot_downloader("regression", height = reg_pred_plot_height(), po = "dlp_", pre = ".predict_plot_"),
+               plotOutput("predict_plot_regression", width = "100%", height = "100%"),
                verbatimTextOutput("predict_regression")),
-	    tabPanel("Plot", plotOutput("plot_regression", width = "100%", height = "100%"))
+	    tabPanel("Plot", plot_downloader("regression", height = reg_plot_height()),
+               plotOutput("plot_regression", width = "100%", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Regression",

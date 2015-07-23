@@ -102,7 +102,8 @@ output$compare_props <- renderUI({
     cp_output_panels <- tabsetPanel(
       id = "tabs_compare_props",
       tabPanel("Summary", verbatimTextOutput("summary_compare_props")),
-      tabPanel("Plot", plotOutput("plot_compare_props", height = "100%"))
+      tabPanel("Plot", plot_downloader("compare_props", height = cp_plot_height()),
+               plotOutput("plot_compare_props", height = "100%"))
     )
 
     stat_tab_panel(menu = "Base",

@@ -25,8 +25,11 @@ Shiny.addCustomMessageHandler("session_start", function(data) {
 
   // Use window.top to accomodate iframes on shinyapps.io
   // https://groups.google.com/d/msg/shinyapps-users/YrLV52e_InY/K11pYWxZ8G8J
-  var path = window.top.location.pathname.replace(/\/_w_(\w+)/, "");
-  window.top.history.replaceState(null, null, path + search);
+  // var path = window.top.location.pathname.replace(/\/_w_(\w+)/, "");
+  // window.top.history.replaceState(null, null, path + search);
+
+  var path = location.pathname.replace(/\/_w_(\w+)/, "");
+  history.replaceState(null, null, path + search);
 
   // prior version
   // history.replaceState(null, null, search);

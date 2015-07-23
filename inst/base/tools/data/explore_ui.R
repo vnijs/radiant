@@ -77,15 +77,18 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- reactive({
-  if (not_available(input$expl_vars)) return()
-  withProgress(message = 'Calculating', value = 0, {
     do.call(explore, expl_inputs())
-  })
 })
 
 output$expl_summary <- renderPrint({
-  if (!is.null(input$expl_tab) && input$expl_tab)
-    .explore() %>% { if (is.null(.)) invisible() else summary(.) }
+  if (not_available(input$expl_vars)) return(invisible())
+  if (!is.null(input$expl_tab) && input$expl_tab) {
+    withProgress(message = 'Calculating', value = 0, {
+      .explore() %>% { if (is.null(.)) invisible() else summary(.) }
+    })
+  } else {
+    invisible()
+  }
 })
 
 expl_plot_width <- function() 650
@@ -93,11 +96,16 @@ expl_plot_height <- function()
   400 * length(input$expl_fun) * length(input$expl_vars)
 
 output$expl_plots <- renderPlot({
-  if (!input$expl_viz || is.null(input$expl_byvar)) return()
+  if (not_available(input$expl_vars)) return(invisible())
+  if (!input$expl_viz || is.null(input$expl_byvar)) return(invisible())
   withProgress(message = 'Making plot', value = 0, {
-    .explore() %>% { if (is.null(.)) invisible() else print(plot(., shiny = TRUE)) }
+    print(.plot_explore())
   })
 }, width = expl_plot_width, height = expl_plot_height)
+
+.plot_explore <- reactive({
+  plot(.explore(), shiny = TRUE)
+})
 
 observe({
   if (not_pressed(input$explore_report)) return()

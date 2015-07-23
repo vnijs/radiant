@@ -167,7 +167,7 @@ plot.explore <- function(x, shiny = FALSE, ...) {
     }
   }
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+  sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
     { if (shiny) . else print(.) }
 }
 

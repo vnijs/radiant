@@ -65,7 +65,9 @@ output$correlation <- renderUI({
 		cor_output_panels <- tabsetPanel(
 	    id = "tabs_correlation",
 	    tabPanel("Summary", verbatimTextOutput("summary_correlation")),
-	    tabPanel("Plot", plotOutput("plot_correlation", width = "100%", height = "100%"))
+	    tabPanel("Plot",
+               plot_downloader("correlation", height = cor_plot_height()),
+	             plotOutput("plot_correlation", width = "100%", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Regression",
