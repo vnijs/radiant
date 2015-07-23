@@ -1,5 +1,22 @@
+## encoding
+options(encoding = "native.enc") ## default
+# options(encoding = "UTF-8")      ## for chines
+## use getOption("encoding") to see if things were changed
+
+loc <- function(os, language = "english") {
+  switch(language,
+         english = ifelse(os == "Windows", "English_United States.1252", "en_US.UTF-8"),
+         chinese = ifelse(os == "Windows", "Chinese", "zh_CN.utf-8"))
+}
+
+## setting local
+Sys.setlocale(category = "LC_ALL", loc(Sys.info()[["sysname"]]))
+# Sys.setlocale(category = "LC_ALL", loc(Sys.info()[["sysname"]], "chinese"))
+## use Sys.setlocale() to see if things were changed
+# Sys.setlocale()
+
 ## path to use for local and server use
-r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
+r_path <- ifelse((file.exists("../base") && file.exists("../quant")), "..",
                   system.file(package = "radiant"))
 if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 
@@ -7,8 +24,8 @@ if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local 
 ## currently these are r_env, r_data, r_state, r_local, r_path, r_sessions, r_ssuid
 
 ## print options
-options("width"=200)
-options("scipen"=100)
+options("width" = 200)
+options("scipen" = 100)
 
 ## pkgs used
 pkgs_cran <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",

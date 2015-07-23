@@ -1,10 +1,10 @@
 shinyServer(function(input, output, session) {
 
-	# source shared functions
+	## source shared functions
 	source(file.path(r_path,"base/init.R"), local = TRUE)
 	source(file.path(r_path,"base/radiant.R"), local = TRUE)
 
-  # for shiny-server
+  ## for shiny-server
   if (!"package:radiant" %in% search()) {
     if (r_path == "..") {
       for (file in list.files("../../R",
@@ -15,21 +15,18 @@ shinyServer(function(input, output, session) {
       }
     } else {
       radiant::copy_all(radiant)
-      set_class <- radiant::set_class
+      # set_class <- radiant::set_class
     }
   } else {
-    copy_from(radiant, state_init, state_single, state_multiple)
+     copy_from(radiant, state_init, state_single, state_multiple)
   }
 
-  # source data & app tools from base
-  for (file in list.files(c(file.path(r_path,"base/tools/app"),
-                         file.path(r_path,"base/tools/data")),
-                         pattern="\\.(r|R)$", full.names = TRUE))
+  ## source data & app tools from base
+  for (file in list.files(c(file.path(r_path,"base/tools/app"),file.path(r_path,"base/tools/data")), pattern="\\.(r|R)$", full.names = TRUE))
     source(file, local = TRUE)
 
 	# source analysis tools for quant app
-  for (file in list.files(c("tools/analysis"),
-                         pattern="\\.(r|R)$", full.names = TRUE))
+  for (file in list.files(c("tools/analysis"), pattern="\\.(r|R)$", full.names = TRUE))
     source(file, local = TRUE)
 
   # save state on refresh or browser close
