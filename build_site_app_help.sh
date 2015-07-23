@@ -35,11 +35,6 @@ rm $dirmac/shinyAce*
 rm $dirmac_mav/shinyAce*
 rm $dirwin/shinyAce*
 
-rm $dirsource/rpivotTable*
-rm $dirmac/rpivotTable*
-rm $dirmac_mav/rpivotTable*
-rm $dirwin/rpivotTable*
-
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1
 
