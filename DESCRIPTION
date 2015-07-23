@@ -28,7 +28,7 @@ Imports:
 	  shiny (>= 0.12.1),
 		shinyAce (>= 0.2.1),
 		lubridate (>= 1.3.3),
-		DT (>= 0.1.28),
+		DT (>= 0.1.29),
 		MathJaxR (>= 0.11),
 		readr (>= 0.1.1)
 Suggests:
