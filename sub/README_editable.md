@@ -1,9 +1,5 @@
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/vnijs/radiant/issues. For other questions and comments please use radiant@rady.ucsd.edu.
 
-## Breaking change (6/15/2015)
-
-If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>. 
-
 ## Key features
 
 - Explore: Quickly and easily summarize, visualize, and analyze your data
@@ -84,27 +80,21 @@ Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant
 
 Not ready to install Radiant on your computer? Try it online at the links below:
 
-<a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a>
+<a href="https://internal.shinyapps.io/vnijs/marketing" target="_blank">internal.shinyapps.io/vnijs/marketing/a>
 
-<a href="https://vnijs.shinyapps.io/quant" target="_blank">vnijs.shinyapps.io/quant</a>
+<a href="https://internal.shinyapps.io/vnijs/quant" target="_blank">internal.shinyapps.io/vnijs/quant</a>
 
-<a href="https://vnijs.shinyapps.io/base" target="_blank">vnijs.shinyapps.io/base</a>
+<a href="https://internal.shinyapps.io/vnijs/base" target="_blank">internal.shinyapps.io/vnijs/base</a>
 
 ## Running Radiant on shinyapps.io / shiny-server
 
-You can run Radiant on a (linux) server. See links above as evidence. There are also (slightly older) instances you can access that will not affect my personal usage of shinyapps.io:
+You can run Radiant on shinyapps.io on any (linux) server supported by Shiny server.
 
-<a href="https://gallery.shinyapps.io/marketing" target="_blank">gallery.shinyapps.io/marketing</a>
-
-<a href="https://gallery.shinyapps.io/quant" target="_blank">gallery.shinyapps.io/quant</a>
-
-<a href="https://gallery.shinyapps.io/base" target="_blank">gallery.shinyapps.io/base</a>
-
-To run your own server instance copy/fork the repo from github and [deploy to shinyapps.io as usual](http://shiny.rstudio.com/articles/shinyapps.html). Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. You can also host Radiant using [shiny-server](http://www.rstudio.com/products/rstudio/download-server/). Just point shiny-server to the directory in inst/ you want to use. As a courtesy, please let me know if you intend to use on a server.
+To run your own server instance copy/fork the repo from github and [deploy to shinyapps.io as usual](http://shiny.rstudio.com/articles/shinyapps.html). Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. You can also host Radiant using [shiny-server](http://www.rstudio.com/products/rstudio/download-server/). Just point shiny-server to the directory in inst/ you want to use. As a courtesy, please let me know if you intend to use Radiant on a server.
 
 ## Saving and loading state
 
-To save your analyses save the state of the app to a file (Data > Manage). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true) in the `examples` folder. Go to `Data > View`, `Data > Visualize` to see some of the settings. There is also a report in `R > Report` that was created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true) contains the output.
+To save your analyses save the state of the app to a file use <i title='Save' class='fa fa-save'></i> or Data > Manage. You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true) in the `examples` folder. Go to `Data > View`, `Data > Visualize` to see some of the settings. There is also a report in `R > Report` that was created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true) contains the output.
 
 A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use Quit > Reset to return to a clean/new state.
 

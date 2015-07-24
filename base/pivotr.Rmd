@@ -4,5 +4,5 @@ title: Data > Pivot
 
 ***
 
-```{r child='app/pivot.md'}
+```{r child='app/pivotr.md'}
 ```
