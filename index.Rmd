@@ -4,7 +4,7 @@ title: Radiant -- Business analytics using R and Shiny
 
 ***
 
-```{r child='sub/README_editable.md'}
+```{r child='sub/README_editable.Rmd'}
 ```
 
 ## License

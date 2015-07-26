@@ -110,7 +110,7 @@ img {
              <li><a href="/radiant/base/manage.html">Manage</a></li>
              <li><a href="/radiant/base/view.html">View</a></li>
              <li><a href="/radiant/base/visualize.html">Visualize</a></li>
-             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
+             <li><a href="/radiant/base/pivotr.html">Pivot</a></li>
              <li><a href="/radiant/base/explore.html">Explore</a></li>
              <li><a href="/radiant/base/transform.html">Transform</a></li>
              <li><a href="/radiant/base/combine.html">Combine</a></li>
@@ -135,6 +135,9 @@ img {
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
           </ul>
         </li>
 
@@ -156,6 +159,9 @@ img {
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
@@ -199,18 +205,18 @@ img {
 <div id="radiant-code" class="section level2">
 <h2>Radiant code</h2>
 <!-- [![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
-Version: 0.2.30, Date: 2015-6-14 -->
+Version: 0.2.54, Date: 2015-7-22 -->
 <p>Built using <a href="http://www.rstudio.com/shiny/" target="_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="_blank">Rstudio</a>. Code available on <a href="https://github.com/vnijs/radiant" target="_blank">GitHub</a></p>
 </div>
 <div id="package-dependencies" class="section level2">
 <h2>Package dependencies</h2>
-<p>Package dependencies: car, gridExtra, GPArotation, psych, wordcloud, AlgDesign, knitr, ggdendro, lubridate, ggplot2, pryr, shiny, magrittr, tidyr, dplyr, broom, htmlwidgets, shiny, htmlwidgets, shinyAce, rpivotTable, DT, radiant</p>
+<p>Package dependencies: car, gridExtra, GPArotation, psych, wordcloud, AlgDesign, knitr, ggdendro, lubridate, ggplot2, pryr, shiny, magrittr, tidyr, dplyr, broom, shiny, rmarkdown, shinyAce, DT, radiant</p>
 <p><details> <summary>Citing packages</summary></p>
 <pre><code>
 To cite package &#39;radiant&#39; in publications use:
 
   Vincent Nijs (2015). radiant: Business Analytics using R and
-  Shiny. R package version 0.2.30.
+  Shiny. R package version 0.2.54.
   https://github.com/vnijs/radiant,
   http://vnijs.github.io/radiant/
 
@@ -220,7 +226,7 @@ A BibTeX entry for LaTeX users is
     title = {radiant: Business Analytics using R and Shiny},
     author = {Vincent Nijs},
     year = {2015},
-    note = {R package version 0.2.30},
+    note = {R package version 0.2.54},
     url = {https://github.com/vnijs/radiant, http://vnijs.github.io/radiant/},
   }
 
@@ -246,23 +252,19 @@ A BibTeX entry for LaTeX users is
 
 To cite package &#39;gridExtra&#39; in publications use:
 
-  Baptiste Auguie (2012). gridExtra: functions in Grid graphics. R
-  package version 0.9.1.
+  Baptiste Auguie (2015). gridExtra: Miscellaneous Functions for
+  &quot;Grid&quot; Graphics. R package version 2.0.0.
   http://CRAN.R-project.org/package=gridExtra
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {gridExtra: functions in Grid graphics},
+    title = {gridExtra: Miscellaneous Functions for &quot;Grid&quot; Graphics},
     author = {Baptiste Auguie},
-    year = {2012},
-    note = {R package version 0.9.1},
+    year = {2015},
+    note = {R package version 2.0.0},
     url = {http://CRAN.R-project.org/package=gridExtra},
   }
-
-ATTENTION: This citation information has been auto-generated from
-the package DESCRIPTION file and may need manual editing, see
-&#39;help(&quot;citation&quot;)&#39;.
 
 
 To cite package &#39;GPArotation&#39; in publications use:
@@ -291,7 +293,7 @@ To cite the psych package in publications use:
   Revelle, W. (2015) psych: Procedures for Personality and
   Psychological Research, Northwestern University, Evanston,
   Illinois, USA, http://CRAN.R-project.org/package=psych Version =
-  1.5.4.
+  1.5.6.
 
 A BibTeX entry for LaTeX users is
 
@@ -301,7 +303,7 @@ A BibTeX entry for LaTeX users is
     organization = { Northwestern University},
     address = { Evanston, Illinois},
     year = {2015},
-    note = {R package version 1.5.4},
+    note = {R package version 1.5.6},
     url = {http://CRAN.R-project.org/package=psych},
   }
 
@@ -350,7 +352,7 @@ the package DESCRIPTION file and may need manual editing, see
 To cite the &#39;knitr&#39; package in publications use:
 
   Yihui Xie (2015). knitr: A General-Purpose Package for Dynamic
-  Report Generation in R. R package version 1.10.
+  Report Generation in R. R package version 1.10.5.
 
   Yihui Xie (2013) Dynamic Documents with R and knitr. Chapman and
   Hall/CRC. ISBN 978-1482203530
@@ -419,17 +421,17 @@ A BibTeX entry for LaTeX users is
 
 To cite package &#39;pryr&#39; in publications use:
 
-  Hadley Wickham (2014). pryr: Tools for computing on the
-  language. R package version 0.1.
+  Hadley Wickham (2015). pryr: Tools for Computing on the
+  Language. R package version 0.1.2.
   http://CRAN.R-project.org/package=pryr
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {pryr: Tools for computing on the language},
+    title = {pryr: Tools for Computing on the Language},
     author = {Hadley Wickham},
-    year = {2014},
-    note = {R package version 0.1},
+    year = {2015},
+    note = {R package version 0.1.2},
     url = {http://CRAN.R-project.org/package=pryr},
   }
 
@@ -438,7 +440,7 @@ To cite package &#39;shiny&#39; in publications use:
 
   Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
   McPherson (2015). shiny: Web Application Framework for R. R
-  package version 0.12.0. http://CRAN.R-project.org/package=shiny
+  package version 0.12.1. http://CRAN.R-project.org/package=shiny
 
 A BibTeX entry for LaTeX users is
 
@@ -446,7 +448,7 @@ A BibTeX entry for LaTeX users is
     title = {shiny: Web Application Framework for R},
     author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
     year = {2015},
-    note = {R package version 0.12.0},
+    note = {R package version 0.12.1},
     url = {http://CRAN.R-project.org/package=shiny},
   }
 
@@ -492,7 +494,7 @@ A BibTeX entry for LaTeX users is
 To cite package &#39;dplyr&#39; in publications use:
 
   Hadley Wickham and Romain Francois (2015). dplyr: A Grammar of
-  Data Manipulation. R package version 0.4.1.
+  Data Manipulation. R package version 0.4.2.
   http://CRAN.R-project.org/package=dplyr
 
 A BibTeX entry for LaTeX users is
@@ -501,7 +503,7 @@ A BibTeX entry for LaTeX users is
     title = {dplyr: A Grammar of Data Manipulation},
     author = {Hadley Wickham and Romain Francois},
     year = {2015},
-    note = {R package version 0.4.1},
+    note = {R package version 0.4.2},
     url = {http://CRAN.R-project.org/package=dplyr},
   }
 
@@ -509,7 +511,7 @@ A BibTeX entry for LaTeX users is
 To cite package &#39;broom&#39; in publications use:
 
   David Robinson (2015). broom: Convert Statistical Analysis
-  Objects into Tidy Data Frames. R package version 0.3.6.
+  Objects into Tidy Data Frames. R package version 0.3.7.
   http://CRAN.R-project.org/package=broom
 
 A BibTeX entry for LaTeX users is
@@ -518,24 +520,8 @@ A BibTeX entry for LaTeX users is
     title = {broom: Convert Statistical Analysis Objects into Tidy Data Frames},
     author = {David Robinson},
     year = {2015},
-    note = {R package version 0.3.6},
+    note = {R package version 0.3.7},
     url = {http://CRAN.R-project.org/package=broom},
-  }
-
-
-To cite package &#39;htmlwidgets&#39; in publications use:
-
-  Ramnath Vaidyanathan, Yihui Xie, JJ Allaire, Joe Cheng and
-  Kenton Russell (2015). htmlwidgets: HTML Widgets for R. R
-  package version 0.4.2.
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {htmlwidgets: HTML Widgets for R},
-    author = {Ramnath Vaidyanathan and Yihui Xie and JJ Allaire and Joe Cheng and Kenton Russell},
-    year = {2015},
-    note = {R package version 0.4.2},
   }
 
 
@@ -543,7 +529,7 @@ To cite package &#39;shiny&#39; in publications use:
 
   Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
   McPherson (2015). shiny: Web Application Framework for R. R
-  package version 0.12.0. http://CRAN.R-project.org/package=shiny
+  package version 0.12.1. http://CRAN.R-project.org/package=shiny
 
 A BibTeX entry for LaTeX users is
 
@@ -551,24 +537,26 @@ A BibTeX entry for LaTeX users is
     title = {shiny: Web Application Framework for R},
     author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
     year = {2015},
-    note = {R package version 0.12.0},
+    note = {R package version 0.12.1},
     url = {http://CRAN.R-project.org/package=shiny},
   }
 
 
-To cite package &#39;htmlwidgets&#39; in publications use:
+To cite package &#39;rmarkdown&#39; in publications use:
 
-  Ramnath Vaidyanathan, Yihui Xie, JJ Allaire, Joe Cheng and
-  Kenton Russell (2015). htmlwidgets: HTML Widgets for R. R
-  package version 0.4.2.
+  JJ Allaire, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston
+  Chang, Jeff Allen, Hadley Wickham and Rob Hyndman (2015).
+  rmarkdown: Dynamic Documents for R. R package version 0.7.
+  http://CRAN.R-project.org/package=rmarkdown
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {htmlwidgets: HTML Widgets for R},
-    author = {Ramnath Vaidyanathan and Yihui Xie and JJ Allaire and Joe Cheng and Kenton Russell},
+    title = {rmarkdown: Dynamic Documents for R},
+    author = {JJ Allaire and Joe Cheng and Yihui Xie and Jonathan McPherson and Winston Chang and Jeff Allen and Hadley Wickham and Rob Hyndman},
     year = {2015},
-    note = {R package version 0.4.2},
+    note = {R package version 0.7},
+    url = {http://CRAN.R-project.org/package=rmarkdown},
   }
 
 
@@ -587,29 +575,10 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package &#39;rpivotTable&#39; in publications use:
-
-  Nicolas kruchten and Enzo Martoglio (2015). rpivotTable:
-  Interface to pivottable library, to have a powerful pivot table
-  on R &amp; shiny. R package version 0.1.4.1.
-  https://github.com/smartinsightsfromdata/,
-  http://smartinsightsfromdata.github.io
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {rpivotTable: Interface to pivottable library, to have a powerful pivot table on R &amp; shiny},
-    author = {Nicolas kruchten and Enzo Martoglio},
-    year = {2015},
-    note = {R package version 0.1.4.1},
-    url = {https://github.com/smartinsightsfromdata/, http://smartinsightsfromdata.github.io},
-  }
-
-
 To cite package &#39;DT&#39; in publications use:
 
   Yihui Xie (2015). DT: A Wrapper of the JavaScript Library
-  &#39;DataTables&#39;. R package version 0.1.3.
+  &#39;DataTables&#39;. R package version 0.1.29.
   http://rstudio.github.io/DT
 
 A BibTeX entry for LaTeX users is
@@ -618,7 +587,7 @@ A BibTeX entry for LaTeX users is
     title = {DT: A Wrapper of the JavaScript Library &#39;DataTables&#39;},
     author = {Yihui Xie},
     year = {2015},
-    note = {R package version 0.1.3},
+    note = {R package version 0.1.29},
     url = {http://rstudio.github.io/DT},
   }
 
@@ -626,7 +595,7 @@ A BibTeX entry for LaTeX users is
 To cite package &#39;radiant&#39; in publications use:
 
   Vincent Nijs (2015). radiant: Business Analytics using R and
-  Shiny. R package version 0.2.30.
+  Shiny. R package version 0.2.54.
   https://github.com/vnijs/radiant,
   http://vnijs.github.io/radiant/
 
@@ -636,7 +605,7 @@ A BibTeX entry for LaTeX users is
     title = {radiant: Business Analytics using R and Shiny},
     author = {Vincent Nijs},
     year = {2015},
-    note = {R package version 0.2.30},
+    note = {R package version 0.2.54},
     url = {https://github.com/vnijs/radiant, http://vnijs.github.io/radiant/},
   }</code></pre>
 <p></details></p>

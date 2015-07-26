@@ -6,6 +6,8 @@ An easy way to store data and get in and out of Radiant (and R) is to use the R-
 
 You can get data from Excel into Radiant in two ways. First, you can save data from Excel in csv format and then, in Radiant, choose the `csv` radio button. Most likely you will have a header row in the csv file for variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click 'Choose files' and locate the file on your computer.
 
+> **Note:** For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load characters correctly.
+
 Alternatively, you can select and copy the data in Excel using CTRL-C (or CMD-C on mac), go to Radiant, choose the `clipboard` radio-button, and click the `Paste data` button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted. If the data is not transferred cleanly to Radiant try saving the data in csv format and loading it into Radiant as described above.
 
 To access all data files bundled with Radiant choose the examples radio button and click `Load examples`. These files are used to illustrate the various analysis tools in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., Regression > Linear (OLS)).
@@ -23,11 +25,13 @@ Getting data from Radiant into Excel can also be achieved in two ways. First, yo
 
 You can save and load the state of the Radiant app just as you would a data file. The state file (extension rda) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the R-menu. Save the state-file to your hard-disk and when you are ready to continue simply load it by selecting the state radio button and clicking the `Choose file` button.
 
+To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on `Save state` (or in `Data > Manage` tab)
+
 This is convenient if you want to save your work to be completed at another time, perhaps on another computer, or to review any assignments you completed using Radiant. You can also share the file with others that would like to replicate your analyses. As an example, download and then load the state_file [`RadiantState.rda`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.rda?raw=true). Go to `Data > View`, `Data > Visualize` to see some of the settings loaded from the statefile. There is also a report in `R > Report` created using the Radiant interface. The html file [`RadiantState.html`](https://github.com/vnijs/radiant/blob/master/inst/examples/RadiantState.html?raw=true) contains the output.
 
-A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use `Quit > Reset` to return to a clean/new state.
+A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use `Reset` in the <i title='Power off' class='fa fa-power-off'></i> menu in the navigation bar to return to a clean/new state.
 
-Loading and saving state also works with R(studio). If you start Radiant from Rstudio and use `Quit > Quit` to stop the app, lists called `r_data` and `r_state` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists (i.e., `r_data` and `r_state`) to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a statefile in Rstudio it will be used when you start Radiant to recreate a previous state.
+Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use <i title='Power off' class='fa fa-power-off'></i> > `Stop` to stop the app, lists called `r_data` and `r_state` will be put into Rstudio's global workspace. If you start radiant again using `radiant()` it will use these lists to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file directly into Rstudio it will be used when you start Radiant to recreate a previous state.
 
 ### Remove data from memory
 

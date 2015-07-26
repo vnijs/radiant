@@ -10,7 +10,7 @@
 
 
 
-<title>Maps &gt; (Dis)similarity</title>
+<title>Data &gt; Pivot</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -197,32 +197,21 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Maps &gt; (Dis)similarity</h1>
+<h1 class="title">Data &gt; Pivot</h1>
 </div>
 
 
 <hr />
 <blockquote>
-<p>Brand maps based on (dis)similarity data can be analyzed using Multi-Dimensional Scaling (MDS)</p>
+<p>Create pivot tables to explore your data</p>
 </blockquote>
-<div id="example-1" class="section level3">
-<h3>Example 1</h3>
-<p>The city data (city) contains information on distances in miles between 10 major cities in the US. Distances for 45 (10 x 9 / 2) from-to city pairs are provided. These data are used to illustrate that MDS can take simple data on distances (or on brand dissimilarities as we will see) and create a 2-dimensional map that accurately depicts the relative city (or brand) positions.</p>
-<p>Click the ‘examples’ radio button on the Data &gt; Manage page and click ‘Load examples’ then choose the city data from the Datasets drop-down. Select ‘from’ as ID 1, ‘to’ as ID 2, and ‘distance’ as the Dissimilarity measure. The original distances are shown in (lower triangular) matrix form in the figure below. If the analysis is successful we expect cities that are close (e.g., Washington DC and New York) should also be located close together on the map and cities that are far apart (e.g., Seattle and Miami) should also be positioned far apart in the map.</p>
-<p>The basic measure of (lack of) fit for MDS is called Stress. If MDS cannot create a map that accurately describes the original data this will result in high stress. Stress values of .1 are generally considered fair, .05 is good, and .01 or lower is excellent. High stress values indicate that a dimensionality of three (or higher) is needed to accurately depict the available data. For the city data the stress value is equal to .02 which is good. In the Summary tab we also see the coordinates that will be used to create the two-dimensional map show in the Plots tab and the recovered distances (i.e., how <em>far</em> the cities are apart in the generated map).</p>
-<p><img src="figures_marketing/mds_summary.png" alt="Summary" /></p>
-<p>In the graph from the screen grab of the Plots tab shown below the relative locations of Los Angeles, Boston, etc. look wrong. This is due to the fact the MDS program has no information on North, South, East and West. We can ‘flip’ the plot in Radiant to see if map becomes easier to recognize and interpret.</p>
-<p><img src="figures_marketing/mds_plot.png" alt="Plot" /></p>
-<p>To create the plot below we clicked the check-boxes for Dimension 1 and Dimension 2. After ‘flipping’ the plot along both the horizontal and vertical axis we see that the relative locations of the cities look quite good. Note that this map is ‘flat’, i.e., there is no correction for the curvature of the earth.</p>
-<p><img src="figures_marketing/mds_plot_flip.png" alt="Plot - flipped" /></p>
-</div>
-<div id="example-2" class="section level3">
-<h3>Example 2</h3>
-<p>The following plot is based on similarity data for a set of toothpaste brands (tpbrands, available as one of the example datasets). Respondents were asked the following question: “Please rate the following pairs of toothpaste brands on the basis of their similarity (1 = very similar, 7 = very dissimilar).” for all pairwise combinations of 10 brands, i.e., 45 comparisons. MDS will try to create a map that reproduces as accurately as possible the original dissimilarities (or perceptual distances) provided by the 50 respondents. The original dissimilarity ratings are shown in (lower triangular) matrix form in the figure below. From these data we can already see that the respondents perceive some brands to be very similar (e.g., Ultra Brite and Pepsodent have an average dissimilarity score of 1.11) and others to be very dissimilar (e.g., Crest and Sensodyne). The stress value for a two-dimensional solution is quite good (.058). As we might expect, the original and recovered distances shows that the fit is not as good as for the <code>city</code> data.</p>
-<p><img src="figures_marketing/mds_summary_tpbrands.png" alt="Summary - tpbrands" /></p>
-<p>The coordinates shown in the Summary tab are used to plot the brands in two-dimensions in the Plots tab. In the plot we see that Aqua Fresh and Colgate as well as Ultra Brite and Pepsodent are located very close together. This is consistent with the original data. Sensodyne and Crest, however, are positioned at opposite ends of the plot. Again, this is consistent with the original data and provides visual confirmation that MDS was able to create a plot that fits the data well.</p>
-<p>From the plot a manager might conclude that the brands that are closest together in the map are perceived by consumers as close substitutes and, hence, close competitors in the minds of consumers in this market segment. A manager for Aqua Fresh or Macleans, in contrast, might focus less on Sensodyne when developing a competitive positioning plan for her brand. An important limitation of the brand maps based on (dis)similarity data is that the axes are difficult to interpret. For example, why are Close-up and Crest located at opposite ends of the horizontal axes? The researcher could respondents to explain the meaning of the axes or else obtain additional attribute information for the brands and correlate/overlay these on to the plot to facilitate interpretation. Such attribute data could, however, also be used to create a brand map without the need for (dis)similarity ratings (see Maps &gt; Attribute).</p>
-<p><img src="figures_marketing/mds_plot_tpbrands.png" alt="Plot - tpbrands" /></p>
+<p>If you have used pivot-tables in Excel the functionality provided in the Pivot tab should be familiar to you. Similar to the Explore tab, you can generate summary statistics for variables in your data. You can also easily generate frequency tables. Perhaps the most powerful feature in Pivot is that you can easy describe the data <em>by</em> one or more other variables.</p>
+<p>For example, with the <code>diamonds</code> data select <code>clarity</code> and <code>cut</code> from the Categorical variables drop-down. You can drag-and-drop the selected variables to change their order. The categories for first variable will be the column headers. After selecting these two variables a frequency table of diamonds with different levels of clarity and quality of cut. Choose <code>Row</code>, <code>Column</code>, or <code>Total</code> from the Normalize drop-down to normalize the frequencies by row, column, or overall total. If a normalize option is selected it can be convenient to check the <code>Percentage</code> box to express the numbers as percentages. Choose <code>Color bar</code> or <code>Heat map</code> from the Conditional formatting drop-down to emphasize the highest frequency counts.</p>
+<p>It is also possible to summarize numerical variables. Select <code>price</code> from the Numerical variables drop-down. This will create the table shown below. Just as in the View tab you can sort the table by clicking on the column headers. You can also use sliders (e.g., click in the input box below <code>I1</code>) to limit the view to values in a specified range. To view only information for diamonds with <code>Fair</code> or <code>Good</code> cut quality click in the input box below the <code>cut</code> header.</p>
+<p><img src="figures/pivotr.png" alt="pivotr table" /></p>
+<div id="filter" class="section level3">
+<h3>Filter</h3>
+<p>Use the <code>Filter</code> box to select (or omit) specific sets of rows from the data. See the help file for Data &gt; View for details.</p>
 </div>
 
 

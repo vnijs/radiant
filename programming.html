@@ -110,7 +110,7 @@ img {
              <li><a href="/radiant/base/manage.html">Manage</a></li>
              <li><a href="/radiant/base/view.html">View</a></li>
              <li><a href="/radiant/base/visualize.html">Visualize</a></li>
-             <li><a href="/radiant/base/pivot.html">Pivot</a></li>
+             <li><a href="/radiant/base/pivotr.html">Pivot</a></li>
              <li><a href="/radiant/base/explore.html">Explore</a></li>
              <li><a href="/radiant/base/transform.html">Transform</a></li>
              <li><a href="/radiant/base/combine.html">Combine</a></li>
@@ -135,6 +135,9 @@ img {
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
           </ul>
         </li>
 
@@ -156,6 +159,9 @@ img {
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
              <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Maps</li>
              <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
@@ -237,7 +243,7 @@ Alt. hyp. : the mean of mpg is &gt; 20
 <p>To compare the mean price of diamonds across different levels of clarity we can call the <code>compare_means</code> function:</p>
 <pre class="r"><code>result &lt;- compare_means(&quot;diamonds&quot;, &quot;clarity&quot;, &quot;price&quot;)
 summary(result)</code></pre>
-<pre><code>Pairwise mean comparisons
+<pre><code>Pairwise mean comparisons (t-test)
 Data      : diamonds 
 Variables : clarity, price 
 Samples   : independent 
@@ -255,34 +261,34 @@ Adjustment: None
    IF 2411.697  99 3330.560 334.734 664.268
 
  Alt. hyp.                Null hyp.     diff     p.value    
- I1 not equal to SI2      I1 = SI2      -905.414 0.045   *  
- I1 not equal to SI1      I1 = SI1       196.198 0.645      
- I1 not equal to VS2      I1 = VS2       371.808 0.387      
- I1 not equal to VS1      I1 = VS1       405.594 0.36       
- I1 not equal to VVS2     I1 = VVS2      856.955 0.068   .  
- I1 not equal to VVS1     I1 = VVS1     1586.315 0.001   ***
- I1 not equal to IF       I1 = IF       1783.078 0.001   ***
+ I1 not equal to SI2      I1 = SI2      -905.414 0.157      
+ I1 not equal to SI1      I1 = SI1       196.198 0.757      
+ I1 not equal to VS2      I1 = VS2       371.808 0.558      
+ I1 not equal to VS1      I1 = VS1       405.594 0.529      
+ I1 not equal to VVS2     I1 = VVS2      856.955 0.193      
+ I1 not equal to VVS1     I1 = VVS1     1586.315 0.018   *  
+ I1 not equal to IF       I1 = IF       1783.078 0.015   *  
  SI2 not equal to SI1     SI2 = SI1     1101.612 &lt; .001  ***
  SI2 not equal to VS2     SI2 = VS2     1277.222 &lt; .001  ***
  SI2 not equal to VS1     SI2 = VS1     1311.008 &lt; .001  ***
  SI2 not equal to VVS2    SI2 = VVS2    1762.369 &lt; .001  ***
  SI2 not equal to VVS1    SI2 = VVS1    2491.729 &lt; .001  ***
  SI2 not equal to IF      SI2 = IF      2688.492 &lt; .001  ***
- SI1 not equal to VS2     SI1 = VS2      175.610 0.399      
- SI1 not equal to VS1     SI1 = VS1      209.396 0.369      
+ SI1 not equal to VS2     SI1 = VS2      175.610 0.403      
+ SI1 not equal to VS1     SI1 = VS1      209.396 0.374      
  SI1 not equal to VVS2    SI1 = VVS2     660.757 0.016   *  
  SI1 not equal to VVS1    SI1 = VVS1    1390.117 &lt; .001  ***
  SI1 not equal to IF      SI1 = IF      1586.880 &lt; .001  ***
  VS2 not equal to VS1     VS2 = VS1       33.786 0.888      
- VS2 not equal to VVS2    VS2 = VVS2     485.147 0.082   .  
+ VS2 not equal to VVS2    VS2 = VVS2     485.147 0.08    .  
  VS2 not equal to VVS1    VS2 = VVS1    1214.507 &lt; .001  ***
- VS2 not equal to IF      VS2 = IF      1411.270 &lt; .001  ***
- VS1 not equal to VVS2    VS1 = VVS2     451.361 0.13       
+ VS2 not equal to IF      VS2 = IF      1411.270 0.001   ***
+ VS1 not equal to VVS2    VS1 = VVS2     451.361 0.128      
  VS1 not equal to VVS1    VS1 = VVS1    1180.721 &lt; .001  ***
- VS1 not equal to IF      VS1 = IF      1377.484 &lt; .001  ***
- VVS2 not equal to VVS1   VVS2 = VVS1    729.360 0.022   *  
- VVS2 not equal to IF     VVS2 = IF      926.123 0.024   *  
- VVS1 not equal to IF     VVS1 = IF      196.763 0.621      
+ VS1 not equal to IF      VS1 = IF      1377.484 0.002   ** 
+ VVS2 not equal to VVS1   VVS2 = VVS1    729.360 0.036   *  
+ VVS2 not equal to IF     VVS2 = IF      926.123 0.042   *  
+ VVS1 not equal to IF     VVS1 = IF      196.763 0.676      
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result, plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
@@ -293,7 +299,7 @@ radiant()</code></pre>
 <p>We can now use the <code>compare_means</code> function to evaluate salary data for professors of different ranks using:</p>
 <pre class="r"><code>result &lt;- compare_means(&quot;salary&quot;, &quot;rank&quot;, &quot;salary&quot;)
 summary(result)</code></pre>
-<pre><code>Pairwise mean comparisons
+<pre><code>Pairwise mean comparisons (t-test)
 Data      : salary 
 Variables : rank, salary 
 Samples   : independent 
@@ -306,7 +312,7 @@ Adjustment: None
       Prof 126772.11 266 27718.675 1699.541 3346.322
 
  Alt. hyp.                         Null hyp.              diff      p.value    
- AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 &lt; .001  ***
+ AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 0.002   ** 
  AsstProf not equal to Prof        AsstProf = Prof        -45996.12 &lt; .001  ***
  AssocProf not equal to Prof       AssocProf = Prof       -32895.67 &lt; .001  ***
 
@@ -316,7 +322,8 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <p>An alternative way to write this code is to use <code>piping</code> (see <a href="http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html">magrittr</a> vignettes):</p>
 <pre class="r"><code>salary %&gt;% compare_means(&quot;rank&quot;, &quot;salary&quot;) %&gt;%
   {summary(.); plot(.)}</code></pre>
-<pre><code>Pairwise mean comparisons
+<p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
+<pre><code>Pairwise mean comparisons (t-test)
 Data      : ----- 
 Variables : rank, salary 
 Samples   : independent 
@@ -329,12 +336,11 @@ Adjustment: None
       Prof 126772.11 266 27718.675 1699.541 3346.322
 
  Alt. hyp.                         Null hyp.              diff      p.value    
- AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 &lt; .001  ***
+ AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 0.002   ** 
  AsstProf not equal to Prof        AsstProf = Prof        -45996.12 &lt; .001  ***
  AssocProf not equal to Prof       AssocProf = Prof       -32895.67 &lt; .001  ***
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <p>We can also run regressions and get output that would require writting many lines of code to produce from scratch:</p>
 <pre class="r"><code>result &lt;- regression(&quot;diamonds&quot;, &quot;price&quot;, c(&quot;carat&quot;,&quot;clarity&quot;))
 summary(result, sum_check = &quot;confint&quot;)</code></pre>
@@ -426,12 +432,12 @@ Observations: 20 </code></pre>
 <pre class="r"><code>## check the help file on how to plot results from hierarchical cluster analysis
 ## default plots - looks like there is a big jump in the overall within-cluster
 ## heterogeneity in the step from 3 to 2 segments
-plot(result)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="672" /></p>
-<pre class="r"><code>## show the dendrogram with cutoff at 0
-plot(result, plots = &quot;dendro&quot;, cutoff = 0.1)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-10-2.png" title="" alt="" width="672" /></p>
-<pre class="r"><code>## plots created above suggest 3 clusters may be  most appropriate
+plot(result)
+
+## show the dendrogram with cutoff at 0
+plot(result, plots = &quot;dendro&quot;, cutoff = 0.1)
+
+## plots created above suggest 3 clusters may be  most appropriate
 ## use kmeans to create the clusters
 ## generate output and save clustermembership to the datafile
 result &lt;- kmeans_clus(&quot;shopping&quot;, vars = &quot;v1:v6&quot;, nr_clus = 3)
@@ -459,7 +465,7 @@ Cluster 3 33.71%
 Between cluster variance accounts for 73.93% of the
 total variance in the data (higher is better).</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
-<p><img src="programming_files/figure-html/unnamed-chunk-10-3.png" title="" alt="" width="672" /></p>
+<p><img src="programming_files/figure-html/unnamed-chunk-10-1.png" title="" alt="" width="672" /></p>
 <pre class="r"><code>save_membership(result)
 
 ## was the data really changed?

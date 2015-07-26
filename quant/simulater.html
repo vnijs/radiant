@@ -10,7 +10,7 @@
 
 
 
-<title>Maps &gt; (Dis)similarity</title>
+<title>Decide &gt; Simulate</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -197,33 +197,29 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Maps &gt; (Dis)similarity</h1>
+<h1 class="title">Decide &gt; Simulate</h1>
 </div>
 
 
 <hr />
 <blockquote>
-<p>Brand maps based on (dis)similarity data can be analyzed using Multi-Dimensional Scaling (MDS)</p>
+<p>Simulate data for decision analysis</p>
 </blockquote>
-<div id="example-1" class="section level3">
-<h3>Example 1</h3>
-<p>The city data (city) contains information on distances in miles between 10 major cities in the US. Distances for 45 (10 x 9 / 2) from-to city pairs are provided. These data are used to illustrate that MDS can take simple data on distances (or on brand dissimilarities as we will see) and create a 2-dimensional map that accurately depicts the relative city (or brand) positions.</p>
-<p>Click the ‘examples’ radio button on the Data &gt; Manage page and click ‘Load examples’ then choose the city data from the Datasets drop-down. Select ‘from’ as ID 1, ‘to’ as ID 2, and ‘distance’ as the Dissimilarity measure. The original distances are shown in (lower triangular) matrix form in the figure below. If the analysis is successful we expect cities that are close (e.g., Washington DC and New York) should also be located close together on the map and cities that are far apart (e.g., Seattle and Miami) should also be positioned far apart in the map.</p>
-<p>The basic measure of (lack of) fit for MDS is called Stress. If MDS cannot create a map that accurately describes the original data this will result in high stress. Stress values of .1 are generally considered fair, .05 is good, and .01 or lower is excellent. High stress values indicate that a dimensionality of three (or higher) is needed to accurately depict the available data. For the city data the stress value is equal to .02 which is good. In the Summary tab we also see the coordinates that will be used to create the two-dimensional map show in the Plots tab and the recovered distances (i.e., how <em>far</em> the cities are apart in the generated map).</p>
-<p><img src="figures_marketing/mds_summary.png" alt="Summary" /></p>
-<p>In the graph from the screen grab of the Plots tab shown below the relative locations of Los Angeles, Boston, etc. look wrong. This is due to the fact the MDS program has no information on North, South, East and West. We can ‘flip’ the plot in Radiant to see if map becomes easier to recognize and interpret.</p>
-<p><img src="figures_marketing/mds_plot.png" alt="Plot" /></p>
-<p>To create the plot below we clicked the check-boxes for Dimension 1 and Dimension 2. After ‘flipping’ the plot along both the horizontal and vertical axis we see that the relative locations of the cities look quite good. Note that this map is ‘flat’, i.e., there is no correction for the curvature of the earth.</p>
-<p><img src="figures_marketing/mds_plot_flip.png" alt="Plot - flipped" /></p>
-</div>
-<div id="example-2" class="section level3">
-<h3>Example 2</h3>
-<p>The following plot is based on similarity data for a set of toothpaste brands (tpbrands, available as one of the example datasets). Respondents were asked the following question: “Please rate the following pairs of toothpaste brands on the basis of their similarity (1 = very similar, 7 = very dissimilar).” for all pairwise combinations of 10 brands, i.e., 45 comparisons. MDS will try to create a map that reproduces as accurately as possible the original dissimilarities (or perceptual distances) provided by the 50 respondents. The original dissimilarity ratings are shown in (lower triangular) matrix form in the figure below. From these data we can already see that the respondents perceive some brands to be very similar (e.g., Ultra Brite and Pepsodent have an average dissimilarity score of 1.11) and others to be very dissimilar (e.g., Crest and Sensodyne). The stress value for a two-dimensional solution is quite good (.058). As we might expect, the original and recovered distances shows that the fit is not as good as for the <code>city</code> data.</p>
-<p><img src="figures_marketing/mds_summary_tpbrands.png" alt="Summary - tpbrands" /></p>
-<p>The coordinates shown in the Summary tab are used to plot the brands in two-dimensions in the Plots tab. In the plot we see that Aqua Fresh and Colgate as well as Ultra Brite and Pepsodent are located very close together. This is consistent with the original data. Sensodyne and Crest, however, are positioned at opposite ends of the plot. Again, this is consistent with the original data and provides visual confirmation that MDS was able to create a plot that fits the data well.</p>
-<p>From the plot a manager might conclude that the brands that are closest together in the map are perceived by consumers as close substitutes and, hence, close competitors in the minds of consumers in this market segment. A manager for Aqua Fresh or Macleans, in contrast, might focus less on Sensodyne when developing a competitive positioning plan for her brand. An important limitation of the brand maps based on (dis)similarity data is that the axes are difficult to interpret. For example, why are Close-up and Crest located at opposite ends of the horizontal axes? The researcher could respondents to explain the meaning of the axes or else obtain additional attribute information for the brands and correlate/overlay these on to the plot to facilitate interpretation. Such attribute data could, however, also be used to create a brand map without the need for (dis)similarity ratings (see Maps &gt; Attribute).</p>
-<p><img src="figures_marketing/mds_plot_tpbrands.png" alt="Plot - tpbrands" /></p>
-</div>
+<p>Select the types of variables to use in the analysis from the <code>Select types</code> dropdown.</p>
+<p>List the constants to include in the analysis in the <code>Constant variables</code> text area (e.g., “cost 3”). If there are multiple variables to include simply press <code>return</code> on your keyboard and write out the information for the next variable. You can also separate constants using a <code>;</code>.</p>
+<p>List the uniformly distributed random variables to include in the analysis in the <code>Uniform variables</code> text area (e.g., “demand 1000 2000”). Note that the first number is the <strong>minimum</strong> and the second is the <strong>maximum</strong> value.</p>
+<p>As for constant variables, if there are multiple uniformly distributed variables to include simply press <code>return</code> (or use <code>;</code>) and write out the information for the next variable.</p>
+<p>List the normally distributed random variables in the <code>Normal variables</code> text area (e.g., “demand 2000 1000”). Note that the first number is the <strong>mean</strong> and the second the <strong>standard deviation</strong>.</p>
+<p>List the random variables with a discrete distribution in the <code>Discrete variables</code> text area (e.g., “price 5 .3 8 .7)” where <strong>for each pair of numbers the first is the value and the second the probability</strong>). Note that the probabilities should sum to 1.</p>
+<p>To perform a calculation using the variables specified in the various text input boxes create a formula in the <code>Formula</code> input box (e.g., “profit = demand * (price - cost)”). Note that you can enter multiple formulas. If, for example, you would also like to calculate the margin for each simulation press <code>return</code> (or use <code>;</code>) after the first formula and type “margin = price - cost”.</p>
+<p>The value shown in the <code># runs</code> input determines the number of simulation runs that will be used. To repeat a simulation with the same randomly generated values enter a number into <code>Random seed</code> input.</p>
+<p>To save the simulated data for further analysis in Radiant specify a name in the <code>Sim name</code> input box. You can then investigate the simulated data by choosing the specified name from the <code>Datasets</code> dropdown in any of the other Data tabs.</p>
+<p>When all desired inputs have been specified press the <code>Simulate</code> button to generate output.</p>
+<p>In the screen shot shown below <code>var_cost</code> and <code>fixed_cost</code> are specified as constants. <code>demand</code> is a normally distributed with a mean of 1000 and a standard deviation of 100. <code>price</code> is a discrete random variable that is set to $5 (30% probability) or $8 (70% probability). There are two formulas. The first updates the demand variable and specifies how demand levels change as a function of price. The second formula specifies the profit function.</p>
+<p><img src="figures_quant/simulater.png" alt="sim output" /></p>
+<p>Because we specified a name in the <code>Sim name</code> box the data are available as <code>sim1</code> within Radiant (see screen shots below). To use the data in Excel go to the Manage tab and save the data to a csv file or use the clipboard feature. For more information see the help file for the Manage tab.</p>
+<p><img src="figures_quant/simulater_view.png" alt="sim output" /> <img src="figures_quant/simulater_viz.png" alt="sim output" /></p>
+<p>The state file for the example above is available for download <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/sim_state.rda?raw=true">here</a></p>
 
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
