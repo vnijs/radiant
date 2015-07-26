@@ -1,8 +1,8 @@
 shinyServer(function(input, output, session) {
 
 	# source shared functions
-	source(file.path(r_path,"base/init.R"), local = TRUE)
-	source(file.path(r_path,"base/radiant.R"), local = TRUE)
+	source(file.path(r_path,"base/init.R"), encoding = r_encoding, local = TRUE)
+	source(file.path(r_path,"base/radiant.R"), encoding = r_encoding, local = TRUE)
 
   # for shiny-server
   if (!"package:radiant" %in% search()) {
@@ -11,7 +11,7 @@ shinyServer(function(input, output, session) {
           pattern="\\.(r|R)$",
           full.names = TRUE)) {
 
-        source(file, local = TRUE)
+        source(file, encoding = r_encoding, local = TRUE)
       }
     } else {
       radiant::copy_all(radiant)
@@ -25,17 +25,17 @@ shinyServer(function(input, output, session) {
 	for (file in list.files(c(file.path(r_path,"base/tools/app"),
 	    									 file.path(r_path,"base/tools/data")),
 												 pattern="\\.(r|R)$", full.names = TRUE))
-	  source(file, local = TRUE)
+	  source(file, encoding = r_encoding, local = TRUE)
 
 	# source analysis tools from quant app
 	for (file in list.files(file.path(r_path,"quant/tools/analysis"),
 	    									 pattern="\\.(r|R)$", full.names = TRUE))
-	  source(file, local = TRUE)
+	  source(file, encoding = r_encoding, local = TRUE)
 
 	# source additional analysis tools for marketing app
   for (file in list.files(c("tools/analysis"),
       									 pattern="\\.(r|R)$", full.names = TRUE))
-	  source(file, local = TRUE)
+	  source(file, encoding = r_encoding, local = TRUE)
 
   # save state on refresh or browser close
   saveStateOnRefresh(session)
