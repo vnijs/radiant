@@ -85,18 +85,18 @@ summary.dtree <- function(object, ...) {
   object$jl_init %>%
     print(
       # Level = .$Get("levelName"),
-      Type = .$Get("type", format = rm_terminal),
+      Probability = .$Get("p", format = FormatPercent),
       Payoff = .$Get("payoff", format = print_money),
-      Probability = .$Get("p", format = FormatPercent)
+      Type = .$Get("type", format = rm_terminal)
     )
 
   ## calculations completed
   cat("\n\nFinal decision tree:\n")
   object$jl %>%
     print(
-      Type = .$Get("type", format = rm_terminal),
+      Probability = .$Get("p", format = FormatPercent),
       Payoff = .$Get("payoff", format = print_money),
-      Probability = .$Get("p", format = FormatPercent)
+      Type = .$Get("type", format = rm_terminal)
     )
 
   cat("\n\nDecision:\n")
