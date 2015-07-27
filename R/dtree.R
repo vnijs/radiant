@@ -139,7 +139,8 @@ plot.dtree <- function(x, shiny = FALSE, ...) {
       if (!is.null(node$parent$decision) && node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
       nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle", bg = "red")
       nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
-      edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+      if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+      else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
     } else if(node$type == 'terminal') {
       tiplabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
       if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
