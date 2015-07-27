@@ -54,8 +54,8 @@ output$dtree <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("eval_dtree", "Calculate")),
             td(uiOutput("ui_dtree_vim")),
-            td(downloadButton("save_dtree", "Save output")),
             td(downloadButton("save_yaml", "Save input")),
+            td(downloadButton("save_dtree", "Save output")),
             td(HTML("<div class='form-group shiny-input-container'>
                 <input id='load_yaml' name='load_yaml' type='file' accept='.yaml'/>
               </div>"))
