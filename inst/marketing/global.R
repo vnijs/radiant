@@ -31,6 +31,7 @@ quant_ui <- tagList(
   ),
 
   navbarMenu("Decide",
+    tabPanel("Decision tree", uiOutput("dtree")),
     tabPanel("Simulate", uiOutput("simulater"))
   )
 )

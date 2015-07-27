@@ -56,7 +56,7 @@ observeEvent(input$vim_keys, {
 })
 
 output$ui_vim <- renderUI({
-  ## initialize manual cmd paste to false
+  ## initialize vim_keys to false
   if(is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
   actionButton("vim_keys",
     if(r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")

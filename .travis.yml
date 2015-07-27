@@ -7,3 +7,4 @@ r_github_packages:
   - jimhester/covr
   - rstudio/DT
   - vnijs/MathJaxR
+  - gluc/data.tree

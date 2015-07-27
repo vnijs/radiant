@@ -56,6 +56,7 @@ observe({
 observe({
   if (!is.null(input$cap_upload)) {
     isolate({
+    	## not available as a dataset from the data drop-down
       r_data[["cap_attr"]] <- gsub("\"","\'",readLines(input$cap_upload$datapath))
     })
   }

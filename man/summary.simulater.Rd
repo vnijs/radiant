@@ -15,7 +15,7 @@
 Summary method for the simulater function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/base/simulater.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/simulater.html} for an example in Radiant
 }
 \examples{
 result <- simulater(norm = "demand 2000 1000")

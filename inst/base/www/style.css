@@ -77,7 +77,7 @@ pre {
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
-#rmd_report, #rmd_code {
+#rmd_report, #rmd_code, #dtree_edit {
   position: absolute;
   top: 95px;
   bottom: 0;
@@ -87,7 +87,7 @@ pre {
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
-#rmd_knitted, #rmd_code_output {
+#rmd_knitted, #rmd_code_output, #dtree_print {
   position: absolute;
   top: 95px;
   bottom: 0;

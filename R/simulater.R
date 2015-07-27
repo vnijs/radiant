@@ -4,7 +4,7 @@
 
 #' Simulate data for decision analysis
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/simulater.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/simulater.html} for an example in Radiant
 #'
 #' @param const A string listing the constants to include in the analysis (e.g., "cost = 3; size = 4")
 #' @param norm A string listing the normally distributed random variables to include in the analysis (e.g., "demand 2000 1000" where the first number is the mean and the second is the standard deviation)
@@ -151,7 +151,7 @@ simulater <- function(const = "",
 
 #' Summary method for the simulater function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/simulater.html} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/simulater.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{simulater}}
 #' @param ... further arguments passed to or from other methods
@@ -173,7 +173,7 @@ summary.simulater <- function(object, ...) {
 
 #' Plot method for the simulater function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/base/simulater} for an example in Radiant
+#' @details See \url{http://vnijs.github.io/radiant/quant/simulater} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{simulater}}
 #' @param shiny Did the function call originate inside a shiny app

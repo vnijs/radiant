@@ -17,7 +17,7 @@
 Plot method for the simulater function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/base/simulater} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/simulater} for an example in Radiant
 }
 \examples{
 result <- simulater(const = "cost 3", norm = "demand 2000 1000",

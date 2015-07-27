@@ -6,6 +6,7 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # build('../MathJaxR', binary = TRUE)
 # devtools::install('../DT')
 build('../DT', binary = TRUE)
+build('../data.tree', binary = TRUE)
 build('../radiant', binary = TRUE)
 
 setwd('../')

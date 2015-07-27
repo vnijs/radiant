@@ -1,27 +1,16 @@
 ## turn off warnings globally
-#options(warn=-1)
+# options(warn=-1)
+
+## options to setfor debugging
+# options(shiny.trace = TRUE)
+# options(shiny.error = recover)
+# options(warn = 2)
+# options(warn = 0)
 
 ## encoding
-# options(encoding = "native.enc") ## default
-# options(encoding = "UTF-8")      ## for chines
-## use getOption("encoding") to see if things were changed
-
-# loc <- function(os, language = "english") {
-#   switch(language,
-#          english = ifelse(os == "Windows", "English_United States.1252", "en_US.UTF-8"),
-#          chinese = ifelse(os == "Windows", "Chinese", "zh_CN.utf-8"))
-# }
-
-## list of global variables
 # options(r_encoding = getOption("encoding"))
 # r_encoding = getOption("encoding")
 r_encoding = "UTF-8"
-
-## setting local
-# Sys.setlocale(category = "LC_ALL", loc(Sys.info()[["sysname"]]))
-# Sys.setlocale(category = "LC_ALL", loc(Sys.info()[["sysname"]], "chinese"))
-## use Sys.setlocale() to see if things were changed
-# Sys.setlocale()
 
 ## path to use for local and server use
 # r_path <- ifelse((file.exists("../base") && file.exists("../quant")), "..",
@@ -48,7 +37,7 @@ options("scipen" = 100)
 r_pkgs <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
             "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
             "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
-            "htmlwidgets", "readr", "rmarkdown", "shinyAce")
+            "htmlwidgets", "readr", "rmarkdown", "shinyAce", "data.tree")
 # options(r_pkgs = r_pkgs); rm(r_pkgs)
 
 ## list of function arguments
@@ -105,11 +94,6 @@ if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
   withMathJax <- MathJaxR::withMathJaxR
 }
 
-## options used for debugging
-# options(shiny.trace = TRUE)
-# options(shiny.error = recover)
-# options(warn=2)
-# options(warn=0)
 
 ## Windows or Mac
 # if (.Platform$OS.type == 'windows') {
@@ -132,6 +116,8 @@ shared_ui <-
     navbarMenu(title = "", id = "State", icon = icon("save"),
                tabPanel(downloadLink("saveStateNav", " Save state", class = "fa fa-download")),
                ## waiting for this feature in Shiny
+               # tabPanel(tags$a(id = "loadStateNav", href = "", class = "shiny-input-container",
+               #                 type='file', accept='.rmd,.Rmd,.md', list(icon("refresh"), "Refresh"))),
                # tabPanel(uploadLink("loadState", "Load state"), icon = icon("folder-open")),
                tabPanel(actionLink("shareState", "Share state", icon = icon("share"))),
                tabPanel("View state", uiOutput("view_state"), icon = icon("user"))
@@ -157,7 +143,9 @@ shared_ui <-
                tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
                tabPanel("About", uiOutput("help_about"), icon = icon("info")),
                tabPanel(tags$a("", href = "http://vnijs.github.io/radiant/", target = "_blank",
-                               list(icon("globe"), "Radiant docs")))
+                               list(icon("globe"), "Radiant docs"))),
+               tabPanel(tags$a("", href = "https://github.com/vnijs/radiant/issues", target = "_blank",
+                               list(icon("github"), "Report issue")))
     ),
 
     tags$head(
