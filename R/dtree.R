@@ -115,37 +115,45 @@ plot.dtree <- function(x, shiny = FALSE, ...) {
   ## copied from https://github.com/gluc/useR15/blob/master/01_showcase/02_decision_tree.R
   ## fit with diagrammer?
 
-  # library(ape)
-  # jl <- x$jl
-  # jl$Revert()
-  # jlp <- as.phylo(jl)
-  # par(mar=c(1,1,1,1))
-  # plot(jlp, show.tip.label = FALSE, type = "cladogram")
+  library(ape)
+  jl <- x$jl
+  jl$Revert()
+  jlp <- as.phylo(jl)
+  par(mar=c(1,1,1,1))
+  plot(jlp, show.tip.label = FALSE, type = "cladogram")
 
-  # nodelabel <- function(x) {
-  #   po <- paste0( '$ ', format(x$payoff, scientific = FALSE, big.mark = "'"))
-  #   if (x$type == 'terminal') return (po)
-  #   return ( paste0('ER\n', po) )
-  # }
+  nodelabel <- function(x) {
+    po <- paste0( '$ ', format(x$payoff, scientific = FALSE, big.mark = ","))
+    if (x$type == 'terminal') return (po)
+    return ( paste0('ER\n', po) )
+  }
 
   # for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), arrows = 2, type = "triangle", angle = 60)
+  for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), arrows = 0, type = "triangle", angle = 60)
 
-  # for(node in jl$Get(function(x) x)) {
-  #   if(node$type == 'decision') {
-  #     nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.3, -0.5))
-  #   } else if(node$type == 'chance') {
-  #     if (node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
-  #     nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle")
-  #     nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
-  #     edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "white")
-  #   } else if(node$type == 'terminal') {
-  #     tiplabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
-  #     edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "white")
-  #   }
-  # }
+  for(node in jl$Get(function(x) x)) {
+    if(node$type == 'decision') {
+      nodelabels(" ", GetPhyloNr(node, "node"), bg = "green")
+      nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.3, -0.5))
+    } else if(node$type == 'chance') {
+      if (!is.null(node$parent$decision) && node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
+      nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle", bg = "red")
+      nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
+      edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+    } else if(node$type == 'terminal') {
+      tiplabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
+      if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+      else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+    }
+  }
 
-  # nodelabels("   ", GetPhyloNr(jl, "node"), frame = "rect")
+  nodelabels("   ", GetPhyloNr(jl, "node"), frame = "none")
 
   # sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
   #   { if (shiny) . else print(.) }
 }
+
+# yl <- yaml::yaml.load_file("~/Desktop/data.tree/quant_job.yaml")
+# library(data.tree)
+# dtree(yl) %>% summary
+# x <- dtree(yl)
