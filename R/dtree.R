@@ -120,48 +120,76 @@ plot.dtree <- function(x, shiny = FALSE, ...) {
   ## copied from https://github.com/gluc/useR15/blob/master/01_showcase/02_decision_tree.R
   ## fit with diagrammer?
 
+  library(DiagrammeR)
   library(ape)
   jl <- x$jl
 
   ## reverse sort order
-  jl$Revert()
+  # jl$Revert()
 
-  ## need for ape
-  jlp <- as.phylo(jl)
-
-  par(mar=c(1,1,1,1))
-  plot(jlp, show.tip.label = FALSE, type = "cladogram")
+  ## needed for ape
+  # jlp <- as.phylo(jl)
+  # par(mar=c(1,1,1,1))
+  # plot(jlp, show.tip.label = FALSE, type = "cladogram")
 
   nodelabel <- function(x) {
-    po <- paste0( '$ ', format(x$payoff, scientific = FALSE, big.mark = ","))
-    if (x$type == 'terminal') return (po)
-    # po
-    return ( paste0('ER\n', po) )
+    paste0( '$ ', format(x$payoff, scientific = FALSE, big.mark = ","))
   }
-
-  for (node in jl$leaves) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), arrows = 2, type = "triangle", angle = 60)
 
   ## all leaves
-  # for (node in jl$leaves) print(node)
+  # for (node in jl$leaves) print(node$parent)
 
+#   jl$levelName
+#   jl$isRoot
+#   jl$children
+
+  mm <- "graph LR\n"
+
+  id <- 0
   for(node in jl$Get(function(x) x)) {
-    if(node$type == 'decision') {
-      nodelabels(" ", GetPhyloNr(node, "node"), bg = "green")
-      nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.3, -0.5))
-    } else if(node$type == 'chance') {
-      if (!is.null(node$parent$decision) && node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
-      nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle", bg = "red")
-      nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
-      if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-      else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-    } else if(node$type == 'terminal') {
-      tiplabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
-      if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-      else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-    }
-  }
+    id <- id + 1
 
-  nodelabels("   ", GetPhyloNr(jl, "node"), frame = "none")
+    mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
+#     if(node$isRoot)  mm %<>% paste0("id",id,"[ ] --> \n")
+#
+#     if(node$type == 'decision') {
+#       mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
+#     } else if(node$type == 'chance') {
+#       mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
+#     } else if(node$type == 'terminal') {
+#       mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
+#     }
+  }
+  cat(mm)
+
+  # desired end product - replace A, B, etc. by id1, id2, etc.
+  mm %<>% paste0("A[ ] --> |Accept John's Offer| B[$12,000]\n A --> |Reject John's Offer |C(( ))\nC --> |Offer from Vanessa 0.6| D[ ]\n D --> |Accept Vanessa's Offer| E[$14,000]\n D --> |Reject Vanessa's Offer| F(( ))\n C --> |No Offer from Vanessa 0.4| G(( ))\n G --> |Salary 1 0.05| H[$21,600]\n G --> |Salary 2 0.25| I[$16,800]\n G --> |Salary 3 0.40| J[$12,800]\n G --> |Salary 4 0.25| K[$6,000]\n G --> |Salary 5 0.05| L[$0]\n \n F --> |Salary 1 0.05| M[$21,600]\n F --> |Salary 2 0.25| N[$16,800]\n F --> |Salary 3 0.40| O[$12,800]\n F --> |Salary 4 0.25| P[$6,000]\n F --> |Salary 5 0.05| Q[$0]\n \n class A,D decision;\n class C,G,F chance;\n")
+
+  ## formatting specifics for chance and decision nodes
+  mm %<>% paste0("\nclassDef default fill:none, bg:none, stroke-width:0px;\nclassDef decision fill:#9f6,stroke:#333,stroke-width:1px;\nclassDef chance fill:red,stroke:#333,stroke-width:1px;")
+
+  ## produces the plot
+  mermaid(mm)
+
+  ## code for ape
+#   for(node in jl$Get(function(x) x)) {
+#     if(node$type == 'decision') {
+#       nodelabels(" ", GetPhyloNr(node, "node"), bg = "green")
+#       nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.3, -0.5))
+#     } else if(node$type == 'chance') {
+#       if (!is.null(node$parent$decision) && node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
+#       nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle", bg = "red")
+#       nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
+#       if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+#       else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+#     } else if(node$type == 'terminal') {
+#       tiplabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
+#       if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+#       else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
+#     }
+#   }
+
+  # nodelabels("   ", GetPhyloNr(jl, "node"), frame = "none")
 
   # sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
   #   { if (shiny) . else print(.) }
@@ -176,10 +204,7 @@ plot.dtree <- function(x, shiny = FALSE, ...) {
 
 # mermaid("
 # graph LR
-#         A[ ] --> |Accept John's Offer| B[$12,000]
-#         A --> |Reject John's Offer |C(( ))
-#         C --> |Offer from Vanessa 0.6| D[ ]
-#         D --> |Accept Vanessa's Offer| E[$14,000]
+#
 #         D --> |Reject Vanessa's Offer| F(( ))
 #         C --> |No Offer from Vanessa 0.4| G(( ))
 #         G --> |Salary 1 0.05| H[$21,600]
@@ -187,13 +212,17 @@ plot.dtree <- function(x, shiny = FALSE, ...) {
 #         G --> |Salary 3 0.40| J[$12,800]
 #         G --> |Salary 4 0.25| K[$6,000]
 #         G --> |Salary 5 0.05| L[$0]
-
+#
 #         F --> |Salary 1 0.05| M[$21,600]
 #         F --> |Salary 2 0.25| N[$16,800]
 #         F --> |Salary 3 0.40| O[$12,800]
 #         F --> |Salary 4 0.25| P[$6,000]
 #         F --> |Salary 5 0.05| Q[$0]
-
+#         A[ ] --> |Accept John's Offer| B[$12,000]
+#         A --> |Reject John's Offer |C(( ))
+#         C --> |Offer from Vanessa 0.6| D[ ]
+#         D --> |Accept Vanessa's Offer| E[$14,000]
+#
 #         classDef default fill:none, bg:none, stroke-width:0px;
 #         classDef decision fill:#9f6,stroke:#333,stroke-width:1px;
 #         classDef chance fill:red,stroke:#333,stroke-width:1px;
