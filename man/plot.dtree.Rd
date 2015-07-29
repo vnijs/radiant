@@ -4,10 +4,12 @@
 \alias{plot.dtree}
 \title{Plot method for the dtree function}
 \usage{
-\method{plot}{dtree}(x, shiny = FALSE, ...)
+\method{plot}{dtree}(x, final = FALSE, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{dtree}}}
+
+\item{final}{If TRUE plot the decision tree solution, else the initial decision tree}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -20,8 +22,8 @@ Plot method for the dtree function
 See \url{http://vnijs.github.io/radiant/quant/dtree.html} for an example in Radiant
 }
 \seealso{
-\code{\link{single_mean}} to generate the result
+\code{\link{dtree}} to generate the result
 
-\code{\link{summary.single_mean}} to summarize results
+\code{\link{summary.dtree}} to summarize results
 }
 

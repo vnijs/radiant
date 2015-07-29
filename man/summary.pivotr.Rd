@@ -4,10 +4,14 @@
 \alias{summary.pivotr}
 \title{Summary method for pivotr}
 \usage{
-\method{summary}{pivotr}(object, ...)
+\method{summary}{pivotr}(object, chi2 = FALSE, shiny = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}
+
+\item{chi2}{If TRUE calculate the chi-square statistic for the (pivot) table}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

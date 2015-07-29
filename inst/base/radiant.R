@@ -289,6 +289,28 @@ plot_downloader <- function(plot_name, width = plot_width(),
   downloadLink(lnm, "", class = "fa fa-download alignright")
 }
 
+pdf_plot_downloader <- function(plot_name, width = plot_width(),
+                                height = plot_height(), pre = ".plot_", po = "dl_") {
+
+  ## link and output name
+  lnm <- paste0(po, plot_name)
+
+  psize <- . %>% {7 * ./650} %>% round(2)
+  # fext <- . %>% tools::file_ext(.) %>% tolower
+
+  ## create an output
+  output[[lnm]] <- downloadHandler(
+    filename = function() { paste0(plot_name, ".pdf") },
+    content = function(file) {
+        # pr <- session$clientData$pixelratio
+        pdf(file=file, width = psize(width), height = psize(height))
+          get(paste0(pre, plot_name))()
+        dev.off()
+    }
+  )
+  downloadLink(lnm, "", class = "fa fa-download alignright")
+}
+
 stat_tab_panel <- function(menu, tool, tool_ui, output_panels,
                            data = input$dataset) {
   sidebarLayout(

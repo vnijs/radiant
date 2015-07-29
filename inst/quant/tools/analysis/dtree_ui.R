@@ -42,7 +42,9 @@ output$ui_dtree_vim <- renderUI({
 })
 
 output$dtree <- renderUI({
-  tagList(
+  tabsetPanel(
+    id = "tabs_dtree",
+    tabPanel("Model",
     with(tags,
       table(
             td(help_modal('Decision tree','dtree_help',
@@ -52,12 +54,12 @@ output$dtree <- renderUI({
             # td(actionLink("dtree_report", "", class="glyphicon glyphicon-book")),
             td(HTML("<i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input' href='' id='dtree_report'></i>")),
             td(HTML("&nbsp;&nbsp;")),
-            td(actionButton("eval_dtree", "Calculate")),
+            td(actionButton("dtree_eval", "Calculate")),
             td(uiOutput("ui_dtree_vim")),
-            td(downloadButton("save_yaml", "Save input")),
-            td(downloadButton("save_dtree", "Save output")),
+            td(downloadButton("dtree_save_yaml", "Save input")),
+            td(downloadButton("dtree_save", "Save output")),
             td(HTML("<div class='form-group shiny-input-container'>
-                <input id='load_yaml' name='load_yaml' type='file' accept='.yaml'/>
+                <input id='dtree_load_yaml' name='dtree_load_yaml' type='file' accept='.yaml'/>
               </div>"))
       )
     ),
@@ -67,55 +69,77 @@ output$dtree <- renderUI({
               wordWrap = TRUE,
               height = "auto",
               value = state_init("dtree_edit", dtree_example),
-              hotkeys = list(run_dtree = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
+              hotkeys = list(dtree_run = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     verbatimTextOutput("dtree_print")
+  ),
+    tabPanel("Plot",
+      pdf_plot_downloader("dtree", height = 600),
+      with(tags, table(
+        td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
+          c("Initial" = FALSE, "Final" = TRUE),
+          selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
+        td(actionButton("dtree_eval_plot", "Calculate"))
+      )),
+      DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px"))
   )
 })
-
-## Knit for report in Radiant
-# knitIt2 <- function(text) {
-#   # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
-#   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
-#         envir = r_data$r_knitr), stylesheet = "",
-#         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-#         "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
-# }
 
 vals_dtree <- reactiveValues(dtree_run = 0)
 
 observe({
-  input$run_dtree
-  if (!is.null(input$eval_dtree)) isolate(vals_dtree$dtree_run %<>% add(1))
+  input$dtree_run
+  input$dtree_eval_plot
+  if (!is.null(input$dtree_eval)) isolate(vals_dtree$dtree_run %<>% add(1))
 })
 
-eval_dtree <- reactive({
+dtree_eval <- reactive({
   if (vals_dtree$dtree_run == 1) return(invisible())
-  # if (not_pressed(input$eval_dtree) && not_pressed(input$run_dtree$randNum)) return(invisible())
+  # if (not_pressed(input$dtree_eval) && not_pressed(input$dtree_run$randNum)) return(invisible())
   isolate({
     if (input$dtree_edit != "") {
       withProgress(message = 'Creating decision tree', value = 0, {
-        dtree(input$dtree_edit) %>% summary
+        # dtree(input$dtree_edit) %>% summary
+        dtree(input$dtree_edit)
       })
     }
   })
 })
 
 output$dtree_print <- renderPrint({
-  eval_dtree()
+  dtree_eval() %>% {if (is.null(.)) invisible() else summary(.)}
 })
 
-output$save_dtree <- downloadHandler(
+output$dtree_plot <- DiagrammeR::renderDiagrammeR({
+  if (is_empty(input$dtree_plot_init)) return(invisible())
+  dt <- dtree_eval()
+  if (is.null(dt)) {
+    return(invisible())
+  } else {
+    grViz({ plot(dt, final = input$dtree_plot_init, shiny = TRUE) })
+  }
+})
+
+.plot_dtree <- reactive({
+  if (is_empty(input$dtree_plot_init)) return(invisible())
+  dt <- dtree_eval()
+  if (is.null(dt)) {
+    return(invisible())
+  } else {
+    plot(dt, final = input$dtree_plot_init, shiny = FALSE)
+  }
+})
+
+output$dtree_save <- downloadHandler(
   filename = function() {"dtree.txt"},
   content = function(file) {
     isolate({
       # dtree(input$dtree_edit) %>% summary %>% cat(.,file=file,sep="\n")
       capture.output(dtree(input$dtree_edit) %>% summary) %>% cat(.,file=file,sep="\n")
-      # knitIt(input$dtree_edit) %>% cat(.,file=file,sep="\n")
     })
   }
 )
 
-output$save_yaml <- downloadHandler(
+output$dtree_save_yaml <- downloadHandler(
   filename = function() {"dtree.yaml"},
   content = function(file) {
     isolate({
@@ -126,7 +150,7 @@ output$save_yaml <- downloadHandler(
 
 observe({
   ## loading yaml file from disk
-  inFile <- input$load_yaml
+  inFile <- input$dtree_load_yaml
   if (!is.null(inFile) && !is.na(inFile)) {
     isolate({
       yaml_file <- paste0(readLines(inFile$datapath), collapse = "\n")

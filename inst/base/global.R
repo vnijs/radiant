@@ -34,7 +34,7 @@ options("width"  = 200)
 options("scipen" = 100)
 
 ## pkgs used
-r_pkgs <- c("car", "gridExtra", "GPArotation", "psych", "wordcloud",
+r_pkgs <- c("DiagrammeR", "car", "gridExtra", "GPArotation", "psych", "wordcloud",
             "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
             "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
             "htmlwidgets", "readr", "rmarkdown", "shinyAce", "data.tree",

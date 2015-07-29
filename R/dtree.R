@@ -108,156 +108,80 @@ summary.dtree <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/dtree.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{dtree}}
+#' @param final If TRUE plot the decision tree solution, else the initial decision tree
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
-#' @seealso \code{\link{single_mean}} to generate the result
-#' @seealso \code{\link{summary.single_mean}} to summarize results
+#' @seealso \code{\link{dtree}} to generate the result
+#' @seealso \code{\link{summary.dtree}} to summarize results
 #'
 #' @export
-plot.dtree <- function(x, shiny = FALSE, ...) {
+plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 
-  ## copied from https://github.com/gluc/useR15/blob/master/01_showcase/02_decision_tree.R
-  ## fit with diagrammer?
+  ## based on https://gist.github.com/gluc/79ef7a0e747f217ca45e
+  jl <- if (final) x$jl else x$jl_init
 
-  library(DiagrammeR)
-  library(ape)
-  jl <- x$jl
+  ## create ids
+  jl$Set(id = paste0("id", 1:jl$totalCount))
 
-  ## reverse sort order
-  # jl$Revert()
-
-  ## needed for ape
-  # jlp <- as.phylo(jl)
-  # par(mar=c(1,1,1,1))
-  # plot(jlp, show.tip.label = FALSE, type = "cladogram")
-
-  nodelabel <- function(x) {
-    paste0( '$ ', format(x$payoff, scientific = FALSE, big.mark = ","))
+  ## create start labels
+  FromLabel <- function(node) {
+    if (node$parent$isRoot) ToLabel(node$parent)
+    else as.character(node$parent$id)
   }
 
-  ## all leaves
-  # for (node in jl$leaves) print(node$parent)
+  ## create arrow labels
+  EdgeLabel <- function(node) {
+    if (node$isRoot) {
+      return (" ")
+    } else if (node$parent$type == "decision") {
+      lbl <- node$name
+    } else if (node$parent$type == "chance") {
+      lbl <- paste0(node$name,": ", node$p)
+    } else if (node$type == "terminal") {
+      lbl <- paste0(node$name,": ", node$p)
+    }
 
-#   jl$levelName
-#   jl$isRoot
-#   jl$children
-
-  mm <- "graph LR\n"
-
-  id <- 0
-  for(node in jl$Get(function(x) x)) {
-    id <- id + 1
-
-    mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
-#     if(node$isRoot)  mm %<>% paste0("id",id,"[ ] --> \n")
-#
-#     if(node$type == 'decision') {
-#       mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
-#     } else if(node$type == 'chance') {
-#       mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
-#     } else if(node$type == 'terminal') {
-#       mm %<>% paste0("id",id," ",node$name, " ", node$type, "\n")
-#     }
+    if (!is.null(node$parent$decision) && node$name == node$parent$decision)
+      paste0(" ==> |", lbl, "|")
+    else
+      paste0(" --> |", lbl, "|")
   }
-  cat(mm)
 
-  # desired end product - replace A, B, etc. by id1, id2, etc.
-  mm %<>% paste0("A[ ] --> |Accept John's Offer| B[$12,000]\n A --> |Reject John's Offer |C(( ))\nC --> |Offer from Vanessa 0.6| D[ ]\n D --> |Accept Vanessa's Offer| E[$14,000]\n D --> |Reject Vanessa's Offer| F(( ))\n C --> |No Offer from Vanessa 0.4| G(( ))\n G --> |Salary 1 0.05| H[$21,600]\n G --> |Salary 2 0.25| I[$16,800]\n G --> |Salary 3 0.40| J[$12,800]\n G --> |Salary 4 0.25| K[$6,000]\n G --> |Salary 5 0.05| L[$0]\n \n F --> |Salary 1 0.05| M[$21,600]\n F --> |Salary 2 0.25| N[$16,800]\n F --> |Salary 3 0.40| O[$12,800]\n F --> |Salary 4 0.25| P[$6,000]\n F --> |Salary 5 0.05| Q[$0]\n \n class A,D decision;\n class C,G,F chance;\n")
+  FormatPayoff <- function(payoff) {
+    paste0("$", format(payoff, scientific = FALSE, big.mark = ","))
+  }
 
-  ## formatting specifics for chance and decision nodes
-  mm %<>% paste0("\nclassDef default fill:none, bg:none, stroke-width:0px;\nclassDef decision fill:#9f6,stroke:#333,stroke-width:1px;\nclassDef chance fill:red,stroke:#333,stroke-width:1px;")
+  ToLabel <- function(node) {
+    po <- if (final) FormatPayoff(node$payoff) else " "
+    if (node$type == "decision") {
+      lbl <- paste0("[", po, "]")
+    } else if (node$type == "chance") {
+      lbl <- paste0("((", po, "))")
+    } else if (node$type == "terminal") {
+      lbl <- paste0("[", FormatPayoff(node$payoff), "]")
+    }
+    paste0(" ", node$id, lbl)
+  }
 
-  ## produces the plot
-  mermaid(mm)
+  style <- paste0(
+    "classDef default fill:none, bg:none, stroke-width:0px;
+    classDef decision fill:#9f6,stroke:#333,stroke-width:1px;
+    classDef chance fill:red,stroke:#333,stroke-width:1px;
+    class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
+    class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
+  trv <- Traverse(jl, traversal = "level", filterFun = isNotRoot)
+  df <- data.frame(from = Get(trv, FromLabel), edge = Get(trv, EdgeLabel), to = Get(trv, ToLabel))
 
-  ## code for ape
-#   for(node in jl$Get(function(x) x)) {
-#     if(node$type == 'decision') {
-#       nodelabels(" ", GetPhyloNr(node, "node"), bg = "green")
-#       nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.3, -0.5))
-#     } else if(node$type == 'chance') {
-#       if (!is.null(node$parent$decision) && node$name == node$parent$decision) edges(GetPhyloNr(node$parent, "node"), GetPhyloNr(node, "node"), col = "red")
-#       nodelabels(" ", GetPhyloNr(node, "node"), frame = "circle", bg = "red")
-#       nodelabels(nodelabel(node), GetPhyloNr(node, "node"), frame = 'none', adj = c(0.5, -0.5))
-#       if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-#       else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-#     } else if(node$type == 'terminal') {
-#       tiplabels(nodelabel(node), GetPhyloNr(node, "node"), frame = "none", adj = c(0.5, -0.6))
-#       if (!is.null(node$p)) edgelabels(paste0(node$name," (", node$p, ")"), GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-#       else edgelabels(node$name, GetPhyloNr(node, "edge"), bg = "none", frame = 'none')
-#     }
-#   }
-
-  # nodelabels("   ", GetPhyloNr(jl, "node"), frame = "none")
-
-  # sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
-  #   { if (shiny) . else print(.) }
+  paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
+    style, sep = "\n") %>%
+    {if (shiny) . else DiagrammeR(.)}
 }
 
 # library(data.tree); library(yaml); library(radiant)
+# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
+# dtree(yl) %>% plot(shiny = TRUE)
+# dtree(yl) %>% plot(final = TRUE)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
-# x <- dtree(yl)
-# dtree(yl) %>% summary
-# yl <- dtree(yl)
-# save(yl, file = "~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.rda")
-
-# mermaid("
-# graph LR
-#
-#         D --> |Reject Vanessa's Offer| F(( ))
-#         C --> |No Offer from Vanessa 0.4| G(( ))
-#         G --> |Salary 1 0.05| H[$21,600]
-#         G --> |Salary 2 0.25| I[$16,800]
-#         G --> |Salary 3 0.40| J[$12,800]
-#         G --> |Salary 4 0.25| K[$6,000]
-#         G --> |Salary 5 0.05| L[$0]
-#
-#         F --> |Salary 1 0.05| M[$21,600]
-#         F --> |Salary 2 0.25| N[$16,800]
-#         F --> |Salary 3 0.40| O[$12,800]
-#         F --> |Salary 4 0.25| P[$6,000]
-#         F --> |Salary 5 0.05| Q[$0]
-#         A[ ] --> |Accept John's Offer| B[$12,000]
-#         A --> |Reject John's Offer |C(( ))
-#         C --> |Offer from Vanessa 0.6| D[ ]
-#         D --> |Accept Vanessa's Offer| E[$14,000]
-#
-#         classDef default fill:none, bg:none, stroke-width:0px;
-#         classDef decision fill:#9f6,stroke:#333,stroke-width:1px;
-#         classDef chance fill:red,stroke:#333,stroke-width:1px;
-#         class A,D decision;
-#         class C,G,F chance;
-# ")
-
-
-# data(acme)
-# print(acme)
-# acme$fieldsAll
-# acme$count
-# acme$totalCount
-# acme$isRoot
-# acme$depth
-# print(acme, "p", "cost")
-#
-# outsource <- acme$Climb("IT", "Outsource")
-# class(outsource)
-# print(outsource)
-# outsource$fields
-# outsource$isLeaf
-# outsource$level
-# outsource$path
-# outsource$p
-# outsource$parent$name
-# outsource$root$name
-# outsource$expCost <- outsource$p * outsource$cost
-# print(acme, "expCost")
-#
-# acme$Get("p")
-# acme$Do(function(x) x$expCost <- x$p * x$cost)
-# acme$Get("expCost", filterFun = isLeaf)
-#
-# ToDataFrameTable(acme, "name", "p", "cost", "level", "pathString")
-# ToDataFrameTree(acme, "name", "p", "cost", "level")
-# ToDataFrameTaxonomy(acme, "p", "cost")
-#
+# dtree(yl) %>% plot
+# dtree(yl) %>% plot(final = TRUE)

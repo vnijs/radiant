@@ -190,6 +190,9 @@ url_list <-
                                           "Predict" = "regression/glm/predict/",
                                           "Plot"    = "regression/glm/plot/")),
 
+       "Decision tree"    = list("tabs_dtree"    = list("Model" = "decide/dtree/",
+                                                        "Plot"  = "decide/dtree/plot/")),
+
        "Simulate"    = list("tabs_simulate"    = list("Model"   = "decide/simulate/",
                                                       "Repeat"  = "decide/simulate/repeat/"))
   )

@@ -132,6 +132,7 @@ pivotr <- function(dataset,
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
+#' @param chi2 If TRUE calculate the chi-square statistic for the (pivot) table
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'

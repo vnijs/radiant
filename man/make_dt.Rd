@@ -22,12 +22,12 @@ See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radi
 \examples{
 pivotr("diamonds", cvars = "cut") \%>\% make_dt
 pivotr("diamonds", cvars = c("cut","clarity")) \%>\% make_dt(format = "color_bar")
-pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\%
-  make_dt(format = "color_bar", check = "perc")
+ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\%
+   make_dt(format = "color_bar", check = "perc")
 }
 \seealso{
 \code{\link{pivotr}} to create the pivot-table using dplyr
 
-\code{\link{summary.pivotr}} to print a plain table
+\code{\link{summary.pivotr}} to print a plain text table
 }
 

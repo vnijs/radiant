@@ -97,6 +97,15 @@ pre {
   overflow-y: scroll;
 }
 
+/* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
+#dtree_print {
+  top: 150px;
+}
+
+#dtree_edit {
+  top: 150px;
+}
+
 .navbar {
   margin-bottom: 5px;
 }
