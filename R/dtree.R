@@ -185,7 +185,6 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 
   style <- paste0(
     "classDef default fill:none, bg:none, stroke-width:0px;
-
     classDef chance fill:#FF8C00,stroke:#333,stroke-width:1px;
     classDef decision fill:#9ACD32,stroke:#333,stroke-width:1px;
     class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
