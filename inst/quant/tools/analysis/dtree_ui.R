@@ -47,20 +47,15 @@ output$dtree <- renderUI({
     tabPanel("Model",
     with(tags,
       table(
-            td(help_modal('Decision tree','dtree_help',
-                       inclMD(file.path(r_path,"quant/tools/help/dtree.md")))),
+            td(help_modal('Decision tree','dtree_help', inclMD(file.path(r_path,"quant/tools/help/dtree.md")))),
             td(HTML("&nbsp;&nbsp;")),
-            # td(actionLink("dtree_report", "", icon = icon("book"))),
-            # td(actionLink("dtree_report", "", class="glyphicon glyphicon-book")),
             td(HTML("<i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input' href='' id='dtree_report'></i>")),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("dtree_eval", "Calculate")),
             td(uiOutput("ui_dtree_vim")),
             td(downloadButton("dtree_save_yaml", "Save input")),
             td(downloadButton("dtree_save", "Save output")),
-            td(HTML("<div class='form-group shiny-input-container'>
-                <input id='dtree_load_yaml' name='dtree_load_yaml' type='file' accept='.yaml'/>
-              </div>"))
+            td(HTML("<div class='form-group shiny-input-container'><input id='dtree_load_yaml' name='dtree_load_yaml' type='file' accept='.yaml'/></div>"))
       )
     ),
 
@@ -73,7 +68,7 @@ output$dtree <- renderUI({
     verbatimTextOutput("dtree_print")
   ),
     tabPanel("Plot",
-      pdf_plot_downloader("dtree", height = 600),
+      actionLink("dtree_save_plot", "", class = "fa fa-download alignright", onclick = "window.print();"),
       with(tags, table(
         td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
           c("Initial" = FALSE, "Final" = TRUE),
@@ -94,11 +89,9 @@ observe({
 
 dtree_eval <- reactive({
   if (vals_dtree$dtree_run == 1) return(invisible())
-  # if (not_pressed(input$dtree_eval) && not_pressed(input$dtree_run$randNum)) return(invisible())
   isolate({
     if (input$dtree_edit != "") {
       withProgress(message = 'Creating decision tree', value = 0, {
-        # dtree(input$dtree_edit) %>% summary
         dtree(input$dtree_edit)
       })
     }
@@ -115,7 +108,7 @@ output$dtree_plot <- DiagrammeR::renderDiagrammeR({
   if (is.null(dt)) {
     return(invisible())
   } else {
-    grViz({ plot(dt, final = input$dtree_plot_init, shiny = TRUE) })
+    DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
   }
 })
 
@@ -125,7 +118,8 @@ output$dtree_plot <- DiagrammeR::renderDiagrammeR({
   if (is.null(dt)) {
     return(invisible())
   } else {
-    plot(dt, final = input$dtree_plot_init, shiny = FALSE)
+    # DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
+    plot(dt, final = input$dtree_plot_init, shiny = TRUE)
   }
 })
 
@@ -133,7 +127,6 @@ output$dtree_save <- downloadHandler(
   filename = function() {"dtree.txt"},
   content = function(file) {
     isolate({
-      # dtree(input$dtree_edit) %>% summary %>% cat(.,file=file,sep="\n")
       capture.output(dtree(input$dtree_edit) %>% summary) %>% cat(.,file=file,sep="\n")
     })
   }

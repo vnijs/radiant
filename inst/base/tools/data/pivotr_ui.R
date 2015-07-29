@@ -115,7 +115,7 @@ output$pivotr <- DT::renderDataTable({
 })
 
 output$pivotr_chi2 <- renderPrint({
-  if(!input$pvt_chi2) return()
+  if(!input$pvt_chi2) return(invisible())
   .pivotr() %>% {if (is.null(.)) return(invisible())
                  else summary(., chi2 = TRUE, shiny = TRUE)}
 })

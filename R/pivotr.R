@@ -171,9 +171,10 @@ summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
   if (chi2) {
     cst <- object$tab %>% filter(.[[1]] != "Total") %>%
       select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
+      mutate_each(funs(rep_na = ifelse(is.na(.),0,.))) %>%
       {sshhr(chisq.test(., correct = FALSE))}
 
-    cst %>% tidy %>% round(3) -> res
+    res <- cst %>% tidy %>% {if (.$p.value < .001) .$p.value <- 0; .} %>% round(3)
     if (res$p.value < .001) res$p.value  <- "< .001"
     l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
     l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5")

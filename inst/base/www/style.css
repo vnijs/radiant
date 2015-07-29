@@ -2,17 +2,6 @@
   width: auto;
 }
 
-/*
-[data-value="View"] {
-  overflow-x: auto;
-}
-
-.row {
-  margin-right: auto;
-  margin-left: auto;
-}
-*/
-
 th, td {
   text-align: left;
 }
@@ -76,6 +65,10 @@ pre {
   float: right;
 }
 
+.color_bar {
+    background-color: blue;
+}
+
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
 #rmd_report, #rmd_code, #dtree_edit {
   position: absolute;
@@ -104,6 +97,24 @@ pre {
 
 #dtree_edit {
   top: 150px;
+}
+
+.mermaid g .edgeLabel span { background: white !important; }
+
+/* print option relevant to print a decision tree to pdf */
+/* based on http://stackoverflow.com/a/2618980/1974918 */
+@media print {
+  #dtree * {
+    visibility: hidden;
+  }
+  #dtree_plot, #dtree_plot * {
+    visibility: visible;
+  }
+  #dtree_plot {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 
 .navbar {

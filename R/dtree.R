@@ -79,6 +79,11 @@ summary.dtree <- function(object, ...) {
   }
 
   rm_terminal <- . %>% {if(. == "terminal") "" else .}
+  # format_percent <- . %>% as.character %>% sprintf("%.2f%%", . * 100)
+
+  ## set parent type
+  nt <- object$jl_init$Get(function(x) x$parent$type)
+  object$jl_init$Set(ptype = nt)
 
   ## initial setup
   cat("Initial decision tree:\n")
@@ -87,8 +92,18 @@ summary.dtree <- function(object, ...) {
       # Level = .$Get("levelName"),
       Probability = .$Get("p", format = FormatPercent),
       Payoff = .$Get("payoff", format = print_money),
-      Type = .$Get("type", format = rm_terminal)
+      # Type = .$Get("type", format = rm_terminal),
+      Type = .$Get("ptype")
     )
+
+  pn <- object$jl$Get(function(x) x$parent$type)
+  ptype <- function(dt) {
+    dt %>% .$Get(function(x) x$parent$type) %>% dt$Set(ptype = .)
+  }
+
+  ## set parent type
+  nt <- object$jl$Get(function(x) x$parent$type)
+  object$jl$Set(ptype = nt)
 
   ## calculations completed
   cat("\n\nFinal decision tree:\n")
@@ -96,7 +111,8 @@ summary.dtree <- function(object, ...) {
     print(
       Probability = .$Get("p", format = FormatPercent),
       Payoff = .$Get("payoff", format = print_money),
-      Type = .$Get("type", format = rm_terminal)
+      # , Type = .$Get("type", format = rm_terminal)
+      Type = .$Get("ptype")
     )
 
   cat("\n\nDecision:\n")
@@ -121,6 +137,9 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
   ## based on https://gist.github.com/gluc/79ef7a0e747f217ca45e
   jl <- if (final) x$jl else x$jl_init
 
+  # jl <- x$jl_init
+  # final <- FALSE
+
   ## create ids
   jl$Set(id = paste0("id", 1:jl$totalCount))
 
@@ -143,9 +162,9 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
     }
 
     if (!is.null(node$parent$decision) && node$name == node$parent$decision)
-      paste0(" ==> |", lbl, "|")
+      paste0(" === |", lbl, "|")
     else
-      paste0(" --> |", lbl, "|")
+      paste0(" --- |", lbl, "|")
   }
 
   FormatPayoff <- function(payoff) {
@@ -166,22 +185,30 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 
   style <- paste0(
     "classDef default fill:none, bg:none, stroke-width:0px;
-    classDef decision fill:#9f6,stroke:#333,stroke-width:1px;
-    classDef chance fill:red,stroke:#333,stroke-width:1px;
+
+    classDef chance fill:#FF8C00,stroke:#333,stroke-width:1px;
+    classDef decision fill:#9ACD32,stroke:#333,stroke-width:1px;
     class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
     class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
   trv <- Traverse(jl, traversal = "level", filterFun = isNotRoot)
+
   df <- data.frame(from = Get(trv, FromLabel), edge = Get(trv, EdgeLabel), to = Get(trv, ToLabel))
+
+#9f6
+  # paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
+  #   style, sep = "\n") %>% DiagrammeR::DiagrammeR(.)
 
   paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
     style, sep = "\n") %>%
-    {if (shiny) . else DiagrammeR(.)}
+    {if (shiny) . else DiagrammeR::DiagrammeR(.)}
 }
 
 # library(data.tree); library(yaml); library(radiant)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
+# x <- dtree(yl)
 # dtree(yl) %>% plot(shiny = TRUE)
 # dtree(yl) %>% plot(final = TRUE)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
+# x <- dtree(yl)
 # dtree(yl) %>% plot
 # dtree(yl) %>% plot(final = TRUE)
