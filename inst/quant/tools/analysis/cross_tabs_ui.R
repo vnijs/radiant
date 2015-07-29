@@ -28,7 +28,8 @@ output$ui_ct_var1 <- renderUI({
 
 output$ui_ct_var2 <- renderUI({
 	vars <- groupable_vars()
-  if (input$ct_var1 %>% not_available) vars <- character(0)
+	# vars <- c("None", groupable_vars())
+  if (not_available(input$ct_var1)) vars <- character(0)
   if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
   	selected = state_single("ct_var2",vars), multiple = FALSE)

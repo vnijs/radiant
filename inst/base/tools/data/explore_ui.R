@@ -2,6 +2,8 @@
 # Explore datasets
 #######################################
 
+default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
+
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user
@@ -12,7 +14,7 @@ expl_inputs <- reactive({
   for (i in r_drop(names(expl_args)))
     expl_args[[i]] <- input[[paste0("expl_",i)]]
 
-  if (is_empty(input$expl_byvar)) expl_args$fun <- c("length", "mean_rm")
+  if (is_empty(input$expl_byvar)) expl_args$fun <- default_funs
 
   expl_args
 })
@@ -37,9 +39,8 @@ output$ui_expl_byvar <- renderUI({
 })
 
 output$ui_expl_fun <- renderUI({
-  if (is_empty(input$expl_byvar)) return()
-
-  sel <- if(is_empty(input$expl_fun)) state_multiple("expl_fun", expl_functions, c("length","mean_rm"))
+  # if (is_empty(input$expl_byvar)) return()
+  sel <- if(is_empty(input$expl_fun)) state_multiple("expl_fun", expl_functions, default_funs)
          else input$expl_fun
 
   selectizeInput("expl_fun", label = "Apply function(s):",
@@ -53,9 +54,8 @@ output$ui_expl_fun <- renderUI({
 })
 
 output$ui_expl_viz <- renderUI({
-  if (is_empty(input$expl_byvar)) return()
-  checkboxInput('expl_viz', 'Show plot',
-                value = state_init("expl_viz", FALSE))
+  # if (is_empty(input$expl_byvar)) return()
+  checkboxInput('expl_viz', 'Show plot', value = state_init("expl_viz", FALSE))
 })
 
 output$ui_Explore <- renderUI({

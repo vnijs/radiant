@@ -51,6 +51,7 @@ pivotr <- function(dataset,
       if (all(cvars == "")) count_(x) else count_(x, cvars)
     else
       mutate_each_(x, "as.numeric", vars = nvar) %>%
+      # summarise_each_(make_funs(fun), vars = nvar)
       summarise_each_(as.formula(paste0("~",fun)), vars = nvar)
   }
 
@@ -131,6 +132,7 @@ pivotr <- function(dataset,
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -141,21 +143,41 @@ pivotr <- function(dataset,
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #'
 #' @export
-summary.pivotr <- function(object, ...) {
+#'
 
-  cat("Pivot table\n")
-  cat("Data       :", object$dataset, "\n")
-  if (object$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
-  cat("Categorical:", object$cvars, "\n")
 
-  if (object$nvar != "n") {
-    cat("Numeric    :", object$nvar, "\n")
-    cat("Function   :", object$fun, "\n")
+# library(radiant)
+# object <- pivotr("diamonds", cvars = "cut:clarity")
+
+summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
+
+  if (!shiny) {
+    cat("Pivot table\n")
+    cat("Data       :", object$dataset, "\n")
+    if (object$data_filter %>% gsub("\\s","",.) != "")
+      cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
+    cat("Categorical:", object$cvars, "\n")
+
+    if (object$nvar != "n") {
+      cat("Numeric    :", object$nvar, "\n")
+      cat("Function   :", object$fun, "\n")
+    }
+    cat("\n")
+    print(object$tab, row.names = FALSE)
+    cat("\n")
   }
-  cat("\n")
 
-  print(object$tab, row.names = FALSE)
+  if (chi2) {
+    cst <- object$tab %>% filter(.[[1]] != "Total") %>%
+      select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
+      {sshhr(chisq.test(., correct = FALSE))}
+
+    cst %>% tidy %>% round(3) -> res
+    if (res$p.value < .001) res$p.value  <- "< .001"
+    l1 <- paste0("Chi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, "\n")
+    l2 <- paste0(sprintf("%.1f",100 * (sum(cst$expected < 5) / length(cst$expected))),"% of cells have expected values below 5")
+    if (shiny) paste0("</br><hr>", l1, "</br>", l2) %>% HTML else cat(l1,l2)
+  }
 }
 
 #' Make a pivot tabel in DT
@@ -169,11 +191,11 @@ summary.pivotr <- function(object, ...) {
 #' @examples
 #' pivotr("diamonds", cvars = "cut") %>% make_dt
 #' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(format = "color_bar")
-#' pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
-#'   make_dt(format = "color_bar", check = "perc")
+#' ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
+#'    make_dt(format = "color_bar", check = "perc")
 #'
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
-#' @seealso \code{\link{summary.pivotr}} to print a plain table
+#' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
 make_dt <- function(pvt, format = "none", check = "") {

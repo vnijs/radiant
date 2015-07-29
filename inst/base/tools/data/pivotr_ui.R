@@ -6,6 +6,7 @@ pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 
 pvt_check <- c("Percentage" = "perc")
+# pvt_check <- c("Percentage" = "perc", "Chi-squared" = "chi2")
 
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 
@@ -64,8 +65,13 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_fun"),
       uiOutput("ui_pvt_normalize"),
       uiOutput("ui_pvt_format"),
-      checkboxGroupInput("pvt_check", NULL, pvt_check,
-        selected = state_init("pvt_check"), inline = TRUE)
+      with(tags, table(
+          td(checkboxGroupInput("pvt_check", NULL, pvt_check,
+               selected = state_init("pvt_check"), inline = TRUE)),
+          td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
+               checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
+        )
+      )
     ),
     help_and_report(modal_title = "Pivotr",
                     fun_name = "pivotr",
@@ -74,6 +80,14 @@ output$ui_Pivotr <- renderUI({
 })
 
 pvt_args <- as.list(formals(pivotr))
+
+observe({
+  ## only allow chi2 if frequencies are shown
+  if (is_empty(input$pvt_normalize, "None") && is_empty(input$pvt_nvar, "None")) return()
+  isolate({
+    if (input$pvt_chi2) updateCheckboxInput(session, "pvt_chi2", value = FALSE)
+  })
+})
 
 ## list of function inputs selected by user
 pvt_inputs <- reactive({
@@ -100,11 +114,17 @@ output$pivotr <- DT::renderDataTable({
   make_dt(pvt, format = input$pvt_format, check = input$pvt_check)
 })
 
+output$pivotr_chi2 <- renderPrint({
+  if(!input$pvt_chi2) return()
+  .pivotr() %>% {if (is.null(.)) return(invisible())
+                 else summary(., chi2 = TRUE, shiny = TRUE)}
+})
+
 observeEvent(input$pivotr_report, {
   isolate({
     update_report(inp_main = clean_args(pvt_inputs(), pvt_args),
                   fun_name = "pivotr", outputs = "summary",
+                  inp_out = list(list(chi2 = input$pvt_chi2)),
                   figs = FALSE)
   })
 })
-

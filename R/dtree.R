@@ -229,3 +229,35 @@ plot.dtree <- function(x, shiny = FALSE, ...) {
 #         class A,D decision;
 #         class C,G,F chance;
 # ")
+
+
+# data(acme)
+# print(acme)
+# acme$fieldsAll
+# acme$count
+# acme$totalCount
+# acme$isRoot
+# acme$depth
+# print(acme, "p", "cost")
+#
+# outsource <- acme$Climb("IT", "Outsource")
+# class(outsource)
+# print(outsource)
+# outsource$fields
+# outsource$isLeaf
+# outsource$level
+# outsource$path
+# outsource$p
+# outsource$parent$name
+# outsource$root$name
+# outsource$expCost <- outsource$p * outsource$cost
+# print(acme, "expCost")
+#
+# acme$Get("p")
+# acme$Do(function(x) x$expCost <- x$p * x$cost)
+# acme$Get("expCost", filterFun = isLeaf)
+#
+# ToDataFrameTable(acme, "name", "p", "cost", "level", "pathString")
+# ToDataFrameTree(acme, "name", "p", "cost", "level")
+# ToDataFrameTaxonomy(acme, "p", "cost")
+#

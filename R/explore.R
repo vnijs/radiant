@@ -27,18 +27,45 @@ explore <- function(dataset,
                     fun = c("length", "mean_rm"),
                     data_filter = "") {
 
-# https://github.com/hadley/dplyr/issues/893
-# structure(list(price = c(580L, 650L, 630L, 706L, 1080L, 3082L,
-# 3328L, 4229L, 1895L, 3546L, 752L, 13003L, 814L, 6115L, 645L,
-# 3749L, 2926L, 765L, 1140L, 1158L), cut = structure(c(2L, 4L,
-# 4L, 2L, 3L, 2L, 2L, 3L, 4L, 1L, 1L, 3L, 2L, 4L, 3L, 3L, 1L, 2L,
-# 2L, 2L), .Label = c("Good", "Ideal", "Premium", "Very Good"), class = "factor")), row.names = c(NA,
-# -20L), .Names = c("price", "cut"), class = "data.frame") %>%
-  # diamonds %>%
-  # group_by(cut) %>%
-  # select(price) %>%
-  # # mutate_each("as.numeric") %>%
-  # summarise(price = median(price))
+
+#  library(dplyr)
+#  dat <- diamonds
+#
+#  dat %>% summarise_each(funs(mean, sum))
+#  isNum <- sapply(dat, is.numeric)
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise(mean = mean(Value), sd = sd(Value))
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(default_funs))
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise(funs(min = "min"))
+#  funs_(default_funs)
+#
+#  library(radiant))
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(default_funs))
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(dfuns))
+#
+#  dfuns <- lapply(default_funs, get)
+#  funs(dfuns)
+#  funs_(default_funs)
+#
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(as.formula(paste0("~",dfuns))))
+#
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(lapply(paste0(dfuns, " = ~",dfuns), as.formula)))
+#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(make_funs(default_funs))
+#
+#
+#
+#  funs_(dfuns) %>%
+#
+#  funs_(dfuns)[[1]]
+#
+#  funs_(as.formula(paste0(dfuns "= ~",dfuns)))
+#
+#  dfuns
+#  dfuns <- default_funs[c(1,3,4)]
+#
+#
+#  default_funs
+#  ?summarise
+#  ?funs
 
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar)
@@ -59,6 +86,7 @@ explore <- function(dataset,
     isNum <- "numeric" == dc | "integer" == dc
 
     ## for median issue in dplyr < .5
+    ## https://github.com/hadley/dplyr/issues/893
     dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
     # dat %<>% group_by_(.dots = byvar) %>% select(which(isNum))
 
@@ -334,3 +362,15 @@ sd_rm <- function(x) sd(x, na.rm = TRUE)
 #'
 #' @export
 sum_rm <- function(x) sum(x, na.rm = TRUE)
+
+#' Make a list of functions-as-formulas to pass to dplyr
+#' @param x List of functions as strings
+#' @return List of functions to pass to dplyr in formula form
+#' @examples
+#' make_funs(c("mean", "sum_rm"))
+#'
+#' @export
+make_funs <- function(x) {
+  xclean <- gsub("_rm$","",x)
+  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula)%>% setNames(xclean))
+}

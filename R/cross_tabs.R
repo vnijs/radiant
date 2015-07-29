@@ -23,8 +23,12 @@ cross_tabs <- function(dataset, var1, var2,
 	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
-	dnn <- c(paste("Group(",var1,")",sep = ""), paste("Variable(",var2,")",sep = ""))
-	tab <- table(dat[,var1], dat[,var2], dnn = dnn)
+
+# 	dnn <- c(paste("Group(",var1,")",sep = ""), paste("Variable(",var2,")",sep = ""))
+# 	tab <- table(dat[,var1], dat[,var2], dnn = dnn)
+	# tab <- table(dat[,var1], dat[,var2])
+	tab <- table(dat[[var1]], dat[[var2]])
+
 	cst <- sshhr( chisq.test(tab, correct = FALSE) )
 
 	# adding the % deviation table

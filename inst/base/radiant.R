@@ -22,6 +22,8 @@ saveSession <- function(session = session) {
 }
 
 observeEvent(input$refresh_radiant, {
+  if(r_local) return()
+  ## use sshhr to aviod warnings if needed
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
   if (file.exists(fn)) unlink(fn, force = TRUE)
 })
