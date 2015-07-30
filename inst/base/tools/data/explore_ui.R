@@ -14,8 +14,6 @@ expl_inputs <- reactive({
   for (i in r_drop(names(expl_args)))
     expl_args[[i]] <- input[[paste0("expl_",i)]]
 
-  if (is_empty(input$expl_byvar)) expl_args$fun <- default_funs
-
   expl_args
 })
 
@@ -32,22 +30,19 @@ output$ui_expl_vars <- renderUI({
 output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    selected = state_multiple("expl_byvar",vars, ""), multiple = TRUE,
+    selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
 
 output$ui_expl_fun <- renderUI({
-  # if (is_empty(input$expl_byvar)) return()
-  sel <- if(is_empty(input$expl_fun)) state_multiple("expl_fun", expl_functions, default_funs)
-         else input$expl_fun
-
+  isolate({
+    sel <- if(is_empty(input$expl_fun))  state_multiple("expl_fun", r_functions, default_funs)
+           else input$expl_fun
+  })
   selectizeInput("expl_fun", label = "Apply function(s):",
-                 choices = expl_functions,
-                 # selected = state_multiple("expl_fun", expl_functions, c("length","mean_rm")),
-                 selected = sel,
-                 multiple = TRUE,
+                 choices = r_functions, selected = sel, multiple = TRUE,
                  options = list(placeholder = 'Select functions',
                                 plugins = list('remove_button', 'drag_drop'))
     )
@@ -78,6 +73,13 @@ output$ui_Explore <- renderUI({
 
 .explore <- reactive({
     do.call(explore, expl_inputs())
+})
+
+output$explorer <- DT::renderDataTable({
+  expl <- .explore()
+  if (is.null(expl)) return()
+  expl$shiny <- TRUE
+  make_expl(expl, format = "None")
 })
 
 output$expl_summary <- renderPrint({

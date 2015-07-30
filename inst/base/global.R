@@ -42,11 +42,10 @@ r_pkgs <- c("DiagrammeR", "car", "gridExtra", "GPArotation", "psych", "wordcloud
 # options(r_pkgs = r_pkgs); rm(r_pkgs)
 
 ## list of function arguments
-expl_functions <-
-  list("n" = "length", "mean" = "mean_rm", "median" = "median_rm",
-       "sum" = "sum_rm", "min" = "min_rm", "max" = "max_rm", "25%" = "p25",
-       "75%" = "p75", "sd" = "sd_rm", "se" = "serr", "cv" = "cv",
-       "skew" = "skew", "kurtosis" = "kurtosi", "# missing" = "nmissing")
+r_functions <-
+  list("n" = "length", "# missing" = "nmissing", "mean" = "mean_rm", "median" = "median_rm",
+       "sum" = "sum_rm", "sd" = "sd_rm", "se" = "serr", "cv" = "cv", "min" = "min_rm",
+       "max" = "max_rm", "25%" = "p25", "75%" = "p75", "skew" = "skew", "kurtosis" = "kurtosi")
 # options(r_functions = r_functions); rm(r_functions)
 
 ## for report and code in menu R

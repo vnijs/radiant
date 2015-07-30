@@ -75,8 +75,17 @@ output$dtree <- renderUI({
           selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
         td(actionButton("dtree_eval_plot", "Calculate"))
       )),
-      DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px"))
-  )
+      DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px")),
+    tabPanel("Sensitivity", verbatimTextOutput("something")
+      # actionLink("dtree_save_splot", "", class = "fa fa-download alignright", onclick = "window.print();"),
+#       with(tags, table(
+#         td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
+#           c("Initial" = FALSE, "Final" = TRUE),
+#           selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
+#         td(actionButton("dtree_eval_plot", "Calculate"))
+#       )),
+      # DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px")
+    ))
 })
 
 vals_dtree <- reactiveValues(dtree_run = 0)

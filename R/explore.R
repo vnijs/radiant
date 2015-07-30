@@ -27,45 +27,9 @@ explore <- function(dataset,
                     fun = c("length", "mean_rm"),
                     data_filter = "") {
 
-
-#  library(dplyr)
-#  dat <- diamonds
-#
-#  dat %>% summarise_each(funs(mean, sum))
-#  isNum <- sapply(dat, is.numeric)
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise(mean = mean(Value), sd = sd(Value))
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(default_funs))
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise(funs(min = "min"))
-#  funs_(default_funs)
-#
-#  library(radiant))
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(default_funs))
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(dfuns))
-#
-#  dfuns <- lapply(default_funs, get)
-#  funs(dfuns)
-#  funs_(default_funs)
-#
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(as.formula(paste0("~",dfuns))))
-#
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(funs_(lapply(paste0(dfuns, " = ~",dfuns), as.formula)))
-#  dat %>% select(which(isNum)) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(make_funs(default_funs))
-#
-#
-#
-#  funs_(dfuns) %>%
-#
-#  funs_(dfuns)[[1]]
-#
-#  funs_(as.formula(paste0(dfuns "= ~",dfuns)))
-#
-#  dfuns
-#  dfuns <- default_funs[c(1,3,4)]
-#
-#
-#  default_funs
-#  ?summarise
-#  ?funs
+#   dataset <- "diamonds"
+#   vars <- "price:x"
+#   data_filter <- ""
 
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar)
@@ -76,22 +40,21 @@ explore <- function(dataset,
   ## in case : was used
   vars <- colnames(head(dat) %>% select_(.dots = vars))
 
+  ## summaries only for numeric variables
+  isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
+
   if (is_empty(byvar)) {
-    res <- capture.output(getsummary(dat))
+    tab <- dat %>% select(isNum) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(make_funs(fun))
   } else {
-    res <- list()
-    for(bv in byvar)
-      if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
-    dc <- getclass(dat)
-    isNum <- "numeric" == dc | "integer" == dc
+    for(bv in byvar) if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
+    # isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
 
     ## for median issue in dplyr < .5
     ## https://github.com/hadley/dplyr/issues/893
-    dat %<>% group_by_(.dots = byvar) %>% select(which(isNum)) %>% mutate_each("as.numeric")
-    # dat %<>% group_by_(.dots = byvar) %>% select(which(isNum))
-
-    for (f in fun)
-      res[[f]] <- dat %>% summarise_each(as.formula(paste0("~",f))) %>% as.data.frame
+    tab <- dat %>% group_by_(.dots = byvar) %>%
+      # select(isNum) %>%
+      select(isNum) %>% mutate_each("as.numeric") %>%
+      summarise_each(make_funs(fun))
   }
 
   ## dat no longer needed
@@ -126,27 +89,149 @@ summary.explore <- function(object, ...) {
     cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 
   cat("\n")
-  if (class(object$res) == "character") {
-    cat(paste0(object$res[-length(object$res)],sep="\n"))
-  } else {
+#   if (class(object$tab) == "character") {
+#     cat(paste0(object$tab[-length(object$tab)],sep="\n"))
+#   } else {
+    print(object$tab)
 
-    if (!exists("expl_functions"))
-      funcs <- object$fun %>% set_names(.,.)
-    else
-      funcs <- get("expl_functions")
-
-    for (f in object$fun) {
-      cat("Results grouped by: ", object$byvar, "\n")
-      cat("Function used: ", names(which(funcs == f)), "\n")
-      object$res[[f]] %>%
-        { .[,-c(1:length(object$byvar))] %<>% round(3); . } %>%
-        print
-      cat("\n")
-    }
-  }
+#     if (!exists("r_functions"))
+#       funcs <- object$fun %>% set_names(.,.)
+#     else
+#       funcs <- get("r_functions")
+#
+#     for (f in object$fun) {
+#       cat("Results grouped by: ", object$byvar, "\n")
+#       cat("Function used: ", names(which(funcs == f)), "\n")
+#       object$tab[[f]] %>%
+#         { .[,-c(1:length(object$byvar))] %<>% round(3); . } %>%
+#         print
+#       cat("\n")
+#     }
+  # }
 
   invisible()
 }
+
+#' Make a tabel of summary statistics in DT
+#'
+#' @details See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
+#'
+#' @param expl Return value from \code{\link{explorer}}
+#' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
+#'
+#' @examples
+#' pivotr("diamonds", cvars = "cut") %>% make_dt
+#' pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(format = "color_bar")
+#' ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
+#'    make_dt(format = "color_bar", check = "perc")
+#'
+#' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
+#' @seealso \code{\link{summary.pivotr}} to print a plain text table
+#'
+#' @export
+make_expl <- function(expl, format = "none") {
+
+#   dt_tab <- expl$tab %>%
+#     DT::datatable(rownames = FALSE,
+#                   filter = list(position = "top", clear = FALSE, plain = TRUE),
+#                   style = ifelse(expl$shiny, "bootstrap", "default"),
+#                   options = list(
+#                     search = list(regex = TRUE),
+#                     processing = FALSE,
+#                     pageLength = 10,
+#                     lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
+#                   )
+#     )
+#
+#   return(dt_tab)
+
+  tab <- expl$tab
+  # cvar <- pvt$cvars[1]
+  cvars <- expl$byvar # cvars %>% {if(length(.) > 1) .[-1] else .}
+  cn <- colnames(tab) %>% {if(cvars == "") . else .[-which(cvars %in% .)]}
+
+  ## column names without total
+  # cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
+
+#   tot <- tail(tab,1)[-(1:length(cvars))]
+#   if ("perc" %in% check)
+#     tot <- sprintf("%.2f%%", tot*100)
+#   else
+#     tot <- round(tot, 3)
+
+  if (length(cvars) == 1 && cvar == cvars) {
+    sketch = shiny::withTags(table(
+      thead(
+        tr(lapply(c(cvars,cn), th))
+      ),
+      tfoot(
+        tr(lapply(c("Total",tot), th))
+      )
+    ))
+  } else {
+    sketch = shiny::withTags(table(
+      thead(
+        tr(
+          th(colspan = length(c(cvars,cn)), cvar, class = "text-center")
+        ),
+        tr(
+          lapply(c(cvars,cn), th)
+        )
+      ),
+      tfoot(
+        tr(
+          th(colspan = length(cvars), "Total"), lapply(tot, th)
+        )
+      )
+    ))
+  }
+
+  ## remove column totals
+  ## should perhaps be part of pivotr but convenient for for now in tfoot
+  ## and for external calls to pivotr
+  tab <- filter(tab, tab[,1] != "Total")
+
+  dt_tab <- tab %>%
+    DT::datatable(container = sketch, rownames = FALSE,
+                  filter = list(position = "top", clear = FALSE, plain = TRUE),
+                  style = ifelse(pvt$shiny, "bootstrap", "default"),
+                  # style = "bootstrap",
+                  options = list(
+                    # stateSave = TRUE,
+                    search = list(regex = TRUE),
+                    processing = FALSE,
+                    pageLength = 10,
+                    lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
+                  )
+    ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
+    {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
+
+  ## heat map with red or color_bar
+  if (format == "color_bar") {
+    dt_tab %<>% DT::formatStyle(cn_nt,
+                                background = DT::styleColorBar(range(tab[ , cn_nt], na.rm = TRUE), "lightblue"),
+                                backgroundSize = "98% 88%",
+                                backgroundRepeat = "no-repeat",
+                                backgroundPosition = "center")
+  } else if (format == "heat") {
+    brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
+    clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
+      round(0) %>%
+      {paste0("rgb(255,", ., ",", .,")")}
+    dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
+  }
+
+  ## show percentage
+  if ("perc" %in% check) dt_tab %<>% DT::formatPercentage(cn, 2)
+
+  dt_tab
+
+  ## can use this in R > Report inside Radiant but doesn't export
+  # renderDataTable({make_dt(result)})
+}
+
+
+
 
 #' Plot method for the explore function
 #'
@@ -168,23 +253,23 @@ plot.explore <- function(x, shiny = FALSE, ...) {
 
   object <- x; rm(x)
 
-  if (class(object$res)[1] == "character")
+  if (class(object$tab)[1] == "character")
     return(invisible())
 
   by_var <- fill_var <- object$byvar[1]
   if (length(object$byvar) > 1) fill_var <- object$byvar[2]
 
-  if (!exists("expl_functions")) {
+  if (!exists("r_functions")) {
     funcs <- object$fun %>% set_names(.,.)
   } else {
-    funcs <- get("expl_functions")
+    funcs <- get("r_functions")
   }
 
   plots <- list()
   for (f in object$fun) {
     for (var in object$vars) {
       plots[[paste0(var,"_",f)]] <-
-        ggplot(data = object$res[[f]], aes_string(x = by_var, y = var, fill = fill_var)) +
+        ggplot(data = object$tab[[f]], aes_string(x = by_var, y = var, fill = fill_var)) +
           geom_bar(stat="identity", position = "dodge", alpha=.7) +
           ggtitle(paste("Function used:", names(which(funcs == f))))
 
@@ -371,6 +456,8 @@ sum_rm <- function(x) sum(x, na.rm = TRUE)
 #'
 #' @export
 make_funs <- function(x) {
-  xclean <- gsub("_rm$","",x)
-  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula)%>% setNames(xclean))
+  xclean <- gsub("_rm$","",x) %>% sub("length","n",.) %>%  sub("nmissing","missing",.)
+  env <- if (exists("radiant")) environment(radiant::radiant) else parent.frame()
+  dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
 }
+

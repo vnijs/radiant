@@ -6,7 +6,6 @@ pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 
 pvt_check <- c("Percentage" = "perc")
-# pvt_check <- c("Percentage" = "perc", "Chi-squared" = "chi2")
 
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 
@@ -31,8 +30,8 @@ output$ui_pvt_nvar <- renderUI({
 output$ui_pvt_fun <- renderUI({
   if (is_empty(input$pvt_nvar, empty = "None")) return()
   selectizeInput("pvt_fun", label = "Apply function:",
-                 choices = expl_functions,
-                 selected = state_single("pvt_fun", expl_functions, "mean_rm"),
+                 choices = r_functions,
+                 selected = state_single("pvt_fun", r_functions, "mean_rm"),
                  multiple = FALSE)
 })
 

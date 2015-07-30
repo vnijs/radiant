@@ -45,7 +45,7 @@ output$ui_data <- renderUI({
                    # conditionalPanel("(input.pvt_check && input.pvt_check.indexOf('chi2') >= 0)", htmlOutput("pivotr_chi2"))),
                    conditionalPanel("input.pvt_chi2 == true", htmlOutput("pivotr_chi2"))),
           # tabPanel("Pivot", DT::dataTableOutput("pivotr"), verbatimTextOutput("pivotr_chi2")),
-          tabPanel("Explore", verbatimTextOutput("expl_summary"),
+          tabPanel("Explore", verbatimTextOutput("expl_summary"), DT::dataTableOutput("explorer"),
                    plot_downloader("explore", height = expl_plot_height()),
                    # plot_downloader("compare_means"),
                    plotOutput("expl_plots", width = "100%", height = "100%")),

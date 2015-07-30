@@ -137,9 +137,6 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
   ## based on https://gist.github.com/gluc/79ef7a0e747f217ca45e
   jl <- if (final) x$jl else x$jl_init
 
-  # jl <- x$jl_init
-  # final <- FALSE
-
   ## create ids
   jl$Set(id = paste0("id", 1:jl$totalCount))
 
@@ -190,12 +187,7 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
     class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
     class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
   trv <- Traverse(jl, traversal = "level", filterFun = isNotRoot)
-
   df <- data.frame(from = Get(trv, FromLabel), edge = Get(trv, EdgeLabel), to = Get(trv, ToLabel))
-
-#9f6
-  # paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
-  #   style, sep = "\n") %>% DiagrammeR::DiagrammeR(.)
 
   paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
     style, sep = "\n") %>%

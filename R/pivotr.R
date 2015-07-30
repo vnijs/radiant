@@ -47,12 +47,22 @@ pivotr <- function(dataset,
 
   sel <- function(x, nvar) if (nvar == "n") x else select_(x, .dots = nvar)
   sfun <- function(x, nvar, cvars = "", fun = fun) {
+
     if (nvar == "n")
       if (all(cvars == "")) count_(x) else count_(x, cvars)
     else
       mutate_each_(x, "as.numeric", vars = nvar) %>%
-      # summarise_each_(make_funs(fun), vars = nvar)
-      summarise_each_(as.formula(paste0("~",fun)), vars = nvar)
+      # summarise_each_(as.formula(paste0("~",fun)), vars = nvar)
+      summarise_each_(make_funs(fun), vars = nvar)
+
+#       x %>% summarise_each_(funs(make_funs(fun)), vars = nvar)
+#       x %>% summarise_(funs(make_funs(fun)), vars = nvar)
+#
+#     nvar <- mpg
+#     x <- mtcars
+#     fun <- default_funs
+#     make_funs(fun)
+
   }
 
   ## main tab

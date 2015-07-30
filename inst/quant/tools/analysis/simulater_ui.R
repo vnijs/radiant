@@ -116,11 +116,11 @@ output$ui_rep_byvar <- renderUI({
 })
 
 output$ui_rep_fun <- renderUI({
-  sel <- if(is_empty(input$rep_fun)) state_multiple("rep_fun", expl_functions, c("sum_rm","mean_rm"))
+  sel <- if(is_empty(input$rep_fun)) state_multiple("rep_fun", r_functions, c("sum_rm","mean_rm"))
          else input$rep_fun
 
   selectizeInput("rep_fun", label = "Apply function(s):",
-                 choices = expl_functions,
+                 choices = r_functions,
                  selected = sel,
                  multiple = TRUE,
                  options = list(placeholder = 'Select functions',
