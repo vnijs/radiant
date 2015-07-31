@@ -117,7 +117,7 @@ output$dtree_plot <- DiagrammeR::renderDiagrammeR({
   if (is.null(dt)) {
     return(invisible())
   } else {
-    DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
+    DiagrammeR::DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
   }
 })
 

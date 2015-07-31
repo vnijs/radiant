@@ -91,6 +91,10 @@ d_ymd <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
 d_ymd_hms <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
                lubridate::ymd_hms(.)
 
+## time in hours:minutes and seconds
+# t_hms <- . %>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hms(.)
+# t_hm <- . %>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hm(.)
+
 as_int <- function(x) {
 	if (is.factor(x)) {
 		levels(x) %>% .[x] %>% as.integer
@@ -127,6 +131,7 @@ type_options <- list("None" = "none", "As factor" = "as.factor",
                      "As character" = "as.character", "As date (mdy)" = "d_mdy",
                      "As date (dmy)" = "d_dmy", "As date (ymd)" = "d_ymd",
                      "As date/time (ymd_hms)" = "d_ymd_hms")
+                     # "As time (hm)" = "t_hm", "As time (hms)" = "t_hms",
 
 trans_types <- list("None" = "none", "Type" = "type", "Change" = "change",
                     "Normalize" = "normalize", "Create" = "create",

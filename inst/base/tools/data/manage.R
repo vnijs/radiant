@@ -28,12 +28,12 @@ loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep
 
   dat <- sshhr(try(
          {if (Sys.info()["sysname"] == "Windows") {
-            read.table("clipboard", header = header, sep = sep, as.is = TRUE)
+            read.table("clipboard", header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
           } else if (Sys.info()["sysname"] == "Darwin") {
-            read.table(pipe("pbpaste"), header = header, sep = sep, as.is = TRUE)
+            read.table(pipe("pbpaste"), header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
           } else {
             if (!is_empty(input$load_cdata))
-              read.table(text = input$load_cdata, header = header, sep = sep, as.is = TRUE)
+              read.table(text = input$load_cdata, header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
           }} %>% as.data.frame(check.names = FALSE), silent = TRUE))
 
   if (is(dat, 'try-error') || nrow(dat) == 0) {
@@ -59,14 +59,12 @@ saveClipboardData <- function() {
 }
 
 factorizer <- function(dat) {
-  isChar <- sapply(dat,is.character)
+  isChar <- sapply(dat, is.character)
   if (sum(isChar) == 0) return(dat)
     toFct <-
       select(dat, which(isChar)) %>%
       summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < .1)) %>%
       select(which(. == TRUE)) %>% names
-    # summarise_each(funs(n_distinct)) %>%
-    # select(which(. < 100 & ((. / nrow(dat)) < .1))) %>% names
   if (length(toFct) == 0) return(dat)
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
@@ -113,20 +111,29 @@ loadUserData <- function(fname, uFile, ext,
   }
 
   if (ext == 'csv') {
-    r_data[[objname]] <- try(read_delim(uFile, sep, col_names=header), silent = TRUE) %>%
-      {if (is(., 'try-error'))
-          try(read.table(uFile, header = header, sep = sep, dec = dec, stringsAsFactors = FALSE), silent = TRUE)
-        else . } %>%
-      {if (is(., 'try-error'))
-          upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-        else . } %>%
-      {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
 
-    # r_data[[objname]] <- try(read.table(uFile, header=header, sep=sep, dec=dec,
-    #   stringsAsFactors=FALSE), silent = TRUE) %>%
-    #   { if (is(., 'try-error')) upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-    #     else . } %>%
-    #   { if (man_str_as_factor) factorizer(.) else . } # %>% tbl_df
+    ## getting checked names from read.csv
+    cn <- try(read.table(uFile, header = header, sep = sep, dec = dec, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
+    if (is(cn, 'try-error')) {
+      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+    } else {
+      # r_data[[objname]] <- try(read_delim(uFile, sep, col_names=header), silent = TRUE) %>%
+      ## read csv using read_csv - fall back on read.csv if there are issues
+      r_data[[objname]] <- try(read_delim(uFile, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
+        {if (is(., 'try-error') || nrow(problems(.)) > 0)
+            try(read.table(uFile, header = header, sep = sep, dec = dec, comment.char = "", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE) %>% head
+          else . } %>%
+        {if (is(., 'try-error'))
+            upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+          else . } %>%
+        {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
+
+      # r_data[[objname]] <- try(read.table(uFile, header=header, sep=sep, dec=dec,
+      #   stringsAsFactors=FALSE), silent = TRUE) %>%
+      #   { if (is(., 'try-error')) upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+      #     else . } %>%
+      #   { if (man_str_as_factor) factorizer(.) else . } # %>% tbl_df
+    }
   }
 
   r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique

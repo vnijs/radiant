@@ -78,45 +78,38 @@ summary.dtree <- function(object, ...) {
       format(digits = 10, nsmall = 2, decimal.mark = ".", big.mark = ",", scientific = FALSE)
   }
 
-  rm_terminal <- . %>% {if(. == "terminal") "" else .}
+  rm_terminal <- function(x)
+    x %>% {if(is.na(.)) "" else .} %>% {if(. == "terminal") "" else .}
+
   # format_percent <- . %>% as.character %>% sprintf("%.2f%%", . * 100)
 
-  ## set parent type
-  nt <- object$jl_init$Get(function(x) x$parent$type)
-  object$jl_init$Set(ptype = nt)
+  ## format data.tree
+  format_dtree <- function(jl) {
+    ## set parent type
+    nt <- jl$Get(function(x) x$parent$type)
+    jl$Set(ptype = nt)
+
+    Traverse(jl) %>%
+      {data.frame(Probability = Get(., "p", format = FormatPercent),
+        Payoff = Get(., "payoff", format = print_money),
+        Type = Get(., "ptype", format = rm_terminal),
+        check.names = FALSE,
+        row.names = Get(.,"levelName"))}
+  }
 
   ## initial setup
   cat("Initial decision tree:\n")
-  object$jl_init %>%
-    print(
-      # Level = .$Get("levelName"),
-      Probability = .$Get("p", format = FormatPercent),
-      Payoff = .$Get("payoff", format = print_money),
-      # Type = .$Get("type", format = rm_terminal),
-      Type = .$Get("ptype")
-    )
+  format_dtree(object$jl_init) %>% print
 
-  pn <- object$jl$Get(function(x) x$parent$type)
-  ptype <- function(dt) {
-    dt %>% .$Get(function(x) x$parent$type) %>% dt$Set(ptype = .)
-  }
-
-  ## set parent type
-  nt <- object$jl$Get(function(x) x$parent$type)
-  object$jl$Set(ptype = nt)
-
-  ## calculations completed
   cat("\n\nFinal decision tree:\n")
-  object$jl %>%
-    print(
-      Probability = .$Get("p", format = FormatPercent),
-      Payoff = .$Get("payoff", format = print_money),
-      # , Type = .$Get("type", format = rm_terminal)
-      Type = .$Get("ptype")
-    )
+  format_dtree(object$jl) %>% print
 
   cat("\n\nDecision:\n")
   object$jl$Get("decision") %>% .[!is.na(.)] %>% paste0(collapse = " & ") %>% cat
+
+  ## useful to avoid row.names and left-align all character variables
+  # format(justify = "left") %>%
+  # print(row.names = FALSE)
 }
 
 #' Plot method for the dtree function
@@ -196,7 +189,8 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 
 # library(data.tree); library(yaml); library(radiant)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
-# x <- dtree(yl)
+# object <- x <- dtree(yl)
+# x %>% summary
 # dtree(yl) %>% plot(shiny = TRUE)
 # dtree(yl) %>% plot(final = TRUE)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")

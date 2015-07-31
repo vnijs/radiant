@@ -155,9 +155,9 @@ has_duplicates <- function(x)
   if (length(unique(x)) < length(x)) TRUE else FALSE
 
 ## is x some type of date variable
-is_date <- function(x) lubridate::is.Date(x) | lubridate::is.POSIXt(x)
+is_date <- function(x) inherits(x, c('Date', 'POSIXlt', 'POSIXct'))
 
-## drop elements from .._args variables
+## drop elements from .._args variables obtained using formals
 r_drop <- function(x, drop = c("dataset","data_filter")) x[-which(x %in% drop)]
 
 ## convert a date variable to character for printing
@@ -179,8 +179,6 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
     print(type = 'html',  print.results = FALSE, include.rownames = FALSE,
           sanitize.text.function = identity,
           html.table.attributes = "class='table table-condensed table-hover'") %>%
-    # sub("<table border=*.1*.>","<table class='table table-condensed table-hover'>", .,
-    #     perl = TRUE) %>%
     paste0(title, .) %>%
     {if (n <= nshow) . else paste0(.,'\n<label>',nshow,' of ', n, ' rows shown. See View-tab for details.</label>')} %>%
     enc2utf8

@@ -299,6 +299,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
   isDate <- "date" == dc
   isChar <- "character" == dc
   isLogic <- "logical" == dc
+  isPeriod <- "period" == dc
 
   if (sum(isNum) > 0) {
 
@@ -329,9 +330,17 @@ getsummary <- function(dat, dc = getclass(dat)) {
     select(dat, which(isDate)) %>% summarise_each(funs(max)) %>% print
     cat("\n")
   }
+  if (sum(isPeriod) > 0) {
+    cat("Earliest time:\n")
+    select(dat, which(isPeriod)) %>% summarise_each(funs(min)) %>% print
+    cat("\nFinal time:\n")
+    select(dat, which(isPeriod)) %>% summarise_each(funs(max)) %>% print
+    cat("\n")
+  }
   if (sum(isChar) > 0) {
-    cat("Summarize character variables:\n")
-    select(dat, which(isChar)) %>% table %>% print
+    cat("Summarize character variables (< 20 unique values shown):\n")
+    select(dat, which(isChar)) %>% distinct %>% lapply(unique) %>%
+      {for(i in names(.)) cat(i, ":", .[[i]][1:min(20,length(.[[i]]))], "\n")}
     cat("\n")
   }
   if (sum(isLogic) > 0) {

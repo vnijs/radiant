@@ -235,7 +235,8 @@ getclass <- function(dat) {
     sub("ordered","factor", .) %>%
     sub("POSIXct","date", .) %>%
     sub("POSIXlt","date", .) %>%
-    sub("Date","date", .)
+    sub("Date","date", .) %>%
+    sub("Period","period", .)
 }
 
 #' Is a character variable defined
