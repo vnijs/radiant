@@ -7,6 +7,7 @@
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
 #' @return A list of all variables defined in the function as an object of class explore
 #'
@@ -25,11 +26,8 @@ explore <- function(dataset,
                     vars = "",
                     byvar = "",
                     fun = c("length", "mean_rm"),
-                    data_filter = "") {
-
-#   dataset <- "diamonds"
-#   vars <- "price:x"
-#   data_filter <- ""
+                    data_filter = "",
+                    shiny = FALSE) {
 
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar)
@@ -43,8 +41,13 @@ explore <- function(dataset,
   ## summaries only for numeric variables
   isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
 
+  pfun <- make_funs(fun)
+
   if (is_empty(byvar)) {
-    tab <- dat %>% select(isNum) %>% gather("Variable", "Value") %>% group_by_("Variable")  %>% summarise_each(make_funs(fun))
+    tab <- dat %>% select(isNum) %>%
+      gather("Variable", "Value") %>%
+      group_by_("Variable")  %>% summarise_each(pfun)
+    if (ncol(tab) == 2) colnames(tab) <- c("Variable", names(pfun))
   } else {
     for(bv in byvar) if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
     # isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
@@ -54,7 +57,7 @@ explore <- function(dataset,
     tab <- dat %>% group_by_(.dots = byvar) %>%
       # select(isNum) %>%
       select(isNum) %>% mutate_each("as.numeric") %>%
-      summarise_each(make_funs(fun))
+      summarise_each(pfun)
   }
 
   ## dat no longer needed
@@ -129,72 +132,67 @@ summary.explore <- function(object, ...) {
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-make_expl <- function(expl, format = "none") {
-
-#   dt_tab <- expl$tab %>%
-#     DT::datatable(rownames = FALSE,
-#                   filter = list(position = "top", clear = FALSE, plain = TRUE),
-#                   style = ifelse(expl$shiny, "bootstrap", "default"),
-#                   options = list(
-#                     search = list(regex = TRUE),
-#                     processing = FALSE,
-#                     pageLength = 10,
-#                     lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
-#                   )
-#     )
-#
-#   return(dt_tab)
+make_expl <- function(expl, format = "color_bar") {
 
   tab <- expl$tab
-  # cvar <- pvt$cvars[1]
-  cvars <- expl$byvar # cvars %>% {if(length(.) > 1) .[-1] else .}
-  cn <- colnames(tab) %>% {if(cvars == "") . else .[-which(cvars %in% .)]}
+  vars <- expl$vars
+  fun <- expl$fun
+  cvars <- expl$byvar
+  cn_all <- colnames(tab)
+  cn <- cn_all %>% {if(cvars == "") .[-1] else .[-which(cvars %in% .)]}
 
-  ## column names without total
-  # cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
-
-#   tot <- tail(tab,1)[-(1:length(cvars))]
-#   if ("perc" %in% check)
-#     tot <- sprintf("%.2f%%", tot*100)
-#   else
-#     tot <- round(tot, 3)
-
-  if (length(cvars) == 1 && cvar == cvars) {
+  if (all(cvars == "")) {
     sketch = shiny::withTags(table(
       thead(
-        tr(lapply(c(cvars,cn), th))
-      ),
-      tfoot(
-        tr(lapply(c("Total",tot), th))
+        tr(lapply(cn_all, th))
+      )
+    ))
+  } else if (length(fun) == 1) {
+    pfun <- make_funs(fun) %>% names
+    sketch = shiny::withTags(table(
+      thead(
+        tr(
+          th(" ", colspan = length(cvars)),
+          lapply(pfun, th, colspan = length(vars), class = "text-center")
+        ),
+        tr(
+          lapply(cvars, th), lapply(vars, th)
+        )
+      )
+    ))
+  } else if (length(vars) == 1) {
+    pfun <- make_funs(fun) %>% names
+    sketch = shiny::withTags(table(
+      thead(
+        tr(
+          th(" ", colspan = length(cvars)),
+          lapply(vars, th, colspan = length(pfun), class = "text-center")
+        ),
+        tr(
+          lapply(cvars, th), lapply(pfun, th)
+        )
       )
     ))
   } else {
+    pfun <- cn %>% matrix(ncol = length(vars), byrow = TRUE) %>% .[,1]  %>%
+            gsub(paste0(vars[1],"_"),"",.)
     sketch = shiny::withTags(table(
       thead(
         tr(
-          th(colspan = length(c(cvars,cn)), cvar, class = "text-center")
+          th(" ", colspan = length(cvars)),
+          lapply(pfun, th, colspan = length(vars), class = "text-center")
         ),
         tr(
-          lapply(c(cvars,cn), th)
-        )
-      ),
-      tfoot(
-        tr(
-          th(colspan = length(cvars), "Total"), lapply(tot, th)
+          lapply(cn_all, th)
         )
       )
     ))
   }
 
-  ## remove column totals
-  ## should perhaps be part of pivotr but convenient for for now in tfoot
-  ## and for external calls to pivotr
-  tab <- filter(tab, tab[,1] != "Total")
-
   dt_tab <- tab %>%
     DT::datatable(container = sketch, rownames = FALSE,
                   filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  style = ifelse(pvt$shiny, "bootstrap", "default"),
+                  style = ifelse(expl$shiny, "bootstrap", "default"),
                   # style = "bootstrap",
                   options = list(
                     # stateSave = TRUE,
@@ -203,26 +201,26 @@ make_expl <- function(expl, format = "none") {
                     pageLength = 10,
                     lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
                   )
-    ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
-    {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
+    )  %>% {if (!all(cvars =="")) DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") else .}
 
   ## heat map with red or color_bar
   if (format == "color_bar") {
-    dt_tab %<>% DT::formatStyle(cn_nt,
-                                background = DT::styleColorBar(range(tab[ , cn_nt], na.rm = TRUE), "lightblue"),
-                                backgroundSize = "98% 88%",
-                                backgroundRepeat = "no-repeat",
-                                backgroundPosition = "center")
+    for (i in cn) {
+      dt_tab %<>% DT::formatStyle(i,
+                                  background = DT::styleColorBar(range(tab[ , i], na.rm = TRUE), "lightblue"),
+                                  backgroundSize = "98% 88%",
+                                  backgroundRepeat = "no-repeat",
+                                  backgroundPosition = "center")
+    }
   } else if (format == "heat") {
-    brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
-    clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
-      round(0) %>%
-      {paste0("rgb(255,", ., ",", .,")")}
-    dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
+    for (i in cn) {
+      brks <- quantile(tab[[i]], probs = seq(.05, .95, .05), na.rm = TRUE)
+      clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
+        round(0) %>%
+        {paste0("rgb(255,", ., ",", .,")")}
+      dt_tab %<>% DT::formatStyle(i, backgroundColor = DT::styleInterval(brks, clrs))
+    }
   }
-
-  ## show percentage
-  if ("perc" %in% check) dt_tab %<>% DT::formatPercentage(cn, 2)
 
   dt_tab
 

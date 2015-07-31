@@ -4,6 +4,8 @@
 
 default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
 
+expl_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
+
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user
@@ -48,6 +50,13 @@ output$ui_expl_fun <- renderUI({
     )
 })
 
+output$ui_expl_format  <- renderUI({
+  selectizeInput("expl_format", label = "Conditional formatting:",
+                 choices = expl_format,
+                 selected = state_single("expl_format", expl_format, "none"),
+                 multiple = FALSE)
+})
+
 output$ui_expl_viz <- renderUI({
   # if (is_empty(input$expl_byvar)) return()
   checkboxInput('expl_viz', 'Show plot', value = state_init("expl_viz", FALSE))
@@ -59,6 +68,7 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
+      uiOutput("ui_expl_format"),
       div(class="row",
         div(class="col-xs-6", checkboxInput('expl_tab', 'Show table',
             value = state_init("expl_tab", TRUE))),
@@ -79,7 +89,7 @@ output$explorer <- DT::renderDataTable({
   expl <- .explore()
   if (is.null(expl)) return()
   expl$shiny <- TRUE
-  make_expl(expl, format = "None")
+  make_expl(expl, format = input$expl_format)
 })
 
 output$expl_summary <- renderPrint({
