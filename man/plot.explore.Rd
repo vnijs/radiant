@@ -19,10 +19,6 @@ Plot method for the explore function
 \details{
 See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant. A plot will only be generated when a 'by' variable has been specified
 }
-\examples{
-result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
-plot(result)
-}
 \seealso{
 \code{\link{explore}} to generate summaries
 

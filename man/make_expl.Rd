@@ -4,12 +4,16 @@
 \alias{make_expl}
 \title{Make a tabel of summary statistics in DT}
 \usage{
-make_expl(expl, format = "none")
+make_expl(expl, top = "fun", format = "color_bar", dec = 3)
 }
 \arguments{
-\item{expl}{Return value from \code{\link{explorer}}}
+\item{expl}{Return value from \code{\link{explore}}}
+
+\item{top}{The variable (type) to display at the top of the table}
 
 \item{format}{Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")}
+
+\item{dec}{Number of decimals to show}
 }
 \description{
 Make a tabel of summary statistics in DT

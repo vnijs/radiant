@@ -50,6 +50,15 @@ output$ui_expl_fun <- renderUI({
     )
 })
 
+output$ui_expl_top  <- renderUI({
+  top_var = c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
+  if (is_empty(input$expl_byvar)) top_var <- top_var[1:2]
+  selectizeInput("expl_top", label = "Column variable:",
+                 choices = top_var,
+                 selected = state_single("expl_top", top_var, top_var[1]),
+                 multiple = FALSE)
+})
+
 output$ui_expl_format  <- renderUI({
   selectizeInput("expl_format", label = "Conditional formatting:",
                  choices = expl_format,
@@ -68,12 +77,13 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
-      uiOutput("ui_expl_format"),
-      div(class="row",
-        div(class="col-xs-6", checkboxInput('expl_tab', 'Show table',
-            value = state_init("expl_tab", TRUE))),
-        div(class="col-xs-6", uiOutput("ui_expl_viz"))
-      )
+      uiOutput("ui_expl_top"),
+      uiOutput("ui_expl_format")
+      # div(class="row",
+      #   div(class="col-xs-6", checkboxInput('expl_tab', 'Show table',
+      #       value = state_init("expl_tab", TRUE))),
+      #   div(class="col-xs-6", uiOutput("ui_expl_viz"))
+      # )
     ),
     help_and_report(modal_title = "Explore",
                     fun_name = "explore",
@@ -82,38 +92,42 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- reactive({
-    do.call(explore, expl_inputs())
+  if (not_available(input$expl_vars)) return()
+  withProgress(message = 'Calculating', value = 0, {
+    sshhr( do.call(explore, expl_inputs()) )
+  })
 })
 
 output$explorer <- DT::renderDataTable({
+  # if (is.null(input$expl_tab) || !input$expl_tab) return()
   expl <- .explore()
   if (is.null(expl)) return()
   expl$shiny <- TRUE
-  make_expl(expl, format = input$expl_format)
+  make_expl(expl, top = input$expl_top, format = input$expl_format)
 })
 
 output$expl_summary <- renderPrint({
   if (not_available(input$expl_vars)) return(invisible())
-  if (!is.null(input$expl_tab) && input$expl_tab) {
+  # if (!is.null(input$expl_tab) && input$expl_tab) {
     withProgress(message = 'Calculating', value = 0, {
-      .explore() %>% { if (is.null(.)) invisible() else summary(.) }
+      .explore() %>% { if (is.null(.)) invisible() else summary(., top = input$expl_top) }
     })
-  } else {
-    invisible()
-  }
+  # } else {
+  #   invisible()
+  # }
 })
 
 expl_plot_width <- function() 650
 expl_plot_height <- function()
   400 * length(input$expl_fun) * length(input$expl_vars)
 
-output$expl_plots <- renderPlot({
-  if (not_available(input$expl_vars)) return(invisible())
-  if (!input$expl_viz || is.null(input$expl_byvar)) return(invisible())
-  withProgress(message = 'Making plot', value = 0, {
-    print(.plot_explore())
-  })
-}, width = expl_plot_width, height = expl_plot_height)
+# output$expl_plots <- renderPlot({
+#   if (not_available(input$expl_vars)) return(invisible())
+#   if (!input$expl_viz || is.null(input$expl_byvar)) return(invisible())
+#   withProgress(message = 'Making plot', value = 0, {
+#     print(.plot_explore())
+#   })
+# }, width = expl_plot_width, height = expl_plot_height)
 
 .plot_explore <- reactive({
   plot(.explore(), shiny = TRUE)
@@ -122,15 +136,15 @@ output$expl_plots <- renderPlot({
 observe({
   if (not_pressed(input$explore_report)) return()
   isolate({
-    if (!is_empty(input$expl_byvar) && input$expl_viz == TRUE) {
-      inp_out <- list("","")
-      outputs <- c("summary","plot")
-      figs <- TRUE
-    } else {
+    # if (!is_empty(input$expl_byvar) && input$expl_viz == TRUE) {
+    #   inp_out <- list("","")
+    #   outputs <- c("summary","plot")
+    #   figs <- TRUE
+    # } else {
       outputs <- c("summary")
-      inp_out <- list("","")
+      inp_out <- list(list(top = input$expl_top))
       figs <- FALSE
-    }
+    # }
     update_report(inp_main = clean_args(expl_inputs(), expl_args),
                   fun_name = "explore",
                   inp_out = inp_out,

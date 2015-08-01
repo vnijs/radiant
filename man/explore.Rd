@@ -4,8 +4,8 @@
 \alias{explore}
 \title{Explore data}
 \usage{
-explore(dataset, vars = "", byvar = "", fun = c("length", "mean_rm"),
-  data_filter = "")
+explore(dataset, vars = "", byvar = "", fun = "mean_rm",
+  data_filter = "", shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -17,6 +17,8 @@ explore(dataset, vars = "", byvar = "", fun = c("length", "mean_rm"),
 \item{fun}{Functions to use for summarizing}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{shiny}{Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app}
 }
 \value{
 A list of all variables defined in the function as an object of class explore

@@ -2,7 +2,7 @@
 globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
                   "se", "ci", "height", "bump", "y", "col1", "nr_clus",
                   ".resid", "rnd_number", "null.deviance", "..density..",
-                  "..y..", "Total", "thead", "tfoot", "th", "tr"))
+                  "..y..", "Total", "thead", "tfoot", "th", "tr", "variable"))
 
 #' radiant
 #'
@@ -14,7 +14,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
 #' @importFrom lubridate is.Date is.POSIXt now mdy dmy ymd ymd_hms
 #' @importFrom broom tidy glance
-#' @importFrom tidyr gather_
+#' @importFrom tidyr gather_ gather separate
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom markdown markdownToHTML
 #' @importFrom shinyAce aceEditor updateAceEditor
