@@ -38,6 +38,7 @@ output$ui_data <- renderUI({
             conditionalPanel("input.man_add_descr == false", uiOutput("dataDescriptionHTML")),
             conditionalPanel("input.man_add_descr == true", uiOutput("dataDescriptionMD"))),
           tabPanel("View", DT::dataTableOutput("dataviewer")),
+                   # verbatimTextOutput("dt_rows")),
           # tabPanel("View", DT::dataTableOutput("dataviewer"), verbatimTextOutput("tbl_state")),
           tabPanel("Visualize", plot_downloader(".visualize", width = viz_plot_width(), height = viz_plot_height(), pre = ""),
                    plotOutput("visualize", width = "100%", height = "100%")),

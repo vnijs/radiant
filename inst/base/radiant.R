@@ -67,10 +67,13 @@ saveStateOnRefresh <- function(session = session) {
 
   if (is.null(input$dataset)) return()
 
+  # rows_all <- isolate(input$dataviewer_rows_all)
+
   if (is_empty(input$data_filter) || input$show_filter == FALSE)
     if (is.null(input$dataset)) return() else return(r_data[[input$dataset]])
 
   selcom <- gsub("\\s","", input$data_filter)
+
   if (selcom != "") {
     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
 
@@ -78,13 +81,20 @@ saveStateOnRefresh <- function(session = session) {
       isolate(r_data$filter_error <- attr(seldat,"condition")$message)
     } else {
       isolate(r_data$filter_error <- "")
-      return(seldat)
+      # input$tableId_rows_all: the indices of rows on all pages (after the table is filtered by the search strings)
+      # if (!is_empty(rows_all))
+      #   return(seldat %>% slice(rows_all))
+      # else
+        return(seldat)
     }
   } else {
     isolate(r_data$filter_error <- "")
   }
 
-  r_data[[input$dataset]]
+  # if (!is_empty(rows_all))
+  #   r_data[[input$dataset]] %>% slice(rows_all)
+  # else
+    r_data[[input$dataset]]
 })
 
 .getclass <- reactive({

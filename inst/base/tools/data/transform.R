@@ -199,20 +199,23 @@ find_env <- function(dataset) {
 }
 
 save2env <- function(dat, dataset,
-                     tr_dataset = dataset,
-                     tr_message = "") {
+                     dat_name = dataset,
+                     mess = "") {
 
 	env <- find_env(dataset)
-	env$r_data[[tr_dataset]] <- dat
-  if(dataset != tr_dataset) {
-  	cat(paste0("Dataset r_data$", tr_dataset, " created in ", environmentName(env), " environment\n"))
-  	env$r_data[['datasetlist']] <- c(tr_dataset, env$r_data[['datasetlist']]) %>% unique
+	env$r_data[[dat_name]] <- dat
+  if(dataset != dat_name) {
+  	cat(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
+  	env$r_data[['datasetlist']] <- c(dat_name, env$r_data[['datasetlist']]) %>% unique
  	} else {
-  	cat(paste0("Dataset r_data$", dataset, " change in ", environmentName(env), " environment\n"))
+  	cat(paste0("Dataset r_data$", dataset, " changed in ", environmentName(env), " environment\n"))
  	}
 
-  if(tr_message != "")
-  	env$r_data[[paste0(tr_dataset,"_descr")]] %<>% paste0("\n",tr_message)
+ 	## set to previous description
+  env$r_data[[paste0(dat_name,"_descr")]] <- env$r_data[[paste0(dataset,"_descr")]]
+
+  if(mess != "")
+    env$r_data[[paste0(dat_name,"_descr")]] %<>% paste0("\n\n",mess)
 }
 
 reorg_vars <- function(dataset,
