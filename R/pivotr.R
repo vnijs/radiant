@@ -11,9 +11,9 @@
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
 #' @examples
-#' pivotr("diamonds", cvars = "cut")$tab
-#' pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
-#' pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
+#' result <- pivotr("diamonds", cvars = "cut")$tab
+#' result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
+#' result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
 #'
 #' @export
 pivotr <- function(dataset,
@@ -52,17 +52,7 @@ pivotr <- function(dataset,
       if (all(cvars == "")) count_(x) else count_(x, cvars)
     else
       mutate_each_(x, "as.numeric", vars = nvar) %>%
-      # summarise_each_(as.formula(paste0("~",fun)), vars = nvar)
       summarise_each_(make_funs(fun), vars = nvar)
-
-#       x %>% summarise_each_(funs(make_funs(fun)), vars = nvar)
-#       x %>% summarise_(funs(make_funs(fun)), vars = nvar)
-#
-#     nvar <- mpg
-#     x <- mtcars
-#     fun <- default_funs
-#     make_funs(fun)
-
   }
 
   ## main tab
@@ -154,12 +144,6 @@ pivotr <- function(dataset,
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #'
 #' @export
-#'
-
-
-# library(radiant)
-# object <- pivotr("diamonds", cvars = "cut:clarity")
-
 summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
 
   if (!shiny) {
@@ -217,6 +201,11 @@ make_dt <- function(pvt, format = "none", check = "") {
   cvars <- pvt$cvars %>% {if(length(.) > 1) .[-1] else .}
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
 
+  #############################################################
+  ## work-around for https://github.com/rstudio/DT/issues/150
+  tab[,cn] <- tab[,cn] %>% round(3)
+  #############################################################
+
   ## column names without total
   cn_nt <- if ("Total" %in% cn) cn[-which(cn == "Total")] else cn
 
@@ -254,7 +243,7 @@ make_dt <- function(pvt, format = "none", check = "") {
   }
 
   ## remove column totals
-  ## should perhaps be part of pivotr but convenient for for now in tfoot
+  ## should perhaps be part of pivotr but convenient for now in tfoot
   ## and for external calls to pivotr
   tab <- filter(tab, tab[,1] != "Total")
 
@@ -297,6 +286,61 @@ make_dt <- function(pvt, format = "none", check = "") {
   # renderDataTable({make_dt(result)})
 }
 
+#' Plot method for the pivotr function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/base/pivotr} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{pivotr}}
+#' @param type Plot type to use ("dodge" or "fill" (default))
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @seealso \code{\link{pivotr}} to generate summaries
+#' @seealso \code{\link{summary.pivotr}} to show summaries
+#'
+#' @export
+plot.pivotr <- function(x, type = "fill", shiny = FALSE, ...) {
+
+  object <- x; rm(x)
+  # object <- pivotr("diamonds", cvars = "cut", nvar = "price")
+  # object <- pivotr("diamonds", cvars = c("cut","clarity"))
+  # object <- pivotr("diamonds", cvars = c("cut","clarity"), nvar = "price")
+  # object <- pivotr("diamonds", cvars = "cut", nvar = "price")
+  # object <- pivotr("diamonds", cvars = c("cut","clarity","color"))
+
+  cvars <- object$cvars
+  nvar <- object$nvar
+  tab <- object$tab %>% {filter(., .[[1]] != "Total")}
+  plot_list <- list()
+
+  if (length(cvars) == 1) {
+    plot_list[[1]] <-
+      ggplot(tab %>% na.omit, aes_string(x = cvars, y = nvar)) +
+        geom_bar(stat="identity", position = "dodge", alpha=.7)
+  } else if (length(cvars) == 2) {
+    ctot <- which(colnames(tab) == "Total")
+    if(length(ctot) > 0) tab %<>% select(-matches("Total"))
+
+    plot_list[[1]] <-
+      ggplot(tab %>% gather_(cvars[1], nvar) %>% na.omit, aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
+        geom_bar(stat="identity", position = type, alpha=.7)
+  } else if (length(cvars) == 3) {
+    ctot <- which(colnames(tab) == "Total")
+    if(length(ctot) > 0) tab %<>% select(-matches("Total"))
+
+    plot_list[[1]] <-
+      ggplot(tab %>% gather_(cvars[1], nvar) %>% na.omit, aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
+        geom_bar(stat="identity", position = type, alpha=.7) +
+        facet_grid(paste(cvars[3], '~ .'))
+  } else {
+    ## You are pushing this feature a bit too far dude
+    return(invisible())
+  }
+
+  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+    { if (shiny) . else print(.) }
+}
+
 ## client-side with bootstrap not working yet https://github.com/rstudio/DT/issues/143
 # install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 # library(radiant)
@@ -319,5 +363,20 @@ make_dt <- function(pvt, format = "none", check = "") {
 # dput(dat)
 # DT::datatable(dat, filter = list(position = "top", clear = FALSE))
 
+## if you need to recreate
+# library(radiant)
+# library(DT)
+# dat <- pivotr("diamonds", cvars = "clarity", nvar = "price")$tab %>% filter(clarity != "Total")
+# dput(dat)
 
+# ## demo
+# dat <- structure(list(clarity = structure(1:8, .Label = c("I1", "SI2",
+# "SI1", "VS2", "VS1", "VVS2", "VVS1", "IF", "Total"), class = "factor"),
+#     price = c(4194.775, 5100.18903591682, 3998.57697642164, 3822.96671709531,
+#     3789.18099547511, 3337.82042253521, 2608.45982142857, 2411.69696969697
+#     )), class = "data.frame", row.names = c(NA, -8L), .Names = c("clarity",
+# "price"))
 
+# dat[,-1] <- round(dat[,-1], 3)
+
+# datatable(dat, filter = list(position = "top", clear = FALSE))

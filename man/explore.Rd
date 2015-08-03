@@ -38,7 +38,5 @@ diamonds \%>\% explore("price", byvar = "cut", fun = c("length", "skew"))
 }
 \seealso{
 \code{\link{summary.explore}} to show summaries
-
-\code{\link{plot.explore}} to plot summaries
 }
 

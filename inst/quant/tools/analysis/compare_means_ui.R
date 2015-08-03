@@ -115,7 +115,7 @@ output$compare_means <- renderUI({
       id = "tabs_compare_means",
       tabPanel("Summary", verbatimTextOutput("summary_compare_means")),
       tabPanel("Plot",
-               # plot_downloader("compare_means", height = cm_plot_height()),
+               plot_downloader("compare_means", height = cm_plot_height()),
                plotOutput("plot_compare_means", height = "100%"))
     )
 

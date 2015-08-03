@@ -29,8 +29,8 @@ Create a pivot table using dplyr
 Create a pivot-table. See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
 }
 \examples{
-pivotr("diamonds", cvars = "cut")$tab
-pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
-pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
+result <- pivotr("diamonds", cvars = "cut")$tab
+result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
+result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
 }
 

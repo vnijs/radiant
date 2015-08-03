@@ -15,6 +15,6 @@ getsummary(dat, dc = getclass(dat))
 Create data.frame summary
 }
 \details{
-Used by Explore and Transform
+Used by Transform
 }
 

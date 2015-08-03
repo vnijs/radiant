@@ -4,18 +4,18 @@
 \alias{getdata}
 \title{Get data for analysis functions}
 \usage{
-getdata(dataset, vars = "", na.rm = TRUE, filt = "", slice = "")
+getdata(dataset, vars = "", filt = "", rows = NULL, na.rm = TRUE)
 }
 \arguments{
 \item{dataset}{Name of the dataframe}
 
 \item{vars}{Variables to extract from the dataframe}
 
-\item{na.rm}{Remove rows with missing values (default is TRUE)}
-
 \item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
 
-\item{slice}{Select a slice of the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is ""). Not in Radiant GUI}
+\item{rows}{Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)}
+
+\item{na.rm}{Remove rows with missing values (default is TRUE)}
 }
 \value{
 Data.frame with specified columns and rows
@@ -27,7 +27,7 @@ Get data for analysis functions
 \donttest{
 r_data <<- list()
 r_data$dat <<- mtcars
-getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
+getdata("dat","mpg:vs", filt = "mpg > 20", rows = 1:5)
 rm(r_data, envir = .GlobalEnv)
 }
 }

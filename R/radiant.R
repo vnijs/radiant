@@ -71,9 +71,9 @@ sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 #'
 #' @param dataset Name of the dataframe
 #' @param vars Variables to extract from the dataframe
-#' @param na.rm Remove rows with missing values (default is TRUE)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
-#' @param slice Select a slice of the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is ""). Not in Radiant GUI
+#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
+#' @param na.rm Remove rows with missing values (default is TRUE)
 #'
 #' @return Data.frame with specified columns and rows
 #'
@@ -81,15 +81,15 @@ sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 #' \donttest{
 #' r_data <<- list()
 #' r_data$dat <<- mtcars
-#' getdata("dat","mpg:vs", filt = "mpg > 20", slice = "1:5")
+#' getdata("dat","mpg:vs", filt = "mpg > 20", rows = 1:5)
 #' rm(r_data, envir = .GlobalEnv)
 #' }
 #' @export
 getdata <- function(dataset,
                     vars = "",
-                    na.rm = TRUE,
                     filt = "",
-                    slice = "") {
+                    rows = NULL,
+                    na.rm = TRUE) {
 
   filt %<>% gsub("\\s","", .)
 
@@ -110,7 +110,7 @@ getdata <- function(dataset,
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
         { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
-        { if (slice == "") . else slice_(., slice) } %>%
+        { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
@@ -174,6 +174,8 @@ changedata <- function(dataset,
 #' @param dataset Name of the dataframe to change
 #' @param vars Variables to so (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
+#' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
+#' @param na.rm Remove rows with missing values (default is FALSE)
 #'
 #' @examples
 #' if (interactive()) {
@@ -183,10 +185,10 @@ changedata <- function(dataset,
 #' }
 #'
 #' @export
-viewdata <- function(dataset, vars = "", filt = "") {
+viewdata <- function(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE) {
 
   ## based on http://rstudio.github.io/DT/server.html
-  dat <- getdata(dataset, vars, filt = filt)
+  dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
 
   shinyApp(

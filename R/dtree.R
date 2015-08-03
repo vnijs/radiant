@@ -38,7 +38,12 @@ dtree <- function(yl) {
   # }
 
   ## making a copy of the initial Node object
-  jl_init <- sshhr(Clone(jl))
+  jl_init <- as.Node(yl)
+  pt <- . %>% {if(is.null(.$type)) .$Set(type = "terminal")}
+  jl_init$Do(pt, filterFun = isLeaf)
+
+  ## see issue https://github.com/gluc/data.tree/issues/22
+  # jl_init <- sshhr(Clone(jl))
   ## without sshhr:
   ## Warning messages: 1: In res[fieldName] <- field : number of items to replace is not a multiple of replacement length
 
@@ -193,7 +198,8 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 # x %>% summary
 # dtree(yl) %>% plot(shiny = TRUE)
 # dtree(yl) %>% plot(final = TRUE)
+# dtree(yl) %>% plot(final = FALSE)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
-# x <- dtree(yl)
+# dtree(yl) %>% summary
 # dtree(yl) %>% plot
 # dtree(yl) %>% plot(final = TRUE)

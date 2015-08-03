@@ -12,8 +12,10 @@ output$ui_View <- renderUI({
   list(
     wellPanel(
       uiOutput("ui_view_vars"),
-      textInput("dt_dat", "Save filtered data to:", input$dataset),
-      actionButton("view_save", "Save")
+      tags$table(
+        tags$td(textInput("view_dat", "Store filtered data as:", input$dataset)),
+        tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
+      )
     ),
     help_modal('View','view_help',inclMD(file.path(r_path,"base/tools/help/view.md")))
   )
@@ -44,19 +46,20 @@ output$dataviewer <- DT::renderDataTable({
   )
 })
 
-observeEvent(input$view_save, {
+observeEvent(input$view_store, {
   isolate({
-    save_view(input$dataset, input$dt_dat, input$data_filter, input$dataviewer_rows_all)
+    view_store(input$dataset, input$view_vars, input$view_dat, input$data_filter, input$dataviewer_rows_all)
     updateTextInput(session, "data_filter", value = "")
     updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
 
   })
 })
 
-save_view <- function(dataset,
-                      dt_dat = dataset,
-                      data_filter = "",
-                      dt_rows = NULL) {
+view_store <- function(dataset,
+                       vars = "",
+                       view_dat = dataset,
+                       data_filter = "",
+                       dt_rows = NULL) {
 
   mess <-
     if (data_filter != "" && !is.null(dt_rows))
@@ -68,10 +71,18 @@ save_view <- function(dataset,
     else
       ""
 
-  getdata(dataset, filt = data_filter, na.rm = FALSE) %>%
-    {if (is.null(dt_rows)) . else slice(., dt_rows)} %>%
-    save2env(dataset, dt_dat, mess)
+  getdata(dataset, vars = vars, filt = data_filter, rows = dt_rows, na.rm = FALSE) %>%
+    save2env(dataset, view_dat, mess)
 }
+
+output$dl_view_tab <- downloadHandler(
+  filename = function() { paste0("view_tab.csv") },
+  content = function(file) {
+    getdata(input$dataset, vars = input$view_vars, filt = input$data_filter,
+            rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
+      write.csv(file)
+  }
+)
 
 # output$dt_rows <- renderPrint({
 #   input$dataviewer_rows_all

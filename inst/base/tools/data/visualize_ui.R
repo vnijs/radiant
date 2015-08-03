@@ -2,7 +2,7 @@ viz_type <- c("Histogram" = "hist", "Density" = "density", "Scatter" = "scatter"
               "Line" = "line", "Bar" = "bar", "Box-plot" = "box")
 viz_check <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 viz_axes <-  c("Flip" = "flip", "Log X" = "log_x", "Log Y" = "log_y",
-               "Scale-y" = "scale_y", "Density" = "density")
+               "Scale-y" = "scale_y", "Density" = "density", "Sort" = "sort")
 
 ## list of function arguments
 viz_args <- as.list(formals(visualize))
@@ -31,7 +31,8 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_yvar <- renderUI({
   if (is.null(input$viz_type)) return()
   vars <- varying_vars()
-  if (input$viz_type == "line") vars <- vars["factor" != .getclass()[vars]]
+  # if (input$viz_type == "line") vars <- vars["factor" != .getclass()[vars]]
+  if (input$viz_type %in% c("line","bar","scatter")) vars <- vars["factor" != .getclass()[vars]]
   selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
     choices = c("None" = "none", vars),
     selected = state_single("viz_yvar", vars, "none"),
@@ -75,6 +76,8 @@ output$ui_viz_axes <- renderUI({
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
   if (input$viz_type == "hist") ind <- c(ind, 5)
   if (!is_empty(input$viz_facet_row, ".")) ind <- c(ind, 4)
+  # if (input$viz_type == "bar" && length(input$viz_xvar) == 1) ind <- c(ind, 6)
+  if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
     selected = state_init("viz_axes"),
     inline = TRUE)

@@ -4,10 +4,9 @@
 
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
-
 pvt_check <- c("Percentage" = "perc")
-
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
+pvt_plot_type <- c("Fill" = "fill", "Dodge" = "dodge")
 
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
@@ -28,7 +27,6 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
-  if (is_empty(input$pvt_nvar, empty = "None")) return()
   selectizeInput("pvt_fun", label = "Apply function:",
                  choices = r_functions,
                  selected = state_single("pvt_fun", r_functions, "mean_rm"),
@@ -36,15 +34,14 @@ output$ui_pvt_fun <- renderUI({
 })
 
 output$ui_pvt_normalize  <- renderUI({
+  if(!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
 
-  if(is.null(input$pvt_cvars)) return()
-  if(length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
-
-  sel <- if(is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
+  isolate({
+    sel <- if(is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
+  })
 
   selectizeInput("pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
-    # selected = state_single("pvt_normalize", pvt_normalize, "None"),
     selected = sel,
     multiple = FALSE)
 })
@@ -57,19 +54,37 @@ output$ui_pvt_format  <- renderUI({
 })
 
 output$ui_Pivotr <- renderUI({
-  list(
+  tagList(
     wellPanel(
       uiOutput("ui_pvt_cvars"),
       uiOutput("ui_pvt_nvar"),
-      uiOutput("ui_pvt_fun"),
+      conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
       uiOutput("ui_pvt_normalize"),
       uiOutput("ui_pvt_format"),
       with(tags, table(
+        tr(
+          td(checkboxInput("pvt_tab", "Show table", value = state_init("pvt_tab", TRUE))),
+          td(checkboxInput("pvt_plot", "Show plot", value = state_init("pvt_plot", FALSE)))
+        ),
+        tr(
           td(checkboxGroupInput("pvt_check", NULL, pvt_check,
                selected = state_init("pvt_check"), inline = TRUE)),
           td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
                checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
-        )
+      )))
+      # with(tags, table(
+      #   tr(
+      #     td(textInput("pivot_dat", "Store filtered data as:", "pivot_dat")),
+      #     td(actionButton("pivot_store", "Store"), style="padding-top:30px;")
+      #   )
+      # ))
+    ),
+    conditionalPanel("input.pvt_plot == true",
+      wellPanel(
+        radioButtons("pvt_plot_type", label = "Plot type:",
+          pvt_plot_type,
+          selected = state_init("pvt_plot_type", "fill"),
+          inline = TRUE)
       )
     ),
     help_and_report(modal_title = "Pivotr",
@@ -119,11 +134,107 @@ output$pivotr_chi2 <- renderPrint({
                  else summary(., chi2 = TRUE, shiny = TRUE)}
 })
 
+output$dl_pivot_tab <- downloadHandler(
+  filename = function() { paste0("pivot_tab.csv") },
+  content = function(file) {
+    dat <- .pivotr()
+    if (is.null(dat)) {
+      write_csv(data_frame("Data" = "[Empty]"),file)
+    } else {
+      rows <- isolate(input$pivotr_rows_all)
+      # dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>% write_csv(file)
+      dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>% write.csv(file)
+    }
+  }
+)
+
+pvt_plot_width <- function() 750
+pvt_plot_height <- function() {
+   pvt <- .pivotr()
+   if (!is.null(pvt) && length(input$pvt_cvars) > 2) {
+       pvt %>% pvt_sorter(rows = isolate(input$pivotr_rows_all)) %>%
+       .$tab %>% .[[input$pvt_cvars[3]]] %>%
+         levels %>%
+         length %>% {. * 200}
+   } else {
+    400
+   }
+}
+
+pvt_sorter <- function(pvt, rows = NULL) {
+  if (is.null(rows)) return(pvt)
+  cvars <- pvt$cvars
+  tab <- pvt$tab %>% {filter(., .[[1]] != "Total")}
+
+  # if (length(isolate(input$pivotr_rows_all)) == nrow(pvt$tab)) return()
+  if (length(rows) == nrow(tab) && all(rows == 1:nrow(tab))) return(pvt)
+
+  if (length(cvars) > 1)
+    tab %<>% select(-which(colnames(.) == "Total"))
+
+  tab %<>% slice(rows)
+  cvars <- if (length(cvars) == 1) cvars else cvars[-1]
+
+  for (i in cvars)
+    tab[[i]] %<>% factor(., levels = unique(.))
+
+  pvt$tab <- tab
+  pvt
+}
+
+.plot_pivot <- reactive({
+  pvt <- .pivotr()
+  if (is.null(pvt)) return(invisible())
+  if (!is_empty(input$pvt_tab, FALSE))
+    pvt <- pvt_sorter(pvt, rows = input$pivotr_rows_all)
+  plot(pvt, type = input$pvt_plot_type, shiny = TRUE)
+})
+
+output$plot_pivot <- renderPlot({
+  if (is_empty(input$pvt_plot, FALSE)) return(invisible())
+  if (is.null(input$pivotr_rows_all)) return(invisible())
+  withProgress(message = 'Making plot', value = 0, {
+    .plot_pivot() %>% print
+  })
+}, width = pvt_plot_width, height = pvt_plot_height)
+
 observeEvent(input$pivotr_report, {
   isolate({
+    if (input$pvt_plot == TRUE) {
+      inp_out <- list(list(chi2 = input$pvt_chi2),list(type = input$pvt_plot_type))
+      outputs <- c("summary","plot")
+      figs <- TRUE
+    } else {
+      outputs <- c("summary")
+      inp_out <- list(list(chi2 = input$pvt_chi2),"")
+      figs <- FALSE
+    }
     update_report(inp_main = clean_args(pvt_inputs(), pvt_args),
-                  fun_name = "pivotr", outputs = "summary",
-                  inp_out = list(list(chi2 = input$pvt_chi2)),
-                  figs = FALSE)
+                  fun_name = "pivotr",
+                  outputs = outputs,
+                  inp_out = inp_out,
+                  figs = figs,
+                  fig.width = round(7 * pvt_plot_width()/650,2),
+                  fig.height = round(7 * pvt_plot_height()/650,2))
   })
 })
+
+
+# observeEvent(input$pivot_store, {
+#   isolate({
+#     dat <- .pivotr()
+#     if (is.null(dat)) return()
+#     rows <- input$pivotr_rows_all
+#     name <- input$pivot_dat
+#     tab <- dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>%
+#       {if (length(dat$cvars) > 1) gather_(., dat$cvars[1], dat$nvar) else .}
+
+#     env <- if (exists("r_env")) r_env else pryr::where("r_data")
+#     env$r_data[[name]] <- tab
+#     cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+#     env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+
+#     # updateTabsetPanel(session, "tabs_data", selected = "Visualize")
+#     # updateSelectInput(session, "dataset", selected = name)
+#   })
+# })

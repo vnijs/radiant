@@ -4,7 +4,7 @@
 \alias{viewdata}
 \title{View data}
 \usage{
-viewdata(dataset, vars = "", filt = "")
+viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE)
 }
 \arguments{
 \item{dataset}{Name of the dataframe to change}
@@ -12,6 +12,10 @@ viewdata(dataset, vars = "", filt = "")
 \item{vars}{Variables to so (default is all)}
 
 \item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
+
+\item{rows}{Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)}
+
+\item{na.rm}{Remove rows with missing values (default is FALSE)}
 }
 \description{
 View data

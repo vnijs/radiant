@@ -51,10 +51,19 @@ visualize <- function(dataset, xvar,
 
   if (!type %in% c("scatter","line")) color = "none"
 
+  ## variable to use if bar chart is specified
+  byvar <- NULL
+
   if (yvar != "none") vars %<>% c(., yvar)
   if (color != "none") vars %<>% c(., color)
-  if (facet_row != ".") vars %<>% c(., facet_row)
-  if (facet_col != ".") vars %<>% c(., facet_col)
+  if (facet_row != ".") {
+    vars %<>% c(., facet_row)
+    byvar <- facet_row
+  }
+  if (facet_col != ".") {
+    vars %<>% c(., facet_col)
+    byvar <- if (is.null(byvar)) facet_col else c(byvar, facet_col)
+  }
 
   ## so you can also pass-in a data.frame
   dat <- getdata(dataset, vars, filt = data_filter)
@@ -135,7 +144,22 @@ visualize <- function(dataset, xvar,
     itt <- 1
     for (i in xvar) {
       for (j in yvar) {
-        plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) +
+        # dat <- mtcars
+        # library(dplyr)
+        # i <- "vs"
+        # j <- "mpg"
+        # byvar <- c("am","gear")
+        tbv <- if (is.null(byvar)) i else c(i, byvar)
+        tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
+
+        if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
+          tmp <- arrange_(ungroup(tmp), j)
+          # for (fct in tbv)
+            # tmp[[fct]] %<>% factor(., levels = unique(.))
+            tmp[[i]] %<>% factor(., levels = unique(.))
+        }
+
+        plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) +
           geom_bar(stat="identity", alpha = alpha)
         itt <- itt + 1
       }

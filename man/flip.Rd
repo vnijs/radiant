@@ -25,8 +25,6 @@ result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 \seealso{
 \code{\link{explore}} to generate summaries
 
-\code{\link{plot.explore}} to plot summaries
-
 \code{\link{make_expl}} to create the DT table
 }
 

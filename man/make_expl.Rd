@@ -4,14 +4,12 @@
 \alias{make_expl}
 \title{Make a tabel of summary statistics in DT}
 \usage{
-make_expl(expl, top = "fun", format = "color_bar", dec = 3)
+make_expl(expl, top = "fun", dec = 3)
 }
 \arguments{
 \item{expl}{Return value from \code{\link{explore}}}
 
-\item{top}{The variable (type) to display at the top of the table}
-
-\item{format}{Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")}
+\item{top}{The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by}
 
 \item{dec}{Number of decimals to show}
 }
@@ -22,10 +20,9 @@ Make a tabel of summary statistics in DT
 See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
 }
 \examples{
-pivotr("diamonds", cvars = "cut") \%>\% make_dt
-pivotr("diamonds", cvars = c("cut","clarity")) \%>\% make_dt(format = "color_bar")
-ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") \%>\%
-   make_dt(format = "color_bar", check = "perc")
+tab <- explore("diamonds", "price:x") \%>\% make_expl
+tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) \%>\%
+  make_expl(top = "byvar")
 }
 \seealso{
 \code{\link{pivotr}} to create the pivot-table using dplyr
