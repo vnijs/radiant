@@ -72,12 +72,6 @@ output$ui_Pivotr <- renderUI({
           td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
                checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
       )))
-      # with(tags, table(
-      #   tr(
-      #     td(textInput("pivot_dat", "Store filtered data as:", "pivot_dat")),
-      #     td(actionButton("pivot_store", "Store"), style="padding-top:30px;")
-      #   )
-      # ))
     ),
     conditionalPanel("input.pvt_plot == true",
       wellPanel(
@@ -141,8 +135,7 @@ output$dl_pivot_tab <- downloadHandler(
     if (is.null(dat)) {
       write_csv(data_frame("Data" = "[Empty]"),file)
     } else {
-      rows <- isolate(input$pivotr_rows_all)
-      # dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>% write_csv(file)
+      rows <- isolate(r_data$pvt_rows)
       dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>% write.csv(file)
     }
   }
@@ -152,7 +145,7 @@ pvt_plot_width <- function() 750
 pvt_plot_height <- function() {
    pvt <- .pivotr()
    if (!is.null(pvt) && length(input$pvt_cvars) > 2) {
-       pvt %>% pvt_sorter(rows = isolate(input$pivotr_rows_all)) %>%
+       pvt %>% pvt_sorter(rows = isolate(r_data$pvt_rows)) %>%
        .$tab %>% .[[input$pvt_cvars[3]]] %>%
          levels %>%
          length %>% {. * 200}
@@ -165,9 +158,6 @@ pvt_sorter <- function(pvt, rows = NULL) {
   if (is.null(rows)) return(pvt)
   cvars <- pvt$cvars
   tab <- pvt$tab %>% {filter(., .[[1]] != "Total")}
-
-  # if (length(isolate(input$pivotr_rows_all)) == nrow(pvt$tab)) return()
-  if (length(rows) == nrow(tab) && all(rows == 1:nrow(tab))) return(pvt)
 
   if (length(cvars) > 1)
     tab %<>% select(-which(colnames(.) == "Total"))
@@ -182,19 +172,27 @@ pvt_sorter <- function(pvt, rows = NULL) {
   pvt
 }
 
+observeEvent(input$pivotr_rows_all, {
+  isolate({
+    dt_rows <- input$pivotr_rows_all
+    # print(cat("dt ", dt_rows,"\n"))
+    if (identical(r_data$pvt_rows, dt_rows)) return()
+    r_data$pvt_rows <- dt_rows
+  })
+})
+
 .plot_pivot <- reactive({
   pvt <- .pivotr()
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE))
-    pvt <- pvt_sorter(pvt, rows = input$pivotr_rows_all)
+    pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
   plot(pvt, type = input$pvt_plot_type, shiny = TRUE)
 })
 
 output$plot_pivot <- renderPlot({
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
-  if (is.null(input$pivotr_rows_all)) return(invisible())
   withProgress(message = 'Making plot', value = 0, {
-    .plot_pivot() %>% print
+    sshhr( .plot_pivot() %>% print )
   })
 }, width = pvt_plot_width, height = pvt_plot_height)
 
@@ -218,23 +216,3 @@ observeEvent(input$pivotr_report, {
                   fig.height = round(7 * pvt_plot_height()/650,2))
   })
 })
-
-
-# observeEvent(input$pivot_store, {
-#   isolate({
-#     dat <- .pivotr()
-#     if (is.null(dat)) return()
-#     rows <- input$pivotr_rows_all
-#     name <- input$pivot_dat
-#     tab <- dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>%
-#       {if (length(dat$cvars) > 1) gather_(., dat$cvars[1], dat$nvar) else .}
-
-#     env <- if (exists("r_env")) r_env else pryr::where("r_data")
-#     env$r_data[[name]] <- tab
-#     cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-#     env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
-
-#     # updateTabsetPanel(session, "tabs_data", selected = "Visualize")
-#     # updateSelectInput(session, "dataset", selected = name)
-#   })
-# })

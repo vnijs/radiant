@@ -307,6 +307,7 @@ plot.pivotr <- function(x, type = "fill", shiny = FALSE, ...) {
   # object <- pivotr("diamonds", cvars = c("cut","clarity"), nvar = "price")
   # object <- pivotr("diamonds", cvars = "cut", nvar = "price")
   # object <- pivotr("diamonds", cvars = c("cut","clarity","color"))
+  # print(lubridate::now())
 
   cvars <- object$cvars
   nvar <- object$nvar

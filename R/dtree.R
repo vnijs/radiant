@@ -38,12 +38,12 @@ dtree <- function(yl) {
   # }
 
   ## making a copy of the initial Node object
-  jl_init <- as.Node(yl)
-  pt <- . %>% {if(is.null(.$type)) .$Set(type = "terminal")}
-  jl_init$Do(pt, filterFun = isLeaf)
-
+#   jl_init <- as.Node(yl)
+#   pt <- . %>% {if(is.null(.$type)) .$Set(type = "terminal")}
+#   jl_init$Do(pt, filterFun = isLeaf)
   ## see issue https://github.com/gluc/data.tree/issues/22
   # jl_init <- sshhr(Clone(jl))
+  jl_init <- Clone(jl)
   ## without sshhr:
   ## Warning messages: 1: In res[fieldName] <- field : number of items to replace is not a multiple of replacement length
 
