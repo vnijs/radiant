@@ -9,6 +9,7 @@
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
 #' @param color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour
+#' @param fill For bar plot ...
 #' @param bins Number of bins used for a histogram (1 - 50)
 #' @param smooth Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)
 #' @param check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
@@ -37,6 +38,7 @@ visualize <- function(dataset, xvar,
                       facet_row = ".",
                       facet_col = ".",
                       color = "none",
+                      fill = "none",
                       bins = 10,
                       smooth = 1,
                       check = "",
@@ -63,6 +65,10 @@ visualize <- function(dataset, xvar,
   if (facet_col != ".") {
     vars %<>% c(., facet_col)
     byvar <- if (is.null(byvar)) facet_col else c(byvar, facet_col)
+  }
+  if (fill != "none" && type == "bar") {
+    vars %<>% c(., fill)
+    byvar <- if (is.null(byvar)) fill else c(byvar, fill)
   }
 
   ## so you can also pass-in a data.frame
@@ -160,7 +166,7 @@ visualize <- function(dataset, xvar,
         }
 
         plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) +
-          geom_bar(stat="identity", alpha = alpha)
+          geom_bar(stat="identity", position = "dodge", alpha = alpha)
         itt <- itt + 1
       }
     }
@@ -187,6 +193,13 @@ visualize <- function(dataset, xvar,
   if (color != 'none')
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + aes_string(color=color) + scale_fill_brewer()
+
+  ## adding fill
+  if (fill != 'none') {
+    # dat[[fill]] %<>% as.factor
+    for (i in 1:length(plot_list))
+      plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill) #+ scale_fill_brewer()
+  }
 
   if ("jitter" %in% check)
     for (i in 1:length(plot_list)) plot_list[[i]] <- plot_list[[1]] +

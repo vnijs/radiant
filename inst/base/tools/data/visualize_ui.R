@@ -70,6 +70,13 @@ output$ui_viz_color <- renderUI({
   selectizeInput("viz_color", "Color", vars, selected = sel, multiple = FALSE)
 })
 
+output$ui_viz_fill <- renderUI({
+  # if (not_available(input$viz_yvar)) return()  ## can't have an XY plot without an X
+  vars <- c("None" = "none", groupable_vars())
+  sel <- state_single("viz_fill", vars, "none")
+  selectizeInput("viz_fill", "Fill", vars, selected = sel, multiple = FALSE)
+})
+
 output$ui_viz_axes <- renderUI({
   if (is.null(input$viz_type)) return()
   ind <- 1
@@ -93,6 +100,9 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_xvar"),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
+      conditionalPanel(condition = "input.viz_type == 'bar'",
+        uiOutput("ui_viz_fill")
+      ),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
                                     input.viz_type == 'line' |
                                     input.viz_type == 'box'",
