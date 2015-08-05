@@ -62,39 +62,79 @@ saveStateOnRefresh <- function(session = session) {
     r_data[[dataset]][,new_col_name] <- new_col
 }
 
+clean_filter <- function(x) {
+
+  ## temporary workaround to address https://github.com/rstudio/shiny/issues/879
+  if(grepl("[=><+-/*.]\\s[a-zA-Z]", x)) {
+    r_data$filter_error <- "Invalid expression: use quotes and == to filter on character or factor variables (e.g., clarity == 'Ideal'). Update or remove the expression and press return"
+    return("ERROR")
+  }
+
+  if (grepl("([^=])=([^=])",x)) {
+    r_data$filter_error <- "Invalid expression: never use = in a filter but == (e.g., year == 2014). Update or remove the expression and press return"
+    return("ERROR")
+  }
+
+  x %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+}
+
+# Workaround for https://github.com/rstudio/shiny/issues/879
+do_filter <- function(dat, sel) {
+  sel <- dat %>% {try(do.call(with, list(., parse(text = sel))), silent = TRUE)}
+  if (is(sel, 'try-error')) {
+    isolate(r_data$filter_error <- paste0(attr(sel, "condition")$message,". Update or remove the expression and press return"))
+  } else if(is.logical(sel)) {
+      isolate(r_data$filter_error <- "")
+      return(dat %>% filter(sel))
+  } else {
+    isolate(r_data$filter_error <- "Invalid expression: Filter condition does not evaluate to a logical vector. Never use = in a filter but == (e.g., year == 2014). Use quotes and == to filter on character or factor variables (e.g., clarity == 'Ideal'). Update or remove the expression and press return")
+  }
+  dat
+}
+
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
 
   if (is.null(input$dataset)) return()
 
-  # rows_all <- isolate(input$dataviewer_rows_all)
-
-  if (is_empty(input$data_filter) || input$show_filter == FALSE)
-    if (is.null(input$dataset)) return() else return(r_data[[input$dataset]])
-
-  selcom <- gsub("\\s","", input$data_filter)
-
-  if (selcom != "") {
-    seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
-
-    if (is(seldat, 'try-error')) {
-      isolate(r_data$filter_error <- attr(seldat,"condition")$message)
-    } else {
-      isolate(r_data$filter_error <- "")
-      # input$tableId_rows_all: the indices of rows on all pages (after the table is filtered by the search strings)
-      # if (!is_empty(rows_all))
-      #   return(seldat %>% slice(rows_all))
-      # else
-        return(seldat)
-    }
-  } else {
+  selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+  # if (is_empty(input$data_filter) || input$show_filter == FALSE) {
+  if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
+    if (is.null(input$dataset)) return() else return(r_data[[input$dataset]])
   }
 
-  # if (!is_empty(rows_all))
-  #   r_data[[input$dataset]] %>% slice(rows_all)
-  # else
+  # isolate(r_data$filter_error <- "")
+  # selcom <- clean_filter(input$data_filter)
+  # selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+
+  if (selcom == "") {
+    isolate(r_data$filter_error <- "")
     r_data[[input$dataset]]
+  } else {
+
+    do_filter(r_data[[input$dataset]], selcom)
+    # seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
+    # selcom <- r_data[[input$dataset]] %>% {try(do.call(with, list(., parse(text = selcom))), silent = TRUE)}
+
+    # # if (is(seldat, 'try-error')) {
+    # if (is(selcom, 'try-error')) {
+    #   # isolate(r_data$filter_error <- paste0(attr(seldat,"condition")$message,". Update or remove the expression and press return"))
+    #   isolate(r_data$filter_error <- paste0(attr(selcom,"condition")$message,". Update or remove the expression and press return"))
+    # } else {
+
+    #   if(is.logical(selcom)) {
+    #     isolate(r_data$filter_error <- "")
+    #     seldat <-
+    #       r_data[[input$dataset]] %>%
+    #       filter(selcom)
+    #     return(seldat)
+    #   } else {
+    #     isolate(r_data$filter_error <- "Invalid expression: Filter condition does not evaluate to a logical vector. Never use = in a filter but == (e.g., year == 2014). Use quotes and == to filter on character or factor variables (e.g., clarity == 'Ideal'). Update or remove the expression and press return")
+    #   }
+    # }
+  }
+  # r_data[[input$dataset]]
 })
 
 .getclass <- reactive({

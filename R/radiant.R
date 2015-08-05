@@ -67,6 +67,28 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 
+#' Workaround for https://github.com/rstudio/shiny/issues/879
+#'
+#' @param dat Data
+#' @param sel Filter string
+#'
+#' @export
+do_filter <- function(dat, sel) {
+  sel <- dat %>% {try(do.call(with, list(., parse(text = sel))), silent = TRUE)}
+  if (is(sel, 'try-error')) {
+    if (exists("r_data"))
+      isolate(r_data$filter_error <- paste0(attr(sel, "condition")$message,". Update or remove the expression and press return"))
+  } else if(is.logical(sel)) {
+    if (exists("r_data"))
+      isolate(r_data$filter_error <- "")
+    return(dat %>% filter(sel))
+  } else {
+    if (exists("r_data"))
+      isolate(r_data$filter_error <- "Invalid expression: Filter condition does not evaluate to a logical vector. Never use = in a filter but == (e.g., year == 2014). Use quotes and == to filter on character or factor variables (e.g., clarity == 'Ideal'). Update or remove the expression and press return")
+  }
+  dat
+}
+
 #' Get data for analysis functions
 #'
 #' @param dataset Name of the dataframe
@@ -91,7 +113,8 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
-  filt %<>% gsub("\\s","", .)
+  # filt %<>% gsub("\\s","", .)
+  filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
 
   { if (!is_string(dataset)) {
       dataset
@@ -109,7 +132,8 @@ getdata <- function(dataset,
         stop %>% return
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
-        { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
+        # { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
+        { if (filt == "") . else do_filter(., filt) } %>%     # apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
