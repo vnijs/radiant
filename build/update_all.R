@@ -62,10 +62,10 @@ Sys.sleep(5)
 # system("git commit -m 'Undo css change for shinyapps.io [ci skip]'")
 # system("git push")
 
-answ <- readline("Did you create binary packages for Windows? (y/n) ")
-if (substr(answ, 1, 1) %in% c("y","Y")) {
+# answ <- readline("Did you create binary packages for Windows? (y/n) ")
+# if (substr(answ, 1, 1) %in% c("y","Y")) {
   system("sh build/build_mac_win.sh")
-}
+# }
 
 ## in case of problems
 # shinyapps::showLogs(entries=1000)

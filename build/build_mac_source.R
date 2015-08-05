@@ -7,12 +7,12 @@ build('../radiant', binary = TRUE)
 
 # devtools::install('~/gh/DT')
 # packageVersion("DT")
-build('../DT')
-build('../DT', binary = TRUE)
+# build('../DT')
+# build('../DT', binary = TRUE)
 
 # devtools::install('~/gh/data.tree')
-build('../data.tree')
-build('../data.tree', binary = TRUE)
+# build('../data.tree')
+# build('../data.tree', binary = TRUE)
 
 # install('../shinyAce')
 # build('../shinyAce')

@@ -406,4 +406,3 @@ make_funs <- function(x) {
   env <- if (exists("radiant")) environment(radiant::radiant) else parent.frame()
   dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
 }
-
