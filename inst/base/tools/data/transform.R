@@ -489,6 +489,7 @@ observe({
 	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
 	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
 	 	updateTextInput(session = session, inputId = "tr_paste", value = "")
+	 	updateTextInput(session = session, inputId = "tr_transform", value = "")
 		updateSelectInput(session = session, inputId = "tr_typefunction", selected = "none")
 		updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
 	  updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
