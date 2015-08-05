@@ -66,7 +66,10 @@ factorizer <- function(dat) {
       summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < .1)) %>%
       select(which(. == TRUE)) %>% names
   if (length(toFct) == 0) return(dat)
-  mutate_each_(dat, funs(as.factor), vars = toFct)
+  rmiss <- . %>% ifelse(. == "", "NA", .)
+  # dat <- read.csv("~/Dropbox/sole-rady/4. Shopify Information/sole_shopify_10_28_14_discount.csv", as.is = TRUE)
+  mutate_each_(dat, funs(rmiss), vars = toFct) %>%  # replace missing levels
+  mutate_each_(funs(as.factor), vars = toFct)
 }
 
 loadUserData <- function(fname, uFile, ext,
@@ -119,9 +122,16 @@ loadUserData <- function(fname, uFile, ext,
     } else {
       # r_data[[objname]] <- try(read_delim(uFile, sep, col_names=header), silent = TRUE) %>%
       ## read csv using read_csv - fall back on read.csv if there are issues
+      # r_data[[objname]] <-
+      #   try(read.table(uFile, header = header, sep = sep, dec = dec, comment.char = "", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE) %>%
+      #   {if (is(., 'try-error'))
+      #       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+      #     else . } %>%
+      #   {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
+
       r_data[[objname]] <- try(read_delim(uFile, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
         {if (is(., 'try-error') || nrow(problems(.)) > 0)
-            try(read.table(uFile, header = header, sep = sep, dec = dec, comment.char = "", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE) %>% head
+            try(read.table(uFile, header = header, sep = sep, dec = dec, comment.char = "", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
           else . } %>%
         {if (is(., 'try-error'))
             upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")

@@ -42,18 +42,25 @@ pivotr <- function(dataset,
   ## using [] seems weird but drop = FALSE doesn't wor
   # dat[cvars] %<>% mutate_each(funs({if(is.factor(.)) . else as.factor(.)}))
 
-  ind <- ifelse(length(cvars) > 1, -1, 1)
-  levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
+  # ind <- ifelse(length(cvars) > 1, -1, 1)
+  # levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
+
+  # for (l in names(levs)) {
+  #   if ("" %in% levs[[l]]) {
+  #       dat[[l]] <- mutate_(dat, l = ifelse(l,"","MISSING"))[[l]]
+  #       dat[[l]] <- factor(dat[[l]], levels = sub("^$","MISSING",levs[[l]]))
+  #   }
+  # }
 
   sel <- function(x, nvar) if (nvar == "n") x else select_(x, .dots = nvar)
   sfun <- function(x, nvar, cvars = "", fun = fun) {
-
     if (nvar == "n")
       if (all(cvars == "")) count_(x) else count_(x, cvars)
     else
       mutate_each_(x, "as.numeric", vars = nvar) %>%
       summarise_each_(make_funs(fun), vars = nvar)
   }
+  # levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
   ## main tab
   tab <-
