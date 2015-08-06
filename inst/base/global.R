@@ -1,3 +1,9 @@
+if (packageVersion("Rcpp") < "0.12.0") stop(
+  "Radiant requires Rcpp >= 0.12.0. ",
+  "Please install the latest version of Rcpp from CRAN: ",
+  "install.packages('Rcpp', repo = 'http://cran.rstudio.com')"
+)
+
 ## turn off warnings globally
 # options(warn=-1)
 

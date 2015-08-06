@@ -132,8 +132,8 @@ getdata <- function(dataset,
         stop %>% return
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
-        # { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
-        { if (filt == "") . else do_filter(., filt) } %>%     # apply data_filter
+        { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
+        # { if (filt == "") . else do_filter(., filt) } %>%     # apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
