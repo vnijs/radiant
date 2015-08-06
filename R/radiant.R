@@ -144,6 +144,56 @@ getdata <- function(dataset,
   # } %>% { if (is.na(groups(.))) . else ungroup(.) } %>%     # ungroup data if needed
 }
 
+#' Convert character to factors as needed
+#'
+#' @param dat Data.frame
+#' @param safx Values to levels ratio
+#'
+#' @return Data.frame with factors
+#'
+#' @export
+factorizer <- function(dat, safx = 10) {
+  isChar <- sapply(dat, is.character)
+  if (sum(isChar) == 0) return(dat)
+    toFct <-
+      select(dat, which(isChar)) %>%
+      summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx))) %>%
+      select(which(. == TRUE)) %>% names
+  if (length(toFct) == 0) return(dat)
+  for (i in toFct)
+    dat[[i]] %<>% ifelse(is.na(.), "[Empty]", .) %>% ifelse(. == "", "[Empty]", .) %>% as.factor
+
+  return(dat)
+
+  ## not using due to https://github.com/hadley/dplyr/issues/1238
+  # rmiss <- . %>% ifelse(is.na(.), "[Empty]", .) %>% ifelse(. == "", "[Empty]", .)
+  # mutate_each_(dat, funs(rmiss), vars = toFct)  %>%  # replace missing levels
+  # mutate_each_(funs(as.factor), vars = toFct)
+}
+
+#' Load a csv files with read.csv and read_csv
+#'
+#' @param fn File name string
+#' @param header Header in file (TRUE, FALSE)
+#' @param sep Use , or ; or \\t
+#' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
+#' @param safx Values to levels ratio
+#'
+#' @return Data.frame with (some) variables converted to factors
+#'
+#' @export
+loadcsv <- function(fn, header = TRUE, sep = ",", saf = TRUE, safx = 10) {
+
+  cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
+  try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
+    {if (is(., 'try-error') || nrow(problems(.)) > 0)
+        try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
+     else . } %>%
+    {if (is(., 'try-error')) return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+     else .} %>%
+    {if (saf) factorizer(., safx) else . } %>% as.data.frame
+}
+
 #' Change data
 #'
 #' @param dataset Name of the dataframe to change

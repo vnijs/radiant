@@ -58,25 +58,6 @@ saveClipboardData <- function() {
   }
 }
 
-factorizer <- function(dat) {
-  isChar <- sapply(dat, is.character)
-  if (sum(isChar) == 0) return(dat)
-    toFct <-
-      select(dat, which(isChar)) %>%
-      summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < .1)) %>%
-      select(which(. == TRUE)) %>% names
-  if (length(toFct) == 0) return(dat)
-  for (i in toFct)
-    dat[[i]] %<>% ifelse(is.na(.), "[Empty]", .) %>% ifelse(. == "", "[Empty]", .) %>% as.factor
-
-  return(dat)
-
-  ## not using due to https://github.com/hadley/dplyr/issues/1238
-  # rmiss <- . %>% ifelse(is.na(.), "[Empty]", .) %>% ifelse(. == "", "[Empty]", .)
-  # mutate_each_(dat, funs(rmiss), vars = toFct)  %>%  # replace missing levels
-  # mutate_each_(funs(as.factor), vars = toFct)
-}
-
 loadUserData <- function(fname, uFile, ext,
                          header = TRUE,
                          man_str_as_factor = TRUE,
@@ -129,16 +110,18 @@ loadUserData <- function(fname, uFile, ext,
     # library(magrittr)
     # library(dplyr)
 
-    cn <- try(read.table(uFile, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
+    r_data[[objname]] <- loadcsv(uFile, header = header, sep = sep, saf = man_str_as_factor) %>%
+      {if (is.character(.)) upload_error_handler(objname, mess) else .}
 
-    r_data[[objname]] <- try(read_delim(uFile, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
-      {if (is(., 'try-error') || nrow(problems(.)) > 0)
-          try(read.table(uFile, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
-        else . } %>%
-      {if (is(., 'try-error'))
-          upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-        else . } %>%
-        {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
+    # cn <- try(read.table(uFile, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
+    # r_data[[objname]] <- try(read_delim(uFile, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
+    #   {if (is(., 'try-error') || nrow(problems(.)) > 0)
+    #       try(read.table(uFile, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
+    #     else . } %>%
+    #   {if (is(., 'try-error'))
+    #       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+    #     else . } %>%
+    #     {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
   }
 
   r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
