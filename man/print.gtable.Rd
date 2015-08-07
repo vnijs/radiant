@@ -18,6 +18,6 @@ A plot
 Print/draw method for grobs produced by gridExtra
 }
 \details{
-See \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
+Print method for ggplot grobs created using arrangeGrob. Code is based on \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
 }
 

@@ -67,28 +67,6 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 
-#' Workaround for https://github.com/rstudio/shiny/issues/879
-#'
-#' @param dat Data
-#' @param sel Filter string
-#'
-#' @export
-do_filter <- function(dat, sel) {
-  sel <- dat %>% {try(do.call(with, list(., parse(text = sel))), silent = TRUE)}
-  if (is(sel, 'try-error')) {
-    if (exists("r_data"))
-      isolate(r_data$filter_error <- paste0(attr(sel, "condition")$message,". Update or remove the expression and press return"))
-  } else if(is.logical(sel)) {
-    if (exists("r_data"))
-      isolate(r_data$filter_error <- "")
-    return(dat %>% filter(sel))
-  } else {
-    if (exists("r_data"))
-      isolate(r_data$filter_error <- "Invalid expression: Filter condition does not evaluate to a logical vector. Never use = in a filter but == (e.g., year == 2014). Use quotes and == to filter on character or factor variables (e.g., clarity == 'Ideal'). Update or remove the expression and press return")
-  }
-  dat
-}
-
 #' Get data for analysis functions
 #'
 #' @param dataset Name of the dataframe
@@ -133,7 +111,6 @@ getdata <- function(dataset,
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
         { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
-        # { if (filt == "") . else do_filter(., filt) } %>%     # apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
@@ -160,15 +137,19 @@ factorizer <- function(dat, safx = 10) {
       summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx))) %>%
       select(which(. == TRUE)) %>% names
   if (length(toFct) == 0) return(dat)
+
+
+  ## workaround for https://github.com/hadley/dplyr/issues/1238
   for (i in toFct)
     dat[[i]] %<>% ifelse(is.na(.), "[Empty]", .) %>% ifelse(. == "", "[Empty]", .) %>% as.factor
 
   return(dat)
 
   ## not using due to https://github.com/hadley/dplyr/issues/1238
+  ## Seems fixed in dev version of dplyr
   # rmiss <- . %>% ifelse(is.na(.), "[Empty]", .) %>% ifelse(. == "", "[Empty]", .)
   # mutate_each_(dat, funs(rmiss), vars = toFct)  %>%  # replace missing levels
-  # mutate_each_(funs(as.factor), vars = toFct)
+  # m ckautate_each_(funs(as.factor), vars = toFct)
 }
 
 #' Load a csv files with read.csv and read_csv
@@ -186,7 +167,7 @@ loadcsv <- function(fn, header = TRUE, sep = ",", saf = TRUE, safx = 10) {
 
   cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
   try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
-    {if (is(., 'try-error') || nrow(problems(.)) > 0)
+    {if (is(., 'try-error') || nrow(readr::problems(.)) > 0)
         try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
      else . } %>%
     {if (is(., 'try-error')) return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
@@ -717,7 +698,7 @@ state_multiple <- function(inputvar, vals, init = character(0)) {
 
 #' Print/draw method for grobs produced by gridExtra
 #'
-#' @details See \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
+#' @details Print method for ggplot grobs created using arrangeGrob. Code is based on \url{https://github.com/baptiste/gridextra/blob/master/inst/testing/shiny.R}
 #'
 #' @param x a gtable object
 #' @param ... further arguments passed to or from other methods

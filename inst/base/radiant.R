@@ -62,20 +62,6 @@ saveStateOnRefresh <- function(session = session) {
     r_data[[dataset]][,new_col_name] <- new_col
 }
 
-# Workaround for https://github.com/rstudio/shiny/issues/879
-# do_filter <- function(dat, sel) {
-#   sel <- dat %>% {try(do.call(with, list(., parse(text = sel))), silent = TRUE)}
-#   if (is(sel, 'try-error')) {
-#     isolate(r_data$filter_error <- paste0(attr(sel, "condition")$message,". Update or remove the expression and press return"))
-#   } else if(is.logical(sel)) {
-#       isolate(r_data$filter_error <- "")
-#       return(dat %>% filter(sel))
-#   } else {
-#     isolate(r_data$filter_error <- "Invalid expression: Filter condition does not evaluate to a logical vector. Never use = in a filter but == (e.g., year == 2014). Use quotes and == to filter on character or factor variables (e.g., clarity == 'Ideal'). Update or remove the expression and press return")
-#   }
-#   dat
-# }
-
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
 
