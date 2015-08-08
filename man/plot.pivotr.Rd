@@ -4,12 +4,12 @@
 \alias{plot.pivotr}
 \title{Plot method for the pivotr function}
 \usage{
-\method{plot}{pivotr}(x, type = "fill", shiny = FALSE, ...)
+\method{plot}{pivotr}(x, type = "dodge", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{pivotr}}}
 
-\item{type}{Plot type to use ("dodge" or "fill" (default))}
+\item{type}{Plot type to use ("fill" or "dodge" (default))}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 

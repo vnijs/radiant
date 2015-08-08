@@ -6,7 +6,7 @@ pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 pvt_check <- c("Percentage" = "perc")
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
-pvt_plot_type <- c("Fill" = "fill", "Dodge" = "dodge")
+pvt_plot_type <- c("Dodge" = "dodge","Fill" = "fill")
 
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
@@ -77,7 +77,7 @@ output$ui_Pivotr <- renderUI({
       wellPanel(
         radioButtons("pvt_plot_type", label = "Plot type:",
           pvt_plot_type,
-          selected = state_init("pvt_plot_type", "fill"),
+          selected = state_init("pvt_plot_type", "dodge"),
           inline = TRUE)
       )
     ),
@@ -133,10 +133,11 @@ output$dl_pivot_tab <- downloadHandler(
   content = function(file) {
     dat <- .pivotr()
     if (is.null(dat)) {
-      write_csv(data_frame("Data" = "[Empty]"),file)
+      write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- isolate(r_data$pvt_rows)
-      dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>% write.csv(file)
+      dat$tab %>% {if (is.null(rows)) . else slice(., c(rows,nrow(.)))} %>%
+        write.csv(file, row.names = FALSE)
     }
   }
 )

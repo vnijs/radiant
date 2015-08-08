@@ -298,7 +298,7 @@ make_dt <- function(pvt, format = "none", check = "") {
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{pivotr}}
-#' @param type Plot type to use ("dodge" or "fill" (default))
+#' @param type Plot type to use ("fill" or "dodge" (default))
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
@@ -306,7 +306,7 @@ make_dt <- function(pvt, format = "none", check = "") {
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
 #' @export
-plot.pivotr <- function(x, type = "fill", shiny = FALSE, ...) {
+plot.pivotr <- function(x, type = "dodge", shiny = FALSE, ...) {
 
   object <- x; rm(x)
   # object <- pivotr("diamonds", cvars = "cut", nvar = "price")

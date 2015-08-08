@@ -31,11 +31,20 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_yvar <- renderUI({
   if (is.null(input$viz_type)) return()
   vars <- varying_vars()
-  # if (input$viz_type == "line") vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("line","bar","scatter")) vars <- vars["factor" != .getclass()[vars]]
+
+  isolate({
+    ## keep the same y-variable 'active' if possible
+    sel <-
+      if(!not_available(input$viz_yvar) && input$viz_yvar %in% vars)
+        input$viz_yvar
+      else
+         state_single("viz_yvar", vars, "none")
+  })
+
   selectizeInput(inputId = "viz_yvar", label = "Y-variable:",
     choices = c("None" = "none", vars),
-    selected = state_single("viz_yvar", vars, "none"),
+    selected = sel,
     multiple = FALSE)
 })
 
@@ -46,8 +55,18 @@ output$ui_viz_xvar <- renderUI({
   if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
+
+  isolate({
+    ## keep the same x-variable 'active' if possible
+    sel <-
+      if(!not_available(input$viz_xvar) && all(input$viz_xvar %in% vars))
+        input$viz_xvar
+      else
+         state_single("viz_xvar", vars, "none")
+  })
+
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
-    selected = state_multiple("viz_xvar",vars),
+    selected = sel,
     multiple = TRUE, size = min(5, length(vars)), selectize = FALSE)
 })
 

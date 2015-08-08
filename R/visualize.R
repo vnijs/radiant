@@ -51,7 +51,10 @@ visualize <- function(dataset, xvar,
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
-  if (!type %in% c("scatter","line")) color = "none"
+  if (!type %in% c("scatter","line")) color <- "none"
+  if (!type == "scatter") check %<>% sub("line","",.) %>% sub("loess","",.)
+  if (!type %in% c("scatter","box")) check %<>% sub("jitter","",.)
+  if (!type %in% c("scatter","line")) color <- "none"
 
   ## variable to use if bar chart is specified
   byvar <- NULL

@@ -109,12 +109,12 @@ output$dl_explore_tab <- downloadHandler(
   content = function(file) {
     dat <- .explore()
     if (is.null(dat)) {
-      write.csv(data_frame("Data" = "[Empty]"),file)
+      write.csv(data_frame("Data" = "[Empty]"),file, row.names = FALSE)
     } else {
       rows <- input$explorer_rows_all
       flip(dat, input$expl_top) %>%
         {if (is.null(rows)) . else slice(., rows)} %>%
-        write.csv(file)
+        write.csv(file, row.names = FALSE)
     }
   }
 )
