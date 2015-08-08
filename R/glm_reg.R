@@ -69,7 +69,7 @@ glm_reg <- function(dataset, dep_var, indep_var,
   isFct <- sapply(select(dat,-1), is.factor)
   if (sum(isFct) > 0) {
     for (i in names(select(dat,-1)[isFct]))
-      glm_coeff$`  ` %<>% gsub(i, paste0(i," > "), .)
+      glm_coeff$`  ` %<>% sub(i, paste0(i," > "), .)
 
     rm(i, isFct)
   }
