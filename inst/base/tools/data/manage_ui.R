@@ -163,10 +163,10 @@ observe({
   if (is.null(input$saveClipData) || input$saveClipData == 0) return()
   isolate({
     saveClipboardData()
-    updateRadioButtons(session = session, inputId = "saveAs",
-                       label = "Save data:",
-                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                         "state" = "state"), selected = "rda", inline = TRUE)
+    updateRadioButtons(session = session, inputId = "saveAs", selected = "rda")
+                       # label = "Save data:",
+                       # c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
+                       #   "state" = "state"), selected = "rda", inline = TRUE)
   })
 })
 
@@ -246,11 +246,11 @@ observe({
   if (not_pressed(input$loadClipData)) return()
   isolate({
     loadClipboardData()
-    updateRadioButtons(session = session, inputId = "dataType",
-                       label = "Load data:",
-                       c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                         "examples" = "examples", "state" = "state"),
-                       selected = "rda", inline = TRUE)
+    updateRadioButtons(session = session, inputId = "dataType", selected = "rda")
+                       # label = "Load data:",
+                       # c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
+                       #   "examples" = "examples", "state" = "state"),
+                       # selected = "rda", inline = TRUE)
     updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = r_data$datasetlist, selected = "xls_data")
   })

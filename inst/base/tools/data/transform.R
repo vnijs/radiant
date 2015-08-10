@@ -338,13 +338,20 @@ transform_main <- reactive({
 
 		if (input$tr_transfunction != 'none') {
       fun <- get(input$tr_transfunction)
-      dat_tr <- dat %>% mutate_each_(funs(fun), vars)
-  		cn <- c(vars,paste(vars, input$tr_transfunction, sep="_"))
-			dat <- cbind(dat,dat_tr)
+      dat <- dat %>% mutate_each_(funs(fun), vars) %>%
+        bind_cols(dat, .) %>%
+        set_colnames(c(vars, paste(vars, input$tr_transfunction, sep="_")))
+
+      # dat <- cbind(dat,dat_tr)
+      # cn <- c(vars,paste(vars, input$tr_transfunction, sep="_"))
+   #    dat_tr <- dat %>% mutate_each_(funs(fun), vars)
+  	# 	cn <- c(vars,paste(vars, input$tr_transfunction, sep="_"))
+			# dat <- cbind(dat,dat_tr)
 			# dat <- bind_cols(dat,dat_tr)
-			colnames(dat) <- cn
+			# colnames(dat) <- cn
 		}
 		if (input$tr_typefunction != 'none') {
+      ## change in type is always done in-place
       fun <- get(input$tr_typefunction)
       dat <- mutate_each_(dat,funs(fun), vars)
 		}
@@ -354,9 +361,6 @@ transform_main <- reactive({
       isNum <- "numeric" == dc | "integer" == dc
       if (sum(isNum) == 0) return("Please select numerical variables to normalize")
       dat_tr <- dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer]
-      # dat_tr <- try(dplyr::select(dat,which(isNum)) / .getdata()[,input$tr_normalizer], silent = TRUE)
-      # if (is(dat_tr, 'try-error'))
-      # 	return(paste0("The normalization failed. The error message was:\n\n", attr(dat_tr,"condition")$message, "\n\nPlease try again. Examples are shown in the help file."))
      	cn <- c(vars,paste(vars[isNum],input$tr_normalizer, sep="_"))
 			dat <- cbind(dat,dat_tr)
 			colnames(dat) <- cn
@@ -375,39 +379,44 @@ transform_main <- reactive({
 
 	if (input$tr_change_type ==  'recode') {
     recom <- input$tr_recode %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
-		# if (input$tr_recode != '') {
 		if (recom != "") {
-			# recom <- input$tr_recode
-			# recom <- gsub("\"","\'", recom)
-			newvar <- try(do.call(car::recode, list(dat[[input$tr_vars[1]]],recom)), silent = TRUE)
-			if (!is(newvar, 'try-error')) {
-				cn <- c(colnames(dat),paste("rc",input$tr_vars[1], sep="_"))
-				dat <- cbind(dat,newvar)
-				colnames(dat) <- cn
-				return(dat)
+			nvar <- try(do.call(car::recode, list(dat[[input$tr_vars[1]]],recom)), silent = TRUE)
+			if (!is(nvar, 'try-error')) {
+        return(data.frame(nvar) %>% setNames(paste(input$tr_vars[1],"rc", sep="_")))
 			} else {
-      	return(paste0("The recode command was not valid. The error message was:\n", attr(newvar,"condition")$message, "\nPlease try again. Examples are shown in the help file (click the ? icon)."))
+      	return(paste0("The recode command was not valid. The error message was:\n", attr(nvar,"condition")$message, "\nPlease try again. Examples are shown in the help file (click the ? icon)."))
 			}
 		}
 	}
 
 	if (input$tr_change_type == 'clip') {
-		if (input$tr_paste != '') {
-			cpdat <- read.table(header=T, text=input$tr_paste)
+		if (input$tr_paste != "") {
+
+      cpdat <- try(read.table(header = TRUE, comment.char = "", fill = TRUE, as.is = TRUE, text = input$tr_paste), silent = TRUE)
+      if (is(cpdat, 'try-error')) {
+        return("The copy-and-pasted data was not well formated. Please make\nsure the number of rows in the data in Radiant and in the\nspreadsheet are the same and try again.")
+      }
+
+      if (is.null(input$tr_vars)) {
+        if (nrow(.getdata()) == nrow(cpdat)) return(cpdat)
+        else return("The copy-and-pasted data does not have the correct number of rows. Please make\nsure the number of rows in the data in Radiant and in the spreadsheet are the\nsame and try again.")
+      }
+
 			cpname <- names(cpdat)
-			if (sum(cpname %in% colnames(dat)) > 0) names(cpdat) <- paste('cp',cpname,sep = '_')
-			if (is.null(input$tr_vars)) return(cpdat)
-			if (nrow(cpdat) == nrow(dat)) dat <- cbind(dat,cpdat)
-			# if (nrow(cpdat) == nrow(dat)) dat <- bind_cols(dat,cpdat)
+			if (sum(cpname %in% colnames(dat)) > 0) names(cpdat) <- paste(cpname, "cp", sep = '_')
+      if (nrow(cpdat) == nrow(dat)) dat <- bind_cols(dat,cpdat)
+      else return("The copy-and-pasted data does not have the correct number of rows. Please make\nsure the number of rows in the data in Radiant and in the spreadsheet are the\nsame and try again.")
 		}
 	}
 
 	if (input$tr_change_type == 'rename') {
-		if (!is.null(input$tr_vars) && input$tr_rename != '') {
-			rcom <- unlist(strsplit(gsub(" ","",input$tr_rename), ","))
-			rcom <- rcom[1:min(length(rcom),length(input$tr_vars))]
+    tr_rename <- input$tr_rename %>% gsub("\\s","", .)
+		if (!is.null(input$tr_vars) && tr_rename != "") {
+			rcom <- unlist(strsplit(tr_rename, ",")) %>%
+        .[1:min(length(.),length(input$tr_vars))]
 			names(dat)[1:length(rcom)] <- rcom
-      # rename_(dat, .dots = setNames(l2,l1))   # dplyr alternative has the same dplyr::changes result
+      ## dplyr alternative has the same dplyr::changes result
+      # rename_(dat, .dots = setNames(l2,l1))
 		}
 	}
 
@@ -430,17 +439,7 @@ transform_main <- reactive({
       	return(paste0("The create command was not valid. The command entered was:\n\n", ccom, "\n\nThe error message was:\n\n", attr(ndat,"condition")$message, "\n\nPlease try again. Examples are shown in the help file."))
       } else {
 			  nvars <- strsplit(ccom, ";")[[1]] %>% strsplit(.,"=") %>% sapply("[", 1)
-				# nfull <- ncol(fdat)
-				# nnew <- ncol(ndat)
-				## this won't work properly if the transform command creates a new variable
-				## and also overwrites an existing one
-				# dat[,c("cyl","new")] <- data.frame(cyl = 1:32, new = 1:32)
 				dat <- select_(ndat, .dots = nvars)
-				# if (nfull < nnew) ndat <- ndat[,(nfull+1):nnew, drop = FALSE]
-				# if (is.null(input$tr_vars)) return(ndat)
-				# cn <- c(colnames(dat),colnames(ndat))
-				# dat <- cbind(dat,ndat)
-				# colnames(dat) <- cn
 			}
 		}
 	}
@@ -463,17 +462,15 @@ output$transform_summary <- renderPrint({
 observeEvent(input$tr_store, {
 	isolate({
 		dat <- transform_main()
-		if (dat %>% is.null) return()
-		if (dat %>% is.character) return(dat)
+		if (is.null(dat)) return()
+		if (is.character(dat)) return(dat)
 
-		# saving to a new dataset if specified
+		## saving to a new dataset if specified
 		dataset <- input$tr_dataset
 		if (r_data[[dataset]] %>% is.null) {
 			r_data[[dataset]] <- .getdata()
 			r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
-			r_data[['datasetlist']] %<>%
-				c(dataset,.) %>%
-				unique
+			r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
 		}
 
 	  if (input$tr_change_type == 'type') {
@@ -492,7 +489,7 @@ observeEvent(input$tr_store, {
 			.changedata(dat, colnames(dat), dataset = dataset)
 		}
 
-		# reset input values once the changes have been applied
+		## reset input values once the changes have been applied
 		updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
 
     if (dataset != input$dataset)
@@ -515,7 +512,7 @@ observeEvent(input$tr_change_type, {
 	})
 })
 
-
+## not doing anything yet ...
 observe({
   if (not_pressed(input$transform_report)) return()
   fun <- isolate(input$tr_change_type)
