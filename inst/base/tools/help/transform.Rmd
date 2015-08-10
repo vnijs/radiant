@@ -2,7 +2,7 @@
 
 ### Type
 
-When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the `Save changes` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
+When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the `Store` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
 
 1. As factor: convert a variable to type factor (i.e., a categorical variable)
 2. As number: convert a variable to type numeric
@@ -11,11 +11,11 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 5. As date (mdy): convert a character of factor variable to a date if the dates are ordered as month-day-year
 6. As date (dmy): convert a character of factor variable to a date if the dates are ordered as day-month-year
 7. As date (dmy): convert a character of factor variable to a date if the dates are ordered as year-month-day
-8. As date/time (ymd_hms): convert a character of factor variable to a date if the dates are ordered as year-month-day-hour-minute-second
+8. As date/time (ymd_hms): convert a character or factor variable to a date if the dates are ordered as year-month-day-hour-minute-second
 
-### Change
+### Transform
 
-When you select `Change` from the `Transformation type` drop-down another drop-down menu is shown that will allow you do apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to change and choose `Log` from the `Apply function` menu. A new variable is created with the prefix `log_`. Click the `Save changes` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
+When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to transform and choose `Log` from the `Apply function` menu. A new variable is created with the prefix `log_`. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
 1. Log: create a log-transformed version of the selected variable (i.e., log(x))
 2. Square: multiply a variable by itself (i.e., x^2)
@@ -28,17 +28,17 @@ When you select `Change` from the `Transformation type` drop-down another drop-d
 
 ### Normalize
 
-Choose `Normalize` from the `Transformation type` drop-down standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. Then click the `Save changes` button.
+Choose `Normalize` from the `Transformation type` drop-down standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. Then click the `Store` button.
 
 ### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Save changes` to add it to the dataset.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Store` to add it to the dataset.
 
 1. Create a new variable z that is the difference between variables x and y in the data
 
 	z = x - y
 
-2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is available in the Change drop-down):
+2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is available in the Transform drop-down):
 
 	z = x - mean(x)
 
@@ -58,7 +58,7 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 	z = ifelse(x < y, 'smaller', 'bigger')
 
-7. Create a categorical variable with three levels
+7. Create a categorical variable with three levels. An alternative approach would be to use the `Recode` function described below
 
 	z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
 
@@ -66,15 +66,19 @@ Note: For 6 and 7 you may need to convert the new variable to a factor for analy
 
 ### Clipboard
 
-It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` dropdown and paste your new data into the `Paste from Excel` box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click `Save changes`.
+It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` dropdown and paste your new data into the `Paste from Excel` box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click `Store`.
 
 ### Recode
 
-To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` dropdown. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Click `Save changes` to add the new variable to the data. Some examples are given below.
+To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` dropdown. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Click `Store` to add the new variable to the data. Some examples are given below.
 
-1. All values below 20 are set to 'Low' and all others to 'High'
+1. Values below 20 are set to 'Low' and all others to 'High'
 
 	lo:20 = 'Low'; else = 'High'
+
+2. Values above 20 are set to 'High' and all others to 'Low'
+
+	20:hi = 'High'; else = 'Low'
 
 2. Values 1 through 12 are set to 'A', 13:24 to 'B', and the remainder to 'C'
 
@@ -84,39 +88,30 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
-4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode box`. Press return and `Save changes` to add the recoded variable to the data.
+4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode box`. Press return and `Store` to add the recoded variable to the data.
 
 	400 = NA
 
 ### Rename
 
-Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Save changes` to alter the variable names in the original data.
+Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Store` to alter the variable names in the original data.
+
+### Replace
+
+Choose `Replace` from the `Transformation type` dropdown if you want to overwrite variables in the data with new ones created using the Create, Transform, Clipboard, etc. features. Select one or more variables to overwrite and the some number of replacement variables. Press `Store` to alter the original data.
 
 ### Reorder or remove columns
 
-Choose `Reorder/Remove columns` from the `Transformation type` dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Save changes` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data > Manage page.
+Choose `Reorder/Remove columns` from the `Transformation type` dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data > Manage page.
 
 ### Reorder or remove levels
 
-If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Save changes` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data > Manage tab. To temporarily remove levels from the data use the `Filter` option discussed below.
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data > Manage tab. To temporarily remove levels from the data use the `Filter` option discussed below.
 
 ### Remove missing values
 
-Choose `Remove missing` from the `Transformation type` dropdown to eliminate all rows with one or more missing values. Press `Save changes` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
+Choose `Remove missing` from the `Transformation type` dropdown to eliminate all rows with one or more missing values. Press `Store` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
 
 ### Filter
 
-There are several ways to select a subset of the data to view. The `Filter` box on the left (click the checkbox first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expression that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators.
-
-You can also use string matching to select rows. For example, type `grepl("ood",cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insentive search you would use `grepl("GOOD",cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid.
-
-It is important to note that filters are _presistent_. A filter entered in any of the Data-tabs will also be applied to other tabs and to the analyses conducted through any of the other menus in Radiant. To remove a filter you have to (1) erase it and press return or (2) uncheck the `Filter` checkbox.
-
-```{r results = 'asis', echo = FALSE}
-tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
-operators <- data.frame("Operator" = c("<","<=",">",">=","==","!=","x | y","x & y"),
-  "Description" = c("less than", "less than or equal to", "greater than", "greater than or equal to", "exactly equal to", "not equal to", "x OR y", "x AND y"))
-knitr::kable(operators, align = 'l', format = 'html', table.attr = tab_small)
-```
-
-Choose `Filter` from the `Transformation type` dropdown to select (or omit) specific sets of rows from the data. You should see the number of observations in the data summary change (i.e., the value of n changes). Press `Save changes` to keep only the rows you want in the data. Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
+Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show an error message. Either remove the filter statement or uncheck the `Filter` checkbox. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data. Then return to the Transform tab to make the desired variable changes.

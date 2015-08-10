@@ -4,9 +4,9 @@
 
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
-pvt_check <- c("Percentage" = "perc")
+# pvt_perc <- c("Percentage" = "perc")
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
-pvt_plot_type <- c("Dodge" = "dodge","Fill" = "fill")
+pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
@@ -67,17 +67,16 @@ output$ui_Pivotr <- renderUI({
           td(checkboxInput("pvt_plot", "Show plot", value = state_init("pvt_plot", FALSE)))
         ),
         tr(
-          td(checkboxGroupInput("pvt_check", NULL, pvt_check,
-               selected = state_init("pvt_check"), inline = TRUE)),
+          td(checkboxInput("pvt_perc", "Percentage", value = state_init("pvt_perc", FALSE))),
           td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
                checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
       )))
     ),
     conditionalPanel("input.pvt_plot == true",
       wellPanel(
-        radioButtons("pvt_plot_type", label = "Plot type:",
-          pvt_plot_type,
-          selected = state_init("pvt_plot_type", "dodge"),
+        radioButtons("pvt_type", label = "Plot type:",
+          pvt_type,
+          selected = state_init("pvt_type", "dodge"),
           inline = TRUE),
         checkboxInput("pvt_flip", "Flip", value = state_init("pvt_flip", FALSE))
       )
@@ -109,9 +108,20 @@ pvt_inputs <- reactive({
   pvt_args
 })
 
+pvt_plot_args <- as.list(if (exists("plot.pivotr")) formals(plot.pivotr)
+                         else formals(radiant:::plot.pivotr))
+
+## list of function inputs selected by user
+pvt_plot_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(pvt_plot_args))
+    pvt_plot_args[[i]] <- input[[paste0("pvt_",i)]]
+  pvt_plot_args
+})
+
 .pivotr <- reactive({
   if (not_available(input$pvt_cvars)) return()
-  withProgress(message = 'Calculating', value = 0, {
+  withProgress(message = "Calculating", value = 0, {
     sshhr( do.call(pivotr, pvt_inputs()) )
   })
 })
@@ -120,7 +130,7 @@ output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
   if (is.null(pvt)) return()
   pvt$shiny <- TRUE
-  make_dt(pvt, format = input$pvt_format, check = input$pvt_check)
+  make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc)
 })
 
 output$pivotr_chi2 <- renderPrint({
@@ -194,7 +204,11 @@ observeEvent(input$pivotr_rows_all, {
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
-  plot(pvt, type = input$pvt_plot_type, flip = input$pvt_flip, shiny = TRUE)
+  # plot(pvt, type = input$pvt_type, flip = input$pvt_flip, shiny = TRUE)
+
+    # sshhr( do.call(pivotr, pvt_inputs()) )
+    pvt_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
+      { do.call(plot, c(list(x = pvt), .)) }
 })
 
 output$plot_pivot <- renderPlot({
@@ -206,13 +220,13 @@ output$plot_pivot <- renderPlot({
 
 observeEvent(input$pivotr_report, {
   isolate({
+    inp_out <- list(list(chi2 = input$pvt_chi2),"")
     if (input$pvt_plot == TRUE) {
-      inp_out <- list(list(chi2 = input$pvt_chi2),list(type = input$pvt_plot_type))
+      inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
       outputs <- c("summary","plot")
       figs <- TRUE
     } else {
       outputs <- c("summary")
-      inp_out <- list(list(chi2 = input$pvt_chi2),"")
       figs <- FALSE
     }
     update_report(inp_main = clean_args(pvt_inputs(), pvt_args),

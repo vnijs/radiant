@@ -11,5 +11,3 @@ It is also possible to summarize numerical variables. Select `price` from the Nu
 ### Filter
 
 Use the `Filter` box to select (or omit) specific sets of rows from the data. See the help file for Data > View for details.
-
-<i title="Help" class="glyphicon glyphicon-question-sign" data-toggle="modal" data-target="#view_help"></i>
