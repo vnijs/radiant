@@ -4,7 +4,7 @@
 \alias{visualize}
 \title{Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}}
 \usage{
-visualize(dataset, xvar, yvar = "none", type = "hist", facet_row = ".",
+visualize(dataset, xvar, yvar = NULL, type = "hist", facet_row = ".",
   facet_col = ".", color = "none", fill = "none", bins = 10,
   smooth = 1, check = "", axes = "", alpha = 0.5, data_filter = "",
   shiny = FALSE, custom = FALSE)
@@ -22,9 +22,9 @@ visualize(dataset, xvar, yvar = "none", type = "hist", facet_row = ".",
 
 \item{facet_col}{Create horizontally arranged subplots for each level of the selected factor variable}
 
-\item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour}
+\item{color}{Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color}
 
-\item{fill}{For bar plot ...}
+\item{fill}{Group bar, histogram, and density plots by group, each with a different color}
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 

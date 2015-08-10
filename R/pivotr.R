@@ -299,6 +299,7 @@ make_dt <- function(pvt, format = "none", check = "") {
 #'
 #' @param x Return value from \code{\link{pivotr}}
 #' @param type Plot type to use ("fill" or "dodge" (default))
+#' @param flip Flip the axes in a plot (FALSE or TRUE)
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
@@ -306,7 +307,7 @@ make_dt <- function(pvt, format = "none", check = "") {
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
 #' @export
-plot.pivotr <- function(x, type = "dodge", shiny = FALSE, ...) {
+plot.pivotr <- function(x, type = "dodge", flip = FALSE, shiny = FALSE, ...) {
 
   object <- x; rm(x)
   # object <- pivotr("diamonds", cvars = "cut", nvar = "price")
@@ -344,6 +345,8 @@ plot.pivotr <- function(x, type = "dodge", shiny = FALSE, ...) {
     ## You are pushing this feature a bit too far dude
     return(invisible())
   }
+
+  if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
     { if (shiny) . else print(.) }

@@ -306,12 +306,11 @@ output$saveState <- downloadHandler(
 #######################################
 # Loading data into memory
 #######################################
-observe({
-  if (input$data_rename %>% is_empty) return()
-  if (input$renameButton %>% not_pressed) return()
+observeEvent(input$renameButton, {
+  if (is_empty(input$data_rename)) return()
   isolate({
-    # you can use pryr::object_size to see that the size of the list doesn't change
-    # when you assign a list element another name
+    ## use pryr::object_size to see that the size of the list doesn't change
+    ## when you assign a list element another name
     r_data[[input$data_rename]] <- r_data[[input$dataset]]
     r_data[[input$dataset]] <- NULL
     r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
@@ -326,7 +325,7 @@ observe({
 })
 
 output$ui_datasets <- renderUI({
-  # Drop-down selection of data set
+  ## Drop-down selection of active dataset
   tagList(
     selectInput(inputId = "dataset", label = "Datasets:", choices = r_data$datasetlist,
       selected = state_init("dataset"), multiple = FALSE),
@@ -344,9 +343,9 @@ output$ui_datasets <- renderUI({
 })
 
 output$uiRename <- renderUI({
-  list(
-    textInput("data_rename", "", input$dataset),
-    actionButton('renameButton', 'Rename')
+  tags$table(
+    tags$td(textInput("data_rename", NULL, input$dataset)),
+    tags$td(actionButton('renameButton', 'Rename'), style="padding-top:5px;")
   )
 })
 
@@ -354,8 +353,8 @@ output$htmlDataExample <- renderText({
 
   if (is.null(.getdata())) return()
 
-  # Show only the first 10 (or 30) rows
+  ## Show only the first 10 (or 20) rows
   r_data[[paste0(input$dataset,"_descr")]] %>%
-    { is_empty(.) %>% ifelse(., 30, 10) } %>%
+    { is_empty(.) %>% ifelse(., 20, 10) } %>%
     show_data_snippet(nshow = .)
 })

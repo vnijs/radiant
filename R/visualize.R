@@ -8,8 +8,8 @@
 #' @param type Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
-#' @param color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different colour
-#' @param fill For bar plot ...
+#' @param color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color
+#' @param fill Group bar, histogram, and density plots by group, each with a different color
 #' @param bins Number of bins used for a histogram (1 - 50)
 #' @param smooth Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)
 #' @param check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
@@ -33,7 +33,7 @@
 #'
 #' @export
 visualize <- function(dataset, xvar,
-                      yvar = "none",
+                      yvar = NULL,
                       type = "hist",
                       facet_row = ".",
                       facet_col = ".",
@@ -52,14 +52,16 @@ visualize <- function(dataset, xvar,
   vars <- xvar
 
   if (!type %in% c("scatter","line")) color <- "none"
-  if (!type == "scatter") check %<>% sub("line","",.) %>% sub("loess","",.)
+  if (type != "scatter") check %<>% sub("line","",.) %>% sub("loess","",.)
   if (!type %in% c("scatter","box")) check %<>% sub("jitter","",.)
   if (!type %in% c("scatter","line")) color <- "none"
+  if (!type %in% c("bar","hist","density")) fill <- "none"
 
   ## variable to use if bar chart is specified
   byvar <- NULL
 
-  if (yvar != "none") vars %<>% c(., yvar)
+  # if (yvar != "none") vars %<>% c(., yvar)
+  if (!is.null(yvar)) vars %<>% c(., yvar)
   if (color != "none") vars %<>% c(., color)
   if (facet_row != ".") {
     vars %<>% c(., facet_row)
@@ -69,9 +71,10 @@ visualize <- function(dataset, xvar,
     vars %<>% c(., facet_col)
     byvar <- if (is.null(byvar)) facet_col else c(byvar, facet_col)
   }
-  if (fill != "none" && type == "bar") {
+  if (fill != "none") {
     vars %<>% c(., fill)
-    byvar <- if (is.null(byvar)) fill else c(byvar, fill)
+    if (type == "bar")
+      byvar <- if (is.null(byvar)) fill else c(byvar, fill)
   }
 
   ## so you can also pass-in a data.frame
@@ -97,10 +100,10 @@ visualize <- function(dataset, xvar,
 
   if (type == "hist") {
     for (i in xvar) {
-      hist_par <- list(alpha = alpha)
+      hist_par <- list(alpha = alpha, position = "dodge")
       plot_list[[i]] <- ggplot(dat, aes_string(x=i))
       if ("density" %in% axes) {
-        hist_par <- list(aes(y = ..density..), alpha = alpha)
+        hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
       if (!"factor" %in% class(dat[[i]]))
@@ -111,7 +114,10 @@ visualize <- function(dataset, xvar,
   } else if (type == "density") {
     for (i in xvar) {
       plot_list[[i]] <- ggplot(dat, aes_string(x=i)) +
-        geom_density(adjust = smooth, color = "blue", fill = "blue", alpha = alpha, size = 1)
+        if (fill == "none")
+          geom_density(adjust = smooth, color = "blue", fill = "blue", alpha = alpha, size = 1)
+        else
+          geom_density(adjust = smooth, alpha = alpha, size = 1)
     }
   } else if (type == "scatter") {
 
@@ -193,43 +199,49 @@ visualize <- function(dataset, xvar,
       plot_list[[i]] <- plot_list[[i]] + facet_grid(facets, scales = scales)
   }
 
-  if (color != 'none')
+  if (color != 'none') {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + aes_string(color=color) + scale_fill_brewer()
+      plot_list[[i]] <- plot_list[[i]] + aes_string(color=color)
+  }
 
   ## adding fill
   if (fill != 'none') {
-    # dat[[fill]] %<>% as.factor
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill) #+ scale_fill_brewer()
+      plot_list[[i]] <- plot_list[[i]] + aes_string(fill = fill)
   }
 
-  if ("jitter" %in% check)
+  if ("jitter" %in% check) {
     for (i in 1:length(plot_list)) plot_list[[i]] <- plot_list[[1]] +
       geom_jitter(alpha = alpha)
+  }
 
-  if ("line" %in% check)
+  if ("line" %in% check) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + geom_smooth(method = "lm", fill = 'blue',
+      plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(method = "lm", fill = 'blue',
                                              alpha = .1, size = .75,
                                              linetype = "dashed",
-                                             colour = 'black')
+                                             colour = 'black') )
+  }
 
-  if ("loess" %in% check)
+  if ("loess" %in% check) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + geom_smooth(span = smooth, size = .75,
-                                             linetype = "dotdash", aes(group=1))
+      plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(span = smooth, size = .75,
+                                             linetype = "dotdash", aes(group=1)) )
+  }
 
-  if ("flip" %in% axes)
+  if ("flip" %in% axes) {
     for (i in 1:length(plot_list)) plot_list[[i]] <- plot_list[[i]] + coord_flip()
+  }
 
-  if ("log_y" %in% axes)
+  if ("log_y" %in% axes) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + scale_y_continuous(trans = "log")
+  }
 
-  if ("log_x" %in% axes)
+  if ("log_x" %in% axes) {
     for (i in 1:length(plot_list))
       plot_list[[i]] <- plot_list[[i]] + scale_x_continuous(trans = "log")
+  }
 
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)

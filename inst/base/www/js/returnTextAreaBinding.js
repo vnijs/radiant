@@ -15,12 +15,25 @@ $.extend(returnTextAreaBinding, {
         el.value = value;
     },
     subscribe: function(el, callback) {
+        // callback when if enter key is pressed: http://stackoverflow.com/a/30149302/1974918
         $(el).on('keydown.textInputBinding input.textInputBinding', function(event) {
-            // if(event.keyCode == 13 && (event.metaKey || event.ctrlKey)) { //if enter key is pressed
-            if(event.keyCode == 13) { //if enter key is pressed
-              event.preventDefault(); // from http://stackoverflow.com/a/30149302/1974918
-              callback()
+            if(event.keyCode == 13) {
+              event.preventDefault();
+              callback();
             }
+            // print value using console.log(event.target.value);
+            if(event.target.value == "") {
+              callback();
+            }
+        });
+
+        // callback when updateTextInput is used to reset value to ""
+        $(el).on('change.textInputBinding', function(event) {
+          if(event.target.value == "") {
+            callback();
+          } else {
+            callback(false);
+          }
         });
     },
     unsubscribe: function(el) {

@@ -2,8 +2,13 @@ observe({
   ## reset r_state on dataset change ... when you are not on the
   ## Manage > Data tab
   if (is.null(r_state$dataset) || is.null(input$dataset)) return()
-  if (input$tabs_data != "Manage" || input$nav_radiant != "Data")
-    if (r_state$dataset != input$dataset) r_state <<- list()
+  if (input$tabs_data != "Manage" || input$nav_radiant != "Data") {
+    if (r_state$dataset != input$dataset) {
+      r_state <<- list()
+      updateTextInput(session = session, inputId = "data_filter", value = "")
+      updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+    }
+  }
 })
 
 ################################################################################
@@ -27,11 +32,6 @@ observeEvent(input$refresh_radiant, {
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
   if (file.exists(fn)) unlink(fn, force = TRUE)
 })
-
-## Not working as intended
-# observeEvent(input$new_session, {
-#   session$sendCustomMessage("new_session","")
-# })
 
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
@@ -58,7 +58,7 @@ saveStateOnRefresh <- function(session = session) {
 ## add variables to the data
 .changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
 	if (nrow(r_data[[dataset]]) == new_col %>% nrow &&
-     new_col_name[1] != "")
+    new_col_name[1] != "")
     r_data[[dataset]][,new_col_name] <- new_col
 }
 
@@ -70,7 +70,7 @@ saveStateOnRefresh <- function(session = session) {
   selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
-  } else if (grepl("([^=])=([^=])",selcom)) {
+  } else if (grepl("([^=!<>])=([^=])",selcom)) {
     isolate(r_data$filter_error <- "Invalid expression: never use = in a filter but == (e.g., year == 2014). Update or remove the expression and press return")
   } else {
     # do_filter(r_data[[input$dataset]], selcom)
@@ -144,11 +144,15 @@ clean_args <- function(rep_args, rep_default = list()) {
 not_available <- function(x)
   if (any(is.null(x)) || (sum(x %in% varnames()) < length(x))) TRUE else FALSE
 
+## check if a variable is null or not in the selected data.frame
+available <- function(x) not_available(x) == FALSE
+
 ## check if a button was NOT pressed
 not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
 
 ## check if a button WAS pressed
-was_pressed <- function(x) if (is.null(x) || x == 0) FALSE else TRUE
+# was_pressed <- function(x) if (is.null(x) || x == 0) FALSE else TRUE
+# was_pressed <- function(x) not_pressed == FALSE
 
 ## check for duplicate entries
 has_duplicates <- function(x)
@@ -208,8 +212,10 @@ print.capture_plot <- function(x, ...) {
 returnTextAreaInput <- function(inputId, label = NULL, value = "") {
   tagList(
     tags$label(label, `for` = inputId),br(),
-    tags$textarea(id=inputId, type = "text", rows="2",
-                  class="returnTextArea form-control", value)
+    tags$textarea(value, id=inputId, type = "text", rows="2",
+                  class="returnTextArea form-control")
+    # tags$textarea(id=inputId, type = "text", rows="2",
+                  # class="returnTextArea form-control", value)
   )
 }
 

@@ -50,7 +50,7 @@ cmb_type <- c("inner_join","left_join","right_join","full_join","semi_join",
 # })
 
 output$ui_Combine <- renderUI({
-  list(
+  tagList(
     wellPanel(
       uiOutput("ui_cmb_dataset"),
       conditionalPanel(condition = "output.ui_cmb_dataset == null",
@@ -60,9 +60,11 @@ output$ui_Combine <- renderUI({
       selectInput("cmb_type", "Combine type:", choices  = cmb_type,
                   selected = state_single("cmb_type",cmb_type, "inner_join"),
                   multiple = FALSE),
-      textInput("cmb_name", "Data name:",
-                state_init("cmb_name",paste0("cmb_",input$dataset))),
-      actionButton("cmb_button", "Combine")
+      tags$table(
+        tags$td(textInput("cmb_name", "Data name:",
+                          state_init("cmb_name",paste0("cmb_",input$dataset)))),
+        tags$td(actionButton("cmb_store", "Combine"), style="padding-top:30px;")
+      )
     ),
     help_and_report(modal_title = "Combine",
                     fun_name = "combine",
@@ -72,7 +74,7 @@ output$ui_Combine <- renderUI({
 
 observe({
   ## combining datasets
-  if (not_pressed(input$cmb_button)) return()
+  if (not_pressed(input$cmb_store)) return()
   isolate({
     dataset <- input$dataset
     cmb_dataset <- input$cmb_dataset
@@ -111,7 +113,7 @@ output$cmb_possible <- renderText({
 })
 
 output$cmb_data <- renderText({
-  input$cmb_button  ## dependence is needed to update cmb_type when result doesn't change
+  input$cmb_store  ## dependence is needed to update cmb_type when result doesn't change
   name <- if (is_empty(input$cmb_name)) paste0("cmb_",isolate(input$dataset))
           else input$cmb_name
   if (!is.null(r_data[[name]])) {

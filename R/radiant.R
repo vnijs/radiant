@@ -166,13 +166,20 @@ factorizer <- function(dat, safx = 10) {
 loadcsv <- function(fn, header = TRUE, sep = ",", saf = TRUE, safx = 10) {
 
   cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
-  try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
+  dat <- try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
     {if (is(., 'try-error') || nrow(readr::problems(.)) > 0)
         try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
      else . } %>%
     {if (is(., 'try-error')) return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
      else .} %>%
     {if (saf) factorizer(., safx) else . } %>% as.data.frame
+
+  ## workaround for https://github.com/rstudio/DT/issues/161
+  isDate <- sapply(dat, is.Date)
+  if (sum(isDate) == 0) return(dat)
+  for (i in colnames(dat)[isDate]) dat[[i]] %<>% as.POSIXct %>% as.Date
+
+  dat
 }
 
 #' Change data

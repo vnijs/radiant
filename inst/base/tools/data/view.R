@@ -9,11 +9,12 @@ output$ui_view_vars <- renderUI({
 })
 
 output$ui_View <- renderUI({
-  list(
+  tagList(
     wellPanel(
       uiOutput("ui_view_vars"),
       tags$table(
-        tags$td(textInput("view_dat", "Store filtered data as:", input$dataset)),
+        tags$td(textInput("view_dat", "Store filtered data as:",
+                          state_init("view_dat", paste0(input$dataset,"_view")))),
         tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
       )
     ),
@@ -29,6 +30,9 @@ output$dataviewer <- DT::renderDataTable({
 
   if (not_available(input$view_vars)) return()
   dat <- select_(.getdata(), .dots = input$view_vars)
+
+  # print(sapply(dat, class))
+  # print(getclass(dat))
 
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
@@ -59,19 +63,19 @@ view_store <- function(dataset,
                        vars = "",
                        view_dat = dataset,
                        data_filter = "",
-                       dt_rows = NULL) {
+                       rows = NULL) {
 
   mess <-
-    if (data_filter != "" && !is.null(dt_rows))
+    if (data_filter != "" && !is.null(rows))
       paste0("\nSaved filtered data: ", data_filter, " and view-filter (", lubridate::now(), ")")
-    else if (is.null(dt_rows))
+    else if (is.null(rows))
       paste0("\nSaved filtered data: ", data_filter, " (", lubridate::now(), ")")
     else if (data_filter == "")
       paste0("\nSaved data with view-filter (", lubridate::now(), ")")
     else
       ""
 
-  getdata(dataset, vars = vars, filt = data_filter, rows = dt_rows, na.rm = FALSE) %>%
+  getdata(dataset, vars = vars, filt = data_filter, rows = rows, na.rm = FALSE) %>%
     save2env(dataset, view_dat, mess)
 }
 
@@ -80,18 +84,10 @@ output$dl_view_tab <- downloadHandler(
   content = function(file) {
     getdata(input$dataset, vars = input$view_vars, filt = input$data_filter,
             rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
-      write.csv(file)
+      write.csv(file, row.names = FALSE)
   }
 )
 
-# output$dt_rows <- renderPrint({
-#   input$dataviewer_rows_all
-# })
-
-# data_filter <- "clarity == 'I1' ||| dataviewer_rows_all"
-# data_filter <- "||| dataviewer_rows_all"
-# data_filter <- ""
-# strsplit(data_filter, "\\|\\|\\|")
-
+## cannot (re)set state ... yet
 # search = list(search = 'Ma'), order = list(list(2, 'asc'), list(1, 'desc'))
 # output$tbl_state <- renderPrint(str(input$dataviewer_state))

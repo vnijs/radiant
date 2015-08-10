@@ -78,7 +78,8 @@ output$ui_Pivotr <- renderUI({
         radioButtons("pvt_plot_type", label = "Plot type:",
           pvt_plot_type,
           selected = state_init("pvt_plot_type", "dodge"),
-          inline = TRUE)
+          inline = TRUE),
+        checkboxInput("pvt_flip", "Flip", value = state_init("pvt_flip", FALSE))
       )
     ),
     help_and_report(modal_title = "Pivotr",
@@ -145,13 +146,19 @@ output$dl_pivot_tab <- downloadHandler(
 pvt_plot_width <- function() 750
 pvt_plot_height <- function() {
    pvt <- .pivotr()
-   if (!is.null(pvt) && length(input$pvt_cvars) > 2) {
+   if (is.null(pvt)) return(400)
+   if (length(input$pvt_cvars) > 2) {
        pvt %>% pvt_sorter(rows = isolate(r_data$pvt_rows)) %>%
        .$tab %>% .[[input$pvt_cvars[3]]] %>%
          levels %>%
          length %>% {. * 200}
+   } else if (input$pvt_flip) {
+      if (length(input$pvt_cvars) == 2)
+        max(400, ncol(pvt$tab) * 15)
+      else
+        max(400, nrow(pvt$tab) * 15)
    } else {
-    400
+      400
    }
 }
 
@@ -187,7 +194,7 @@ observeEvent(input$pivotr_rows_all, {
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
-  plot(pvt, type = input$pvt_plot_type, shiny = TRUE)
+  plot(pvt, type = input$pvt_plot_type, flip = input$pvt_flip, shiny = TRUE)
 })
 
 output$plot_pivot <- renderPlot({

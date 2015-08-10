@@ -282,7 +282,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
-    select(dat, which(isLogic)) %>% tally %>% print
+    select(dat, which(isLogic)) %>% summarise_each(funs(sum)) %>%
+      as.data.frame %>% set_rownames("# True") %>% print
     cat("\n")
   }
 }
