@@ -28,25 +28,25 @@ When you select `Transform` from the `Transformation type` drop-down another dro
 
 ### Normalize
 
-Choose `Normalize` from the `Transformation type` drop-down standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. Then click the `Store` button.
+Choose `Normalize` from the `Transformation type` drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. You will see a summary statistics for the new variable `price_carat` in the main panel. So save changes click the `Store` button.
 
 ### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Store` to add it to the dataset.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Store` to add it to the dataset.
 
 1. Create a new variable z that is the difference between variables x and y in the data
 
 	z = x - y
 
-2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is available in the Transform drop-down):
+2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the Transform drop-down):
 
 	z = x - mean(x)
 
-3. Create a new factor z that takes on the value TRUE when x > y and FALSE otherwise
+3. Create a new `logical` variable z that takes on the value TRUE when x > y and FALSE otherwise
 
 	z = x > y
 
-4. Create a new factor z that takes on the value TRUE when x is equal to y and FALSE otherwise
+4. Create a new `logical` z that takes on the value TRUE when x is equal to y and FALSE otherwise
 
 	z = x == y
 
@@ -62,11 +62,15 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 	z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
 
-Note: For 6 and 7 you may need to convert the new variable to a factor for analysis (see `Type` above)
+8. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press return and `Store` to add new variable `sales_rc` variable. Note that we had entered `sales` on the left-hand side of the `=` sign the orginal variable would have been overwritten
+
+  sales_rc = ifelse(sales > 400, NA, sales)
+
+Note: For examples 6 and 7 above you may want to convert the new variable to type `factor` before using it for further analysis (see `Type` above)
 
 ### Clipboard
 
-It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` dropdown and paste your new data into the `Paste from Excel` box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click `Store`.
+It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` dropdown and paste your new data into the `Paste from Excel` box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click `Store`.
 
 ### Recode
 
@@ -88,7 +92,7 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
-4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode box`. Press return and `Store` to add the recoded variable to the data.
+4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode` box. Press return and `Store` to add the recoded variable to the data
 
 	400 = NA
 
@@ -114,4 +118,4 @@ Choose `Remove missing` from the `Transformation type` dropdown to eliminate all
 
 ### Filter
 
-Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show an error message. Either remove the filter statement or uncheck the `Filter` checkbox. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data. Then return to the Transform tab to make the desired variable changes.
+Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or uncheck the `Filter` checkbox. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data. Then return to the Transform tab to make the desired variable changes.
