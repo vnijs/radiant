@@ -1,5 +1,5 @@
 
-R version 3.2.0 (2015-04-16) -- "Full of Ingredients"
+R version 3.2.1 (2015-06-18) -- "World-Famous Astronaut"
 Copyright (C) 2015 The R Foundation for Statistical Computing
 Platform: x86_64-apple-darwin13.4.0 (64-bit)
 
@@ -35,9 +35,9 @@ Loading required package: dplyr
 
 Attaching package: ‘dplyr’
 
-The following object is masked from ‘package:stats’:
+The following objects are masked from ‘package:stats’:
 
-    filter
+    filter, lag
 
 The following objects are masked from ‘package:base’:
 
@@ -127,23 +127,27 @@ table
 5    1st      Yes  Francatelli, Miss. Laura Mabel female  30     0     0     NA  56.9292     E36   Cherbourg
 6    1st      Yes             LeRoy, Miss. Bertha female  30     0     0     NA 106.4250           Cherbourg
 > avengers %>% combinedata(superheroes, type = "bind_cols")
-             name alignment gender publisher     name alignment gender         publisher
-1            Thor      good   male    Marvel  Magneto       bad   male            Marvel
-2        Iron Man      good   male    Marvel    Storm      good female            Marvel
-3            Hulk      good   male    Marvel Mystique       bad female            Marvel
-4         Hawkeye      good   male    Marvel   Batman      good   male                DC
-5     Black Widow      good female    Marvel    Joker       bad   male                DC
-6 Captain America      good   male    Marvel Catwoman       bad female                DC
-7         Magneto       bad   male    Marvel  Hellboy      good   male Dark Horse Comics
+Source: local data frame [7 x 8]
+
+             name alignment gender publisher   name.1 alignment.1 gender.1       publisher.1
+1            Thor      good   male    Marvel  Magneto         bad     male            Marvel
+2        Iron Man      good   male    Marvel    Storm        good   female            Marvel
+3            Hulk      good   male    Marvel Mystique         bad   female            Marvel
+4         Hawkeye      good   male    Marvel   Batman        good     male                DC
+5     Black Widow      good female    Marvel    Joker         bad     male                DC
+6 Captain America      good   male    Marvel Catwoman         bad   female                DC
+7         Magneto       bad   male    Marvel  Hellboy        good     male Dark Horse Comics
 > combinedata("avengers", "superheroes", type = "bind_cols")
-             name alignment gender publisher     name alignment gender         publisher
-1            Thor      good   male    Marvel  Magneto       bad   male            Marvel
-2        Iron Man      good   male    Marvel    Storm      good female            Marvel
-3            Hulk      good   male    Marvel Mystique       bad female            Marvel
-4         Hawkeye      good   male    Marvel   Batman      good   male                DC
-5     Black Widow      good female    Marvel    Joker       bad   male                DC
-6 Captain America      good   male    Marvel Catwoman       bad female                DC
-7         Magneto       bad   male    Marvel  Hellboy      good   male Dark Horse Comics
+Source: local data frame [7 x 8]
+
+             name alignment gender publisher   name.1 alignment.1 gender.1       publisher.1
+1            Thor      good   male    Marvel  Magneto         bad     male            Marvel
+2        Iron Man      good   male    Marvel    Storm        good   female            Marvel
+3            Hulk      good   male    Marvel Mystique         bad   female            Marvel
+4         Hawkeye      good   male    Marvel   Batman        good     male                DC
+5     Black Widow      good female    Marvel    Joker         bad     male                DC
+6 Captain America      good   male    Marvel Catwoman         bad   female                DC
+7         Magneto       bad   male    Marvel  Hellboy        good     male Dark Horse Comics
 > avengers %>% combinedata(superheroes, type = "bind_rows")
 Source: local data frame [14 x 4]
 
@@ -228,11 +232,6 @@ Source: local data frame [14 x 4]
 > 
 > ### ** Examples
 > 
-> cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
-> result <- conjoint_profiles("cp")
-> rm(cp, envir = .GlobalEnv)
-> result <- readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
-+             conjoint_profiles
 > 
 > 
 > 
@@ -334,124 +333,51 @@ Source: local data frame [14 x 4]
 > 
 > result <- explore("diamonds", "price:x")
 > summary(result)
-Data     : diamonds 
+Data      : diamonds 
+Functions :  mean 
+Top       :  Function 
 
-Summarize numeric variables:
-           n missing     mean  median    min      max    25%     75%       sd    se    cv
-  price 3000       0 3907.186 2407.00 338.00 18791.00 938.00 5274.00 3956.915 1.319 1.013
-  carat 3000       0    0.794    0.70   0.20     3.00   0.39    1.04    0.474 0.000 0.597
-  depth 3000       0   61.753   61.90  54.20    70.80  61.10   62.50    1.446 0.000 0.023
-  table 3000       0   57.465   57.00  50.00    69.00  56.00   59.00    2.241 0.001 0.039
-      x 3000       0    5.722    5.71   3.73     9.42   4.70    6.54    1.124 0.000 0.196
- 
- Summarize factors:
-     clarity           cut       color  
-  SI1    :721   Fair     : 101   D:382  
-  VS2    :661   Good     : 275   E:554  
-  SI2    :529   Very Good: 677   F:565  
-  VS1    :442   Premium  : 771   G:597  
-  VVS2   :284   Ideal    :1176   H:454  
-  VVS1   :224                    I:284  
-  (Other):139                    J:164  
+ variable     mean
+    price 3907.186
+    carat    0.794
+    depth   61.753
+    table   57.465
+        x    5.722
 > result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > summary(result)
-Data     : diamonds 
+Data      : diamonds 
+Grouped by:  cut 
+Functions :  n skew 
+Top       :  Function 
 
-Results grouped by:  cut 
-Function used:  length 
-        cut price
-1      Fair   101
-2      Good   275
-3 Very Good   677
-4   Premium   771
-5     Ideal  1176
-
-Results grouped by:  cut 
-Function used:  skew 
-        cut price
-1      Fair 1.574
-2      Good 1.489
-3 Very Good 1.601
-4   Premium 1.413
-5     Ideal 1.799
-
+       cut variable    n  skew
+      Fair    price  101 1.574
+      Good    price  275 1.489
+ Very Good    price  677 1.601
+   Premium    price  771 1.413
+     Ideal    price 1176 1.799
 > diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew"))
-$gf
-function (x, na.rm = TRUE, type = 3) 
-{
-    if (length(dim(x)) == 0) {
-        if (na.rm) {
-            x <- x[!is.na(x)]
-        }
-        sdx <- sd(x, na.rm = na.rm)
-        mx <- mean(x)
-        n <- length(x[!is.na(x)])
-        switch(type, {
-            skewer <- sqrt(n) * (sum((x - mx)^3, na.rm = na.rm)/(sum((x - 
-                mx)^2, na.rm = na.rm)^(3/2)))
-        }, {
-            skewer <- n * sqrt(n - 1) * (sum((x - mx)^3, na.rm = na.rm)/((n - 
-                2) * sum((x - mx)^2, na.rm = na.rm)^(3/2)))
-        }, {
-            skewer <- sum((x - mx)^3)/(n * sd(x)^3)
-        })
-    }
-    else {
-        skewer <- rep(NA, dim(x)[2])
-        if (is.matrix(x)) {
-            mx <- colMeans(x, na.rm = na.rm)
-        }
-        else {
-            mx <- apply(x, 2, mean, na.rm = na.rm)
-        }
-        sdx <- apply(x, 2, sd, na.rm = na.rm)
-        for (i in 1:dim(x)[2]) {
-            n <- length(x[!is.na(x[, i]), i])
-            switch(type, {
-                skewer[i] <- sqrt(n) * (sum((x[, i] - mx[i])^3, 
-                  na.rm = na.rm)/(sum((x[, i] - mx[i])^2, na.rm = na.rm)^(3/2)))
-            }, {
-                skewer[i] <- n * sqrt(n - 1) * (sum((x[, i] - 
-                  mx[i])^3, na.rm = na.rm)/((n - 2) * sum((x[, 
-                  i] - mx[i])^2, na.rm = na.rm)^(3/2)))
-            }, {
-                skewer[i] <- sum((x[, i] - mx[i])^3, na.rm = na.rm)/(n * 
-                  sdx[i]^3)
-            })
-        }
-    }
-    return(skewer)
-}
-<environment: namespace:psych>
+$tab
+Source: local data frame [5 x 4]
 
-$f
-[1] "skew"
+        cut variable    n     skew
+1      Fair    price  101 1.574133
+2      Good    price  275 1.488577
+3 Very Good    price  677 1.600775
+4   Premium    price  771 1.413179
+5     Ideal    price 1176 1.798660
+
+$bv
+[1] "cut"
+
+$pfun
+<fun_calls>
+$ n   : length(.)
+$ skew: skew(.)
 
 $isNum
-price   cut 
- TRUE FALSE 
-
-$dc
-    price       cut 
-"integer"  "factor" 
-
-$res
-$res$length
-        cut price
-1      Fair   101
-2      Good   275
-3 Very Good   677
-4   Premium   771
-5     Ideal  1176
-
-$res$skew
-        cut    price
-1      Fair 1.574133
-2      Good 1.488577
-3 Very Good 1.600775
-4   Premium 1.413179
-5     Ideal 1.798660
-
+price 
+    1 
 
 $tvars
 [1] "price" "cut"  
@@ -471,8 +397,29 @@ $fun
 $data_filter
 [1] ""
 
+$shiny
+[1] FALSE
+
 attr(,"class")
 [1] "explore" "list"   
+> 
+> 
+> 
+> cleanEx()
+> nameEx("flip")
+> ### * flip
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: flip
+> ### Title: Flip the DT table to put Function, Variable, or Group by on top
+> ### Aliases: flip
+> 
+> ### ** Examples
+> 
+> result <- explore("diamonds", "price:x") %>% flip("var")
+> result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
++   flip("byvar")
 > 
 > 
 > 
@@ -646,7 +593,7 @@ attr(,"class")
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: lin_launcher
-> ### Title: Create a launcher for Linux (.sh)
+> ### Title: Create a launcher and updater for Linux (.sh)
 > ### Aliases: lin_launcher
 > 
 > ### ** Examples
@@ -671,7 +618,7 @@ attr(,"class")
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: mac_launcher
-> ### Title: Create a launcher for Mac (.command)
+> ### Title: Create a launcher and updater for Mac (.command)
 > ### Aliases: mac_launcher
 > 
 > ### ** Examples
@@ -686,6 +633,62 @@ attr(,"class")
 +       unlink(fn)
 +   }
 + }
+> 
+> 
+> 
+> cleanEx()
+> nameEx("make_dt")
+> ### * make_dt
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: make_dt
+> ### Title: Make a pivot tabel in DT
+> ### Aliases: make_dt
+> 
+> ### ** Examples
+> 
+> pivotr("diamonds", cvars = "cut") %>% make_dt
+> pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(format = "color_bar")
+> ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
++    make_dt(format = "color_bar", perc = TRUE)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("make_expl")
+> ### * make_expl
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: make_expl
+> ### Title: Make a tabel of summary statistics in DT
+> ### Aliases: make_expl
+> 
+> ### ** Examples
+> 
+> tab <- explore("diamonds", "price:x") %>% make_expl
+> tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
++   make_expl(top = "byvar")
+> 
+> 
+> 
+> cleanEx()
+> nameEx("make_funs")
+> ### * make_funs
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: make_funs
+> ### Title: Make a list of functions-as-formulas to pass to dplyr
+> ### Aliases: make_funs
+> 
+> ### ** Examples
+> 
+> make_funs(c("mean", "sum_rm"))
+<fun_calls>
+$ mean: mean(.)
+$ sum : sum_rm(.)
 > 
 > 
 > 
@@ -718,7 +721,7 @@ attr(,"class")
 > 
 > ### ** Examples
 > 
-> result <- mds("city","from","to","distance")
+> result <- mds("city", "from", "to", "distance")
 > summary(result)
 (Dis)similarity based brand map (MDS)
 Data        : city 
@@ -761,7 +764,7 @@ SF       1697.23  131.69
 LA       1464.05  560.58
 Denver    522.49   13.40
 
-Stress: 0.02> result <- mds("diamonds","clarity","cut","price")
+Stress: 0.02> result <- mds("diamonds", "clarity", "cut", "price")
 > summary(result)
 Number of observations and unique IDs for the brand variable do not match.
 Please choose another brand variable or another dataset.> 
@@ -872,6 +875,24 @@ Please choose another brand variable or another dataset.>
 > 
 > 
 > cleanEx()
+> nameEx("pivotr")
+> ### * pivotr
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pivotr
+> ### Title: Create a pivot table using dplyr
+> ### Aliases: pivotr
+> 
+> ### ** Examples
+> 
+> result <- pivotr("diamonds", cvars = "cut")$tab
+> result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
+> result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
+> 
+> 
+> 
+> cleanEx()
 > nameEx("plot.compare_means")
 > ### * plot.compare_means
 > 
@@ -956,23 +977,6 @@ Please choose another brand variable or another dataset.>
 > result <- cross_tabs("newspaper", "Income", "Newspaper")
 > plot(result, check = c("observed","expected","chi_sq"))
 > newspaper %>% cross_tabs("Income", "Newspaper") %>% plot(c("observed","expected"))
-> 
-> 
-> 
-> cleanEx()
-> nameEx("plot.explore")
-> ### * plot.explore
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: plot.explore
-> ### Title: Plot method for the explore function
-> ### Aliases: plot.explore
-> 
-> ### ** Examples
-> 
-> result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
-> plot(result)
 > 
 > 
 > 
@@ -1593,11 +1597,19 @@ Predicted values for profiles from dataset:
 > 
 > result <- regression("diamonds", "price", c("carat","clarity"))
 > plot(result, plots = "dashboard")
+stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 > plot(result, plots = "dashboard", lines = c("line","loess"))
+geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
+geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
+geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
+stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 > plot(result, plots = "coef", intercept = TRUE)
 > plot(result, plots = "coef", conf_lev = .99, intercept = TRUE)
 > plot(result, plots = "hist")
+stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
+stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 > plot(result, plots = "scatter", lines = c("line","loess"))
+geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
 > plot(result, plots = "correlations")
 > plot(result, plots = "leverage")
 > plot(result, plots = "resid_pred", lines = "line")
@@ -1608,6 +1620,25 @@ Predicted values for profiles from dataset:
 
 detaching ‘package:mgcv’, ‘package:nlme’
 
+> nameEx("plot.simulater")
+> ### * plot.simulater
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: plot.simulater
+> ### Title: Plot method for the simulater function
+> ### Aliases: plot.simulater
+> 
+> ### ** Examples
+> 
+> result <- simulater(const = "cost 3", norm = "demand 2000 1000",
++                     discrete = "price 5 .3 8 .7",
++                     form = "profit = demand * (price - cost)")
+> plot(result)
+> 
+> 
+> 
+> cleanEx()
 > nameEx("plot.single_mean")
 > ### * plot.single_mean
 > 
@@ -1991,6 +2022,24 @@ Predicted values for profiles from dataset:
 > 
 > sig_stars(c(.0009, .049, .009, .4, .09))
 [1] "***" "*"   "**"  ""    "."  
+> 
+> 
+> 
+> cleanEx()
+> nameEx("simulater")
+> ### * simulater
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: simulater
+> ### Title: Simulate data for decision analysis
+> ### Aliases: simulater
+> 
+> ### ** Examples
+> 
+> result <- simulater(const = "cost 3", norm = "demand 2000 1000",
++                     discrete = "price 5 .3 8 .7",
++                     form = "profit = demand * (price - cost)")
 > 
 > 
 > 
@@ -5230,6 +5279,23 @@ attr(,"class")
 > 
 > 
 > cleanEx()
+> nameEx("sum_rm")
+> ### * sum_rm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: sum_rm
+> ### Title: Sum with na.rm = TRUE
+> ### Aliases: sum_rm
+> 
+> ### ** Examples
+> 
+> sum_rm(1:200)
+[1] 20100
+> 
+> 
+> 
+> cleanEx()
 > nameEx("summary.compare_means")
 > ### * summary.compare_means
 > 
@@ -5243,7 +5309,7 @@ attr(,"class")
 > 
 > result <- compare_means("diamonds","cut","price")
 > summary(result)
-Pairwise mean comparisons
+Pairwise mean comparisons (t-test)
 Data      : diamonds 
 Variables : cut, price 
 Samples   : independent 
@@ -5258,21 +5324,21 @@ Adjustment: None
      Ideal 3470.224 1176 3827.423 111.610 218.977
 
  Alt. hyp.                        Null hyp.             diff     p.value    
- Fair not equal to Good           Fair = Good            374.805 0.391      
- Fair not equal to Very Good      Fair = Very Good       545.322 0.177      
- Fair not equal to Premium        Fair = Premium         135.829 0.737      
- Fair not equal to Ideal          Fair = Ideal          1035.014 0.009   ** 
- Good not equal to Very Good      Good = Very Good       170.517 0.528      
- Good not equal to Premium        Good = Premium        -238.976 0.38       
- Good not equal to Ideal          Good = Ideal           660.209 0.009   ** 
- Very Good not equal to Premium   Very Good = Premium   -409.493 0.056   .  
- Very Good not equal to Ideal     Very Good = Ideal      489.692 0.009   ** 
+ Fair not equal to Good           Fair = Good            374.805 0.414      
+ Fair not equal to Very Good      Fair = Very Good       545.322 0.195      
+ Fair not equal to Premium        Fair = Premium         135.829 0.745      
+ Fair not equal to Ideal          Fair = Ideal          1035.014 0.011   *  
+ Good not equal to Very Good      Good = Very Good       170.517 0.545      
+ Good not equal to Premium        Good = Premium        -238.976 0.388      
+ Good not equal to Ideal          Good = Ideal           660.209 0.012   *  
+ Very Good not equal to Premium   Very Good = Premium   -409.493 0.049   *  
+ Very Good not equal to Ideal     Very Good = Ideal      489.692 0.01    *  
  Premium not equal to Ideal       Premium = Ideal        899.185 < .001  ***
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > result <- diamonds %>% tbl_df %>% compare_means("x","y")
 > summary(result)
-Pairwise mean comparisons
+Pairwise mean comparisons (t-test)
 Data      : ----- 
 Variables : x, y 
 Samples   : independent 
@@ -5289,7 +5355,7 @@ Adjustment: None
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > result <- diamonds %>% tbl_df %>% group_by(cut) %>% compare_means("x",c("x","y"))
 > summary(result)
-Pairwise mean comparisons
+Pairwise mean comparisons (t-test)
 Data      : ----- 
 Variables : x, y 
 Samples   : independent 
@@ -6024,88 +6090,52 @@ Chi-squared: 187.783 df(1), p.value < .001
 > 
 > result <- explore("diamonds", "price:x")
 > summary(result)
-Data     : diamonds 
+Data      : diamonds 
+Functions :  mean 
+Top       :  Function 
 
-Summarize numeric variables:
-           n missing     mean  median    min      max    25%     75%       sd    se    cv
-  price 3000       0 3907.186 2407.00 338.00 18791.00 938.00 5274.00 3956.915 1.319 1.013
-  carat 3000       0    0.794    0.70   0.20     3.00   0.39    1.04    0.474 0.000 0.597
-  depth 3000       0   61.753   61.90  54.20    70.80  61.10   62.50    1.446 0.000 0.023
-  table 3000       0   57.465   57.00  50.00    69.00  56.00   59.00    2.241 0.001 0.039
-      x 3000       0    5.722    5.71   3.73     9.42   4.70    6.54    1.124 0.000 0.196
- 
- Summarize factors:
-     clarity           cut       color  
-  SI1    :721   Fair     : 101   D:382  
-  VS2    :661   Good     : 275   E:554  
-  SI2    :529   Very Good: 677   F:565  
-  VS1    :442   Premium  : 771   G:597  
-  VVS2   :284   Ideal    :1176   H:454  
-  VVS1   :224                    I:284  
-  (Other):139                    J:164  
+ variable     mean
+    price 3907.186
+    carat    0.794
+    depth   61.753
+    table   57.465
+        x    5.722
 > result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > summary(result)
-Data     : diamonds 
+Data      : diamonds 
+Grouped by:  cut 
+Functions :  n skew 
+Top       :  Function 
 
-Results grouped by:  cut 
-Function used:  length 
-        cut price
-1      Fair   101
-2      Good   275
-3 Very Good   677
-4   Premium   771
-5     Ideal  1176
-
-Results grouped by:  cut 
-Function used:  skew 
-        cut price
-1      Fair 1.574
-2      Good 1.489
-3 Very Good 1.601
-4   Premium 1.413
-5     Ideal 1.799
-
+       cut variable    n  skew
+      Fair    price  101 1.574
+      Good    price  275 1.489
+ Very Good    price  677 1.601
+   Premium    price  771 1.413
+     Ideal    price 1176 1.799
 > diamonds %>% explore("price:x") %>% summary
-Data     : ----- 
+Data      : ----- 
+Functions :  mean 
+Top       :  Function 
 
-Summarize numeric variables:
-           n missing     mean  median    min      max    25%     75%       sd    se    cv
-  price 3000       0 3907.186 2407.00 338.00 18791.00 938.00 5274.00 3956.915 1.319 1.013
-  carat 3000       0    0.794    0.70   0.20     3.00   0.39    1.04    0.474 0.000 0.597
-  depth 3000       0   61.753   61.90  54.20    70.80  61.10   62.50    1.446 0.000 0.023
-  table 3000       0   57.465   57.00  50.00    69.00  56.00   59.00    2.241 0.001 0.039
-      x 3000       0    5.722    5.71   3.73     9.42   4.70    6.54    1.124 0.000 0.196
- 
- Summarize factors:
-     clarity           cut       color  
-  SI1    :721   Fair     : 101   D:382  
-  VS2    :661   Good     : 275   E:554  
-  SI2    :529   Very Good: 677   F:565  
-  VS1    :442   Premium  : 771   G:597  
-  VVS2   :284   Ideal    :1176   H:454  
-  VVS1   :224                    I:284  
-  (Other):139                    J:164  
+ variable     mean
+    price 3907.186
+    carat    0.794
+    depth   61.753
+    table   57.465
+        x    5.722
 > diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew")) %>% summary
-Data     : ----- 
+Data      : ----- 
+Grouped by:  cut 
+Functions :  n skew 
+Top       :  Function 
 
-Results grouped by:  cut 
-Function used:  length 
-        cut price
-1      Fair   101
-2      Good   275
-3 Very Good   677
-4   Premium   771
-5     Ideal  1176
-
-Results grouped by:  cut 
-Function used:  skew 
-        cut price
-1      Fair 1.574
-2      Good 1.489
-3 Very Good 1.601
-4   Premium 1.413
-5     Ideal 1.799
-
+       cut variable    n  skew
+      Fair    price  101 1.574
+      Good    price  275 1.489
+ Very Good    price  677 1.601
+   Premium    price  771 1.413
+     Ideal    price 1176 1.799
 > 
 > 
 > 
@@ -6570,7 +6600,7 @@ total variance in the data (higher is better).>
 > 
 > ### ** Examples
 > 
-> result <- mds("city","from","to","distance")
+> result <- mds("city", "from", "to", "distance")
 > summary(result)
 (Dis)similarity based brand map (MDS)
 Data        : city 
@@ -6655,7 +6685,7 @@ SF       1697.228  131.686
 LA       1464.047  560.580
 Denver    522.487   13.396
 
-Stress: 0.0197> city %>% mds("from", "to","distance") %>% summary
+Stress: 0.0197> city %>% mds("from", "to", "distance") %>% summary
 (Dis)similarity based brand map (MDS)
 Data        : ----- 
 Variables   : from, to, distance 
@@ -6698,6 +6728,65 @@ LA       1464.05  560.58
 Denver    522.49   13.40
 
 Stress: 0.02> 
+> 
+> 
+> cleanEx()
+> nameEx("summary.pivotr")
+> ### * summary.pivotr
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: summary.pivotr
+> ### Title: Summary method for pivotr
+> ### Aliases: summary.pivotr
+> 
+> ### ** Examples
+> 
+> pivotr("diamonds", cvars = "cut") %>% summary
+Pivot table
+Data       : diamonds 
+Categorical: cut 
+
+       cut    n
+      Fair  101
+      Good  275
+ Very Good  677
+   Premium  771
+     Ideal 1176
+     Total 3000
+
+> pivotr("diamonds", cvars = "cut") %>% summary
+Pivot table
+Data       : diamonds 
+Categorical: cut 
+
+       cut    n
+      Fair  101
+      Good  275
+ Very Good  677
+   Premium  771
+     Ideal 1176
+     Total 3000
+
+> pivotr("diamonds", cvars = "cut:clarity", nvar = "price") %>% summary
+Pivot table
+Data       : diamonds 
+Categorical: cut clarity 
+Numeric    : price 
+Function   : mean 
+
+ clarity     Fair     Good Very Good  Premium    Ideal    Total
+      I1 2730.167 4333.500  3864.167 4932.231 6078.200 4194.775
+     SI2 5893.964 5280.919  5045.621 5568.019 4435.673 5100.189
+     SI1 4273.069 3757.022  4277.544 4113.811 3758.125 3998.577
+     VS2 3292.000 3925.481  3950.947 4522.914 3306.290 3822.967
+     VS1 5110.769 3740.697  3889.475 4461.333 3189.362 3789.181
+    VVS2 2030.500 4378.167  2525.193 3580.581 3665.181 3337.820
+    VVS1 6761.500 3889.333  1945.875 1426.692 2960.594 2608.460
+      IF 3205.000  817.250  4675.867 2361.333 1961.344 2411.697
+   Total 4505.238 4130.433  3959.916 4369.409 3470.224 3907.186
+
+> 
 > 
 > 
 > cleanEx()
@@ -7228,6 +7317,27 @@ Sampling frame:
 > 
 > 
 > cleanEx()
+> nameEx("summary.simulater")
+> ### * summary.simulater
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: summary.simulater
+> ### Title: Summary method for the simulater function
+> ### Aliases: summary.simulater
+> 
+> ### ** Examples
+> 
+> result <- simulater(norm = "demand 2000 1000")
+> summary(result)
+Summarize numeric variables:
+           n missing     mean   median       min      max      25%      75%       sd    se   cv
+ demand 1000       0 1988.352 1964.676 -1008.049 5810.277 1302.627 2688.428 1034.916 1.035 0.52
+
+> 
+> 
+> 
+> cleanEx()
 > nameEx("summary.single_mean")
 > ### * summary.single_mean
 > 
@@ -7441,8 +7551,13 @@ $intv
 > ### ** Examples
 > 
 > visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
+geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
 > visualize("diamonds", "price:x", type = "hist")
 > visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
+> visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
++   ggtitle("A scatterplot") + xlab("price in $")
+> visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
++   {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
 > diamonds %>% visualize(c("price","carat","depth"), type = "density")
 > 
 > 
@@ -7457,7 +7572,7 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > flush(stderr()); flush(stdout())
 > 
 > ### Name: win_launcher
-> ### Title: Create a launcher for Windows (.bat)
+> ### Title: Create a launcher and updater for Windows (.bat)
 > ### Aliases: win_launcher
 > 
 > ### ** Examples
@@ -7479,7 +7594,7 @@ detaching ‘package:mgcv’, ‘package:nlme’
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  17.234 0.327 17.879 0 0 
+Time elapsed:  23.631 0.517 24.52 0 0 
 > grDevices::dev.off()
 null device 
           1 

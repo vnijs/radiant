@@ -24,7 +24,7 @@ upload_error_handler <- function(objname, ret) {
   r_data[[objname]] <- data.frame(matrix(rep("",12), nrow = 2))
 }
 
-loadClipboardData <- function(objname = "xls_data", ret = "", header = TRUE, sep = "\t") {
+loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
 
   dat <- sshhr(try(
          {if (Sys.info()["sysname"] == "Windows") {

@@ -307,6 +307,8 @@ make_dt <- function(pvt, format = "none", perc = FALSE) {
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
+#' @importFrom scales percent
+#'
 #' @export
 plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = FALSE, ...) {
 
@@ -348,7 +350,7 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
   }
 
   if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
-  if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = scales::percent)
+  if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = percent)
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
     { if (shiny) . else print(.) }

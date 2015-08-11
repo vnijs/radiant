@@ -242,7 +242,7 @@ observe({
 })
 
 observe({
-  # 'reading' data from clipboard
+  ## reading data from clipboard
   if (not_pressed(input$loadClipData)) return()
   isolate({
     loadClipboardData()
@@ -252,7 +252,7 @@ observe({
                        #   "examples" = "examples", "state" = "state"),
                        # selected = "rda", inline = TRUE)
     updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = r_data$datasetlist, selected = "xls_data")
+                      choices = r_data$datasetlist, selected = "copy_and_paste")
   })
 })
 

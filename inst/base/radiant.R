@@ -71,13 +71,11 @@ saveStateOnRefresh <- function(session = session) {
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
   } else if (grepl("([^=!<>])=([^=])",selcom)) {
-    isolate(r_data$filter_error <- "Invalid expression: never use = in a filter but == (e.g., year == 2014). Update or remove the expression and press return")
+    isolate(r_data$filter_error <- "Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
   } else {
-    # do_filter(r_data[[input$dataset]], selcom)
     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
-
     if (is(seldat, 'try-error')) {
-      isolate(r_data$filter_error <- paste0(attr(seldat,"condition")$message,". Update or remove the expression and press return"))
+      isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
       isolate(r_data$filter_error <- "")
       return(seldat)
@@ -111,7 +109,7 @@ two_level_vars <- reactive({
 ## used in visualize - don't plot variables that have zero sd
 varying_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(sd_rm)) %>%
+    {sshhr(summarise_each(., funs(sd_rm)))} %>%
     { . > 0 } %>%
     which(.) %>%
     varnames()[.]

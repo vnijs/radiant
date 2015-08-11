@@ -67,6 +67,29 @@ sshh <- function(...) {
 #' @export
 sshhr <- function(...) suppressWarnings( suppressMessages( ... ) )
 
+
+#' Filter data with user-specified expression
+#'
+#' @param dat Data.frame to filter
+#' @param filt Filter expression to apply to the specified dataset (e.g., "price > 10000" if dataset is "diamonds")
+#'
+#' @return Filtered data.frame
+#'
+#' @export
+filterdata <- function(dat, filt = "") {
+  if (grepl("([^=!<>])=([^=])", filt)) {
+    message("Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
+  } else {
+    seldat <- try(filter_(dat, filt), silent = TRUE)
+    if (is(seldat, 'try-error')) {
+      message(paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
+    } else {
+      return(seldat)
+    }
+  }
+  dat
+}
+
 #' Get data for analysis functions
 #'
 #' @param dataset Name of the dataframe
@@ -91,9 +114,7 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
-  # filt %<>% gsub("\\s","", .)
   filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
-
   { if (!is_string(dataset)) {
       dataset
     } else if (exists("r_env")) {
@@ -110,7 +131,8 @@ getdata <- function(dataset,
         stop %>% return
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
-        { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
+        # { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
+        { if (filt == "") . else filterdata(., filt) } %>%     # apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
         { if (vars[1] == "") . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }

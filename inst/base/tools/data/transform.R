@@ -392,7 +392,7 @@ transform_main <- reactive({
 	if (input$tr_change_type == 'clip') {
 		if (input$tr_paste != "") {
 
-      cpdat <- try(read.table(header = TRUE, comment.char = "", fill = TRUE, as.is = TRUE, text = input$tr_paste), silent = TRUE)
+      cpdat <- try(read.table(header = TRUE, comment.char = "", fill = TRUE, sep = "\t", as.is = TRUE, text = input$tr_paste), silent = TRUE)
       if (is(cpdat, 'try-error')) {
         return("The copy-and-pasted data was not well formated. Please make\nsure the number of rows in the data in Radiant and in the\nspreadsheet are the same and try again.")
       }
