@@ -10,7 +10,8 @@ dirwin=../radiant_miniCRAN/bin/windows/contrib/3.2/
 # updating gh packages
 # cd ../DT
 # git pull
-# cd ../rpivotTable
+# cd ../data.tree
+# git pull
 
 # removing all files in miniCRAN
 # rm $dirsource/*
@@ -24,20 +25,15 @@ rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
 
-# rm $dirsource/DT*
-# rm $dirmac/DT*
-# rm $dirmac_mav/DT*
-# rm $dirwin/DT*
-#
-# rm $dirsource/data.tree*
-# rm $dirmac/data.tree*
-# rm $dirmac_mav/data.tree*
-# rm $dirwin/data.tree*
+rm $dirsource/DT*
+rm $dirmac/DT*
+rm $dirmac_mav/DT*
+rm $dirwin/DT*
 
-# rm $dirsource/rpivotTable*
-# rm $dirmac/rpivotTable*
-# rm $dirmac_mav/rpivotTable*
-# rm $dirwin/rpivotTable*
+rm $dirsource/data.tree*
+rm $dirmac/data.tree*
+rm $dirmac_mav/data.tree*
+rm $dirwin/data.tree*
 
 # rm $dirsource/MathJaxR*
 # rm $dirmac/MathJaxR*

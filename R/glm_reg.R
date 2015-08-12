@@ -348,6 +348,7 @@ plot.glm_reg <- function(x,
 #' @param object Return value from \code{\link{glm_reg}}
 #' @param pred_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
 #' @param pred_data Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation
+#' @param prn Print prediction results (default is TRUE)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -365,6 +366,7 @@ plot.glm_reg <- function(x,
 predict.glm_reg <- function(object,
                             pred_cmd = "",
                             pred_data = "",
+                            prn = TRUE,
                             ...) {
 
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
@@ -381,7 +383,7 @@ predict.glm_reg <- function(object,
   vars <- object$indep_var
   # pred_cmd <- "pclass = levels(pclass)"
   if (pred_cmd != "") {
-    pred_cmd %<>% gsub("\"","\'", .)
+    pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
       paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
@@ -435,13 +437,24 @@ predict.glm_reg <- function(object,
     colnames(pred_val) <- c("Prediction","std.error")
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
-    if (pred_type == "cmd") {
-      cat("Predicted values for:\n")
-    } else {
-      cat(paste0("Predicted values for profiles from dataset: ",object$pred_data,"\n"))
-    }
+    if (prn) {
+      cat("Generalized linear model (glm)")
+      cat("\nLink function:", object$link)
+      cat("\nData         :", object$dataset)
+      if (object$data_filter %>% gsub("\\s","",.) != "")
+        cat("\nFilter       :", gsub("\\n","", object$data_filter))
+      cat("\nDependent variable   :", object$dep_var)
+      cat("\nLevel                :", object$lev, "in", object$dep_var)
+      cat("\nIndependent variables:", paste0(object$indep_var, collapse=", "),"\n\n")
 
-    pred %>% print(., row.names = FALSE)
+      if (pred_type == "cmd") {
+        cat("Predicted values for:\n")
+      } else {
+        cat(paste0("Predicted values for profiles from dataset: ",object$pred_data,"\n"))
+      }
+
+      pred %>% print(., row.names = FALSE)
+    }
 
     # pushing predictions into the clipboard
     # os_type <- Sys.info()["sysname"]
@@ -533,7 +546,7 @@ plot.glm_predict <- function(x,
   sshhr( p )
 }
 
-#' Save residuals generated in the glm_reg function
+#' Store residuals generated in the glm_reg function
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
@@ -542,13 +555,13 @@ plot.glm_predict <- function(x,
 #' @examples
 #' \donttest{
 #' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-#' save_glm_resid(result)
+#' store_glm_resid(result)
 #' head(titanic)
 #' }
 #' @export
-save_glm_resid <- function(object) {
+store_glm_resid <- function(object) {
   if (object$data_filter != "")
-    return("Please deactivate data filters before trying to save residuals")
+    return("Please deactivate data filters before trying to store residuals")
   object$model$residuals %>%
     changedata(object$dataset, vars = ., var_names = "glm_residuals")
 }

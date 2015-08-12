@@ -203,7 +203,7 @@ output$ui_regression <- renderUI({
   	    selectInput("reg_plots", "Regression plots:", choices = reg_plots,
   		  	selected = state_single("reg_plots", reg_plots)),
         conditionalPanel(condition = "input.reg_plots == 'coef'",
-        	checkboxInput("reg_coef_int", "Include intercept", state_init("reg_coef_int", FALSE))
+        	checkboxInput("reg_intercept", "Include intercept", state_init("reg_intercept", FALSE))
         ),
         conditionalPanel(condition = "input.reg_plots == 'scatter' |
                                       input.reg_plots == 'dashboard' |
@@ -239,7 +239,7 @@ output$ui_regression <- renderUI({
    					             step = 0.01)
   		  ),
         conditionalPanel(condition = "input.tabs_regression == 'Summary'",
-          actionButton("reg_save_res", "Save residuals")
+          actionButton("reg_store_res", "Store residuals")
         )
       )
 	  ),
@@ -252,7 +252,8 @@ output$ui_regression <- renderUI({
 
 reg_plot <- reactive({
 
-  if(is_empty(input$reg_plots)) return()
+  if (reg_available() != "available") return()
+  if (is_empty(input$reg_plots)) return()
 
   # specifying plot heights
   plot_height <- 500
@@ -307,75 +308,55 @@ output$regression <- renderUI({
 		             	output_panels = reg_output_panels)
 })
 
+reg_available <- reactive({
+
+  if (not_available(input$reg_dep_var))
+    return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
+
+  if (not_available(input$reg_indep_var))
+    return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
+
+  "available"
+})
+
 .regression <- reactive({
 	do.call(regression, reg_inputs())
 })
 
 .summary_regression <- reactive({
-  if (not_available(input$reg_dep_var))
-    return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
-
-  if (not_available(input$reg_indep_var))
-    return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
-
-  isolate({
-    if (input$reg_dep_var %in% input$reg_indep_var) return()
-  })
-
+  if (reg_available() != "available") return(reg_available())
+  if (input$reg_dep_var %in% input$reg_indep_var) return()
   do.call(summary, c(list(object = .regression()), reg_sum_inputs()))
 })
 
 .predict_regression <- reactive({
-
   r_data$reg_pred <- NULL
-
-  if (not_available(input$reg_dep_var))
-    return(invisible())
-
-  if (not_available(input$reg_indep_var))
-    return(invisible())
-
-  if (is_empty(input$reg_predict, ""))
-    return(invisible())
-
-  # do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  if (reg_available() != "available") return(reg_available())
+  if (is_empty(input$reg_predict)) return(invisible())
   r_data$reg_pred <- do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
 })
 
 .predict_plot_regression <- reactive({
-
-  if (is_empty(input$reg_predict, ""))
+  if (is_empty(input$reg_predict) || is.null(r_data$reg_pred))
     return(invisible())
-
-  if (is.null(r_data$reg_pred))
-    return(invisible())
-
   do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
 })
 
 .plot_regression <- reactive({
 
-  if (not_available(input$reg_dep_var))
-    return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
-
-  if (not_available(input$reg_indep_var))
-    return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
-
-  if (is_empty(input$reg_plots, ""))
+  if (reg_available() != "available") return(reg_available())
+  if (is_empty(input$reg_plots))
     return("Please select a regression plot from the drop-down menu")
 
-  if ("correlations" %in% input$reg_plots || "leverage" %in% input$reg_plots)
+  if (input$reg_plots %in% c("correlations", "leverage"))
     capture_plot( do.call(plot, c(list(x = .regression()), reg_plot_inputs())) )
   else
-    reg_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
-      { do.call(plot, c(list(x = .regression()), .)) }
-
+    reg_plot_inputs() %>% { .$shiny <- TRUE; . } %>% { do.call(plot, c(list(x = .regression()), .)) }
 })
 
-observe({
-  if (not_pressed(input$regression_report)) return()
+observeEvent(input$regression_report, {
   isolate({
-    outputs <- c("summary","# save_reg_resid")
+    outputs <- c("summary","# store_reg_resid")
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
@@ -404,10 +385,9 @@ observe({
   })
 })
 
-observe({
-	if (not_pressed(input$reg_save_res)) return()
+observeEvent(input$reg_store_res, {
 	isolate({
-    .regression() %>% { if (is.list(.)) save_reg_resid(.) }
+    .regression() %>% { if (is.list(.)) store_reg_resid(.) }
 	})
 })
 

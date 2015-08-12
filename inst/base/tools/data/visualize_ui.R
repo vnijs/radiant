@@ -171,7 +171,8 @@ viz_plot_height <- reactive({
     r_data$plot_height
   } else {
     lx <- if (not_available(input$viz_xvar)) 1 else length(input$viz_xvar)
-    ly <- if (not_available(input$viz_yvar)) 1 else length(input$viz_yvar)
+    ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("hist","density"),
+                  1, length(input$viz_yvar))
     (lx * ly) %>%
     { if (. > 1)
         (input$viz_plot_height/2) * ceiling(. / 2)

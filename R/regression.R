@@ -393,6 +393,7 @@ plot.regression <- function(x,
 #' @param pred_cmd Command used to generate data for prediction
 #' @param pred_data Name of the dataset to use for prediction
 #' @param conf_lev Confidence level used to estimate confidence intervals (.95 is the default)
+#' @param prn Print prediction results (default is TRUE)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -413,6 +414,7 @@ predict.regression <- function(object,
                                pred_cmd = "",
                                pred_data = "",
                                conf_lev = 0.95,
+                               prn = TRUE,
                                ...) {
 
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
@@ -428,7 +430,7 @@ predict.regression <- function(object,
   pred_type <- "cmd"
   vars <- object$indep_var
   if (pred_cmd != "") {
-    pred_cmd %<>% gsub("\"","\'", .)
+    pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
       paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
@@ -486,13 +488,22 @@ predict.regression <- function(object,
 
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
-    if (pred_type == "cmd") {
-      cat("Predicted values for:\n")
-    } else {
-      cat(paste0("Predicted values for profiles from dataset: ",object$pred_data,"\n"))
-    }
+    if (prn) {
+      cat("Linear regression (OLS)\n")
+      cat("Data     :", object$dataset, "\n")
+      if (object$data_filter %>% gsub("\\s","",.) != "")
+        cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+      cat("Dependent variable   :", object$dep_var, "\n")
+      cat("Independent variables:", paste0(object$indep_var, collapse=", "), "\n\n")
 
-    pred %>% print(., row.names = FALSE)
+      if (pred_type == "cmd") {
+        cat("Predicted values for:\n")
+      } else {
+        cat(paste0("Predicted values for profiles from dataset: ",object$pred_data,"\n"))
+      }
+
+      pred %>% print(., row.names = FALSE)
+    }
 
     # pushing predictions into the clipboard
     # os_type <- Sys.info()["sysname"]
@@ -575,7 +586,7 @@ plot.reg_predict <- function(x,
   sshhr( p )
 }
 
-#' Save regression residuals
+#' Store regression residuals
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
@@ -584,11 +595,11 @@ plot.reg_predict <- function(x,
 #' @examples
 #' \donttest{
 #' result <- regression("diamonds", "price", c("carat","clarity"))
-#' save_reg_resid(result)
+#' store_reg_resid(result)
 #' head(diamonds)
 #' }
 #' @export
-save_reg_resid <- function(object) {
+store_reg_resid <- function(object) {
   if (object$data_filter != "")
     return("Please deactivate data filters before trying to save residuals")
   object$model$residuals %>%

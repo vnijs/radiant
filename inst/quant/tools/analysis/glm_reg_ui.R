@@ -197,7 +197,7 @@ output$ui_glm_reg <- renderUI({
         selectInput("glm_plots", "GLM plots:", choices = glm_plots,
           selected = state_single("glm_plots", glm_plots)),
         conditionalPanel(condition = "input.glm_plots == 'coef'",
-          checkboxInput("intercept", "Include intercept", state_init("intercept", FALSE)))
+          checkboxInput("glm_intercept", "Include intercept", state_init("glm_intercept", FALSE)))
       )
     ),
     wellPanel(
@@ -229,7 +229,7 @@ output$ui_glm_reg <- renderUI({
    					             step = 0.01)
   		  ),
         conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
-  		    actionButton("glm_save_res", "Save residuals")
+  		    actionButton("glm_store_res", "Store residuals")
         )
       )
 	  ),
@@ -240,6 +240,9 @@ output$ui_glm_reg <- renderUI({
 })
 
 glm_plot <- reactive({
+
+  if (glm_available() != "available") return()
+  if(is_empty(input$glm_plots)) return()
 
   plot_height <- 500
   plot_width <- 650
@@ -292,69 +295,50 @@ output$glm_reg <- renderUI({
 
 })
 
-.glm_reg <- reactive({
-	do.call(glm_reg, glm_inputs())
-})
-
-.summary_glm_reg <- reactive({
-
+glm_available <- reactive({
   if (not_available(input$glm_dep_var))
     return("This analysis requires a dependent variable with two levels and one\nor more independent variables. If these variables are not available\nplease select another dataset.\n\n" %>% suggest_data("titanic"))
 
   if (not_available(input$glm_indep_var))
     return("Please select one or more independent variables.\n\n" %>% suggest_data("titanic"))
 
+  "available"
+})
+
+.glm_reg <- reactive({
+	do.call(glm_reg, glm_inputs())
+})
+
+.summary_glm_reg <- reactive({
+  if (glm_available() != "available") return(glm_available())
   do.call(summary, c(list(object = .glm_reg()), glm_sum_inputs()))
 })
 
 .predict_glm_reg <- reactive({
   r_data$glm_pred <- NULL
-
-  if (not_available(input$glm_dep_var))
-    return(invisible())
-
-  if (not_available(input$glm_indep_var))
-    return(invisible())
-
-  if (is_empty(input$glm_predict, ""))
-    return(invisible())
-
+  if (glm_available() != "available") return(glm_available())
+  if (is_empty(input$glm_predict)) return(invisible())
   r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
 })
 
 .predict_plot_glm_reg <- reactive({
-
-  if (is_empty(input$glm_predict, ""))
-    return(" ")
-
-  if (is.null(r_data$glm_pred))
-    return(" ")
-
-  # glm_pred_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
-  #   { do.call(plot, c(list(x = r_data$glm_pred), .)) }
+  if (glm_available() != "available") return(glm_available())
+  if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
   do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
 })
 
 .plot_glm_reg <- reactive({
-
-  if (not_available(input$glm_dep_var))
-    return("This analysis requires a dependent variable with two levels and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("titanic"))
-
-  if (not_available(input$glm_indep_var))
-    return("Please select one or more independent variables.\n\n" %>% suggest_data("titanic"))
-
-  if (is_empty(input$glm_plots, ""))
+  if (glm_available() != "available") return(glm_available())
+  if (is_empty(input$glm_plots))
     return("Please select a regression plot from the drop-down menu")
 
   glm_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
     { do.call(plot, c(list(x = .glm_reg()), .)) }
-  # do.call(plot, c(list(x = .glm_reg()), glm_plot_inputs()))
 })
 
-observe({
-  if (not_pressed(input$glm_reg_report)) return()
+observeEvent(input$glm_reg_report, {
   isolate({
-    outputs <- c("summary","# save_glm_resid")
+    outputs <- c("summary","# store_glm_resid")
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(glm_sum_inputs(), glm_sum_args[-1])
     figs <- FALSE
@@ -386,10 +370,9 @@ observe({
   })
 })
 
-observe({
-  if (not_pressed(input$glm_save_res)) return()
+observeEvent(input$glm_store_res, {
   isolate({
-    .glm_reg() %>% { if (is.list(.)) save_glm_resid(.) }
+    .glm_reg() %>% { if (is.list(.)) store_glm_resid(.) }
   })
 })
 

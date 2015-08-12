@@ -5,7 +5,7 @@
 \title{Predict method for the regression function}
 \usage{
 \method{predict}{regression}(object, pred_cmd = "", pred_data = "",
-  conf_lev = 0.95, ...)
+  conf_lev = 0.95, prn = TRUE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}
@@ -15,6 +15,8 @@
 \item{pred_data}{Name of the dataset to use for prediction}
 
 \item{conf_lev}{Confidence level used to estimate confidence intervals (.95 is the default)}
+
+\item{prn}{Print prediction results (default is TRUE)}
 
 \item{...}{further arguments passed to or from other methods}
 }
