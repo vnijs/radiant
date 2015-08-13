@@ -10,7 +10,7 @@ build('../radiant', binary = TRUE)
 # build('../DT')
 # build('../DT', binary = TRUE)
 
-devtools::install('~/gh/data.tree')
+# devtools::install('~/gh/data.tree')
 build('../data.tree')
 build('../data.tree', binary = TRUE)
 
