@@ -6,6 +6,6 @@
 
 Source: <a href="http://en.wikipedia.org/wiki/Central_limit_theorem" target="_blank">Wikipedia</a>
 
-### Kahn on the CLT
+### Khan on the CLT
 
 <div align="center"><iframe width="640" height="375" src="//www.youtube.com/embed/JNm3M9cqWyc" frameborder="0" allowfullscreen></iframe></div>

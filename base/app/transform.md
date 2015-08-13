@@ -1,4 +1,4 @@
-> Modify type, change, normalize, create, add, reorder, and remove variables in the data.
+> Transform variables in data
 
 ### Type
 
