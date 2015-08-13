@@ -237,19 +237,19 @@ img {
 </div>
 <div id="normalize" class="section level3">
 <h3>Normalize</h3>
-<p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. Then click the <code>Store</code> button.</p>
+<p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. You will see a summary statistics for the new variable <code>price_carat</code> in the main panel. So save changes click the <code>Store</code> button.</p>
 </div>
 <div id="create" class="section level3">
 <h3>Create</h3>
-<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. On the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Store</code> to add it to the dataset.</p>
+<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. On the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Store</code> to add it to the dataset.</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new variable z that is the difference between variables x and y in the data</p>
 <p>z = x - y</p></li>
-<li><p>Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is available in the Transform drop-down):</p>
+<li><p>Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the Transform drop-down):</p>
 <p>z = x - mean(x)</p></li>
-<li><p>Create a new factor z that takes on the value TRUE when x &gt; y and FALSE otherwise</p>
+<li><p>Create a new <code>logical</code> variable z that takes on the value TRUE when x &gt; y and FALSE otherwise</p>
 <p>z = x &gt; y</p></li>
-<li><p>Create a new factor z that takes on the value TRUE when x is equal to y and FALSE otherwise</p>
+<li><p>Create a new <code>logical</code> z that takes on the value TRUE when x is equal to y and FALSE otherwise</p>
 <p>z = x == y</p></li>
 <li><p>Create a variable z that is equal to x lagged by 3 periods</p>
 <p>z = lag(x,3)</p></li>
@@ -257,12 +257,14 @@ img {
 <p>z = ifelse(x &lt; y, ‘smaller’, ‘bigger’)</p></li>
 <li><p>Create a categorical variable with three levels. An alternative approach would be to use the <code>Recode</code> function described below</p>
 <p>z = ifelse(x &lt; 60, ‘&lt; 60’, ifelse(x &gt; 65, ‘&gt; 65’, ‘60-65’))</p></li>
+<li><p>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press return and <code>Store</code> to add new variable <code>sales_rc</code> variable. Note that we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the orginal variable would have been overwritten</p></li>
 </ol>
-<p>Note: For 6 and 7 you may need to convert the new variable to a factor for analysis (see <code>Type</code> above)</p>
+<p>sales_rc = ifelse(sales &gt; 400, NA, sales)</p>
+<p>Note: For examples 6 and 7 above you may want to convert the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
 </div>
 <div id="clipboard" class="section level3">
 <h3>Clipboard</h3>
-<p>It is possible to manipulate your data in Excel and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data &gt; Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> dropdown and paste your new data into the <code>Paste from Excel</code> box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click <code>Store</code>.</p>
+<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data &gt; Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> dropdown and paste your new data into the <code>Paste from Excel</code> box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click <code>Store</code>.</p>
 </div>
 <div id="recode" class="section level3">
 <h3>Recode</h3>
@@ -276,7 +278,7 @@ img {
 <p>1:12 = ‘A’; 13:24 = ‘B’; else = ‘C’</p></li>
 <li><p>To collapse age categories for a cross-tab analysis. In the example below ‘&lt;25’ and ‘25-34’ are recoded to ‘&lt;35’, ‘35-44’ and ‘35-44’ are recoded to ‘35-54’, and ‘55-64’ and ‘&gt;64’ are recoded to ‘&gt;54’</p>
 <p>‘&lt;25’ = ‘&lt;35’; ‘25-34’ = ‘&lt;35’; ‘35-44’ = ‘35-54’; ‘45-54’ = ‘35-54’; ‘55-64’ = ‘&gt;54’; ‘&gt;64’ = ‘&gt;54’</p></li>
-<li><p>To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we would (1) select the variable <code>sales</code> in the <code>Select column(s)</code> box and enter the command below in the <code>Recode box</code>. Press return and <code>Store</code> to add the recoded variable to the data.</p>
+<li><p>To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we would (1) select the variable <code>sales</code> in the <code>Select column(s)</code> box and enter the command below in the <code>Recode</code> box. Press return and <code>Store</code> to add the recoded variable to the data</p>
 <p>400 = NA</p></li>
 </ol>
 </div>
@@ -302,7 +304,7 @@ img {
 </div>
 <div id="filter" class="section level3">
 <h3>Filter</h3>
-<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show an error message. Either remove the filter statement or uncheck the <code>Filter</code> checkbox. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data. Then return to the Transform tab to make the desired variable changes.</p>
+<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or uncheck the <code>Filter</code> checkbox. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data. Then return to the Transform tab to make the desired variable changes.</p>
 </div>
 
 

@@ -379,7 +379,12 @@ clarity &gt; VVS2    5109.476  4697.311  5521.640 412.164
 clarity &gt; VVS1    5027.669  4607.574  5447.764 420.095
 clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
 <pre class="r"><code>predict(result, pred_cmd = &quot;carat = 1:10&quot;)</code></pre>
-<pre><code>Predicted values for:
+<pre><code>Linear regression (OLS)
+Data     : diamonds 
+Dependent variable   : price 
+Independent variables: carat, clarity 
+
+Predicted values for:
  clarity carat Prediction      2.5%     97.5%      +/-
      SI1     1   5265.569  2859.633  7671.505 2405.936
      SI1     2  13703.599 11294.952 16112.246 2408.647
