@@ -1,6 +1,6 @@
 Package: radiant
 Title: Business Analytics using R and Shiny
-Version: 0.2.85
+Version: 0.2.86
 Date: 2015-8-13
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description:
@@ -32,7 +32,7 @@ Imports:
 		DT (>= 0.1.32),
 		MathJaxR (>= 0.11),
 		readr (>= 0.1.1),
-		data.tree(>= 0.1.7),
+		data.tree(>= 0.1.8),
 		yaml(>= 2.1.13),
 		scales(>= 0.2.5)
 Suggests:

@@ -301,6 +301,16 @@ getsummary <- function(dat, dc = getclass(dat)) {
 #' @export
 nmissing <- function(x) sum(is.na(x))
 
+#' 5th percentile
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return 5th percentile
+#' @examples
+#' p05(rnorm(100))
+#'
+#' @export
+p05 <- function(x, na.rm = TRUE) quantile(x,.05, na.rm = na.rm)
+
 #' 25th percentile
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -320,6 +330,16 @@ p25 <- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 #'
 #' @export
 p75 <- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
+
+#' 95th percentile
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return 95th percentile
+#' @examples
+#' p95(rnorm(100))
+#'
+#' @export
+p95 <- function(x, na.rm = TRUE) quantile(x,.95, na.rm = na.rm)
 
 #' Standard error
 #' @param x Input variable

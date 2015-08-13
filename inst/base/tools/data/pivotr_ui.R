@@ -10,8 +10,7 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
-  # vars <- groupable_vars()
-  vars <- vars()
+  vars <- groupable_vars()
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
     selected = state_multiple("pvt_cvars",vars, ""), multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
