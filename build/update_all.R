@@ -28,27 +28,28 @@ system("git push")
 # devtools::install_github(c("vnijs/radiant","rstudio/DT"))
 # devtools::install_github("vnijs/radiant")
 # remove.packages('dplyr')
-devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree"))
 # devtools::install_github(c("hadley/dplyr"))
 # devtools::install_github("trestletech/shinyAce")
 # library(radiant)
 # radiant()
 
-library(shinyapps)
-fpath <- "~/gh/radiant/inst/base"
-setwd(fpath)
-
-for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
-  source(file, local = TRUE)
-
-source("../../build/deployapp.R", local = TRUE)
-deployApp(account = "vnijs", launch.browser = FALSE)
-
-setwd(file.path(fpath,"../quant"))
-deployApp(account = "vnijs", launch.browser = FALSE)
-
-setwd(file.path(fpath,"../marketing"))
-deployApp(account = "vnijs", launch.browser = FALSE)
+# devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree"))
+#
+# library(shinyapps)
+# fpath <- "~/gh/radiant/inst/base"
+# setwd(fpath)
+#
+# for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
+#   source(file, local = TRUE)
+#
+# source("../../build/deployapp.R", local = TRUE)
+# deployApp(account = "vnijs", launch.browser = FALSE)
+#
+# setwd(file.path(fpath,"../quant"))
+# deployApp(account = "vnijs", launch.browser = FALSE)
+#
+# setwd(file.path(fpath,"../marketing"))
+# deployApp(account = "vnijs", launch.browser = FALSE)
 
 # fn <- "~/gh/radiant/inst/base/www/style.css"
 # readLines(fn) %>%
@@ -56,11 +57,6 @@ deployApp(account = "vnijs", launch.browser = FALSE)
 #   cat(file = fn, sep = "\n")
 
 setwd("~/gh/radiant/")
-Sys.sleep(5)
-
-# system("git add --all .")
-# system("git commit -m 'Undo css change for shinyapps.io [ci skip]'")
-# system("git push")
 
 # answ <- readline("Did you create binary packages for Windows? (y/n) ")
 # if (substr(answ, 1, 1) %in% c("y","Y")) {

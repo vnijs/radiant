@@ -8,7 +8,7 @@
   fun = c("sum_rm", "mean_rm", "sd_rm"), ...)
 }
 \arguments{
-\item{object}{Return value from \code{\link{simulater}}}
+\item{object}{Return value from \code{\link{repeater}}}
 
 \item{sum_vars}{(Numerical) variables to summaries}
 

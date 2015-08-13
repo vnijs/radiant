@@ -4,18 +4,30 @@
 \alias{repeater}
 \title{Repeat simulation}
 \usage{
-repeater(nr = 12, vars = "", seed = "", sim = "")
+repeater(nr = 12, vars = "", grid = "", seed = "", name = "",
+  sim = "")
 }
 \arguments{
 \item{nr}{Number times to repeat the simulation}
 
 \item{vars}{Variables to use in repeated simulation}
 
+\item{grid}{Expression to use in grid search for constants}
+
 \item{seed}{To repeat a simulation with the same randomly generated values enter a number into Random seed input box.}
+
+\item{name}{To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.}
 
 \item{sim}{Return value from the simulater function}
 }
 \description{
 Repeat simulation
+}
+\examples{
+result <- simulater(const = "cost 3", norm = "demand 2000 1000",
+                    discrete = "price 5 .3 8 .7",
+                    form = "profit = demand * (price - cost)")
+
+repeater(sim = result)
 }
 

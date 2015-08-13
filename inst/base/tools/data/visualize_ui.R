@@ -36,10 +36,10 @@ output$ui_viz_yvar <- renderUI({
   isolate({
     ## keep the same y-variable 'active' if possible
     sel <-
-      if(!not_available(input$viz_yvar) && input$viz_yvar %in% vars)
+      if(available(input$viz_yvar) && all(input$viz_yvar %in% vars))
         input$viz_yvar
       else
-         state_multiple("viz_yvar", vars)
+        state_multiple("viz_yvar", vars)
   })
 
   selectInput(inputId = "viz_yvar", label = "Y-variable:",
@@ -59,7 +59,7 @@ output$ui_viz_xvar <- renderUI({
   isolate({
     ## keep the same x-variable 'active' if possible
     sel <-
-      if(!not_available(input$viz_xvar) && all(input$viz_xvar %in% vars))
+      if(available(input$viz_xvar) && all(input$viz_xvar %in% vars))
         input$viz_xvar
       else
         state_multiple("viz_xvar", vars)
@@ -102,7 +102,7 @@ output$ui_viz_axes <- renderUI({
   if (!is_empty(input$viz_facet_row, ".")) ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
-    selected = state_init("viz_axes"),
+    selected = state_init("viz_axes", ""),
     inline = TRUE)
 })
 
@@ -207,8 +207,7 @@ output$visualize <- renderPlot({
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
 
-observe({
-  if (not_pressed(input$visualize_report)) return()
+observeEvent(input$visualize_report, {
   isolate({
     update_report(inp_main = clean_args(viz_inputs(), viz_args),
                   fun_name = "visualize", outputs = character(0),

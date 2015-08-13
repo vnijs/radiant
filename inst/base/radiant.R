@@ -1,15 +1,15 @@
-observe({
-  ## reset r_state on dataset change ... when you are not on the
-  ## Manage > Data tab
-  if (is.null(r_state$dataset) || is.null(input$dataset)) return()
-  if (input$tabs_data != "Manage" || input$nav_radiant != "Data") {
-    if (r_state$dataset != input$dataset) {
-      r_state <<- list()
-      updateTextInput(session = session, inputId = "data_filter", value = "")
-      updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-    }
-  }
-})
+# observe({
+#   ## reset r_state on dataset change ... when you are not on the
+#   ## Manage > Data tab
+#   if (is.null(r_state$dataset) || is.null(input$dataset)) return()
+#   if (input$tabs_data != "Manage" || input$nav_radiant != "Data") {
+#     if (r_state$dataset != input$dataset) {
+#       r_state <<- list()
+#       updateTextInput(session = session, inputId = "data_filter", value = "")
+#       updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+#     }
+#   }
+# })
 
 ################################################################################
 ## function to save app state on refresh or crash
@@ -92,7 +92,7 @@ saveStateOnRefresh <- function(session = session) {
 ## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) | n_distinct(.) %in% 2:20)) %>%
+    summarise_each(funs(is.factor(.) | (n_distinct(.)/n()) < .1)) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })

@@ -54,6 +54,13 @@ simulater <- function(const = "",
   # discrete = "price 6 .30 8 .70"
   # form = "demand = demand -50*price;profit = demand*(price-var_cost) - fixed_cost"
 
+  # const = "cost 1.25;salvage .5;price 5;q .5:100"
+  # norm = "demand 535.74 145"
+  # form = "profit = -cost*q + 5*pmin(q,demand) + .5 * pmax(0, q - demand)"
+  # seed = "1234"
+  # name = "sim1"
+  # nr = 1000
+
   ## remove any non-numbers from seed, including spaces
   seed %>% gsub("[^0-9]","",.) %>% { if(. != "") set.seed(seed) }
 
@@ -72,7 +79,6 @@ simulater <- function(const = "",
   if (const != "") {
     s <- const %>% spliter
     for (i in 1:length(s))
-      # dat[[s[[i]][1]]] <- as.numeric(s[[i]][2]) %>% rep(,nr)
       s[[i]] %>% { dat[[.[1]]] <<- as.numeric(.[2]) %>% rep(,nr) }
   }
 
@@ -165,9 +171,6 @@ simulater <- function(const = "",
 #'
 #' @export
 summary.simulater <- function(object, ...) {
-  ## show results
-  # print(head(object$sim_call)); cat("\n")
-  # print(head(object$dat)); cat("\n")
   getsummary(object$dat)
 }
 
@@ -221,49 +224,44 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
 #'
 #' @param nr Number times to repeat the simulation
 #' @param vars Variables to use in repeated simulation
+#' @param grid Expression to use in grid search for constants
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
+#' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
 #' @param sim Return value from the simulater function
+#'
+#' @examples
+#' result <- simulater(const = "cost 3", norm = "demand 2000 1000",
+#'                     discrete = "price 5 .3 8 .7",
+#'                     form = "profit = demand * (price - cost)")
+#'
+#' repeater(sim = result)
+#'
 #'
 #' @export
 repeater <- function(nr = 12,
                      vars = "",
+                     grid = "",
                      seed = "",
+                     name = "",
                      sim = "") {
 
-  # sim <- result
+  # seed <- "1234"
   # nr <- 12
-  # grid <- "q = seq(.5,1078.5,.5) \n \t   "
-  # grid <- "cost = 1:5"
-  # grid <- gsub("\\s+","",grid)
-  # if (grid != "") {
-  #   spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
-  #   s <- grid %>% spliter("=")
-  #   out <- try(do.call(with, list(sim$dat, parse(text = s[[1]][2]))), silent = TRUE)
-  #   if (is(out, 'try-error')) {
-  #     message("Formula", form, "was not successfully evaluated")
-  #   }
-  # }
-
-  # seed <- ""
   # sim <- result
   # sim$sim_call
-
   seed %>% gsub("[^0-9]","",.) %>% { if(. != "") set.seed(seed) }
+  if (identical(vars, "")) return()
 
+  ## from http://stackoverflow.com/a/7664655/1974918
+  ## keep those list elements that, e.g., q is in
   nr_sim <- nrow(sim$dat)
   sc <- sim$sim_call
-
-  # vars <- c("demand","cost")
-  if (vars == "") return()
-
-  ## cleaning up the sim call
-  sc$name <- ""
-  sc$seed <- ""
-  ## from http://stackoverflow.com/a/7664655/1974918
+  sc$name <- sc$seed <- "" ## cleaning up the sim call
   sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
   sc[1:which(names(sc) == "form")] <- ""
   sc[names(sc_keep)] <- sc_keep
   sc$dat <- sim$dat %>% as.list
+  sc$form
 
   rep_sim <- function(run_nr) {
     bind_cols(
@@ -272,16 +270,50 @@ repeater <- function(nr = 12,
     )
   }
 
-  bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
-}
+  rep_grid_sim <- function(gval) {
+    sc_grid <- grep(paste(vars, collapse = "|"), sc_keep, value=TRUE) %>% {.[which(names(.) != "form")]}
+    sc[names(sc_grid)] <- sub(paste0("[;\n]", vars, " [.0-9]+"), paste0("\n", vars, " ", gval), sc_grid) %>%
+                          sub(paste0("^", vars, " [.0-9]+"), paste0(vars, " ", gval), .)
 
-# object <- repeater(sim = result)
-# object
-# str(object)
+    bind_cols(
+      data_frame(run = rep(gval, nr_sim), sim = 1:nr_sim),
+      do.call(simulater, sc)$dat
+    )
+  }
+
+  if (grid == "") {
+    ret <- bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
+  } else {
+    grid %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
+    grid <- try(eval(parse(text = paste0("with(sim$dat, expand.grid(", grid ,"))"))), silent = TRUE)
+    ret <- bind_rows(lapply(grid[,1], rep_grid_sim)) %>% set_class(c("repeater", class(.)))
+  }
+
+  name %<>% gsub(" ","",.)
+  if (name != "") {
+    if (exists("r_env")) {
+      env <- r_env
+    } else if (exists("r_data")) {
+      env <- pryr::where("r_data")
+    } else {
+      return(ret)
+    }
+
+    mess <- paste0("\n### Data from repeated simulation\n\nFormula: ", sc$form, "\n\nOn: ",
+                   lubridate::now())
+
+    env$r_data[[name]] <- ret
+    env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+    env$r_data[[paste0(name,"_descr")]] <- mess
+    return(name %>% set_class(c("repeater", class(.))))
+  }
+
+  ret
+}
 
 #' Summarize repeated simulation
 #'
-#' @param object Return value from \code{\link{simulater}}
+#' @param object Return value from \code{\link{repeater}}
 #' @param sum_vars (Numerical) variables to summaries
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
@@ -294,18 +326,10 @@ summary.repeater <- function(object,
                              fun = c("sum_rm", "mean_rm", "sd_rm"),
                              ...) {
   ## show results
-  # print(object); cat("\n")
+  if (is.character(object)) object <- getdata(object)
   getsummary(object)
-  # %>% print
-  # print(sum_vars)
-  # print(byvar)
-  # print(fun)
-
-  # sum_vars <- "profit"
-  # byvar <- "sim"
 
   # explore(object, sum_vars, byvar = byvar, fun = fun) %>% summary %>% print
-
   # object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
   #   select(total_profit)
 
@@ -313,7 +337,7 @@ summary.repeater <- function(object,
 
 #' Plot repeated simulation
 #'
-#' @param x Return value from \code{\link{simulater}}
+#' @param x Return value from \code{\link{repeater}}
 #' @param sum_vars (Numerical) variables to summaries
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
@@ -323,29 +347,18 @@ summary.repeater <- function(object,
 #' @export
 plot.repeater <- function(x,
                           sum_vars = "",
-                          byvar = "",
+                          byvar = "sim",
                           fun = c("sum_rm", "mean_rm", "sd_rm"),
                           shiny = FALSE, ...) {
 
   object <- x; rm(x)
-
-  # sum_vars <- c("profit","nr_meals")
-  # sum_vars <- c("profit","demand")
-  # byvar <- "sim"
-  # fun = c("sum", "mean")
-
-  # org_obj <- object
-  # object <- org_obj
-
-  object <- explore(object, sum_vars, byvar = byvar, fun = fun)
-  # object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
-  #   select(total_profit)
-
+  if (is.character(object)) object <- getdata(object)
+  expl <- explore(object, sum_vars, byvar = byvar, fun = fun)
   plot_list <- list()
-  for (l in names(object$res)) {
-    for (i in colnames(object$res[[l]]) %>% .[!. %in% byvar]) {
+  for (l in levels(expl$tab$variable)) {
+    for (i in names(expl$pfun)) {
 
-      dat <- select_(object$res[[l]], .dots = i)
+      dat <- expl$tab %>% filter_(paste0("variable == \"", l,"\"")) %>% select_(i)
       bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
 
       ## plot results
@@ -361,6 +374,37 @@ plot.repeater <- function(x,
 }
 
 
+# result <- simulater(const = "cost 1.25\nsalvage .5\nprice 5\nq .5", norm = "demand 535.74 145", form = "profit = -cost*q + 5*pmin(q,demand) + .5 * pmax(0, q - demand)", seed = "1234", name = "sim1", nr = 10)
+# summary(result)
+# plot(result)
+
+# object <- repeater(vars = "q", sim = result, grid = "400:420")
+# object %>% print(n = 1020)
+# summary(object, sum_vars = c("profit","q"))
+# plot(object, sum_vars = c("profit","q"))
+
+# object <- repeater(vars = "q", grid = "500:600", seed = "1234", sim = result)
+# class(object)
+# summary(object)
+# plot(object)
+
+# result <- simulater(const = "non_labor_cost 3995;cost 11", norm = "nr_meals 3000 1000", unif = "labor_cost 5040 6860", discrete = "price 20 .25 18.5 .35 16.5 .3 15 .1", form = "profit = (price - cost)*nr_meals - labor_cost - non_labor_cost", seed = "1234", name = "sim1")
+# summary(result)
+# plot(result)
+# object <- repeater(vars = "nr_meals", sim = result, grid = "")
+# viewdata(object)
+# summary(object)
+# plot(object, sum_vars = "profit")
+
+# library(radiant)
+# library(gridExtra)
+# result <- simulater(const = "var_cost 5;fixed_cost 1000", norm = "demand 1000 100", discrete = "price 6 .30 8 .70", form = "demand = demand - 50*price;profit = demand*(price-var_cost) - fixed_cost", seed = "1234", name = "sim1")
+# summary(result)
+# plot(result)
+
+# object <- repeater(vars = "demand", sim = result)
+# summary(object, sum_vars = "demand")
+# plot(object, sum_vars = "demand")
 
 # nr_meals_sim <- rnorm(nr_sim*12,nr_meals[1],nr_meals[2])
 # nr_meals_sim <- matrix(nr_meals_sim, nrow = nr_sim, ncol = 12)

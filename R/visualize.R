@@ -33,7 +33,7 @@
 #'
 #' @export
 visualize <- function(dataset, xvar,
-                      yvar = NULL,
+                      yvar = "",
                       type = "hist",
                       facet_row = ".",
                       facet_col = ".",
@@ -60,8 +60,19 @@ visualize <- function(dataset, xvar,
   ## variable to use if bar chart is specified
   byvar <- NULL
 
-  # if (yvar != "none") vars %<>% c(., yvar)
-  if (!is.null(yvar)) vars %<>% c(., yvar)
+  if (identical(yvar,"")) {
+    if(!type %in% c("hist","density")) {
+      message("No yvar provided for a plot that requires a yvar")
+      return(invisible())
+    }
+  } else {
+    if (type %in% c("hist","density")) {
+      yvar <- ""
+    } else {
+      vars %<>% c(., yvar)
+    }
+  }
+
   if (color != "none") vars %<>% c(., color)
   if (facet_row != ".") {
     vars %<>% c(., facet_row)
@@ -245,6 +256,7 @@ visualize <- function(dataset, xvar,
 
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+
 
  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
    { if (shiny) . else print(.) }

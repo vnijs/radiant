@@ -4,11 +4,11 @@
 \alias{plot.repeater}
 \title{Plot repeated simulation}
 \usage{
-\method{plot}{repeater}(x, sum_vars = "", byvar = "", fun = c("sum_rm",
+\method{plot}{repeater}(x, sum_vars = "", byvar = "sim", fun = c("sum_rm",
   "mean_rm", "sd_rm"), shiny = FALSE, ...)
 }
 \arguments{
-\item{x}{Return value from \code{\link{simulater}}}
+\item{x}{Return value from \code{\link{repeater}}}
 
 \item{sum_vars}{(Numerical) variables to summaries}
 

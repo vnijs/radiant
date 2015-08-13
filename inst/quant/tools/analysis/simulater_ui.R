@@ -30,7 +30,10 @@ rep_inputs <- reactive({
   # rep_args[[sim_ret]] <- sim_inputs()
   rep_args[["sim"]] <- .simulater()
 
+  # print(rep_args[["grid"]])
+
   rep_args
+
 })
 
 rep_sum_args <- as.list(if (exists("summary.repeater")) formals(summary.repeater)
@@ -54,9 +57,6 @@ rep_plot_inputs <- reactive({
     rep_plot_args[[i]] <- input[[paste0("rep_",i)]]
   rep_plot_args
 })
-
-
-
 
 textinput_maker <- function(id = "const", lab = "Constant") {
 
@@ -146,16 +146,16 @@ output$ui_simulater <- renderUI({
           textinput_maker("discrete","Discrete")
         ),
         textinput_maker("form","Formula"),
-
         with(tags, table(
           td(textInput("sim_seed", "Set random seed:",
                        value = state_init('sim_seed', 1234))),
           td(numericInput("sim_nr", "# runs:", min = 1, max = 10^6,
                           value = state_init('sim_nr', 1000)))
-          )
-        ),
-        textInput("sim_name", "Sim name:", state_init("sim_name", "sim1")),
-        actionButton("runSim", "Simulate")
+        )),
+        with(tags, table(
+          td(textInput("sim_name", "Sim name:", state_init("sim_name", "simdat"))),
+          td(actionButton("runSim", "Simulate"), style="padding-top:30px;")
+        ))
       ),
       help_and_report(modal_title = "Simulate", fun_name = "simulater",
         help_file = inclMD(file.path(r_path,"quant/tools/help/simulater.md")))
@@ -163,6 +163,7 @@ output$ui_simulater <- renderUI({
     conditionalPanel(condition = "input.tabs_simulate == 'Repeat'",
       wellPanel(
         uiOutput("ui_rep_vars"),
+        textInput("rep_grid", "Grid search", value = state_init("rep_grid", "")),
         uiOutput("ui_rep_sum_vars"),
         uiOutput("ui_rep_byvar"),
         uiOutput("ui_rep_fun"),
@@ -173,10 +174,13 @@ output$ui_simulater <- renderUI({
                           value = state_init('rep_nr', 12)))
           )
         ),
-        actionButton("runRepeat", "Simulate")
-      ) #,
-      # help_and_report(modal_title = "Repeat simulation", fun_name = "rsimulater",
-      #   help_file = inclMD(file.path(r_path,"quant/tools/help/rsimulater.md")))
+        with(tags, table(
+          td(textInput("rep_name", "Repeat sim name:", state_init("rep_name", "simdat_repeat"))),
+          td(actionButton("runRepeat", "Simulate"), style="padding-top:30px;")
+        ))
+      ),
+      help_and_report(modal_title = "Repeat simulation", fun_name = "repeater",
+                      help_file = inclMD(file.path(r_path,"quant/tools/help/simulater.md")))
     )
   )
 })
@@ -234,9 +238,12 @@ sim_plot_height <- function()
 
 .repeater <- eventReactive(input$runRepeat, {
   withProgress(message = 'Replicating simulation', value = 0, {
+    # print(rep_inputs())
     do.call(repeater, rep_inputs())
   })
 })
+
+
 
 .summary_repeat <- reactive({
   object <- .repeater()
@@ -274,6 +281,17 @@ observeEvent(input$simulater_report, {
                   outputs = c("summary","plot"), figs = TRUE,
                   fig.width = round(7 * sim_plot_width()/650,2),
                   fig.height = round(7 * sim_plot_height()/400,2))
+  })
+})
+
+
+observeEvent(input$repeater_report, {
+  isolate({
+    update_report(inp_main = clean_args(rep_inputs(), rep_args) %>% lapply(report_cleaner),
+                  fun_name = "repeater", inp_out = list("",""),
+                  outputs = c("summary","plot"), figs = TRUE,
+                  fig.width = round(7 * rep_plot_width()/650,2),
+                  fig.height = round(7 * rep_plot_height()/400,2))
   })
 })
 

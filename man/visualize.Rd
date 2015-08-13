@@ -4,7 +4,7 @@
 \alias{visualize}
 \title{Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}}
 \usage{
-visualize(dataset, xvar, yvar = NULL, type = "hist", facet_row = ".",
+visualize(dataset, xvar, yvar = "", type = "hist", facet_row = ".",
   facet_col = ".", color = "none", fill = "none", bins = 10,
   smooth = 1, check = "", axes = "", alpha = 0.5, data_filter = "",
   shiny = FALSE, custom = FALSE)

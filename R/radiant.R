@@ -134,7 +134,7 @@ getdata <- function(dataset,
         # { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter
         { if (filt == "") . else filterdata(., filt) } %>%     # apply data_filter
         { if (is.null(rows)) . else slice(., rows) } %>%
-        { if (vars[1] == "") . else select_(., .dots = vars) } %>%
+        { if (vars[1] == "" || is.null(vars)) . else select_(., .dots = vars) } %>%
         { if (na.rm) na.omit(.) else . }
         ## line below may cause an error https://github.com/hadley/dplyr/issues/219
         # { if (na.rm) { if (anyNA(.)) na.omit(.) else . } else . }
