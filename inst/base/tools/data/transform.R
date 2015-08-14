@@ -55,16 +55,19 @@ st <- function(x)
 msp <- function(x) cut(x, breaks = quantile(x,c(0,.5,1)),
                        include.lowest = TRUE,
                        labels = c("Below", "Above"))
-# decile split
-dec <- function(x) cut(x, breaks = quantile(x, seq(0,1,.1)),
-                       include.lowest = TRUE,
-                       labels = seq(1,10,1))
+
+## decile split
+dec <- function(x) {
+  ## avoid non-unique breaks
+  df <- data.frame(breaks = quantile(x, seq(0,1,.1))) %>% set_rownames(0:10) %>% unique
+  cut(x, df$breaks, rownames(df)[-1], include.lowest = TRUE)
+}
 
 sq <- function(x) x^2
 inv <- function(x) 1/x
 normalize <- function(x,y) x/y
 
-# use as.character in case x is a factor
+## use as.character in case x is a factor
 d_mdy <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
            lubridate::mdy(.) %>% as.Date
 d_dmy <- . %>% { if (is.factor(.)) as.character(.) else . } %>%
