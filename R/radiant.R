@@ -2,7 +2,7 @@
 #'
 #' @details See \url{http://vnijs.github.io/radiant} for documentation and tutorials
 #'
-#' @param app Choose the app to run. Either "base", "quant", or "marketing". "marketing" is the default
+#' @param app Choose the app to run. One of "base", "quant", "analytics", "marketing". "marketing" is the default
 #'
 #' @examples
 #' if (interactive()) {
@@ -11,7 +11,7 @@
 #'   radiant("marketing")
 #' }
 #' @export
-radiant <- function(app = c("marketing", "quant", "base"))
+radiant <- function(app = c("marketing", "analytics","quant", "base"))
   runApp(system.file(app[1], package="radiant"), launch.browser = TRUE)
 
 #' Alias used to set the class for analysis function return

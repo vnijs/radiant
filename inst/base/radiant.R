@@ -16,6 +16,7 @@
 ################################################################################
 
 saveSession <- function(session = session) {
+  if (!exists("r_sessions")) return()
   r_sessions[[r_ssuid]] <- list(
     r_data    = reactiveValuesToList(r_data),
     r_state   = reactiveValuesToList(input),

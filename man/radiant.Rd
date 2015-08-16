@@ -6,10 +6,10 @@
 \alias{radiant-package}
 \title{radiant}
 \usage{
-radiant(app = c("marketing", "quant", "base"))
+radiant(app = c("marketing", "analytics", "quant", "base"))
 }
 \arguments{
-\item{app}{Choose the app to run. Either "base", "quant", or "marketing". "marketing" is the default}
+\item{app}{Choose the app to run. One of "base", "quant", "analytics", "marketing". "marketing" is the default}
 }
 \description{
 radiant

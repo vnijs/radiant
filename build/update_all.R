@@ -13,9 +13,9 @@ document(roclets = c('rd', 'collate', 'namespace'))
 #
 # Sys.sleep(5)
 
-system("git add --all .")
-system("git commit -m 'Update [ci skip]'")
-system("git push")
+# system("git add --all .")
+# system("git commit -m 'Update [ci skip]'")
+# system("git push")
 
 # options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")

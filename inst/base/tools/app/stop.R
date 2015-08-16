@@ -33,7 +33,9 @@ stop_radiant <- function() {
           # cat(input$rmd_report, file = pipe("pbcopy"))
         }
       }
-      sshh(rm(r_env, r_sessions, envir = .GlobalEnv)) # removing r_sessions
+      ## removing r_env and r_sessions
+      if (exists("r_env")) rm(r_env, envir = .GlobalEnv)
+      if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
       cat(stop_message)
       stopApp("-- Stopped Radiant --")
