@@ -34,6 +34,7 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # radiant()
 
 devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree"))
+devtools::install_github("vnijs/radiant")
 
 library(shinyapps)
 fpath <- "~/gh/radiant/inst/base"
@@ -62,9 +63,9 @@ deployApp(account = "vnijs", launch.browser = FALSE)
 setwd("~/gh/radiant/")
 
 # answ <- readline("Did you create binary packages for Windows? (y/n) ")
-# if (substr(answ, 1, 1) %in% c("y","Y")) {
+if (substr(answ, 1, 1) %in% c("y","Y")) {
   system("sh build/build_mac_win.sh")
-# }
+}
 
 ## in case of problems
 # shinyapps::showLogs(entries=1000)
