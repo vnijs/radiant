@@ -2,16 +2,17 @@
 #'
 #' @details See \url{http://vnijs.github.io/radiant} for documentation and tutorials
 #'
-#' @param app Choose the app to run. One of "base", "quant", "analytics", "marketing". "marketing" is the default
+#' @param app Choose the app to run. One of "base", "quant", "analytics", "marketing". "analytics" is the default
 #'
 #' @examples
 #' if (interactive()) {
 #'   radiant("base")
 #'   radiant("quant")
 #'   radiant("marketing")
+#'   radiant("analytics")
 #' }
 #' @export
-radiant <- function(app = c("marketing", "analytics","quant", "base"))
+radiant <- function(app = c("analytics", "marketing", "quant", "base"))
   runApp(system.file(app[1], package="radiant"), launch.browser = TRUE)
 
 #' Alias used to set the class for analysis function return
@@ -385,7 +386,7 @@ iterms <- function(vars, nway, sep = ":") {
 #'
 #' @details On Windows a file named 'radiant.bat' and one named 'update_radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 #'
-#' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
+#' @param app App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"
 #'
 #' @examples
 #' if (interactive()) {
@@ -400,7 +401,7 @@ iterms <- function(vars, nway, sep = ":") {
 #' }
 #'
 #' @export
-win_launcher <- function(app = c("marketing", "quant", "base")) {
+win_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
 
   if (!interactive()) stop("This function can only be used in an interactive R session")
 
@@ -436,7 +437,7 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 #'
 #' @details On Mac a file named 'radiant.command' and one named 'update_radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 #'
-#' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
+#' @param app App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"
 #'
 #' @examples
 #' if (interactive()) {
@@ -451,7 +452,7 @@ win_launcher <- function(app = c("marketing", "quant", "base")) {
 #' }
 #'
 #' @export
-mac_launcher <- function(app = c("marketing", "quant", "base")) {
+mac_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
 
   if (!interactive()) stop("This function can only be used in an interactive R session")
 
@@ -488,7 +489,7 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
 #'
 #' @details On Linux a file named 'radiant.sh' and one named 'update_radiant.sh' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
 #'
-#' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
+#' @param app App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"
 #'
 #' @examples
 #' if (interactive()) {
@@ -503,7 +504,7 @@ mac_launcher <- function(app = c("marketing", "quant", "base")) {
 #' }
 #'
 #' @export
-lin_launcher <- function(app = c("marketing", "quant", "base")) {
+lin_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
 
   if (!interactive()) stop("This function can only be used in an interactive R session")
 
@@ -544,10 +545,10 @@ lin_launcher <- function(app = c("marketing", "quant", "base")) {
 #' @seealso \code{\link{mac_launcher}} to create a shortcut on Mac
 #' @seealso \code{\link{lin_launcher}} to create a shortcut on Linux
 #'
-#' @param app App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"
+#' @param app App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"
 #'
 #' @export
-launcher <- function(app = c("marketing", "quant", "base")) {
+launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
 
   if (Sys.info()["sysname"] == "Darwin")
     mac_launcher(app[1])

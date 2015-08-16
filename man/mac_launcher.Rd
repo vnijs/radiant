@@ -4,10 +4,10 @@
 \alias{mac_launcher}
 \title{Create a launcher and updater for Mac (.command)}
 \usage{
-mac_launcher(app = c("marketing", "quant", "base"))
+mac_launcher(app = c("analytics", "marketing", "quant", "base"))
 }
 \arguments{
-\item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
+\item{app}{App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"}
 }
 \description{
 Create a launcher and updater for Mac (.command)

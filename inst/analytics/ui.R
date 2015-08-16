@@ -13,5 +13,5 @@ analytics_ui <- tagList(
 )
 
 shinyUI(
-  do.call(navbarPage, c("Analyics", nav_ui, quant_ui, analytics_ui, shared_ui))
+  do.call(navbarPage, c("Business Analytics", nav_ui, quant_ui, analytics_ui, shared_ui))
 )

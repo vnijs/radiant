@@ -51,6 +51,9 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # setwd(file.path(fpath,"../marketing"))
 # deployApp(account = "vnijs", launch.browser = FALSE)
 
+# setwd(file.path(fpath,"../analytics"))
+# deployApp(account = "vnijs", launch.browser = FALSE)
+
 # fn <- "~/gh/radiant/inst/base/www/style.css"
 # readLines(fn) %>%
 #   gsub("top: 145px;", "top: 95px;", .) %>%

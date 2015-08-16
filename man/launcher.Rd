@@ -4,10 +4,10 @@
 \alias{launcher}
 \title{Create a launcher on the desktop for Windows (.bat), Mac (.command), or Linux (.sh)}
 \usage{
-launcher(app = c("marketing", "quant", "base"))
+launcher(app = c("analytics", "marketing", "quant", "base"))
 }
 \arguments{
-\item{app}{App to run when the desktop icon is double-clicked ("marketing", "quant", or "base"). Default is "marketing"}
+\item{app}{App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"}
 }
 \description{
 Create a launcher on the desktop for Windows (.bat), Mac (.command), or Linux (.sh)
