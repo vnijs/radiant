@@ -33,26 +33,26 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # library(radiant)
 # radiant()
 
-# devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree"))
-#
-# library(shinyapps)
-# fpath <- "~/gh/radiant/inst/base"
-# setwd(fpath)
-#
-# for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
-#   source(file, local = TRUE)
-#
-# source("../../build/deployapp.R", local = TRUE)
-# deployApp(account = "vnijs", launch.browser = FALSE)
-#
-# setwd(file.path(fpath,"../quant"))
-# deployApp(account = "vnijs", launch.browser = FALSE)
-#
-# setwd(file.path(fpath,"../marketing"))
-# deployApp(account = "vnijs", launch.browser = FALSE)
+devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree"))
 
-# setwd(file.path(fpath,"../analytics"))
-# deployApp(account = "vnijs", launch.browser = FALSE)
+library(shinyapps)
+fpath <- "~/gh/radiant/inst/base"
+setwd(fpath)
+
+for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
+  source(file, local = TRUE)
+
+source("../../build/deployapp.R", local = TRUE)
+deployApp(account = "vnijs", launch.browser = FALSE)
+
+setwd(file.path(fpath,"../quant"))
+deployApp(account = "vnijs", launch.browser = FALSE)
+
+setwd(file.path(fpath,"../marketing"))
+deployApp(account = "vnijs", launch.browser = FALSE)
+
+setwd(file.path(fpath,"../analytics"))
+deployApp(account = "vnijs", launch.browser = FALSE)
 
 # fn <- "~/gh/radiant/inst/base/www/style.css"
 # readLines(fn) %>%

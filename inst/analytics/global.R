@@ -9,3 +9,4 @@ rm(bp)
 
 addResourcePath("figures_quant", file.path(r_path,"quant/tools/help/figures/"))
 addResourcePath("figures_marketing", file.path(r_path,"marketing/tools/help/figures/"))
+addResourcePath("figures_analytics", file.path(r_path,"analytics/tools/help/figures/"))

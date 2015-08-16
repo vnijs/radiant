@@ -30,10 +30,10 @@ rm $dirwin/radiant*
 # rm $dirmac_mav/DT*
 # rm $dirwin/DT*
 #
-rm $dirsource/data.tree*
-rm $dirmac/data.tree*
-rm $dirmac_mav/data.tree*
-rm $dirwin/data.tree*
+# rm $dirsource/data.tree*
+# rm $dirmac/data.tree*
+# rm $dirmac_mav/data.tree*
+# rm $dirwin/data.tree*
 
 # rm $dirsource/MathJaxR*
 # rm $dirmac/MathJaxR*
