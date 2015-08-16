@@ -182,6 +182,40 @@ img {
              <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
+
+        <li class="dropdown">
+          <a href="/radiant/analytics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Business Analytics<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sample</li>
+             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
+             <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
+             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
+             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
+             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
+             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Regression</li>
+             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
+             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
+             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
         <li class="dropdown">
           <a href="/radiant/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -250,16 +284,13 @@ img {
 </ul>
 <p>Radiant is available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version with complete documentation for off-line access open R(studio) and copy-and-paste the command below:</p>
 <pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)</code></pre>
-<p>Once all packages are installed use the commands below to launch the app (use either “base”, “quant”, or “marketing”):</p>
+<p>Once all packages are installed use the commands below to launch the app (use either “base”, “quant”, “marketing” or “analytics”):</p>
 <pre class="r"><code>library(radiant)
-radiant(&quot;marketing&quot;)</code></pre>
+radiant(&quot;analytics&quot;)</code></pre>
 <p>See also the <code>Installing Radiant</code> video:</p>
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen>
 </iframe>
-<p>You can create a launcher on your Desktop to start Radiant by typing <code>launcher(&quot;marketing&quot;)</code> in the R-console and pressing return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser.</p>
-<blockquote>
-<p><strong>Note:</strong> As of version 0.2.54 the <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
-</blockquote>
+<p>You can create a launcher on your Desktop to start Radiant by typing <code>launcher(&quot;analytics&quot;)</code> in the R-console and pressing return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
 <p>When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code>. The Radiant process will stop and the browser window will close (Chrome) or gray-out.</p>
 </div>
 <div id="documentation" class="section level2">
@@ -274,6 +305,7 @@ radiant(&quot;marketing&quot;)</code></pre>
 <div id="online" class="section level2">
 <h2>Online</h2>
 <p>Not ready to install Radiant on your computer? Try it online at the links below:</p>
+<p><a href="https://internal.shinyapps.io/vnijs/analytics" target="_blank">internal.shinyapps.io/vnijs/analytics</a></p>
 <p><a href="https://internal.shinyapps.io/vnijs/marketing" target="_blank">internal.shinyapps.io/vnijs/marketing</a></p>
 <p><a href="https://internal.shinyapps.io/vnijs/quant" target="_blank">internal.shinyapps.io/vnijs/quant</a></p>
 <p><a href="https://internal.shinyapps.io/vnijs/base" target="_blank">internal.shinyapps.io/vnijs/base</a></p>

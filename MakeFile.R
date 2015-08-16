@@ -20,6 +20,7 @@ setwd('base/app')
 knitr::knit('combine.Rmd'); knitr::knit('view.Rmd'); knitr::knit('transform.Rmd');
 setwd('../../base'); system('make')
 setwd('../marketing'); system('make')
+setwd('../analytics'); system('make')
 setwd('../quant'); system('make')
 setwd('../')
 

@@ -6,6 +6,8 @@ title: News
 
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package.
 
+## Business analytics app added (8/16/2015)
+
 ## Breaking change (6/15/2015)
 
 If you are using Radiant for Rmarkdown documents, State files, or from R-code please be aware that (most) function arguments have changed as of version 0.2.30. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.
