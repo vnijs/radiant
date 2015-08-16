@@ -561,42 +561,26 @@ plot.glm_predict <- function(x,
   sshhr( p )
 }
 
-#' Store predicted values generated in the glm_reg function
+#' Store residuals or predicted values generated in the glm_reg function
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
-#' @param object Return value from \code{\link{predict.glm_reg}}
+#' @param object Return value from \code{\link{glm_reg}} or \code{\link{predict.glm_reg}}
+#' @param data Dataset name
+#' @param type Residuals ("residual") or predictions ("predictions")
+#' @param name Variable name assigned to the residuals or predicted values
 #'
 #' @examples
 #' \donttest{
 #' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-#' store_glm_pred(result)
+#' store_glm(result, "Prediction")
 #' head(titanic)
 #' }
 #' @export
-store_glm_pred <- function(object, name = "predict_glm") {
-  if (object$data_filter != "")
-    return("Please deactivate data filters before trying to store residuals")
-  object$Prediction %>%
-    changedata(object$dataset, vars = ., var_names = "predict_glm")
-}
-
-#' Store residuals generated in the glm_reg function
-#'
-#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
-#'
-#' @param object Return value from \code{\link{glm_reg}}
-#'
-#' @examples
-#' \donttest{
-#' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-#' store_glm_resid(result)
-#' head(titanic)
-#' }
-#' @export
-store_glm_resid <- function(object) {
-  if (object$data_filter != "")
-    return("Please deactivate data filters before trying to store residuals")
-  object$model$residuals %>%
-    changedata(object$dataset, vars = ., var_names = "residuals_glm")
+store_glm <- function(object, data = object$dataset,
+                      type = "residual", name = paste0(type, "_glm")) {
+  if (!is.null(object$data_filter) && object$data_filter != "")
+    return(message("Please deactivate data filters before trying to store predictions or residuals"))
+  store <- if (type == "residual") object$model$residuals else object$Prediction
+    changedata(data, vars = store, var_names = name)
 }

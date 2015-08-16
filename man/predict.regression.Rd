@@ -4,15 +4,17 @@
 \alias{predict.regression}
 \title{Predict method for the regression function}
 \usage{
-\method{predict}{regression}(object, pred_cmd = "", pred_data = "",
-  conf_lev = 0.95, prn = TRUE, ...)
+\method{predict}{regression}(object, pred_vars = "", pred_data = "",
+  pred_cmd = "", conf_lev = 0.95, prn = TRUE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}
 
-\item{pred_cmd}{Command used to generate data for prediction}
+\item{pred_vars}{Variables to use for prediction}
 
 \item{pred_data}{Name of the dataset to use for prediction}
+
+\item{pred_cmd}{Command used to generate data for prediction}
 
 \item{conf_lev}{Confidence level used to estimate confidence intervals (.95 is the default)}
 

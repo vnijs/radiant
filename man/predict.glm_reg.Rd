@@ -4,15 +4,17 @@
 \alias{predict.glm_reg}
 \title{Predict method for the glm_reg function}
 \usage{
-\method{predict}{glm_reg}(object, pred_cmd = "", pred_data = "",
-  prn = TRUE, ...)
+\method{predict}{glm_reg}(object, pred_vars = "", pred_data = "",
+  pred_cmd = "", prn = TRUE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{glm_reg}}}
 
-\item{pred_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
+\item{pred_vars}{Variables selected to generate predictions}
 
 \item{pred_data}{Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation}
+
+\item{pred_cmd}{Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)}
 
 \item{prn}{Print prediction results (default is TRUE)}
 
@@ -26,9 +28,11 @@ See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Ra
 }
 \examples{
 result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
-predict(result, pred_cmd = "pclass = levels(pclass)")
+ predict(result, pred_cmd = "pclass = levels(pclass)")
 glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes") \%>\%
   predict(pred_cmd = "sex = c('male','female')")
+glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes") \%>\%
+ predict(pred_data = "titanic")
 }
 \seealso{
 \code{\link{glm_reg}} to generate the result

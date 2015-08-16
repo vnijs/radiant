@@ -255,7 +255,11 @@ output$ui_glm_reg <- renderUI({
    					             step = 0.01)
   		  ),
         conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
-  		    actionButton("glm_store_res", "Store residuals")
+          tags$table(
+            tags$td(textInput("glm_store_res_name", "Store residuals:", "residuals_glm")),
+            tags$td(actionButton("glm_store_res", "Store"), style="padding-top:30px;")
+          )
+  		    # actionButton("glm_store_res", "Store residuals")
         )
       )
 	  ),
@@ -354,8 +358,8 @@ glm_available <- reactive({
 
 .predict_plot_glm_reg <- reactive({
   if (!input$glm_pred_plot) return(" ")
-  if (!input$glm_xvar %in% input$glm_indep_var) return(" ")
   if (glm_available() != "available") return(glm_available())
+  if (not_available(input$glm_xvar) || !input$glm_xvar %in% input$glm_indep_var) return(" ")
   if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
   do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
 })
@@ -405,7 +409,7 @@ observeEvent(input$glm_reg_report, {
 
 observeEvent(input$glm_store_res, {
   isolate({
-    .glm_reg() %>% { if (is.list(.)) store_glm_resid(.) }
+    .glm_reg() %>% { if (is.list(.)) store_glm(., type = "residual", name = input$glm_store_res_name) }
   })
 })
 
@@ -413,10 +417,10 @@ observeEvent(input$glm_store_pred, {
   isolate({
     pred <- r_data$glm_pred
     if (is.null(pred)) return()
-    if (nrow(pred) != nrow(.getdata()))
+    if (nrow(pred) != nrow(getdata(input$dataset)))
       return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    changedata(input$dataset, pred$Prediction, input$glm_store_pred_name)
-    # store_glm_pred(., name = input$glm_store_pred_name) }
+    # changedata(input$dataset, pred$Prediction, input$glm_store_pred_name)
+    store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)
   })
 })
 

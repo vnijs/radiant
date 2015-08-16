@@ -95,9 +95,9 @@ output$ui_reg_indep_var <- renderUI({
   if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]
 
   ## if possible, keep current indep value when depvar changes
+  ## after storing residuals or predictions
   isolate({
-    init <-
-      input$reg_indep_var %>%
+    init <- input$reg_indep_var %>%
       {if(!is_empty(.) && . %in% vars) . else character(0)}
   })
 
@@ -261,7 +261,10 @@ output$ui_regression <- renderUI({
                          step = 0.01)
         ),
         conditionalPanel(condition = "input.tabs_regression == 'Summary'",
-          actionButton("reg_store_res", "Store residuals")
+          tags$table(
+            tags$td(textInput("reg_store_res_name", "Store residuals:", "residuals_reg")),
+            tags$td(actionButton("reg_store_res", "Store"), style="padding-top:30px;")
+          )
         )
       )
     ),
@@ -363,7 +366,8 @@ reg_available <- reactive({
 
 .predict_plot_regression <- reactive({
   if (!input$reg_pred_plot) return(" ")
-  if (!input$reg_xvar %in% input$reg_indep_var) return(" ")
+  if (reg_available() != "available") return(reg_available())
+  if (not_available(input$reg_xvar) || !input$reg_xvar %in% input$reg_indep_var) return(" ")
   if (is_empty(input$reg_predict) || is.null(r_data$reg_pred))
     return(invisible())
   do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
@@ -413,7 +417,7 @@ observeEvent(input$regression_report, {
 
 observeEvent(input$reg_store_res, {
   isolate({
-    .regression() %>% { if (is.list(.)) store_reg_resid(.) }
+    .regression() %>% { if (is.list(.)) store_reg(., type = "residual", name = input$reg_store_res_name) }
   })
 })
 
@@ -421,12 +425,12 @@ observeEvent(input$reg_store_pred, {
   isolate({
     pred <- r_data$reg_pred
     if (is.null(pred)) return()
-    if (nrow(pred) != nrow(.getdata()))
+    if (nrow(pred) != nrow(getdata(input$dataset)))
       return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    changedata(input$dataset, pred$Prediction, input$reg_store_pred_name)
-    # store_glm_pred(., name = input$glm_store_pred_name) }
+    store_reg(pred, data = input$dataset, type = "prediction", name = input$reg_store_pred_name)
   })
 })
+
 
 output$dl_reg_pred <- downloadHandler(
   filename = function() { "reg_predictions.csv" },
