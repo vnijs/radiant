@@ -11,7 +11,6 @@
 # options(warn = 2)
 # options(warn = 0)
 
-
 init_state <- function(r_data) {
 
   ## initial plot height and width

@@ -22,6 +22,7 @@ expl_inputs <- reactive({
 output$ui_expl_vars <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
+  if (not_available(vars)) return()
   selectInput("expl_vars", label = "Select variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
@@ -29,6 +30,7 @@ output$ui_expl_vars <- renderUI({
 
 output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
+  if (not_available(vars)) return()
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',

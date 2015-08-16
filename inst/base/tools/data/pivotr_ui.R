@@ -11,6 +11,7 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
+  if (not_available(vars)) return()
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
     selected = state_multiple("pvt_cvars",vars, ""), multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
@@ -214,8 +215,9 @@ observeEvent(input$pivotr_rows_all, {
 output$plot_pivot <- renderPlot({
   if (is_empty(input$pvt_plot, FALSE)) return(invisible())
   withProgress(message = 'Making plot', value = 0, {
-    sshhr( .plot_pivot() %>% print )
+    sshhr(.plot_pivot()) %>% print
   })
+  return(invisible())
 }, width = pvt_plot_width, height = pvt_plot_height)
 
 observeEvent(input$pivotr_report, {

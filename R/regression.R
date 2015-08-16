@@ -390,8 +390,9 @@ plot.regression <- function(x,
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
-#' @param pred_cmd Command used to generate data for prediction
+#' @param pred_vars Variables to use for prediction
 #' @param pred_data Name of the dataset to use for prediction
+#' @param pred_cmd Command used to generate data for prediction
 #' @param conf_lev Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param prn Print prediction results (default is TRUE)
 #' @param ... further arguments passed to or from other methods
@@ -411,21 +412,27 @@ plot.regression <- function(x,
 #'
 #' @export
 predict.regression <- function(object,
-                               pred_cmd = "",
+                               pred_vars = "",
                                pred_data = "",
+                               pred_cmd = "",
                                conf_lev = 0.95,
                                prn = TRUE,
                                ...) {
 
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
+  pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
   if ("standardize" %in% object$check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
-  } else if (pred_cmd == "" && pred_data == "") {
-    return(cat("Please specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. Make\nsure to press return after you finish entering the command.\nIf no results are shown the command was likely invalid. Alternatively,\nspecify a dataset to generate predictions. You could create this in\nExcel and use the paste feature in Data > Manage to bring it into\nRadiant"))
+  } else if (pred_count == 3) {
+    return(cat("Please select variables, data, or specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. Make\nsure to press return after you finish entering the command.\nIf no results are shown the command was likely invalid. Alternatively,\nspecify a dataset to generate predictions. You could create this in\nExcel and use the paste feature in Data > Manage to bring it into\nRadiant"))
   }
 
-  if (pred_cmd != "" && pred_data != "")
-    cat("Both a command and a dataset where specified for prediciton. The command will be used.\nTo use the dataset remove the command.")
+  if (pred_count < 2) {
+    if (pred_cmd != "")
+      cat("Multiple inputs where specified for prediciton. The command will be used.\nTo use variables or a dataset remove the command.")
+    if (pred_vars != "")
+      cat("Multiple inputs where specified for prediciton. The variables selected will be used.\nTo use a command or dataset unselect variables.")
+  }
 
   pred_type <- "cmd"
   vars <- object$indep_var
@@ -461,7 +468,7 @@ predict.regression <- function(object,
         return(cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n"))
       } else {
         plug_data[names(pred)] <- list(NULL)
-        pred <- data.frame(plug_data[-1],pred)
+        pred <- data.frame(plug_data[,-1],pred)
       }
     }
   } else {

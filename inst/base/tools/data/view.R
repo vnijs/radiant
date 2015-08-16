@@ -3,6 +3,7 @@
 #############################################
 output$ui_view_vars <- renderUI({
   vars <- varnames()
+  if (not_available(vars)) return()
   selectInput("view_vars", "Select variables to show:", choices  = vars,
     selected = state_multiple("view_vars",vars, vars), multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars)))
@@ -74,6 +75,8 @@ view_store <- function(dataset,
 
   getdata(dataset, vars = vars, filt = data_filter, rows = rows, na.rm = FALSE) %>%
     save2env(dataset, view_dat, mess)
+
+  updateSelectInput(session = session, inputId = "dataset", selected = view_dat)
 }
 
 output$dl_view_tab <- downloadHandler(

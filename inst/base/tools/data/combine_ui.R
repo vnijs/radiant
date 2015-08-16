@@ -58,11 +58,10 @@ output$ui_Combine <- renderUI({
       ),
       uiOutput("ui_cmb_by"),
       selectInput("cmb_type", "Combine type:", choices  = cmb_type,
-                  selected = state_single("cmb_type",cmb_type, "inner_join"),
+                  selected = state_single("cmb_type",cmb_type,"inner_join"),
                   multiple = FALSE),
       tags$table(
-        tags$td(textInput("cmb_name", "Data name:",
-                          state_init("cmb_name",paste0("cmb_",input$dataset)))),
+        tags$td(textInput("cmb_name", "Data name:", paste0(input$dataset,"_cmb"))),
         tags$td(actionButton("cmb_store", "Combine"), style="padding-top:30px;")
       )
     ),
@@ -72,9 +71,8 @@ output$ui_Combine <- renderUI({
   )
 })
 
-observe({
+observeEvent(input$cmb_store, {
   ## combining datasets
-  if (not_pressed(input$cmb_store)) return()
   isolate({
     dataset <- input$dataset
     cmb_dataset <- input$cmb_dataset

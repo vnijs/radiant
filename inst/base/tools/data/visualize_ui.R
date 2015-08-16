@@ -31,6 +31,7 @@ output$ui_viz_type <- renderUI({
 output$ui_viz_yvar <- renderUI({
   if (is.null(input$viz_type)) return()
   vars <- varying_vars()
+  if (not_available(vars)) return()
   if (input$viz_type %in% c("line","bar","scatter")) vars <- vars["factor" != .getclass()[vars]]
 
   isolate({
@@ -52,6 +53,7 @@ output$ui_viz_yvar <- renderUI({
 output$ui_viz_xvar <- renderUI({
   if (is.null(input$viz_type)) return()
   vars <- varying_vars()
+  if (not_available(vars)) return()
   if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()

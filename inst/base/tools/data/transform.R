@@ -1,6 +1,7 @@
 # UI-elements for transform
 output$ui_tr_vars <- renderUI({
   vars <- varnames()
+  if (not_available(vars)) return()
   selectInput("tr_vars", "Select variable(s):", choices  = vars,
     selected = state_multiple("tr_vars", vars),
     multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
@@ -121,6 +122,14 @@ as_num <- function(x) {
 	}
 }
 
+make_train <- function(n = .7, name = "training", nr = 100) {
+  if (n < 1) n <- round(n * nr) %>% max(1)
+  ind <- seq_len(nr)
+  training <- rep_len(0L,nr)
+  training[sample(ind,n)] <- 1L
+  training
+}
+
 # test
 # library(magrittr)
 # library(dplyr)
@@ -146,6 +155,7 @@ type_options <- list("None" = "none", "As factor" = "as.factor",
 # trans_types <- list("None" = "none", "Type" = "type", "Change" = "change",
 trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Normalize" = "normalize", "Create" = "create",
+                    "Training sample" = "training",
                     "Clipboard" = "clip", "Recode" = "recode",
                     "Rename" = "rename", "Replace" = "replace",
                     "Reorder/remove variables" = "reorg_vars",
@@ -170,6 +180,14 @@ output$ui_Transform <- renderUI({
     conditionalPanel(condition = "input.tr_change_type == 'create'",
 	    returnTextAreaInput("tr_create", "Create (e.g., x = y - z):", "")
     ),
+    conditionalPanel(condition = "input.tr_change_type == 'training'",
+      tags$table(
+        tags$td(numericInput("tr_training_n", label = "Size:", min = 0,
+                value = state_init("tr_training_n", .9))),
+        tags$td(textInput("tr_training", "Variable name:",
+                state_init("tr_training","training")))
+      )
+    ),
     conditionalPanel(condition = "input.tr_change_type == 'clip'",
     	HTML("<label>Paste from spreadsheet:</label>"),
     	tags$textarea(class="form-control", id="tr_paste", rows=3, "")
@@ -191,8 +209,7 @@ output$ui_Transform <- renderUI({
     ),
     conditionalPanel(condition = "input.tr_change_type != 'none'",
 	    tags$table(
-	      tags$td(textInput("tr_dataset", "Store changes in:",
-	                        state_init("tr_dataset",input$dataset))),
+	      tags$td(textInput("tr_dataset", "Store changes in:", input$dataset)),
 	      tags$td(actionButton("tr_store", "Store"), style="padding-top:30px;")
 	    )
 	  ),
@@ -320,6 +337,13 @@ transform_main <- reactive({
   	return("A filter is active. Either uncheck the filter checkbox, remove the filter statement,\nor store the filtered data through the Data > View tab")
 
 	dat <- .getdata()
+
+  if (input$tr_change_type == 'training') {
+    tname <- if (input$tr_training == "") "training" else input$tr_training
+    tnr <- nrow(dat)
+    tn <- input$tr_training_n %>% {ifelse (. < 0 || is.na(.) || . > tnr, .7, .)}
+    return(data.frame(make_train(tn, tname, tnr)) %>% setNames(tname))
+  }
 
 	if (input$tr_change_type == "none") {
 	  if (not_available(input$tr_vars)) return(dat)
@@ -495,9 +519,8 @@ observeEvent(input$tr_store, {
 		## reset input values once the changes have been applied
 		updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
 
-    if (dataset != input$dataset)
-			updateSelectInput(session = session, inputId = "dataset", select = dataset)
-
+    # if (dataset != input$dataset)
+		updateSelectInput(session = session, inputId = "dataset", select = dataset)
   })
 })
 
