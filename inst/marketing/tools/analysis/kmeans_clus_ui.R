@@ -51,7 +51,7 @@ output$ui_kmeans_clus <- renderUI({
   	),
   	help_and_report(modal_title = "K-means cluster analysis",
   	                fun_name = "kmeans_clus",
-  	                help_file = inclMD("tools/help/kmeans_clus.md"))
+  	                help_file = inclMD(file.path(r_path,"marketing/tools/help/kmeans_clus.md")))
 	)
 })
 

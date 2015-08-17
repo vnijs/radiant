@@ -386,22 +386,24 @@ reg_available <- reactive({
 
 observeEvent(input$regression_report, {
   isolate({
-    outputs <- c("summary","# store_reg_resid")
+    outputs <- c("summary")
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
     figs <- FALSE
     if (!is_empty(input$reg_plots)) {
-      inp_out[[3]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
+      inp_out[[2]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
     xcmd <- ""
     if (!is.null(r_data$reg_pred)) {
-      inp_out[[3 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
+      inp_out[[2 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
-      xcmd <- paste0("# write.csv(result, file = '~/reg_sav_pred.csv', row.names = FALSE)")
+      xcmd <-
+        paste0("# store_reg(result, data = \"", input$dataset, "\", type = \"prediction\", name = \"", input$reg_store_pred_name,"\")\n") %>%
+        paste0("# write.csv(result, file = \"~/reg_predictions.csv\", row.names = FALSE)")
       if (!is_empty(input$reg_xvar)) {
-        inp_out[[4 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
+        inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
         outputs <- c(outputs, "plot")
         figs <- TRUE
       }

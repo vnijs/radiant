@@ -14,8 +14,7 @@ output$ui_View <- renderUI({
     wellPanel(
       uiOutput("ui_view_vars"),
       tags$table(
-        tags$td(textInput("view_dat", "Store filtered data as:",
-                          state_init("view_dat", paste0(input$dataset,"_view")))),
+        tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset,"_view"))),
         tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
       )
     ),
@@ -62,6 +61,7 @@ view_store <- function(dataset,
                        view_dat = dataset,
                        data_filter = "",
                        rows = NULL) {
+
 
   mess <-
     if (data_filter != "" && !is.null(rows))

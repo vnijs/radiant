@@ -80,7 +80,7 @@ output$ui_mds <- renderUI({
 	  ),
 		help_and_report(modal_title = "(Dis)similarity based brand maps (MDS)",
 		                fun_name = "mds",
-		                help_file = inclMD("tools/help/mds.md"))
+		                help_file = inclMD(file.path(r_path,"marketing/tools/help/mds.md")))
 	)
 })
 

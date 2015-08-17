@@ -58,7 +58,7 @@ output$ui_conjoint <- renderUI({
 	  ),
   	help_and_report(modal_title = "Conjoint",
   	                fun_name = "conjoint",
-  	                help_file = inclMD("tools/help/conjoint.md"))
+  	                help_file = inclMD(file.path(r_path,"marketing/tools/help/conjoint.md")))
 	)
 })
 
@@ -93,7 +93,7 @@ output$conjoint <- renderUI({
 		ca_output_panels <- tabsetPanel(
 	    id = "tabs_conjoint",
 	    tabPanel("Summary", verbatimTextOutput("summary_conjoint")),
-	    tabPanel("Predict", verbatimTextOutput("predict_conjoint")),
+	    # tabPanel("Predict", verbatimTextOutput("predict_conjoint")),
 	    tabPanel("Plot", plotOutput("plot_conjoint", width = "100%", height = "100%"))
 	    # tabPanel("Plot", plotOutput("plot_conjoint"))
 	  )

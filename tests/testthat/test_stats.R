@@ -1,4 +1,6 @@
 # library(png)
+# library(radiant)
+# library(testthat)
 
 trim_trailing <- function(x) sub("\\s+$", "", x)
 trim_leading <- function(x) sub("^\\s+", "", x)
@@ -14,7 +16,6 @@ compare_output <- function(res1, res2) {
   }
 }
 
-library(radiant)
 
 ######### tests ########
 
@@ -34,8 +35,9 @@ context("Compare proportions")
 test_that("compare_props 2", {
   result <- compare_props("titanic", "pclass", "survived")
   res1 <- capture.output(summary(result))[9] %>% trim
+  res1
   # cat(paste0(res1, "\n"))
-  res2 <- "200 123 323 0.619 0.027 0.053"
+  res2 <- "179 103 282 0.635 0.029 0.056"
   expect_equal(res1,res2)
 })
 

@@ -30,7 +30,7 @@ output$ui_pre_factor <- renderUI({
 	  ),
     help_and_report(modal_title = "Pre-factor analysis",
                     fun_name = "pre_factor",
-                    help_file = inclMD("tools/help/pre_factor.md"))
+                    help_file = inclMD(file.path(r_path,"marketing/tools/help/pre_factor.md")))
  	)
 })
 

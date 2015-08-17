@@ -96,8 +96,16 @@ output$ui_glm_indep_var <- renderUI({
   vars <- varnames()[notChar]
   if (not_available(input$glm_dep_var)) vars <- character(0)
   if (length(vars) > 0 ) vars <- vars[-which(vars == input$glm_dep_var)]
+
+  ## if possible, keep current indep value when depvar changes
+  ## after storing residuals or predictions
+  isolate({
+    init <- input$glm_indep_var %>%
+    {if(!is_empty(.) && . %in% vars) . else character(0)}
+  })
+
   selectInput(inputId = "glm_indep_var", label = "Independent variables:", choices = vars,
-  	selected = state_multiple("glm_indep_var", vars),
+  	selected = state_multiple("glm_indep_var", vars, init),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -369,28 +377,35 @@ glm_available <- reactive({
   if (is_empty(input$glm_plots))
     return("Please select a regression plot from the drop-down menu")
 
-  glm_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
-    { do.call(plot, c(list(x = .glm_reg()), .)) }
+  glm_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
+    {do.call(plot, c(list(x = .glm_reg()), .))}
 })
+
+
+    # store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)
 
 observeEvent(input$glm_reg_report, {
   isolate({
-    outputs <- c("summary","# store_glm_resid")
+    ## find a way to have the predict call **not** to use 'result'
+    # outputs <- c("summary", "# store_glm")
+    outputs <- c("summary")
     inp_out <- list("","")
     inp_out[[1]] <- clean_args(glm_sum_inputs(), glm_sum_args[-1])
     figs <- FALSE
     if (!is_empty(input$glm_plots)) {
-      inp_out[[3]] <- clean_args(glm_plot_inputs(), glm_plot_args[-1])
+      inp_out[[2]] <- clean_args(glm_plot_inputs(), glm_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
     xcmd <- ""
     if (!is.null(r_data$glm_pred)) {
-      inp_out[[3 + figs]] <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
+      inp_out[[2 + figs]] <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
       outputs <- c(outputs,"result <- predict")
-      xcmd <- "# write.csv(result, file = '~/glm_sav_pred.csv', row.names = FALSE)"
+      xcmd <-
+        paste0("# store_glm(result, data = \"", input$dataset, "\", type = \"prediction\", name = \"", input$glm_store_pred_name,"\")\n") %>%
+        paste0("# write.csv(result, file = \"~/glm_predictions.csv\", row.names = FALSE)")
       if (!is_empty(input$glm_xvar)) {
-        inp_out[[4 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
+        inp_out[[3 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
         outputs <- c(outputs, "plot")
         figs <- TRUE
       }

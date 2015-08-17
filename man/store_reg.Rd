@@ -4,7 +4,7 @@
 \alias{store_reg}
 \title{Store residuals or predicted values generated in the regression function}
 \usage{
-store_reg(object, data = object$dataset, type = "residual",
+store_reg(object, data = object$dataset, type = "residuals",
   name = paste0(type, "_reg"))
 }
 \arguments{
@@ -12,7 +12,7 @@ store_reg(object, data = object$dataset, type = "residual",
 
 \item{data}{Dataset name}
 
-\item{type}{Residuals ("residual") or predictions ("predictions")}
+\item{type}{Residuals ("residuals") or predictions ("predictions"). For predictions the dataset name must be provided}
 
 \item{name}{Variable name assigned to the residuals or predicted values}
 }
@@ -26,7 +26,6 @@ See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in
 \donttest{
 result <- regression("diamonds", "price", c("carat","clarity"))
 store_reg(result)
-head(diamonds)
 }
 }
 

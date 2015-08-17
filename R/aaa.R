@@ -81,7 +81,7 @@ NULL
 #' @keywords datasets
 #' @name titanic
 #' @usage data(titanic)
-#' @format A data frame with 1309 rows and 11 variables
+#' @format A data frame with 1043 rows and 10 variables
 NULL
 
 #' Predict survival

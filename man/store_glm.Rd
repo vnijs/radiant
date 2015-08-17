@@ -4,7 +4,7 @@
 \alias{store_glm}
 \title{Store residuals or predicted values generated in the glm_reg function}
 \usage{
-store_glm(object, data = object$dataset, type = "residual",
+store_glm(object, data = object$dataset, type = "residuals",
   name = paste0(type, "_glm"))
 }
 \arguments{
@@ -12,7 +12,7 @@ store_glm(object, data = object$dataset, type = "residual",
 
 \item{data}{Dataset name}
 
-\item{type}{Residuals ("residual") or predictions ("predictions")}
+\item{type}{Residuals ("residuals") or predictions ("predictions"). For predictions the dataset name must be provided}
 
 \item{name}{Variable name assigned to the residuals or predicted values}
 }
@@ -25,8 +25,7 @@ See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Ra
 \examples{
 \donttest{
 result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-store_glm(result, "Prediction")
-head(titanic)
+store_glm(result)
 }
 }
 

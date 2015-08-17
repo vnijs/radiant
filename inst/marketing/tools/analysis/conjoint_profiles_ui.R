@@ -9,9 +9,10 @@ output$ui_conjoint_profiles <- renderUI({
 	  		downloadButton('cap_download_profiles', 'Save profiles')
 	  	# )
 		),
+
   	help_and_report(modal_title = "Conjoint profiles",
   	                fun_name = "conjoint_profiles",
-  	                help_file = inclMD("tools/help/conjoint_profiles.md"))
+  	                help_file = inclMD(file.path(r_path,"marketing/tools/help/conjoint_profiles.md")))
 	)
 })
 

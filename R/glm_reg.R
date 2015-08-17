@@ -567,20 +567,19 @@ plot.glm_predict <- function(x,
 #'
 #' @param object Return value from \code{\link{glm_reg}} or \code{\link{predict.glm_reg}}
 #' @param data Dataset name
-#' @param type Residuals ("residual") or predictions ("predictions")
+#' @param type Residuals ("residuals") or predictions ("predictions"). For predictions the dataset name must be provided
 #' @param name Variable name assigned to the residuals or predicted values
 #'
 #' @examples
 #' \donttest{
 #' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-#' store_glm(result, "Prediction")
-#' head(titanic)
+#' store_glm(result)
 #' }
 #' @export
 store_glm <- function(object, data = object$dataset,
-                      type = "residual", name = paste0(type, "_glm")) {
+                      type = "residuals", name = paste0(type, "_glm")) {
   if (!is.null(object$data_filter) && object$data_filter != "")
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
-  store <- if (type == "residual") object$model$residuals else object$Prediction
+  store <- if (type == "residuals") object$model$residuals else object$Prediction
     changedata(data, vars = store, var_names = name)
 }

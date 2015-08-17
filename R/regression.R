@@ -599,21 +599,20 @@ plot.reg_predict <- function(x,
 #'
 #' @param object Return value from \code{\link{regression}} or \code{\link{predict.regression}}
 #' @param data Dataset name
-#' @param type Residuals ("residual") or predictions ("predictions")
+#' @param type Residuals ("residuals") or predictions ("predictions"). For predictions the dataset name must be provided
 #' @param name Variable name assigned to the residuals or predicted values
 #'
 #' @examples
 #' \donttest{
 #' result <- regression("diamonds", "price", c("carat","clarity"))
 #' store_reg(result)
-#' head(diamonds)
 #' }
 #' @export
 store_reg <- function(object, data = object$dataset,
-                      type = "residual", name = paste0(type, "_reg")) {
+                      type = "residuals", name = paste0(type, "_reg")) {
   if (!is.null(object$data_filter) && object$data_filter != "")
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
-  store <- if (type == "residual") object$model$residuals else object$Prediction
+  store <- if (type == "residuals") object$model$residuals else object$Prediction
     changedata(data, vars = store, var_names = name)
 }
 

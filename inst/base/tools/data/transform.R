@@ -405,7 +405,7 @@ transform_main <- reactive({
   }
 
 	if (input$tr_change_type ==  'recode') {
-    recom <- input$tr_recode %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+    recom <- input$tr_recode %>% gsub("\\s","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
 		if (recom != "") {
 			nvar <- try(do.call(car::recode, list(dat[[input$tr_vars[1]]],recom)), silent = TRUE)
 			if (!is(nvar, 'try-error')) {
