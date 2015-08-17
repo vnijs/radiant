@@ -262,12 +262,14 @@ output$ui_glm_reg <- renderUI({
    					             max = 0.99, value = state_init("glm_conf_lev",.95),
    					             step = 0.01)
   		  ),
-        conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
+        ## Only save residuals when filter is off
+        conditionalPanel(condition = "input.tabs_glm_reg == 'Summary' &
+                                      (input.show_filter == false |
+                                      input.data_filter == '')",
           tags$table(
             tags$td(textInput("glm_store_res_name", "Store residuals:", "residuals_glm")),
             tags$td(actionButton("glm_store_res", "Store"), style="padding-top:30px;")
           )
-  		    # actionButton("glm_store_res", "Store residuals")
         )
       )
 	  ),

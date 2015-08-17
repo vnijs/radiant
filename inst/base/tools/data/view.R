@@ -77,6 +77,7 @@ view_store <- function(dataset,
     save2env(dataset, view_dat, mess)
 
   updateSelectInput(session = session, inputId = "dataset", selected = view_dat)
+  updateSelectInput(session = session, inputId = "view_vars", selected = vars)
 }
 
 output$dl_view_tab <- downloadHandler(

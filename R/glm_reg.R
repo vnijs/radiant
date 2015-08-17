@@ -433,7 +433,8 @@ predict.glm_reg <- function(object,
       }
     }
   } else {
-    pred <- getdata(pred_data)
+    ## generate predictions for all observations in the dataset
+    pred <- getdata(pred_data, filt = "")
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
     if (is(pred, 'try-error')) {

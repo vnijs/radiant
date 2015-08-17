@@ -260,7 +260,10 @@ output$ui_regression <- renderUI({
                          max = 0.99, value = state_init("reg_conf_lev",.95),
                          step = 0.01)
         ),
-        conditionalPanel(condition = "input.tabs_regression == 'Summary'",
+        ## Only save residuals when filter is off
+        conditionalPanel(condition = "input.tabs_regression == 'Summary' &
+                                      (input.show_filter == false |
+                                      input.data_filter == '')",
           tags$table(
             tags$td(textInput("reg_store_res_name", "Store residuals:", "residuals_reg")),
             tags$td(actionButton("reg_store_res", "Store"), style="padding-top:30px;")
