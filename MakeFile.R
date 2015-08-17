@@ -1,17 +1,4 @@
 setwd("~/gh/radiant_gh-pages/")
-# setwd('quant'); system('make')
-
-# local_dir <- .libPaths()[1]
-# global_dir <- .libPaths()[2]
-
-## installing packages to global_dir
-# repos <- "http://cran.rstudio.com"
-# options(repos = c(CRAN = repos))
-# install.packages("rmarkdown", lib = global_dir)
-# install.packages("ggvis", lib = global_dir)
-# install.packages("testthat", lib = global_dir)
-# devtools::install_github
-
 file.copy("../radiant/inst/marketing/data/shopping.rda",
           "~/Desktop/shopping.rda",overwrite = TRUE)
 

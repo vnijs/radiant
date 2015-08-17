@@ -10,31 +10,44 @@ Radiant is a platform-independent browser-based interface for business analytics
 
 #### 1. Install R for your system
 
-  For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">https://cran.rstudio.com/bin/macosx/</a>
+For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">https://cran.rstudio.com/bin/macosx/</a>
 
-  For windows go to <a href="https://cran.rstudio.com/bin/windows/base/" target="_blank"> https://cran.rstudio.com/bin/windows/base/</a>
+For windows you can get the latest release here: <a href="https://cran.rstudio.com/bin/windows/base/release.htm" target="_blank">https://cran.rstudio.com/bin/windows/base/release.htm</a>
 
 #### 2. Install Rstudio
 
-  [Rstudio for mac](https://download1.rstudio.org/RStudio-0.99.473.dmg)
+Get that latest release of Rstudio for your system from:
 
-  [Rstudio for windows](https://download1.rstudio.org/RStudio-0.99.473.exe)
+<a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">https://www.rstudio.com/products/rstudio/download/</a>
 
 #### 3. Use a modern browser 
 
-  For example, [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari. Internet Explorer (version 11 or higher) should work as well 
+For example, [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari. Internet Explorer (version 11 or higher) should work as well 
 
 #### 4. Install Radiant
 
-  To install Radiant open R(studio) and copy-and-paste the command below and press return:
+To install Radiant open R(studio) and copy-and-paste the command below and press return:
 
 ```r
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 ```
 
+If you are asked where to install Radiant and its dependencies answer "yes" or "y" “Would you like to use a personal library instead?”
+
 #### 5. Create a desktop launcher
 
-Please create a Radiant-launcher on your Desktop that will start and update Radiant for you. In Rstudio, type `launcher("analytics")` and press return. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release.
+Please create a Radiant-launcher on your Desktop that will start and update Radiant for you. Copy-and-paste (or type) the command below into Rstudio:
+
+```r
+radiant::launcher()
+```
+
+and press return. When asked if you want to create a short-cut type `y`. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release. Alternatively, you can start Radiant from Rstudio using the commands below:
+
+```r
+library(radiant)
+radiant()
+```
 
 When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click `Stop`. The Radiant process will stop and the browser window will close (Chrome) or gray-out.
 
