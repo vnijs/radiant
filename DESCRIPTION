@@ -1,6 +1,6 @@
 Package: radiant
 Title: Business Analytics using R and Shiny
-Version: 0.3.1
+Version: 0.3.2
 Date: 2015-8-17
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description:
