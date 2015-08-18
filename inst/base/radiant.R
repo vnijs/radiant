@@ -101,7 +101,8 @@ groupable_vars <- reactive({
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(n_distinct)) %>%
+    # summarise_each(funs(n_distinct)) %>%
+    summarise_each(funs(length(unique(na.omit(.))))) %>%
     { . == 2 } %>%
     which(.) %>%
     varnames()[.]

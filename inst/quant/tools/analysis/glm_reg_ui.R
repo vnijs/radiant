@@ -252,7 +252,7 @@ output$ui_glm_reg <- renderUI({
           checkboxGroupInput("glm_check", NULL, glm_check,
             selected = state_init("glm_check"), inline = TRUE),
           checkboxGroupInput("glm_sum_check", NULL, glm_sum_check,
-            selected = state_init("glm_sum_check"), inline = TRUE)
+            selected = state_init("glm_sum_check", "odds"), inline = TRUE)
   			),
   	    conditionalPanel(condition = "(input.glm_sum_check && (input.glm_sum_check.indexOf('odds') >= 0 |
                          input.glm_sum_check.indexOf('confint') >= 0)) |
@@ -426,7 +426,11 @@ observeEvent(input$glm_reg_report, {
 
 observeEvent(input$glm_store_res, {
   isolate({
-    .glm_reg() %>% { if (is.list(.)) store_glm(., type = "residual", name = input$glm_store_res_name) }
+     robj <- .glm_reg()
+     if (!is.list(robj)) return()
+     if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
+       return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+     store_glm(robj, data = input$dataset, type = "residual", name = input$glm_store_res_name)
   })
 })
 
@@ -434,7 +438,7 @@ observeEvent(input$glm_store_pred, {
   isolate({
     pred <- r_data$glm_pred
     if (is.null(pred)) return()
-    if (nrow(pred) != nrow(getdata(input$dataset)))
+    if (nrow(pred) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
       return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
     # changedata(input$dataset, pred$Prediction, input$glm_store_pred_name)
     store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)

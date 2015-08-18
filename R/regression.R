@@ -473,7 +473,7 @@ predict.regression <- function(object,
     }
   } else {
     ## generate predictions for all observations in the dataset
-    pred <- getdata(pred_data, filt = "")
+    pred <- getdata(pred_data, filt = "", na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -483,6 +483,7 @@ predict.regression <- function(object,
       cat(vars[!vars %in% pred_names])
       return()
     }
+    pred %<>% na.omit()
     pred_type <- "data"
   }
 

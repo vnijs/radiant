@@ -196,11 +196,14 @@ summary.glm_reg <- function(object,
       cat("There is perfect multi-collinearity in the set of selected independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
       if(object$link == "logit") {
-        odds_tab <- exp(ci_tab) %>% round(3)
-        odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
-        odds_tab %>%
-          set_colnames(c("odds ratio", cl_low, cl_high, "+/-")) %>%
-          .[-1, ] %>% print
+        exp(ci_tab[-1,]) %>% round(3) %>%
+          set_colnames(c("odds ratio", cl_low, cl_high)) %>% print
+          # .[-1, ] %>% print
+        # odds_tab <- exp(ci_tab) %>% round(3)
+        # odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
+#         odds_tab %>%
+#           set_colnames(c("odds ratio", cl_low, cl_high, "+/-")) %>%
+#           .[-1, ] %>% print
         cat("\n")
       } else if(object$link == "probit") {
         cat("Odds ratios are not calculated for Probit models\n\n")
@@ -434,7 +437,7 @@ predict.glm_reg <- function(object,
     }
   } else {
     ## generate predictions for all observations in the dataset
-    pred <- getdata(pred_data, filt = "")
+    pred <- getdata(pred_data, filt = "", na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -444,6 +447,7 @@ predict.glm_reg <- function(object,
       cat(vars[!vars %in% pred_names])
       return()
     }
+    pred %<>% na.omit()
     pred_type <- "data"
   }
 

@@ -422,7 +422,13 @@ observeEvent(input$regression_report, {
 
 observeEvent(input$reg_store_res, {
   isolate({
-    .regression() %>% { if (is.list(.)) store_reg(., type = "residual", name = input$reg_store_res_name) }
+    # .regression() %>% { if (is.list(.)) store_reg(., type = "residual", name = input$reg_store_res_name) }
+    robj <- .regression()
+    if (!is.list(robj)) return()
+    if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE))) {
+      return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+    }
+    store_reg(robj, data = input$dataset, type = "residual", name = input$reg_store_res_name)
   })
 })
 
