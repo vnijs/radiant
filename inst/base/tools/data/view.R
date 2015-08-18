@@ -5,7 +5,7 @@ output$ui_view_vars <- renderUI({
   vars <- varnames()
   if (not_available(vars)) return()
   selectInput("view_vars", "Select variables to show:", choices  = vars,
-    selected = state_multiple("view_vars",vars, vars), multiple = TRUE,
+    selected = state_multiple("view_vars", vars, vars), multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars)))
 })
 
@@ -31,8 +31,10 @@ output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return()
   dat <- select_(.getdata(), .dots = input$view_vars)
 
+  if (nrow(dat) > 2000)  filt <- 'none'
+  else filt <- list(position = "top", clear = FALSE, plain = TRUE)
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
-  DT::datatable(dat, filter = list(position = "top", clear = FALSE, plain = TRUE),
+  DT::datatable(dat, filter = filt,
     rownames = FALSE, style = "bootstrap", escape = FALSE,
     options = list(
       # stateSave = TRUE,   ## maintains state but does not show column filter settings
