@@ -12,8 +12,11 @@
 #'   radiant("analytics")
 #' }
 #' @export
-radiant <- function(app = c("analytics", "marketing", "quant", "base"))
-  runApp(system.file(app[1], package="radiant"), launch.browser = TRUE)
+radiant <- function(app = c("analytics", "marketing", "quant", "base")) {
+  if (!"package:radiant" %in% search())
+    if (!require(radiant)) stop("Calling radiant start function but radiant is not installed.")
+  runApp(system.file(app[1], package = "radiant"), launch.browser = TRUE)
+}
 
 #' Alias used to set the class for analysis function return
 #'
@@ -276,7 +279,7 @@ viewdata <- function(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE) 
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
 
-  if (nrow(dat) > 2000)  filt <- 'none'
+  if (nrow(dat) > 3000)  filt <- 'none'
   else filt <- list(position = "top", clear = FALSE, plain = FALSE)
 
   shinyApp(

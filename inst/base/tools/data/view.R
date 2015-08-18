@@ -31,7 +31,7 @@ output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return()
   dat <- select_(.getdata(), .dots = input$view_vars)
 
-  if (nrow(dat) > 2000)  filt <- 'none'
+  if (nrow(dat) > 3000)  filt <- 'none'
   else filt <- list(position = "top", clear = FALSE, plain = TRUE)
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   DT::datatable(dat, filter = filt,
