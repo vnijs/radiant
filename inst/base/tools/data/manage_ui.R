@@ -276,10 +276,12 @@ observeEvent(input$url_csv_load, {
                  quote = "\"", fill = TRUE, stringsAsFactors = input$man_str_as_factor,
                  sep = input$man_sep, dec = input$man_dec), silent = TRUE)
 
-      if (is(dat, 'try-error'))
+      if (is(dat, 'try-error')) {
         upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
-      else
+      } else {
         dat <- {if (input$man_str_as_factor) factorizer(dat) else dat} %>% as.data.frame
+        r_data[[paste0(objname,"_descr")]] <- ""
+      }
 
       r_data[[objname]] <- dat
       r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique

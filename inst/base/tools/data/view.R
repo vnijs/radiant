@@ -54,7 +54,7 @@ output$dataviewer <- DT::renderDataTable({
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
     ),
-    callback = JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+    callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
                    $('input#uploadState').on('click', function() { table.state.clear(); });")
   )
 })

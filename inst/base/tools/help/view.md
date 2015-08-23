@@ -2,7 +2,7 @@
 
 ### Datasets
 
-Choose one of the datasets from the drop-down menu. Files were loaded into Radiant through the Manage tab.
+Choose one of the datasets from the `Datasets` dropdown. Files are loaded into Radiant through the Manage tab.
 
 ### Select columns
 
@@ -10,7 +10,7 @@ By default all columns in the data are shown. Click on any variable to focus on 
 
 ### Browse the data
 
-By default only 10 rows of are shown. You can change this setting through the `records per page` drop-down. Press the `Next` and `Previous` buttons at the bottom-right of the screen to _scroll_ through the data.
+By default only 10 rows of are shown at one time. You can change this setting through the `Show ... entries` dropdown. Press the `Next` and `Previous` buttons at the bottom-right of the screen to navigate through the data.
 
 ### Sort
 
@@ -18,13 +18,13 @@ Click on a column header in the table to sort the data by the values of that var
 
 ### Filter
 
-There are several ways to select a subset of the data to view. The `Filter` box on the left (click the check-box first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expressions that have an **or** condition. For example, to select rows where `Salary` is larger than $100,000 or smaller than $20,000 use `Salary < 20000 | Salary > 100000`. `|` is the symbol for **or**. The table below gives an overview of common operators.
+There are several ways to select a subset of the data to view. The `Filter` box on the left (click the check-box first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R, and most other programming languages, `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expressions that have an **or** condition. For example, to select rows where `Salary` is smaller than \$100,000 and larger than \$20,000 use `Salary > 20000 & Salary < 100000`. `&` is the symbol for **and**. The table below gives an overview of common operators.
 
-To filter using dates you need the `as.Date` function. For example, to choose only those dates before June 1st, 2014 enterh `Date < as.Date("2014-6-1")` into the filter box and press return.
+To filter using dates you need the `as.Date` function. For example, to choose only those dates before June 1st, 2014 enter `Date < as.Date("2014-6-1")` into the filter box and press return.
 
 You can also use string matching to select rows. For example, type `grepl("ood", cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insensitive search you would use `grepl("GOOD", cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid.
 
-It is important to note that these filters are _persistent_. A filter entered in one of the Data-tabs will also be applied to other tabs and to the analyses conducted through the Radiant menus. To remove a filter (1) erase it or (2) uncheck the `Filter` check-box.
+It is important to note that these filters are _persistent_. A filter entered in one of the Data-tabs will also be applied to other tabs and to any analysis conducted through the Radiant menus. To deactivate a  filter uncheck the `Filter` check-box. To remove a filter simply erase it.
 
 <table class='table table-condensed table-hover' style='width:30%;'>
  <thead>
@@ -71,10 +71,10 @@ It is important to note that these filters are _persistent_. A filter entered in
 
 ### Column filters and Search
 
-For variables that have a limited number of different values (i.e., a factor) you can select the levels to keep from the column filter below the variable name. For example, to filter on rows with ideal cut click in the box below the variable name and select `Ideal` from the dropdown menu shown. You can also type a string into these column filters followed by return. Matching is case-insensitive. In fact, typing `eal` would produce the same result because the search will match any part of a string. Similarly, you can type a string to select observations for character variables.
+For variables that have a limited number of different values (i.e., a factor) you can select the levels to keep from the column filter below the variable name. For example, to filter on rows with ideal cut click in the box below the `cut` column header and select `Ideal` from the dropdown menu shown. You can also type a string into these column filters followed by return. Note that matching is case-insensitive. In fact, typing `eal` would produce the same result because the search will match any part of a string. Similarly, you can type a string to select observations for character variables (e.g., street names).
 
-For numeric variables the column filter boxes have some special features that make them almost as powerful as the `Filter` box. For numerical and integer variables you can use `...` to indicate a range. For example, to select `Price` values between $500 and $2000 dollars type `500 ... 2000` and press return. The range is inclusive of the values typed. Furthermore, `0.32 ...` will show only diamonds with carat values larger than or equal to 0.32. These variables also have a slider that you can use to define the range of values to keep.
+For numeric variables the column filter boxes have some special features that make them almost as powerful as the `Filter` box. For numerical and integer variables you can use `...` to indicate a range. For example, to select `Price` values between \$500 and \$2000 dollars type `500 ... 2000` and press return. The range is inclusive of the values typed. Furthermore, if we want to filter on `carat` `0.32 ...` will show only diamonds with carat values larger than or equal to 0.32. Numeric variables also have a slider that you can use to define the range of values to keep.
 
-If you want to get _really_ fancy you can use the search box on the top right to search across all columns using regular expressions. For example, to find all rows that have an entry in _any_ column ending with the number 72 type `72$` (i.e., the `$` sign is used to indicate the end of an entry). For all rows with entries that start with 60 use `^60` (i.e., the `^` is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a _big_ topic area. To learn more about regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.
+If you want to get _really_ fancy you can use the search box on the top right to search across all columns in the data using **regular expressions**. For example, to find all rows that have an entry in _any_ column ending with the number 72 type `72$` (i.e., the `$` sign is used to indicate the end of an entry). For all rows with entries that start with 60 use `^60` (i.e., the `^` is used to indicate the first character in an entry). Regular expressions are incredibly powerful for search but this is a _big_ topic area. To learn more about regular expressions see this <a href="http://www.regular-expressions.info/tutorial.html" target="_blank">tutorial</a>.
 
-It is important to note that the column sorting, column filters, and search are _not persistent_. To store these setting press the `Store` button. You can store the data and settings under a different name by changing the value in the text input to the left of the `Store` button.
+It is important to note that column sorting, column filters, and search are **not** persistent. To store these settings for use in other parts of Radiant press the `Store` button. You can store the data and settings under a different dataset name by changing the value in the text input to the left of the `Store` button. This feature can also be used to select a subset of variables to keep. Just select the ones you want to keep and press the `Store` button. For more control over the variables you want to keep or remove and to specify their order in the dataset use the `Data > Transform` tab.
