@@ -113,6 +113,8 @@ nav_ui <-
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
        collapsible = TRUE, tabPanel("Data", withMathJax(), uiOutput("ui_data")))
 
+r_help <- "help_base"
+
 shared_ui <-
   tagList(
     navbarMenu("R",
@@ -143,24 +145,15 @@ shared_ui <-
                ## had to remove class = "action-button" to make this work
                tabPanel(tags$a(id = "new_session", href = "./", target = "_blank",
                                list(icon("plus"), "New session")))
-    ),
-
-    navbarMenu(title = "", id = "Help", icon = icon("question-circle"),
-               tabPanel("Help", uiOutput("help_quant"), icon = icon("question")),
-               tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
-               tabPanel("About", uiOutput("help_about"), icon = icon("info")),
-               tabPanel(tags$a("", href = "http://vnijs.github.io/radiant/", target = "_blank",
-                               list(icon("globe"), "Radiant docs"))),
-               tabPanel(tags$a("", href = "https://github.com/vnijs/radiant/issues", target = "_blank",
-                               list(icon("github"), "Report issue")))
-    ),
-
-    tags$head(
-      tags$script(src = "js/session.js"),
-      tags$script(src = "js/jquery-ui.custom.min.js"),
-      tags$script(src = "js/video_reset.js"),
-      tags$link(rel = "shortcut icon", href = "imgs/icon.png")
     )
+  )
+
+js_head <-
+  tags$head(
+    tags$script(src = "js/session.js"),
+    tags$script(src = "js/jquery-ui.custom.min.js"),
+    tags$script(src = "js/video_reset.js"),
+    tags$link(rel = "shortcut icon", href = "imgs/icon.png")
   )
 
 

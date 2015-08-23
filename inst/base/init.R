@@ -231,10 +231,14 @@ for (i in names(url_list)) {
 
 ## environment to results from code run through knitr
 # r_knitr <- new.env(parent = emptyenv())
-if (is.null(isolate(r_data$r_knitr))) {
-  isolate({
-    r_data$r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
-  })
+# if (is.null(isolate(r_data$r_knitr))) {
+  # isolate({
+    # r_data$r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
+  # })
+# }
+
+if (!exists("r_knitr")) {
+  r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
 }
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab

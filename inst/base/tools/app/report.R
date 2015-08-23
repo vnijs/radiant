@@ -107,7 +107,8 @@ scrub <-
 
 ## Knit to save html
 knitIt <- function(text) {
-  knitr::knit2html(text = text, quiet = TRUE, envir = r_data$r_knitr,
+  # knitr::knit2html(text = text, quiet = TRUE, envir = r_data$r_knitr,
+  knitr::knit2html(text = text, quiet = TRUE, envir = r_knitr,
                    options=c("mathjax", "base64_images"),
                    stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>%
   scrub %>% HTML
@@ -117,7 +118,8 @@ knitIt <- function(text) {
 knitIt2 <- function(text) {
   # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
-        envir = r_data$r_knitr), stylesheet = "",
+        # envir = r_data$r_knitr), stylesheet = "",
+        envir = r_knitr), stylesheet = "",
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }

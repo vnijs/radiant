@@ -202,3 +202,28 @@ output$help_marketing <- renderUI({
     )
   )
 })
+
+help_analytics_ui <- tagList(
+  wellPanel(
+    HTML("<label>Cluster menu: <i id='help_cluster_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_cluster_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
+    checkboxGroupInput("help_cluster", NULL, help_cluster,
+      selected = state_init("help_cluster"), inline = TRUE)
+  )
+)
+
+output$help_analytics <- renderUI({
+  sidebarLayout(
+    sidebarPanel(
+      help_quant_ui,
+      help_analytics_ui,
+      wellPanel(
+        helpText("Help is available on each page by clicking the ? icon on the bottom left of your screen.")
+      )
+    ),
+    mainPanel(
+      help_quant_main,
+      htmlOutput("help_cluster")
+    )
+  )
+})

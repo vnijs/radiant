@@ -209,7 +209,7 @@ make_dt <- function(pvt, format = "none", perc = FALSE) {
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
 
   #############################################################
-  ## work-around for https://github.com/rstudio/DT/issues/150
+  ## workaround for https://github.com/rstudio/DT/issues/150
   tab[,cn] <- tab[,cn] %>% round(3)
   #############################################################
 

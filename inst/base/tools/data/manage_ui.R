@@ -13,6 +13,20 @@ output$ui_fileUpload <- renderUI({
   } else if (input$dataType == "rda") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c(".rda",".rds",".rdata"))
+  } else if (input$dataType == "url_rda") {
+    with(tags, table(
+      tr(
+        td(textInput("url_rda", NULL, "")),
+        td(actionButton("url_rda_load", "Load"), style="padding-top:5px;")
+      )
+    ))
+  } else if (input$dataType == "url_csv") {
+    with(tags, table(
+      tr(
+        td(textInput("url_csv", NULL, "")),
+        td(actionButton("url_csv_load", "Load"), style="padding-top:5px;")
+      )
+    ))
   }
 })
 
@@ -43,15 +57,16 @@ output$ui_clipboard_save <- renderUI({
 })
 
 output$ui_Manage <- renderUI({
-  list(
+  tagList(
     wellPanel(
-      radioButtons(inputId = "dataType", label = "Load data:",
-                   c("rda" = "rda", "csv" = "csv",  "clipboard" = "clipboard",
-                     "examples" = "examples", "state" = "state"),
-                     selected = "rda", inline = TRUE),
+      # radioButtons(inputId = "dataType", label = "Load data:",
+      selectInput("dataType", label = "Load data of type:",
+                   c("rda" = "rda", "rda (url)" = "url_rda", "csv" = "csv", "csv (url)" = "url_csv",
+                     "clipboard" = "clipboard","examples" = "examples", "state" = "state"),
+                     selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
-        conditionalPanel(condition = "input.dataType == 'csv'",
+        conditionalPanel("input.dataType == 'csv' | input.dataType == 'url_csv'",
           with(tags, table(td(checkboxInput('man_header', 'Header', TRUE)),
             td(HTML("&nbsp;&nbsp;")),
             td(checkboxInput('man_str_as_factor', 'Str. as Factor', TRUE)))),
@@ -74,9 +89,11 @@ output$ui_Manage <- renderUI({
       )
     ),
     wellPanel(
-      radioButtons(inputId = "saveAs", label = "Save data:",
+      selectInput("saveAs", label = "Save data:",
+      # radioButtons(inputId = "saveAs", label = "Save data:",
                    c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                     "state" = "state"), selected = "rda", inline = TRUE),
+                     "state" = "state"), selected = "rda"),
+                     # "state" = "state"), selected = "rda", inline = TRUE),
 
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         uiOutput("ui_clipboard_save")
@@ -101,9 +118,9 @@ output$ui_Manage <- renderUI({
   )
 })
 
-# updating the dataset description
-observe({
-  if (is.null(input$updateDescr) || input$updateDescr == 0) return()
+## updating the dataset description
+observeEvent(input$updateDescr, {
+  # if (is.null(input$updateDescr) || input$updateDescr == 0) return()
   isolate({
     r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr",
@@ -134,9 +151,9 @@ output$uiRemoveDataset <- renderUI({
   )
 })
 
-observe({
+observeEvent(input$removeDataButton, {
   # removing datasets
-  if (is.null(input$removeDataButton) || input$removeDataButton == 0) return()
+  # if (is.null(input$removeDataButton) || input$removeDataButton == 0) return()
   isolate({
 
     # only remove datasets if 1 or more were selected - without this line
@@ -159,14 +176,11 @@ observe({
 })
 
 # 'saving' data to clipboard
-observe({
-  if (is.null(input$saveClipData) || input$saveClipData == 0) return()
+observeEvent(input$saveClipData, {
+  # if (is.null(input$saveClipData) || input$saveClipData == 0) return()
   isolate({
     saveClipboardData()
     updateRadioButtons(session = session, inputId = "saveAs", selected = "rda")
-                       # label = "Save data:",
-                       # c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                       #   "state" = "state"), selected = "rda", inline = TRUE)
   })
 })
 
@@ -196,11 +210,12 @@ output$downloadData <- downloadHandler(
 )
 
 # loading data
-observe({
+# observe({
+observeEvent(input$uploadfile, {
   # loading files from disk
-  inFile <- input$uploadfile
-  if (!is.null(inFile)) {
-    isolate({
+  isolate({
+    inFile <- input$uploadfile
+    if (is.null(inFile)) return()
       # iterating through the files to upload
       for (i in 1:(dim(inFile)[1]))
         loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
@@ -211,13 +226,75 @@ observe({
       updateSelectInput(session, "dataset", label = "Datasets:",
                         choices = r_data$datasetlist,
                         selected = r_data$datasetlist[1])
-    })
-  }
+  })
+})
+
+observeEvent(input$url_rda_load, {
+  ## loading rda file from url
+  ## https://github.com/vnijs/radiant/blob/master/inst/examples/houseprices.rda?raw=true
+  isolate({
+    if (input$url_rda == "") return()
+    objname <- "rda_url"
+    con <- curl::curl(input$url_rda)
+    try(open(con), silent = TRUE)
+    if (is(con, 'try-error')) {
+      upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
+    } else {
+      robjname <- load(con)
+      if (length(robjname) > 1) {
+        if (sum(robjname %in% c("r_state", "r_data")) == 2) {
+          upload_error_handler(objname,"### To restore app state from a state-file please choose the 'state' option from the dropdown.")
+        } else {
+          upload_error_handler(objname,"### More than one R object is contained in the specified data file.")
+        }
+      } else {
+        r_data[[objname]] <- as.data.frame(get(robjname))
+        r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+        r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
+        updateSelectInput(session, "dataset", label = "Datasets:",
+                          choices = r_data$datasetlist,
+                          selected = r_data$datasetlist[1])
+      }
+    }
+    close(con)
+  })
+})
+
+observeEvent(input$url_csv_load, {
+  ## loading csv file from url
+  ## https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/houseprices.csv
+  isolate({
+    objname <- "csv_url"
+    if (input$url_csv == "") return()
+    con <- curl::curl(input$url_csv)
+    try(open(con), silent = TRUE)
+    if (is(con, 'try-error')) {
+      upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
+    } else {
+
+      dat <- try(read.table(con, header = input$man_header, comment.char = "",
+                 quote = "\"", fill = TRUE, stringsAsFactors = input$man_str_as_factor,
+                 sep = input$man_sep, dec = input$man_dec), silent = TRUE)
+
+      if (is(dat, 'try-error'))
+        upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
+      else
+        dat <- {if (input$man_str_as_factor) factorizer(dat) else dat} %>% as.data.frame
+
+      r_data[[objname]] <- dat
+      r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
+
+      updateSelectInput(session, "dataset", label = "Datasets:",
+                        choices = r_data$datasetlist,
+                        selected = r_data$datasetlist[1])
+    }
+    close(con)
+  })
 })
 
 # loading all examples files (linked to help files)
-observe({
-  if (not_pressed(input$loadExampleData)) return()
+observeEvent(input$loadExampleData, {
+  # if (not_pressed(input$loadExampleData)) return()
   isolate({
 
     # loading data bundled with Radiant
@@ -241,16 +318,12 @@ observe({
   })
 })
 
-observe({
+observeEvent(input$loadClipData, {
   ## reading data from clipboard
-  if (not_pressed(input$loadClipData)) return()
   isolate({
     loadClipboardData()
-    updateRadioButtons(session = session, inputId = "dataType", selected = "rda")
-                       # label = "Load data:",
-                       # c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                       #   "examples" = "examples", "state" = "state"),
-                       # selected = "rda", inline = TRUE)
+    # updateRadioButtons(session = session, inputId = "dataType", selected = "rda")
+    updateSelectInput(session = session, inputId = "dataType", selected = "rda")
     updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = r_data$datasetlist, selected = "copy_and_paste")
   })

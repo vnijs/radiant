@@ -279,7 +279,7 @@ viewdata <- function(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE) 
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
 
-  if (nrow(dat) > 3000)  filt <- 'none'
+  if (nrow(dat) > 10000)  filt <- 'none'
   else filt <- list(position = "top", clear = FALSE, plain = FALSE)
 
   shinyApp(

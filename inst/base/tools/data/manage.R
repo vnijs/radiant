@@ -100,28 +100,8 @@ loadUserData <- function(fname, uFile, ext,
   }
 
   if (ext == 'csv') {
-
-#     ## getting checked names from read.csv
-    # uFile <- "~/gh/sole-rady/data/sole_shopify_10_28_14_edited.csv"
-    # header <- TRUE
-    # sep <- ","
-    # dec = "."
-    # man_str_as_factor <- TRUE
-    # library(magrittr)
-    # library(dplyr)
-
     r_data[[objname]] <- loadcsv(uFile, header = header, sep = sep, saf = man_str_as_factor) %>%
       {if (is.character(.)) upload_error_handler(objname, mess) else .}
-
-    # cn <- try(read.table(uFile, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
-    # r_data[[objname]] <- try(read_delim(uFile, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
-    #   {if (is(., 'try-error') || nrow(problems(.)) > 0)
-    #       try(read.table(uFile, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
-    #     else . } %>%
-    #   {if (is(., 'try-error'))
-    #       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-    #     else . } %>%
-    #     {if (man_str_as_factor) factorizer(.) else . } %>% as.data.frame
   }
 
   r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
