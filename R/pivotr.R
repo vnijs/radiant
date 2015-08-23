@@ -190,6 +190,9 @@ summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
 #' @param pvt Return value from \code{\link{pivotr}}
 #' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
 #' @param perc Display numbers as percentages (TRUE or FALSE)
+#' @param search Global search. Used to save and restore state
+#' @param searchCols Column search and filter. Used to save and restore state
+#' @param order Column sorting. Used to save and restore state
 #'
 #' @examples
 #' pivotr("diamonds", cvars = "cut") %>% make_dt
@@ -201,7 +204,12 @@ summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-make_dt <- function(pvt, format = "none", perc = FALSE) {
+make_dt <- function(pvt,
+                    format = "none",
+                    perc = FALSE,
+                    search = "",
+                    searchCols = NULL,
+                    order = NULL) {
 
   tab <- pvt$tab
   cvar <- pvt$cvars[1]
@@ -262,10 +270,15 @@ make_dt <- function(pvt, format = "none", perc = FALSE) {
     options = list(
       # stateSave = TRUE,
       search = list(regex = TRUE),
+      # search = list(search = search),
+      # searchCols = searchCols,
+      # order = order,
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
     )
+    # , callback = JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+    #                $('input#uploadState').on('click', function() { table.state.clear(); });")
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
         {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 

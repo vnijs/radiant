@@ -4,7 +4,8 @@
 \alias{make_dt}
 \title{Make a pivot tabel in DT}
 \usage{
-make_dt(pvt, format = "none", perc = FALSE)
+make_dt(pvt, format = "none", perc = FALSE, search = "",
+  searchCols = NULL, order = NULL)
 }
 \arguments{
 \item{pvt}{Return value from \code{\link{pivotr}}}
@@ -12,6 +13,12 @@ make_dt(pvt, format = "none", perc = FALSE)
 \item{format}{Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")}
 
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
+
+\item{search}{Global search. Used to save and restore state}
+
+\item{searchCols}{Column search and filter. Used to save and restore state}
+
+\item{order}{Column sorting. Used to save and restore state}
 }
 \description{
 Make a pivot tabel in DT

@@ -131,7 +131,15 @@ output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
   if (is.null(pvt)) return()
   pvt$shiny <- TRUE
+
+  # search <- r_state$pivotr_state$search$search
+  # if (is.null(search)) search <- ""
+  # searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
+  # order <- r_state$pivotr_state$order
+
   make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc)
+  # make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
+  #         search = search, searchCols = searchCols, order = order)
 })
 
 output$pivotr_chi2 <- renderPrint({

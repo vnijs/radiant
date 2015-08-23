@@ -31,23 +31,36 @@ output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return()
   dat <- select_(.getdata(), .dots = input$view_vars)
 
-  if (nrow(dat) > 10000)  filt <- 'none'
+  ## seems needed due to partial name matching on dataviewer_search
+  search <- r_state$dataviewer_state$search$search
+  if (is.null(search)) search <- ""
+
+  if (nrow(dat) > 100000)  filt <- 'none'
   else filt <- list(position = "top", clear = FALSE, plain = TRUE)
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   DT::datatable(dat, filter = filt,
     rownames = FALSE, style = "bootstrap", escape = FALSE,
     options = list(
-      # stateSave = TRUE,   ## maintains state but does not show column filter settings
-      # search = list(regex = TRUE, search = "G", order = list(list(2, 'asc'), list(1, 'desc'))),
-      search = list(regex = TRUE),
+
+      stateSave = TRUE,   ## maintains state but does not show column filter settings
+      searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
+      # search = list(regex = TRUE),
+      search = list(search = search),
+      order = r_state$dataviewer_state$order,
+
       autoWidth = TRUE,
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
-    )
+    ),
+    callback = JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+                   $('input#uploadState').on('click', function() { table.state.clear(); });")
   )
 })
+
+min
+
 
 observeEvent(input$view_store, {
   isolate({
