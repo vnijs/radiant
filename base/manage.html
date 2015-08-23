@@ -242,21 +242,27 @@ img {
 <blockquote>
 <p>Manage data and state: Load data into Radiant, Save data to disk, Remove a dataset from memory, or Save/Load the full state of the app</p>
 </blockquote>
+<div id="datasets" class="section level3">
+<h3>Datasets</h3>
+<p>When you first start Radiant a dataset (<code>diamonds</code>) with information on diamond prices is shown.</p>
+<p>It is good practice to add a description of the data and variables to each file you use. For the files that are part of Radiant you will see a brief overview of the variables etc. below the table of the first 10 rows of the data. If you would like to add a description for your own data check the ‘Add/edit data description’ check-box. A window will open below the data table where you can add text in <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The descriptions of the data included with Radiant should serve as a good starting point.</p>
+<p>If you would like to rename a dataset loaded in Radiant check the <code>Rename data</code> box, enter a new name for the data, and click the <code>Rename</code> button</p>
+</div>
 <div id="load-data" class="section level3">
 <h3>Load data</h3>
-<p>An easy way to store data and get in and out of Radiant (and R) is to use the R-data format (rda). These are binary files that can be stored compactly and read into R quickly. Choose the rda radio button and click <code>Choose Files</code> to locate the file you want to load.</p>
-<p>You can get data from Excel into Radiant in two ways. First, you can save data from Excel in csv format and then, in Radiant, choose the <code>csv</code> radio button. Most likely you will have a header row in the csv file for variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click ‘Choose files’ and locate the file on your computer.</p>
+<p>The best way to load and save data for use in Radiant (and R) is to use the R-data format (rda). These are binary files that can be stored compactly and read into R quickly. Choose <code>rda</code> from the <code>Load data of type</code> dropdown and click <code>Choose Files</code> to locate the file(s) you want to load. If the <code>rda</code> file is available online choose <code>rda (url)</code> from the dropdown, paste the url into the text input, and press <code>Load</code>.</p>
+<p>You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose <code>csv</code> from the <code>Load data of type</code> dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click ‘Choose files’ and locate the file on your computer. If the <code>csv</code> data is available online choose <code>csv (url)</code> from the dropdown, paste the url into the text input shown, and press <code>Load</code>.</p>
 <blockquote>
-<p><strong>Note:</strong> For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load characters correctly.</p>
+<p><strong>Note:</strong> For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.</p>
 </blockquote>
-<p>Alternatively, you can select and copy the data in Excel using CTRL-C (or CMD-C on mac), go to Radiant, choose the <code>clipboard</code> radio-button, and click the <code>Paste data</code> button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted. If the data is not transferred cleanly to Radiant try saving the data in csv format and loading it into Radiant as described above.</p>
-<p>To access all data files bundled with Radiant choose the examples radio button and click <code>Load examples</code>. These files are used to illustrate the various analysis tools in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., Regression &gt; Linear (OLS)).</p>
+<p>Alternatively, you can select and copy the data in the spreadsheet using CTRL-C (or CMD-C on mac), go to Radiant, choose <code>clipboard</code> from the dropdown, and click the <code>Paste data</code> button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted. If you see a message in Radiant that the data were not transferred cleanly try saving the data in csv format and loading it into Radiant as described above.</p>
+<p>To access all data files bundled with Radiant choose <code>examples</code> from the <code>Load data of type</code> dropdown and click <code>Load examples</code>. These files are used to illustrate the various analysis tools accessible in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., Regression &gt; Linear (OLS)).</p>
 </div>
 <div id="save-data" class="section level3">
 <h3>Save data</h3>
-<p>As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rda). Choose the rda radio button and click the <code>Save data</code> button to store the data on your computer.</p>
+<p>As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rda). Choose <code>rda</code> from the <code>Save data</code> dropdown and click the <code>Save data</code> button to save selected dataset to file.</p>
 <p>It is good practice to add a description of the data and variables to each file you use. For the files that are part of Radiant you will see a brief overview of the variables etc. below the table of the first 10 rows of the data. If you would like to add a description for your own data check the ‘Add/edit data description’ check-box. A window will open below that data table where you can add text in <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The descriptions of the data included with Radiant should serve as a good starting point. When you save the data as an rda file the description you created (or edited) will automatically be added to the file.</p>
-<p>Getting data from Radiant into Excel can also be achieved in two ways. First, you can save data in csv format and load it into Excel (i.e., choose the csv radio button and click <code>Save data</code>). Alternatively, you can copy the data from Radiant into the clipboard by choosing the clipboard radio button and clicking the <code>Copy data</code> button. Paste the data from Radiant into a worksheet in Excel using CTRL-V (or CMD-V on mac).</p>
+<p>Getting data from Radiant into a spreadsheet can be achieved in two ways. First, you can save data in csv format and load the file into the spreadsheet (i.e., choose <code>csv</code> from the <code>Save data</code> dropdown and click the <code>Save data</code> button). Alternatively, you can copy the data from Radiant into the clipboard by choosing <code>clipboard</code> from the dropdown and clicking the <code>Copy data</code> button, open the spreadsheet, and paste the data from Radiant using CTRL-V (or CMD-V on mac).</p>
 </div>
 <div id="save-and-load-state" class="section level3">
 <h3>Save and load state</h3>
@@ -268,7 +274,7 @@ img {
 </div>
 <div id="remove-data-from-memory" class="section level3">
 <h3>Remove data from memory</h3>
-<p>If data are loaded that you no longer need access to in the current session you can select them and click the <code>Remove data</code> button. One datafile will always remain open.</p>
+<p>If data are loaded that you no longer need access to in the current session check the <code>Remove data from memory</code> box. Then select the data to remove and click the <code>Remove data</code> button. One datafile will always remain open.</p>
 </div>
 
 
