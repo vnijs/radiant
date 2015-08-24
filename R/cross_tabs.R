@@ -23,7 +23,6 @@ cross_tabs <- function(dataset, var1, var2,
 	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
-
 # 	dnn <- c(paste("Group(",var1,")",sep = ""), paste("Variable(",var2,")",sep = ""))
 # 	tab <- table(dat[,var1], dat[,var2], dnn = dnn)
 	# tab <- table(dat[,var1], dat[,var2])
@@ -151,11 +150,43 @@ summary.cross_tabs <- function(object,
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #'
+#' @importFrom scales percent
+#'
 #' @export
 plot.cross_tabs <- function(x,
                             check = "",
                             shiny = FALSE,
                             ...) {
+
+  # library(radiant)
+  # library(broom)
+  # library(scales)
+  # library(tidyr)
+  # library(gridExtra)
+  # result <- cross_tabs("newspaper", "Income", "Newspaper")
+  # plot(result, check = "observed")
+  # object <- result
+ #  dput(object)
+
+
+ #  tab <- gather_table(object$cst$observed)
+ #  tab <- object$cst$expected
+ #  class(tab)
+	# tab <- object$cst$chi_sq
+	# tab
+	# dput(tab)
+	# class(tab)
+
+# tab <- structure(c(162.787931034483, 100.212068965517, 196.212068965517,
+# 120.787931034483), .Dim = c(2L, 2L), .Dimnames = structure(list(
+#     c("Low Income", "High Income"), c("WS Journal", "USA Today"
+#     )), .Names = c("", "")))
+
+# tab %>%
+# 	data.frame(., check.names = FALSE) %>%
+#   mutate(rnames = rownames(.)) %>%
+#   gather_(., "variable", "values", -which(colnames(.) == "rnames"))
+
 
 	object <- x; rm(x)
 
@@ -163,23 +194,24 @@ plot.cross_tabs <- function(x,
 		tab %>%
 			data.frame(., check.names = FALSE) %>%
 			mutate(rnames = rownames(.)) %>%
-			{ sshhr( gather_(., "variable", "values") ) }
+			{sshhr( gather(., variable, values, -rnames) )}
 	}
 
 	plots <- list()
 
 	if ("observed" %in% check) {
 		fact_names <- object$cst$observed %>% dimnames %>% as.list
-  	tab <- gather_table(object$cst$observed)
+  	tab <- as.data.frame(object$cst$observed, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		tab$object$var1 %<>% as.factor %>% factor(levels = fact_names[[1]])
-		tab$object$var1 %<>% as.factor %>% factor(levels = fact_names[[2]])
+		tab[[1]] %<>% as.factor %>% factor(levels = fact_names[[1]])
+		tab[[2]] %<>% as.factor %>% factor(levels = fact_names[[2]])
 
 		plots[['observed']] <-
-		ggplot(tab, aes_string(x = object$var1, y = "values", fill = object$var2)) +
-         			geom_bar(stat="identity", position = "fill", alpha = .7) +
-         			labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
-							x = "", y = "", fill = object$var2))
+		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		    geom_bar(stat="identity", position = "fill", alpha = .7) +
+		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
+				  	 x = "", y = "", fill = object$var2)) +
+		    scale_y_continuous(labels = percent)
 	}
 
 	if ("expected" %in% check) {
@@ -187,39 +219,48 @@ plot.cross_tabs <- function(x,
   	tab <- gather_table(object$cst$expected)
 		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
-		plots[['expected']] <- ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
-         			geom_bar(stat="identity", position = "fill", alpha = .7) +
-         			labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
-							x = "", y = "", fill = object$var2))
+		plots[['expected']] <-
+		  ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
+		    geom_bar(stat="identity", position = "fill", alpha = .7) +
+		    labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
+		         x = "", y = "", fill = object$var2)) +
+		    scale_y_continuous(labels = percent)
 	}
 
 	if ("chi_sq" %in% check) {
-
-		tab <- gather_table(object$cst$chi_sq)
-		# tab <- gather_table((object$cst$observed - object$cst$expected)^2 / object$cst$expected)
+  	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plots[['chi_sq']] <- ggplot(tab, aes_string(x = object$var1, y = "values", fill = object$var2)) +
-         			geom_bar(stat="identity", position = "dodge", alpha = .7) +
-         			labs(list(title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""), x = object$var1))
+		plots[['chi_sq']] <-
+		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+		    labs(list(title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""),
+		         x = object$var1, y = ""))
   }
 
 	if ("dev_std" %in% check) {
-		tab <- gather_table(object$cst$residuals)
+  	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plots[['dev_std']] <- ggplot(tab, aes_string(x = object$var1, y = "values", fill = object$var2)) +
-         			geom_bar(stat="identity", position = "dodge", alpha = .7) +
-     					geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
-     					geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
-     					geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
-         			labs(list(title = paste("Deviation standardized for ",object$var2," versus ",object$var1, sep = ""), x = object$var1))
+		plots[['dev_std']] <-
+		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
+		    geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
+		    geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
+		    labs(list(title = paste("Deviation standardized for ",object$var2," versus ",object$var1, sep = ""),
+		         x = object$var1, y = ""))
 	}
 
 	if ("dev_perc" %in% check) {
-		tab <- gather_table(object$cst$deviation)
+  	tab <- as.data.frame(object$cst$deviation, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plots[['dev_prec']] <- ggplot(tab, aes_string(x = object$var1, y = "values", fill = object$var2)) +
-         			geom_bar(stat="identity", position = "dodge", alpha = .7) + ylim(-1,1) +
-         			labs(list(title = paste("Deviation % for ",object$var2," versus ",object$var1, sep = ""), x = object$var1))
+		ymax <- max(abs(tab$Freq))
+		ylim <- if (ymax < 1) c(-1,1) else c(-ymax, ymax)
+		plots[['dev_prec']] <-
+		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+		    labs(list(title = paste("Deviation % for ",object$var2," versus ",object$var1, sep = ""),
+		         x = object$var1, y = "")) +
+		    scale_y_continuous(labels = percent, limits = ylim)
   }
 
 	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
