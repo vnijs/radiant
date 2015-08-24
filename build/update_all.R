@@ -13,9 +13,9 @@ document(roclets = c('rd', 'collate', 'namespace'))
 #
 # Sys.sleep(5)
 
-system("git add --all .")
-system("git commit -m 'Update [ci skip]'")
-system("git push")
+# system("git add --all .")
+# system("git commit -m 'Update [ci skip]'")
+# system("git push")
 
 # options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
@@ -33,8 +33,12 @@ system("git push")
 # library(radiant)
 # radiant()
 
-devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree"))
+# devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree", "trestletech/shinyAce"))
+devtools::install_github("trestletech/shinyAce")
+devtools::install_github("vnijs/MathJaxR")
+devtools::install_github("themel/sendmailR")
 
+# devtools::install_github("rstudio/shinyapps")
 library(shinyapps)
 fpath <- "~/gh/radiant/inst/base"
 setwd(fpath)
@@ -63,7 +67,7 @@ setwd("~/gh/radiant/")
 
 # answ <- readline("Did you create binary packages for Windows? (y/n) ")
 # if (substr(answ, 1, 1) %in% c("y","Y")) {
-  system("sh build/build_mac_win.sh")
+  # system("sh build/build_mac_win.sh")
 # }
 
 ## in case of problems

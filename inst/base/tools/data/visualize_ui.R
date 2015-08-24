@@ -101,7 +101,7 @@ output$ui_viz_axes <- renderUI({
   ind <- 1
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
   if (input$viz_type == "hist") ind <- c(ind, 5)
-  if (!is_empty(input$viz_facet_row, ".")) ind <- c(ind, 4)
+  if (!is_empty(input$viz_facet_row, ".") || !is_empty(input$viz_facet_col, "."))  ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
     selected = state_init("viz_axes", ""),
@@ -117,6 +117,12 @@ output$ui_viz_check <- renderUI({
     inline = TRUE)
 })
 
+observeEvent(input$viz_type, {
+  isolate({
+    if (input$viz_type != "hist")
+      updateSliderInput(session, "viz_bins", value = 10)
+  })
+})
 
 output$ui_Visualize <- renderUI({
   tagList(

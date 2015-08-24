@@ -203,11 +203,14 @@ visualize <- function(dataset, xvar,
     }
   }
 
-  facets <- paste(facet_row, '~', facet_col)
-  if (facets != '. ~ .') {
+  if (facet_row != "." || facet_col != ".") {
+    facets <- if (facet_row == ".")  paste("~", facet_col)
+              else paste(facet_row, '~', facet_col)
     scales <- if ("scale_y" %in% axes) "free_y" else "fixed"
+    facet_fun <- if (facet_row == ".") facet_wrap else facet_grid
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + facet_grid(facets, scales = scales)
+      plot_list[[i]] <- plot_list[[i]] + facet_fun(as.formula(facets), scales = scales)
+
   }
 
   if (color != 'none') {
