@@ -2,14 +2,6 @@
 ## Pivotr - combination of Explore and View
 ############################################
 
-# observeEvent(input$dataset, {
-#   ## reset r_state for DT tables when dataset is changed
-#   isolate({
-#     r_state$pivotr_state <<- list()
-#     r_state$pivotr_search_columns <<- NULL
-#   })
-# })
-
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
@@ -27,6 +19,11 @@ output$ui_pvt_cvars <- renderUI({
         input$pvt_cvars
       else
         state_multiple("pvt_cvars",vars, "")
+
+    if (not_available(r_state$pvt_cvars)) {
+      r_state$pivotr_state <<- list()
+      r_state$pivotr_search_columns <<- NULL
+    }
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,

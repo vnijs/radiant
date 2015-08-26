@@ -2,14 +2,6 @@
 # Explore datasets
 #######################################
 
-# observeEvent(input$dataset, {
-#   ## reset r_state for DT tables when dataset is changed
-#   isolate({
-#     r_state$explorer_state <<- list()
-#     r_state$explorer_search_columns <<- NULL
-#   })
-# })
-
 default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
 # expl_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 
@@ -31,6 +23,12 @@ output$ui_expl_vars <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
+
+  if (not_available(r_state$expl_vars)) {
+    r_state$explorer_state <<- list()
+    r_state$explorer_search_columns <<- NULL
+  }
+
   selectInput("expl_vars", label = "Select variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
@@ -39,6 +37,11 @@ output$ui_expl_vars <- renderUI({
 output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
+
+  if (not_available(r_state$expl_vars)) {
+    r_state$explorer_state <<- list()
+    r_state$explorer_search_columns <<- NULL
+  }
 
   isolate({
     ## keep the same categorical-variables 'active' if possible
