@@ -264,21 +264,23 @@ make_dt <- function(pvt,
 
   dt_tab <- tab %>%
   DT::datatable(container = sketch, rownames = FALSE,
-    filter = list(position = "top", clear = FALSE, plain = TRUE),
+    filter = list(position = "top"),
+    # filter = list(position = "top", clear = FALSE, plain = TRUE),
     style = ifelse(pvt$shiny, "bootstrap", "default"),
-    # style = "bootstrap",
     options = list(
-      # stateSave = TRUE,
-      search = list(regex = TRUE),
-      # search = list(search = search),
-      # searchCols = searchCols,
-      # order = order,
+      # search = list(regex = TRUE),
+
+      stateSave = TRUE,
+      search = list(search = search),
+      searchCols = searchCols,
+      order = order,
+
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
     )
-    # , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
-    #                $('input#uploadState').on('click', function() { table.state.clear(); });")
+    , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+                         $('input#uploadState').on('click', function() { table.state.clear(); });")
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
         {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 

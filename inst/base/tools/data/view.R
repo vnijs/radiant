@@ -26,6 +26,18 @@ my_dataTablesFilter = function(data, req) {
   ## to implement
 }
 
+observeEvent(input$dataviewer_search_columns, {
+  isolate({
+    r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
+  })
+})
+
+observeEvent(input$dataviewer_state, {
+  isolate({
+    r_state$dataviewer_state <<- input$dataviewer_state
+  })
+})
+
 output$dataviewer <- DT::renderDataTable({
 
   if (not_available(input$view_vars)) return()
@@ -36,7 +48,8 @@ output$dataviewer <- DT::renderDataTable({
   if (is.null(search)) search <- ""
 
   if (nrow(dat) > 100000)  filt <- 'none'
-  else filt <- list(position = "top", clear = FALSE, plain = TRUE)
+  else filt <- list(position = "top")
+  # else filt <- list(position = "top", clear = FALSE, plain = TRUE)
   # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   DT::datatable(dat, filter = filt,
     rownames = FALSE, style = "bootstrap", escape = FALSE,

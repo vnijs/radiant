@@ -4,7 +4,6 @@
 
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
-# pvt_perc <- c("Percentage" = "perc")
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 
@@ -12,8 +11,20 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
+
+  isolate({
+    ## keep the same categorical-variables 'active' if possible
+    sel <-
+      if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars))
+        input$pvt_cvars
+      else
+        state_multiple("pvt_cvars",vars, "")
+  })
+
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    selected = state_multiple("pvt_cvars",vars, ""), multiple = TRUE,
+    # selected = state_multiple("pvt_cvars",vars, ""),
+    selected = sel,
+    multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
   )
@@ -127,19 +138,32 @@ pvt_plot_inputs <- reactive({
   })
 })
 
+observeEvent(input$pivotr_search_columns, {
+  isolate({
+    r_state$pivotr_search_columns <<- input$pivotr_search_columns
+  })
+})
+
+observeEvent(input$pivotr_state, {
+  isolate({
+    r_state$pivotr_state <<- input$pivotr_state
+  })
+})
+
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
   if (is.null(pvt)) return()
   pvt$shiny <- TRUE
 
-  # search <- r_state$pivotr_state$search$search
-  # if (is.null(search)) search <- ""
-  # searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
-  # order <- r_state$pivotr_state$order
+  # make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc)
 
-  make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc)
-  # make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
-  #         search = search, searchCols = searchCols, order = order)
+  search <- r_state$pivotr_state$search$search
+  if (is.null(search)) search <- ""
+  searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
+  order <- r_state$pivotr_state$order
+  make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
+          search = search, searchCols = searchCols, order = order)
+
 })
 
 output$pivotr_chi2 <- renderPrint({
@@ -210,6 +234,11 @@ observeEvent(input$pivotr_rows_all, {
 
 .plot_pivot <- reactive({
   pvt <- .pivotr()
+
+
+# isolate({
+
+
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
@@ -218,6 +247,10 @@ observeEvent(input$pivotr_rows_all, {
     # sshhr( do.call(pivotr, pvt_inputs()) )
     pvt_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
       { do.call(plot, c(list(x = pvt), .)) }
+
+# })
+
+
 })
 
 output$plot_pivot <- renderPlot({
