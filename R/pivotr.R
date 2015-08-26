@@ -281,6 +281,7 @@ make_dt <- function(pvt,
     )
     , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
                          $('input#uploadState').on('click', function() { table.state.clear(); });")
+                         # $('select#dataset').onchange(function() { table.state.clear(); });")
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
         {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}
 

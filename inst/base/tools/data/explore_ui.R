@@ -2,6 +2,14 @@
 # Explore datasets
 #######################################
 
+observeEvent(input$dataset, {
+  ## reset r_state for DT tables when dataset is changed
+  isolate({
+    r_state$explorer_state <<- list()
+    r_state$explorer_search_columns <<- NULL
+  })
+})
+
 default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
 # expl_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
 
@@ -31,8 +39,19 @@ output$ui_expl_vars <- renderUI({
 output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
+
+  isolate({
+    ## keep the same categorical-variables 'active' if possible
+    sel <-
+      if(available(input$expl_byvar) && all(input$expl_byvar %in% vars))
+        input$expl_byvar
+      else
+        state_multiple("expl_byvar",vars, "")
+  })
+
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
+    # selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
+    selected = sel, multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
@@ -98,12 +117,31 @@ output$ui_Explore <- renderUI({
   })
 })
 
+observeEvent(input$explorer_search_columns, {
+  isolate({
+    r_state$explorer_search_columns <<- input$explorer_search_columns
+  })
+})
+
+observeEvent(input$explorer_state, {
+  isolate({
+    r_state$explorer_state <<- input$explorer_state
+  })
+})
+
 output$explorer <- DT::renderDataTable({
   expl <- .explore()
   if (is.null(expl)) return()
   expl$shiny <- TRUE
   # make_expl(expl, top = input$expl_top, format = input$expl_format)
-  make_expl(expl, top = input$expl_top)
+  # make_expl(expl, top = input$expl_top)
+
+  search <- r_state$explorer_state$search$search
+  if (is.null(search)) search <- ""
+  searchCols <- lapply(r_state$explorer_search_columns, function(x) list(search = x))
+  order <- r_state$explorer_state$order
+  make_expl(expl, top = input$expl_top, search = search,
+            searchCols = searchCols, order = order)
 })
 
 output$dl_explore_tab <- downloadHandler(

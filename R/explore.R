@@ -154,6 +154,9 @@ flip <- function(expl, top) {
 #' @param expl Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by
 #' @param dec Number of decimals to show
+#' @param search Global search. Used to save and restore state
+#' @param searchCols Column search and filter. Used to save and restore state
+#' @param order Column sorting. Used to save and restore state
 #'
 #' @examples
 #' tab <- explore("diamonds", "price:x") %>% make_expl
@@ -164,7 +167,12 @@ flip <- function(expl, top) {
 #' @seealso \code{\link{summary.pivotr}} to print a plain text table
 #'
 #' @export
-make_expl <- function(expl, top = "fun", dec = 3) {
+make_expl <- function(expl,
+                      top = "fun",
+                      dec = 3,
+                      search = "",
+                      searchCols = NULL,
+                      order = NULL) {
 
   tab <- expl %>% flip(top)
   cn_all <- colnames(tab)
@@ -184,17 +192,28 @@ make_expl <- function(expl, top = "fun", dec = 3) {
   ))
 
   dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
-    DT::datatable(container = sketch, rownames = FALSE,
-                  filter = list(position = "top", clear = FALSE, plain = TRUE),
-                  style = ifelse(expl$shiny, "bootstrap", "default"),
-                  options = list(
-                    # stateSave = TRUE,
-                    search = list(regex = TRUE),
-                    processing = FALSE,
-                    pageLength = 10,
-                    lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
-                  )
+    DT::datatable(container = sketch,
+      rownames = FALSE,
+      # filter = list(position = "top", clear = FALSE, plain = TRUE),
+      filter = list(position = "top"),
+      style = ifelse(expl$shiny, "bootstrap", "default"),
+      options = list(
+        # search = list(regex = TRUE),
+
+        stateSave = TRUE,
+        search = list(search = search),
+        searchCols = searchCols,
+        order = order,
+
+        processing = FALSE,
+        pageLength = 10,
+        lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
+      )
+      , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+                          $('input#uploadState').on('click', function() { table.state.clear(); });")
+                          # $('select#dataset').onchange(function() { table.state.clear(); });")
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
+
 
   ## heat map with red or color_bar
   # if (format == "color_bar") {

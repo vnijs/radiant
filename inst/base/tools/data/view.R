@@ -1,3 +1,23 @@
+# observe({
+#   ## reset r_state for DT tables when dataset is changed
+#   if (is.null(r_state$dataset) || is.null(input$dataset)) return()
+#   if (input$tabs_data == "View" && input$nav_radiant == "Data") {
+#     if (r_state$dataset != input$dataset) {
+#       r_state$pivotr_state <<- list()
+#       r_state$pivotr_search_columns <<- NULL
+#     }
+#   }
+# })
+
+observeEvent(input$dataset, {
+  ## reset r_state for DT tables when dataset is changed
+  isolate({
+    r_state$dataviewer_state <<- list()
+    r_state$dataviewer_search_columns <<- NULL
+  })
+})
+
+
 #############################################
 # View table output of the selected dataset
 #############################################
@@ -40,6 +60,13 @@ observeEvent(input$dataviewer_state, {
 
 output$dataviewer <- DT::renderDataTable({
 
+  isolate({
+    print("In isolate:")
+    print(input$dataset)
+    print(input$dataviewer_state$order)
+    print(r_state$dataviewer_state$order)
+  })
+
   if (not_available(input$view_vars)) return()
   dat <- select_(.getdata(), .dots = input$view_vars)
 
@@ -69,6 +96,7 @@ output$dataviewer <- DT::renderDataTable({
     ),
     callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
                    $('input#uploadState').on('click', function() { table.state.clear(); });")
+                   # $('select#dataset').onchange(function() { table.state.clear(); });")
   )
 })
 

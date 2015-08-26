@@ -2,6 +2,14 @@
 ## Pivotr - combination of Explore and View
 ############################################
 
+observeEvent(input$dataset, {
+  ## reset r_state for DT tables when dataset is changed
+  isolate({
+    r_state$pivotr_state <<- list()
+    r_state$pivotr_search_columns <<- NULL
+  })
+})
+
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")
 pvt_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
@@ -235,22 +243,11 @@ observeEvent(input$pivotr_rows_all, {
 .plot_pivot <- reactive({
   pvt <- .pivotr()
 
-
-# isolate({
-
-
   if (is.null(pvt)) return(invisible())
   if (!is_empty(input$pvt_tab, FALSE))
     pvt <- pvt_sorter(pvt, rows = r_data$pvt_rows)
-  # plot(pvt, type = input$pvt_type, flip = input$pvt_flip, shiny = TRUE)
-
-    # sshhr( do.call(pivotr, pvt_inputs()) )
     pvt_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
       { do.call(plot, c(list(x = pvt), .)) }
-
-# })
-
-
 })
 
 output$plot_pivot <- renderPlot({
