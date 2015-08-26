@@ -12,11 +12,23 @@
 observeEvent(input$dataset, {
   ## reset r_state for DT tables when dataset is changed
   isolate({
+    if (is.null(input$dataset)) return()
+    if (is.null(r_state$dataset)) r_state$dataset <<- input$dataset
+    if (r_state$dataset == input$dataset) return()
+
+    # if (r_state$dataset == input$dataset)
+    #   return()
+    # else
+    #   r_state$dataset<<- input$dataset
+
     r_state$dataviewer_state <<- list()
     r_state$dataviewer_search_columns <<- NULL
+    r_state$pivotr_state <<- list()
+    r_state$pivotr_search_columns <<- NULL
+    r_state$explorer_state <<- list()
+    r_state$explorer_search_columns <<- NULL
   })
 })
-
 
 #############################################
 # View table output of the selected dataset
@@ -24,6 +36,13 @@ observeEvent(input$dataset, {
 output$ui_view_vars <- renderUI({
   vars <- varnames()
   if (not_available(vars)) return()
+  isolate({
+    # print("Vars:")
+    # print(vars)
+    # print("State vars:")
+    if (not_available(r_state$view_vars)) r_state$view_vars <<- NULL
+  })
+
   selectInput("view_vars", "Select variables to show:", choices  = vars,
     selected = state_multiple("view_vars", vars, vars), multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars)))
@@ -60,16 +79,20 @@ observeEvent(input$dataviewer_state, {
 
 output$dataviewer <- DT::renderDataTable({
 
-  isolate({
-    print("In isolate:")
-    print(input$dataset)
-    print(input$dataviewer_state$order)
-    print(r_state$dataviewer_state$order)
-  })
+  # isolate({
+  #   print("In isolate:")
+  #   print(input$dataset)
+    # print(input$dataviewer_state$order)
+    # print(r_state$dataviewer_state$order)
+  #   print(input$dataviewer_search_columns)
+  #   print(r_state$dataviewer_search_columns)
+  # })
 
   if (not_available(input$view_vars)) return()
+
   dat <- select_(.getdata(), .dots = input$view_vars)
 
+  isolate({
   ## seems needed due to partial name matching on dataviewer_search
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
@@ -98,9 +121,9 @@ output$dataviewer <- DT::renderDataTable({
                    $('input#uploadState').on('click', function() { table.state.clear(); });")
                    # $('select#dataset').onchange(function() { table.state.clear(); });")
   )
-})
 
-min
+})
+})
 
 
 observeEvent(input$view_store, {

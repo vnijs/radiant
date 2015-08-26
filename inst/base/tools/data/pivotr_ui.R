@@ -2,13 +2,13 @@
 ## Pivotr - combination of Explore and View
 ############################################
 
-observeEvent(input$dataset, {
-  ## reset r_state for DT tables when dataset is changed
-  isolate({
-    r_state$pivotr_state <<- list()
-    r_state$pivotr_search_columns <<- NULL
-  })
-})
+# observeEvent(input$dataset, {
+#   ## reset r_state for DT tables when dataset is changed
+#   isolate({
+#     r_state$pivotr_state <<- list()
+#     r_state$pivotr_search_columns <<- NULL
+#   })
+# })
 
 pvt_normalize <- c("None" = "None", "Row" = "row", "Column" = "column",
                    "Total" = "total")

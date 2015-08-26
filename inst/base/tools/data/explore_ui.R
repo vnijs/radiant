@@ -2,13 +2,13 @@
 # Explore datasets
 #######################################
 
-observeEvent(input$dataset, {
-  ## reset r_state for DT tables when dataset is changed
-  isolate({
-    r_state$explorer_state <<- list()
-    r_state$explorer_search_columns <<- NULL
-  })
-})
+# observeEvent(input$dataset, {
+#   ## reset r_state for DT tables when dataset is changed
+#   isolate({
+#     r_state$explorer_state <<- list()
+#     r_state$explorer_search_columns <<- NULL
+#   })
+# })
 
 default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
 # expl_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
@@ -136,12 +136,16 @@ output$explorer <- DT::renderDataTable({
   # make_expl(expl, top = input$expl_top, format = input$expl_format)
   # make_expl(expl, top = input$expl_top)
 
+  isolate({
+
   search <- r_state$explorer_state$search$search
   if (is.null(search)) search <- ""
   searchCols <- lapply(r_state$explorer_search_columns, function(x) list(search = x))
   order <- r_state$explorer_state$order
   make_expl(expl, top = input$expl_top, search = search,
             searchCols = searchCols, order = order)
+
+  })
 })
 
 output$dl_explore_tab <- downloadHandler(
