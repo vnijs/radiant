@@ -13,88 +13,22 @@ output$ui_pvt_cvars <- renderUI({
   if (not_available(vars)) return()
 
   isolate({
-    ## keep the same categorical-variables 'active' if possible
-    # print(input$pvt_cvars)
-    # print(vars)
-    # print(input$pvt_cvars %in% vars)
-    # print(available(input$pvt_cvars))
-
-    # sel <-
-    #   if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars))
-    #     input$pvt_cvars
-    #   else
-    #     state_multiple("pvt_cvars",vars, "")
-
-    # print(input$pvt_cvars)
-    # print(r_state$pvt_cvars)
-    # print(vars)
-
-      # if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars)) {
-      # # if(available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
-      #   sel <- input$pvt_cvars
-      #   ind1 <- which(sel %in% vars)
-      #   ind2 <- sapply(sel, function(x) which(x == vars))
-      #   vars[ind1] <- sel
-      #   names(vars)[ind1] <- names(vars)[ind2]
-      #   print(vars)
-      # } else {
-      #   sel <- state_multiple("pvt_cvars",vars, "")
-      # }
-
-      # if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars)) {
-      if(available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
-        sel <- r_state$pvt_cvars
-        ind1 <- which(sel %in% vars)
-        ind2 <- sapply(sel, function(x) which(x == vars))
-        vars[ind1] <- sel
-        names(vars)[ind1] <- names(vars)[ind2]
-        # print(vars)
-      }
-
-    # print(vars)
-    # print("----")
-
-
-    # print(r_state$pvt_cvars)
-    # if (not_available(r_state$pvt_cvars)) {
-    #   r_state$pvt_cvars <- input$pvt_cvars
-    #   print(r_state$pvt_cvars)
-    #   r_state$pivotr_state <<- list()
-    #   r_state$pivotr_search_columns <<- NULL
-    # }
+    if(available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
+      sel <- r_state$pvt_cvars
+      ind1 <- which(sel %in% vars)
+      ind2 <- sapply(sel, function(x) which(x == vars))
+      vars[ind1] <- sel
+      names(vars)[ind1] <- names(vars)[ind2]
+    }
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-  # selectizeInput("pvt_cvars", label = "Categorical variables:", choices = sel,
     selected = state_multiple("pvt_cvars",vars, ""),
-    # selected = sel,
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
-
-# observeEvent(input$pvt_cvars, {
-#     print(r_state$pvt_cvars)
-#     print(r_state$pivotr_search_columns)
-#     print(r_state$pivotr_state$order)
-
-#     # r_state$pvt_cvars <- input$pvt_cvars
-#     if (not_available(r_state$pvt_cvars)) {
-#       # r_state$pvt_cvars <- input$pvt_cvars
-#       # print(r_state$pvt_cvars)
-#       r_state$pivotr_state <<- list()
-#       r_state$pivotr_search_columns <<- NULL
-#     }
-# })
-
-## see if you can figure out how to reset the indices for sorting and
-## filtering variables as variable selection changes
-# observeEvent(input$pvt_cvars, {
-#   # print(input$pvt_cvars)
-#   r_state$pivotr_state <<- list()
-#   r_state$pivotr_search_columns <<- NULL
-# })
 
 output$ui_pvt_nvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
@@ -105,12 +39,6 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
-  # isolate({
-
-  # print("--")
-  # print(input$pvt_fun)
-
-  #   })
   selectizeInput("pvt_fun", label = "Apply function:",
                  choices = r_functions,
                  selected = state_single("pvt_fun", r_functions, "mean_rm"),
@@ -313,7 +241,6 @@ pvt_sorter <- function(pvt, rows = NULL) {
 observeEvent(input$pivotr_rows_all, {
   isolate({
     dt_rows <- input$pivotr_rows_all
-    # print(cat("dt ", dt_rows,"\n"))
     if (identical(r_data$pvt_rows, dt_rows)) return()
     r_data$pvt_rows <- dt_rows
   })

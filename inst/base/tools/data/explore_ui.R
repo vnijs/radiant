@@ -23,13 +23,6 @@ output$ui_expl_vars <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
-
-  # if (not_available(r_state$expl_vars)) {
-  #   r_state$explorer_state <<- list()
-  #   r_state$explorer_search_columns <<- NULL
-  # }
-
-
   selectInput("expl_vars", label = "Select variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
@@ -38,51 +31,18 @@ output$ui_expl_vars <- renderUI({
 output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
-
-  # if (not_available(r_state$expl_vars)) {
-  #   r_state$explorer_state <<- list()
-  #   r_state$explorer_search_columns <<- NULL
-  # }
-
   isolate({
-    ## keep the same categorical-variables 'active' if possible
-    # sel <-
-    #   if(available(input$expl_byvar) && all(input$expl_byvar %in% vars))
-    #     input$expl_byvar
-    #   else
-    #     state_multiple("expl_byvar",vars, "")
-
-      if(available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
-        sel <- r_state$expl_byvar
-        ind1 <- which(sel %in% vars)
-        ind2 <- sapply(sel, function(x) which(x == vars))
-        vars[ind1] <- sel
-        names(vars)[ind1] <- names(vars)[ind2]
-        # print(vars)
-      }
-
-
-    # print(input$expl_byvar)
-    # print(r_state$expl_byvar)
-    # print(vars)
-    # if(available(input$expl_byvar) && all(input$expl_byvar %in% vars)) {
-    #   sel <- input$expl_byvar
-    #   ind1 <- which(sel %in% vars)
-    #   ind2 <- sapply(sel, function(x) which(x == vars))
-    #   vars[ind1] <- sel
-    #   names(vars)[ind1] <- names(vars)[ind2]
-    # } else {
-    #   sel <- state_multiple("expl_byvar",vars, "")
-    # }
-    # print(vars)
-    # print("----")
-
-
+    if(available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
+      sel <- r_state$expl_byvar
+      ind1 <- which(sel %in% vars)
+      ind2 <- sapply(sel, function(x) which(x == vars))
+      vars[ind1] <- sel
+      names(vars)[ind1] <- names(vars)[ind2]
+    }
   })
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
-    # selected = sel, multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
@@ -110,13 +70,6 @@ output$ui_expl_top  <- renderUI({
                  multiple = FALSE)
 })
 
-# output$ui_expl_format  <- renderUI({
-#   selectizeInput("expl_format", label = "Conditional formatting:",
-#                  choices = expl_format,
-#                  selected = state_single("expl_format", expl_format, "none"),
-#                  multiple = FALSE)
-# })
-
 output$ui_expl_viz <- renderUI({
   checkboxInput('expl_viz', 'Show plot', value = state_init("expl_viz", FALSE))
 })
@@ -134,7 +87,6 @@ output$ui_Explore <- renderUI({
           td(actionButton("expl_store", "Store"), style="padding-top:30px;")
         )
       ))
-      # uiOutput("ui_expl_format")
     ),
     help_and_report(modal_title = "Explore",
                     fun_name = "explore",
@@ -173,17 +125,6 @@ output$explorer <- DT::renderDataTable({
   expl <- .explore()
   if (is.null(expl)) return()
   expl$shiny <- TRUE
-  # make_expl(expl, top = input$expl_top, format = input$expl_format)
-  # make_expl(expl, top = input$expl_top)
-
-  # expl_reset <- function(var, ncol) {
-  #   if (!identical(r_state[[var]], input[[var]])) {
-  #     r_state[[var]] <<- input[[var]]
-  #     r_state$explorer_state <<- list()
-  #     r_state$explorer_search_columns <<- rep("", ncol)
-  #   }
-  # }
-
 
   ## resetting DT when changes occur
   nc <- ncol(expl$tab)
@@ -242,7 +183,6 @@ observeEvent(input$expl_store, {
     cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
     env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
 
-    # updateTabsetPanel(session, "tabs_data", selected = "Visualize")
     updateSelectInput(session, "dataset", selected = name)
   })
 })

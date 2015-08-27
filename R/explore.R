@@ -50,8 +50,7 @@ explore <- function(dataset,
     if (ncol(tab) == 2) colnames(tab) <- c("variable", names(pfun))
   } else {
 
-    # for(bv in byvar) if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
-
+    ## needed to deal with empty/missing values
     for (bv in byvar) {
       if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
 
@@ -190,10 +189,7 @@ make_expl <- function(expl,
   cn_num <- cn_all[sapply(tab, is.numeric)]
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
 
-  # if (top == "") top <- "fun"
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", expl$byvar[1]))[top]
-  # print(top)
-  # if (is.na(top)) top <- "Function"
 
   sketch = shiny::withTags(table(
     thead(
@@ -208,46 +204,20 @@ make_expl <- function(expl,
   dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
     DT::datatable(container = sketch,
       rownames = FALSE,
-      # filter = list(position = "top", clear = FALSE, plain = TRUE),
       filter = list(position = "top"),
       style = ifelse(expl$shiny, "bootstrap", "default"),
       options = list(
         # search = list(regex = TRUE),
-
         stateSave = TRUE,
         search = list(search = search),
         searchCols = searchCols,
         order = order,
-
         processing = FALSE,
         pageLength = 10,
         lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
       )
       , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-      # , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
-                          # $('input#uploadState').on('click', function() { table.state.clear(); });")
-                          # $('select#dataset').onchange(function() { table.state.clear(); });")
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
-
-
-  ## heat map with red or color_bar
-  # if (format == "color_bar") {
-  #   for (i in cn_num) {
-  #     dt_tab %<>% DT::formatStyle(i,
-  #                                 background = DT::styleColorBar(range(tab[, i], na.rm = TRUE), "lightblue"),
-  #                                 backgroundSize = "98% 88%",
-  #                                 backgroundRepeat = "no-repeat",
-  #                                 backgroundPosition = "center")
-  #   }
-  # } else if (format == "heat") {
-  #   for (i in cn_num) {
-  #     brks <- quantile(tab[[i]], probs = seq(.05, .95, .05), na.rm = TRUE)
-  #     clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
-  #       round(0) %>%
-  #       {paste0("rgb(255,", ., ",", .,")")}
-  #     dt_tab %<>% DT::formatStyle(i, backgroundColor = DT::styleInterval(brks, clrs))
-  #   }
-  # }
 
   dt_tab
 

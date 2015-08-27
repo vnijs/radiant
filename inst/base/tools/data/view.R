@@ -1,24 +1,3 @@
-# observeEvent(input$dataset, {
-#   ## reset r_state for DT tables when dataset is changed
-#   isolate({
-#     if (is.null(input$dataset)) return()
-#     if (is.null(r_state$dataset)) r_state$dataset <<- input$dataset
-#     if (r_state$dataset == input$dataset) return()
-
-#     # if (r_state$dataset == input$dataset)
-#     #   return()
-#     # else
-#     #   r_state$dataset<<- input$dataset
-
-#     # r_state$dataviewer_state <<- list()
-#     # r_state$dataviewer_search_columns <<- NULL
-#     # r_state$pivotr_state <<- list()
-#     # r_state$pivotr_search_columns <<- NULL
-#     # r_state$explorer_state <<- list()
-#     # r_state$explorer_search_columns <<- NULL
-#   })
-# })
-
 #############################################
 # View table output of the selected dataset
 #############################################
@@ -28,7 +7,6 @@ output$ui_view_vars <- renderUI({
   isolate({
     if (not_available(r_state$view_vars)) {
       r_state$view_vars <<- NULL
-      # r_state$view_vars <<- input$view_vars
       r_state$dataviewer_state <<- list()
       r_state$dataviewer_search_columns <<- NULL
     }
@@ -41,22 +19,6 @@ output$ui_view_vars <- renderUI({
 
 ## see if you can figure out how to reset the indices for sorting and
 ## filtering variables as variable selection changes
-observeEvent(input$view_vars, {
-
-  # r_state$view_vars <<- input$view_vars
-
-  # print(input$view_vars)
-  # print(input$dataviewer_state$order %>% unlist)
-  # print(r_state$dataviewer_state$order %>% unlist)
-  # r_state$dataviewer_state$order <<- list()
-
-  # r_state <- list()
-  # r_state$dataviewer_state$order
-  # r_state$dataviewer_state <<- list()
-  # r_state$dataviewer_search_columns <<- rep("", length(input$view_vars))
-  # r_state$dataviewer_search_columns <<- rep("", length(input$view_vars))
-})
-
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
@@ -76,34 +38,14 @@ my_dataTablesFilter = function(data, req) {
 
 observeEvent(input$dataviewer_search_columns, {
   isolate({
-
-    # +++++++++++++++++++++++++
-    # NEED MATCH THE INDEX TO THE NAME FOR COLUM SEARCHES - ALSO APPLIES TO
-    # PIVOT AND EXPLORE
-    # +++++++++++++++++++++++++
-
-    # print(input$dataviewer_search_columns)
-    # print(r_state$dataviewer_search_columns)
-
     r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
   })
 })
 
 observeEvent(input$dataviewer_state, {
-# observeEvent(input$dataviewer_state$order, {
   isolate({
-
-    # print(input$dataviewer_state$order %>% unlist)
-    # print(r_state$dataviewer_state$order %>% unlist)
-
     r_state$dataviewer_state <<-
-      if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
-
-    # r_state$dataviewer_state$order <<-
-    #   if (is.null(input$dataviewer_state$order)) list() else input$dataviewer_state$order
-
-    # print(r_state$dataviewer_state$order %>% unlist)
-    # print("===")
+    if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
   })
 })
 
@@ -112,18 +54,8 @@ output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return()
 
   dat <- select_(.getdata(), .dots = input$view_vars)
-
-  ## resetting if needed
-  # print(r_state$view_vars)
-  # print(input$view_vars)
-
-  ## this causes problems when r_state is NULL to start
-  # if (!is.null(r_state$view_vars) && !identical(r_state$view_vars, input$view_vars)) {
-
   ## this causes problems when r_state is NULL to latter on ??
   if (!identical(r_state$view_vars, input$view_vars)) {
-    # print(r_state$view_vars)
-    # print("reset")
     r_state$view_vars <<- input$view_vars
     r_state$dataviewer_state <<- list()
     r_state$dataviewer_search_columns <<- rep("", ncol(dat))
@@ -132,12 +64,11 @@ output$dataviewer <- DT::renderDataTable({
   ## seems needed due to partial name matching on dataviewer_search
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
-  # search <- ""
 
   if (nrow(dat) > 100000)  filt <- 'none'
-  else filt <- list(position = "top")
+  # else filt <- list(position = "top")
+  else filt <- list(position = "top", clear = FALSE, plain = TRUE)
   # else filt <- list(position = "top", clear = FALSE, plain = TRUE)
-  # action = DT::dataTableAjax(session, dat, rownames = FALSE, filter = my_dataTablesFilter)
   DT::datatable(dat, filter = filt,
     rownames = FALSE, style = "bootstrap", escape = FALSE,
     options = list(
@@ -145,13 +76,9 @@ output$dataviewer <- DT::renderDataTable({
       stateSave = TRUE,   ## maintains state but does not show column filter settings
 
       searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
-      # searchCols = lapply(rep("", ncol(dat)), function(x) list(search = x)),
-      # search = list(regex = TRUE),
       search = list(search = search),
-      # search = list(search = ""),
       order = {if (is.null(r_state$dataviewer_state$order)) list()
-              else r_state$dataviewer_state$order},
-      # order = list(),
+               else r_state$dataviewer_state$order},
       autoWidth = TRUE,
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
       processing = FALSE,
@@ -163,10 +90,7 @@ output$dataviewer <- DT::renderDataTable({
                    # $('input#uploadState').on('click', function() { table.state.clear(); });")
                    # $('select#dataset').onchange(function() { table.state.clear(); });")
   )
-
-# })
 })
-
 
 observeEvent(input$view_store, {
   isolate({
@@ -209,7 +133,3 @@ output$dl_view_tab <- downloadHandler(
       write.csv(file, row.names = FALSE)
   }
 )
-
-## cannot (re)set state ... yet
-# search = list(search = 'Ma'), order = list(list(2, 'asc'), list(1, 'desc'))
-# output$tbl_state <- renderPrint(str(input$dataviewer_state))
