@@ -33,7 +33,8 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # library(radiant)
 # radiant()
 
-devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree", "trestletech/shinyAce"))
+# devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree", "trestletech/shinyAce"))
+devtools::install_github("vnijs/radiant")
 # devtools::install_github("trestletech/shinyAce")
 # devtools::install_github("vnijs/MathJaxR")
 # devtools::install_github("themel/sendmailR")
@@ -47,6 +48,7 @@ for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.name
   source(file, local = TRUE)
 
 source("../../build/deployapp.R", local = TRUE)
+
 deployApp(account = "vnijs", launch.browser = FALSE)
 
 setwd(file.path(fpath,"../quant"))
@@ -67,7 +69,7 @@ setwd("~/gh/radiant/")
 
 # answ <- readline("Did you create binary packages for Windows? (y/n) ")
 # if (substr(answ, 1, 1) %in% c("y","Y")) {
-  # system("sh build/build_mac_win.sh")
+  system("sh build/build_mac_win.sh")
 # }
 
 ## in case of problems
