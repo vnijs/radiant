@@ -15,7 +15,7 @@ shinyServer(function(input, output, session) {
       }
     } else {
       radiant::copy_all(radiant)
-      # set_class <- radiant::set_class
+      set_class <- radiant::set_class
     }
   } else {
      copy_from(radiant, state_init, state_single, state_multiple)
