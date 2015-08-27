@@ -16,6 +16,23 @@
 #' result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
 #'
 #' @export
+
+    # dataset <- mtcars %>% mutate_each(funs(as.character))
+    # dat <- mtcars %>% mutate_each(funs(as.character))
+    # dataset <- "diamonds"
+    # cvars <- c("clarity","cut")
+    # cvars <- "clarity"
+    # cvars <- c("mpg","cyl")
+    # dat %>% getclass
+    # nvar = "None"
+    # fun = "mean"
+
+    # pivotr(dataset, cvars = cvars)$tab
+
+    # pivotr(dataset, cvars = c("mpg","cyl"))$tab
+    # pivotr(dataset, cvars = c("mpg","cyl")) %>% summary
+    # pvt <- pivotr(dataset, cvars = c("mpg","cyl"))
+
 pivotr <- function(dataset,
                    cvars = "",
                    nvar = "None",
@@ -35,8 +52,16 @@ pivotr <- function(dataset,
   if (nvar == "None") nvar <- "n"
 
   ## use loop or mutate_each?
-  for (cv in cvars)
+  for (cv in cvars) {
     if (!is.factor(dat[[cv]])) dat[[cv]] %<>% as.factor
+
+    levs <- levels(dat[[cv]])
+    if ("" %in% levs) {
+      levs[levs == ""] <- "[EMPTY]"
+      dat[[cv]] <- factor(dat[[cv]], levels = levs)
+      dat[[cv]][is.na(dat[[cv]])] <- "[EMPTY]"
+    }
+  }
 
   ## convert categorical variables to factors if needed
   ## using [] seems weird but drop = FALSE doesn't wor
@@ -45,6 +70,7 @@ pivotr <- function(dataset,
   # ind <- ifelse(length(cvars) > 1, -1, 1)
   # levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
+  # levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
   # for (l in names(levs)) {
   #   if ("" %in% levs[[l]]) {
   #       dat[[l]] <- mutate_(dat, l = ifelse(l,"","MISSING"))[[l]]
@@ -60,7 +86,6 @@ pivotr <- function(dataset,
       mutate_each_(x, "as.numeric", vars = nvar) %>%
       summarise_each_(make_funs(fun), vars = nvar)
   }
-  # levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
   ## main tab
   tab <-
@@ -79,14 +104,35 @@ pivotr <- function(dataset,
         tab,
         bind_cols(data.frame("Total") %>% setNames(cvars), total %>% set_colnames(nvar))
       )
+
   } else {
 
     col_total <-
       dat %>%
       group_by_(.dots = cvars[1]) %>%
       sel(nvar) %>%
-      sfun(nvar, cvars[1], fun)
+      sfun(nvar, cvars[1], fun) # %>%
+      # {.[[1]][.[[1]] == ""] <- "[EMPTY]"; .}
 
+    # levs <- levels(col_total[[1]])
+    # if ("" %in% levs) {
+    #     levs[levs == ""] <- "[EMPTY]"
+    #     col_total[[1]] <- factor(col_total[[1]], levels = levs)
+    #     col_total[[1]][is.na(col_total[[1]])] <- "[EMPTY]"
+    #     # tab[[cv]][is.na(tab[[cv]]) | tab[[cv]] == ""] <- "[EMPTY]"
+    #     # tab[[cv]][tab[[cv]] == ""] <- "[EMPTY]"
+    # }
+      # %>%
+      # {.[[1]][.[[1]] == ""] <- "[EMPTY]"; .}
+
+      # mutate_each_(funs(ifelse(. == "", "[EMPTY]", .) %>% as.character), vars = cvars[1])
+
+      # col_total
+
+      # %>%
+      # mutate_each_(funs(ifelse(. == "", "[EMPTY]", .)), vars = cvars[1])
+
+      # mutate(mpg = ifelse(mpg == "", "[EMPTY]",mpg))
     row_total <-
       dat %>%
       group_by_(.dots = cvars[-1]) %>%
@@ -94,6 +140,16 @@ pivotr <- function(dataset,
       ungroup %>%
       select_(Total = nvar) %>%
       bind_rows(total %>% set_colnames("Total"))
+
+    # for (cv in cvars) {
+    #   levs <- levels(tab[[cv]])
+    #   if ("" %in% levs) {
+    #     levs[levs == ""] <- "[EMPTY]"
+    #     tab[[cv]] <- factor(tab[[cv]], levels = levs)
+    #     tab[[cv]][is.na(tab[[cv]]) | tab[[cv]] == ""] <- "[EMPTY]"
+    #     # tab[[cv]][tab[[cv]] == ""] <- "[EMPTY]"
+    #   }
+    # }
 
     ## creating cross tab
     tab <- spread_(tab, cvars[1], nvar)
@@ -109,11 +165,17 @@ pivotr <- function(dataset,
       rm(col_total, row_total)
   }
 
+  # tab %>% getclass
   ## resetting factor levels
   ind <- ifelse(length(cvars) > 1, -1, 1)
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
-  for (i in cvars[ind])
-    tab[[i]] <- factor(tab[[i]], levels = c(levs[[i]],"Total"))
+
+  for (i in cvars[ind]) {
+    # l <- levs[[i]]
+    # if ("" %in% l) l[l == ""] <- "[EMPTY]"
+    # tab[[i]] <- factor(tab[[i]], levels = c(levs,"Total"))
+    tab[[i]] %<>% factor(., levels = c(levs[[i]],"Total"))
+  }
 
   isNum <- -which(names(tab) %in% cvars)
   if (normalize == "total") {
@@ -129,7 +191,8 @@ pivotr <- function(dataset,
 
   if (!shiny) tab <- as.data.frame(tab, as.is = TRUE)
 
-  rm(cv, isNum, dat, sfun, sel, i, levs, total, ind)
+  # rm(cv, isNum, dat, sfun, sel, i, levs, total, ind)
+  rm(cv, isNum, dat, sfun, sel, i, total, ind)
 
   environment() %>% as.list %>% set_class(c("pivotr",class(.)))
 }
@@ -279,8 +342,9 @@ make_dt <- function(pvt,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
     )
-    , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
-                         $('input#uploadState').on('click', function() { table.state.clear(); });")
+    , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    # , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+    #                      $('input#uploadState').on('click', function() { table.state.clear(); });")
                          # $('select#dataset').onchange(function() { table.state.clear(); });")
   ) %>% DT::formatStyle(., cvars,  color = "white", backgroundColor = "grey") %>%
         {if ("Total" %in% cn) DT::formatStyle(., "Total", fontWeight = "bold") else .}

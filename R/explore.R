@@ -49,7 +49,19 @@ explore <- function(dataset,
       group_by_("variable")  %>% summarise_each(pfun)
     if (ncol(tab) == 2) colnames(tab) <- c("variable", names(pfun))
   } else {
-    for(bv in byvar) if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
+
+    # for(bv in byvar) if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
+
+    for (bv in byvar) {
+      if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
+
+      levs <- levels(dat[[bv]])
+      if ("" %in% levs) {
+        levs[levs == ""] <- "[EMPTY]"
+        dat[[bv]] <- factor(dat[[bv]], levels = levs)
+        dat[[bv]][is.na(dat[[bv]])] <- "[EMPTY]"
+      }
+    }
 
     ## for median issue in dplyr < .5
     ## https://github.com/hadley/dplyr/issues/893
@@ -125,7 +137,7 @@ summary.explore <- function(object, top = "fun", ...) {
 #' @details See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Radiant
 #'
 #' @param expl Return value from \code{\link{explore}}
-#' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by
+#' @param top The variable (type) to display at the top of the table ("fun" for Function, "var" for Variable, and "byvar" for Group by. "fun" is the default
 #'
 #' @examples
 #' result <- explore("diamonds", "price:x") %>% flip("var")
@@ -136,8 +148,7 @@ summary.explore <- function(object, top = "fun", ...) {
 #' @seealso \code{\link{make_expl}} to create the DT table
 #'
 #' @export
-flip <- function(expl, top) {
-  flip
+flip <- function(expl, top = "fun") {
   cvars <- expl$byvar %>% {if (.[1] == "") character(0) else .}
   if (top[1] == "var")
     expl$tab %>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
@@ -209,8 +220,9 @@ make_expl <- function(expl,
         pageLength = 10,
         lengthMenu = list(c(10, 25, 50, -1), c("10","25","50","All"))
       )
-      , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
-                          $('input#uploadState').on('click', function() { table.state.clear(); });")
+      , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+      # , callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+                          # $('input#uploadState').on('click', function() { table.state.clear(); });")
                           # $('select#dataset').onchange(function() { table.state.clear(); });")
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
 

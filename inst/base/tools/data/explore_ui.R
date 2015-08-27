@@ -24,10 +24,11 @@ output$ui_expl_vars <- renderUI({
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
 
-  if (not_available(r_state$expl_vars)) {
-    r_state$explorer_state <<- list()
-    r_state$explorer_search_columns <<- NULL
-  }
+  # if (not_available(r_state$expl_vars)) {
+  #   r_state$explorer_state <<- list()
+  #   r_state$explorer_search_columns <<- NULL
+  # }
+
 
   selectInput("expl_vars", label = "Select variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
@@ -38,23 +39,50 @@ output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
 
-  if (not_available(r_state$expl_vars)) {
-    r_state$explorer_state <<- list()
-    r_state$explorer_search_columns <<- NULL
-  }
+  # if (not_available(r_state$expl_vars)) {
+  #   r_state$explorer_state <<- list()
+  #   r_state$explorer_search_columns <<- NULL
+  # }
 
   isolate({
     ## keep the same categorical-variables 'active' if possible
-    sel <-
-      if(available(input$expl_byvar) && all(input$expl_byvar %in% vars))
-        input$expl_byvar
-      else
-        state_multiple("expl_byvar",vars, "")
+    # sel <-
+    #   if(available(input$expl_byvar) && all(input$expl_byvar %in% vars))
+    #     input$expl_byvar
+    #   else
+    #     state_multiple("expl_byvar",vars, "")
+
+      if(available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
+        sel <- r_state$expl_byvar
+        ind1 <- which(sel %in% vars)
+        ind2 <- sapply(sel, function(x) which(x == vars))
+        vars[ind1] <- sel
+        names(vars)[ind1] <- names(vars)[ind2]
+        # print(vars)
+      }
+
+
+    # print(input$expl_byvar)
+    # print(r_state$expl_byvar)
+    # print(vars)
+    # if(available(input$expl_byvar) && all(input$expl_byvar %in% vars)) {
+    #   sel <- input$expl_byvar
+    #   ind1 <- which(sel %in% vars)
+    #   ind2 <- sapply(sel, function(x) which(x == vars))
+    #   vars[ind1] <- sel
+    #   names(vars)[ind1] <- names(vars)[ind2]
+    # } else {
+    #   sel <- state_multiple("expl_byvar",vars, "")
+    # }
+    # print(vars)
+    # print("----")
+
+
   })
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    # selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
-    selected = sel, multiple = TRUE,
+    selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
+    # selected = sel, multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
@@ -73,6 +101,7 @@ output$ui_expl_fun <- renderUI({
 })
 
 output$ui_expl_top  <- renderUI({
+  if (is_empty(input$expl_vars)) return()
   top_var = c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
   if (is_empty(input$expl_byvar)) top_var <- top_var[1:2]
   selectizeInput("expl_top", label = "Column variable:",
@@ -114,7 +143,7 @@ output$ui_Explore <- renderUI({
 })
 
 .explore <- reactive({
-  if (not_available(input$expl_vars)) return()
+  if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(explore, expl_inputs()) )
   })
@@ -132,6 +161,14 @@ observeEvent(input$explorer_state, {
   })
 })
 
+expl_reset <- function(var, ncol) {
+  if (!identical(r_state[[var]], input[[var]])) {
+    r_state[[var]] <<- input[[var]]
+    r_state$explorer_state <<- list()
+    r_state$explorer_search_columns <<- rep("", ncol)
+  }
+}
+
 output$explorer <- DT::renderDataTable({
   expl <- .explore()
   if (is.null(expl)) return()
@@ -139,16 +176,36 @@ output$explorer <- DT::renderDataTable({
   # make_expl(expl, top = input$expl_top, format = input$expl_format)
   # make_expl(expl, top = input$expl_top)
 
-  isolate({
+  # expl_reset <- function(var, ncol) {
+  #   if (!identical(r_state[[var]], input[[var]])) {
+  #     r_state[[var]] <<- input[[var]]
+  #     r_state$explorer_state <<- list()
+  #     r_state$explorer_search_columns <<- rep("", ncol)
+  #   }
+  # }
 
-  search <- r_state$explorer_state$search$search
-  if (is.null(search)) search <- ""
-  searchCols <- lapply(r_state$explorer_search_columns, function(x) list(search = x))
-  order <- r_state$explorer_state$order
+
+  ## resetting DT when changes occur
+  nc <- ncol(expl$tab)
+  expl_reset("expl_vars", nc)
+  expl_reset("expl_byvar", nc)
+  expl_reset("expl_fun", nc)
+  if (!is.null(r_state$expl_top) && !is.null(input$expl_top) &&
+      !identical(r_state$expl_top, input$expl_top)) {
+    r_state$expl_top <<- input$expl_top
+    r_state$explorer_state <<- list()
+    r_state$explorer_search_columns <<- rep("", nc)
+  }
+
+  isolate({
+    search <- r_state$explorer_state$search$search
+    if (is.null(search)) search <- ""
+    searchCols <- lapply(r_state$explorer_search_columns, function(x) list(search = x))
+    order <- r_state$explorer_state$order
+  })
+
   make_expl(expl, top = input$expl_top, search = search,
             searchCols = searchCols, order = order)
-
-  })
 })
 
 output$dl_explore_tab <- downloadHandler(

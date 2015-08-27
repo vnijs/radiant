@@ -149,6 +149,9 @@ if (r_local) {
   }
 }
 
+# if (is.null(r_state$dataviewer_state)) r_state$dataviewer_state <- list()
+# if (is.null(r_state$dataviewer_state)) r_state$dataviewer_state <- list()
+
 #####################################
 ## url processing to share results
 #####################################

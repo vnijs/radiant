@@ -28,6 +28,7 @@ output$ui_view_vars <- renderUI({
   isolate({
     if (not_available(r_state$view_vars)) {
       r_state$view_vars <<- NULL
+      # r_state$view_vars <<- input$view_vars
       r_state$dataviewer_state <<- list()
       r_state$dataviewer_search_columns <<- NULL
     }
@@ -36,6 +37,24 @@ output$ui_view_vars <- renderUI({
   selectInput("view_vars", "Select variables to show:", choices  = vars,
     selected = state_multiple("view_vars", vars, vars), multiple = TRUE,
     selectize = FALSE, size = min(15, length(vars)))
+})
+
+## see if you can figure out how to reset the indices for sorting and
+## filtering variables as variable selection changes
+observeEvent(input$view_vars, {
+
+  # r_state$view_vars <<- input$view_vars
+
+  # print(input$view_vars)
+  # print(input$dataviewer_state$order %>% unlist)
+  # print(r_state$dataviewer_state$order %>% unlist)
+  # r_state$dataviewer_state$order <<- list()
+
+  # r_state <- list()
+  # r_state$dataviewer_state$order
+  # r_state$dataviewer_state <<- list()
+  # r_state$dataviewer_search_columns <<- rep("", length(input$view_vars))
+  # r_state$dataviewer_search_columns <<- rep("", length(input$view_vars))
 })
 
 output$ui_View <- renderUI({
@@ -57,13 +76,34 @@ my_dataTablesFilter = function(data, req) {
 
 observeEvent(input$dataviewer_search_columns, {
   isolate({
+
+    # +++++++++++++++++++++++++
+    # NEED MATCH THE INDEX TO THE NAME FOR COLUM SEARCHES - ALSO APPLIES TO
+    # PIVOT AND EXPLORE
+    # +++++++++++++++++++++++++
+
+    # print(input$dataviewer_search_columns)
+    # print(r_state$dataviewer_search_columns)
+
     r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
   })
 })
 
 observeEvent(input$dataviewer_state, {
+# observeEvent(input$dataviewer_state$order, {
   isolate({
-    r_state$dataviewer_state <<- input$dataviewer_state
+
+    # print(input$dataviewer_state$order %>% unlist)
+    # print(r_state$dataviewer_state$order %>% unlist)
+
+    r_state$dataviewer_state <<-
+      if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
+
+    # r_state$dataviewer_state$order <<-
+    #   if (is.null(input$dataviewer_state$order)) list() else input$dataviewer_state$order
+
+    # print(r_state$dataviewer_state$order %>% unlist)
+    # print("===")
   })
 })
 
@@ -73,10 +113,26 @@ output$dataviewer <- DT::renderDataTable({
 
   dat <- select_(.getdata(), .dots = input$view_vars)
 
-  # isolate({
+  ## resetting if needed
+  # print(r_state$view_vars)
+  # print(input$view_vars)
+
+  ## this causes problems when r_state is NULL to start
+  # if (!is.null(r_state$view_vars) && !identical(r_state$view_vars, input$view_vars)) {
+
+  ## this causes problems when r_state is NULL to latter on ??
+  if (!identical(r_state$view_vars, input$view_vars)) {
+    # print(r_state$view_vars)
+    # print("reset")
+    r_state$view_vars <<- input$view_vars
+    r_state$dataviewer_state <<- list()
+    r_state$dataviewer_search_columns <<- rep("", ncol(dat))
+  }
+
   ## seems needed due to partial name matching on dataviewer_search
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
+  # search <- ""
 
   if (nrow(dat) > 100000)  filt <- 'none'
   else filt <- list(position = "top")
@@ -87,19 +143,24 @@ output$dataviewer <- DT::renderDataTable({
     options = list(
 
       stateSave = TRUE,   ## maintains state but does not show column filter settings
+
       searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
+      # searchCols = lapply(rep("", ncol(dat)), function(x) list(search = x)),
       # search = list(regex = TRUE),
       search = list(search = search),
-      order = r_state$dataviewer_state$order,
-
+      # search = list(search = ""),
+      order = {if (is.null(r_state$dataviewer_state$order)) list()
+              else r_state$dataviewer_state$order},
+      # order = list(),
       autoWidth = TRUE,
       columnDefs = list(list(className = 'dt-center', targets = "_all")),
       processing = FALSE,
       pageLength = 10,
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
     ),
-    callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
-                   $('input#uploadState').on('click', function() { table.state.clear(); });")
+    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    # callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
+                   # $('input#uploadState').on('click', function() { table.state.clear(); });")
                    # $('select#dataset').onchange(function() { table.state.clear(); });")
   )
 

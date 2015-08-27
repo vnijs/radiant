@@ -14,26 +14,87 @@ output$ui_pvt_cvars <- renderUI({
 
   isolate({
     ## keep the same categorical-variables 'active' if possible
-    sel <-
-      if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars))
-        input$pvt_cvars
-      else
-        state_multiple("pvt_cvars",vars, "")
+    # print(input$pvt_cvars)
+    # print(vars)
+    # print(input$pvt_cvars %in% vars)
+    # print(available(input$pvt_cvars))
 
-    if (not_available(r_state$pvt_cvars)) {
-      r_state$pivotr_state <<- list()
-      r_state$pivotr_search_columns <<- NULL
-    }
+    # sel <-
+    #   if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars))
+    #     input$pvt_cvars
+    #   else
+    #     state_multiple("pvt_cvars",vars, "")
+
+    # print(input$pvt_cvars)
+    # print(r_state$pvt_cvars)
+    # print(vars)
+
+      # if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars)) {
+      # # if(available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
+      #   sel <- input$pvt_cvars
+      #   ind1 <- which(sel %in% vars)
+      #   ind2 <- sapply(sel, function(x) which(x == vars))
+      #   vars[ind1] <- sel
+      #   names(vars)[ind1] <- names(vars)[ind2]
+      #   print(vars)
+      # } else {
+      #   sel <- state_multiple("pvt_cvars",vars, "")
+      # }
+
+      # if(available(input$pvt_cvars) && all(input$pvt_cvars %in% vars)) {
+      if(available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
+        sel <- r_state$pvt_cvars
+        ind1 <- which(sel %in% vars)
+        ind2 <- sapply(sel, function(x) which(x == vars))
+        vars[ind1] <- sel
+        names(vars)[ind1] <- names(vars)[ind2]
+        # print(vars)
+      }
+
+    # print(vars)
+    # print("----")
+
+
+    # print(r_state$pvt_cvars)
+    # if (not_available(r_state$pvt_cvars)) {
+    #   r_state$pvt_cvars <- input$pvt_cvars
+    #   print(r_state$pvt_cvars)
+    #   r_state$pivotr_state <<- list()
+    #   r_state$pivotr_search_columns <<- NULL
+    # }
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    # selected = state_multiple("pvt_cvars",vars, ""),
-    selected = sel,
+  # selectizeInput("pvt_cvars", label = "Categorical variables:", choices = sel,
+    selected = state_multiple("pvt_cvars",vars, ""),
+    # selected = sel,
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
+
+# observeEvent(input$pvt_cvars, {
+#     print(r_state$pvt_cvars)
+#     print(r_state$pivotr_search_columns)
+#     print(r_state$pivotr_state$order)
+
+#     # r_state$pvt_cvars <- input$pvt_cvars
+#     if (not_available(r_state$pvt_cvars)) {
+#       # r_state$pvt_cvars <- input$pvt_cvars
+#       # print(r_state$pvt_cvars)
+#       r_state$pivotr_state <<- list()
+#       r_state$pivotr_search_columns <<- NULL
+#     }
+# })
+
+## see if you can figure out how to reset the indices for sorting and
+## filtering variables as variable selection changes
+# observeEvent(input$pvt_cvars, {
+#   # print(input$pvt_cvars)
+#   r_state$pivotr_state <<- list()
+#   r_state$pivotr_search_columns <<- NULL
+# })
 
 output$ui_pvt_nvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
@@ -151,7 +212,8 @@ observeEvent(input$pivotr_search_columns, {
 
 observeEvent(input$pivotr_state, {
   isolate({
-    r_state$pivotr_state <<- input$pivotr_state
+    r_state$pivotr_state <<-
+      if (is.null(input$pivotr_state)) list() else input$pivotr_state
   })
 })
 
@@ -162,10 +224,23 @@ output$pivotr <- DT::renderDataTable({
 
   # make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc)
 
+# observeEvent(input$pvt_cvars, {
+#     print(r_state$pvt_cvars)
+
+  if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {
+    # print(r_state$view_vars)
+    # print("reset")
+    r_state$pvt_cvars <<- input$pvt_cvars
+    r_state$pivotr_state <<- list()
+    r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
+  }
+
   search <- r_state$pivotr_state$search$search
   if (is.null(search)) search <- ""
   searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
   order <- r_state$pivotr_state$order
+
+
   make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
           search = search, searchCols = searchCols, order = order)
 
