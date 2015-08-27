@@ -194,7 +194,8 @@ plot.cross_tabs <- function(x,
 		tab %>%
 			data.frame(., check.names = FALSE) %>%
 			mutate(rnames = rownames(.)) %>%
-			{sshhr( gather(., variable, values, -rnames) )}
+			# {sshhr( gather(., variable, values, -rnames) )}
+			{sshhr( gather_(., "variable", "values", setdiff(colnames(.),"rnames")) )}
 	}
 
 	plots <- list()

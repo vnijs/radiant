@@ -41,6 +41,7 @@ pivotr <- function(dataset,
                    data_filter = "",
                    shiny = FALSE) {
 
+
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
   dat <- getdata(dataset, vars, filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
@@ -50,6 +51,11 @@ pivotr <- function(dataset,
     cvars <- colnames(dat) %>% {.[. != nvar]}
 
   if (nvar == "None") nvar <- "n"
+
+  # if (is.null(fun)) fun <- "mean"
+  # if (fun == "") fun <- "mean"
+  # print(fun)
+  # fun <- "mean"
 
   ## use loop or mutate_each?
   for (cv in cvars) {

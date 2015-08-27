@@ -204,7 +204,8 @@ output$explorer <- DT::renderDataTable({
     order <- r_state$explorer_state$order
   })
 
-  make_expl(expl, top = input$expl_top, search = search,
+  top <- ifelse (input$expl_top == "", "fun", input$expl_top)
+  make_expl(expl, top = top, search = search,
             searchCols = searchCols, order = order)
 })
 

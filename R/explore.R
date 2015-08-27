@@ -190,7 +190,10 @@ make_expl <- function(expl,
   cn_num <- cn_all[sapply(tab, is.numeric)]
   cn_cat <- cn_all[-which(cn_all %in% cn_num)]
 
+  # if (top == "") top <- "fun"
   top <- c("fun" = "Function", "var" = "Variables", "byvar" = paste0("Group by: ", expl$byvar[1]))[top]
+  # print(top)
+  # if (is.na(top)) top <- "Function"
 
   sketch = shiny::withTags(table(
     thead(

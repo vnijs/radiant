@@ -105,6 +105,12 @@ output$ui_pvt_nvar <- renderUI({
 })
 
 output$ui_pvt_fun <- renderUI({
+  # isolate({
+
+  # print("--")
+  # print(input$pvt_fun)
+
+  #   })
   selectizeInput("pvt_fun", label = "Apply function:",
                  choices = r_functions,
                  selected = state_single("pvt_fun", r_functions, "mean_rm"),
@@ -199,6 +205,14 @@ pvt_plot_inputs <- reactive({
 
 .pivotr <- reactive({
   if (not_available(input$pvt_cvars)) return()
+  if (is_empty(input$pvt_fun)) {
+    updateSelectInput(session, "pvt_fun", selected = "length")
+    return()
+  }
+  if (is_empty(input$pvt_nvar)) {
+    updateSelectInput(session, "pvt_nvar", selected = "None")
+    return()
+  }
   withProgress(message = "Calculating", value = 0, {
     sshhr( do.call(pivotr, pvt_inputs()) )
   })
@@ -222,14 +236,7 @@ output$pivotr <- DT::renderDataTable({
   if (is.null(pvt)) return()
   pvt$shiny <- TRUE
 
-  # make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc)
-
-# observeEvent(input$pvt_cvars, {
-#     print(r_state$pvt_cvars)
-
   if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {
-    # print(r_state$view_vars)
-    # print("reset")
     r_state$pvt_cvars <<- input$pvt_cvars
     r_state$pivotr_state <<- list()
     r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
