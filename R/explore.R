@@ -6,6 +6,8 @@
 #' @param vars (Numerical) variables to summaries
 #' @param byvar Variable(s) to group data by before summarizing
 #' @param fun Functions to use for summarizing
+#' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
+#' @param tabsort Expression used to sort the table (e.g., "-Total")
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
@@ -15,6 +17,8 @@
 #' result <- explore("diamonds", "price:x")
 #' summary(result)
 #' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
+
+
 #' summary(result)
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew"))
 #'
@@ -25,6 +29,8 @@ explore <- function(dataset,
                     vars = "",
                     byvar = "",
                     fun = "mean_rm",
+                    tabfilt = "",
+                    tabsort = "",
                     data_filter = "",
                     shiny = FALSE) {
 
@@ -66,7 +72,7 @@ explore <- function(dataset,
     ## https://github.com/hadley/dplyr/issues/893
     tab <-
       dat %>% group_by_(.dots = byvar) %>%
-      select(isNum) %>% mutate_each("as.numeric") %>%
+      # select(isNum) %>% mutate_each("as.numeric") %>%
       summarise_each(pfun)
 
     if (length(vars) > 1 && length(fun) > 1) {
@@ -83,6 +89,26 @@ explore <- function(dataset,
       tab %<>% mutate(variable = factor(vars, levels = vars)) %>%
         select_(.dots = c(byvar, "variable", names(pfun)))
     }
+  }
+
+  ## filtering the table if desired
+  if (tabfilt != "") {
+    tab <- filterdata(tab, tabfilt)
+  }
+
+  ## sorting the table if desired
+  if (tabsort != "") {
+    ## only one variable for now
+    tabsort <- tabsort[1]
+    if (substring(tabsort,1) == "-") {
+      tab %<>% arrange(., desc(.[[substring(tabsort,2)]]))
+    } else {
+      tab %<>% arrange_(tabsort)
+    }
+
+    isFct <- tab %>% getclass %>% {.[. == "factor"]} %>% names
+    for (i in isFct)
+      tab[[i]] %<>% factor(., levels = unique(.))
   }
 
   ## dat no longer needed
@@ -115,7 +141,7 @@ summary.explore <- function(object, top = "fun", ...) {
   cat("Data      :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
-  if (object$byvar != "")
+  if (object$byvar[1] != "")
     cat("Grouped by: ", object$byvar, "\n")
   cat("Functions : ", names(object$pfun), "\n")
   cat("Top       : ", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
@@ -205,7 +231,7 @@ make_expl <- function(expl,
     DT::datatable(container = sketch,
       rownames = FALSE,
       filter = list(position = "top"),
-      style = ifelse(expl$shiny, "bootstrap", "default"),
+      style = ifelse (expl$shiny, "bootstrap", "default"),
       options = list(
         # search = list(regex = TRUE),
         stateSave = TRUE,

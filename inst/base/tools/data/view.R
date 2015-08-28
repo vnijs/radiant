@@ -66,8 +66,7 @@ output$dataviewer <- DT::renderDataTable({
   if (is.null(search)) search <- ""
 
   if (nrow(dat) > 100000)  filt <- 'none'
-  # else filt <- list(position = "top")
-  else filt <- list(position = "top", clear = FALSE, plain = TRUE)
+  else filt <- list(position = "top")
   # else filt <- list(position = "top", clear = FALSE, plain = TRUE)
   DT::datatable(dat, filter = filt,
     rownames = FALSE, style = "bootstrap", escape = FALSE,
@@ -86,9 +85,6 @@ output$dataviewer <- DT::renderDataTable({
       lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
     ),
     callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
-    # callback = DT::JS("$('a#refresh_radiant').on('click', function() { table.state.clear(); });
-                   # $('input#uploadState').on('click', function() { table.state.clear(); });")
-                   # $('select#dataset').onchange(function() { table.state.clear(); });")
   )
 })
 

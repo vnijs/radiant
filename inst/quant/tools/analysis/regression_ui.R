@@ -98,7 +98,7 @@ output$ui_reg_indep_var <- renderUI({
   ## after storing residuals or predictions
   isolate({
     init <- input$reg_indep_var %>%
-      {if(!is_empty(.) && . %in% vars) . else character(0)}
+      {if (!is_empty(.) && . %in% vars) . else character(0)}
   })
 
   selectInput(inputId = "reg_indep_var", label = "Independent variables:", choices = vars,

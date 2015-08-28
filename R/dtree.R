@@ -27,19 +27,19 @@ dtree <- function(yl) {
   jl <- as.Node(yl)
 
   ## if type not set and isLeaf set to terminal
-  pt <- . %>% {if(is.null(.$type)) .$Set(type = "terminal")}
+  pt <- . %>% {if (is.null(.$type)) .$Set(type = "terminal")}
   jl$Do(pt, filterFun = isLeaf)
 
   ## or use this approach if type not set?
   # set_terminal <- jl$Get("type")
-  # if(any(is.na(set_terminal))) {
+  # if (any(is.na(set_terminal))) {
   #   set_terminal[is.na(set_terminal)] <- "terminal"
   #   jl$Set(type = set_terminal)
   # }
 
   ## making a copy of the initial Node object
 #   jl_init <- as.Node(yl)
-#   pt <- . %>% {if(is.null(.$type)) .$Set(type = "terminal")}
+#   pt <- . %>% {if (is.null(.$type)) .$Set(type = "terminal")}
 #   jl_init$Do(pt, filterFun = isLeaf)
   ## see issue https://github.com/gluc/data.tree/issues/22
   # jl_init <- sshhr(Clone(jl))
@@ -79,12 +79,12 @@ dtree <- function(yl) {
 summary.dtree <- function(object, ...) {
 
   print_money <- function(x) {
-    x %>% {if(is.na(.)) "" else .} %>%
+    x %>% {if (is.na(.)) "" else .} %>%
       format(digits = 10, nsmall = 2, decimal.mark = ".", big.mark = ",", scientific = FALSE)
   }
 
   rm_terminal <- function(x)
-    x %>% {if(is.na(.)) "" else .} %>% {if(. == "terminal") "" else .}
+    x %>% {if (is.na(.)) "" else .} %>% {if (. == "terminal") "" else .}
 
   # format_percent <- . %>% as.character %>% sprintf("%.2f%%", . * 100)
 

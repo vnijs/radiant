@@ -101,7 +101,7 @@ output$ui_glm_indep_var <- renderUI({
   ## after storing residuals or predictions
   isolate({
     init <- input$glm_indep_var %>%
-    {if(!is_empty(.) && . %in% vars) . else character(0)}
+    {if (!is_empty(.) && . %in% vars) . else character(0)}
   })
 
   selectInput(inputId = "glm_indep_var", label = "Independent variables:", choices = vars,
@@ -282,7 +282,7 @@ output$ui_glm_reg <- renderUI({
 glm_plot <- reactive({
 
   if (glm_available() != "available") return()
-  if(is_empty(input$glm_plots)) return()
+  if (is_empty(input$glm_plots)) return()
 
   plot_height <- 500
   plot_width <- 650

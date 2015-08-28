@@ -70,7 +70,7 @@
 #   if (r_local) {
 #     "local"
 #   } else {
-#     ifelse(is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
+#     ifelse (is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
 #   }
 #
 # ## (re)start the session and push the id into the url
@@ -119,7 +119,7 @@
 #
 # # r_url <- list()
 # # r_url <<- list(id = "nav_radiant", menu = "Data", base = "Data", tab = "Manage")
-# # r_url$tab <- if(is.null(r_url$tab)) "" else r_url$tab
+# # r_url$tab <- if (is.null(r_url$tab)) "" else r_url$tab
 #
 # ## relevant links
 # # http://stackoverflow.com/questions/25306519/shiny-saving-url-state-subpages-and-tabs/25385474#25385474
@@ -151,16 +151,16 @@
 #
 # # url_observe <- observe({
 # observe({
-#   # if(is_empty(r_state$url)) return()
-#   if(is_empty(r_data$url)) return()
-#   if(is.null(input$dataset)) return()
+#   # if (is_empty(r_state$url)) return()
+#   if (is_empty(r_data$url)) return()
+#   if (is.null(input$dataset)) return()
 #   # url_depth <- length(r_state$url)
-#   # if(url_depth == 0) return()
-#   # if(!is.null(r_data$url)) return()
+#   # if (url_depth == 0) return()
+#   # if (!is.null(r_data$url)) return()
 #   # input$nav_radiant
 #   # query <- parseQueryString(session$clientData$url_search)
 #   # if ('tab' %in% names(queryParams))
-#   # if(!is.null(query$url)) {
+#   # if (!is.null(query$url)) {
 #   # url <- strsplit(query$url,"/")[[1]]
 #   #       url1 <<- url[1]
 #   #       url2 <<- url[2]
@@ -202,11 +202,11 @@
 #     # updateTabsetPanel(session, "nav_radiant", selected = url[["nav_radiant"]])
 #     # for(u in names(url)[-1]) {
 #     for(u in names(url)) {
-#       if(is.null(input[[u]])) return()
-#       if(input[[u]] != url[[u]])
+#       if (is.null(input[[u]])) return()
+#       if (input[[u]] != url[[u]])
 #         updateTabsetPanel(session, u, selected = url[[u]])
-#       # if(names(tail(url,1)) == u) url_observe$suspend()
-#       if(names(tail(url,1)) == u) test$suspend()
+#       # if (names(tail(url,1)) == u) url_observe$suspend()
+#       if (names(tail(url,1)) == u) test$suspend()
 #     }
 #   })
 #   # updateTabsetPanel(session, "nav_radiant", selected = url[["nav_radiant"]])
@@ -222,9 +222,9 @@
 #   # }
 #
 #   # updateTabsetPanel(session, "nav_radiant", selected = r_state$url[1])
-#   # if(url_depth == 1) return()
+#   # if (url_depth == 1) return()
 #   # tab <- url_list[[r_state$url[1]]]
-#   # if(is.null(input[[tab]])) return()
+#   # if (is.null(input[[tab]])) return()
 #   # updateTabsetPanel(session, tab, selected = r_state$url[2])
 #
 #   # url_list <- list("Data" = "tabs_data",
@@ -238,9 +238,9 @@
 #   #                  "GLM" = "tabs_glm_reg")
 #
 #   # updateTabsetPanel(session, "nav_radiant", selected = r_state$url[1])
-#   # if(url_depth == 1) return()
+#   # if (url_depth == 1) return()
 #   # tab <- url_list[[r_state$url[1]]]
-#   # if(is.null(input[[tab]])) return()
+#   # if (is.null(input[[tab]])) return()
 #   # updateTabsetPanel(session, tab, selected = r_state$url[2])
 # })
 #

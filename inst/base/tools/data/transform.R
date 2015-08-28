@@ -238,7 +238,7 @@ save2env <- function(dat, dataset,
 
 	env <- find_env(dataset)
 	env$r_data[[dat_name]] <- dat
-  if(dataset != dat_name) {
+  if (dataset != dat_name) {
   	cat(paste0("Dataset r_data$", dat_name, " created in ", environmentName(env), " environment\n"))
   	env$r_data[['datasetlist']] <- c(dat_name, env$r_data[['datasetlist']]) %>% unique
  	} else {
@@ -248,7 +248,7 @@ save2env <- function(dat, dataset,
  	## set to previous description
   env$r_data[[paste0(dat_name,"_descr")]] <- env$r_data[[paste0(dataset,"_descr")]]
 
-  if(mess != "")
+  if (mess != "")
     env$r_data[[paste0(dat_name,"_descr")]] %<>% paste0("\n\n",mess)
 }
 

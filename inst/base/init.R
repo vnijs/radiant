@@ -95,9 +95,9 @@ isolate({
 r_ssuid <-
   if (r_local) {
     # "local"
-    ifelse(is.null(prevSSUID), paste0("local-",shiny:::createUniqueId(3)), prevSSUID)
+    ifelse (is.null(prevSSUID), paste0("local-",shiny:::createUniqueId(3)), prevSSUID)
   } else {
-    ifelse(is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
+    ifelse (is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
   }
 
 ## (re)start the session and push the id into the url
@@ -209,7 +209,7 @@ url_list <-
 url_patterns <- list()
 for (i in names(url_list)) {
   res <- url_list[[i]]
-  if(!is.list(res)) {
+  if (!is.list(res)) {
     url_patterns[[res]] <- list("nav_radiant" = i)
   } else {
     tabs <- names(res)
@@ -286,7 +286,7 @@ if (!is.null(r_state$nav_radiant)) {
   ## naming the observer so we can suspend it when done
   nav_observe <- observe({
     ## needed to avoid errors when no data is available yet
-    if(is.null(input$dataset)) return()
+    if (is.null(input$dataset)) return()
     updateTabsetPanel(session, "nav_radiant", selected = r_state$nav_radiant)
 
     ## check if shiny set the main tab to the desired value

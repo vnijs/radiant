@@ -37,7 +37,7 @@ output$ui_viz_yvar <- renderUI({
   isolate({
     ## keep the same y-variable 'active' if possible
     sel <-
-      if(available(input$viz_yvar) && all(input$viz_yvar %in% vars))
+      if (available(input$viz_yvar) && all(input$viz_yvar %in% vars))
         input$viz_yvar
       else
         state_multiple("viz_yvar", vars)
@@ -61,7 +61,7 @@ output$ui_viz_xvar <- renderUI({
   isolate({
     ## keep the same x-variable 'active' if possible
     sel <-
-      if(available(input$viz_xvar) && all(input$viz_xvar %in% vars))
+      if (available(input$viz_xvar) && all(input$viz_xvar %in% vars))
         input$viz_xvar
       else
         state_multiple("viz_xvar", vars)

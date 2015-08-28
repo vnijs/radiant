@@ -1,8 +1,9 @@
-if (packageVersion("Rcpp") < "0.12.0") stop(
-  "Radiant requires Rcpp >= 0.12.0. ",
-  "Please install the latest version of Rcpp from CRAN: ",
-  "install.packages('Rcpp', repo = 'http://cran.rstudio.com')"
-)
+## No longer need when dplyr 0.5 comes out
+# if (packageVersion("Rcpp") < "0.12.0") stop(
+#   "Radiant requires Rcpp >= 0.12.0. ",
+#   "Please install the latest version of Rcpp from CRAN: ",
+#   "install.packages('Rcpp', repo = 'http://cran.rstudio.com')"
+# )
 
 ## turn off warnings globally
 # options(warn=-1)
@@ -19,11 +20,11 @@ if (packageVersion("Rcpp") < "0.12.0") stop(
 r_encoding = "UTF-8"
 
 ## path to use for local and server use
-# r_path <- ifelse((file.exists("../base") && file.exists("../quant")), "..",
+# r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
 #                   system.file(package = "radiant"))
 # if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 
-r_path <- ifelse((file.exists("../base") && file.exists("../quant")), "..",
+r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
                   system.file(package = "radiant"))
 if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
 

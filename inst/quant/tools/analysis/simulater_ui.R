@@ -60,7 +60,7 @@ rep_plot_inputs <- reactive({
 
 textinput_maker <- function(id = "const", lab = "Constant") {
 
-  lab <- paste0(lab, if(id == "form") ":" else " variables:")
+  lab <- paste0(lab, if (id == "form") ":" else " variables:")
   id <- paste0("sim_", id)
 
   tagList(
@@ -86,7 +86,7 @@ sim_vars <- reactive({
 output$ui_rep_vars <- renderUI({
   # vars <- .simulater() %>% { if (is.null(.)) character(0) else colnames(.$dat) }
   vars <- sim_vars()
-  # if(is.null(vars)) return()
+  # if (is.null(vars)) return()
   selectizeInput("rep_vars", label = "Select variables:",
     choices = vars, multiple = TRUE,
     selected = state_multiple("rep_vars", vars),
@@ -116,7 +116,7 @@ output$ui_rep_byvar <- renderUI({
 })
 
 output$ui_rep_fun <- renderUI({
-  sel <- if(is_empty(input$rep_fun)) state_multiple("rep_fun", r_functions, c("sum_rm","mean_rm"))
+  sel <- if (is_empty(input$rep_fun)) state_multiple("rep_fun", r_functions, c("sum_rm","mean_rm"))
          else input$rep_fun
 
   selectizeInput("rep_fun", label = "Apply function(s):",

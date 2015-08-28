@@ -7,6 +7,8 @@
 #' @param nvar Numerical variable
 #' @param fun Function to apply to numerical variable
 #' @param normalize Normalize the table by "row" total,"colum" totals, or overall "total"
+#' @param tabfilt Expression used to filter the table. This should be a string (e.g., "Total > 10000")
+#' @param tabsort Expression used to sort the table (e.g., "-Total")
 #' @param data_filter Expression used to filter the dataset. This should be a string (e.g., "price > 10000")
 #' @param shiny Logical (TRUE, FALSE) to indicate if the function call originate inside a shiny app
 #'
@@ -21,6 +23,8 @@ pivotr <- function(dataset,
                    nvar = "None",
                    fun = "mean",
                    normalize = "None",
+                   tabfilt = "",
+                   tabsort = "",
                    data_filter = "",
                    shiny = FALSE) {
 
@@ -107,7 +111,7 @@ pivotr <- function(dataset,
 
   # tab %>% getclass
   ## resetting factor levels
-  ind <- ifelse(length(cvars) > 1, -1, 1)
+  ind <- ifelse (length(cvars) > 1, -1, 1)
   levs <- lapply(select_(dat, .dots = cvars[ind]), levels)
 
   for (i in cvars[ind])
@@ -123,6 +127,25 @@ pivotr <- function(dataset,
     tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")]) %>% round(3)
     ## mutate_each has issues for spaces in variable names
     # tab[,isNum] %<>% mutate_each_(funs(h = . / .[which(tab[,1] == "Total")]), vars = colnames(.)) %>% round(3)
+  }
+
+  ## filtering the table if desired
+  if (tabfilt != "") {
+    tab <- filterdata(tab, tabfilt)
+  }
+
+  ## sorting the table if desired
+  if (tabsort != "") {
+    ## only one variable for now
+    tabsort <- tabsort[1]
+    if (substring(tabsort,1) == "-") {
+      tab %<>% arrange(., desc(.[[substring(tabsort,2)]]))
+    } else {
+      tab %<>% arrange_(tabsort)
+    }
+
+    for (i in cvars)
+      tab[[i]] %<>% factor(., levels = unique(.))
   }
 
   if (!shiny) tab <- as.data.frame(tab, as.is = TRUE)
@@ -149,7 +172,10 @@ pivotr <- function(dataset,
 #' @seealso \code{\link{pivotr}} to create the pivot-table using dplyr
 #'
 #' @export
-summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
+summary.pivotr <- function(object,
+                           chi2 = FALSE,
+                           shiny = FALSE,
+                           ...) {
 
   if (!shiny) {
     cat("Pivot table\n")
@@ -170,7 +196,7 @@ summary.pivotr <- function(object, chi2 = FALSE, shiny = FALSE,  ...) {
   if (chi2) {
     cst <- object$tab %>% filter(.[[1]] != "Total") %>%
       select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
-      mutate_each(funs(rep_na = ifelse(is.na(.),0,.))) %>%
+      mutate_each(funs(rep_na = ifelse (is.na(.),0,.))) %>%
       {sshhr(chisq.test(., correct = FALSE))}
 
     res <- cst %>% tidy %>% {if (.$p.value < .001) .$p.value <- 0; .} %>% round(3)
@@ -211,12 +237,12 @@ make_dt <- function(pvt,
 
   tab <- pvt$tab
   cvar <- pvt$cvars[1]
-  cvars <- pvt$cvars %>% {if(length(.) > 1) .[-1] else .}
+  cvars <- pvt$cvars %>% {if (length(.) > 1) .[-1] else .}
   cn <- colnames(tab) %>% {.[-which(cvars %in% .)]}
 
   #############################################################
   ## workaround for https://github.com/rstudio/DT/issues/150
-  tab[,cn] <- tab[,cn] %>% round(3)
+  # tab[,cn] <- tab[,cn] %>% round(3)
   #############################################################
 
   ## column names without total
@@ -264,7 +290,7 @@ make_dt <- function(pvt,
   DT::datatable(container = sketch, rownames = FALSE,
     filter = list(position = "top"),
     # filter = list(position = "top", clear = FALSE, plain = TRUE),
-    style = ifelse(pvt$shiny, "bootstrap", "default"),
+    style = ifelse (pvt$shiny, "bootstrap", "default"),
     options = list(
       # search = list(regex = TRUE),
       stateSave = TRUE,
@@ -334,14 +360,14 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
         geom_bar(stat="identity", position = "dodge", alpha=.7)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
-    if(length(ctot) > 0) tab %<>% select(-matches("Total"))
+    if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
     plot_list[[1]] <-
       ggplot(tab %>% gather_(cvars[1], nvar) %>% na.omit, aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
         geom_bar(stat="identity", position = type, alpha=.7)
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
-    if(length(ctot) > 0) tab %<>% select(-matches("Total"))
+    if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
     plot_list[[1]] <-
       ggplot(tab %>% gather_(cvars[1], nvar) %>% na.omit, aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +

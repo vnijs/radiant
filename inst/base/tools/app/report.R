@@ -46,9 +46,9 @@ observeEvent(input$manual_paste, {
 
 output$ui_manual <- renderUI({
   ## initialize manual cmd paste to false
-  if(is.null(r_data$manual)) r_data$manual <- FALSE
+  if (is.null(r_data$manual)) r_data$manual <- FALSE
   actionButton("manual_paste",
-    if(r_data$manual) "Manual paste (on)" else "Manual paste (off)")
+    if (r_data$manual) "Manual paste (on)" else "Manual paste (off)")
 })
 
 observeEvent(input$vim_keys, {
@@ -57,9 +57,9 @@ observeEvent(input$vim_keys, {
 
 output$ui_vim <- renderUI({
   ## initialize vim_keys to false
-  if(is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
+  if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
   actionButton("vim_keys",
-    if(r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
+    if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
 })
 
 output$report <- renderUI({
@@ -81,7 +81,7 @@ output$report <- renderUI({
     ),
 
     shinyAce::aceEditor("rmd_report", mode = "markdown",
-              vimKeyBinding = ifelse(is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
+              vimKeyBinding = ifelse (is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
               wordWrap = TRUE,
               height = "auto",
               selectionId = "rmd_selection",
@@ -133,7 +133,7 @@ output$rmd_knitted <- renderUI({
     }
     if (input$rmd_report != "") {
       withProgress(message = 'Knitting report', value = 0, {
-        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+        ifelse (is.null(input$rmd_selection) || input$rmd_selection == "",
                return(knitIt2(input$rmd_report)),
                return(knitIt2(input$rmd_selection)))
       })
@@ -146,7 +146,7 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if (r_local) {
       isolate({
-        ifelse(is.null(input$rmd_selection) || input$rmd_selection == "",
+        ifelse (is.null(input$rmd_selection) || input$rmd_selection == "",
                text <- input$rmd_report, text <- input$rmd_selection)
         knitIt(text) %>% cat(.,file=file,sep="\n")
       })
@@ -158,8 +158,9 @@ output$saveRmd <- downloadHandler(
   filename = function() {"report.Rmd"},
   content = function(file) {
     isolate({
-      "```{r echo = FALSE}\n# knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\n# suppressMessages(library(radiant))\n# uncomment the lines above to 'knit' the Rmd file in Rstudio\n# you will also need to load the data using load()\n```\n\n" %>%
+      "```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressMessages(library(radiant))\nr_data <- readRDS(\"~/r_data.rds\")\n```\n\n" %>%
         paste0(.,input$rmd_report) %>% cat(.,file=file,sep="\n")
+        reactiveValuesToList(r_data) %>% saveRDS(file = "~/r_data.rds")
     })
   }
 )

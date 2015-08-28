@@ -61,7 +61,7 @@ visualize <- function(dataset, xvar,
   byvar <- NULL
 
   if (identical(yvar,"")) {
-    if(!type %in% c("hist","density")) {
+    if (!type %in% c("hist","density")) {
       message("No yvar provided for a plot that requires a yvar")
       return(invisible())
     }
@@ -154,12 +154,21 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       for (j in yvar) {
         if (color == 'none') {
-          if (is.factor(dat[,i]))
-            plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line(aes(group = 1))
-          else
+          if (is.factor(dat[[i]])) {
+            tbv <- if (is.null(byvar)) i else c(i, byvar)
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
+            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) + geom_point() + geom_line(aes(group = 1))
+          } else {
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
+          }
         } else {
-          plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
+          if (is.factor(dat[[i]])) {
+            tbv <- if (is.null(byvar)) i else c(i, byvar)
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
+            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color)) + geom_point() + geom_line(aes(group = 1))
+          } else {
+            plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
+          }
         }
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
@@ -170,11 +179,7 @@ visualize <- function(dataset, xvar,
     itt <- 1
     for (i in xvar) {
       for (j in yvar) {
-        # dat <- mtcars
-        # library(dplyr)
-        # i <- "vs"
-        # j <- "mpg"
-        # byvar <- c("am","gear")
+
         tbv <- if (is.null(byvar)) i else c(i, byvar)
         tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
 

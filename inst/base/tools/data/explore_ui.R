@@ -1,10 +1,8 @@
 #######################################
-# Explore datasets
+## Explore datasets
 #######################################
 
 default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
-# expl_format <- c("None" = "none", "Color bar" = "color_bar", "Heat map" = "heat")
-
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user
@@ -18,7 +16,7 @@ expl_inputs <- reactive({
   expl_args
 })
 
-# UI-elements for explore
+## UI-elements for explore
 output$ui_expl_vars <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
@@ -32,7 +30,7 @@ output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
   isolate({
-    if(available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
+    if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
       sel <- r_state$expl_byvar
       ind1 <- which(sel %in% vars)
       ind2 <- sapply(sel, function(x) which(x == vars))
@@ -50,7 +48,7 @@ output$ui_expl_byvar <- renderUI({
 
 output$ui_expl_fun <- renderUI({
   isolate({
-    sel <- if(is_empty(input$expl_fun))  state_multiple("expl_fun", r_functions, default_funs)
+    sel <- if (is_empty(input$expl_fun))  state_multiple("expl_fun", r_functions, default_funs)
            else input$expl_fun
   })
   selectizeInput("expl_fun", label = "Apply function(s):",
@@ -196,7 +194,7 @@ output$expl_summary <- renderPrint({
 
 observeEvent(input$explore_report, {
   isolate({
-    update_report(inp_main = clean_args(expl_inputs(), expl_args),
+    update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),
                   fun_name = "explore",
                   inp_out = list(list(top = input$expl_top)),
                   outputs = c("summary"),

@@ -134,10 +134,10 @@ summary.glm_reg <- function(object,
 
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
-  # pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
+  ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
   glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
 
-  # chi-squared test of overall model fit (p-value) - http://www.ats.ucla.edu/stat/r/dae/logit.htm
+  ## chi-squared test of overall model fit (p-value) - http://www.ats.ucla.edu/stat/r/dae/logit.htm
   chi_pval <- with(object$model, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
   chi_pval %<>% { if (. < .001) "< .001" else round(.,3) }
 
@@ -154,7 +154,7 @@ summary.glm_reg <- function(object,
       if (length(object$indep_var) > 1) {
         cat("Variance Inflation Factors\n")
         vif (object$model) %>%
-          { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+          { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(3) %>%
           .[order(.$VIF, decreasing=T),] %>%
@@ -195,20 +195,20 @@ summary.glm_reg <- function(object,
     if (object$model$coeff %>% is.na %>% any) {
       cat("There is perfect multi-collinearity in the set of selected independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
-      if(object$link == "logit") {
+      if (object$link == "logit") {
         exp(ci_tab[-1,]) %>% round(3) %>%
           set_colnames(c("odds ratio", cl_low, cl_high)) %>% print
           # .[-1, ] %>% print
+
         # odds_tab <- exp(ci_tab) %>% round(3)
         # odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
-#         odds_tab %>%
-#           set_colnames(c("odds ratio", cl_low, cl_high, "+/-")) %>%
-#           .[-1, ] %>% print
+          # odds_tab %>%
+          # set_colnames(c("odds ratio", cl_low, cl_high, "+/-")) %>%
+          # .[-1, ] %>% print
         cat("\n")
-      } else if(object$link == "probit") {
+      } else if (object$link == "probit") {
         cat("Odds ratios are not calculated for Probit models\n\n")
       }
-
     }
   }
 
@@ -221,7 +221,7 @@ summary.glm_reg <- function(object,
 
       vars <- object$indep_var
       if (object$int_var != "" && length(vars) > 1) {
-        # updating test_var if needed
+        ## updating test_var if needed
         test_var <- test_specs(test_var, object$int_var)
         vars <- c(vars,object$int_var)
       }
@@ -229,7 +229,7 @@ summary.glm_reg <- function(object,
       # test_var <- "pclass"
       not_selected <- setdiff(vars, test_var)
       if (length(not_selected) > 0) sub_formula <- paste(object$dep_var, "~", paste(not_selected, collapse = " + "))
-      #### update with glm_sub NOT working when called from radiant - strange
+      ## update with glm_sub NOT working when called from radiant - strange
       # glm_sub <- update(object$model, sub_formula, data = object$model$model)
       glm_sub <- glm(sub_formula, family = binomial(link = object$link), data = object$model$model)
       glm_sub_fit <- glance(glm_sub)
@@ -384,7 +384,7 @@ predict.glm_reg <- function(object,
 
   pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
 
-  # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
+  ## used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% object$check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (pred_count == 3) {
@@ -477,16 +477,6 @@ predict.glm_reg <- function(object,
       pred %>% {.[, isNum] <- round(.[, isNum],4); .} %>%
         print(row.names = FALSE)
     }
-
-    # pushing predictions into the clipboard
-    # os_type <- Sys.info()["sysname"]
-    # if (os_type == 'Windows') {
-    #   write.table(pred, "clipboard", sep="\t", row.names=FALSE)
-    # } else if (os_type == "Darwin") {
-    #   write.table(pred, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-    # }
-    # if (os_type != "Linux")
-    #   cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
 
     return(pred %>% set_class(c("glm_predict",class(.))))
   } else {
@@ -581,10 +571,15 @@ plot.glm_predict <- function(x,
 #' store_glm(result)
 #' }
 #' @export
-store_glm <- function(object, data = object$dataset,
-                      type = "residuals", name = paste0(type, "_glm")) {
+store_glm <- function(object,
+                      data = object$dataset,
+                      type = "residuals",
+                      name = paste0(type, "_glm")) {
+
   if (!is.null(object$data_filter) && object$data_filter != "")
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
+
   store <- if (type == "residuals") object$model$residuals else object$Prediction
-    changedata(data, vars = store, var_names = name)
+
+  changedata(data, vars = store, var_names = name)
 }

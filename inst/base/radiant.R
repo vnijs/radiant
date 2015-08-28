@@ -28,7 +28,7 @@ saveSession <- function(session = session) {
 }
 
 observeEvent(input$refresh_radiant, {
-  if(r_local) return()
+  if (r_local) return()
   ## use sshhr to avoid warnings if needed
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
   if (file.exists(fn)) unlink(fn, force = TRUE)
@@ -90,12 +90,15 @@ saveStateOnRefresh <- function(session = session) {
   head(r_data[[input$dataset]]) %>% getclass
 })
 
+n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMPTY]"])
+
 ## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(is.factor(.) | (n_distinct(.)/n()) < .1)) %>%
+    # summarise_each(funs(is.factor(.) | (n_distinct(., na.rm = TRUE)/n()) < .05)) %>%
+    summarise_each(funs(is.factor(.) | (n_distinct_no_miss(.)/n()) < .05)) %>%
     ## workaround dplyr
-    summarise_each(funs(is.factor(.) || ((length(unique(na.omit(.)))/n()) < .05))) %>%
+    # summarise_each(funs(is.factor(.) || ((length(unique(na.omit(.)))/n()) < .05))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
@@ -103,9 +106,10 @@ groupable_vars <- reactive({
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(n_distinct)) %>%
+    # summarise_each(funs(n_distinct(., na.rm = TRUE))) %>%
+    summarise_each(funs(n_distinct_no_miss(.))) %>%
     ## workaround dplyr
-    summarise_each(funs(length(unique(na.omit(.))))) %>%
+    # summarise_each(funs(length(unique(na.omit(.))))) %>%
     { . == 2 } %>%
     which(.) %>%
     varnames()[.]
@@ -283,8 +287,8 @@ plot_downloader <- function(plot_name, width = plot_width(),
   output[[lnm]] <- downloadHandler(
     filename = function() { paste0(plot_name, ".png") },
     content = function(file) {
-        # if(fext(file) == "svg") svg(file=file, width = psize(width), height = psize(height))
-        # if(fext(file) == "pdf") pdf(file=file, width = psize(width), height = psize(height))
+        # if (fext(file) == "svg") svg(file=file, width = psize(width), height = psize(height))
+        # if (fext(file) == "pdf") pdf(file=file, width = psize(width), height = psize(height))
 
         ## needed to get the image quality at the same level as shiny
         pr <- session$clientData$pixelratio

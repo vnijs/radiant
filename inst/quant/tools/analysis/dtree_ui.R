@@ -36,9 +36,9 @@ observeEvent(input$dtree_vim_keys, {
 
 output$ui_dtree_vim <- renderUI({
   ## initialize vim_keys to false
-  if(is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
+  if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
   actionButton("dtree_vim_keys",
-    if(r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
+    if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
 })
 
 output$dtree <- renderUI({
@@ -60,7 +60,7 @@ output$dtree <- renderUI({
     ),
 
     shinyAce::aceEditor("dtree_edit", mode = "yaml",
-              vimKeyBinding = ifelse(is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
+              vimKeyBinding = ifelse (is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
               wordWrap = TRUE,
               height = "auto",
               value = state_init("dtree_edit", dtree_example),

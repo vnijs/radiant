@@ -62,6 +62,6 @@ combinedata <- function(dataset, cmb_dataset,
 
 ## something strange going on with bind_cols when there are duplicate names
 # if (type == "bind_cols") {
-#   if((intersect(names(getdata(dataset)),names(getdata(cmb_dataset))) %>% length) > 0)
+#   if ((intersect(names(getdata(dataset)),names(getdata(cmb_dataset))) %>% length) > 0)
 #     return("Error: found duplicated column name")
 # }

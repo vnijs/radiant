@@ -5,7 +5,8 @@
 \title{Create a pivot table using dplyr}
 \usage{
 pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
-  normalize = "None", data_filter = "", shiny = FALSE)
+  normalize = "None", tabfilt = "", tabsort = "", data_filter = "",
+  shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Name of the dataframe to change}
@@ -17,6 +18,10 @@ pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
 \item{fun}{Function to apply to numerical variable}
 
 \item{normalize}{Normalize the table by "row" total,"colum" totals, or overall "total"}
+
+\item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
+
+\item{tabsort}{Expression used to sort the table (e.g., "-Total")}
 
 \item{data_filter}{Expression used to filter the dataset. This should be a string (e.g., "price > 10000")}
 

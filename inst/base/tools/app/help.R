@@ -1,5 +1,5 @@
 #######################################
-# Other elements in help menu
+## Other elements in help menu
 #######################################
 output$help_videos <- renderUI({
   file.path(r_path,"base/tools/app/tutorials.md") %>% inclMD %>% HTML
@@ -10,7 +10,7 @@ output$help_about <- renderUI({
 })
 
 #######################################
-# Main function of help menu
+## Main function of help menu
 #######################################
 # help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
 
@@ -24,13 +24,13 @@ append_help <- function(help_str, help_path, Rmd = FALSE) {
                       inclMD(file.path(help_path,local_hd[i])),
                       sep="\n")
   }
-  mathjax_script <- ifelse(Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
+  mathjax_script <- ifelse (Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
   cc <- "&copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>"
   paste(all_help,"\n",mathjax_script,"\n",cc) %>% HTML
 }
 
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
-               "Explore" = "explore.md", "Combine" = "combine.md", "Transform" = "transform.md")
+               "Pivot" = "pivotr.md", "Explore" = "explore.md", "Combine" = "combine.md", "Transform" = "transform.md")
 output$help_data <- reactive(append_help("help_data", file.path(r_path,"base/tools/help/")))
 
 help_sample <- c("Sampling" = "sampling.md", "Sample size" = "sample_size.Rmd")
@@ -39,11 +39,14 @@ output$help_sample <- reactive(append_help("help_sample", file.path(r_path,"quan
 help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
                     "Single proportion" = "single_prop.md", "Compare proportions" = "compare_props.md",
                     "Cross-tabs" = "cross_tabs.md")
+
 output$help_base_menu <- reactive(append_help("help_base_menu", file.path(r_path,"quant/tools/help/")))
 
 help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.Rmd")
 output$help_regression <- reactive(append_help("help_regression", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
+help_decide <- c("Decision tree" = "dtree.md", "Simulate" = "simulater.md")
+output$help_decide <- reactive(append_help("help_decide", file.path(r_path,"quant/tools/help/"), Rmd = FALSE))
 
 help_switch <- function(help_all, help_str, help_on = TRUE) {
   if (is.null(help_all) || help_all == 0) return()
@@ -68,6 +71,9 @@ observe( help_switch(input$help_base_none, "help_base_menu", help_on = FALSE) )
 
 observe( help_switch(input$help_regression_all, "help_regression") )
 observe( help_switch(input$help_regression_none, "help_regression", help_on = FALSE) )
+
+observe( help_switch(input$help_decide_all, "help_decide") )
+observe( help_switch(input$help_decide_none, "help_decide", help_on = FALSE) )
 
 output$help_base <- renderUI({
   sidebarLayout(
@@ -110,6 +116,12 @@ help_quant_ui <- tagList(
     <i id='help_regression_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_regression", NULL, help_regression,
        selected = state_init("help_regression"), inline = TRUE)
+  ),
+  wellPanel(
+    HTML("<label>Decide menu: <i id='help_decide_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_decide_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
+    checkboxGroupInput("help_decide", NULL, help_decide,
+       selected = state_init("help_decide"), inline = TRUE)
   )
 )
 
@@ -119,7 +131,8 @@ help_quant_main <- tagList(
   htmlOutput("help_data"),
   htmlOutput("help_sample"),
   htmlOutput("help_base_menu"),
-  htmlOutput("help_regression")
+  htmlOutput("help_regression"),
+  htmlOutput("help_decide")
 )
 
 output$help_quant <- renderUI({

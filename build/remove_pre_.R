@@ -45,7 +45,7 @@ for(f in fl) {
 	  # str_extract(org,paste0("[^ca_a-zA-Z0-9_]",str)) %>%
 	  str_extract(org,paste0("[^a-zA-Z0-9_]",str,"[^a-zA-Z0-9_]")) %>%
 	    .[!is.na(.)] %>%
-	    { if(length(.) > 0) {
+	    { if (length(.) > 0) {
 	    	  cat("Working on:",a,"\n")
 	    	  print(.)
 	    	  stop("Fix arguments here")

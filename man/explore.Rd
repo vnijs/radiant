@@ -4,8 +4,8 @@
 \alias{explore}
 \title{Explore data}
 \usage{
-explore(dataset, vars = "", byvar = "", fun = "mean_rm",
-  data_filter = "", shiny = FALSE)
+explore(dataset, vars = "", byvar = "", fun = "mean_rm", tabfilt = "",
+  tabsort = "", data_filter = "", shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -15,6 +15,10 @@ explore(dataset, vars = "", byvar = "", fun = "mean_rm",
 \item{byvar}{Variable(s) to group data by before summarizing}
 
 \item{fun}{Functions to use for summarizing}
+
+\item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
+
+\item{tabsort}{Expression used to sort the table (e.g., "-Total")}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 

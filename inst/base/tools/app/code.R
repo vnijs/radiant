@@ -35,9 +35,9 @@ observeEvent(input$vim_keys_code, {
 
 output$ui_vim_code <- renderUI({
   ## initialize manual cmd paste to false
-  if(is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
+  if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
   actionButton("vim_keys_code",
-    if(r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
+    if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
 })
 
 output$rcode <- renderUI({
@@ -59,7 +59,7 @@ output$rcode <- renderUI({
     ),
 
     shinyAce::aceEditor("rmd_code", mode = "r",
-      vimKeyBinding = ifelse(is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
+      vimKeyBinding = ifelse (is.null(r_data$vim_keys), FALSE, r_data$vim_keys),
       height="auto",
       selectionId = "rmd_code_selection",
       value = state_init("rmd_code",r_example),
@@ -80,7 +80,7 @@ output$rmd_code_output <- renderUI({
   if (valsCode$code == 1) return()
   isolate({
     if (r_local) {
-      rmd_code <- if(is_empty(input$rmd_code_selection)) input$rmd_code
+      rmd_code <- if (is_empty(input$rmd_code_selection)) input$rmd_code
                   else input$rmd_code_selection
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%

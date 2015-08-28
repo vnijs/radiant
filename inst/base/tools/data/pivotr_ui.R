@@ -13,7 +13,7 @@ output$ui_pvt_cvars <- renderUI({
   if (not_available(vars)) return()
 
   isolate({
-    if(available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
+    if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
       sel <- r_state$pvt_cvars
       ind1 <- which(sel %in% vars)
       ind2 <- sapply(sel, function(x) which(x == vars))
@@ -46,10 +46,10 @@ output$ui_pvt_fun <- renderUI({
 })
 
 output$ui_pvt_normalize  <- renderUI({
-  if(!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
+  if (!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
 
   isolate({
-    sel <- if(is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
+    sel <- if (is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
   })
 
   selectizeInput("pvt_normalize", label = "Normalize by:",
@@ -175,14 +175,13 @@ output$pivotr <- DT::renderDataTable({
   searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
   order <- r_state$pivotr_state$order
 
-
   make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
           search = search, searchCols = searchCols, order = order)
 
 })
 
 output$pivotr_chi2 <- renderPrint({
-  if(!input$pvt_chi2) return(invisible())
+  if (!input$pvt_chi2) return(invisible())
   .pivotr() %>% {if (is.null(.)) return(invisible())
                  else summary(., chi2 = TRUE, shiny = TRUE)}
 })
@@ -205,9 +204,9 @@ pvt_plot_width <- function() 750
 pvt_plot_height <- function() {
    pvt <- .pivotr()
    if (is.null(pvt)) return(400)
+   pvt %<>% pvt_sorter(rows = r_data$pvt_rows)
    if (length(input$pvt_cvars) > 2) {
-       pvt %>% pvt_sorter(rows = isolate(r_data$pvt_rows)) %>%
-       .$tab %>% .[[input$pvt_cvars[3]]] %>%
+       pvt$tab %>% .[[input$pvt_cvars[3]]] %>%
          levels %>%
          length %>% {. * 200}
    } else if (input$pvt_flip) {
@@ -266,6 +265,11 @@ output$plot_pivot <- renderPlot({
 
 observeEvent(input$pivotr_report, {
   isolate({
+
+    # print("====")
+    # print(input$pivotr_search_columns)
+    # print(sc %>% {set_names(.,colnames(pvt$tab))})
+
     inp_out <- list(list(chi2 = input$pvt_chi2),"")
     if (input$pvt_plot == TRUE) {
       inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
@@ -275,7 +279,7 @@ observeEvent(input$pivotr_report, {
       outputs <- c("summary")
       figs <- FALSE
     }
-    update_report(inp_main = clean_args(pvt_inputs(), pvt_args),
+    update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
                   fun_name = "pivotr",
                   outputs = outputs,
                   inp_out = inp_out,

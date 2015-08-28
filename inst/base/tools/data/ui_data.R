@@ -63,7 +63,7 @@ output$ui_data <- renderUI({
           tabPanel("Combine", htmlOutput("cmb_data1"), htmlOutput("cmb_data2"),
                    htmlOutput("cmb_possible"), htmlOutput("cmb_data"))
           # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),
-          # , selected = ifelse(is_empty(r_url$tab), "Manage", r_url$tab)
+          # , selected = ifelse (is_empty(r_url$tab), "Manage", r_url$tab)
         )
       )
     )
