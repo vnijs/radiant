@@ -13,9 +13,9 @@ document(roclets = c('rd', 'collate', 'namespace'))
 #
 # Sys.sleep(5)
 
-# system("git add --all .")
-# system("git commit -m 'Update [ci skip]'")
-# system("git push")
+system("git add --all .")
+system("git commit -m 'Update [ci skip]'")
+system("git push")
 
 # options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
@@ -34,7 +34,7 @@ document(roclets = c('rd', 'collate', 'namespace'))
 # radiant()
 
 # devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree", "trestletech/shinyAce"))
-devtools::install_github("vnijs/radiant")
+devtools::install_github(c("vnijs/radiant","rstudio/DT"))
 # devtools::install_github("trestletech/shinyAce")
 # devtools::install_github("vnijs/MathJaxR")
 # devtools::install_github("themel/sendmailR")
