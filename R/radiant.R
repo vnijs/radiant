@@ -331,7 +331,11 @@ changedata <- function(dataset,
 #' }
 #'
 #' @export
-viewdata <- function(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE) {
+viewdata <- function(dataset,
+                     vars = "",
+                     filt = "",
+                     rows = NULL,
+                     na.rm = FALSE) {
 
   ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
@@ -489,7 +493,7 @@ win_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     cat(launch_string,file=fn2,sep="\n")
     Sys.chmod(fn2, mode = "0755")
 
-    if (file.exists(fn1) & file.exists(fn2))
+    if (file.exists(fn1) && file.exists(fn2))
       message("Done! Look for a file named radiant.bat on your desktop. Double-click it to start Radiant in your default browser. There is also a file called update_radiant.bat you can double click to update the version of Radiant on your computer.\n")
     else
       message("Something went wrong. No shortcuts were created.")
@@ -540,7 +544,7 @@ mac_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     cat(launch_string,file=fn2,sep="\n")
     Sys.chmod(fn2, mode = "0755")
 
-    if (file.exists(fn1) & file.exists(fn2))
+    if (file.exists(fn1) && file.exists(fn2))
       message("Done! Look for a file named radiant.command  on your desktop. Double-click it to start Radiant in your default browser. There is also a file called update_radiant.command you can double click to update the version of Radiant on your computer.\n")
     else
       message("Something went wrong. No shortcuts were created.")
@@ -592,7 +596,7 @@ lin_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     cat(launch_string,file=fn2,sep="\n")
     Sys.chmod(fn2, mode = "0755")
 
-    if (file.exists(fn1) & file.exists(fn2))
+    if (file.exists(fn1) && file.exists(fn2))
       message("Done! Look for a file named radiant.sh on your desktop. Double-click it to start Radiant in your default browser. There is also a file called update_radiant.sh you can double click to update the version of Radiant on your computer.\n")
     else
       message("Something went wrong. No shortcuts were created.")
@@ -615,11 +619,13 @@ lin_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
 #' @export
 launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
 
-  if (Sys.info()["sysname"] == "Darwin")
+  os <- Sys.info()["sysname"]
+
+  if (os == "Darwin")
     mac_launcher(app[1])
-  else if (Sys.info()["sysname"] == "Windows")
+  else if (os == "Windows")
     win_launcher(app[1])
-  else if (Sys.info()["sysname"] == "Linux")
+  else if (os == "Linux")
     lin_launcher(app[1])
   else
     return(message("This function is not available for your platform."))

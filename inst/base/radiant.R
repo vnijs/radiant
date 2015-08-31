@@ -90,18 +90,17 @@ saveStateOnRefresh <- function(session = session) {
   head(r_data[[input$dataset]]) %>% getclass
 })
 
-n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMPTY]"])
-
 ## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(is.factor(.) | (n_distinct(., na.rm = TRUE)/n()) < .05)) %>%
     summarise_each(funs(is.factor(.) || (n_distinct_no_miss(.)/n()) < .05)) %>%
     ## workaround dplyr
     # summarise_each(funs(is.factor(.) || ((length(unique(na.omit(.)))/n()) < .05))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
+
+n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMPTY]"])
 
 ## used in compare proportions
 two_level_vars <- reactive({
