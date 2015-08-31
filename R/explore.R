@@ -16,9 +16,7 @@
 #' @examples
 #' result <- explore("diamonds", "price:x")
 #' summary(result)
-#' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
-
-
+#' result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 #' summary(result)
 #' diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew"))
 #'
@@ -33,6 +31,12 @@ explore <- function(dataset,
                     tabsort = "",
                     data_filter = "",
                     shiny = FALSE) {
+
+  # dataset <- "diamonds"
+  # vars <- c("price","carat")
+  # byvar <- "cut"
+  # fun <- c("mean_rm","n_missing")
+  # data_filter <- ""
 
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar)
@@ -68,6 +72,9 @@ explore <- function(dataset,
       }
     }
 
+    ## avoiding issues with n_missing and n_distinct
+    names(pfun) %<>% sub("n_","n.",.)
+
     ## for median issue in dplyr < .5
     ## https://github.com/hadley/dplyr/issues/893
     tab <-
@@ -75,10 +82,14 @@ explore <- function(dataset,
       # select(isNum) %>% mutate_each("as.numeric") %>%
       summarise_each(pfun)
 
+    ## avoiding issues with n_missing and n_distinct
+    names(pfun) %<>% sub("n.","n_",.)
+
     if (length(vars) > 1 && length(fun) > 1) {
       ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
       tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
         separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
+        mutate(fun = sub("n.","n_",fun)) %>%
         mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
         spread_("fun","value")
     } else if (length(fun) == 1) {
@@ -276,10 +287,9 @@ getsummary <- function(dat, dc = getclass(dat)) {
     select(dat, which(isNum)) %>%
       tidyr::gather_("variable", "values", cn) %>%
       group_by_("variable") %>%
-      summarise_each(funs(n = length, missing = nmissing, mean = mean_rm,
-                     median = median_rm, min = min_rm, max = max_rm,
-                     `25%` = p25, `75%` = p75, sd = sd_rm, se = serr,
-                     cv = sd/mean)) %>%
+      summarise_each(funs(n = length, n_missing = n_missing, n_distinct = n_distinct,
+                     mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
+                     `25%` = p25, `75%` = p75, sd = sd_rm, se = serr, cv = sd/mean)) %>%
       data.frame(check.names = FALSE) %>%
       { .[,-1] %<>% round(.,3); colnames(.)[1] <- ""; . } %>%
       print(row.names = FALSE)
@@ -326,10 +336,10 @@ getsummary <- function(dat, dc = getclass(dat)) {
 #' @param x Input variable
 #' @return number of missing values
 #' @examples
-#' nmissing(c("a","b",NA))
+#' n_missing(c("a","b",NA))
 #'
 #' @export
-nmissing <- function(x) sum(is.na(x))
+n_missing <- function(x) sum(is.na(x))
 
 #' 5th percentile
 #' @param x Input variable
@@ -453,7 +463,7 @@ sum_rm <- function(x) sum(x, na.rm = TRUE)
 #'
 #' @export
 make_funs <- function(x) {
-  xclean <- gsub("_rm$","",x) %>% sub("length","n",.) %>%  sub("nmissing","missing",.)
+  xclean <- gsub("_rm$","",x) %>% sub("length","n",.)
   env <- if (exists("radiant")) environment(radiant::radiant) else parent.frame()
   dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
 }

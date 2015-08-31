@@ -4,7 +4,7 @@
 \alias{factorizer}
 \title{Convert character to factors as needed}
 \usage{
-factorizer(dat, safx = 10)
+factorizer(dat, safx = 20)
 }
 \arguments{
 \item{dat}{Data.frame}

@@ -88,7 +88,7 @@ summary.hier_clus <- function(object, ...) {
 plot.hier_clus <- function(x,
                            plots = c("scree","diff"),
                            cutoff = 0.02,
-                           shiny = TRUE,
+                           shiny = FALSE,
                            ...) {
 
 	object <- x; rm(x)
@@ -156,4 +156,5 @@ plot.hier_clus <- function(x,
 
 	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	 	{ if (shiny) . else print(.) }
+
 }

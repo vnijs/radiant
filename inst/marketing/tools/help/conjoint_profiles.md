@@ -2,7 +2,8 @@
 
 To setup a conjoint study we first need to determine the attributes and attributes levels that should be included. Once that has been done we would typically generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected.
 
-Put the attributes and levels in a text file and load it into Radiant. An example of the required format is shown below. You can also download the input as a text file <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/profiles-movie.txt" target="_blank">here</a>.
+Put the attributes and levels in a text file and load it into Radiant. An example of the required format is shown below. You can also download the input as a text file <a href="https://vnijs.github.io/radiant/examples/profiles-movie.txt" target="_blank">here</a>.
+
 
 ```r
 price = c("$10","$13","$16")

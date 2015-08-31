@@ -96,6 +96,8 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	400 = NA
 
+**Note:** Never use a `=` symbol in a label (e.g., 50:hi = ">= 50") as this will cause errors.
+
 ### Rename
 
 Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Store` to alter the variable names in the original data.

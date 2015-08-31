@@ -148,13 +148,14 @@ plot.kmeans_clus <- function(x,
 	mutate(clus_var = as.factor(object$km_out$cluster)) -> dat
 	vars <- colnames(dat) %>% .[-length(.)]
 
-	plots <- list()
+	plot_list <- list()
 	for (var in vars) {
-		plots[[var]] <- ggplot(dat, aes_string(x=var, fill='clus_var')) +
+		plot_list[[var]] <- ggplot(dat, aes_string(x=var, fill='clus_var')) +
 				geom_density(adjust=2.5, alpha=.3) +
 				labs(y = "") + theme(axis.text.y = element_blank())
 	}
-	sshhr( do.call(arrangeGrob, c(plots, list(ncol = min(length(plots),2)))) ) %>%
+
+	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
 	 	{ if (shiny) . else print(.) }
 
 }

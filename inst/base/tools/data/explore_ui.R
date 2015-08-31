@@ -2,7 +2,7 @@
 ## Explore datasets
 #######################################
 
-default_funs <- c("length", "nmissing", "mean_rm", "sd_rm", "min_rm", "max_rm")
+default_funs <- c("length", "n_missing", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user

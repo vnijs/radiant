@@ -5,7 +5,7 @@
 \title{Plot method for the hier_clus function}
 \usage{
 \method{plot}{hier_clus}(x, plots = c("scree", "diff"), cutoff = 0.02,
-  shiny = TRUE, ...)
+  shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{hier_clus}}}

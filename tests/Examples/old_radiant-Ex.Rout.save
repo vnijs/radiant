@@ -50,58 +50,58 @@ The following object is masked from ‘package:ggplot2’:
 
     diamonds
 
-> 
+>
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > cleanEx()
 > nameEx("changedata")
 > ### * changedata
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: changedata
 > ### Title: Change data
 > ### Aliases: changedata
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("clean_loadings")
 > ### * clean_loadings
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: clean_loadings
 > ### Title: Sort and clean loadings
 > ### Aliases: clean_loadings
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- full_factor("diamonds",c("price","carat","table","x","y"))
 > clean_loadings(result$floadings, TRUE, .5, 2)
       PC1 PC2
-carat        
-y            
-x            
-price        
-table        
-> 
-> 
-> 
+carat
+y
+x
+price
+table
+>
+>
+>
 > cleanEx()
 > nameEx("combinedata")
 > ### * combinedata
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: combinedata
 > ### Title: Combine datasets using dplyr's bind and join functions
 > ### Aliases: combinedata
-> 
+>
 > ### ** Examples
-> 
+>
 > combinedata("titanic","titanic_pred",c("pclass","sex","age")) %>% head
   pclass survived                            name    sex age sibsp parch ticket     fare   cabin    embarked
 1    1st       No Allison, Mr. Hudson Joshua Crei   male  30     1     2 113781 151.5500 C22 C26 Southampton
@@ -166,176 +166,176 @@ Source: local data frame [14 x 4]
 12           Joker       bad   male                DC
 13        Catwoman       bad female                DC
 14         Hellboy      good   male Dark Horse Comics
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("compare_means")
 > ### * compare_means
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: compare_means
 > ### Title: Compare means for two or more variables
 > ### Aliases: compare_means
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- compare_means("diamonds","cut","price")
 > result <- diamonds %>% compare_means("cut","price")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("compare_props")
 > ### * compare_props
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: compare_props
 > ### Title: Compare proportions across groups
 > ### Aliases: compare_props
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- compare_props("titanic", "pclass", "survived")
 > result <- titanic %>% compare_props("pclass", "survived")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("conjoint")
 > ### * conjoint
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: conjoint
 > ### Title: Conjoint analysis
 > ### Aliases: conjoint
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
 > result <- mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("conjoint_profiles")
 > ### * conjoint_profiles
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: conjoint_profiles
 > ### Title: Create fractional factorial design for conjoint analysis
 > ### Aliases: conjoint_profiles
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("copy_all")
 > ### * copy_all
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: copy_all
 > ### Title: Source all package functions
 > ### Aliases: copy_all
-> 
+>
 > ### ** Examples
-> 
+>
 > copy_all(radiant)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("copy_from")
 > ### * copy_from
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: copy_from
 > ### Title: Source for package functions
 > ### Aliases: copy_from
-> 
+>
 > ### ** Examples
-> 
+>
 > copy_from(radiant, state_init)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("correlation")
 > ### * correlation
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: correlation
 > ### Title: Calculate correlations for two or more variables
 > ### Aliases: correlation
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- correlation("diamonds", c("price","carat","clarity"))
 > result <- correlation("diamonds", "price:table")
 > result <- diamonds %>% correlation("price:table")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("cross_tabs")
 > ### * cross_tabs
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: cross_tabs
 > ### Title: Evaluate associations between categorical variables
 > ### Aliases: cross_tabs
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- cross_tabs("newspaper", "Income", "Newspaper")
 > result <- newspaper %>% cross_tabs("Income", "Newspaper")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("cv")
 > ### * cv
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: cv
 > ### Title: Coefficient of variation
 > ### Aliases: cv
-> 
+>
 > ### ** Examples
-> 
+>
 > cv(runif (100))
 [1] 0.5167255
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("explore")
 > ### * explore
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: explore
 > ### Title: Explore data
 > ### Aliases: explore
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- explore("diamonds", "price:x")
 > summary(result)
-Data      : diamonds 
-Functions :  mean 
-Top       :  Function 
+Data      : diamonds
+Functions :  mean
+Top       :  Function
 
  variable     mean
     price 3907.186
@@ -345,10 +345,10 @@ Top       :  Function
         x    5.722
 > result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > summary(result)
-Data      : diamonds 
-Grouped by:  cut 
-Functions :  n skew 
-Top       :  Function 
+Data      : diamonds
+Grouped by:  cut
+Functions :  n skew
+Top       :  Function
 
        cut variable    n  skew
       Fair    price  101 1.574
@@ -376,11 +376,11 @@ $ n   : length(.)
 $ skew: skew(.)
 
 $isNum
-price 
-    1 
+price
+    1
 
 $tvars
-[1] "price" "cut"  
+[1] "price" "cut"
 
 $dataset
 [1] "-----"
@@ -392,7 +392,7 @@ $byvar
 [1] "cut"
 
 $fun
-[1] "length" "skew"  
+[1] "length" "skew"
 
 $data_filter
 [1] ""
@@ -401,143 +401,143 @@ $shiny
 [1] FALSE
 
 attr(,"class")
-[1] "explore" "list"   
-> 
-> 
-> 
+[1] "explore" "list"
+>
+>
+>
 > cleanEx()
 > nameEx("flip")
 > ### * flip
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: flip
 > ### Title: Flip the DT table to put Function, Variable, or Group by on top
 > ### Aliases: flip
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- explore("diamonds", "price:x") %>% flip("var")
 > result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
 +   flip("byvar")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("full_factor")
 > ### * full_factor
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: full_factor
 > ### Title: Factor analysis (PCA)
 > ### Aliases: full_factor
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- full_factor("diamonds",c("price","carat","table","x","y"))
 > result <- full_factor("diamonds",c("price","carat","table","x","y"), method = "maxlik")
 > result <- diamonds %>% full_factor(c("price","carat","table","x","y"), method = "maxlik")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("getclass")
 > ### * getclass
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: getclass
 > ### Title: Get variable class
 > ### Aliases: getclass
-> 
+>
 > ### ** Examples
-> 
+>
 > getclass(mtcars)
-      mpg       cyl      disp        hp      drat        wt      qsec        vs        am      gear      carb 
-"numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" 
-> 
-> 
-> 
+      mpg       cyl      disp        hp      drat        wt      qsec        vs        am      gear      carb
+"numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric" "numeric"
+>
+>
+>
 > cleanEx()
 > nameEx("getdata")
 > ### * getdata
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: getdata
 > ### Title: Get data for analysis functions
 > ### Aliases: getdata
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("glm_reg")
 > ### * glm_reg
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: glm_reg
 > ### Title: Generalized linear models (GLM)
 > ### Aliases: glm_reg
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
 > result <- glm_reg("titanic", "survived", c("pclass","sex"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("hier_clus")
 > ### * hier_clus
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: hier_clus
 > ### Title: Hierarchical cluster analysis
 > ### Aliases: hier_clus
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- hier_clus("shopping", vars = c("v1:v6"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("is_empty")
 > ### * is_empty
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: is_empty
 > ### Title: Is a character variable defined
 > ### Aliases: is_empty
-> 
+>
 > ### ** Examples
-> 
+>
 > is_empty("")
 [1] TRUE
 > is_empty(NULL)
 [1] TRUE
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("is_string")
 > ### * is_string
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: is_string
 > ### Title: Is input a string?
 > ### Aliases: is_string
-> 
+>
 > ### ** Examples
-> 
+>
 > is_string("")
 [1] FALSE
 > is_string("data")
@@ -546,58 +546,58 @@ attr(,"class")
 [1] FALSE
 > is_string(NULL)
 [1] FALSE
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("iterms")
 > ### * iterms
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: iterms
 > ### Title: Create a vector of interaction terms
 > ### Aliases: iterms
-> 
+>
 > ### ** Examples
-> 
+>
 > paste0("var", 1:3) %>% iterms(2)
 [1] "var1:var2" "var1:var3" "var2:var3"
 > paste0("var", 1:3) %>% iterms(3)
 [1] "var1:var2"      "var1:var3"      "var2:var3"      "var1:var2:var3"
 > paste0("var", 1:3) %>% iterms(2, sep = ".")
 [1] "var1.var2" "var1.var3" "var2.var3"
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("kmeans_clus")
 > ### * kmeans_clus
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: kmeans_clus
 > ### Title: K-means cluster analysis
 > ### Aliases: kmeans_clus
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- kmeans_clus("shopping", c("v1:v6"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("lin_launcher")
 > ### * lin_launcher
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: lin_launcher
 > ### Title: Create a launcher and updater for Linux (.sh)
 > ### Aliases: lin_launcher
-> 
+>
 > ### ** Examples
-> 
+>
 > if (interactive()) {
 +   if (Sys.info()["sysname"] == "Linux") {
 +     lin_launcher()
@@ -608,21 +608,21 @@ attr(,"class")
 +       unlink(fn)
 +   }
 + }
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("mac_launcher")
 > ### * mac_launcher
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: mac_launcher
 > ### Title: Create a launcher and updater for Mac (.command)
 > ### Aliases: mac_launcher
-> 
+>
 > ### ** Examples
-> 
+>
 > if (interactive()) {
 +   if (Sys.info()["sysname"] == "Darwin") {
 +     mac_launcher()
@@ -633,123 +633,123 @@ attr(,"class")
 +       unlink(fn)
 +   }
 + }
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("make_dt")
 > ### * make_dt
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: make_dt
 > ### Title: Make a pivot tabel in DT
 > ### Aliases: make_dt
-> 
+>
 > ### ** Examples
-> 
+>
 > pivotr("diamonds", cvars = "cut") %>% make_dt
 > pivotr("diamonds", cvars = c("cut","clarity")) %>% make_dt(format = "color_bar")
 > ret <-  pivotr("diamonds", cvars = c("cut","clarity"), normalize = "total") %>%
 +    make_dt(format = "color_bar", perc = TRUE)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("make_expl")
 > ### * make_expl
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: make_expl
 > ### Title: Make a tabel of summary statistics in DT
 > ### Aliases: make_expl
-> 
+>
 > ### ** Examples
-> 
+>
 > tab <- explore("diamonds", "price:x") %>% make_expl
 > tab <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
 +   make_expl(top = "byvar")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("make_funs")
 > ### * make_funs
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: make_funs
 > ### Title: Make a list of functions-as-formulas to pass to dplyr
 > ### Aliases: make_funs
-> 
+>
 > ### ** Examples
-> 
+>
 > make_funs(c("mean", "sum_rm"))
 <fun_calls>
 $ mean: mean(.)
 $ sum : sum_rm(.)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("max_rm")
 > ### * max_rm
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: max_rm
 > ### Title: Max with na.rm = TRUE
 > ### Aliases: max_rm
-> 
+>
 > ### ** Examples
-> 
+>
 > max_rm(runif (100))
 [1] 0.9919061
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("mds")
 > ### * mds
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: mds
 > ### Title: (Dis)similarity based brand maps (MDS)
 > ### Aliases: mds
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- mds("city", "from", "to", "distance")
 > summary(result)
 (Dis)similarity based brand map (MDS)
-Data        : city 
-Variables   : from, to, distance 
-# dimensions: 2 
-Method      : Metric 
-Observations: 45 
+Data        : city
+Variables   : from, to, distance
+# dimensions: 2
+Method      : Metric
+Observations: 45
 
 Original distance data:
         Boston   NY   DC Miami Chicago Seattle   SF   LA
-NY         206                                          
-DC         429  233                                     
-Miami     1504 1308 1075                                
-Chicago    963  802  671  1329                          
-Seattle   2976 2815 2684  3273    2013                  
-SF        3095 2934 2799  3053    2142     808          
-LA        2979 2786 2631  2687    2054    1131  379     
+NY         206
+DC         429  233
+Miami     1504 1308 1075
+Chicago    963  802  671  1329
+Seattle   2976 2815 2684  3273    2013
+SF        3095 2934 2799  3053    2142     808
+LA        2979 2786 2631  2687    2054    1131  379
 Denver    1949 1771 1616  2037     996    1307 1235 1059
 
 Recovered distance data:
         Boston     NY     DC  Miami Chicago Seattle     SF     LA
-NY       216.2                                                   
-DC       424.3  209.3                                            
-Miami   1481.0 1320.5 1159.8                                     
-Chicago  964.2  781.6  649.7 1431.6                              
-Seattle 2950.1 2814.8 2720.0 3271.4  2077.3                      
-SF      3103.3 2929.1 2787.1 3054.3  2147.6   777.6              
-LA      2993.0 2800.5 2634.9 2728.9  2030.3  1207.1  488.2       
+NY       216.2
+DC       424.3  209.3
+Miami   1481.0 1320.5 1159.8
+Chicago  964.2  781.6  649.7 1431.6
+Seattle 2950.1 2814.8 2720.0 3271.4  2077.3
+SF      3103.3 2929.1 2787.1 3054.3  2147.6   777.6
+LA      2993.0 2800.5 2634.9 2728.9  2030.3  1207.1  488.2
 Denver  1930.7 1750.8 1606.5 2015.2   969.3  1256.5 1180.7 1089.0
 
 Coordinates:
@@ -767,251 +767,251 @@ Denver    522.49   13.40
 Stress: 0.02> result <- mds("diamonds", "clarity", "cut", "price")
 > summary(result)
 Number of observations and unique IDs for the brand variable do not match.
-Please choose another brand variable or another dataset.> 
-> 
-> 
+Please choose another brand variable or another dataset.>
+>
+>
 > cleanEx()
 > nameEx("mean_rm")
 > ### * mean_rm
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: mean_rm
 > ### Title: Mean with na.rm = TRUE
 > ### Aliases: mean_rm
-> 
+>
 > ### ** Examples
-> 
+>
 > mean_rm(runif (100))
 [1] 0.5178471
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("median_rm")
 > ### * median_rm
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: median_rm
 > ### Title: Median with na.rm = TRUE
 > ### Aliases: median_rm
-> 
+>
 > ### ** Examples
-> 
+>
 > median_rm(runif (100))
 [1] 0.4878107
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("min_rm")
 > ### * min_rm
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: min_rm
 > ### Title: Min with na.rm = TRUE
 > ### Aliases: min_rm
-> 
+>
 > ### ** Examples
-> 
+>
 > min_rm(runif (100))
 [1] 0.01339033
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
-> nameEx("nmissing")
-> ### * nmissing
-> 
+> nameEx("n_missing")
+> ### * n_missing
+>
 > flush(stderr()); flush(stdout())
-> 
-> ### Name: nmissing
+>
+> ### Name: n_missing
 > ### Title: Number of missing values
-> ### Aliases: nmissing
-> 
+> ### Aliases: n_missing
+>
 > ### ** Examples
-> 
-> nmissing(c("a","b",NA))
+>
+> n_missing(c("a","b",NA))
 [1] 1
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("p25")
 > ### * p25
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: p25
 > ### Title: 25th percentile
 > ### Aliases: p25
-> 
+>
 > ### ** Examples
-> 
+>
 > p25(rnorm(100))
-       25% 
--0.4942425 
-> 
-> 
-> 
+       25%
+-0.4942425
+>
+>
+>
 > cleanEx()
 > nameEx("p75")
 > ### * p75
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: p75
 > ### Title: 75th percentile
 > ### Aliases: p75
-> 
+>
 > ### ** Examples
-> 
+>
 > p75(rnorm(100))
-      75% 
-0.6915454 
-> 
-> 
-> 
+      75%
+0.6915454
+>
+>
+>
 > cleanEx()
 > nameEx("pivotr")
 > ### * pivotr
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: pivotr
 > ### Title: Create a pivot table using dplyr
 > ### Aliases: pivotr
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pivotr("diamonds", cvars = "cut")$tab
 > result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
 > result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.compare_means")
 > ### * plot.compare_means
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.compare_means
 > ### Title: Plot method for the compare_means function
 > ### Aliases: plot.compare_means
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- compare_means("diamonds","cut","price")
 > plot(result, plots = c("bar","density"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.compare_props")
 > ### * plot.compare_props
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.compare_props
 > ### Title: Plot method for the compare_props function
 > ### Aliases: plot.compare_props
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- compare_props("titanic", "pclass", "survived")
 > plot(result, plots = c("props","counts"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.conjoint")
 > ### * plot.conjoint
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.conjoint
 > ### Title: Plot method for the conjoint function
 > ### Aliases: plot.conjoint
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
 > plot(result, scale_plot = TRUE)
 > plot(result, plots = "iw")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.correlation_")
 > ### * plot.correlation_
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.correlation_
 > ### Title: Plot method for the correlation function
 > ### Aliases: plot.correlation_
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- correlation("diamonds",c("price","carat","clarity"))
 > plot(result)
 > diamonds %>% correlation("price:clarity") %>% plot
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.cross_tabs")
 > ### * plot.cross_tabs
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.cross_tabs
 > ### Title: Plot method for the cross_tabs function
 > ### Aliases: plot.cross_tabs
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- cross_tabs("newspaper", "Income", "Newspaper")
 > plot(result, check = c("observed","expected","chi_sq"))
 > newspaper %>% cross_tabs("Income", "Newspaper") %>% plot(c("observed","expected"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.full_factor")
 > ### * plot.full_factor
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.full_factor
 > ### Title: Plot method for the full_factor function
 > ### Aliases: plot.full_factor
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- full_factor("diamonds",c("price","carat","table"))
 > plot(result)
 > result <- full_factor("computer","high_end:business")
 > summary(result)
 Data should have more observations than variables.
-Please reduce the number of variables.> 
-> 
-> 
+Please reduce the number of variables.>
+>
+>
 > cleanEx()
 > nameEx("plot.glm_predict")
 > ### * plot.glm_predict
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.glm_predict
 > ### Title: Plot method for the predict.glm_reg function
 > ### Aliases: plot.glm_predict
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- glm_reg("titanic", "survived", c("pclass","sex","age"), lev = "Yes")
 > pred <- predict(result, pred_cmd = "pclass = levels(pclass)")
 Predicted values for:
@@ -1330,94 +1330,94 @@ Predicted values for:
     3rd   male 100 0.008970932 0.004582738
 > plot(pred, xvar = "age", color = "sex", facet_col = "pclass")
 > plot(pred, xvar = "age", color = "pclass", facet_col = "sex")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.glm_reg")
 > ### * plot.glm_reg
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.glm_reg
 > ### Title: Plot method for the glm_reg function
 > ### Aliases: plot.glm_reg
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
 > plot(result, plots = "coef")
 Waiting for profiling to be done...
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.hier_clus")
 > ### * plot.hier_clus
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.hier_clus
 > ### Title: Plot method for the hier_clus function
 > ### Aliases: plot.hier_clus
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- hier_clus("shopping", vars = c("v1:v6"))
 > plot(result, plots = c("diff", "scree"), cutoff = .05)
 > plot(result, plots = "dendro", cutoff = 0)
 > shopping %>% hier_clus(vars = c("v1:v6")) %>% plot
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.kmeans_clus")
 > ### * plot.kmeans_clus
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.kmeans_clus
 > ### Title: Plot method for kmeans_clus
 > ### Aliases: plot.kmeans_clus
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- kmeans_clus("shopping", vars = c("v1:v6"))
 > plot(result)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.mds")
 > ### * plot.mds
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.mds
 > ### Title: Plot method for the mds function
 > ### Aliases: plot.mds
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- mds("city","from","to","distance")
 > plot(result)
 > plot(result, rev_dim = 1:2)
 > plot(result, rev_dim = 1:2, fontsz = 2)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.pmap")
 > ### * plot.pmap
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.pmap
 > ### Title: Plot method for the pmap function
 > ### Aliases: plot.pmap
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pmap("computer", "brand", "high_end:business")
 > plot(result, plots = "brand")
 > plot(result, plots = c("brand", "attr"))
@@ -1426,38 +1426,38 @@ Waiting for profiling to be done...
 > result <- pmap("computer", "brand", "high_end:dated",
 +                pref = c("innovative", "business"))
 > plot(result, plots = c("brand", "attr", "pref"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.pre_factor")
 > ### * plot.pre_factor
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.pre_factor
 > ### Title: Plot method for the pre_factor function
 > ### Aliases: plot.pre_factor
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pre_factor("diamonds",c("price","carat","table"))
 > plot(result)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.reg_predict")
 > ### * plot.reg_predict
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.reg_predict
 > ### Title: Plot method for the predict.regression function
 > ### Aliases: plot.reg_predict
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- regression("diamonds", "price", c("carat","clarity"))
 > pred <- predict(result, pred_cmd = "carat = 1:10")
 Predicted values for:
@@ -1476,7 +1476,7 @@ Predicted values for:
 > result <- regression("diamonds", "price", c("carat","clarity"), int_var = "carat:clarity")
 > dpred <<- getdata("diamonds") %>% slice(1:100)
 > pred <- predict(result, pred_data = "dpred")
-Predicted values for profiles from dataset: 
+Predicted values for profiles from dataset:
  carat clarity   Prediction       2.5%     97.5%      +/-
   0.32     VS1   240.945939 -2069.1374  2551.029 2310.083
   0.34     SI1  -119.579762 -2428.2871  2189.128 2308.707
@@ -1580,21 +1580,21 @@ Predicted values for profiles from dataset:
   1.28      IF 11428.689524  9010.2432 13847.136 2418.446
 > plot(pred, xvar = "carat", color = "clarity")
 > rm(dpred, envir = .GlobalEnv)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.regression")
 > ### * plot.regression
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.regression
 > ### Title: Plot method for the regression function
 > ### Aliases: plot.regression
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- regression("diamonds", "price", c("carat","clarity"))
 > plot(result, plots = "dashboard")
 stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
@@ -1613,111 +1613,111 @@ geom_smooth: method="auto" and size of largest group is >=1000, so using gam wit
 > plot(result, plots = "correlations")
 > plot(result, plots = "leverage")
 > plot(result, plots = "resid_pred", lines = "line")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 
 detaching ‘package:mgcv’, ‘package:nlme’
 
 > nameEx("plot.simulater")
 > ### * plot.simulater
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.simulater
 > ### Title: Plot method for the simulater function
 > ### Aliases: plot.simulater
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- simulater(const = "cost 3", norm = "demand 2000 1000",
 +                     discrete = "price 5 .3 8 .7",
 +                     form = "profit = demand * (price - cost)")
 > plot(result)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.single_mean")
 > ### * plot.single_mean
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.single_mean
 > ### Title: Plot method for the single_mean function
 > ### Aliases: plot.single_mean
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- single_mean("diamonds","price", comp_value = 3500)
 > plot(result, plots = c("hist", "simulate"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("plot.single_prop")
 > ### * plot.single_prop
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: plot.single_prop
 > ### Title: Plot method for the single_prop function
 > ### Aliases: plot.single_prop
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
 > plot(result, plots = c("hist", "simulate"))
 > result <- single_prop("titanic","pclass", lev = "1st")
 > plot(result, plots = c("hist","simulate"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("pmap")
 > ### * pmap
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: pmap
 > ### Title: Attribute based brand maps
 > ### Aliases: pmap
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pmap("computer","brand","high_end:business")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("pre_factor")
 > ### * pre_factor
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: pre_factor
 > ### Title: Evaluate if data are appropriate for PCA / Factor analysis
 > ### Aliases: pre_factor
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pre_factor("diamonds",c("price","carat","table"))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("predict.glm_reg")
 > ### * predict.glm_reg
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: predict.glm_reg
 > ### Title: Predict method for the glm_reg function
 > ### Aliases: predict.glm_reg
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- glm_reg("titanic", "survived", c("pclass","sex"), lev = "Yes")
 > predict(result, pred_cmd = "pclass = levels(pclass)")
 Predicted values for:
@@ -1738,21 +1738,21 @@ Predicted values for:
   pclass    sex Prediction  std.error
 1    3rd   male  0.1063100 0.01204523
 2    3rd female  0.5953203 0.02944920
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("predict.regression")
 > ### * predict.regression
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: predict.regression
 > ### Title: Predict method for the regression function
 > ### Aliases: predict.regression
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- regression("diamonds", "price", c("carat","clarity"))
 > predict(result, pred_cmd = "carat = 1:10")
 Predicted values for:
@@ -1801,7 +1801,7 @@ Predicted values for:
 > result <- regression("diamonds", "price", c("carat","clarity"), int_var = c("carat:clarity"))
 > dpred <<- getdata("diamonds") %>% slice(1:10)
 > predict(result, pred_data = "dpred")
-Predicted values for profiles from dataset: 
+Predicted values for profiles from dataset:
  carat clarity  Prediction       2.5%    97.5%      +/-
   0.32     VS1  240.945939 -2069.1374 2551.029 2310.083
   0.34     SI1 -119.579762 -2428.2871 2189.128 2308.707
@@ -1825,236 +1825,236 @@ Predicted values for profiles from dataset:
 9   0.51    VVS2 2485.146235   175.8103 4794.482 2309.336
 10  1.01     SI2 4563.100403  2255.8166 6870.384 2307.284
 > rm(dpred, envir = .GlobalEnv)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("radiant")
 > ### * radiant
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: radiant
 > ### Title: radiant
 > ### Aliases: radiant radiant-package
-> 
+>
 > ### ** Examples
-> 
+>
 > if (interactive()) {
 +   radiant("base")
 +   radiant("quant")
 +   radiant("marketing")
 + }
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("regression")
 > ### * regression
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: regression
 > ### Title: Linear regression using OLS
 > ### Aliases: regression
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- regression("diamonds", "price", c("carat","clarity"))
 > result <- regression("diamonds", "price", c("carat","clarity"), check = "standardize")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("sample_size")
 > ### * sample_size
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sample_size
 > ### Title: Sample size calculation
 > ### Aliases: sample_size
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("sampling")
 > ### * sampling
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sampling
 > ### Title: Simple random sampling
 > ### Aliases: sampling
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- sampling("rndnames","Names",10)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("save_factors")
 > ### * save_factors
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: save_factors
 > ### Title: Save factor scores to active dataset
 > ### Aliases: save_factors
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("save_glm_resid")
 > ### * save_glm_resid
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: save_glm_resid
 > ### Title: Save residuals generated in the glm_reg function
 > ### Aliases: save_glm_resid
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("save_membership")
 > ### * save_membership
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: save_membership
 > ### Title: Add a cluster membership variable to the active dataset
 > ### Aliases: save_membership
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("save_reg_resid")
 > ### * save_reg_resid
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: save_reg_resid
 > ### Title: Save regression residuals
 > ### Aliases: save_reg_resid
-> 
+>
 > ### ** Examples
-> 
-> 
-> 
-> 
+>
+>
+>
+>
 > cleanEx()
 > nameEx("sd_rm")
 > ### * sd_rm
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sd_rm
 > ### Title: Standard deviation with na.rm = TRUE
 > ### Aliases: sd_rm
-> 
+>
 > ### ** Examples
-> 
+>
 > sd_rm(rnorm(100))
 [1] 0.8981994
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("serr")
 > ### * serr
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: serr
 > ### Title: Standard error
 > ### Aliases: serr
-> 
+>
 > ### ** Examples
-> 
+>
 > serr(rnorm(100))
 [1] 0.008981994
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("set_class")
 > ### * set_class
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: set_class
 > ### Title: Alias used to set the class for analysis function return
 > ### Aliases: set_class
-> 
+>
 > ### ** Examples
-> 
+>
 > foo <- function(x) x^2 %>% set_class(c("foo", class(.)))
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("sig_stars")
 > ### * sig_stars
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sig_stars
 > ### Title: Add stars '***' to a data.frame (from broom's 'tidy' function)
 > ###   based on p.values
 > ### Aliases: sig_stars
-> 
+>
 > ### ** Examples
-> 
+>
 > sig_stars(c(.0009, .049, .009, .4, .09))
-[1] "***" "*"   "**"  ""    "."  
-> 
-> 
-> 
+[1] "***" "*"   "**"  ""    "."
+>
+>
+>
 > cleanEx()
 > nameEx("simulater")
 > ### * simulater
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: simulater
 > ### Title: Simulate data for decision analysis
 > ### Aliases: simulater
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- simulater(const = "cost 3", norm = "demand 2000 1000",
 +                     discrete = "price 5 .3 8 .7",
 +                     form = "profit = demand * (price - cost)")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("single_mean")
 > ### * single_mean
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: single_mean
 > ### Title: Compare a sample mean to a population mean
 > ### Aliases: single_mean
-> 
+>
 > ### ** Examples
-> 
+>
 > single_mean("diamonds","price")
 $res
   estimate statistic p.value parameter conf.low conf.high
@@ -5082,71 +5082,71 @@ $data_filter
 [1] ""
 
 attr(,"class")
-[1] "single_mean" "list"       
-> 
-> 
-> 
+[1] "single_mean" "list"
+>
+>
+>
 > cleanEx()
 > nameEx("single_prop")
 > ### * single_prop
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: single_prop
 > ### Title: Compare a sample proportion to a population proportion
 > ### Aliases: single_prop
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- single_prop("diamonds","cut")
 > result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("sshh")
 > ### * sshh
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sshh
 > ### Title: Hide warnings and messages and return invisible
 > ### Aliases: sshh
-> 
+>
 > ### ** Examples
-> 
+>
 > sshh( library(dplyr) )
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("sshhr")
 > ### * sshhr
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sshhr
 > ### Title: Hide warnings and messages and return result
 > ### Aliases: sshhr
-> 
+>
 > ### ** Examples
-> 
+>
 > sshhr( library(dplyr) )
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("state_init")
 > ### * state_init
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: state_init
 > ### Title: Set initial value for shiny input
 > ### Aliases: state_init
-> 
+>
 > ### ** Examples
-> 
+>
 > r_state <<- list()
 > state_init("test")
 [1] ""
@@ -5172,7 +5172,7 @@ attr(,"class")
       </label>
     </div>
   </div>
-</div> 
+</div>
 > r_state$rb <- "b"
 > shiny::radioButtons("rb", label = "Button:", c("a","b"), selected = state_init("rb", "a"))
 <div id="rb" class="form-group shiny-input-radiogroup shiny-input-container">
@@ -5191,23 +5191,23 @@ attr(,"class")
       </label>
     </div>
   </div>
-</div> 
+</div>
 > rm(r_state)
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("state_multiple")
 > ### * state_multiple
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: state_multiple
 > ### Title: Set initial values for shiny input from a list of values
 > ### Aliases: state_multiple
-> 
+>
 > ### ** Examples
-> 
+>
 > r_state <- list()
 > state_multiple("test",1:10,1:3)
 [1] 1 2 3
@@ -5223,7 +5223,7 @@ attr(,"class")
 <option value="b">b</option></select>
     <script type="application/json" data-for="sim">{}</script>
   </div>
-</div> 
+</div>
 > r_state$sim <- c("a","b")
 > shiny::selectInput("sim", label = "Select:", c("a","b"),
 +   selected = state_single("sim", c("a","b")),  multiple = TRUE)
@@ -5234,22 +5234,22 @@ attr(,"class")
 <option value="b" selected>b</option></select>
     <script type="application/json" data-for="sim">{}</script>
   </div>
-</div> 
-> 
-> 
-> 
+</div>
+>
+>
+>
 > cleanEx()
 > nameEx("state_single")
 > ### * state_single
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: state_single
 > ### Title: Set initial value for shiny input from a list of values
 > ### Aliases: state_single
-> 
+>
 > ### ** Examples
-> 
+>
 > r_state <- list()
 > state_single("test",1:10,1)
 [1] 1
@@ -5264,7 +5264,7 @@ attr(,"class")
 <option value="b">b</option></select>
     <script type="application/json" data-for="si" data-nonempty="">{}</script>
   </div>
-</div> 
+</div>
 > r_state$si <- "b"
 > shiny::selectInput("si", label = "Select:", c("a","b"), selected = state_single("si", "b"))
 <div class="form-group shiny-input-container">
@@ -5274,47 +5274,47 @@ attr(,"class")
 <option value="b" selected>b</option></select>
     <script type="application/json" data-for="si" data-nonempty="">{}</script>
   </div>
-</div> 
-> 
-> 
-> 
+</div>
+>
+>
+>
 > cleanEx()
 > nameEx("sum_rm")
 > ### * sum_rm
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: sum_rm
 > ### Title: Sum with na.rm = TRUE
 > ### Aliases: sum_rm
-> 
+>
 > ### ** Examples
-> 
+>
 > sum_rm(1:200)
 [1] 20100
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.compare_means")
 > ### * summary.compare_means
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.compare_means
 > ### Title: Summary method for the compare_means function
 > ### Aliases: summary.compare_means
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- compare_means("diamonds","cut","price")
 > summary(result)
 Pairwise mean comparisons (t-test)
-Data      : diamonds 
-Variables : cut, price 
-Samples   : independent 
-Confidence: 0.95 
-Adjustment: None 
+Data      : diamonds
+Variables : cut, price
+Samples   : independent
+Confidence: 0.95
+Adjustment: None
 
                mean    n       sd      se      ci
       Fair 4505.238  101 3749.540 373.093 740.206
@@ -5323,83 +5323,83 @@ Adjustment: None
    Premium 4369.409  771 4236.977 152.591 299.544
      Ideal 3470.224 1176 3827.423 111.610 218.977
 
- Alt. hyp.                        Null hyp.             diff     p.value    
- Fair not equal to Good           Fair = Good            374.805 0.414      
- Fair not equal to Very Good      Fair = Very Good       545.322 0.195      
- Fair not equal to Premium        Fair = Premium         135.829 0.745      
- Fair not equal to Ideal          Fair = Ideal          1035.014 0.011   *  
- Good not equal to Very Good      Good = Very Good       170.517 0.545      
- Good not equal to Premium        Good = Premium        -238.976 0.388      
- Good not equal to Ideal          Good = Ideal           660.209 0.012   *  
- Very Good not equal to Premium   Very Good = Premium   -409.493 0.049   *  
- Very Good not equal to Ideal     Very Good = Ideal      489.692 0.01    *  
+ Alt. hyp.                        Null hyp.             diff     p.value
+ Fair not equal to Good           Fair = Good            374.805 0.414
+ Fair not equal to Very Good      Fair = Very Good       545.322 0.195
+ Fair not equal to Premium        Fair = Premium         135.829 0.745
+ Fair not equal to Ideal          Fair = Ideal          1035.014 0.011   *
+ Good not equal to Very Good      Good = Very Good       170.517 0.545
+ Good not equal to Premium        Good = Premium        -238.976 0.388
+ Good not equal to Ideal          Good = Ideal           660.209 0.012   *
+ Very Good not equal to Premium   Very Good = Premium   -409.493 0.049   *
+ Very Good not equal to Ideal     Very Good = Ideal      489.692 0.01    *
  Premium not equal to Ideal       Premium = Ideal        899.185 < .001  ***
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > result <- diamonds %>% tbl_df %>% compare_means("x","y")
 > summary(result)
 Pairwise mean comparisons (t-test)
-Data      : ----- 
-Variables : x, y 
-Samples   : independent 
-Confidence: 0.95 
-Adjustment: None 
+Data      : -----
+Variables : x, y
+Samples   : independent
+Confidence: 0.95
+Adjustment: None
 
     mean    n    sd    se   ci
  x 5.722 3000 1.124 0.021 0.04
  y 5.723 3000 1.114 0.020 0.04
 
- Alt. hyp.          Null hyp. diff   p.value  
- x not equal to y   x = y     -0.001 0.959    
+ Alt. hyp.          Null hyp. diff   p.value
+ x not equal to y   x = y     -0.001 0.959
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > result <- diamonds %>% tbl_df %>% group_by(cut) %>% compare_means("x",c("x","y"))
 > summary(result)
 Pairwise mean comparisons (t-test)
-Data      : ----- 
-Variables : x, y 
-Samples   : independent 
-Confidence: 0.95 
-Adjustment: None 
+Data      : -----
+Variables : x, y
+Samples   : independent
+Confidence: 0.95
+Adjustment: None
 
     mean    n    sd    se   ci
  x 5.722 3000 1.124 0.021 0.04
  y 5.723 3000 1.114 0.020 0.04
 
- Alt. hyp.          Null hyp. diff   p.value  
- x not equal to y   x = y     -0.001 0.959    
+ Alt. hyp.          Null hyp. diff   p.value
+ x not equal to y   x = y     -0.001 0.959
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.compare_props")
 > ### * summary.compare_props
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.compare_props
 > ### Title: Summary method for the compare_props function
 > ### Aliases: summary.compare_props
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- compare_props("titanic", "pclass", "survived")
 > summary(result)
 Pairwise proportion comparisons
-Data      : titanic 
-Variables : pclass, survived 
-Level     :  in survived 
-Confidence: 0.95 
-Adjustment: None 
+Data      : titanic
+Variables : pclass, survived
+Level     :  in survived
+Confidence: 0.95
+Adjustment: None
 
  Yes  No   n     p    se    ci
  200 123 323 0.619 0.027 0.053
  119 158 277 0.430 0.030 0.058
  181 528 709 0.255 0.016 0.032
 
- Alt. hyp.              Null hyp.   diff  p.value    
+ Alt. hyp.              Null hyp.   diff  p.value
  1st not equal to 2nd   1st = 2nd   0.189 < .001  ***
  1st not equal to 3rd   1st = 3rd   0.364 < .001  ***
  2nd not equal to 3rd   2nd = 3rd   0.175 < .001  ***
@@ -5407,44 +5407,44 @@ Adjustment: None
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > titanic %>% compare_props("pclass", "survived") %>% summary
 Pairwise proportion comparisons
-Data      : ----- 
-Variables : pclass, survived 
-Level     :  in survived 
-Confidence: 0.95 
-Adjustment: None 
+Data      : -----
+Variables : pclass, survived
+Level     :  in survived
+Confidence: 0.95
+Adjustment: None
 
  Yes  No   n     p    se    ci
  200 123 323 0.619 0.027 0.053
  119 158 277 0.430 0.030 0.058
  181 528 709 0.255 0.016 0.032
 
- Alt. hyp.              Null hyp.   diff  p.value    
+ Alt. hyp.              Null hyp.   diff  p.value
  1st not equal to 2nd   1st = 2nd   0.189 < .001  ***
  1st not equal to 3rd   1st = 3rd   0.364 < .001  ***
  2nd not equal to 3rd   2nd = 3rd   0.175 < .001  ***
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.conjoint")
 > ### * summary.conjoint
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.conjoint
 > ### Title: Summary method for the conjoint function
 > ### Aliases: summary.conjoint
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
 > summary(result, mc_diag = TRUE)
 Conjoint analysis
-Data     : mp3 
-Dependent variable   : Rating 
-Independent variables: Memory, Radio, Size, Price, Shape 
+Data     : mp3
+Dependent variable   : Rating
+Independent variables: Memory, Radio, Size, Price, Shape
 
 Conjoint part-worths:
    Attributes      Levels      PW
@@ -5491,9 +5491,9 @@ VIF      1     1    1     1     1
 Rsq      0     0    0     0     0
 > mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape") %>% summary(., mc_diag = TRUE)
 Conjoint analysis
-Data     : ----- 
-Dependent variable   : Rating 
-Independent variables: Memory, Radio, Size, Price, Shape 
+Data     : -----
+Dependent variable   : Rating
+Independent variables: Memory, Radio, Size, Price, Shape
 
 Conjoint part-worths:
    Attributes      Levels      PW
@@ -5538,26 +5538,26 @@ Multicollinearity diagnostics:
     Memory Radio Size Price Shape
 VIF      1     1    1     1     1
 Rsq      0     0    0     0     0
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.conjoint_profiles")
 > ### * summary.conjoint_profiles
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.conjoint_profiles
 > ### Title: Summary method for the conjoint_profiles function
 > ### Aliases: summary.conjoint_profiles
-> 
+>
 > ### ** Examples
-> 
+>
 > cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
 > result <- conjoint_profiles("cp")
 > summary(result)
 Generate conjoint profiles
-Data      : cp 
+Data      : cp
 # profiles: 18
 
 Attributes and levels:
@@ -5565,7 +5565,7 @@ price = c("$10","$13","$16")
 sight = c("Staggered","Not Staggered")
 comfort = c("Average seat, no cupholder","Average seat, cupholder","Large seat, cupholder")
 audio.visual = c("Small screen, plain sound","Large screen, plain sound","Large screen, digital sound")
-food = c("No food","Hot dogs and popcorn","Gourmet food") 
+food = c("No food","Hot dogs and popcorn","Gourmet food")
 
 Fractional factorial design correlations:
              price sight comfort audio.visual food
@@ -5764,7 +5764,7 @@ Full factorial design:
 > readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
 +   conjoint_profiles %>% summary
 Generate conjoint profiles
-Data      : price = c("$10","$13","$16") sight = c("Staggered","Not Staggered") comfort = c("Average seat, no cupholder","Average seat, cupholder","Large seat, cupholder") audio.visual = c("Small screen, plain sound","Large screen, plain sound","Large screen, digital sound") food = c("No food","Hot dogs and popcorn","Gourmet food") 
+Data      : price = c("$10","$13","$16") sight = c("Staggered","Not Staggered") comfort = c("Average seat, no cupholder","Average seat, cupholder","Large seat, cupholder") audio.visual = c("Small screen, plain sound","Large screen, plain sound","Large screen, digital sound") food = c("No food","Hot dogs and popcorn","Gourmet food")
 # profiles: 18
 
 Attributes and levels:
@@ -5772,7 +5772,7 @@ price = c("$10","$13","$16")
 sight = c("Staggered","Not Staggered")
 comfort = c("Average seat, no cupholder","Average seat, cupholder","Large seat, cupholder")
 audio.visual = c("Small screen, plain sound","Large screen, plain sound","Large screen, digital sound")
-food = c("No food","Hot dogs and popcorn","Gourmet food") 
+food = c("No food","Hot dogs and popcorn","Gourmet food")
 
 Fractional factorial design correlations:
              price sight comfort audio.visual food
@@ -5967,76 +5967,76 @@ Full factorial design:
      160   $16 Not Staggered      Large seat, cupholder Large screen, digital sound              No food
      161   $16 Not Staggered      Large seat, cupholder Large screen, digital sound Hot dogs and popcorn
      162   $16 Not Staggered      Large seat, cupholder Large screen, digital sound         Gourmet food
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.correlation_")
 > ### * summary.correlation_
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.correlation_
 > ### Title: Summary method for the correlation function
 > ### Aliases: summary.correlation_
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- correlation("diamonds",c("price","carat","clarity"))
 > summary(result, cutoff = .3)
 Correlation
-Data     : diamonds 
-Variables: price, carat, clarity 
+Data     : diamonds
+Variables: price, carat, clarity
 Null hyp.: variables x and y are not correlated
 Alt. hyp.: variables x and y are correlated
 
 Correlation matrix:
         price carat
-carat    0.93      
+carat    0.93
 clarity       -0.36
 
 p.values:
         price carat
-carat   0          
-clarity       0    
+carat   0
+clarity       0
 > diamonds %>% correlation("price:clarity") %>% summary
 Correlation
-Data     : ----- 
-Variables: price:clarity 
+Data     : -----
+Variables: price:clarity
 Null hyp.: variables x and y are not correlated
 Alt. hyp.: variables x and y are correlated
 
 Correlation matrix:
         price carat
-carat    0.93      
+carat    0.93
 clarity -0.16 -0.36
 
 p.values:
         price carat
-carat   0          
-clarity 0     0    
-> 
-> 
-> 
+carat   0
+clarity 0     0
+>
+>
+>
 > cleanEx()
 > nameEx("summary.cross_tabs")
 > ### * summary.cross_tabs
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.cross_tabs
 > ### Title: Summary method for the cross_tabs function
 > ### Aliases: summary.cross_tabs
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- cross_tabs("newspaper", "Income", "Newspaper")
 > summary(result, check = c("observed","expected","chi_sq"))
 Cross-tabs
-Data     : newspaper 
-Variables: Income, Newspaper 
-Null hyp.: there is no association between Income and Newspaper 
-Alt. hyp.: there is an association between Income and Newspaper 
+Data     : newspaper
+Variables: Income, Newspaper
+Null hyp.: there is no association between Income and Newspaper
+Alt. hyp.: there is an association between Income and Newspaper
 
 Observed:
             WS Journal USA Today Total
@@ -6056,14 +6056,14 @@ Low Income       39.11     32.45  71.55
 High Income      63.53     52.70 116.23
 Total           102.63     85.15 187.78
 
-Chi-squared: 187.783 df(1), p.value < .001 
+Chi-squared: 187.783 df(1), p.value < .001
 
 0.0 % of cells have expected values below 5> newspaper %>% cross_tabs("Income", "Newspaper") %>% summary("observed")
 Cross-tabs
-Data     : ----- 
-Variables: Income, Newspaper 
-Null hyp.: there is no association between Income and Newspaper 
-Alt. hyp.: there is an association between Income and Newspaper 
+Data     : -----
+Variables: Income, Newspaper
+Null hyp.: there is no association between Income and Newspaper
+Alt. hyp.: there is an association between Income and Newspaper
 
 Observed:
             WS Journal USA Today Total
@@ -6071,28 +6071,28 @@ Low Income          83       276   359
 High Income        180        41   221
 Total              263       317   580
 
-Chi-squared: 187.783 df(1), p.value < .001 
+Chi-squared: 187.783 df(1), p.value < .001
 
-0.0 % of cells have expected values below 5> 
-> 
-> 
+0.0 % of cells have expected values below 5>
+>
+>
 > cleanEx()
 > nameEx("summary.explore")
 > ### * summary.explore
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.explore
 > ### Title: Summary method for the explore function
 > ### Aliases: summary.explore
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- explore("diamonds", "price:x")
 > summary(result)
-Data      : diamonds 
-Functions :  mean 
-Top       :  Function 
+Data      : diamonds
+Functions :  mean
+Top       :  Function
 
  variable     mean
     price 3907.186
@@ -6102,10 +6102,10 @@ Top       :  Function
         x    5.722
 > result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew"))
 > summary(result)
-Data      : diamonds 
-Grouped by:  cut 
-Functions :  n skew 
-Top       :  Function 
+Data      : diamonds
+Grouped by:  cut
+Functions :  n skew
+Top       :  Function
 
        cut variable    n  skew
       Fair    price  101 1.574
@@ -6114,9 +6114,9 @@ Top       :  Function
    Premium    price  771 1.413
      Ideal    price 1176 1.799
 > diamonds %>% explore("price:x") %>% summary
-Data      : ----- 
-Functions :  mean 
-Top       :  Function 
+Data      : -----
+Functions :  mean
+Top       :  Function
 
  variable     mean
     price 3907.186
@@ -6125,10 +6125,10 @@ Top       :  Function
     table   57.465
         x    5.722
 > diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew")) %>% summary
-Data      : ----- 
-Grouped by:  cut 
-Functions :  n skew 
-Top       :  Function 
+Data      : -----
+Grouped by:  cut
+Functions :  n skew
+Top       :  Function
 
        cut variable    n  skew
       Fair    price  101 1.574
@@ -6136,30 +6136,30 @@ Top       :  Function
  Very Good    price  677 1.601
    Premium    price  771 1.413
      Ideal    price 1176 1.799
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.full_factor")
 > ### * summary.full_factor
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.full_factor
 > ### Title: Summary method for the full_factor function
 > ### Aliases: summary.full_factor
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- full_factor("diamonds",c("price","carat","depth","table","x"))
 > summary(result)
 Factor analysis
-Data        : diamonds 
-Variables   : price, carat, depth, table, x 
-# factors   : 2 
-Method      : PCA 
-Rotation    : varimax 
-Observations: 3000 
+Data        : diamonds
+Variables   : price, carat, depth, table, x
+# factors   : 2
+Method      : PCA
+Rotation    : varimax
+Observations: 3000
 
 Factor loadings:
        PC1   PC2
@@ -6174,7 +6174,7 @@ Variance %   0.58 0.26
 Cumulative % 0.58 0.84
 
 Attribute communalities:
-          
+
 price 0.92
 carat 0.98
 depth 0.69
@@ -6195,12 +6195,12 @@ Factor scores (max 10 shown):
   0.42 -0.82
 > summary(result, cutoff = 0, fsort = FALSE)
 Factor analysis
-Data        : diamonds 
-Variables   : price, carat, depth, table, x 
-# factors   : 2 
-Method      : PCA 
-Rotation    : varimax 
-Observations: 3000 
+Data        : diamonds
+Variables   : price, carat, depth, table, x
+# factors   : 2
+Method      : PCA
+Rotation    : varimax
+Observations: 3000
 
 Factor loadings:
        PC1   PC2
@@ -6215,7 +6215,7 @@ Variance %   0.58 0.26
 Cumulative % 0.58 0.84
 
 Attribute communalities:
-          
+
 price 0.92
 carat 0.98
 depth 0.69
@@ -6236,12 +6236,12 @@ Factor scores (max 10 shown):
   0.42 -0.82
 > summary(result, cutoff = 0, fsort = TRUE)
 Factor analysis
-Data        : diamonds 
-Variables   : price, carat, depth, table, x 
-# factors   : 2 
-Method      : PCA 
-Rotation    : varimax 
-Observations: 3000 
+Data        : diamonds
+Variables   : price, carat, depth, table, x
+# factors   : 2
+Method      : PCA
+Rotation    : varimax
+Observations: 3000
 
 Factor loadings:
        PC1   PC2
@@ -6256,7 +6256,7 @@ Variance %   0.58 0.26
 Cumulative % 0.58 0.84
 
 Attribute communalities:
-          
+
 price 0.92
 carat 0.98
 depth 0.69
@@ -6277,18 +6277,18 @@ Factor scores (max 10 shown):
   0.42 -0.82
 > summary(result, cutoff = .5, fsort = TRUE)
 Factor analysis
-Data        : diamonds 
-Variables   : price, carat, depth, table, x 
-# factors   : 2 
-Method      : PCA 
-Rotation    : varimax 
-Observations: 3000 
+Data        : diamonds
+Variables   : price, carat, depth, table, x
+# factors   : 2
+Method      : PCA
+Rotation    : varimax
+Observations: 3000
 
 Factor loadings:
        PC1   PC2
-carat 0.99      
-x     0.97      
-price 0.96      
+carat 0.99
+x     0.97
+price 0.96
 depth      -0.83
 table       0.79
               PC1  PC2
@@ -6297,7 +6297,7 @@ Variance %   0.58 0.26
 Cumulative % 0.58 0.84
 
 Attribute communalities:
-          
+
 price 0.92
 carat 0.98
 depth 0.69
@@ -6318,12 +6318,12 @@ Factor scores (max 10 shown):
   0.42 -0.82
 > diamonds %>% full_factor(c("price","carat","depth","table","x")) %>% summary
 Factor analysis
-Data        : ----- 
-Variables   : price, carat, depth, table, x 
-# factors   : 2 
-Method      : PCA 
-Rotation    : varimax 
-Observations: 3000 
+Data        : -----
+Variables   : price, carat, depth, table, x
+# factors   : 2
+Method      : PCA
+Rotation    : varimax
+Observations: 3000
 
 Factor loadings:
        PC1   PC2
@@ -6338,7 +6338,7 @@ Variance %   0.58 0.26
 Cumulative % 0.58 0.84
 
 Attribute communalities:
-          
+
 price 0.92
 carat 0.98
 depth 0.69
@@ -6359,27 +6359,27 @@ Factor scores (max 10 shown):
   0.42 -0.82
 > diamonds %>% full_factor(c("price","carat","depth","table","x")) %>% summary(cutoff = .5)
 Factor analysis
-Data        : ----- 
-Variables   : price, carat, depth, table, x 
-# factors   : 2 
-Method      : PCA 
-Rotation    : varimax 
-Observations: 3000 
+Data        : -----
+Variables   : price, carat, depth, table, x
+# factors   : 2
+Method      : PCA
+Rotation    : varimax
+Observations: 3000
 
 Factor loadings:
        PC1   PC2
-price 0.96      
-carat 0.99      
+price 0.96
+carat 0.99
 depth      -0.83
 table       0.79
-x     0.97      
+x     0.97
               PC1  PC2
 Eigenvalues  2.88 1.32
 Variance %   0.58 0.26
 Cumulative % 0.58 0.84
 
 Attribute communalities:
-          
+
 price 0.92
 carat 0.98
 depth 0.69
@@ -6398,21 +6398,21 @@ Factor scores (max 10 shown):
   0.29  0.03
  -0.48 -0.83
   0.42 -0.82
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.glm_reg")
 > ### * summary.glm_reg
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.glm_reg
 > ### Title: Summary method for the glm_reg function
 > ### Aliases: summary.glm_reg
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
 > summary(result, test_var = "pclass")
 Generalized linear model (glm)
@@ -6422,15 +6422,15 @@ Dependent variable   : survived
 Level                : Yes in survived
 Independent variables: pclass
 
-              coefficient std.error z.value p.value    
+              coefficient std.error z.value p.value
   (Intercept)       0.486     0.115   4.242  < .001 ***
  pclass > 2nd      -0.770     0.167  -4.611  < .001 ***
  pclass > 3rd      -1.557     0.143 -10.860  < .001 ***
 
 Pseudo R-squared: 0.073
 Log-likelihood: -806.629, AIC: 1619.259, BIC: 1634.79
-Chi-squared: 127.765 df(2), p.value < .001 
-Nr obs:  1309 
+Chi-squared: 127.765 df(2), p.value < .001
+Nr obs:  1309
 
 Model 1: survived ~ 1
 Model 2: survived ~ pclass
@@ -6444,18 +6444,18 @@ Dependent variable   : survived
 Level                : Yes in survived
 Independent variables: pclass, sex
 
-                         coefficient std.error z.value p.value    
+                         coefficient std.error z.value p.value
              (Intercept)       3.325     0.455   7.309  < .001 ***
             pclass > 2nd      -1.267     0.549  -2.309   0.021   *
             pclass > 3rd      -3.362     0.475  -7.081  < .001 ***
               sex > male      -3.985     0.481  -8.277  < .001 ***
- pclass > 2nd:sex > male       0.162     0.610   0.265   0.791    
+ pclass > 2nd:sex > male       0.162     0.610   0.265   0.791
  pclass > 3rd:sex > male       2.304     0.516   4.467  < .001 ***
 
 Pseudo R-squared: 0.305
 Log-likelihood: -605.025, AIC: 1222.05, BIC: 1253.112
-Chi-squared: 530.974 df(5), p.value < .001 
-Nr obs:  1309 
+Chi-squared: 530.974 df(5), p.value < .001
+Nr obs:  1309
 
 Variance Inflation Factors
     pclass:sex pclass    sex
@@ -6487,7 +6487,7 @@ Dependent variable   : survived
 Level                : Yes in survived
 Independent variables: pclass, sex, age
 
-              coefficient std.error z.value p.value    
+              coefficient std.error z.value p.value
   (Intercept)       3.522     0.327  10.781  < .001 ***
  pclass > 2nd      -1.281     0.226  -5.678  < .001 ***
  pclass > 3rd      -2.290     0.226 -10.140  < .001 ***
@@ -6496,61 +6496,61 @@ Independent variables: pclass, sex, age
 
 Pseudo R-squared: 0.306
 Log-likelihood: -491.227, AIC: 992.453, BIC: 1017.217
-Chi-squared: 432.167 df(4), p.value < .001 
-Nr obs:  1046 
+Chi-squared: 432.167 df(4), p.value < .001
+Nr obs:  1046
 
 Variance Inflation Factors
     pclass   age   sex
 VIF  1.415 1.354 1.052
 Rsq  0.293 0.262 0.049
 
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.hier_clus")
 > ### * summary.hier_clus
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.hier_clus
 > ### Title: Summary method for the hier_clus function
 > ### Aliases: summary.hier_clus
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- hier_clus("shopping", vars = c("v1:v6"))
 > summary(result)
 Hierarchical cluster analysis
-Data        : shopping 
-Variables   : v1:v6 
-Method      : ward.D 
-Distance    : sq.euclidian 
-Observations: 20 
-> 
-> 
-> 
+Data        : shopping
+Variables   : v1:v6
+Method      : ward.D
+Distance    : sq.euclidian
+Observations: 20
+>
+>
+>
 > cleanEx()
 > nameEx("summary.kmeans_clus")
 > ### * summary.kmeans_clus
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.kmeans_clus
 > ### Title: Summary method for kmeans_clus
 > ### Aliases: summary.kmeans_clus
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- kmeans_clus("shopping", vars = c("v1:v6"))
 > summary(result)
 K-means cluster analysis
-Data        : shopping 
-Variables   : v1:v6 
-Method      : ward.D 
-Distance    : sq.euclidian 
-Observations: 20 
-Generated   : 2 clusters of sizes 8, 12 
+Data        : shopping
+Variables   : v1:v6
+Method      : ward.D
+Distance    : sq.euclidian
+Observations: 20
+Generated   : 2 clusters of sizes 8, 12
 
 Cluster means:
              v1    v2    v3    v4    v5    v6
@@ -6558,19 +6558,19 @@ Cluster 1 5.750 3.625 6.000 3.125 1.875 3.875
 Cluster 2 2.583 4.417 2.583 4.750 4.500 4.667
 
 Percentage of within cluster variance accounted for by each cluster:
-                
+
 Cluster 1 17.66%
 Cluster 2 82.34%
 
 Between cluster variance accounts for 40.52% of the
 total variance in the data (higher is better).> shopping %>% kmeans_clus(vars = c("v1:v6"), nr_clus = 3) %>% summary
 K-means cluster analysis
-Data        : ----- 
-Variables   : v1:v6 
-Method      : ward.D 
-Distance    : sq.euclidian 
-Observations: 20 
-Generated   : 3 clusters of sizes 8, 6, 6 
+Data        : -----
+Variables   : v1:v6
+Method      : ward.D
+Distance    : sq.euclidian
+Observations: 20
+Generated   : 3 clusters of sizes 8, 6, 6
 
 Cluster means:
              v1    v2    v3    v4    v5    v6
@@ -6579,56 +6579,56 @@ Cluster 2 1.667 3.000 1.833 3.500 5.500 3.333
 Cluster 3 3.500 5.833 3.333 6.000 3.500 6.000
 
 Percentage of within cluster variance accounted for by each cluster:
-                
+
 Cluster 1 40.31%
 Cluster 2 25.98%
 Cluster 3 33.71%
 
 Between cluster variance accounts for 73.93% of the
-total variance in the data (higher is better).> 
-> 
-> 
+total variance in the data (higher is better).>
+>
+>
 > cleanEx()
 > nameEx("summary.mds")
 > ### * summary.mds
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.mds
 > ### Title: Summary method for the mds function
 > ### Aliases: summary.mds
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- mds("city", "from", "to", "distance")
 > summary(result)
 (Dis)similarity based brand map (MDS)
-Data        : city 
-Variables   : from, to, distance 
-# dimensions: 2 
-Method      : Metric 
-Observations: 45 
+Data        : city
+Variables   : from, to, distance
+# dimensions: 2
+Method      : Metric
+Observations: 45
 
 Original distance data:
         Boston   NY   DC Miami Chicago Seattle   SF   LA
-NY         206                                          
-DC         429  233                                     
-Miami     1504 1308 1075                                
-Chicago    963  802  671  1329                          
-Seattle   2976 2815 2684  3273    2013                  
-SF        3095 2934 2799  3053    2142     808          
-LA        2979 2786 2631  2687    2054    1131  379     
+NY         206
+DC         429  233
+Miami     1504 1308 1075
+Chicago    963  802  671  1329
+Seattle   2976 2815 2684  3273    2013
+SF        3095 2934 2799  3053    2142     808
+LA        2979 2786 2631  2687    2054    1131  379
 Denver    1949 1771 1616  2037     996    1307 1235 1059
 
 Recovered distance data:
         Boston     NY     DC  Miami Chicago Seattle     SF     LA
-NY       216.2                                                   
-DC       424.3  209.3                                            
-Miami   1481.0 1320.5 1159.8                                     
-Chicago  964.2  781.6  649.7 1431.6                              
-Seattle 2950.1 2814.8 2720.0 3271.4  2077.3                      
-SF      3103.3 2929.1 2787.1 3054.3  2147.6   777.6              
-LA      2993.0 2800.5 2634.9 2728.9  2030.3  1207.1  488.2       
+NY       216.2
+DC       424.3  209.3
+Miami   1481.0 1320.5 1159.8
+Chicago  964.2  781.6  649.7 1431.6
+Seattle 2950.1 2814.8 2720.0 3271.4  2077.3
+SF      3103.3 2929.1 2787.1 3054.3  2147.6   777.6
+LA      2993.0 2800.5 2634.9 2728.9  2030.3  1207.1  488.2
 Denver  1930.7 1750.8 1606.5 2015.2   969.3  1256.5 1180.7 1089.0
 
 Coordinates:
@@ -6645,32 +6645,32 @@ Denver    522.49   13.40
 
 Stress: 0.02> summary(result, dec = 2)
 (Dis)similarity based brand map (MDS)
-Data        : city 
-Variables   : from, to, distance 
-# dimensions: 2 
-Method      : Metric 
-Observations: 45 
+Data        : city
+Variables   : from, to, distance
+# dimensions: 2
+Method      : Metric
+Observations: 45
 
 Original distance data:
         Boston   NY   DC Miami Chicago Seattle   SF   LA
-NY         206                                          
-DC         429  233                                     
-Miami     1504 1308 1075                                
-Chicago    963  802  671  1329                          
-Seattle   2976 2815 2684  3273    2013                  
-SF        3095 2934 2799  3053    2142     808          
-LA        2979 2786 2631  2687    2054    1131  379     
+NY         206
+DC         429  233
+Miami     1504 1308 1075
+Chicago    963  802  671  1329
+Seattle   2976 2815 2684  3273    2013
+SF        3095 2934 2799  3053    2142     808
+LA        2979 2786 2631  2687    2054    1131  379
 Denver    1949 1771 1616  2037     996    1307 1235 1059
 
 Recovered distance data:
          Boston      NY      DC   Miami Chicago Seattle      SF      LA
-NY       216.17                                                        
-DC       424.34  209.27                                                
-Miami   1481.04 1320.47 1159.80                                        
-Chicago  964.17  781.64  649.65 1431.60                                
-Seattle 2950.14 2814.77 2720.03 3271.40 2077.26                        
-SF      3103.29 2929.07 2787.14 3054.27 2147.64  777.59                
-LA      2992.97 2800.55 2634.90 2728.86 2030.29 1207.14  488.18        
+NY       216.17
+DC       424.34  209.27
+Miami   1481.04 1320.47 1159.80
+Chicago  964.17  781.64  649.65 1431.60
+Seattle 2950.14 2814.77 2720.03 3271.40 2077.26
+SF      3103.29 2929.07 2787.14 3054.27 2147.64  777.59
+LA      2992.97 2800.55 2634.90 2728.86 2030.29 1207.14  488.18
 Denver  1930.70 1750.84 1606.47 2015.18  969.35 1256.50 1180.68 1089.01
 
 Coordinates:
@@ -6687,32 +6687,32 @@ Denver    522.487   13.396
 
 Stress: 0.0197> city %>% mds("from", "to", "distance") %>% summary
 (Dis)similarity based brand map (MDS)
-Data        : ----- 
-Variables   : from, to, distance 
-# dimensions: 2 
-Method      : Metric 
-Observations: 45 
+Data        : -----
+Variables   : from, to, distance
+# dimensions: 2
+Method      : Metric
+Observations: 45
 
 Original distance data:
         Boston   NY   DC Miami Chicago Seattle   SF   LA
-NY         206                                          
-DC         429  233                                     
-Miami     1504 1308 1075                                
-Chicago    963  802  671  1329                          
-Seattle   2976 2815 2684  3273    2013                  
-SF        3095 2934 2799  3053    2142     808          
-LA        2979 2786 2631  2687    2054    1131  379     
+NY         206
+DC         429  233
+Miami     1504 1308 1075
+Chicago    963  802  671  1329
+Seattle   2976 2815 2684  3273    2013
+SF        3095 2934 2799  3053    2142     808
+LA        2979 2786 2631  2687    2054    1131  379
 Denver    1949 1771 1616  2037     996    1307 1235 1059
 
 Recovered distance data:
         Boston     NY     DC  Miami Chicago Seattle     SF     LA
-NY       216.2                                                   
-DC       424.3  209.3                                            
-Miami   1481.0 1320.5 1159.8                                     
-Chicago  964.2  781.6  649.7 1431.6                              
-Seattle 2950.1 2814.8 2720.0 3271.4  2077.3                      
-SF      3103.3 2929.1 2787.1 3054.3  2147.6   777.6              
-LA      2993.0 2800.5 2634.9 2728.9  2030.3  1207.1  488.2       
+NY       216.2
+DC       424.3  209.3
+Miami   1481.0 1320.5 1159.8
+Chicago  964.2  781.6  649.7 1431.6
+Seattle 2950.1 2814.8 2720.0 3271.4  2077.3
+SF      3103.3 2929.1 2787.1 3054.3  2147.6   777.6
+LA      2993.0 2800.5 2634.9 2728.9  2030.3  1207.1  488.2
 Denver  1930.7 1750.8 1606.5 2015.2   969.3  1256.5 1180.7 1089.0
 
 Coordinates:
@@ -6727,25 +6727,25 @@ SF       1697.23  131.69
 LA       1464.05  560.58
 Denver    522.49   13.40
 
-Stress: 0.02> 
-> 
-> 
+Stress: 0.02>
+>
+>
 > cleanEx()
 > nameEx("summary.pivotr")
 > ### * summary.pivotr
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.pivotr
 > ### Title: Summary method for pivotr
 > ### Aliases: summary.pivotr
-> 
+>
 > ### ** Examples
-> 
+>
 > pivotr("diamonds", cvars = "cut") %>% summary
 Pivot table
-Data       : diamonds 
-Categorical: cut 
+Data       : diamonds
+Categorical: cut
 
        cut    n
       Fair  101
@@ -6757,8 +6757,8 @@ Categorical: cut
 
 > pivotr("diamonds", cvars = "cut") %>% summary
 Pivot table
-Data       : diamonds 
-Categorical: cut 
+Data       : diamonds
+Categorical: cut
 
        cut    n
       Fair  101
@@ -6770,10 +6770,10 @@ Categorical: cut
 
 > pivotr("diamonds", cvars = "cut:clarity", nvar = "price") %>% summary
 Pivot table
-Data       : diamonds 
-Categorical: cut clarity 
-Numeric    : price 
-Function   : mean 
+Data       : diamonds
+Categorical: cut clarity
+Numeric    : price
+Function   : mean
 
  clarity     Fair     Good Very Good  Premium    Ideal    Total
       I1 2730.167 4333.500  3864.167 4932.231 6078.200 4194.775
@@ -6786,29 +6786,29 @@ Function   : mean
       IF 3205.000  817.250  4675.867 2361.333 1961.344 2411.697
    Total 4505.238 4130.433  3959.916 4369.409 3470.224 3907.186
 
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.pmap")
 > ### * summary.pmap
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.pmap
 > ### Title: Summary method for the pmap function
 > ### Aliases: summary.pmap
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pmap("computer","brand","high_end:business")
 > summary(result)
 Attribute based brand map
-Data        : computer 
-Attributes  : high_end, stylish, modern, value, dated, innovative, business 
-# dimensions: 2 
+Data        : computer
+Attributes  : high_end, stylish, modern, value, dated, innovative, business
+# dimensions: 2
 Rotation    : varimax
-Observations: 5 
+Observations: 5
 
 Brand - Factor scores:
           PC1   PC2
@@ -6834,7 +6834,7 @@ Eigenvalues  5.35 1.16
 Variance %   0.76 0.17
 Cumulative % 0.76 0.93
 
-Attribute communalities:               
+Attribute communalities:
 high_end   0.91
 stylish    0.97
 modern     0.97
@@ -6844,11 +6844,11 @@ innovative 0.77
 business   0.97
 > summary(result, cutoff = .3)
 Attribute based brand map
-Data        : computer 
-Attributes  : high_end, stylish, modern, value, dated, innovative, business 
-# dimensions: 2 
+Data        : computer
+Attributes  : high_end, stylish, modern, value, dated, innovative, business
+# dimensions: 2
 Rotation    : varimax
-Observations: 5 
+Observations: 5
 
 Brand - Factor scores:
           PC1   PC2
@@ -6860,12 +6860,12 @@ Sony     0.73 -0.60
 
 Attribute - Factor loadings:
              PC1  PC2
-high_end    0.94     
-stylish     0.98     
-modern      0.99     
-value      -0.93     
-dated      -0.97     
-innovative  0.86     
+high_end    0.94
+stylish     0.98
+modern      0.99
+value      -0.93
+dated      -0.97
+innovative  0.86
 business         0.99
 
 Fit measures:
@@ -6874,7 +6874,7 @@ Eigenvalues  5.35 1.16
 Variance %   0.76 0.17
 Cumulative % 0.76 0.93
 
-Attribute communalities:               
+Attribute communalities:
 high_end   0.91
 stylish    0.97
 modern     0.97
@@ -6885,12 +6885,12 @@ business   0.97
 > result <- pmap("computer","brand","high_end:dated", pref = c("innovative","business"))
 > summary(result)
 Attribute based brand map
-Data        : computer 
-Attributes  : high_end, stylish, modern, value, dated 
-Preferences : innovative, business 
-# dimensions: 2 
+Data        : computer
+Attributes  : high_end, stylish, modern, value, dated
+Preferences : innovative, business
+# dimensions: 2
 Rotation    : varimax
-Observations: 5 
+Observations: 5
 
 Brand - Factor scores:
           PC1   PC2
@@ -6919,7 +6919,7 @@ Eigenvalues  2.60 2.33
 Variance %   0.52 0.47
 Cumulative % 0.52 0.99
 
-Attribute communalities:             
+Attribute communalities:
 high_end 0.99
 stylish  0.99
 modern   0.98
@@ -6928,12 +6928,12 @@ dated    0.98
 > computer %>% pmap("brand","high_end:dated", pref = c("innovative","business")) %>%
 +   summary
 Attribute based brand map
-Data        : ----- 
-Attributes  : high_end, stylish, modern, value, dated 
-Preferences : innovative, business 
-# dimensions: 2 
+Data        : -----
+Attributes  : high_end, stylish, modern, value, dated
+Preferences : innovative, business
+# dimensions: 2
 Rotation    : varimax
-Observations: 5 
+Observations: 5
 
 Brand - Factor scores:
           PC1   PC2
@@ -6962,40 +6962,40 @@ Eigenvalues  2.60 2.33
 Variance %   0.52 0.47
 Cumulative % 0.52 0.99
 
-Attribute communalities:             
+Attribute communalities:
 high_end 0.99
 stylish  0.99
 modern   0.98
 value    0.99
 dated    0.98
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.pre_factor")
 > ### * summary.pre_factor
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.pre_factor
 > ### Title: Summary method for the pre_factor function
 > ### Aliases: summary.pre_factor
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- pre_factor("diamonds",c("price","carat","table"))
 > summary(result)
 Pre-factor analysis diagnostics
-Data        : diamonds 
-Variables   : price, carat, table 
-Observations: 3000 
+Data        : diamonds
+Variables   : price, carat, table
+Observations: 3000
 
 Bartlett test
 Null hyp.: variables are not correlated
 Alt. hyp.: variables are correlated
 Chi-square: 6029.81 df(3), p.value < .001
 
-KMO test:  0.51 
+KMO test:  0.51
 
 Variable collinearity:
        Rsq
@@ -7009,16 +7009,16 @@ table 0.05
       3        0.07       0.02         1.00
 > diamonds %>% pre_factor(c("price","carat","table")) %>% summary
 Pre-factor analysis diagnostics
-Data        : ----- 
-Variables   : price, carat, table 
-Observations: 3000 
+Data        : -----
+Variables   : price, carat, table
+Observations: 3000
 
 Bartlett test
 Null hyp.: variables are not correlated
 Alt. hyp.: variables are correlated
 Chi-square: 6029.81 df(3), p.value < .001
 
-KMO test:  0.51 
+KMO test:  0.51
 
 Variable collinearity:
        Rsq
@@ -7033,29 +7033,29 @@ table 0.05
 > result <- pre_factor("computer","high_end:business")
 > summary(result)
 Data should have more observations than variables.
-Please reduce the number of variables.> 
-> 
-> 
+Please reduce the number of variables.>
+>
+>
 > cleanEx()
 > nameEx("summary.regression")
 > ### * summary.regression
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.regression
 > ### Title: Summary method for the regression function
 > ### Aliases: summary.regression
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- regression("diamonds", "price", c("carat","clarity"))
 > summary(result, sum_check = c("rmse","sumsquares","vif","confint"), test_var = "clarity")
 Linear regression (OLS)
-Data     : diamonds 
-Dependent variable   : price 
-Independent variables: carat, clarity 
+Data     : diamonds
+Dependent variable   : price
+Independent variables: carat, clarity
 
-                coefficient std.error t.value p.value    
+                coefficient std.error t.value p.value
     (Intercept)   -6780.993   204.952 -33.086  < .001 ***
           carat    8438.030    51.101 165.125  < .001 ***
   clarity > SI2    2790.760   201.395  13.857  < .001 ***
@@ -7068,11 +7068,11 @@ Independent variables: carat, clarity
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-R-squared: 0.904,  Adjusted R-squared: 0.904 
+R-squared: 0.904,  Adjusted R-squared: 0.904
 F-statistic: 3530.024 df(9,2991), p.value < .001
 Nr obs: 3000
 
-Prediction error (RMSE):  1224.329 
+Prediction error (RMSE):  1224.329
 
 Sum of squares:
              df          SS
@@ -7102,18 +7102,18 @@ R-squared, Model 1 vs 2: 0.86 0.904
 F-statistic: 197.585 df(2998,2991), p.value < .001> result <- regression("shopping", "v1", c("v2","v3"))
 > summary(result, test_var = "v2")
 Linear regression (OLS)
-Data     : shopping 
-Dependent variable   : v1 
-Independent variables: v2, v3 
+Data     : shopping
+Dependent variable   : v1
+Independent variables: v2, v3
 
-             coefficient std.error t.value p.value    
- (Intercept)       0.321     0.930   0.346   0.734    
-          v2       0.095     0.177   0.538   0.597    
+             coefficient std.error t.value p.value
+ (Intercept)       0.321     0.930   0.346   0.734
+          v2       0.095     0.177   0.538   0.597
           v3       0.794     0.124   6.401  < .001 ***
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-R-squared: 0.707,  Adjusted R-squared: 0.672 
+R-squared: 0.707,  Adjusted R-squared: 0.672
 F-statistic: 20.505 df(3,17), p.value < .001
 Nr obs: 20
 
@@ -7122,81 +7122,81 @@ Model 2: v1 ~ v2 + v3
 R-squared, Model 1 vs 2: 0.702 0.707
 F-statistic: 0.29 df(18,17), p.value 0.597> shopping %>% regression("v1", "v2:v6") %>% summary
 Linear regression (OLS)
-Data     : ----- 
-Dependent variable   : v1 
-Independent variables: v2, v3, v4, v5, v6 
+Data     : -----
+Dependent variable   : v1
+Independent variables: v2, v3, v4, v5, v6
 
-             coefficient std.error t.value p.value    
+             coefficient std.error t.value p.value
  (Intercept)       4.300     1.292   3.329   0.005  **
-          v2       0.035     0.151   0.235   0.818    
+          v2       0.035     0.151   0.235   0.818
           v3       0.472     0.134   3.515   0.003  **
-          v4       0.238     0.160   1.486   0.159    
+          v4       0.238     0.160   1.486   0.159
           v5      -0.609     0.145  -4.197   0.001 ***
           v6      -0.307     0.154  -1.993   0.066   .
 
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-R-squared: 0.89,  Adjusted R-squared: 0.851 
+R-squared: 0.89,  Adjusted R-squared: 0.851
 F-statistic: 22.686 df(6,14), p.value < .001
 Nr obs: 20
 
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.sample_size")
 > ### * summary.sample_size
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.sample_size
 > ### Title: Summary method for the sample_size function
 > ### Aliases: summary.sample_size
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- sample_size(type = "mean", err_mean = 2, sd_mean = 10)
 > summary(result)
 Sample size calculation
 Calculation type     : Mean
-Acceptable Error     : 2 
-Sample std. deviation: 10 
-Confidence level     : 1.96 
-Incidence rate       : 1 
-Response rate        : 1 
+Acceptable Error     : 2
+Sample std. deviation: 10
+Confidence level     : 1.96
+Incidence rate       : 1
+Response rate        : 1
 Population correction: None
 
 Required sample size     : 97
 Required contact attempts: 97
 
 Choose a Z-value:
-80%	 1.28 
-85%	 1.44 
-90%	 1.64 
-95%	 1.96 
-99%	 2.58 
-> 
-> 
-> 
+80%	 1.28
+85%	 1.44
+90%	 1.64
+95%	 1.96
+99%	 2.58
+>
+>
+>
 > cleanEx()
 > nameEx("summary.sampling")
 > ### * summary.sampling
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.sampling
 > ### Title: Summary method for the sampling function
 > ### Aliases: summary.sampling
-> 
+>
 > ### ** Examples
-> 
+>
 > set.seed(1234)
 > result <- sampling("rndnames", "Names", 10)
 > summary(result)
 Sampling (simple random)
-Data       : rndnames 
-ID variable: Names 
-Sample size: 10 
+Data       : rndnames
+ID variable: Names
+Sample size: 10
 
 Selected:
                Names rnd_number
@@ -7313,134 +7313,134 @@ Sampling frame:
          Alita Aikin      0.027
        Junko Jungers      0.310
          Denese Diem      0.742
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.simulater")
 > ### * summary.simulater
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.simulater
 > ### Title: Summary method for the simulater function
 > ### Aliases: summary.simulater
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- simulater(norm = "demand 2000 1000")
 > summary(result)
 Summarize numeric variables:
            n missing     mean   median       min      max      25%      75%       sd    se   cv
  demand 1000       0 1988.352 1964.676 -1008.049 5810.277 1302.627 2688.428 1034.916 1.035 0.52
 
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.single_mean")
 > ### * summary.single_mean
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.single_mean
 > ### Title: Summary method for the single_mean function
 > ### Aliases: summary.single_mean
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- single_mean("diamonds","price")
 > summary(result)
 Single mean test
-Data      : diamonds 
-Variable  : price 
-Confidence: 0.95 
-Null hyp. : the mean of price = 0 
-Alt. hyp. : the mean of price is not equal to 0 
+Data      : diamonds
+Variable  : price
+Confidence: 0.95
+Null hyp. : the mean of price = 0
+Alt. hyp. : the mean of price is not equal to 0
 
      mean t.value p.value   df     2.5%    97.5%       sd    n
  3907.186  54.084  < .001 2999 3765.535 4048.837 3956.915 3000
 > diamonds %>% single_mean("price") %>% summary
 Single mean test
-Data      : ----- 
-Variable  : price 
-Confidence: 0.95 
-Null hyp. : the mean of price = 0 
-Alt. hyp. : the mean of price is not equal to 0 
+Data      : -----
+Variable  : price
+Confidence: 0.95
+Null hyp. : the mean of price = 0
+Alt. hyp. : the mean of price is not equal to 0
 
      mean t.value p.value   df     2.5%    97.5%       sd    n
  3907.186  54.084  < .001 2999 3765.535 4048.837 3956.915 3000
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("summary.single_prop")
 > ### * summary.single_prop
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: summary.single_prop
 > ### Title: Summary method for the single_prop function
 > ### Aliases: summary.single_prop
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
 > summary(result)
 Single proportion test
-Data      : diamonds 
-Variable  : clarity 
-Confidence: 0.95 
-Null hyp. : the proportion of IF in clarity = 0.05 
-Alt. hyp. : the proportion of IF in clarity not equal to 0.05 
+Data      : diamonds
+Variable  : clarity
+Confidence: 0.95
+Null hyp. : the proportion of IF in clarity = 0.05
+Alt. hyp. : the proportion of IF in clarity not equal to 0.05
 
   prop chisq.value p.value df  2.5% 97.5% ns    n
  0.033      18.253  < .001  1 0.027  0.04 99 3000
 > diamonds %>% single_prop("clarity", lev = "IF", comp_value = 0.05) %>% summary
 Single proportion test
-Data      : ----- 
-Variable  : clarity 
-Confidence: 0.95 
-Null hyp. : the proportion of IF in clarity = 0.05 
-Alt. hyp. : the proportion of IF in clarity not equal to 0.05 
+Data      : -----
+Variable  : clarity
+Confidence: 0.95
+Null hyp. : the proportion of IF in clarity = 0.05
+Alt. hyp. : the proportion of IF in clarity not equal to 0.05
 
   prop chisq.value p.value df  2.5% 97.5% ns    n
  0.033      18.253  < .001  1 0.027  0.04 99 3000
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("test_specs")
 > ### * test_specs
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: test_specs
 > ### Title: Add interaction terms to list of test variables if needed
 > ### Aliases: test_specs
-> 
+>
 > ### ** Examples
-> 
+>
 > test_specs("a", c("a:b", "b:c"))
 Interaction terms contain variables specified for testing.
 Relevant interaction terms are included in the requested test.
 
 [1] "a"   "a:b"
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("the_table")
 > ### * the_table
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: the_table
 > ### Title: Function to calculate the PW and IW table for conjoint
 > ### Aliases: the_table
-> 
+>
 > ### ** Examples
-> 
+>
 > result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
 > the_table(result$model, result$dat, result$indep_var)
 $PW
@@ -7477,22 +7477,22 @@ Size     0.00000 34.17167
 Price  -34.17167  0.00000
 Shape  -34.17167  0.00000
 
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("var_check")
 > ### * var_check
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: var_check
 > ### Title: Check if main effects for all interaction effects are included
 > ###   in the model If ':' is used to select a range _indep_var_ is updated
 > ### Aliases: var_check
-> 
+>
 > ### ** Examples
-> 
+>
 > var_check("a:d", c("a","b","c","d"))
 $vars
 [1] "a" "b" "c" "d"
@@ -7514,42 +7514,42 @@ $iv
 $intv
 [1] ""
 
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("viewdata")
 > ### * viewdata
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: viewdata
 > ### Title: View data
 > ### Aliases: viewdata
-> 
+>
 > ### ** Examples
-> 
+>
 > if (interactive()) {
 + viewdata(mtcars)
 + viewdata("mtcars")
 + mtcars %>% viewdata
 + }
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 > nameEx("visualize")
 > ### * visualize
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: visualize
 > ### Title: Visualize data using ggplot2 <URL:
 > ###   http://docs.ggplot2.org/current/>
 > ### Aliases: visualize
-> 
+>
 > ### ** Examples
-> 
+>
 > visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 geom_smooth: method="auto" and size of largest group is >=1000, so using gam with formula: y ~ s(x, bs = "cs"). Use 'method = x' to change the smoothing method.
 > visualize("diamonds", "price:x", type = "hist")
@@ -7559,24 +7559,24 @@ geom_smooth: method="auto" and size of largest group is >=1000, so using gam wit
 > visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
 +   {.[[1]] + ggtitle("A histogram") + xlab("price in $")}
 > diamonds %>% visualize(c("price","carat","depth"), type = "density")
-> 
-> 
-> 
+>
+>
+>
 > cleanEx()
 
 detaching ‘package:mgcv’, ‘package:nlme’
 
 > nameEx("win_launcher")
 > ### * win_launcher
-> 
+>
 > flush(stderr()); flush(stdout())
-> 
+>
 > ### Name: win_launcher
 > ### Title: Create a launcher and updater for Windows (.bat)
 > ### Aliases: win_launcher
-> 
+>
 > ### ** Examples
-> 
+>
 > if (interactive()) {
 +   if (Sys.info()["sysname"] == "Windows") {
 +     win_launcher()
@@ -7587,17 +7587,17 @@ detaching ‘package:mgcv’, ‘package:nlme’
 +       unlink(fn)
 +   }
 + }
-> 
-> 
-> 
+>
+>
+>
 > ### * <FOOTER>
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  23.631 0.517 24.52 0 0 
+Time elapsed:  23.631 0.517 24.52 0 0
 > grDevices::dev.off()
-null device 
-          1 
+null device
+          1
 > ###
 > ### Local variables: ***
 > ### mode: outline-minor ***

@@ -155,7 +155,7 @@ getdata <- function(dataset,
 #' @return Data.frame with factors
 #'
 #' @export
-factorizer <- function(dat, safx = 10) {
+factorizer <- function(dat, safx = 20) {
   isChar <- sapply(dat, is.character)
   if (sum(isChar) == 0) return(dat)
     toFct <-
@@ -178,18 +178,19 @@ factorizer <- function(dat, safx = 10) {
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
 
-#' Load a csv files with read.csv and read_csv
+#' Load a csv file with read.csv and read_csv
 #'
 #' @param fn File name string
 #' @param header Header in file (TRUE, FALSE)
-#' @param sep Use , or ; or \\t
+#' @param sep Use , (default) or ; or \\t
+#' @param dec Decimal symbol. Use . (default) or ,
 #' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
 #' @param safx Values to levels ratio
 #'
 #' @return Data.frame with (some) variables converted to factors
 #'
 #' @export
-loadcsv <- function(fn, header = TRUE, sep = ",", saf = TRUE, safx = 10) {
+loadcsv <- function(fn, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
 
   cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
   # dat <- try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
@@ -208,6 +209,61 @@ loadcsv <- function(fn, header = TRUE, sep = ",", saf = TRUE, safx = 10) {
   # for (i in colnames(dat)[isDate]) dat[[i]] %<>% as.POSIXct %>% as.Date
 
   # dat
+}
+
+#' Load a csv file with from a url
+#'
+#' @param csv_url URL for the csv file
+#' @param header Header in file (TRUE, FALSE)
+#' @param sep Use , (default) or ; or \\t
+#' @param dec Decimal symbol. Use . (default) or ,
+#' @param saf Convert character variables to factors if (1) there are less than 100 distinct values (2) there are X (see safx) more values than levels
+#' @param safx Values to levels ratio
+#'
+#' @return Data.frame with (some) variables converted to factors
+#'
+#' @export
+loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
+
+  con <- curl::curl(csv_url)
+  try(open(con), silent = TRUE)
+  if (is(con, 'try-error')) {
+    close(con)
+    return("### There was an error loading the csv file from the provided url.")
+  } else {
+    dat <- try(read.table(con, header = header, comment.char = "",
+               quote = "\"", fill = TRUE, stringsAsFactors = saf,
+               sep = sep, dec = dec), silent = TRUE)
+    close(con)
+
+    if (is(dat, 'try-error'))
+      return("### There was an error loading the data. Please make sure the data are in csv format.")
+
+    if (saf) dat <- factorizer(dat, safx)
+
+    dat
+  }
+}
+
+#' Load an rda file from a url
+#'
+#' @param rda_url URL for the csv file
+#'
+#' @return Data.frame
+#'
+#' @export
+loadrda_url <- function(rda_url) {
+  con <- curl::curl(rda_url)
+  try(open(con), silent = TRUE)
+  if (is(con, 'try-error')) {
+    close(con)
+    return("### There was an error loading the rda file from the provided url.")
+  } else {
+    robj <- load(con)
+    if (length(robj) > 1) message("The connection contains multiple R-objects. Only the first will be returned.")
+    close(con)
+    get(robj)
+  }
 }
 
 #' Change data

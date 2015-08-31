@@ -210,7 +210,6 @@ output$downloadData <- downloadHandler(
 )
 
 # loading data
-# observe({
 observeEvent(input$uploadfile, {
   # loading files from disk
   isolate({
@@ -231,7 +230,7 @@ observeEvent(input$uploadfile, {
 
 observeEvent(input$url_rda_load, {
   ## loading rda file from url
-  ## https://github.com/vnijs/radiant/blob/master/inst/examples/houseprices.rda?raw=true
+  ## https://vnijs.github.io/radiant/examples/houseprices.rda
   isolate({
     if (input$url_rda == "") return()
     objname <- "rda_url"
@@ -262,7 +261,7 @@ observeEvent(input$url_rda_load, {
 
 observeEvent(input$url_csv_load, {
   ## loading csv file from url
-  ## https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/houseprices.csv
+  ## https://vnijs.github.io/radiant/examples/houseprices.csv
   isolate({
     objname <- "csv_url"
     if (input$url_csv == "") return()

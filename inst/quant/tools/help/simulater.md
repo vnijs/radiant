@@ -29,4 +29,4 @@ Because we specified a name in the `Sim name` box the data are available as `sim
 ![sim output](figures_quant/simulater_view.png)
 ![sim output](figures_quant/simulater_viz.png)
 
-The state file for the example above is available for download <a href="https://github.com/vnijs/radiant/blob/master/inst/examples/sim_state.rda?raw=true">here</a>
+The state file for the example above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_state.rda">here</a>
