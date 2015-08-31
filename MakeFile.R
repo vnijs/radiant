@@ -1,6 +1,6 @@
 setwd("~/gh/radiant_gh-pages/")
-file.copy("../radiant/inst/marketing/data/shopping.rda",
-          "~/Desktop/shopping.rda",overwrite = TRUE)
+# file.copy("../radiant/inst/marketing/data/shopping.rda",
+#           "~/Desktop/shopping.rda",overwrite = TRUE)
 
 system('make')
 setwd('base/app')
@@ -23,7 +23,7 @@ knitr::knit("tutorials_dev.Rmd")
 file.copy("tutorials_dev.md","../../radiant/inst/base/tools/app/tutorials.md",overwrite = TRUE)
 setwd('../')
 
-unlink("~/Desktop/shopping.rda")
+# unlink("~/Desktop/shopping.rda")
 system('sh rsync_base2app.sh')
 
 ## create documentation pdf

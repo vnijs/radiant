@@ -258,19 +258,20 @@ img {
 </div>
 <div id="install-radiant" class="section level4">
 <h4>4. Install Radiant</h4>
-<p>To install Radiant open R(studio) and copy-and-paste the command below and press return:</p>
+<p>To install Radiant open R(studio) and copy-and-paste the command below to the <code>Console</code> window on the bottom left. Then press return. R(studio) will now install Radiant and several dependencies. This may take a few minutes depending on your internet connection.</p>
 <pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)</code></pre>
-<p>If you are asked where to install Radiant and its dependencies (i.e., “Would you like to use a personal library instead?”) answer “yes” or “y”</p>
+<p>If you are asked where to install Radiant and its dependencies (i.e., “Would you like to use a personal library instead?”) answer “yes” or “y” and then press return.</p>
 </div>
 <div id="create-a-desktop-launcher" class="section level4">
 <h4>5. Create a desktop launcher</h4>
-<p>To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) one of the commands below into Rstudio. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
+<p>To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) one of the commands below into the <code>Console</code> window in Rstudio. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
 <pre class="r"><code>radiant::launcher(&quot;quant&quot;)
 
 radiant::launcher(&quot;marketing&quot;)
 
 radiant::launcher(&quot;analytics&quot;)</code></pre>
-<p>and press return. When asked if you want to create a short-cut type <code>y</code>. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release. Alternatively, you can start Radiant from Rstudio using one of the commands below. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
+<p>After pasting the command press return. When asked if you want to create a short-cut type <code>y</code> and press return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
+<p>Alternatively, you can start Radiant from the <code>Console</code> window in Rstudio using one of the commands below. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
 <pre class="r"><code>library(radiant)
 
 radiant(&quot;quant&quot;)

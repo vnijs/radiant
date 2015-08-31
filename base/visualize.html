@@ -248,7 +248,7 @@ img {
 </div>
 <div id="plot-type" class="section level3">
 <h3>Plot-type</h3>
-<p>Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the <code>diamonds</code> data loaded select <code>Histogram</code> and all (X) variables (use CTRL-A or CMD-A). This will create histograms for all variables in your dataset. Scatter plots are used to show the relationship, or lack thereof, between two variables. Select a variable to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and a numeric variable (Y-axis). Box-plots are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
+<p>Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the <code>diamonds</code> data loaded select <code>Histogram</code> and all (X) variables (use CTRL-a or CMD-a). This will create histograms for all variables in your dataset. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and the average value of a numeric variable (Y-axis). Box-plots are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.</p>
 </div>
 <div id="box-plots" class="section level3">
 <h3>Box plots</h3>
@@ -278,6 +278,13 @@ img {
 <div id="plot-height-and-width" class="section level3">
 <h3>Plot height and width</h3>
 <p>To make plots bigger or smaller adjust the values in the height and width boxes on the bottom left.</p>
+</div>
+<div id="customizing-plots-in-r-report" class="section level3">
+<h3>Customizing plots in R &gt; Report</h3>
+<p>To customize a plot first generate the visualize command by clicking the report (book) icon on the bottom left of your screen. The example below illustrates how to customize a command in the <code>R &gt; Report</code> tab. Notice that <code>custom</code> is set to <code>TRUE</code>.</p>
+<pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, yvar = &quot;price&quot;, xvar = &quot;carat&quot;, type = &quot;scatter&quot;, custom = TRUE) +
+  ggtitle(&quot;A scatterplot&quot;) + xlab(&quot;price in $&quot;)</code></pre>
+<p>See the ggplot2 documentation page for available options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.</p>
 </div>
 
 

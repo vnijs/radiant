@@ -32,16 +32,16 @@ visualize(dataset = "diamonds", xvar = "carat", yvar = "price",
           type = "scatter", facet_row = "clarity", color = "clarity")
 ```
 
-As an example, you can render the [`single_mean.Rmd`](https://github.com/vnijs/radiant/blob/master/inst/examples/single_mean.Rmd?raw=true) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://raw.githubusercontent.com/vnijs/radiant/master/inst/examples/radiant_rcode.R) for a more extensive example.
+As an example, you can render the [`single_mean.Rmd`](https://vnijs.github.io/radiant/examples/single_mean.Rmd) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://vnijs.github.io/radiant/examples/radiant_rcode.R) for a more extensive example.
 
-Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
+An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
 
 ```r
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 library(radiant)
 ```
 
-This will load the library and the required packages. To see the index of functions currently available from the Radiant package using the `help(package = "radiant")` command
+This will load the library and the required packages. To see the index of functions currently available in the Radiant package using the `help(package = "radiant")` command
 
 Lets start by comparing the mean of a variable to a (population) value using the built-in `mtcars` dataset. This functionality is in the Radiant menu `Base > Single mean`. The analysis is conducted in function `single_mean`. Calling the `summary` method on the result object will show tabular output. Calling `plot` on the same result will produce plots to help evaluate the hypothesis.
 
@@ -95,18 +95,20 @@ plot(result, plots = "dashboard")
 
 As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
 
-```{r}
+```{r fig.height=8}
 ## set working directory to your Desktop
-## setwd("~/Desktop") # or setwd("~/Documents/Desktop")
-
-## get the data from the link below and save it to your desktop
-browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
-
-## load the shopping dataset, if the file is not found make sure your working directory is set to Desktop
-load("~/Desktop/shopping.rda") # or load("~/Documents/Desktop/shopping.rda")
+# setwd("~/Desktop") # or setwd("~/Documents/Desktop")
 
 ## load the radiant library (not needed if run in Radiant's R > Code tab)
 library(radiant)
+
+## load the data directly from a url
+shopping <- loadrda_url("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
+
+## to download the data and load it use the commands below
+## if the file is not found make sure your working directory is set to the Desktop
+# browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
+# load("~/Desktop/shopping.rda") # or load("~/Documents/Desktop/shopping.rda")
 
 ## start with hierarchical clustering, view help
 ## run hierarchical cluster analysis on the shopping data, variables v1 through v6
@@ -119,10 +121,14 @@ summary(result)
 ## default plots - looks like there is a big jump in the overall within-cluster
 ## heterogeneity in the step from 3 to 2 segments
 plot(result)
+```
 
-## show the dendrogram with cutoff at 0
+```{r}
+## show the dendrogram with cutoff at 0.1
 plot(result, plots = "dendro", cutoff = 0.1)
+```
 
+```{r}
 ## plots created above suggest 3 clusters may be  most appropriate
 ## use kmeans to create the clusters
 ## generate output and save clustermembership to the datafile

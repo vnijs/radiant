@@ -4,11 +4,12 @@ There are six _join_ (or _merge_) options available in Radiant from the [dplyr](
 
 The examples below are adapted from [Cheatsheet for dplyr join functions](http://stat545-ubc.github.io/bit001_dplyr-cheatsheet.html) by Jenny Bryan and focus on three small datasets, `superheroes`, `publishers`, and `avengers`, to illustrate the different _join_ types and other ways to combine datasets in R and Radiant. The data is also available in csv format through the links below:
 
-<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
+<a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/superheroes.csv" target = "_blank">superheroes.csv</a>
 
-<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/publishers.csv" target = "_blank">publishers.csv</a>
+<a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/publishers.csv" target = "_blank">publishers.csv</a>
 
-<a href="https://github.com/vnijs/radiant/blob/master/inst/examples/avengers.csv" target = "_blank">avengers.csv</a>
+<a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/avengers.csv" target = "_blank">avengers.csv</a>
+
 
 <table class='table table-condensed table-hover' style='width:70%;'>
 <caption>Superheroes</caption>
@@ -524,7 +525,7 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 
 ### Dataset order
 
-Note that the order of the datasets selected may matters for a join. If we setup the Data > Combine tab as below the results are as follows:
+Note that the order of the datasets selected may matter for a join. If we setup the Data > Combine tab as below the results are as follows:
 
 ![join order](figures/join_publishers_superheroes.png)
 

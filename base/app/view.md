@@ -20,7 +20,7 @@ Click on a column header in the table to sort the data by the values of that var
 
 There are several ways to select a subset of the data to view. The `Filter` box on the left (click the check-box first) can be used with `>` and `<` signs and you can also combine subset commands. For example, `x > 3 & y == 2` would show only those rows for which the variable `x` has values larger than 3 **and** for which `y` has values equal to 2. Note that in R, and most other programming languages, `=` is used to _assign_ a value and `==` to evaluate if the value of a variable is equal to some other value. In contrast `!=` is used to determine if a variable is _unequal_ to some value. You can also use expressions that have an **or** condition. For example, to select rows where `Salary` is smaller than \$100,000 and larger than \$20,000 use `Salary > 20000 & Salary < 100000`. `&` is the symbol for **and**. The table below gives an overview of common operators.
 
-To filter using dates you need the `as.Date` function. For example, to choose only those dates before June 1st, 2014 enter `Date < as.Date("2014-6-1")` into the filter box and press return.
+It is also possible to filter using dates. For example, to choose only those dates before June 1st, 2014 enter `Date < "2014-6-1"` into the filter box and press return.
 
 You can also use string matching to select rows. For example, type `grepl("ood", cut)` to select rows with `Good` or `Very good` cut. This search is case sensitive by default. For case insensitive search you would use `grepl("GOOD", cut, ignore.case = TRUE)`. Type your statement in the `Filter`  box and press return to see the result on screen or an error below the box if the expression is invalid.
 
