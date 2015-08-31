@@ -18,7 +18,7 @@
 #' summary(result)
 #' result <- explore("diamonds", c("price","carat"), byvar = "cut", fun = c("n_missing", "skew"))
 #' summary(result)
-#' diamonds %>% explore("price", byvar = "cut", fun = c("length", "skew"))
+#' diamonds %>% explore("price", byvar = "cut", fun = c("length", "n_distinct"))
 #'
 #' @seealso \code{\link{summary.explore}} to show summaries
 #'
@@ -33,7 +33,8 @@ explore <- function(dataset,
                     shiny = FALSE) {
 
   # dataset <- "diamonds"
-  # vars <- c("price","carat")
+  # # vars <- c("price","carat")
+  # vars <- "price"
   # byvar <- "cut"
   # fun <- c("mean_rm","n_missing")
   # data_filter <- ""
@@ -84,6 +85,7 @@ explore <- function(dataset,
 
     ## avoiding issues with n_missing and n_distinct
     names(pfun) %<>% sub("n.","n_",.)
+    tab
 
     if (length(vars) > 1 && length(fun) > 1) {
       ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
@@ -98,9 +100,13 @@ explore <- function(dataset,
         rename_(.dots = setNames("value", names(pfun)))
     } else if (length(vars) == 1){
       tab %<>% mutate(variable = factor(vars, levels = vars)) %>%
+        set_colnames(., sub("^n.","n_",colnames(.))) %>%
         select_(.dots = c(byvar, "variable", names(pfun)))
     }
   }
+
+
+
 
   ## filtering the table if desired
   if (tabfilt != "") {
@@ -246,7 +252,7 @@ make_expl <- function(expl,
       options = list(
         # search = list(regex = TRUE),
         stateSave = TRUE,
-        search = list(search = search),
+        search = list(search = search, regex = TRUE),
         searchCols = searchCols,
         order = order,
         processing = FALSE,

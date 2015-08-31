@@ -75,7 +75,7 @@ output$dataviewer <- DT::renderDataTable({
       stateSave = TRUE,   ## maintains state but does not show column filter settings
 
       searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
-      search = list(search = search),
+      search = list(search = search, regex = TRUE),
       order = {if (is.null(r_state$dataviewer_state$order)) list()
                else r_state$dataviewer_state$order},
       autoWidth = TRUE,

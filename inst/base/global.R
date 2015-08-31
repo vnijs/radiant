@@ -19,6 +19,7 @@
 # r_encoding = getOption("encoding")
 r_encoding = "UTF-8"
 
+
 ## path to use for local and server use
 # r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
 #                   system.file(package = "radiant"))

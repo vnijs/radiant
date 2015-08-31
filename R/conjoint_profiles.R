@@ -59,12 +59,13 @@ conjoint_profiles <- function(dataset) {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' cp <<- readLines(system.file("examples/profiles-movie.txt", package='radiant'))
+#' cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
+#'        "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
+#'        "audio.visual = c('Small plain','Large plain','Large digital')",
+#'        "food = c('No food','Hot dogs and popcorn','Gourmet food')")
 #' result <- conjoint_profiles("cp")
 #' summary(result)
 #' rm(cp, envir = .GlobalEnv)
-#' readLines(system.file("examples/profiles-movie.txt", package='radiant')) %>%
-#'   conjoint_profiles %>% summary
 #'
 #' @seealso \code{\link{conjoint_profiles}} to calculate results
 #'

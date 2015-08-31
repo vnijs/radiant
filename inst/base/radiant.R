@@ -96,7 +96,7 @@ n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMP
 groupable_vars <- reactive({
   .getdata() %>%
     # summarise_each(funs(is.factor(.) | (n_distinct(., na.rm = TRUE)/n()) < .05)) %>%
-    summarise_each(funs(is.factor(.) | (n_distinct_no_miss(.)/n()) < .05)) %>%
+    summarise_each(funs(is.factor(.) || (n_distinct_no_miss(.)/n()) < .05)) %>%
     ## workaround dplyr
     # summarise_each(funs(is.factor(.) || ((length(unique(na.omit(.)))/n()) < .05))) %>%
     {which(. == TRUE)} %>%

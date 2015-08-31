@@ -294,7 +294,7 @@ make_dt <- function(pvt,
     options = list(
       # search = list(regex = TRUE),
       stateSave = TRUE,
-      search = list(search = search),
+      search = list(search = search, regex = TRUE),
       searchCols = searchCols,
       order = order,
       processing = FALSE,
