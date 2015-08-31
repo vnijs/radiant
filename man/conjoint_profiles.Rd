@@ -20,13 +20,13 @@ See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an
 }
 \examples{
 \donttest{
-cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
-       "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
-       "audio.visual = c('Small plain','Large plain','Large digital')",
-       "food = c('No food','Hot dogs and popcorn','Gourmet food')")
-result <- conjoint_profiles("cp")
-result <- cp \%>\% conjoint_profiles
-rm(cp, envir = .GlobalEnv)
+ cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
+        "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
+        "audio.visual = c('Small plain','Large plain','Large digital')",
+        "food = c('No food','Hot dogs and popcorn','Gourmet food')")
+ result <- conjoint_profiles("cp")
+ result <- cp \%>\% conjoint_profiles
+ rm(cp, envir = .GlobalEnv)
 }
 }
 \seealso{

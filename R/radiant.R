@@ -483,12 +483,24 @@ win_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     local_dir <- Sys.getenv("R_LIBS_USER")
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-    pt <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
-    fn1 <- paste0(pt, "radiant.bat")
+    # pt <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
+    pt <- file.path(Sys.getenv("HOME") ,"Desktop")
+    if (!file.exists(pt))
+      pt <- file.path(Sys.getenv("USERPROFILE") ,"Desktop", fsep = "\\")
+
+    if (!file.exists(pt)) {
+      pt <- Sys.getenv("HOME")
+      message(paste0("The launcher function was unable to find your Desktop. The launcher and update files/icons will be put in the directory: ", pt))
+    }
+
+    pt <- normalizePath(pt, winslash='/')
+
+    fn1 <- file.path(pt, "radiant.bat")
     launch_string <- paste0(Sys.which('R'), " -e \"if (!require(radiant)) { install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/') }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
     cat(launch_string, file=fn1, sep="\n")
+    Sys.chmod(fn1, mode = "0755")
 
-    fn2 <- paste0(pt, "update_radiant.bat")
+    fn2 <- file.path(pt, "update_radiant.bat")
     launch_string <- paste0(Sys.which('R'), " -e \"install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\"")
     cat(launch_string,file=fn2,sep="\n")
     Sys.chmod(fn2, mode = "0755")

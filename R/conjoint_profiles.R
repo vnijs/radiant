@@ -8,13 +8,13 @@
 #'
 #' @examples
 #' \donttest{
-#' cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
-#'        "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
-#'        "audio.visual = c('Small plain','Large plain','Large digital')",
-#'        "food = c('No food','Hot dogs and popcorn','Gourmet food')")
-#' result <- conjoint_profiles("cp")
-#' result <- cp %>% conjoint_profiles
-#' rm(cp, envir = .GlobalEnv)
+#'  cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
+#'         "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
+#'         "audio.visual = c('Small plain','Large plain','Large digital')",
+#'         "food = c('No food','Hot dogs and popcorn','Gourmet food')")
+#'  result <- conjoint_profiles("cp")
+#'  result <- cp %>% conjoint_profiles
+#'  rm(cp, envir = .GlobalEnv)
 #' }
 #'
 #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
@@ -59,6 +59,7 @@ conjoint_profiles <- function(dataset) {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
+#' \donttest{
 #' cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
 #'        "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
 #'        "audio.visual = c('Small plain','Large plain','Large digital')",
@@ -66,6 +67,7 @@ conjoint_profiles <- function(dataset) {
 #' result <- conjoint_profiles("cp")
 #' summary(result)
 #' rm(cp, envir = .GlobalEnv)
+#' }
 #'
 #' @seealso \code{\link{conjoint_profiles}} to calculate results
 #'
