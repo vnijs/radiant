@@ -117,9 +117,11 @@ two_level_vars <- reactive({
 ## used in visualize - don't plot variables that have zero sd
 varying_vars <- reactive({
   .getdata() %>%
-    {sshhr(summarise_each(., funs(sd_rm)))} %>%
-    { . > 0 } %>%
-    which(.) %>%
+    # {sshhr(summarise_each(., funs(sd_rm)))} %>%
+    # { . > 0 } %>%
+    summarise_each(funs(does_vary(.))) %>%
+    as.logical %>%
+    which %>%
     varnames()[.]
 })
 

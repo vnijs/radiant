@@ -425,6 +425,29 @@ mean_rm <- function(x) mean(x, na.rm = TRUE)
 #' @export
 median_rm <- function(x) median(x, na.rm = TRUE)
 
+#' Mode with na.rm = TRUE
+#' @param x Input variable
+#' @return Mode value
+#' @examples
+#' mode_rm(diamonds$cut)
+#'
+#' @export
+mode_rm <- function(x) {
+  ## from http://stackoverflow.com/a/8189441/1974918
+  x <- na.omit(x)
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+# mode_rm1 <- function(x) {
+#   data_frame(x = na.omit(x)) %>%
+#   group_by(x) %>%
+#   summarize(n = n()) %>%
+#   arrange(n) %>%
+#   .[[1]] %>%
+#   .[1]
+# }
+
 #' Min with na.rm = TRUE
 #' @param x Input variable
 #' @return Minimum value
@@ -460,6 +483,26 @@ sd_rm <- function(x) sd(x, na.rm = TRUE)
 #'
 #' @export
 sum_rm <- function(x) sum(x, na.rm = TRUE)
+
+#' Does a vector have non-zero variability?
+#' @param x Input variable
+#' @return Logical. TRUE is there is variability
+#' @examples
+#' summarise_each(diamonds, funs(does_vary)) %>% as.logical
+#'
+#' @export
+does_vary <- function(x) {
+  ## based on http://stackoverflow.com/questions/4752275/test-for-equality-among-all-elements-of-a-single-vector
+  if (length(x) == 1L) {
+    FALSE
+  } else {
+    if (is.factor(x) || is.character(x)) {
+      n_distinct(x, na_rm = TRUE) > 1
+    } else {
+      abs(max_rm(x) - min_rm(x)) > .Machine$double.eps^0.5
+    }
+  }
+}
 
 #' Make a list of functions-as-formulas to pass to dplyr
 #' @param x List of functions as strings

@@ -34,27 +34,31 @@ compare_means <- function(dataset, var1, var2,
 	dat <- getdata(dataset, vars, filt = data_filter)
 	if (!is_string(dataset)) dataset <- "-----"
 
-	# in case : was used for var2
+	## in case : was used for var2
 	vars <- colnames(dat)
 
 	if (dat[[var1]] %>% is.factor) {
 		colnames(dat) <- c("variable","values")
+		cname <- var1
 	} else {
 		dat %<>% gather_("variable", "values", vars)
+		cname <- " "
   }
 
-	# check variances in the data
-  if (dat %>% summarise_each(., funs(var(., na.rm = TRUE))) %>% min %>% {. == 0})
+	## check there is variation in the data
+  # if (dat %>% summarise_each(., funs(var(., na.rm = TRUE))) %>% min %>% {. == 0})
+  if (any(summarise_each(dat, funs(does_vary)) == FALSE))
   	return("Test could not be calculated. Please select another variable.")
 
-	# resetting option to independent if the number of observations is unequal
-  # summary on factor gives counts
-  if (samples == "paired")
+	## resetting option to independent if the number of observations is unequal
+  ## summary on factor gives counts
+  if (samples == "paired") {
     if (summary(dat[["variable"]]) %>% {max(.) != min(.)})
       samples <- "independent (obs. per level unequal)"
+  }
 
 	##############################################
-	# flip the order of pairwise testing - part 1
+	## flip the order of pairwise testing - part 1
 	##############################################
   flip_alt <- c("two.sided" = "two.sided",
                 "less" = "greater",
@@ -81,12 +85,13 @@ compare_means <- function(dataset, var1, var2,
 	ci_calc <- function(se, n, conf.lev = .95)
 	 	se * qt(conf.lev/2 + .5, n - 1)
 
-	dat %>%
+	dat_summary <-
+	  dat %>%
 		group_by_("variable") %>%
     summarise_each(funs(mean, n = length(.), sd,
                    			se = sd/sqrt(n),
                    			ci = ci_calc(se,n,conf_lev))) %>%
-    rename_(.dots = setNames("variable", " ")) -> dat_summary
+    rename_(.dots = setNames("variable", cname))
 
 	vars <- paste0(vars, collapse = ", ")
   environment() %>% as.list %>% set_class(c("compare_means",class(.)))
@@ -113,7 +118,6 @@ compare_means <- function(dataset, var1, var2,
 #' @export
 summary.compare_means <- function(object, ...) {
 
-	# result <- object
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
@@ -132,7 +136,7 @@ summary.compare_means <- function(object, ...) {
                   "greater" = ">")[object$alternative]
 
   means <- object$dat_summary$mean
-  names(means) <- object$dat_summary$` ` %>% as.character
+  names(means) <- object$dat_summary[[1]] %>% as.character
 
 	mod <- object$res
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
@@ -174,11 +178,11 @@ plot.compare_means <- function(x,
 	v1 <- colnames(dat)[1]
 	v2 <- colnames(dat)[-1]
 
-	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+	## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	plot_list <- list()
 	if ("bar" %in% plots) {
 		colnames(object$dat_summary)[1] <- "variable"
-		# use of `which` allows the user to change the order of the plots shown
+		## use of `which` allows the user to change the order of the plots shown
 		plot_list[[which("bar" == plots)]] <- ggplot(object$dat_summary,
 	    aes_string(x = "variable", y = "mean", fill = "variable")) +
 	    geom_bar(stat = "identity")  +
@@ -187,7 +191,7 @@ plot.compare_means <- function(x,
 	 		theme(legend.position = "none")
 	}
 
-	# graphs on full data
+	## graphs on full data
 	if ("box" %in% plots) {
 		plot_list[[which("box" == plots)]] <-
 			ggplot(dat, aes_string(x = v1, y = v2, fill = v1)) +

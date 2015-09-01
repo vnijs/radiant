@@ -36,30 +36,30 @@ compare_props <- function(dataset, var1, var2,
 
 	lv <- levels(dat[,var2])
 	if (levs != "") {
-		# lv <- levels(dat[,var2])
 		if (levs %in% lv && lv[1] != levs) {
 			dat[,var2] %<>% as.character %>% as.factor %>% relevel(levs)
 			lv <- levels(dat[,var2])
 		}
 	}
 
-	# check variances in the data
-  if (dat %>% summarise_each(., funs(var(.,na.rm = TRUE))) %>% min %>% {. == 0})
+	## check variances in the data
+  if (any(summarise_each(dat, funs(does_vary)) == FALSE))
   	return("Test could not be calculated. Please select another variable.")
 
   rn <- ""
-  dat %>%
-  group_by_(var1, var2) %>%
-  summarise(n = n()) %>%
-  spread_(var2, "n") %>%
-  { .[,1][[1]] %>% as.character ->> rn
-	  select(., -1) %>%
-	  as.matrix %>%
-	  set_rownames(rn)
-  } -> prop_input
+  prop_input <-
+	  dat %>%
+	  group_by_(var1, var2) %>%
+	  summarise(n = n()) %>%
+	  spread_(var2, "n") %>%
+	  { rn <<- .[,1][[1]] %>% as.character
+		  select(., -1) %>%
+		  as.matrix %>%
+		  set_rownames(rn)
+	  }
 
 	##############################################
-	# flip the order of pairwise testing - part 1
+	## flip the order of pairwise testing - part 1
 	##############################################
   flip_alt <- c("two.sided" = "two.sided", "less" = "greater", "greater" = "less")
 	##############################################
@@ -68,23 +68,23 @@ compare_props <- function(dataset, var1, var2,
 	              alternative = flip_alt[alternative]) ) %>% tidy
 
 	##############################################
-	# flip the order of pairwise testing - part 2
+	## flip the order of pairwise testing - part 2
 	##############################################
 	res[,c("group1","group2")] <- res[,c("group2","group1")]
 	##############################################
 
-	# from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
+	## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, conf.lev = .95)
 	 	se * qnorm(conf.lev/2 + .5, lower.tail = TRUE)
 
-	class(prop_input)
-
-	prop_input %>%
-		data.frame %>%
-		mutate(n = .[,1:2] %>% rowSums, p = .[,1] / n,
-					 se = (p * (1 - p) / n) %>% sqrt,
-       		 ci = ci_calc(se, conf_lev)) %>%
-		set_rownames({prop_input %>% rownames}) -> dat_summary
+	dat_summary <-
+		prop_input %>%
+			data.frame %>%
+			mutate(n = .[,1:2] %>% rowSums, p = .[,1] / n,
+						 se = (p * (1 - p) / n) %>% sqrt,
+	       		 ci = ci_calc(se, conf_lev)) %>%
+			set_rownames({prop_input %>% rownames}) %>%
+			add_rownames(var = var1)
 
 	vars <- paste0(vars, collapse = ", ")
   environment() %>% as.list %>% set_class(c("compare_props",class(.)))
@@ -155,6 +155,8 @@ summary.compare_props <- function(object, ...) {
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
+#' @importFrom scales percent
+#'
 #' @export
 plot.compare_props <- function(x,
                                plots = "props",
@@ -166,7 +168,6 @@ plot.compare_props <- function(x,
 	dat <- object$dat
 	v1 <- colnames(dat)[1]
 	v2 <- colnames(dat)[-1]
-	object$dat_summary[,v1] <- object$rn
 	lev_name <- object$lv[1]
 
 	## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
@@ -178,7 +179,8 @@ plot.compare_props <- function(x,
 			geom_bar(stat = "identity") +
 	 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
 	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
-	 		theme(legend.position = "none")
+	 		theme(legend.position = "none") +
+	 		scale_y_continuous(labels = percent)
 	}
 
 	if ("counts" %in% plots) {
