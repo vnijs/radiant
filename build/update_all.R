@@ -70,7 +70,7 @@ setwd("~/gh/radiant/")
 
 # answ <- readline("Did you create binary packages for Windows? (y/n) ")
 # if (substr(answ, 1, 1) %in% c("y","Y")) {
-  # system("sh build/build_mac_win.sh")
+  system("sh build/build_mac_win.sh")
 # }
 
 ## in case of problems
