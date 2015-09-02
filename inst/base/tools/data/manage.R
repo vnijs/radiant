@@ -68,7 +68,7 @@ loadUserData <- function(fname, uFile, ext,
   ## objname is used as the name of the data.frame
   objname <- sub(paste0(".",ext,"$"),"", filename)
 
-  ## if ext isn't in the filename ...
+  ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
     fext <- tools::file_ext(filename) %>% tolower
 
@@ -89,7 +89,8 @@ loadUserData <- function(fname, uFile, ext,
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
     } else if (length(robjname) > 1) {
       if (sum(robjname %in% c("r_state", "r_data")) == 2) {
-        upload_error_handler(objname,"### To restore app state from a state-file please click the state radio button before uploading the file")
+        upload_error_handler(objname,"### To restore state from a state-file select 'state' from the 'Load data of type' drowdown before uploading the file")
+        rm(r_state, r_data) ## need to remove the local copies of r_state and r_data
       } else {
         upload_error_handler(objname,"### More than one R object contained in the data.")
       }
@@ -103,6 +104,5 @@ loadUserData <- function(fname, uFile, ext,
     r_data[[objname]] <- loadcsv(uFile, header = header, sep = sep, saf = man_str_as_factor) %>%
       {if (is.character(.)) upload_error_handler(objname, mess) else .}
   }
-
-  r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
+  r_data[['datasetlist']] <<- c(objname, r_data[['datasetlist']]) %>% unique
 }

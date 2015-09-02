@@ -159,33 +159,25 @@ output$saveRmd <- downloadHandler(
   content = function(fname) {
     isolate({
 
-      # fname <- "report.zip"
-      # input <- list()
-      # input$rmd_report <- "test"
-      # current_dir <- getwd()
-      # tmpdir <- tempdir()
-      # print(tempdir())
+      cdir <- getwd()
+      setwd(tempdir())
+      fbase <- "radiant_report"
+      fnames <- paste0(fbase, c(".Rmd",".rds", ".zip"))
 
-      fpath <- tempdir()
-      fbase <- sub(paste0(".",tools::file_ext(fname)),"",fname)
+      ## doesn't work - creates a temp filename
+      # fbase <- basename(filename)
+      # fbase <- sub(paste0(".",tools::file_ext(fbase)),"", fbase)
 
-      fnames <- file.path(fpath, paste0(fbase, c(".Rmd",".rds", ".zip")))
-
-      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressMessages(library(radiant))\nr_data <- readRDS(\"", fbase, ".rds\")\n```\n\n") %>%
-        paste0(input$rmd_report) %>% cat(file = fnames[1],sep="\n")
-
-      # mtcars %>% saveRDS(file = fnames[2])
+      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressMessages(library(radiant))\nr_data <- readRDS(\"", fbase, ".rds\")\n```\n\n") %>%
+        paste0(., input$rmd_report) %>% cat(., file = fnames[1],sep="\n")
 
       reactiveValuesToList(r_data) %>% saveRDS(file = fnames[2])
-      # zip(zipfile=file.path(fpath, fname), files=file.path(fpath, paste0(fbase, c(".Rmd",".zip"))))
-      print(list.files(fpath))
 
-      zip(zipfile=fnames[3], files=fnames[1:2])
+      zip(fnames[3], fnames[1:2])
 
-      if(file.exists(fnames[3]))
-        file.rename(fnames[3], fname)
+      if(file.exists(fnames[3])) file.rename(fnames[3], fname)
 
-      # setwd(current_dir)
+      setwd(cdir)
     })
   },
   contentType = "application/zip"

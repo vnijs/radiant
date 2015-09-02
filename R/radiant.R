@@ -222,10 +222,12 @@ loadcsv <- function(fn, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 
 #'
 #' @return Data.frame with (some) variables converted to factors
 #'
+#' @importFrom curl curl
+#'
 #' @export
 loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
 
-  con <- curl::curl(csv_url)
+  con <- curl(csv_url)
   try(open(con), silent = TRUE)
   if (is(con, 'try-error')) {
     close(con)
@@ -251,9 +253,11 @@ loadcsv_url <- function(csv_url, header = TRUE, sep = ",", dec = ".", saf = TRUE
 #'
 #' @return Data.frame
 #'
+#' @importFrom curl curl
+#'
 #' @export
 loadrda_url <- function(rda_url) {
-  con <- curl::curl(rda_url)
+  con <- curl(rda_url)
   try(open(con), silent = TRUE)
   if (is(con, 'try-error')) {
     close(con)
