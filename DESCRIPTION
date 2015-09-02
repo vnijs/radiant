@@ -35,7 +35,7 @@ Imports:
 		data.tree(>= 0.1.9),
 		yaml(>= 2.1.13),
 		scales(>= 0.2.5),
-		curl(>= 0.9.3)
+		curl(>= 0.9.1)
 Suggests:
 		devtools (>= 1.8.0),
 		testthat (>= 0.10.0),
