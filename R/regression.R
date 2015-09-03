@@ -576,6 +576,23 @@ plot.reg_predict <- function(x,
   cn[which(cn == "Prediction") + 2] <- "ymax"
   colnames(object) <- cn
 
+  # if (facet_row != ".") {
+  #   byvar <- facet_row
+  # }
+  # if (facet_col != ".") {
+  #   byvar <- if (is.null(byvar)) facet_col else c(byvar, facet_col)
+  # }
+  # if (fill != "none") {
+  #   vars %<>% c(., fill)
+  #   if (type == "bar")
+  #     byvar <- if (is.null(byvar)) fill else c(byvar, fill)
+  # }
+
+  # tbv <- if (is.null(byvar)) i else c(i, byvar)
+  # tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
+  # print(getclass(object))
+
+
   if (color == 'none') {
     p <- ggplot(object, aes_string(x=xvar, y="Prediction")) +
            geom_line(aes(group=1))
@@ -635,7 +652,7 @@ store_reg <- function(object, data = object$dataset,
 #' @export
 var_check <- function(iv, cn, intv = "") {
 
-  # if : is used to select a range of variables indep_var is updated
+  ## if : is used to select a range of variables indep_var is updated
   vars <- iv
   if (length(vars) < length(cn)) vars <- iv <- cn
 

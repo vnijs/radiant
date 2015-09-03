@@ -430,7 +430,7 @@ observeEvent(input$glm_store_res, {
      if (!is.list(robj)) return()
      if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
        return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-     store_glm(robj, data = input$dataset, type = "residual", name = input$glm_store_res_name)
+     store_glm(robj, data = input$dataset, type = "residuals", name = input$glm_store_res_name)
   })
 })
 
@@ -440,7 +440,6 @@ observeEvent(input$glm_store_pred, {
     if (is.null(pred)) return()
     if (nrow(pred) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
       return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    # changedata(input$dataset, pred$Prediction, input$glm_store_pred_name)
     store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)
   })
 })

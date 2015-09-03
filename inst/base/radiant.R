@@ -90,25 +90,23 @@ saveStateOnRefresh <- function(session = session) {
   head(r_data[[input$dataset]]) %>% getclass
 })
 
+# n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMPTY]"])
+
 ## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) || (n_distinct_no_miss(.)/n()) < .05)) %>%
-    ## workaround dplyr
-    # summarise_each(funs(is.factor(.) || ((length(unique(na.omit(.)))/n()) < .05))) %>%
+    # summarise_each(funs(is.factor(.) || is.Date(.) || (n_distinct_no_miss(.)/n()) < .05)) %>%
+    summarise_each(funs(is.factor(.) || is.Date(.) || (n_distinct(., na_rm = TRUE)/n()) < .05)) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
 
-n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMPTY]"])
 
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(n_distinct(., na.rm = TRUE))) %>%
-    summarise_each(funs(n_distinct_no_miss(.))) %>%
-    ## workaround dplyr
-    # summarise_each(funs(length(unique(na.omit(.))))) %>%
+    # summarise_each(funs(n_distinct_no_miss(.))) %>%
+    summarise_each(funs(n_distinct(., na_rm = TRUE))) %>%
     { . == 2 } %>%
     which(.) %>%
     varnames()[.]
@@ -117,8 +115,6 @@ two_level_vars <- reactive({
 ## used in visualize - don't plot variables that have zero sd
 varying_vars <- reactive({
   .getdata() %>%
-    # {sshhr(summarise_each(., funs(sd_rm)))} %>%
-    # { . > 0 } %>%
     summarise_each(funs(does_vary(.))) %>%
     as.logical %>%
     which %>%

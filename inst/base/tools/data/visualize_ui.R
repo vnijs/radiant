@@ -32,7 +32,11 @@ output$ui_viz_yvar <- renderUI({
   if (is.null(input$viz_type)) return()
   vars <- varying_vars()
   if (not_available(vars)) return()
-  if (input$viz_type %in% c("line","bar","scatter")) vars <- vars["factor" != .getclass()[vars]]
+  vars <- vars["date" != .getclass()[vars]]
+  if (input$viz_type %in% c("line","bar","scatter")) {
+    vars <- vars["factor" != .getclass()[vars]]
+    vars <- vars["character" != .getclass()[vars]]
+  }
 
   isolate({
     ## keep the same y-variable 'active' if possible

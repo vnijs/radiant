@@ -164,7 +164,7 @@ visualize <- function(dataset, xvar,
         } else {
           if (is.factor(dat[[i]])) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
+            tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(funs(mean))
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color)) + geom_point() + geom_line(aes(group = 1))
           } else {
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
@@ -185,9 +185,7 @@ visualize <- function(dataset, xvar,
 
         if ("sort" %in% axes && facet_row == "." && facet_col == ".") {
           tmp <- arrange_(ungroup(tmp), j)
-          # for (fct in tbv)
-            # tmp[[fct]] %<>% factor(., levels = unique(.))
-            tmp[[i]] %<>% factor(., levels = unique(.))
+          tmp[[i]] %<>% factor(., levels = unique(.))
         }
 
         plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) +

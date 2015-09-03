@@ -193,8 +193,26 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 }
 
 # library(data.tree); library(yaml); library(radiant)
+
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
 # object <- x <- dtree(yl)
+
+# df <- ToDataFrameTree(object$jl, "p", "payoff")
+# df <- ToDataFrameTable(object$jl, "p", "payoff")
+# df <- ToDataFrameTaxonomy(object$jl, "p", "payoff")
+
+# df[df$children == "Small Box Office","p"] <- .8
+# df[df$children == "Medium Box Office","p"] <-
+#   1 - df[df$children == "Small Box Office","p"]  - df[df$children == "Large Box Office","p"]
+
+# `Small Box Office` = c(.1, .2, .3)
+# `Median Box Office` = 1 - `Small Box Office`
+
+# expand.grid
+
+# as.Node(df)
+
+
 # x %>% summary
 # dtree(yl) %>% plot(shiny = TRUE)
 # dtree(yl) %>% plot(final = TRUE)
@@ -203,3 +221,5 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 # dtree(yl) %>% summary
 # dtree(yl) %>% plot
 # dtree(yl) %>% plot(final = TRUE)
+
+# shiny::runApp("~/gh/radiant/inst/quant")
