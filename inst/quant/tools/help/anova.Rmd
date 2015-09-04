@@ -1,0 +1,56 @@
+> Anova
+
+
+### Data
+
+```{r}
+head(warpbreaks)
+```
+
+Two easy ways to run anova:
+
+```{r}
+tens.aov <- aov(breaks ~ tension, data = warpbreaks)
+print(tens.aov)
+summary(tens.aov)
+```
+
+Or,
+
+```{r}
+tens.lm <- lm(breaks ~ tension, data = warpbreaks)
+anova (tens.lm)
+```
+
+Like with regular LM it’s easy to test for interactions between factors:
+
+```{r}
+summary(aov(breaks~wool*tension, warpbreaks))
+```
+
+The easiest way to visualize an interaction like this is with an ugly but functional interaction plot:
+
+```{r}
+with(warpbreaks,interaction.plot(tension,wool,breaks))
+```
+
+(it takes 3 arguments: the first is the factor for the x-axis, then the trace factor for the different lines, then the response variable). And then of course you could instead use a barplot (using something like ggplot to make it prettier).
+
+With ANOVAs, you also have the option of ANCOVA – using a covariate to soak up variance, or testing whether there’s an effect of variable X1 above and beyond that of variable X2, much like you’d include a control var/fixed effect in regression, so the R code is really similar. If you were using tension as a covariate (doesn’t make sense for this dataset, but just for example’s sake):
+
+```{r}
+summary(aov(breaks ~ tension + wool, warpbreaks))
+```
+
+The trick is that the covariate always has to be listed first in the code, because apparently R reads in AOV items stepwise.
+
+Then the only other 2 major features would be linear contrasts, and repeated measures analyses… unfortunately I don’t remember much about these topics and don’t have accessible code on them  :-/ but Yidan and Min are both very good at stats and R, and they might be able to help!
+
+Oh and another (simpler) way to test for where the true differences are between groups (if you find a significant effect of the factor overall) is to use a Tukey HSD test:
+
+```{r}
+TukeyHSD(tens.aov)
+```
+
+This will output all pairwise comparisons between the groups in your factor.
+

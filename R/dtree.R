@@ -193,13 +193,61 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 }
 
 # library(data.tree); library(yaml); library(radiant)
-
+#
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
 # object <- x <- dtree(yl)
+# print(object$jl)
 
 # df <- ToDataFrameTree(object$jl, "p", "payoff")
 # df <- ToDataFrameTable(object$jl, "p", "payoff")
 # df <- ToDataFrameTaxonomy(object$jl, "p", "payoff")
+# print(df)
+#
+# ps <- .4
+# object$jl$Set(ps, filterFun = function(x) x$name == "Small Box Office")
+#
+# pf <- function(self) 1 - self$parent$SmallBoxOffice$ps
+# object$jl$Set(pf, filterFun = function(x) x$name == "Medium Box Office")
+#
+# ps <- c(.5, .3, .2)
+# object$jl$Set(ps, filterFun = function(x) x$name %in% c("Small Box Office","Medium Box Office", "Large Box Office"))
+#
+# df <- ToDataFrameTaxonomy(object$jl, "p", "payoff", "ps")
+# print(df)
+#
+# ps <- 0
+# object$jl$Set(ps, filterFun = function(x) x$type == "chance")
+#
+# prob_prob <- c()
+# check_prob <- function(x) {
+#   if (x$type == 'chance') x$prob <- Aggregate(x, function(node) node$p, sum)
+#   if(!is.null(x$prob) && x$prob == 1) prob_prob <<- c(prob_prob, x$name)
+#   # if(!is.null(x$prob) && x$prob == 1) prob_prob <<- x$name
+# }
+#
+# object$jl$Do(check_prob, traversal = "post-order", filterFun = isNotLeaf)
+# prob_prob
+#
+# df <- ToDataFrameTaxonomy(object$jl, "p", "payoff", "ps","prob")
+# print(df)
+#
+#
+# decision <- function(x) {
+#   po <- sapply(x$children, function(child) child$payoff)
+#   x$decision <- names(po[po == x$payoff])
+# }
+#
+#   jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision')
+
+
+#
+# print(df)
+#
+#
+# df <- ToDataFrameTaxonomy(object$jl, "p", "ps", "payoff")
+# print(df)
+
+
 
 # df[df$children == "Small Box Office","p"] <- .8
 # df[df$children == "Medium Box Office","p"] <-
