@@ -161,21 +161,20 @@ output$saveRmd <- downloadHandler(
 
       cdir <- getwd()
       setwd(tempdir())
-      fbase <- "radiant_report"
-      fnames <- paste0(fbase, c(".Rmd",".rds", ".zip"))
+      fbase <- "report"
+      fnames <- c("report.Rmd", "r_data.rda")
 
       ## doesn't work - creates a temp filename
       # fbase <- basename(filename)
       # fbase <- sub(paste0(".",tools::file_ext(fbase)),"", fbase)
 
-      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressMessages(library(radiant))\nr_data <- readRDS(\"", fbase, ".rds\")\n```\n\n") %>%
+      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressMessages(library(radiant))\nload(\"", fnames[2], "\")\n```\n\n") %>%
         paste0(., input$rmd_report) %>% cat(., file = fnames[1],sep="\n")
 
-      reactiveValuesToList(r_data) %>% saveRDS(file = fnames[2])
+      r_data <- reactiveValuesToList(r_data)
+      save(r_data, file = fnames[2])
 
-      zip(fnames[3], fnames[1:2])
-
-      if(file.exists(fnames[3])) file.rename(fnames[3], fname)
+      zip(fname, fnames[1:2])
 
       setwd(cdir)
     })

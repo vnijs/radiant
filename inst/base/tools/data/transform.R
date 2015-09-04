@@ -213,11 +213,11 @@ output$ui_Transform <- renderUI({
 	      tags$td(actionButton("tr_store", "Store"), style="padding-top:30px;")
 	    )
 	  ),
-    # help_and_report(modal_title = "Transform",
-    #                 fun_name = "transform",
-    #                 help_file = inclMD(file.path(r_path, "base/tools/help/transform.md")))
-		help_modal("Transform", "transform_help",
-		  inclMD(file.path(r_path,"base/tools/help/transform.md")))
+    help_and_report(modal_title = "Transform",
+                    fun_name = "transform",
+                    help_file = inclMD(file.path(r_path, "base/tools/help/transform.md")))
+		# help_modal("Transform", "transform_help",
+		#   inclMD(file.path(r_path,"base/tools/help/transform.md")))
 
 	))
 })
@@ -538,10 +538,13 @@ observeEvent(input$tr_change_type, {
 	})
 })
 
-## not doing anything yet ...
-observe({
-  if (not_pressed(input$transform_report)) return()
+observeEvent(input$transform_report, {
   fun <- isolate(input$tr_change_type)
+
+  ## not doing anything yet ...
+  # if (fun == "none") return()
+  return()
+
   isolate({
     update_report(inp_main = clean_args(tr_inputs(), tr_args_fun(fun)),
                   fun_name = fun, outputs = character(0), pre_cmd = "",
