@@ -271,6 +271,10 @@ radiant::launcher(&quot;marketing&quot;)
 
 radiant::launcher(&quot;analytics&quot;)</code></pre>
 <p>After pasting the command press return. When asked if you want to create a short-cut type <code>y</code> and press return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
+<p>If Radiant does not open in your browser when double clicking the <code>radiant</code> icon and you have a previous install of Radiant and/or the packages Rcpp and dplyr, please copy-and-paste the three commands below into Rstudio and press return. Then double-click the <code>update_radiant</code> icon on your desktop again. If the update is success try double clicking the <code>radiant</code> icon on your desktop again.</p>
+<pre class="r"><code>remove.packages(&quot;radiant&quot;, lib = .libPaths())
+remove.packages(&quot;Rcpp&quot;, lib = .libPaths())
+remove.packages(&quot;dplyr&quot;, lib = .libPaths())</code></pre>
 <p>Alternatively, you can start Radiant from the <code>Console</code> window in Rstudio using one of the commands below. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
 <pre class="r"><code>library(radiant)
 
