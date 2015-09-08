@@ -38,8 +38,24 @@ table.dataTable tfoot td, table.dataTable thead td {
 }
 
 .modal-dialog {
+  padding-top: 80px;
+  padding-left: 80px;
   width: 800px;
+  overflow-y: initial !important
 }
+
+.modal-body{
+  height: 600px;
+  overflow-y: auto;
+}
+
+/*@media (min-height: 500px) {
+    .modal-body { height: 400px; }
+}
+
+@media (min-height: 800px) {
+    .modal-body { height: 600px; }
+}*/
 
 img {
   max-width: 100%;
@@ -52,7 +68,7 @@ pre {
   white-space: pre;
 }
 
-#data_filter, #tr_transform, #tr_recode, #tr_rename,
+#data_filter, #tr_transform, #tr_recode, #tr_rename, #tr_paste,
 #glm_predict_cmd, #reg_predict_cmd {
   max-width: 234px;
 }

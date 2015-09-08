@@ -29,14 +29,10 @@ output$ui_expl_vars <- renderUI({
 output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
+
   isolate({
-    if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
-      sel <- r_state$expl_byvar
-      ind1 <- which(sel %in% vars)
-      ind2 <- sapply(sel, function(x) which(x == vars))
-      vars[ind1] <- sel
-      names(vars)[ind1] <- names(vars)[ind2]
-    }
+    if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars))
+      vars <- unique(c(r_state$expl_byvar, vars))
   })
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,

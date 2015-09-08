@@ -56,7 +56,8 @@ output$ui_viz_yvar <- renderUI({
 ## X - variable
 output$ui_viz_xvar <- renderUI({
   if (is.null(input$viz_type)) return()
-  vars <- varying_vars()
+  # vars <- varying_vars()
+  vars <- varnames()
   if (not_available(vars)) return()
   if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
@@ -224,7 +225,7 @@ observeEvent(input$visualize_report, {
     update_report(inp_main = clean_args(viz_inputs(), viz_args),
                   fun_name = "visualize", outputs = character(0),
                   pre_cmd = "", figs = TRUE,
-                  fig.width = round(7 * viz_plot_width()/650,2),
-                  fig.height = round(7 * viz_plot_height()/500,2))
+                  fig.width = round(7 * viz_plot_width()/600,2),
+                  fig.height = round(7 * viz_plot_height()/600,2))
   })
 })

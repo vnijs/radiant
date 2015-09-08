@@ -1,9 +1,19 @@
 ## No longer need when dplyr 0.5 comes out
-# if (packageVersion("Rcpp") < "0.12.0") stop(
-#   "Radiant requires Rcpp >= 0.12.0. ",
-#   "Please install the latest version of Rcpp from CRAN: ",
-#   "install.packages('Rcpp', repo = 'http://cran.rstudio.com')"
-# )
+if (packageVersion("Rcpp") < "0.12.0") {
+  stop(
+  "Radiant requires Rcpp >= 0.12.0. ",
+  "Please install the latest version of Rcpp from CRAN: ",
+  "install.packages('Rcpp', repo = 'http://cran.rstudio.com')"
+  )
+}
+
+if (packageVersion("dplyr") < "0.4.3") {
+  stop(
+  "Radiant requires dplyr >= 0.4.3. ",
+  "Please install the latest version of dplyr from CRAN: ",
+  "install.packages('dplyr', repo = 'http://cran.rstudio.com')"
+  )
+}
 
 ## turn off warnings globally
 # options(warn=-1)
@@ -155,6 +165,9 @@ js_head <-
   tags$head(
     tags$script(src = "js/session.js"),
     tags$script(src = "js/jquery-ui.custom.min.js"),
+    tags$script(src = "js/returnTextAreaBinding.js"),
+    tags$script(src = "js/returnTextInputBinding.js"),
+    # tags$script(src = "js/draggable_modal.js"),
     tags$script(src = "js/video_reset.js"),
     tags$link(rel = "shortcut icon", href = "imgs/icon.png")
   )

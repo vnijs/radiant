@@ -90,7 +90,8 @@ output$dataviewer <- DT::renderDataTable({
 
 observeEvent(input$view_store, {
   isolate({
-    view_store(input$dataset, input$view_vars, input$view_dat, input$data_filter, input$dataviewer_rows_all)
+    data_filter <- if (input$show_filter) input$data_filter else ""
+    view_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
     updateTextInput(session, "data_filter", value = "")
     updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
 
@@ -124,7 +125,8 @@ view_store <- function(dataset,
 output$dl_view_tab <- downloadHandler(
   filename = function() { paste0("view_tab.csv") },
   content = function(file) {
-    getdata(input$dataset, vars = input$view_vars, filt = input$data_filter,
+    data_filter <- if (input$show_filter) input$data_filter else ""
+    getdata(input$dataset, vars = input$view_vars, filt = data_filter,
             rows = input$dataviewer_rows_all, na.rm = FALSE) %>%
       write.csv(file, row.names = FALSE)
   }

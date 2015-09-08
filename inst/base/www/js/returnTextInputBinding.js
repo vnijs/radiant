@@ -14,11 +14,31 @@ $.extend(returnTextInputBinding, {
     el.value = value;
   },
   subscribe: function(el, callback) {
-    // $(el).on('keyup.textInputBinding input.textInputBinding', function(event) {
-    //   callback(true);
+    // old setup worked but does not 'fire' when input is emptied
+    // $(el).on('change.textInputBinding', function(event) {
+    //   callback(false);
     // });
+
+    // same setup as returnTextAreaBinding.js
+    // callback when if enter key is pressed: http://stackoverflow.com/a/30149302/1974918
+    $(el).on('keydown.textInputBinding input.textInputBinding', function(event) {
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          callback();
+        }
+        // print value using console.log(event.target.value);
+        if(event.target.value == "") {
+          callback();
+        }
+    });
+
+    // callback when updateTextInput is used to reset value to ""
     $(el).on('change.textInputBinding', function(event) {
-      callback(false);
+      if(event.target.value == "") {
+        callback();
+      } else {
+        callback(false);
+      }
     });
   },
   unsubscribe: function(el) {

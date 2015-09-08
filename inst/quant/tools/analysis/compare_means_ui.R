@@ -40,9 +40,17 @@ output$ui_cm_var2 <- renderUI({
     # when cm_var1 is numeric comparisons for multiple variables are possible
     vars <- vars[-which(vars == input$cm_var1)]
     if (length(vars) == 0) return()
+
+    ## if possible, keep current indep value when depvar changes
+    ## after storing residuals or predictions
+    isolate({
+      init <- input$cm_var2 %>%
+        {if (!is_empty(.) && . %in% vars) . else character(0)}
+    })
+
     selectizeInput(inputId = "cm_var2", label = "Variables (select one or more):",
                 choices = vars,
-                selected = state_multiple("cm_var2", vars),
+                selected = state_multiple("cm_var2", vars, init),
                 multiple = TRUE,
                 options = list(placeholder = 'Select variables',
                                plugins = list('remove_button', 'drag_drop')))

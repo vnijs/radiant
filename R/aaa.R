@@ -13,7 +13,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
-#' @importFrom lubridate is.Date is.POSIXt now mdy dmy ymd ymd_hms
+#' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm
 #' @importFrom broom tidy glance
 #' @importFrom tidyr gather_ gather separate
 #' @importFrom gridExtra arrangeGrob
@@ -23,6 +23,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom MathJaxR withMathJaxR
 #' @importFrom readr read_delim write_csv
 #' @importFrom rmarkdown render
+#' @importFrom car recode
 NULL
 
 #' Exporting the kurtosi function from the psych package

@@ -13,13 +13,8 @@ output$ui_pvt_cvars <- renderUI({
   if (not_available(vars)) return()
 
   isolate({
-    if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
-      sel <- r_state$pvt_cvars
-      ind1 <- which(sel %in% vars)
-      ind2 <- sapply(sel, function(x) which(x == vars))
-      vars[ind1] <- sel
-      names(vars)[ind1] <- names(vars)[ind2]
-    }
+    if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars))
+      vars <- unique(c(r_state$pvt_cvars, vars))
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,

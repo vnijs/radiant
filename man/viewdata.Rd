@@ -9,7 +9,7 @@ viewdata(dataset, vars = "", filt = "", rows = NULL, na.rm = FALSE)
 \arguments{
 \item{dataset}{Name of the dataframe to change}
 
-\item{vars}{Variables to so (default is all)}
+\item{vars}{Variables to show (default is all)}
 
 \item{filt}{Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")}
 

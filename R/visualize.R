@@ -117,8 +117,9 @@ visualize <- function(dataset, xvar,
         hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
-      if (!"factor" %in% class(dat[[i]]))
-        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% diff(.)/bins
+      if (!"factor" %in% class(dat[[i]])) {
+        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
+      }
 
       plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
     }
@@ -141,6 +142,12 @@ visualize <- function(dataset, xvar,
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
         if ("factor" %in% class(dat[[i]])) {
+
+          ## make range comparable to bar plot
+          ymax <- max(dat[[j]]) %>% {if (. < 0) 0 else .}
+          ymin <- min(dat[[j]]) %>% {if (. > 0) 0 else .}
+          plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
+
           plot_list[[itt]] <- plot_list[[itt]] +
             geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
             # geom_errorbar(stat = "hline", yintercept = "median", width = .8, size = 1, color = "red", aes(ymax = ..y.., ymin = ..y..))

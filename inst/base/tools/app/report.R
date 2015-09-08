@@ -38,6 +38,7 @@ plot(result, plots = 'hist')
 visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
           type = 'scatter', color = 'clarity')
 ```
+> **Put your own code here or delete this sample report and create your own**
 "
 
 observeEvent(input$manual_paste, {
@@ -52,7 +53,10 @@ output$ui_manual <- renderUI({
 })
 
 observeEvent(input$vim_keys, {
-  isolate(r_data$vim_keys %<>% {. == FALSE})
+  isolate({
+    r_state$rmd_report <<- input$rmd_report
+    r_data$vim_keys %<>% {. == FALSE}
+  })
 })
 
 output$ui_vim <- renderUI({
@@ -247,9 +251,10 @@ update_report_fun <- function(cmd) {
   }
 
   if (cmd != "") {
-    if (is.null(input$rmd_report)) {
+    if (is_empty(input$rmd_report)) {
       if (is.null(r_state$rmd_report)) {
-        r_state$rmd_report <<- cmd
+      # if (is_empty(is.null(r_state$rmd_report))) {
+        r_state$rmd_report <<- paste0("## Your report title\n", cmd)
       } else {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
       }

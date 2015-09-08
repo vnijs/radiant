@@ -322,7 +322,7 @@ changedata <- function(dataset,
 #' @details View, search, sort, etc. your data
 #'
 #' @param dataset Name of the dataframe to change
-#' @param vars Variables to so (default is all)
+#' @param vars Variables to show (default is all)
 #' @param filt Filter to apply to the specified dataset. For example "price > 10000" if dataset is "diamonds" (default is "")
 #' @param rows Select rows in the specified dataset. For example "1:10" for the first 10 rows or "n()-10:n()" for the last 10 rows (default is NULL)
 #' @param na.rm Remove rows with missing values (default is FALSE)

@@ -12,7 +12,8 @@ output$ui_filter_error <- renderUI({
 output$ui_data <- renderUI({
   tagList(
     includeCSS(file.path(r_path,"base/www/style.css")),
-    includeScript(file.path(r_path,"base/www/js/returnTextAreaBinding.js")),
+    # includeScript(file.path(r_path,"base/www/js/returnTextAreaBinding.js")),
+    # includeScript(file.path(r_path,"base/www/js/returnTextInputBinding.js")),
     sidebarLayout(
       sidebarPanel(
         ## based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo
@@ -59,7 +60,10 @@ output$ui_data <- renderUI({
           tabPanel("Explore",
                    downloadLink("dl_explore_tab", "", class = "fa fa-download alignright"),
                    DT::dataTableOutput("explorer")),
-          tabPanel("Transform", htmlOutput("transform_data"), verbatimTextOutput("transform_summary")),
+          tabPanel("Transform",
+                   htmlOutput("transform_data"),
+                   verbatimTextOutput("transform_summary"),
+                   uiOutput("ui_tr_log")),
           tabPanel("Combine", htmlOutput("cmb_data1"), htmlOutput("cmb_data2"),
                    htmlOutput("cmb_possible"), htmlOutput("cmb_data"))
           # tabPanel("Generate", HTML("<h3>Generate input data for simulation and prediction</h3>")),
