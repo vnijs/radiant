@@ -105,9 +105,6 @@ explore <- function(dataset,
     }
   }
 
-
-
-
   ## filtering the table if desired
   if (tabfilt != "") {
     tab <- filterdata(tab, tabfilt)
@@ -183,6 +180,7 @@ summary.explore <- function(object, top = "fun", ...) {
 #'
 #' @examples
 #' result <- explore("diamonds", "price:x") %>% flip("var")
+#'
 #' result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) %>%
 #'   flip("byvar")
 #'
@@ -194,6 +192,29 @@ flip <- function(expl, top = "fun") {
   cvars <- expl$byvar %>% {if (.[1] == "") character(0) else .}
   if (top[1] == "var")
     expl$tab %>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
+
+# https://github.com/hadley/tidyr/issues/104
+# library(tidyr)
+# tab <- structure(list(variable = structure(1:5, .Label = c("price", "carat", "depth", "table", "x"), class = "factor"), mean = c(3907.186,
+#   0.794283333333333, 61.7526666666667, 57.4653333333333, 5.72182333333333
+#   )), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA,
+#   -5L), .Names = c("variable", "mean"))
+
+# tab %>% gather("function", "value", -1)
+# tab %>% gather("function", "value", -variable)
+
+
+# tab %>% gather("function", "value", -1)
+# Source: local data frame [5 x 3]
+
+#   variable function        value
+#     (fctr)   (fctr)        (dbl)
+# 1    price     mean 3907.1860000
+# 2    carat     mean    0.7942833
+# 3    depth     mean   61.7526667
+# 4    table     mean   57.4653333
+# 5        x     mean    5.7218233
+
   else if (top[1] == "byvar" && length(cvars) > 0)
     expl$tab %>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_(cvars[1], "value")
   else

@@ -13,7 +13,7 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom knitr knit2html
 #' @importFrom pryr where
 #' @importFrom magrittr %<>% %T>% %$% set_rownames set_colnames set_names divide_by add extract2
-#' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm
+#' @importFrom lubridate is.Date is.POSIXt now year month wday week hour minute second ymd mdy dmy ymd_hms hms hm as.duration
 #' @importFrom broom tidy glance
 #' @importFrom tidyr gather_ gather separate
 #' @importFrom gridExtra arrangeGrob
@@ -23,7 +23,13 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom MathJaxR withMathJaxR
 #' @importFrom readr read_delim write_csv
 #' @importFrom rmarkdown render
+NULL
+
+#' Exporting the recode function from the car package
 #' @importFrom car recode
+#' @name recode
+#' @rdname recode
+#' @export
 NULL
 
 #' Exporting the kurtosi function from the psych package
@@ -156,8 +162,3 @@ NULL
 #' @usage data(avengers)
 #' @format A data frame with 7 rows and 4 variables
 NULL
-
-
-
-
-

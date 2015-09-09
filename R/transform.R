@@ -177,6 +177,11 @@ as_factor <- function(x) as.factor(x)
 #' @export
 as_character <- function(x) as.character(x)
 
+#' Wrapper for lubridate's as.duration function. Result converted to numeric
+#' @param x Time difference
+#' @export
+as_duration <- function(x) as.numeric(lubridate::as.duration(x))
+
 #' Generate a variable used to selected a training sample
 #' @param n Number (or fraction) of observations to label as training
 #' @param nr Number of rows in the dataset
@@ -193,148 +198,33 @@ make_train <- function(n = .7, nr = 100) {
   training
 }
 
-#' Filter out rows with missing observations
+#' Add tranformed variables to a data frame (NSE)
 #'
-#' @details Filter data on complete cases for selected variables
+#' @details Wrapper for dplyr::mutate_each that allows custom variable name extensions
 #'
-#' @param data Data.frame to filter
-#' @param vars Variables used to identify rows with missing values (default is all)
-#'
-#' @examples
-#' mtcars[1:4, "mpg"] <- NA; mtcars[5:10, "carb"] <- NA
-#' filter_na(mtcars, "mpg")
-#'
-#' @export
-filter_na <- function(data, vars = "") {
-  if (all(vars == "")) return(na.omit(data))
-  ind <- select_(data, .dots = vars) %>% complete.cases
-  filter(data, ind)
-}
-
-#' Add tranformed variables to a data.frame (SE)
-#'
-#' @param data Data.frame to add transformed variables to
-#' @param fun Function to apple (e.g., "log")
-#' @param ext Extension to add for each variable
-#' @param vars Variables to transform (default is all)
-#'
-#' @examples
-#' mutate_each_add_(mtcars, fun = "log", ext = "_log", vars = c("mpg","cyl"))
-#'
-#' @export
-mutate_each_add_ <- function(data, fun,
-                             ext = "",
-                             vars = "") {
-
-    fun <- get(fun)
-    data %>% select_(.dots = vars) %>% mutate_each_(funs(fun), vars) %>%
-      set_colnames(paste0(vars, ext)) %>% bind_cols(data, .)
-}
-
-
-#' Add tranformed variables to a data.frame (NSE)
-#'
-#' @param data Data.frame to add transformed variables to
-#' @param fun Function to apple (e.g., "log")
-#' @param ext Extension to add for each variable
+#' @param tbl Data frame to add transformed variables to
+#' @param funs Function(s) to apply (e.g., funs(log))
 #' @param ... Variables to transform
-#'
-#' @examples
-#' mutate_each_add(mtcars, fun = "log", ext = "_log", mpg, cyl)
-#'
-#' @importFrom pryr named_dots
-#'
-#' @export
-mutate_each_add <- function(data, fun,
-                            ext = "",
-                            ...) {
-
-    vars <- pryr::named_dots(...) %>% names
-    if (is.null(vars)) vars <- colnames(data)
-
-    fun <- get(fun)
-    # data %>% select(...) %>% mutate_each(funs(fun), ...) %>%
-    data %>% select_(.dots = vars) %>% mutate_each_(funs(fun), vars = vars) %>%
-      set_colnames(paste0(vars, ext)) %>% bind_cols(data, .)
-
-# data %>%  mutate_each(funs(fun), ...) %>% select(...) %>%
-#   set_colnames(paste0(vars, ext)) %>% bind_cols(data, .)
-
-}
-
-#' Add normalized variables to a data.frame (NSE)
-#'
-#' @param data Data.frame to add transformed variables to
 #' @param ext Extension to add for each variable
-#' @param ... Variables to normalize. The first variable is used as the normalizer
 #'
 #' @examples
-#' normalize_each_add(mtcars, ext = "_nz", mpg, cyl, mpg)
+#' mutate_each(mtcars, funs(log), mpg, cyl, ext = "_log")
 #'
 #' @importFrom pryr named_dots
 #'
 #' @export
-normalize_each_add <- function(data, ext = "", ...) {
+mutate_each <- function(tbl, funs, ..., ext = "") {
 
-  vars <- pryr::named_dots(...) %>% names
-  nz <- select_(data, vars[1])[[1]]
-  vars <- vars[-1]
+  if (ext == "") {
+    dplyr::mutate_each(tbl, funs, ...)
+  } else {
+    vars <- pryr::named_dots(...) %>% names
+    if (is.null(vars)) vars <- colnames(tbl)
 
-  nlize <- function(x) x / nz
-
-  data %>% select_(.dots = vars) %>%
-    mutate_each_(funs(nlize(.)), vars = vars) %>%
-    set_colnames(paste0(vars, ext)) %>% bind_cols(data, .)
+    tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
+      set_colnames(paste0(vars, ext)) %>% bind_cols(tbl, .)
+  }
 }
-
-# Create new variables and add them to the dataframe
-#
-# @param data Data.frame to add transformed variables to
-# @param cmd Expression that will generate the new variable(s). To create multiple new variables separate commands using a ";"
-#
-# @examples
-# create(mtcars, "mpg0 = mpg - mean(mpg); mpg_ln = log(mpg)")
-#
-# @export
-# create <- function(data, cmd) {
-#   do.call(within, list(dataset, parse(text = cmd)))
-# }
-
-## Test
-# dat <- read.table(header = TRUE, text = "date days
-# 1/1/10  1
-# 1/2/10  2
-# 1/3/10  3
-# 1/4/10  4
-# 1/5/10  5
-# 1/6/10  6
-# 1/7/10  7
-# 1/8/10  8
-# 1/9/10  9
-# 1/10/10 10")
-# sapply(dat,class)
-# library(lubridate)
-# library(magrittr)
-# dat$date %>% as_mdy %T>% print %>% class
-# dat$date %<>% as.character
-# dat$date %>% as_mdy %T>% print %>% class
-# dat$date %<>% as.factor
-# dat$date %>% as_mdy %T>% print %>% class
-
-## time in hours:minutes and seconds
-# time <- "19:12:01"
-# time %<>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hms(.)
-
-
-# ?hours
-
-# time <- "19:12"
-# time %<>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hm(.)
-# time
-# ?hm
-# hours(time)
-# minutes(time)
-# seconds(time)
 
 #' Create data.frame summary
 #'
@@ -347,7 +237,7 @@ normalize_each_add <- function(data, ext = "", ...) {
 getsummary <- function(dat, dc = getclass(dat)) {
 
   isFct <- "factor" == dc
-  isNum <- "numeric" == dc | "integer" == dc
+  isNum <- "numeric" == dc | "integer" == dc | "Duration" == dc
   isDate <- "date" == dc
   isChar <- "character" == dc
   isLogic <- "logical" == dc
@@ -371,7 +261,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isFct) > 0) {
     cat("Summarize factors:\n")
-    select(dat, which(isFct)) %>% summary(maxsum = 12) %>% print
+    select(dat, which(isFct)) %>% summary(maxsum = 20) %>% print
     cat("\n")
   }
   if (sum(isDate) > 0) {
@@ -382,16 +272,28 @@ getsummary <- function(dat, dc = getclass(dat)) {
     cat("\n")
   }
   if (sum(isPeriod) > 0) {
+
+    max_time <- function(x) sort(x) %>% tail(1)
+    min_time <- function(x) sort(x) %>% head(1)
+
     cat("Earliest time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(min)) %>% print
+    select(dat, which(isPeriod)) %>% summarise_each(funs(min_time)) %>% print
     cat("\nFinal time:\n")
-    select(dat, which(isPeriod)) %>% summarise_each(funs(max)) %>% print
+    select(dat, which(isPeriod)) %>% summarise_each(funs(max_time)) %>% print
     cat("\n")
   }
+
   if (sum(isChar) > 0) {
-    cat("Summarize character variables (< 20 unique values shown):\n")
-    select(dat, which(isChar)) %>% distinct %>% lapply(unique) %>%
-      {for(i in names(.)) cat(i, ":", .[[i]][1:min(20,length(.[[i]]))], "\n")}
+    ## finding unique elements can be slow for large files
+    if (nrow(dat) < 10^5) {
+      cat("Summarize character variables (< 20 unique values shown):\n")
+      select(dat, which(isChar)) %>% lapply(unique) %>%
+        {for(i in names(.)) cat(i, ":", .[[i]][1:min(20,length(.[[i]]))], "\n")}
+    } else {
+      cat("Summarize character variables (< 20 values shown):\n")
+      select(dat, which(isChar)) %>%
+        {for(i in names(.)) cat(i, ":", .[[i]][1:min(20,length(.[[i]]))], "\n")}
+    }
     cat("\n")
   }
   if (sum(isLogic) > 0) {
@@ -402,5 +304,62 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
 }
 
+## Test
+# dat <- read.table(header = TRUE, text = "date days
+# 1/1/10  1
+# 1/2/10  2
+# 1/3/10  3
+# 1/4/10  4
+# 1/5/10  5
+# 1/6/10  6
+# 1/7/10  7
+# 1/8/10  8
+# 1/9/10  9
+# 1/10/10 10")
+# sapply(dat,class)
+# library(lubridate)
+# library(magrittr)
+# dat$date %>% as_mdy %T>% print %>% class
+# dat$date %<>% as.character
+# dat$date %>% as_mdy %T>% print %>% class
+# dat$date %<>% as.factor
+# dat$date %>% as_mdy %T>% print %>% class
 
+## time in hours:minutes and seconds
+# library(lubridate)
+# time <- as_hms("19:12:01") + lubridate::minutes(0:2999) %>% data.frame
+# summarise_each(time, funs(max))
+# max(minute(time[[1]]))
+# time(time)
+# arrange(time) %>% tail(1)
+# arrange(time) %>% tail(1)
+# time %<>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hms(.)
+# time <- "19:12"
+# time %<>% { if (is.factor(.)) as.character(.) else . } %>% lubridate::hm(.)
+# time
+# ?hm
+# hours(time)
+# minutes(time)
+# seconds(time)
+
+
+# library(lubridate)
+# library(DT)
+# dat <- read.table(header = TRUE, text = "time
+# 1:00
+# 1:01
+# 1:02
+# 1:03
+# 1:04
+# 1:05
+# 1:06
+# 1:07
+# 4:08
+# 8:09
+# 9:10")
+
+# dat$time <- hm(dat$time)
+# class(dat$time)
+
+# datatable(dat, filter = 'top')
 

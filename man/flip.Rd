@@ -19,6 +19,7 @@ See \url{http://vnijs.github.io/radiant/base/explore.html} for an example in Rad
 }
 \examples{
 result <- explore("diamonds", "price:x") \%>\% flip("var")
+
 result <- explore("diamonds", "price", byvar = "cut", fun = c("length", "skew")) \%>\%
   flip("byvar")
 }
