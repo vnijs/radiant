@@ -242,23 +242,39 @@ img {
 <blockquote>
 <p>Transform variables in data</p>
 </blockquote>
+<div id="transform-command-log" class="section level3">
+<h3>Transform command log</h3>
+<p>All transformations applied in the <em>Data &gt; Transform</em> tab can be logged. If, for example, you apply a log transformation to a numeric variable the following code is generated and put in the <em>Transform command log</em> window at the bottom of your screen when you click the <code>Store</code> button.</p>
+<pre>
+## transform variable
+r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price)
+</pre>
+<p>This is an important feature if you need to recreate your results at some point in the future or want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate a result.</p>
+<p>To add commands contained in the command log window to a report in <em>R &gt; Report</em> click the <i title='Report results' class='fa fa-edit'> icon.</p>
+</div>
+<div id="filter" class="section level3">
+<h3>Filter</h3>
+<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the <code>Filter</code> check-box. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data. Then return to the Transform tab to make the desired variable changes.</p>
+</div>
 <div id="type" class="section level3">
 <h3>Type</h3>
-<p>When you select <code>Type</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the <code>Store</code> button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.</p>
+<p>When you select <code>Type</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to change the type (or class) of one or more variables. For example, you can change a variable of type integer to a variable of type factor. Click the <code>Store</code> button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>As factor: convert a variable to type factor (i.e., a categorical variable)</li>
 <li>As number: convert a variable to type numeric</li>
 <li>As integer: convert a variable to type integer</li>
 <li>As character: convert a variable to type character (i.e., strings)</li>
-<li>As date (mdy): convert a character of factor variable to a date if the dates are ordered as month-day-year</li>
-<li>As date (dmy): convert a character of factor variable to a date if the dates are ordered as day-month-year</li>
-<li>As date (dmy): convert a character of factor variable to a date if the dates are ordered as year-month-day</li>
-<li>As date/time (ymd_hms): convert a character or factor variable to a date if the dates are ordered as year-month-day-hour-minute-second</li>
+<li>As date (mdy): convert a variable to a date if the dates are ordered as month-day-year</li>
+<li>As date (dmy): convert a variable to a date if the dates are ordered as day-month-year</li>
+<li>As date (dmy): convert a variable to a date if the dates are ordered as year-month-day</li>
+<li>As date/time (ymd_hms): convert a variable to a date if the dates are ordered as year-month-day-hour-minute-second</li>
+<li>As time (hms): convert variable to class <code>period</code> if the time is organized as hour-minute-second</li>
+<li>As time (hm): convert variable to class <code>period</code> if the time is organized as hour-minute</li>
 </ol>
 </div>
 <div id="transform" class="section level3">
 <h3>Transform</h3>
-<p>When you select <code>Transform</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to transform and choose <code>Log</code> from the <code>Apply function</code> menu. A new variable is created with the prefix <code>log_</code>. Click the <code>Store</code> button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
+<p>When you select <code>Transform</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose <code>Log</code> from the <code>Apply function</code> menu. A new variable is created with the extension specified in the ’Variable name extension<code>text input (e.g,.</code>log_<code>). Make sure to press</code>return<code>after changing the extension. Click the</code>Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>Log: create a log-transformed version of the selected variable (i.e., log(x))</li>
 <li>Square: multiply a variable by itself (i.e., x^2)</li>
@@ -270,13 +286,9 @@ img {
 <li>Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, …, 90th percentiles.</li>
 </ol>
 </div>
-<div id="normalize" class="section level3">
-<h3>Normalize</h3>
-<p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. You will see a summary statistics for the new variable <code>price_carat</code> in the main panel. So save changes click the <code>Store</code> button.</p>
-</div>
 <div id="create" class="section level3">
 <h3>Create</h3>
-<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. On the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Store</code> to add it to the dataset.</p>
+<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. To the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Store</code> to add it to the dataset.</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new variable z that is the difference between variables x and y in the data</p>
 <p>z = x - y</p></li>
@@ -295,15 +307,22 @@ img {
 <li><p>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press return and <code>Store</code> to add new variable <code>sales_rc</code> variable. Note that we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the orginal variable would have been overwritten</p></li>
 </ol>
 <p>sales_rc = ifelse(sales &gt; 400, NA, sales)</p>
-<p>Note: For examples 6 and 7 above you may want to convert the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
-</div>
-<div id="clipboard" class="section level3">
-<h3>Clipboard</h3>
-<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data &gt; Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> dropdown and paste your new data into the <code>Paste from Excel</code> box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click <code>Store</code>.</p>
+<ol start="9" style="list-style-type: decimal">
+<li><p>Determine the time difference between two dates/times in seconds</p>
+<p>time_diff = as_duration(time2 - time2)</p></li>
+<li><p>Extract the month from a date variable</p>
+<p>month = month(date)</p></li>
+</ol>
+<p>Other attributes that can be extract are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> is can be convenient to add <code>label = TRUE</code> to the call.</p>
+<ol start="11" style="list-style-type: decimal">
+<li><p>Extract the weekday from a date variable with a label rather than a number</p>
+<p>weekday = wday(date, label = TRUE)</p></li>
+</ol>
+<p>Note: For examples 6 and 7 above you may want to change the type of the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
 </div>
 <div id="recode" class="section level3">
 <h3>Recode</h3>
-<p>To use the recode feature select the variable you want to change and choose <code>Recode</code> from the <code>Transformation type</code> dropdown. Provide one or more recode commands (separate the commands by a <code>;</code>) and press return to see the newly created variable. Click <code>Store</code> to add the new variable to the data. Some examples are given below.</p>
+<p>To use the recode feature select the variable you want to change and choose <code>Recode</code> from the <code>Transformation type</code> drop-down. Provide one or more recode commands (separate the commands by a <code>;</code>) and press return to see the newly created variable. Note that you can specify the names for the recode variable in the <code>Recoded variable name</code> input box (press return submit changes). Finally, click <code>Store</code> to add the new variable to the data. Some examples are given below.</p>
 <ol style="list-style-type: decimal">
 <li><p>Values below 20 are set to ‘Low’ and all others to ‘High’</p>
 <p>lo:20 = ‘Low’; else = ‘High’</p></li>
@@ -316,31 +335,42 @@ img {
 <li><p>To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we would (1) select the variable <code>sales</code> in the <code>Select column(s)</code> box and enter the command below in the <code>Recode</code> box. Press return and <code>Store</code> to add the recoded variable to the data</p>
 <p>400 = NA</p></li>
 </ol>
-<p><strong>Note:</strong> Never use a <code>=</code> symbol in a label (e.g., 50:hi = “&gt;= 50”) as this will cause errors.</p>
+<p><strong>Note:</strong> Never use a <code>=</code> symbol in a label (e.g., 50:hi = ‘&gt;= 50’) as this will cause errors.</p>
 </div>
 <div id="rename" class="section level3">
 <h3>Rename</h3>
-<p>Choose <code>Rename</code> from the <code>Transformation type</code> dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a <code>,</code>. Press return to see the variables with their new names on screen and press <code>Store</code> to alter the variable names in the original data.</p>
+<p>Choose <code>Rename</code> from the <code>Transformation type</code> drop-down, select one or more variables, and enter new names for them in the rename box shown. Separate each name by a <code>,</code>. Press return to see the variables with their new names on screen and press <code>Store</code> to alter the variable names in the original data.</p>
 </div>
 <div id="replace" class="section level3">
 <h3>Replace</h3>
-<p>Choose <code>Replace</code> from the <code>Transformation type</code> dropdown if you want to overwrite variables in the data with new ones created using the Create, Transform, Clipboard, etc. features. Select one or more variables to overwrite and the some number of replacement variables. Press <code>Store</code> to alter the original data.</p>
+<p>Choose <code>Replace</code> from the <code>Transformation type</code> drop-down if you want to replace existing variables in the data with new ones created using Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press <code>Store</code> to alter the original data.</p>
+</div>
+<div id="clipboard" class="section level3">
+<h3>Clipboard</h3>
+<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste variables back into Radiant. If you do not have the original data in a spreadsheet already use the clipboard feature in <em>Data &gt; Manage</em> so you can paste it into the spreadsheet. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e, CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> drop-down and paste your new data into the <code>Paste from spreadsheet</code> box. It is key that the number of observations for the new variable(s) are the same as in the data in Radiant. To add the new variables to the data click <code>Store</code>.</p>
+<blockquote>
+<p><strong>Note:</strong> Using the clipboard feature for data transformation is discouraged because it is not reproducible.</p>
+</blockquote>
+</div>
+<div id="normalize" class="section level3">
+<h3>Normalize</h3>
+<p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. You will see summary statistics for the new variable (e.g., <code>price_carat</code>) in the main panel. Store changes by clicking the <code>Store</code> button.</p>
 </div>
 <div id="reorder-or-remove-columns" class="section level3">
 <h3>Reorder or remove columns</h3>
-<p>Choose <code>Reorder/Remove columns</code> from the <code>Transformation type</code> dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press <code>Store</code> to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data &gt; Manage page.</p>
+<p>Choose <code>Reorder/Remove columns</code> from the <code>Transformation type</code> drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press <code>Store</code> to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the <code>Data &gt; Manage</code> tab.</p>
 </div>
 <div id="reorder-or-remove-levels" class="section level3">
 <h3>Reorder or remove levels</h3>
-<p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press <code>Store</code> to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data &gt; Manage tab. To temporarily remove levels from the data use the <code>Filter</code> option discussed below.</p>
+<p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press <code>Store</code> to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the <em>Data &gt; Manage</em> tab. To temporarily exclude levels from the data use the <code>Filter</code> (see the help file linked in the <code>Data &gt; View</code> tab).</p>
 </div>
 <div id="remove-missing-values" class="section level3">
 <h3>Remove missing values</h3>
-<p>Choose <code>Remove missing</code> from the <code>Transformation type</code> dropdown to eliminate all rows with one or more missing values. Press <code>Store</code> to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of <em>n</em> changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data &gt; Manage page.</p>
+<p>Choose <code>Remove missing</code> from the <code>Transformation type</code> drop-down to eliminate all rows with one or more missing values. If no variables are selected a row with a missing values in <strong>any</strong> column will be removed. If one or more variables are selected only those rows will be removed with missing values for the selected variables. Press <code>Store</code> to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of <em>n</em> changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the <em>Data &gt; Manage</em> page.</p>
 </div>
-<div id="filter" class="section level3">
-<h3>Filter</h3>
-<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or uncheck the <code>Filter</code> checkbox. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data. Then return to the Transform tab to make the desired variable changes.</p>
+<div id="remove-duplicates" class="section level3">
+<h3>Remove duplicates</h3>
+<p>Certain variables should have only unique values (i.e., no duplicates). Customers id’s, for example, should be unique unless we a dataset contains multiple orders for the same customer. In that case the combination if customer id <strong>and</strong> order id should be unique. To remove duplicate rows make sure either no or all variables in the data are selected. To remove rows with duplicates across one or more variables select the variables or interest. Choose <code>Remove duplicates</code> from the <code>Transformation type</code> drop-down and evaluate how the summary statistics change. Press <code>Store</code> to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of <em>n</em> and <em>n_distinct</em> will change). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the <em>Data &gt; Manage</em> page.</p>
 </div>
 
 

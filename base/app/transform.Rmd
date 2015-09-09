@@ -1,21 +1,40 @@
 > Transform variables in data
 
+### Transform command log
+
+All transformations applied in the _Data > Transform_ tab can be logged. If, for example, you apply a log transformation to a numeric variable the following code is generated and put in the _Transform command log_ window at the bottom of your screen when you click the `Store` button.
+
+<pre>
+## transform variable
+r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price)
+</pre>
+
+This is an important feature if you need to recreate your results at some point in the future or want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate a result.
+
+To add commands contained in the command log window to a report in _R > Report_ click the <i title='Report results' class='fa fa-edit'> icon.
+
+### Filter
+
+Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the `Filter` check-box. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data. Then return to the Transform tab to make the desired variable changes.
+
 ### Type
 
-When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type or class of one or more variables in your data. For example, you can change a variable of type factor or character to a variable of type date. Click the `Store` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
+When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type (or class) of one or more variables. For example, you can change a variable of type integer to a variable of type factor. Click the `Store` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
 
 1. As factor: convert a variable to type factor (i.e., a categorical variable)
 2. As number: convert a variable to type numeric
 3. As integer: convert a variable to type integer
 4. As character: convert a variable to type character (i.e., strings)
-5. As date (mdy): convert a character of factor variable to a date if the dates are ordered as month-day-year
-6. As date (dmy): convert a character of factor variable to a date if the dates are ordered as day-month-year
-7. As date (dmy): convert a character of factor variable to a date if the dates are ordered as year-month-day
-8. As date/time (ymd_hms): convert a character or factor variable to a date if the dates are ordered as year-month-day-hour-minute-second
+5. As date (mdy): convert a variable to a date if the dates are ordered as month-day-year
+6. As date (dmy): convert a variable to a date if the dates are ordered as day-month-year
+7. As date (dmy): convert a variable to a date if the dates are ordered as year-month-day
+8. As date/time (ymd_hms): convert a variable to a date if the dates are ordered as year-month-day-hour-minute-second
+9. As time (hms): convert variable to class `period` if the time is organized as hour-minute-second
+10. As time (hm): convert variable to class `period` if the time is organized as hour-minute
 
 ### Transform
 
-When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable you want to transform and choose `Log` from the `Apply function` menu. A new variable is created with the prefix `log_`. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
+When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Log` from the `Apply function` menu. A new variable is created with the extension specified in the 'Variable name extension` text input (e.g,. `log_`). Make sure to press `return` after changing the extension. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
 1. Log: create a log-transformed version of the selected variable (i.e., log(x))
 2. Square: multiply a variable by itself (i.e., x^2)
@@ -26,13 +45,9 @@ When you select `Transform` from the `Transformation type` drop-down another dro
 7. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
 8. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
 
-### Normalize
-
-Choose `Normalize` from the `Transformation type` drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. You will see a summary statistics for the new variable `price_carat` in the main panel. So save changes click the `Store` button.
-
 ### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. On the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Store` to add it to the dataset.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. To the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Store` to add it to the dataset.
 
 1. Create a new variable z that is the difference between variables x and y in the data
 
@@ -66,15 +81,25 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
   sales_rc = ifelse(sales > 400, NA, sales)
 
-Note: For examples 6 and 7 above you may want to convert the new variable to type `factor` before using it for further analysis (see `Type` above)
+9. Determine the time difference between two dates/times in seconds
 
-### Clipboard
+	time\_diff = as\_duration(time2 - time2)
 
-It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste a new variable back into R. If you do not have the original data in Excel use the clipboard feature in Data > Manage to save the data to the clipboard so you can paste it into Excel. Apply your transformations in Excel and then copy the new variable, with a header label, to the clipboard in Excel (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` dropdown and paste your new data into the `Paste from Excel` box. It is key that the number of observations for the new variable is the same as in the original data. The new variable will be shown on screen. To add the variable to the data click `Store`.
+10. Extract the month from a date variable
+
+	month = month(date)
+
+Other attributes that can be extract are `minute`, `hour`, `day`, `week`, `year`, `wday` (for weekday). For `wday` and `month` is can be convenient to add `label = TRUE` to the call.
+
+11. Extract the weekday from a date variable with a label rather than a number
+
+	weekday = wday(date, label = TRUE)
+
+Note: For examples 6 and 7 above you may want to change the type of the new variable to type `factor` before using it for further analysis (see `Type` above)
 
 ### Recode
 
-To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` dropdown. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Click `Store` to add the new variable to the data. Some examples are given below.
+To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` drop-down. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Note that you can specify the names for the recode variable in the `Recoded variable name` input box (press return submit changes). Finally, click `Store` to add the new variable to the data. Some examples are given below.
 
 1. Values below 20 are set to 'Low' and all others to 'High'
 
@@ -96,28 +121,38 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	400 = NA
 
-**Note:** Never use a `=` symbol in a label (e.g., 50:hi = ">= 50") as this will cause errors.
+**Note:** Never use a `=` symbol in a label (e.g., 50:hi = '>= 50') as this will cause errors.
 
 ### Rename
 
-Choose `Rename` from the `Transformation type` dropdown, select one or more variables and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Store` to alter the variable names in the original data.
+Choose `Rename` from the `Transformation type` drop-down, select one or more variables, and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Store` to alter the variable names in the original data.
 
 ### Replace
 
-Choose `Replace` from the `Transformation type` dropdown if you want to overwrite variables in the data with new ones created using the Create, Transform, Clipboard, etc. features. Select one or more variables to overwrite and the some number of replacement variables. Press `Store` to alter the original data.
+Choose `Replace` from the `Transformation type` drop-down if you want to replace existing variables in the data with new ones created using Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press `Store` to alter the original data.
+
+### Clipboard
+
+It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste variables back into Radiant. If you do not have the original data in a spreadsheet already use the clipboard feature in _Data > Manage_ so you can paste it into the spreadsheet. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` drop-down and paste your new data into the `Paste from spreadsheet` box. It is key that the number of observations for the new variable(s) are the same as in the data in Radiant. To add the new variables to the data click `Store`.
+
+> **Note:** Using the clipboard feature for data transformation is discouraged because it is not reproducible.
+
+### Normalize
+
+Choose `Normalize` from the `Transformation type` drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. You will see summary statistics for the new variable (e.g., `price_carat`) in the main panel. Store changes by clicking the `Store` button.
 
 ### Reorder or remove columns
 
-Choose `Reorder/Remove columns` from the `Transformation type` dropdown. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the Data > Manage page.
+Choose `Reorder/Remove columns` from the `Transformation type` drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the `Data > Manage` tab.
 
 ### Reorder or remove levels
 
-If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` dropdown to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the Data > Manage tab. To temporarily remove levels from the data use the `Filter` option discussed below.
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the _Data > Manage_ tab. To temporarily exclude levels from the data use the `Filter` (see the help file linked in the `Data > View` tab).
 
 ### Remove missing values
 
-Choose `Remove missing` from the `Transformation type` dropdown to eliminate all rows with one or more missing values. Press `Store` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the Data > Manage page.
+Choose `Remove missing` from the `Transformation type` drop-down to eliminate all rows with one or more missing values. If no variables are selected a row with a missing values in **any** column will be removed. If one or more variables are selected only those rows will be removed with missing values for the selected variables. Press `Store` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the _Data > Manage_ page.
 
-### Filter
+### Remove duplicates
 
-Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or uncheck the `Filter` checkbox. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data. Then return to the Transform tab to make the desired variable changes.
+Certain variables should have only unique values (i.e., no duplicates). Customers id's, for example, should be unique unless we a dataset contains multiple orders for the same customer. In that case the combination if customer id **and** order id should be unique. To remove duplicate rows make sure either no or all variables in the data are selected. To remove rows with duplicates across one or more variables select the variables or interest. Choose `Remove duplicates` from the `Transformation type` drop-down and evaluate how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the _Data > Manage_ page.
