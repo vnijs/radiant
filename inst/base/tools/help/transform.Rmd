@@ -11,7 +11,7 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 
 This is an important feature if you need to recreate your results at some point in the future or want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate a result.
 
-To add commands contained in the command log window to a report in _R > Report_ click the <i title='Report results' class='fa fa-edit'> icon.
+To add commands contained in the command log window to a report in _R > Report_ click the <i title='Report results' class='fa fa-edit'></i> icon.
 
 ### Filter
 
