@@ -244,17 +244,17 @@ img {
 </blockquote>
 <div id="transform-command-log" class="section level3">
 <h3>Transform command log</h3>
-<p>All transformations applied in the <em>Data &gt; Transform</em> tab can be logged. If, for example, you apply a log transformation to a numeric variable the following code is generated and put in the <em>Transform command log</em> window at the bottom of your screen when you click the <code>Store</code> button.</p>
+<p>All transformations applied in the <em>Data &gt; Transform</em> tab can be <em>logged</em>. If, for example, you apply a <code>log</code> transformation to numeric variables the following code is generated and put in the <em>Transform command log</em> window at the bottom of your screen when you click the <code>Store</code> button.</p>
 <pre>
 ## transform variable
-r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price)
+r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price, carat)
 </pre>
-<p>This is an important feature if you need to recreate your results at some point in the future or want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate a result.</p>
+<p>This is an important feature if you need to recreate your results at some point in the future or you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate all results.</p>
 <p>To add commands contained in the command log window to a report in <em>R &gt; Report</em> click the <i title='Report results' class='fa fa-edit'></i> icon.</p>
 </div>
 <div id="filter" class="section level3">
 <h3>Filter</h3>
-<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the <code>Filter</code> check-box. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data. Then return to the Transform tab to make the desired variable changes.</p>
+<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the <code>Filter</code> check-box. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data and select the newly create dataset. Then return to the Transform tab to make the desired variable changes.</p>
 </div>
 <div id="type" class="section level3">
 <h3>Type</h3>
@@ -266,15 +266,20 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <li>As character: convert a variable to type character (i.e., strings)</li>
 <li>As date (mdy): convert a variable to a date if the dates are ordered as month-day-year</li>
 <li>As date (dmy): convert a variable to a date if the dates are ordered as day-month-year</li>
-<li>As date (dmy): convert a variable to a date if the dates are ordered as year-month-day</li>
-<li>As date/time (ymd_hms): convert a variable to a date if the dates are ordered as year-month-day-hour-minute-second</li>
+<li>As date (ymd): convert a variable to a date if the dates are ordered as year-month-day</li>
+<li>As date/time (mdy_hms): convert a variable to a date if the dates are ordered as month-day-year-hour-minute-second</li>
+<li>As date/time (mdy_hm): convert a variable to a date if the dates are ordered as month-day-year-hour-minute</li>
+<li>As date/time (dmy_hms): See mdy_hms</li>
+<li>As date/time (dmy_hm): See mdy_hm</li>
+<li>As date/time (ymd_hms): See mdy_hms</li>
+<li>As date/time (ymd_hm): See mdy_hm</li>
 <li>As time (hms): convert variable to class <code>period</code> if the time is organized as hour-minute-second</li>
 <li>As time (hm): convert variable to class <code>period</code> if the time is organized as hour-minute</li>
 </ol>
 </div>
 <div id="transform" class="section level3">
 <h3>Transform</h3>
-<p>When you select <code>Transform</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose <code>Log</code> from the <code>Apply function</code> menu. A new variable is created with the extension specified in the ’Variable name extension<code>text input (e.g,.</code>log_<code>). Make sure to press</code>return<code>after changing the extension. Click the</code>Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
+<p>When you select <code>Transform</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose <code>Log</code> from the <code>Apply function</code> drop-down. A new variable is created with the extension specified in the ’Variable name extension<code>text input (e.g,.</code>_log<code>). Make sure to press</code>return<code>after changing the extension. Click the</code>Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
 <li>Log: create a log-transformed version of the selected variable (i.e., log(x))</li>
 <li>Square: multiply a variable by itself (i.e., x^2)</li>
@@ -288,11 +293,11 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 </div>
 <div id="create" class="section level3">
 <h3>Create</h3>
-<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. To the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press <code>Store</code> to add it to the dataset.</p>
+<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge of R-syntax. A new variable can be any function of other variables in the (active) dataset. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. To the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press <code>return</code> to create the new variable and press <code>Store</code> to add it to the dataset.</p>
 <ol style="list-style-type: decimal">
-<li><p>Create a new variable z that is the difference between variables x and y in the data</p>
+<li><p>Create a new variable z that is the difference between variables x and y</p>
 <p>z = x - y</p></li>
-<li><p>Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the Transform drop-down):</p>
+<li><p>Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the <code>Transform</code> drop-down as <code>Center</code>):</p>
 <p>z = x - mean(x)</p></li>
 <li><p>Create a new <code>logical</code> variable z that takes on the value TRUE when x &gt; y and FALSE otherwise</p>
 <p>z = x &gt; y</p></li>
@@ -304,25 +309,31 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <p>z = ifelse(x &lt; y, ‘smaller’, ‘bigger’)</p></li>
 <li><p>Create a categorical variable with three levels. An alternative approach would be to use the <code>Recode</code> function described below</p>
 <p>z = ifelse(x &lt; 60, ‘&lt; 60’, ifelse(x &gt; 65, ‘&gt; 65’, ‘60-65’))</p></li>
-<li><p>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press return and <code>Store</code> to add new variable <code>sales_rc</code> variable. Note that we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the orginal variable would have been overwritten</p></li>
+<li><p>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press <code>return</code> and <code>Store</code> to add the new <code>sales_rc</code> variable. Note that if we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the original variable would have been overwritten</p></li>
 </ol>
 <p>sales_rc = ifelse(sales &gt; 400, NA, sales)</p>
 <ol start="9" style="list-style-type: decimal">
+<li>If you have a date in a format not available through the <code>Type</code> menu you can use the <code>parse_date_time</code> function. For a date formated as “2-1-14” you would specify the command below (note that this format will also be parsed correctly by the <code>mdy</code> function in the <code>Type</code> menu)</li>
+</ol>
+<p>date = parse_date_time(x, “%m%d%y”)</p>
+<ol start="10" style="list-style-type: decimal">
 <li><p>Determine the time difference between two dates/times in seconds</p>
 <p>time_diff = as_duration(time2 - time2)</p></li>
 <li><p>Extract the month from a date variable</p>
 <p>month = month(date)</p></li>
 </ol>
-<p>Other attributes that can be extract are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> is can be convenient to add <code>label = TRUE</code> to the call.</p>
-<ol start="11" style="list-style-type: decimal">
-<li><p>Extract the weekday from a date variable with a label rather than a number</p>
+<p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call.</p>
+<ol start="12" style="list-style-type: decimal">
+<li><p>Extract the weekday from a date variable and use a label rather than a number</p>
 <p>weekday = wday(date, label = TRUE)</p></li>
+<li><p>Calculating the distance between two locations using lat-long information</p>
+<p>trip_distance = as_distance(lat1, long1, lat2, long2)</p></li>
 </ol>
-<p>Note: For examples 6 and 7 above you may want to change the type of the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
+<p>Note: For examples 6 and 7 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
 </div>
 <div id="recode" class="section level3">
 <h3>Recode</h3>
-<p>To use the recode feature select the variable you want to change and choose <code>Recode</code> from the <code>Transformation type</code> drop-down. Provide one or more recode commands (separate the commands by a <code>;</code>) and press return to see the newly created variable. Note that you can specify the names for the recode variable in the <code>Recoded variable name</code> input box (press return submit changes). Finally, click <code>Store</code> to add the new variable to the data. Some examples are given below.</p>
+<p>To use the recode feature select the variable you want to change and choose <code>Recode</code> from the <code>Transformation type</code> drop-down. Provide one or more recode commands, separated by a <code>;</code>, and press return to see the newly created variable. Note that you can specify the names for the recoded variable in the <code>Recoded variable name</code> input box (press return to submit changes). Finally, click <code>Store</code> to add the new variable to the data. Some examples are given below.</p>
 <ol style="list-style-type: decimal">
 <li><p>Values below 20 are set to ‘Low’ and all others to ‘High’</p>
 <p>lo:20 = ‘Low’; else = ‘High’</p></li>
@@ -330,12 +341,12 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <p>20:hi = ‘High’; else = ‘Low’</p></li>
 <li><p>Values 1 through 12 are set to ‘A’, 13:24 to ‘B’, and the remainder to ‘C’</p>
 <p>1:12 = ‘A’; 13:24 = ‘B’; else = ‘C’</p></li>
-<li><p>To collapse age categories for a cross-tab analysis. In the example below ‘&lt;25’ and ‘25-34’ are recoded to ‘&lt;35’, ‘35-44’ and ‘35-44’ are recoded to ‘35-54’, and ‘55-64’ and ‘&gt;64’ are recoded to ‘&gt;54’</p>
+<li><p>Collapse age categories for a cross-tab analysis. In the example below ‘&lt;25’ and ‘25-34’ are recoded to ‘&lt;35’, ‘35-44’ and ‘35-44’ are recoded to ‘35-54’, and ‘55-64’ and ‘&gt;64’ are recoded to ‘&gt;54’</p>
 <p>‘&lt;25’ = ‘&lt;35’; ‘25-34’ = ‘&lt;35’; ‘35-44’ = ‘35-54’; ‘45-54’ = ‘35-54’; ‘55-64’ = ‘&gt;54’; ‘&gt;64’ = ‘&gt;54’</p></li>
-<li><p>To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we would (1) select the variable <code>sales</code> in the <code>Select column(s)</code> box and enter the command below in the <code>Recode</code> box. Press return and <code>Store</code> to add the recoded variable to the data</p>
+<li><p>To exclude a particular value (e.g., an outlier in the data) for subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we would (1) select the variable <code>sales</code> in the <code>Select variable(s)</code> box and enter the command below in the <code>Recode</code> box. Press <code>return</code> and <code>Store</code> to add the recoded variable to the data</p>
 <p>400 = NA</p></li>
 </ol>
-<p><strong>Note:</strong> Never use a <code>=</code> symbol in a label (e.g., 50:hi = ‘&gt;= 50’) as this will cause errors.</p>
+<p><strong>Note:</strong> Never use a <code>=</code> symbol in a label (e.g., 50:hi = ‘&gt;= 50’) as this will cause an error.</p>
 </div>
 <div id="rename" class="section level3">
 <h3>Rename</h3>
@@ -343,11 +354,11 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 </div>
 <div id="replace" class="section level3">
 <h3>Replace</h3>
-<p>Choose <code>Replace</code> from the <code>Transformation type</code> drop-down if you want to replace existing variables in the data with new ones created using Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press <code>Store</code> to alter the original data.</p>
+<p>Choose <code>Replace</code> from the <code>Transformation type</code> drop-down if you want to replace existing variables in the data with new ones created using, for example, Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press <code>Store</code> to alter the data.</p>
 </div>
 <div id="clipboard" class="section level3">
 <h3>Clipboard</h3>
-<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste variables back into Radiant. If you do not have the original data in a spreadsheet already use the clipboard feature in <em>Data &gt; Manage</em> so you can paste it into the spreadsheet. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e, CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> drop-down and paste your new data into the <code>Paste from spreadsheet</code> box. It is key that the number of observations for the new variable(s) are the same as in the data in Radiant. To add the new variables to the data click <code>Store</code>.</p>
+<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don’t have the original data in a spreadsheet already use the clipboard feature in <em>Data &gt; Manage</em> so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the <em>Data &gt; View</em> tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> drop-down and paste the new data into the <code>Paste from spreadsheet</code> box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click <code>Store</code>.</p>
 <blockquote>
 <p><strong>Note:</strong> Using the clipboard feature for data transformation is discouraged because it is not reproducible.</p>
 </blockquote>
@@ -358,19 +369,23 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 </div>
 <div id="reorder-or-remove-columns" class="section level3">
 <h3>Reorder or remove columns</h3>
-<p>Choose <code>Reorder/Remove columns</code> from the <code>Transformation type</code> drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press <code>Store</code> to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the <code>Data &gt; Manage</code> tab.</p>
+<p>Choose <code>Reorder/Remove columns</code> from the <code>Transformation type</code> drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the <span class="math">\(\times\)</span> next to the label. Press <code>Store</code> to commit the changes.</p>
 </div>
 <div id="reorder-or-remove-levels" class="section level3">
 <h3>Reorder or remove levels</h3>
-<p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press <code>Store</code> to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the <em>Data &gt; Manage</em> tab. To temporarily exclude levels from the data use the <code>Filter</code> (see the help file linked in the <code>Data &gt; View</code> tab).</p>
+<p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the <span class="math">\(\times\)</span> to remove them. Press <code>Store</code> to commit the changes. To temporarily exclude levels from the data use the <code>Filter</code> box (see the help file linked in the <code>Data &gt; View</code> tab).</p>
 </div>
 <div id="remove-missing-values" class="section level3">
 <h3>Remove missing values</h3>
-<p>Choose <code>Remove missing</code> from the <code>Transformation type</code> drop-down to eliminate all rows with one or more missing values. If no variables are selected a row with a missing values in <strong>any</strong> column will be removed. If one or more variables are selected only those rows will be removed with missing values for the selected variables. Press <code>Store</code> to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of <em>n</em> changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the <em>Data &gt; Manage</em> page.</p>
+<p>Choose <code>Remove missing</code> from the <code>Transformation type</code> drop-down to eliminate rows with one or more missing values. If all variables are selected a row with a missing values in <strong>any</strong> column will be removed. If one or more variables are selected only those rows will be removed with missing values for the selected variables. Press <code>Store</code> to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of <em>n</em> changes).</p>
 </div>
 <div id="remove-duplicates" class="section level3">
 <h3>Remove duplicates</h3>
-<p>Certain variables should have only unique values (i.e., no duplicates). Customers id’s, for example, should be unique unless we a dataset contains multiple orders for the same customer. In that case the combination if customer id <strong>and</strong> order id should be unique. To remove duplicate rows make sure either no or all variables in the data are selected. To remove rows with duplicates across one or more variables select the variables or interest. Choose <code>Remove duplicates</code> from the <code>Transformation type</code> drop-down and evaluate how the summary statistics change. Press <code>Store</code> to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of <em>n</em> and <em>n_distinct</em> will change). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the <em>Data &gt; Manage</em> page.</p>
+<p>It is common to have one or more variables in a dataset that have only unique values (i.e., no duplicates). Customers id’s, for example, should be unique unless the dataset contains multiple orders for the same customer. In that case the combination of customer id <strong>and</strong> order id should be unique. To remove duplicate select one or more variables to determine <em>uniqueness</em>. Choose <code>Remove duplicates</code> from the <code>Transformation type</code> drop-down and check how the summary statistics change. Press <code>Store</code> to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of <em>n</em> and <em>n_distinct</em> will change).</p>
+</div>
+<div id="show-duplicates" class="section level3">
+<h3>Show duplicates</h3>
+<p>If there are duplicates in the data use <code>Show duplicates</code> to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the <em>View</em> tab make sure to <code>Store</code> them in a different dataset (i.e., make sure <strong>not</strong> to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are <strong>exactly</strong> the same so showing 2 or 3 isn’t helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with <strong>all</strong> rows that are deemed similar.</p>
 </div>
 
 
