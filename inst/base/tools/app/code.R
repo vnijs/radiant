@@ -48,7 +48,7 @@ output$rcode <- renderUI({
             td(help_modal('Code','code_help',
                        inclMD(file.path(r_path,"base/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
-            td(actionButton("rEval", "Run")),
+            td(actionButton("rEval", "Run code")),
             td(uiOutput("ui_vim_code")),
             td(downloadButton('saveCode', 'Save')),
             td(HTML("<div class='form-group shiny-input-container'>

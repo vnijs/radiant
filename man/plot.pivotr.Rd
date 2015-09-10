@@ -26,6 +26,11 @@ Plot method for the pivotr function
 \details{
 See \url{http://vnijs.github.io/radiant/base/pivotr} for an example in Radiant
 }
+\examples{
+pivotr("diamonds", cvars = "cut") \%>\% plot
+pivotr("diamonds", cvars = c("cut","clarity")) \%>\% plot
+pivotr("diamonds", cvars = c("cut","clarity","color")) \%>\% plot
+}
 \seealso{
 \code{\link{pivotr}} to generate summaries
 

@@ -2,20 +2,20 @@
 
 ### Transform command log
 
-All transformations applied in the _Data > Transform_ tab can be logged. If, for example, you apply a log transformation to a numeric variable the following code is generated and put in the _Transform command log_ window at the bottom of your screen when you click the `Store` button.
+All transformations applied in the _Data > Transform_ tab can be _logged_. If, for example, you apply a `log` transformation to numeric variables the following code is generated and put in the _Transform command log_ window at the bottom of your screen when you click the `Store` button.
 
 <pre>
 ## transform variable
-r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price)
+r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price, carat)
 </pre>
 
-This is an important feature if you need to recreate your results at some point in the future or want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate a result.
+This is an important feature if you need to recreate your results at some point in the future or you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate all results.
 
 To add commands contained in the command log window to a report in _R > Report_ click the <i title='Report results' class='fa fa-edit'></i> icon.
 
 ### Filter
 
-Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the `Filter` check-box. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data. Then return to the Transform tab to make the desired variable changes.
+Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the `Filter` check-box. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data and select the newly create dataset. Then return to the Transform tab to make the desired variable changes.
 
 ### Type
 
@@ -27,14 +27,19 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 4. As character: convert a variable to type character (i.e., strings)
 5. As date (mdy): convert a variable to a date if the dates are ordered as month-day-year
 6. As date (dmy): convert a variable to a date if the dates are ordered as day-month-year
-7. As date (dmy): convert a variable to a date if the dates are ordered as year-month-day
-8. As date/time (ymd_hms): convert a variable to a date if the dates are ordered as year-month-day-hour-minute-second
-9. As time (hms): convert variable to class `period` if the time is organized as hour-minute-second
-10. As time (hm): convert variable to class `period` if the time is organized as hour-minute
+7. As date (ymd): convert a variable to a date if the dates are ordered as year-month-day
+8. As date/time (mdy_hms): convert a variable to a date if the dates are ordered as month-day-year-hour-minute-second
+9. As date/time (mdy_hm): convert a variable to a date if the dates are ordered as month-day-year-hour-minute
+10. As date/time (dmy_hms): See mdy\_hms
+11. As date/time (dmy_hm): See mdy\_hm
+12. As date/time (ymd_hms): See mdy\_hms
+13. As date/time (ymd_hm): See mdy\_hm
+14. As time (hms): convert variable to class `period` if the time is organized as hour-minute-second
+15. As time (hm): convert variable to class `period` if the time is organized as hour-minute
 
 ### Transform
 
-When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in your data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Log` from the `Apply function` menu. A new variable is created with the extension specified in the 'Variable name extension` text input (e.g,. `log_`). Make sure to press `return` after changing the extension. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
+When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Log` from the `Apply function` drop-down. A new variable is created with the extension specified in the 'Variable name extension` text input (e.g,. `_log`). Make sure to press `return` after changing the extension. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
 1. Log: create a log-transformed version of the selected variable (i.e., log(x))
 2. Square: multiply a variable by itself (i.e., x^2)
@@ -45,15 +50,16 @@ When you select `Transform` from the `Transformation type` drop-down another dro
 7. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
 8. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
 
+
 ### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge or R-syntax. A new variable can be any function of other variables in the (active) data. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. To the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press return to create the new variable and press `Store` to add it to the dataset.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge of R-syntax. A new variable can be any function of other variables in the (active) dataset. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. To the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press `return` to create the new variable and press `Store` to add it to the dataset.
 
-1. Create a new variable z that is the difference between variables x and y in the data
+1. Create a new variable z that is the difference between variables x and y
 
 	z = x - y
 
-2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the Transform drop-down):
+2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the `Transform` drop-down as `Center`):
 
 	z = x - mean(x)
 
@@ -77,29 +83,37 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 	z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
 
-8. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press return and `Store` to add new variable `sales_rc` variable. Note that we had entered `sales` on the left-hand side of the `=` sign the orginal variable would have been overwritten
+8. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press `return` and `Store` to add the new `sales_rc` variable. Note that if we had entered `sales` on the left-hand side of the `=` sign the original variable would have been overwritten
 
   sales_rc = ifelse(sales > 400, NA, sales)
 
-9. Determine the time difference between two dates/times in seconds
+9. If you have a date in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
+
+  date = parse\_date\_time(x, "%m%d%y")
+
+10. Determine the time difference between two dates/times in seconds
 
 	time\_diff = as\_duration(time2 - time2)
 
-10. Extract the month from a date variable
+11. Extract the month from a date variable
 
 	month = month(date)
 
-Other attributes that can be extract are `minute`, `hour`, `day`, `week`, `year`, `wday` (for weekday). For `wday` and `month` is can be convenient to add `label = TRUE` to the call.
+Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call.
 
-11. Extract the weekday from a date variable with a label rather than a number
+12. Extract the weekday from a date variable and use a label rather than a number
 
 	weekday = wday(date, label = TRUE)
 
-Note: For examples 6 and 7 above you may want to change the type of the new variable to type `factor` before using it for further analysis (see `Type` above)
+13. Calculating the distance between two locations using lat-long information
+
+	trip\_distance = as_distance(lat1, long1, lat2, long2)
+
+Note: For examples 6 and 7 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
 
 ### Recode
 
-To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` drop-down. Provide one or more recode commands (separate the commands by a `;`) and press return to see the newly created variable. Note that you can specify the names for the recode variable in the `Recoded variable name` input box (press return submit changes). Finally, click `Store` to add the new variable to the data. Some examples are given below.
+To use the recode feature select the variable you want to change and choose `Recode` from the `Transformation type` drop-down. Provide one or more recode commands, separated by a `;`, and press return to see the newly created variable. Note that you can specify the names for the recoded variable in the `Recoded variable name` input box (press return to submit changes). Finally, click `Store` to add the new variable to the data. Some examples are given below.
 
 1. Values below 20 are set to 'Low' and all others to 'High'
 
@@ -113,27 +127,27 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	1:12 = 'A'; 13:24 = 'B'; else = 'C'
 
-3.	To collapse age categories for a cross-tab analysis. In the example below '<25' and '25-34' are recoded to '<35', '35-44' and '35-44' are recoded to '35-54', and '55-64' and '>64' are recoded to '>54'
+3. Collapse age categories for a cross-tab analysis. In the example below '<25' and '25-34' are recoded to '<35', '35-44' and '35-44' are recoded to '35-54', and '55-64' and '>64' are recoded to '>54'
 
 	'<25' = '<35'; '25-34' = '<35'; '35-44' = '35-54'; '45-54' = '35-54'; '55-64' = '>54'; '>64' = '>54'
 
-4. To exclude a particular value (e.g., an outlier in the data) from the data from subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select column(s)` box and enter the command below in the `Recode` box. Press return and `Store` to add the recoded variable to the data
+4. To exclude a particular value (e.g., an outlier in the data) for subsequent analyses we can recode it to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we would (1) select the variable `sales` in the `Select variable(s)` box and enter the command below in the `Recode` box. Press `return` and `Store` to add the recoded variable to the data
 
 	400 = NA
 
-**Note:** Never use a `=` symbol in a label (e.g., 50:hi = '>= 50') as this will cause errors.
+**Note:** Never use a `=` symbol in a label (e.g., 50:hi = '>= 50') as this will cause an error.
 
 ### Rename
 
-Choose `Rename` from the `Transformation type` drop-down, select one or more variables, and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and  press `Store` to alter the variable names in the original data.
+Choose `Rename` from the `Transformation type` drop-down, select one or more variables, and enter new names for them in the rename box shown. Separate each name by a `,`. Press return to see the variables with their new names on screen and press `Store` to alter the variable names in the original data.
 
 ### Replace
 
-Choose `Replace` from the `Transformation type` drop-down if you want to replace existing variables in the data with new ones created using Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press `Store` to alter the original data.
+Choose `Replace` from the `Transformation type` drop-down if you want to replace existing variables in the data with new ones created using, for example, Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press `Store` to alter the data.
 
 ### Clipboard
 
-It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste variables back into Radiant. If you do not have the original data in a spreadsheet already use the clipboard feature in _Data > Manage_ so you can paste it into the spreadsheet. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e, CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` drop-down and paste your new data into the `Paste from spreadsheet` box. It is key that the number of observations for the new variable(s) are the same as in the data in Radiant. To add the new variables to the data click `Store`.
+It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don't have the original data in a spreadsheet already use the clipboard feature in _Data > Manage_ so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the _Data > View_ tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` drop-down and paste the new data into the `Paste from spreadsheet` box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click `Store`.
 
 > **Note:** Using the clipboard feature for data transformation is discouraged because it is not reproducible.
 
@@ -143,16 +157,20 @@ Choose `Normalize` from the `Transformation type` drop-down to standardize one o
 
 ### Reorder or remove columns
 
-Choose `Reorder/Remove columns` from the `Transformation type` drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the x next to the label. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variables back you will have to reload the data through the `Data > Manage` tab.
+Choose `Reorder/Remove columns` from the `Transformation type` drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the $\times$ next to the label. Press `Store` to commit the changes.
 
 ### Reorder or remove levels
 
-If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the x to remove them. Press `Store` to commit the changes. Note that this action cannot be undone. If you want the original variable back you will have to reload the data through the _Data > Manage_ tab. To temporarily exclude levels from the data use the `Filter` (see the help file linked in the `Data > View` tab).
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter` box (see the help file linked in the `Data > View` tab).
 
 ### Remove missing values
 
-Choose `Remove missing` from the `Transformation type` drop-down to eliminate all rows with one or more missing values. If no variables are selected a row with a missing values in **any** column will be removed. If one or more variables are selected only those rows will be removed with missing values for the selected variables. Press `Store` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the _Data > Manage_ page.
+Choose `Remove missing` from the `Transformation type` drop-down to eliminate rows with one or more missing values. If all variables are selected a row with a missing values in **any** column will be removed. If one or more variables are selected only those rows will be removed with missing values for the selected variables. Press `Store` to change the data. If missing values were present you will see the number of observations in the data summary change (i.e., the value of _n_ changes).
 
 ### Remove duplicates
 
-Certain variables should have only unique values (i.e., no duplicates). Customers id's, for example, should be unique unless we a dataset contains multiple orders for the same customer. In that case the combination if customer id **and** order id should be unique. To remove duplicate rows make sure either no or all variables in the data are selected. To remove rows with duplicates across one or more variables select the variables or interest. Choose `Remove duplicates` from the `Transformation type` drop-down and evaluate how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change). Note that this action cannot be undone. If you want these rows back you will have to reload the data through the _Data > Manage_ page.
+It is common to have one or more variables in a dataset that have only unique values (i.e., no duplicates). Customers id's, for example, should be unique unless the dataset contains multiple orders for the same customer. In that case the combination of customer id **and** order id should be unique. To remove duplicate select one or more variables to determine _uniqueness_. Choose `Remove duplicates` from the `Transformation type` drop-down and check how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change).
+
+### Show duplicates
+
+If there are duplicates in the data use `Show duplicates` to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the _View_ tab make sure to `Store` them in a different dataset (i.e., make sure **not** to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are **exactly** the same so showing 2 or 3 isn't helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with **all** rows that are deemed similar.

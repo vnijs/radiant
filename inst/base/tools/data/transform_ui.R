@@ -75,6 +75,15 @@ output$ui_tr_rcname <- renderUI({
   returnTextInput("tr_rcname", "Recoded variable name:", rcname)
 })
 
+output$ui_tr_dataset <- renderUI({
+  tr_dataset <- input$dataset
+  if (input$tr_change_type == "show_dup") tr_dataset <- paste0(tr_dataset, "_dup")
+  tags$table(
+    tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
+    tags$td(actionButton("tr_store", "Store"), style="padding-top:30px;")
+  )
+})
+
 trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp",
                       "Square" = "square", "Square-root" = "sqrt",
                       "Center" = "center", "Standardize" = "standardize", "Inverse" = "inverse",
@@ -84,7 +93,12 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As numeric" = "as_numeric", "As integer" = "as_integer",
                      "As character" = "as_character", "As date (mdy)" = "as_mdy",
                      "As date (dmy)" = "as_dmy", "As date (ymd)" = "as_ymd",
+                     "As date/time (mdy_hms)" = "as_mdy_hms",
+                     "As date/time (mdy_hm)" = "as_mdy_hm",
+                     "As date/time (dmy_hms)" = "as_dmy_hms",
+                     "As date/time (dmy_hm)" = "as_dmy_hm",
                      "As date/time (ymd_hms)" = "as_ymd_hms",
+                     "As date/time (ymd_hm)" = "as_ymd_hm",
                      "As time (hm)" = "as_hm", "As time (hms)" = "as_hms")
 
 trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
@@ -95,7 +109,8 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Reorder/remove levels" = "reorg_levs",
                     "Reorder/remove variables" = "reorg_vars",
                     "Remove missing values" = "remove_na",
-                    "Remove duplicates" = "remove_dup")
+                    "Remove duplicates" = "remove_dup",
+                    "Show duplicates" = "show_dup")
 
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
@@ -149,10 +164,11 @@ output$ui_Transform <- renderUI({
       uiOutput("ui_tr_ext_nz")
     ),
     conditionalPanel(condition = "input.tr_change_type != 'none'",
-	    tags$table(
-	      tags$td(textInput("tr_dataset", "Store changes in:", input$dataset)),
-	      tags$td(actionButton("tr_store", "Store"), style="padding-top:30px;")
-	    )
+      uiOutput("ui_tr_dataset")
+	    # tags$table(
+	    #   tags$td(textInput("tr_dataset", "Store changes in:", input$dataset)),
+	    #   tags$td(actionButton("tr_store", "Store"), style="padding-top:30px;")
+	    # )
 	  )),
     help_and_report(modal_title = "Transform",
                     fun_name = "transform",
@@ -348,10 +364,11 @@ output$ui_Transform <- renderUI({
 .remove_na <- function(dataset,
                        vars = "",
                        store_dat = "",
+                       nr_col = 0,
                        store = TRUE) {
 
   if (!store || !is.character(dataset)) {
-    if (all(vars == "")) {
+    if (all(vars == "") || length(unique(vars)) == ncol(dataset)) {
       dataset %>% filter(complete.cases(.))
     } else {
       ind <- select_(dataset, .dots = vars) %>% complete.cases
@@ -359,7 +376,8 @@ output$ui_Transform <- renderUI({
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (all(vars == "")) vars <- "."
+    # if (all(vars == "")) vars <- "."
+    if (all(vars == "") || length(unique(vars)) == nr_col) vars <- .
     paste0("## remove missing values\nr_data[[\"",store_dat,"\"]] <- r_data[[\"",dataset,"\"]] %>% filter(complete.cases(", vars, "))\n") %>%
       update_log(input$tr_log)
   }
@@ -368,10 +386,11 @@ output$ui_Transform <- renderUI({
 .remove_dup <- function(dataset,
                         vars = "",
                         store_dat = "",
+                        nr_col = 0,
                         store = TRUE) {
 
   if (!store || !is.character(dataset)) {
-    if (all(vars == ""))
+    if (all(vars == "") || length(unique(vars)) == ncol(dataset))
       dat <- distinct(dataset)
     else
       dat <- distinct_(dataset, .dots = vars)
@@ -381,7 +400,7 @@ output$ui_Transform <- renderUI({
     else
       dat
   } else {
-    if (all(vars == ""))
+    if (all(vars == "") || length(unique(vars)) == nr_col)
       cmd <- paste0("## remove duplicate rows\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]])\n")
     else
       cmd <- paste0("## remove rows with duplicate values\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
@@ -389,6 +408,38 @@ output$ui_Transform <- renderUI({
     update_log(cmd, input$tr_log)
   }
 }
+
+.show_dup <- function(dataset,
+                      vars = "",
+                      store_dat = "",
+                      nr_col = 0,
+                      store = TRUE) {
+
+  if (!store || !is.character(dataset)) {
+    if (all(vars == "") || length(unique(vars)) == ncol(dataset)) {
+      dat <- filter(dataset, duplicated(dataset))
+    } else {
+      dat <- dataset %>% group_by_(.dots = vars) %>%
+        filter(n() > 1) %>%
+        mutate(nr_dup = 1:n()) %>%
+        arrange_(.dots = vars) %>%
+        ungroup
+    }
+
+    if (nrow(dat) == 0)
+      "No duplicates found"
+    else
+      dat
+  } else {
+    if (all(vars == "") || length(unique(vars)) == nr_col)
+      cmd <- paste0("## show duplicate rows\nr_data[[\"",store_dat,"\"]] <- r_data[[\"",dataset,"\"]] %>% filter(duplicated(.))\n")
+    else
+      cmd <- paste0("## show rows with duplicate values\nr_data[[\"",store_dat,"\"]] <- show_duplicated(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
+
+    update_log(cmd, input$tr_log)
+  }
+}
+
 
 inp_vars <- function(inp, rval = "")
 	if (is_empty(input[[inp]])) rval else input[[inp]]
@@ -413,6 +464,10 @@ transform_main <- reactive({
       return("Select a variable of type factor to change the ordering and/or number of levels")
     } else if (input$tr_change_type == 'normalize') {
       return("Select one or more variables to normalize")
+    } else if (input$tr_change_type == "remove_na") {
+      return("Select a one or more variables to see the effects of removing missing values")
+    } else if (input$tr_change_type %in% c("remove_dup","show_dup")) {
+      return("Select a one or more variables to see the effects of removing duplicates")
     }
   }
 
@@ -433,12 +488,12 @@ transform_main <- reactive({
  	  return(.reorg_vars(dat, inp_vars("tr_reorg_vars"), store = FALSE))
 
   ## remove missing variables
-	if (input$tr_change_type == "remove_na")
-		return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
+	# if (input$tr_change_type == "remove_na")
+	# 	return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
 
-  ## remove duplicates
-  if (input$tr_change_type == "remove_dup")
-    return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
+ #  ## remove duplicates
+ #  if (input$tr_change_type == "remove_dup")
+ #    return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
 
   ## create training variable
   if (input$tr_change_type == 'training')
@@ -470,6 +525,17 @@ transform_main <- reactive({
   ## only use the functions below if variables have been selected
   if (!is_empty(input$tr_vars)) {
     if (not_available(input$tr_vars)) return()
+
+    ## remove missing variables
+    if (input$tr_change_type == "remove_na")
+      return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
+
+    ## remove duplicates
+    if (input$tr_change_type == "remove_dup")
+      return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
+
+    if (input$tr_change_type == "show_dup")
+      return(.show_dup(dat, inp_vars("tr_vars"), store = FALSE))
 
     if (input$tr_change_type == 'normalize') {
       if (is_empty(input$tr_normalizer, "none")) {
@@ -564,7 +630,8 @@ tr_snippet <- reactive({
 
 output$transform_summary <- renderPrint({
  	dat <- transform_main()
-  isolate({
+  ## with isolate on the summary wouldn't update when the dataset was changed
+  # isolate({
     if (is.null(dat)) return(invisible())
     if (is.character(dat)) {
       cat("**", dat,"**\n\n")
@@ -582,7 +649,7 @@ output$transform_summary <- renderPrint({
         cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))
       }
     }
-  })
+  # })
 })
 
 observeEvent(input$tr_store, {
@@ -594,17 +661,20 @@ observeEvent(input$tr_store, {
 
 		## saving to a new dataset if specified
 		dataset <- input$tr_dataset
-		if (r_data[[dataset]] %>% is.null) {
+		if (is.null(r_data[[dataset]])) {
 			r_data[[dataset]] <- .getdata()
 			r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
 			r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
 		}
 
     if (input$tr_change_type == 'remove_na') {
-      .remove_na(input$dataset, vars = input$tr_vars, input$tr_dataset)
+      .remove_na(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'remove_dup') {
-      .remove_dup(input$dataset, vars = input$tr_vars, input$tr_dataset)
+      .remove_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+      r_data[[dataset]] <- dat
+    } else if (input$tr_change_type == 'show_dup') {
+      .show_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'reorg_vars') {
       .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)

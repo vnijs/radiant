@@ -54,7 +54,9 @@ output$ui_manual <- renderUI({
 
 observeEvent(input$vim_keys, {
   isolate({
-    r_state$rmd_report <<- input$rmd_report
+    if (!is_empty(input$rmd_report))
+      r_state$rmd_report <<- input$rmd_report
+
     r_data$vim_keys %<>% {. == FALSE}
   })
 })
@@ -73,7 +75,7 @@ output$report <- renderUI({
             td(help_modal('Report','report_help',
                        inclMD(file.path(r_path,"base/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
-            td(actionButton("evalRmd", "Update")),
+            td(actionButton("evalRmd", "Knit report")),
             td(uiOutput("ui_manual")),
             td(uiOutput("ui_vim")),
             td(downloadButton("saveHTML", "Save HTML")),

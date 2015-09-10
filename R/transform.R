@@ -102,6 +102,51 @@ as_ymd <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
 as_ymd_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
                 {sshhr( ymd_hms(.) )}
 
+#' Convert input in year-month-day-hour-minute format to date-time
+#' @param x Input variable
+#' @return Date-time variable of class Date
+#' @examples
+#' as_ymd_hm("2014-1-1 12:15")
+#' @export
+as_ymd_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
+                {sshhr( parse_date_time(x, "%Y%m%d %H%M") )}
+
+#' Convert input in month-day-year-hour-minute-second format to date-time
+#' @param x Input variable
+#' @return Date-time variable of class Date
+#' @examples
+#' as_mdy_hms("1-1-2014 12:15:01")
+#' @export
+as_mdy_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
+                {sshhr( parse_date_time(x, "%m%d%Y %H%M%S") )}
+
+#' Convert input in month-day-year-hour-minute format to date-time
+#' @param x Input variable
+#' @return Date-time variable of class Date
+#' @examples
+#' as_mdy_hm("1-1-2014 12:15")
+#' @export
+as_mdy_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
+                {sshhr( parse_date_time(x, "%m%d%Y %H%M") )}
+
+#' Convert input in day-month-year-hour-minute-second format to date-time
+#' @param x Input variable
+#' @return Date-time variable of class Date
+#' @examples
+#' as_mdy_hms("1-1-2014 12:15:01")
+#' @export
+as_dmy_hms <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
+                {sshhr( parse_date_time(x, "%d%m%Y %H%M%S") )}
+
+#' Convert input in day-month-year-hour-minute format to date-time
+#' @param x Input variable
+#' @return Date-time variable of class Date
+#' @examples
+#' as_mdy_hm("1-1-2014 12:15")
+#' @export
+as_dmy_hm <- function(x) { if (is.factor(x)) as.character(x) else x } %>%
+                {sshhr( parse_date_time(x, "%d%m%Y %H%M") )}
+
 #' Convert input in hour-minute-second format to time
 #' @param x Input variable
 #' @return Time variable of class Period
@@ -182,6 +227,34 @@ as_character <- function(x) as.character(x)
 #' @export
 as_duration <- function(x) as.numeric(lubridate::as.duration(x))
 
+#' Distance in kilometers or miles between two locations based on lat-long
+#' Function based on \url{http://www.movable-type.co.uk/scripts/latlong.html}. Uses the haversine formula
+#' @param long1 Longitude of location 1
+#' @param lat1 Latitude of location 1
+#' @param long2 Longitude of location 2
+#' @param lat2 Latitude of location 2
+#' @param unit Measure kilometers ("km", default) or miles ("miles")
+#' @param R Radius of the earth
+#' @return Distance bewteen two points
+#' @examples
+#' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "km")
+#' as_distance(32.8245525,-117.0951632, 40.7033127,-73.979681, unit = "miles")
+#'
+#' @export
+as_distance <- function (lat1, long1, lat2, long2,
+                         unit = "km",
+                         R = c("km" = 6371, "miles" = 3959)[[unit]]) {
+
+    rad <- pi/180
+    d1 <- lat1 * rad
+    d2 <- lat2 * rad
+    dlat <- (lat2 - lat1) * rad
+    dlong <- (long2 - long1) * rad
+    a <- sin(dlat/2)^2 + cos(d1) * cos(d2) * sin(dlong/2)^2
+    c <- 2 * atan2(sqrt(a), sqrt(1 - a))
+    R * c
+}
+
 #' Generate a variable used to selected a training sample
 #' @param n Number (or fraction) of observations to label as training
 #' @param nr Number of rows in the dataset
@@ -223,6 +296,35 @@ mutate_each <- function(tbl, funs, ..., ext = "") {
 
     tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
       set_colnames(paste0(vars, ext)) %>% bind_cols(tbl, .)
+  }
+}
+
+#' Show all rows with duplicated values (not just the first or last)
+#'
+#' @details If an entire row is duplicated use "duplicated" to show only one of the duplicated rows. When using a subset of variables to establish uniqueness it may be of interest to show all rows that have (some) duplicate elements
+#'
+#' @param tbl Data frame to add transformed variables to
+#' @param ... Variables used to evaluate row uniqueness
+#'
+#' @examples
+#' bind_rows(mtcars, mtcars[c(1,5,7),]) %>%
+#'   show_duplicated(mpg, cyl)
+#' bind_rows(mtcars, mtcars[c(1,5,7),]) %>%
+#'   show_duplicated
+#'
+#' @importFrom pryr named_dots
+#'
+#' @export
+show_duplicated <- function(tbl, ...) {
+  vars <- pryr::named_dots(...) %>% names
+  if (is.null(vars) || length(unique(vars)) == ncol(tbl)) {
+    filter(tbl, duplicated(tbl))
+  } else {
+    tbl %>% group_by_(.dots = vars) %>%
+      filter(n() > 1) %>%
+      mutate(nr_dup = 1:n()) %>%
+      arrange_(.dots = vars) %>%
+      ungroup
   }
 }
 
