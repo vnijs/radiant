@@ -273,9 +273,11 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <li>As date/time (dmy_hm): See mdy_hm</li>
 <li>As date/time (ymd_hms): See mdy_hms</li>
 <li>As date/time (ymd_hm): See mdy_hm</li>
-<li>As time (hms): convert variable to class <code>period</code> if the time is organized as hour-minute-second</li>
-<li>As time (hm): convert variable to class <code>period</code> if the time is organized as hour-minute</li>
 </ol>
+<!--
+14. As time (hms): convert variable to class `period` if the time is organized as hour-minute-second
+15. As time (hm): convert variable to class `period` if the time is organized as hour-minute
+-->
 </div>
 <div id="transform" class="section level3">
 <h3>Transform</h3>
@@ -321,15 +323,12 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <p>time_diff = as_duration(time2 - time2)</p></li>
 <li><p>Extract the month from a date variable</p>
 <p>month = month(date)</p></li>
-</ol>
-<p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call.</p>
-<ol start="12" style="list-style-type: decimal">
-<li><p>Extract the weekday from a date variable and use a label rather than a number</p>
+<li><p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call. For example, to extract the weekday from a date variable and use a label rather than a number</p>
 <p>weekday = wday(date, label = TRUE)</p></li>
 <li><p>Calculating the distance between two locations using lat-long information</p>
 <p>trip_distance = as_distance(lat1, long1, lat2, long2)</p></li>
 </ol>
-<p>Note: For examples 6 and 7 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
+<p>Note: For examples 6, 7, and 12 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
 </div>
 <div id="recode" class="section level3">
 <h3>Recode</h3>

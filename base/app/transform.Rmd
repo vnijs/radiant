@@ -34,8 +34,11 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 11. As date/time (dmy_hm): See mdy\_hm
 12. As date/time (ymd_hms): See mdy\_hms
 13. As date/time (ymd_hm): See mdy\_hm
+
+<!--
 14. As time (hms): convert variable to class `period` if the time is organized as hour-minute-second
 15. As time (hm): convert variable to class `period` if the time is organized as hour-minute
+-->
 
 ### Transform
 
@@ -99,9 +102,7 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 	month = month(date)
 
-Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call.
-
-12. Extract the weekday from a date variable and use a label rather than a number
+12. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
 
 	weekday = wday(date, label = TRUE)
 
@@ -109,7 +110,7 @@ Other attributes that can be extracted from a date or date-time variable are `mi
 
 	trip\_distance = as_distance(lat1, long1, lat2, long2)
 
-Note: For examples 6 and 7 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
+Note: For examples 6, 7, and 12 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
 
 ### Recode
 
