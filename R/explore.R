@@ -430,6 +430,15 @@ max_rm <- function(x) max(x, na.rm = TRUE)
 #' @export
 sd_rm <- function(x) sd(x, na.rm = TRUE)
 
+#' Variance with na.rm = TRUE
+#' @param x Input variable
+#' @return Variance
+#' @examples
+#' var_rm(rnorm(100))
+#'
+#' @export
+var_rm <- function(x) var(x, na.rm = TRUE)
+
 #' Sum with na.rm = TRUE
 #' @param x Input variable
 #' @return Sum of input values

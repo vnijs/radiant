@@ -59,7 +59,6 @@ output$ui_clipboard_save <- renderUI({
 output$ui_Manage <- renderUI({
   tagList(
     wellPanel(
-      # radioButtons(inputId = "dataType", label = "Load data:",
       selectInput("dataType", label = "Load data of type:",
                    c("rda" = "rda", "rda (url)" = "url_rda", "csv" = "csv", "csv (url)" = "url_csv",
                      "clipboard" = "clipboard","examples" = "examples", "state" = "state"),
@@ -90,11 +89,8 @@ output$ui_Manage <- renderUI({
     ),
     wellPanel(
       selectInput("saveAs", label = "Save data:",
-      # radioButtons(inputId = "saveAs", label = "Save data:",
                    c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
                      "state" = "state"), selected = "rda"),
-                     # "state" = "state"), selected = "rda", inline = TRUE),
-
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         uiOutput("ui_clipboard_save")
       ),
@@ -120,7 +116,6 @@ output$ui_Manage <- renderUI({
 
 ## updating the dataset description
 observeEvent(input$updateDescr, {
-  # if (is.null(input$updateDescr) || input$updateDescr == 0) return()
   isolate({
     r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr",
@@ -153,9 +148,7 @@ output$uiRemoveDataset <- renderUI({
 
 observeEvent(input$removeDataButton, {
   # removing datasets
-  # if (is.null(input$removeDataButton) || input$removeDataButton == 0) return()
   isolate({
-
     # only remove datasets if 1 or more were selected - without this line
     # all files would be removed when the removeDataButton is pressed
     if (is.null(input$removeDataset)) return()
@@ -177,7 +170,6 @@ observeEvent(input$removeDataButton, {
 
 # 'saving' data to clipboard
 observeEvent(input$saveClipData, {
-  # if (is.null(input$saveClipData) || input$saveClipData == 0) return()
   isolate({
     saveClipboardData()
     updateRadioButtons(session = session, inputId = "saveAs", selected = "rda")
@@ -204,6 +196,7 @@ output$downloadData <- downloadHandler(
       }
     } else if (ext == 'csv') {
       write.csv(.getdata(), file, row.names = FALSE)
+      ## some weirdness going on here with the number of digits written to file
       # write_csv(.getdata(), file)
     }
   }
@@ -293,9 +286,8 @@ observeEvent(input$url_csv_load, {
   })
 })
 
-# loading all examples files (linked to help files)
+## loading all examples files (linked to help files)
 observeEvent(input$loadExampleData, {
-  # if (not_pressed(input$loadExampleData)) return()
   isolate({
 
     # loading data bundled with Radiant

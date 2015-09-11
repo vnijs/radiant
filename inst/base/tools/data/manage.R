@@ -50,7 +50,7 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
 saveClipboardData <- function() {
   os_type <- Sys.info()["sysname"]
   if (os_type == 'Windows') {
-    write.table(.getdata(), "clipboard", sep="\t", row.names=FALSE)
+    write.table(.getdata(), "clipboard-10000", sep="\t", row.names=FALSE)
   } else if (os_type == "Darwin") {
     write.table(.getdata(), file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
   } else if (os_type == "Linux") {
