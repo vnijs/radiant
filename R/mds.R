@@ -43,7 +43,7 @@ mds <- function(dataset, id1, id2, dis,
 	lab <- unique(c(id1_dat, id2_dat))
 	nrLev <- length(lab)
 
-	lower <- (nrLev * (nrLev -1)) / 2
+	lower <- (nrLev * (nrLev - 1)) / 2
 	nrObs <- length(d)
 
 	## setup the distance matrix

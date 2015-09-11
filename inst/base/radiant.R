@@ -90,8 +90,6 @@ saveStateOnRefresh <- function(session = session) {
   head(r_data[[input$dataset]]) %>% getclass
 })
 
-# n_distinct_no_miss <- function(x) n_distinct( x[!is.na(x) & x != "" & x != "[EMPTY]"])
-
 ## used for group_by and facet row/column
 groupable_vars <- reactive({
   .getdata() %>%
@@ -104,7 +102,6 @@ groupable_vars <- reactive({
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%
-    # summarise_each(funs(n_distinct_no_miss(.))) %>%
     summarise_each(funs(n_distinct(., na_rm = TRUE))) %>%
     { . == 2 } %>%
     which(.) %>%
@@ -219,14 +216,11 @@ returnTextAreaInput <- function(inputId, label = NULL, value = "") {
     tags$label(label, `for` = inputId),br(),
     tags$textarea(value, id=inputId, type = "text", rows="2",
                   class="returnTextArea form-control")
-    # tags$textarea(id=inputId, type = "text", rows="2",
-                  # class="returnTextArea form-control", value)
   )
 }
 
 returnTextInput <- function(inputId, label = NULL, value = "") {
   tagList(
-    # singleton(tags$head(tags$script(src = "js/returnTextInputBinding.js"))),
     tags$label(label, `for` = inputId),
     tags$input(id = inputId, type = "text", value = value,
                class = "returnTextInput form-control")
@@ -250,7 +244,6 @@ register_print_output <- function(fun_name, rfun_name,
     ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>%
     { if (is.character(.)) cat(.,"\n") else . } %>% rm
-
   })
 }
 
@@ -342,7 +335,7 @@ help_modal <- function(modal_title, link, help_file) {
               </div>
             </div>
            </div>
-           <i title='Help' class='glyphicon glyphicon-question-sign' data-toggle='modal' data-target='#%s'></i>",
+           <i title='Help' class='fa fa-question' data-toggle='modal' data-target='#%s'></i>",
            link, link, link, modal_title, help_file, link) %>%
   enc2utf8 %>% HTML
 }
@@ -424,5 +417,9 @@ cf <- function(...) {
   # if (is(cf_call, 'try-error')) cf_call <- sys.call(which = 1)
   # cat(paste0("\n--- called from: ", cf_call, " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
   # catsys.call(which = 2)
-  cat(..., sep = "\n", file = "~/r_cat.txt", append = TRUE)
+  # out <- capture.output(print(...))
+  out <- paste0(capture.output(...), collapse = "\n")
+  cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
+
+  # cat(..., sep = "\n", file = "~/r_cat.txt", append = TRUE)
 }

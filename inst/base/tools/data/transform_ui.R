@@ -98,8 +98,8 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As date/time (dmy_hms)" = "as_dmy_hms",
                      "As date/time (dmy_hm)" = "as_dmy_hm",
                      "As date/time (ymd_hms)" = "as_ymd_hms",
-                     "As date/time (ymd_hm)" = "as_ymd_hm",
-                     "As time (hm)" = "as_hm", "As time (hms)" = "as_hms")
+                     "As date/time (ymd_hm)" = "as_ymd_hm")
+                     # "As time (hm)" = "as_hm", "As time (hms)" = "as_hms")
 
 trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Create" = "create", "Recode" = "recode",

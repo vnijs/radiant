@@ -37,7 +37,7 @@ output$ui_mds_id1 <- renderUI({
 })
 
 output$ui_mds_id2 <- renderUI({
-  if (not_available(input$mds_id1)) return()
+  # if (not_available(input$mds_id1)) return()
 	isLabel <- "character" == .getclass() | "factor" == .getclass()
   vars <- varnames()[isLabel]
   if (length(vars) > 0) vars <- vars[-which(vars == input$mds_id1)]
@@ -46,7 +46,7 @@ output$ui_mds_id2 <- renderUI({
 })
 
 output$ui_mds_dis <- renderUI({
-  if (not_available(input$mds_id2)) return()
+  # if (not_available(input$mds_id2)) return()
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
   selectInput(inputId = "mds_dis", label = "Dissimilarity:", choices = vars,
@@ -115,26 +115,29 @@ output$mds <- renderUI({
 })
 
 .mds <- reactive({
+  if (not_available(input$mds_id2) || not_available(input$mds_dis))
+    return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
+
 	do.call(mds, mds_inputs())
 })
 
 .summary_mds <- reactive({
-	if (not_available(input$mds_id2) || not_available(input$mds_dis))
-		return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
+	# if (not_available(input$mds_id2) || not_available(input$mds_dis))
+	# 	return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
+
   .mds() %>% { if (is.character(.)) . else summary(., dec = 1) }
 })
 
 .plot_mds <- reactive({
-	if (not_available(input$mds_id2) || not_available(input$mds_dis))
-		return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
+	# if (not_available(input$mds_id2) || not_available(input$mds_dis))
+	# 	return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
 
   .mds() %>%
   	{ if (is.character(.)) .
   	  else capture_plot( do.call(plot, c(list(x = .), mds_plot_inputs())) ) }
 })
 
-observe({
- if (not_pressed(input$mds_report)) return()
+observeEvent(input$mds_report, {
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list()
