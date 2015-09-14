@@ -323,7 +323,7 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <p>time_diff = as_duration(time2 - time2)</p></li>
 <li><p>Extract the month from a date variable</p>
 <p>month = month(date)</p></li>
-<li><p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call. For example, to extract the weekday from a date variable and use a label rather than a number</p>
+<li><p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>quarter</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call. For example, to extract the weekday from a date variable and use a label rather than a number</p>
 <p>weekday = wday(date, label = TRUE)</p></li>
 <li><p>Calculating the distance between two locations using lat-long information</p>
 <p>trip_distance = as_distance(lat1, long1, lat2, long2)</p></li>
