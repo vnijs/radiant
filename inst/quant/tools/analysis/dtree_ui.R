@@ -49,7 +49,7 @@ output$dtree <- renderUI({
       table(
             td(help_modal('Decision tree','dtree_help', inclMD(file.path(r_path,"quant/tools/help/dtree.md")))),
             td(HTML("&nbsp;&nbsp;")),
-            td(HTML("<i title='Report results' class='glyphicon glyphicon-book action-button shiny-bound-input' href='' id='dtree_report'></i>")),
+            td(HTML("<i title='Report results' class='fa fa-edit action-button shiny-bound-input' href='' id='dtree_report'></i>")),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("dtree_eval", "Calculate")),
             td(uiOutput("ui_dtree_vim")),
@@ -75,8 +75,8 @@ output$dtree <- renderUI({
           selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
         td(actionButton("dtree_eval_plot", "Calculate"))
       )),
-      DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px")),
-    tabPanel("Sensitivity", verbatimTextOutput("something")
+      DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px"))
+    # ,tabPanel("Sensitivity", verbatimTextOutput("something")
       # actionLink("dtree_save_splot", "", class = "fa fa-download alignright", onclick = "window.print();"),
 #       with(tags, table(
 #         td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
@@ -85,7 +85,8 @@ output$dtree <- renderUI({
 #         td(actionButton("dtree_eval_plot", "Calculate"))
 #       )),
       # DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px")
-    ))
+    # )
+  )
 })
 
 vals_dtree <- reactiveValues(dtree_run = 0)
@@ -164,7 +165,12 @@ observe({
 observe({
   if (not_pressed(input$dtree_report)) return()
   isolate({
-    dtree_name <- paste0("dtree",floor(runif(1, 1000, 9999)))
+    dtree_name <-
+      sub("^\\s*name:\\s*(.*)\\ntype.*", "\\1", input$dtree_edit) %>% tolower %>%
+      gsub("[^[:alnum:] ]", "", .) %>% gsub("\\s+","_",.) %>%
+      gsub("^([0-9]+)",".",.)
+    if (dtree_name == "") dtree_name <- "dtree"
+
     r_data[[dtree_name]] <- input$dtree_edit
     update_report(inp_main = list(yl = dtree_name),
                   fun_name = "dtree",
@@ -172,4 +178,3 @@ observe({
                   figs = FALSE)
   })
 })
-

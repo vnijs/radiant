@@ -21,7 +21,8 @@ To show the output press the `Update` button.
 
 ### Documenting analysis results in Radiant
 
-The report feature in Radiant should be used in conjunction with the <i title='Report results' class='glyphicon glyphicon-book'></i> icons shown on the bottom of the (left) side bar on all analytisis pages. When that icon is clicked the command used to create the ouput is copied into the editor in the R > Report. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report. However, you can turn off that feature by clicking the `Manual paste (off)` button. The text in the button should now read `Manual paste (on)`. Click the button again to turn manual paste off again. With manual paste on the code is put in the clipboard when you click a book icon and you can paste it where you want in the R > Report editor window.
+The report feature in Radiant should be used in conjunction with the <i title='Report results' class='fa fa-edit'></i> icons shown at the bottom of the side bar on (almost) all pages. When that icon is clicked the command used to create the ouput is copied into the editor in the R > Report. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report. However, you can turn off that feature by clicking the `Manual paste (off)` button. The text in the button should now read `Manual paste (on)`. Click the button again to turn manual paste off again. With manual paste on the code is put in the clipboard when you click a book icon and you can paste it where you want in the R > Report editor window.
+
 
 By clicking the update button, the output from the analysis will be recreated. You can add text, bullets, headers, etc. around the code blocks to describe and explain the results using <a href='http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html' target='_blank'>markdown</a>.
 
@@ -113,10 +114,9 @@ scrub <-
 
 ## Knit to save html
 knitIt <- function(text) {
-  # knitr::knit2html(text = text, quiet = TRUE, envir = r_data$r_knitr,
   knitr::knit2html(text = text, quiet = TRUE, envir = r_knitr,
                    options=c("mathjax", "base64_images"),
-                   stylesheet = file.path(r_path,"base/www/rmarkdown.css")) %>%
+                   stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
   scrub %>% HTML
 }
 
@@ -124,7 +124,6 @@ knitIt <- function(text) {
 knitIt2 <- function(text) {
   # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
-        # envir = r_data$r_knitr), stylesheet = "",
         envir = r_knitr), stylesheet = "",
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML

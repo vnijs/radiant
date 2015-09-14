@@ -74,9 +74,9 @@ knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE, message = FALSE
                       warning = FALSE, fig.path = "~/r_figures/")
 
 ## using DT rather than Shiny versions of datatable
-renderDataTable <- DT::renderDataTable
-dataTableOutput <- DT::dataTableOutput
-datatable       <- DT::datatable
+# renderDataTable <- DT::renderDataTable
+# dataTableOutput <- DT::dataTableOutput
+# datatable       <- DT::datatable
 
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
@@ -90,7 +90,7 @@ if (Sys.getenv('SHINY_PORT') == "") {
 
 } else {
   r_local <- FALSE
-  options(shiny.maxRequestSize = 5 * 1024^2)   ## limit upload filesize on server (5MB)
+  options(shiny.maxRequestSize = 10 * 1024^2)   ## limit upload filesize on server (5MB)
   sapply(r_pkgs, require, character.only = TRUE)
 }
 
@@ -98,8 +98,10 @@ if (Sys.getenv('SHINY_PORT') == "") {
 r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
-if (!r_local)
-  "~/r_sessions/" %>% { if (!file.exists(.)) dir.create(., recursive = TRUE) }
+# if (!r_local)
+  # "~/r_sessions/" %>% { if (!file.exists(.)) dir.create(., recursive = TRUE) }
+
+"~/r_sessions/" %>% { if (!file.exists(.)) dir.create(., recursive = TRUE) }
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))

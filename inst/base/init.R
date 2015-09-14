@@ -3,9 +3,7 @@
 ## when available
 ################################################################################
 
-# Shipping.Country == "US" & Shipping.Province == "CA" | "NY"
-
-## options to setfor debugging
+## options to set for debugging
 # options(shiny.trace = TRUE)
 # options(shiny.error = recover)
 # options(warn = 2)
@@ -33,41 +31,41 @@ init_state <- function(r_data) {
   r_data
 }
 
-if (!r_local) {
+# if (!r_local) {
+if (TRUE) {
 
-  state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
-    if (!require(sendmailR)) {
-      install.packages("sendmailR", repos = "http://cran.rstudio.com")
-      library(sendmailR)
-    }
+  # state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
+  #   if (!require(sendmailR)) {
+  #     install.packages("sendmailR", repos = "http://cran.rstudio.com")
+  #     library(sendmailR)
+  #   }
 
-    from <- '<vincent.nijs@gmail.com>'
-    to <- '<vincent.nijs@gmail.com>'
-    body <- paste0(body,collapse="\n")
-    sendmail(from, to, subject, body,
-             control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
-  }
+  #   from <- '<vincent.nijs@gmail.com>'
+  #   to <- '<vincent.nijs@gmail.com>'
+  #   body <- paste0(body,collapse="\n")
+  #   sendmail(from, to, subject, body,
+  #            control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
+  # }
 
-  check_age_and_size <- function() {
+  # check_age_and_size <- function() {
 
-    ids <- ls(r_sessions)
-    ages <- list()
-    for (i in ids) {
-      session_age <- difftime(Sys.time(), r_sessions[[i]]$timestamp, units = "days")
-      if (session_age > 1) r_sessions[[i]] <- NULL
-      ages[i] <- session_age %>% round(3)
-    }
+  #   ids <- ls(r_sessions)
+  #   ages <- list()
+  #   for (i in ids) {
+  #     session_age <- difftime(Sys.time(), r_sessions[[i]]$timestamp, units = "days")
+  #     if (session_age > 1) r_sessions[[i]] <- NULL
+  #     ages[i] <- session_age %>% round(3)
+  #   }
 
-    session_size <- pryr::object_size(r_sessions) %>% as.numeric %>%
-                      {. / 1048576} %>% round(3)
+  #   session_size <- pryr::object_size(r_sessions) %>% as.numeric %>%
+  #                     {. / 1048576} %>% round(3)
 
-    if (length(r_sessions) > 20 || session_size > 20)
-      state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
-  }
+  #   if (length(r_sessions) > 20 || session_size > 20)
+  #     state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
+  # }
 
-  fl <- list.files(normalizePath("~/r_sessions/"),
-                 pattern = "*.rds", full.names = TRUE)
-
+  ## are there any state files dumped more than 1 minute ago?
+  # check_age_and_size()
 
 
   remove_session_files <- function(st = Sys.time()) {
@@ -81,9 +79,6 @@ if (!r_local) {
   }
 
   remove_session_files()
-
-  ## are there any state files dumped more than 1 minute ago?
-  # check_age_and_size()
 }
 
 ## from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R
@@ -91,11 +86,30 @@ isolate({
   prevSSUID <- parseQueryString(session$clientData$url_search)[["SSUID"]]
 })
 
+most_recent_session_file <- function() {
+  fl <- list.files(normalizePath("~/r_sessions/"), pattern = "*.rds",
+                   full.names = TRUE)
+
+  if (length(fl) > 0) {
+    data.frame(fn = fl, dt = file.mtime(fl)) %>% arrange(desc(dt)) %>%
+    slice(1) %>% .[["fn"]] %>% as.character %>% basename %>%
+    gsub("r_(.*).rds","\\1",.)
+  } else {
+    NULL
+  }
+}
+
 ## set the session id
 r_ssuid <-
   if (r_local) {
-    # "local"
-    ifelse (is.null(prevSSUID), paste0("local-",shiny:::createUniqueId(3)), prevSSUID)
+    # ifelse (is.null(prevSSUID), paste0("local-",shiny:::createUniqueId(3)), prevSSUID)
+    if (is.null(prevSSUID)) {
+      mrsf <- most_recent_session_file()
+      if (is.null(mrsf)) paste0("local-",shiny:::createUniqueId(3))
+      else "local-restored"
+    } else {
+      prevSSUID
+    }
   } else {
     ifelse (is.null(prevSSUID), shiny:::createUniqueId(5), prevSSUID)
   }
@@ -104,6 +118,7 @@ r_ssuid <-
 session$sendCustomMessage("session_start", r_ssuid)
 
 ## load previous state if available
+## look in global memory first
 if (exists("r_state") && exists("r_data")) {
   r_data  <- do.call(reactiveValues, r_data)
   r_state <- r_state
@@ -113,7 +128,8 @@ if (exists("r_state") && exists("r_data")) {
   r_state <- r_sessions[[r_ssuid]]$r_state
 } else if (file.exists(paste0("~/r_sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
-  rs <- readRDS(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+  rs <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds") %>% readRDS
+  # rs <- readRDS(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
 
   if (length(rs$r_data) == 0)
     r_data  <- init_state(reactiveValues())
@@ -121,6 +137,10 @@ if (exists("r_state") && exists("r_data")) {
     r_data  <- do.call(reactiveValues, rs$r_data)
 
   r_state <- rs$r_state
+
+  ## don't navigate to same tab in case the app locks again
+  r_state$nav_radiant <- NULL
+
   rm(rs)
 } else {
   r_data  <- init_state(reactiveValues())
@@ -132,15 +152,6 @@ if (r_local) {
   ## does *not* make a copy of the data - nice
   r_env <<- pryr::where("r_data")
 
-
-
-  ###
-  ## if r_env still needed?
-  ###
-
-
-
-
   ## adding any data.frame from the global environment to r_data should not affect
   ## memory usage ... at least until the entry in r_data is changed
   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
@@ -149,11 +160,9 @@ if (r_local) {
   for (df in df_list) {
     isolate({
       r_data[[df]] <- get(df, envir = .GlobalEnv)
-      attr(r_data[[df]],'description')
       r_data[[paste0(df,"_descr")]] <- attr(r_data[[df]],'description') %>%
         { if (is.null(.)) "No description provided. Please use Radiant to add an overview of the data in markdown format.\n Check the 'Add/edit data description' box on the left of your screen" else . }
       r_data$datasetlist %<>% c(df, .) %>% unique
-      # rm(list = df, envir = .GlobalEnv)
     })
   }
 }

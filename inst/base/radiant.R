@@ -22,13 +22,21 @@ saveSession <- function(session = session) {
     r_state   = reactiveValuesToList(input),
     timestamp = Sys.time()
   )
+
+  # r_ssuid <- "123"
+  # paste0("~/r_sessions/r_", r_ssuid, ".rds")
+  # normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+
+  fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
+
   ## saving session information to file on server
-  if (!r_local)
-    saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+  # if (!r_local)
+  # saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+  saveRDS(r_sessions[[r_ssuid]], file = fn)
 }
 
 observeEvent(input$refresh_radiant, {
-  if (r_local) return()
+  # if (r_local) return()
   ## use sshhr to avoid warnings if needed
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
   if (file.exists(fn)) unlink(fn, force = TRUE)
@@ -40,7 +48,6 @@ saveStateOnRefresh <- function(session = session) {
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
           is.null(input$uploadState)) {
         saveSession(session)
-        # if (r_local) try(rm(r_env, envir = .GlobalEnv), silent = TRUE)
         if (r_local) sshh( rm(r_env, envir = .GlobalEnv) )
       } else {
         if (is.null(input$uploadState)) {

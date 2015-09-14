@@ -102,7 +102,7 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 	month = month(date)
 
-12. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
+12. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
 
 	weekday = wday(date, label = TRUE)
 
