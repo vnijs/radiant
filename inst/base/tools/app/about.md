@@ -46,24 +46,23 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for off-line access open R(studio) and copy-and-paste the command below:
+An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version for Windows of Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:
 
 ```r
-install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
+install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = 'binary')
 ```
 
-Once all packages are installed use the commands below to launch the app (use either "base", "quant", "marketing" or "analytics"):
+Once all packages are installed use the command below to launch the app (use either "base", "quant", "marketing" or "analytics"):
 
 ```r
-library(radiant)
-radiant("analytics")
+radiant::radiant("analytics")
 ```
 
 See also the `Installing Radiant` video:
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 
-You can create a launcher on your Desktop to start Radiant by typing `launcher("analytics")` in the R-console and pressing return. Again, enter either "base", "quant", "marketing" or "analytics" depending on the app you want to use. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release.
+You can create a launcher on your Desktop to start Radiant by typing `radiant::launcher("analytics")` in the R(studio) console and pressing return. Again, enter either "base", "quant", "marketing" or "analytics" depending on the app you want to use. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release.
 
 When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click `Stop`. The Radiant process will stop and the browser window will close (Chrome) or gray-out.
 

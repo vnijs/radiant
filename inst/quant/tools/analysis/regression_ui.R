@@ -61,11 +61,13 @@ reg_pred_inputs <- reactive({
 
   reg_pred_args$pred_cmd <- reg_pred_args$pred_data <- reg_pred_args$pred_vars <- ""
   if (input$reg_predict == "cmd")
-    reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd)
+    reg_pred_args$pred_cmd <- gsub("\\n", "", input$reg_pred_cmd)
   else if (input$reg_predict == "data")
     reg_pred_args$pred_data <- input$reg_pred_data
   else if (input$reg_predict == "vars")
     reg_pred_args$pred_vars <- input$reg_pred_vars
+
+    # reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd)
 
   reg_pred_args
 })

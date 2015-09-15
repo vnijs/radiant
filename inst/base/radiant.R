@@ -23,23 +23,24 @@ saveSession <- function(session = session) {
     timestamp = Sys.time()
   )
 
-  # r_ssuid <- "123"
-  # paste0("~/r_sessions/r_", r_ssuid, ".rds")
-  # normalizePath(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-
+  ## saving session information to file
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
+  saveRDS(r_sessions[[r_ssuid]], file = fn)
 
-  ## saving session information to file on server
   # if (!r_local)
   # saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
-  saveRDS(r_sessions[[r_ssuid]], file = fn)
 }
 
 observeEvent(input$refresh_radiant, {
-  # if (r_local) return()
-  ## use sshhr to avoid warnings if needed
-  fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
-  if (file.exists(fn)) unlink(fn, force = TRUE)
+  if (r_local) {
+    fn <- normalizePath("~/r_sessions")
+    file.remove(list.files(fn, full.names = TRUE))
+  } else {
+    fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
+    if (file.exists(fn)) unlink(fn, force = TRUE)
+  }
+
+  try(r_ssuid <- NULL, silent = TRUE)
 })
 
 saveStateOnRefresh <- function(session = session) {
@@ -53,6 +54,7 @@ saveStateOnRefresh <- function(session = session) {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions"))
             try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
+            try(r_ssuid <- NULL, silent = TRUE)
         }
       }
     })
@@ -63,19 +65,13 @@ saveStateOnRefresh <- function(session = session) {
 ## functions used across tools in radiant
 ################################################################
 
-## add variables to the data
-.changedata <- function(new_col, new_col_name = "", dataset = input$dataset) {
-	if (nrow(r_data[[dataset]]) == new_col %>% nrow &&
-    new_col_name[1] != "")
-    r_data[[dataset]][,new_col_name] <- new_col
-}
-
 ## get active dataset and apply data-filter if available
 .getdata <- reactive({
 
   if (is.null(input$dataset)) return()
 
-  selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+  # selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+  selcom <- input$data_filter %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
   } else if (grepl("([^=!<>])=([^=])",selcom)) {
@@ -180,8 +176,6 @@ trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
 ## show a few rows of a dataframe
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
 
-  # cf(head(dat))
-
   n <- 0
   {if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat} %>%
     { n <<- nrow(.); . } %>%
@@ -273,9 +267,6 @@ register_plot_output <- function(fun_name, rfun_name,
         withProgress(message = 'Making plot', value = 0, print(.))
       }
     }
-
-    # return(invisible())
-
   }, width=get(width_fun), height=get(height_fun))
 
   return(invisible())
@@ -380,8 +371,7 @@ inclRmd <- function(path, r_env = parent.frame()) {
     envir = r_env, options = "", stylesheet = "") %>%
     # gsub("&lt;!--/html_preserve--&gt;","",.) %>%  ## knitr adds this
     # gsub("&lt;!--html_preserve--&gt;","",.) %>%   ## knitr adds this
-    HTML %>%
-    withMathJax
+    HTML %>% withMathJax
 }
 
 ## used by View - remove or use more broadly
@@ -420,13 +410,6 @@ save2env <- function(dat, dataset,
 ## use with tail -f ~/r_cat.txt in a terminal
 cf <- function(...) {
   cat(paste0("\n--- called from: ", environmentName(parent.frame()), " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
-  # cf_call <- try(sys.call(which = 2), silent = TRUE)
-  # if (is(cf_call, 'try-error')) cf_call <- sys.call(which = 1)
-  # cat(paste0("\n--- called from: ", cf_call, " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
-  # catsys.call(which = 2)
-  # out <- capture.output(print(...))
   out <- paste0(capture.output(...), collapse = "\n")
   cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
-
-  # cat(..., sep = "\n", file = "~/r_cat.txt", append = TRUE)
 }

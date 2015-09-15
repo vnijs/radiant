@@ -118,7 +118,8 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
-  filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+  # filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+  filt %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   { if (!is_string(dataset)) {
       dataset
     } else if (exists("r_env")) {
@@ -500,12 +501,12 @@ win_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     pt <- normalizePath(pt, winslash='/')
 
     fn1 <- file.path(pt, "radiant.bat")
-    launch_string <- paste0(Sys.which('R'), " -e \"if (!require(radiant)) { install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/') }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
+    launch_string <- paste0("\"",Sys.which('R'), "\" -e \"if (!require(radiant)) { install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary') }; library(radiant); shiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\"")
     cat(launch_string, file=fn1, sep="\n")
     Sys.chmod(fn1, mode = "0755")
 
     fn2 <- file.path(pt, "update_radiant.bat")
-    launch_string <- paste0(Sys.which('R'), " -e \"install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\"\npause(1000)")
+    launch_string <- paste0("\"", Sys.which('R'), "\" -e \"install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\"\npause(1000)")
     cat(launch_string,file=fn2,sep="\n")
     Sys.chmod(fn2, mode = "0755")
 
@@ -551,12 +552,12 @@ mac_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
     fn1 <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-    launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
+    launch_string <- paste0("#!/usr/bin/env Rscript\nif (!require(radiant)) {\n  install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\n}\n\nlibrary(radiant)\nshiny::runApp(system.file(\'", app[1], "\', package='radiant'), port = 4444, launch.browser = TRUE)\n")
     cat(launch_string,file=fn1,sep="\n")
     Sys.chmod(fn1, mode = "0755")
 
     fn2 <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/update_radiant.command")
-    launch_string <- paste0("#!/usr/bin/env Rscript\ninstall.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/')\nSys.sleep(1000)")
+    launch_string <- paste0("#!/usr/bin/env Rscript\ninstall.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\nSys.sleep(1000)")
     cat(launch_string,file=fn2,sep="\n")
     Sys.chmod(fn2, mode = "0755")
 

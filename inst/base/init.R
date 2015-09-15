@@ -102,12 +102,11 @@ most_recent_session_file <- function() {
 ## set the session id
 r_ssuid <-
   if (r_local) {
-    # ifelse (is.null(prevSSUID), paste0("local-",shiny:::createUniqueId(3)), prevSSUID)
     if (is.null(prevSSUID)) {
       mrsf <- most_recent_session_file()
-      if (is.null(mrsf)) paste0("local-",shiny:::createUniqueId(3))
-      else "local-restored"
+      paste0("local-",shiny:::createUniqueId(3))
     } else {
+      mrsf <- "0000"
       prevSSUID
     }
   } else {
@@ -117,8 +116,7 @@ r_ssuid <-
 ## (re)start the session and push the id into the url
 session$sendCustomMessage("session_start", r_ssuid)
 
-## load previous state if available
-## look in global memory first
+## load for previous state if available but look in global memory first
 if (exists("r_state") && exists("r_data")) {
   r_data  <- do.call(reactiveValues, r_data)
   r_state <- r_state
@@ -128,8 +126,26 @@ if (exists("r_state") && exists("r_data")) {
   r_state <- r_sessions[[r_ssuid]]$r_state
 } else if (file.exists(paste0("~/r_sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
-  rs <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds") %>% readRDS
-  # rs <- readRDS(paste0("~/r_sessions/r_", r_ssuid, ".rds"))
+  fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
+  rs <- readRDS(fn)
+  unlink(fn, force = TRUE)
+
+  if (length(rs$r_data) == 0)
+    r_data  <- init_state(reactiveValues())
+  else
+    r_data  <- do.call(reactiveValues, rs$r_data)
+
+  r_state <- rs$r_state
+  rm(rs)
+} else if (r_local && file.exists(paste0("~/r_sessions/r_", mrsf, ".rds"))) {
+
+  ## restore from local folder but assign new ssuid
+  fn <- paste0(normalizePath("~/r_sessions"),"/r_", mrsf, ".rds")
+  rs <- readRDS(fn)
+
+  rs <- readRDS(fn)
+
+  unlink(fn, force = TRUE)
 
   if (length(rs$r_data) == 0)
     r_data  <- init_state(reactiveValues())
@@ -140,7 +156,6 @@ if (exists("r_state") && exists("r_data")) {
 
   ## don't navigate to same tab in case the app locks again
   r_state$nav_radiant <- NULL
-
   rm(rs)
 } else {
   r_data  <- init_state(reactiveValues())

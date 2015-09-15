@@ -21,7 +21,7 @@ output$ui_tr_normalizer <- renderUI({
 })
 
 output$ui_tr_reorg_vars <- renderUI({
-  ## need a dependency to reset levels
+  ## need a dependency to reset list of variables
   if (is_empty(input$tr_change_type)) return()
   vars <- varnames()
   selectizeInput("tr_reorg_vars", "Reorder/remove variables:", choices  = vars,
@@ -187,7 +187,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -208,14 +207,9 @@ output$ui_Transform <- renderUI({
 
     if (store_dat == "") store_dat <- dataset
     if (ext == "")
-      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(",fun, "), ", paste0(vars, collapse = ", "), ")\n")
+      paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "), ")\n")
     else
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
-
-      # cmd <- paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(",fun, "), ", paste0(vars, collapse = ", "), ")\n")
-      # cmd <- paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
-
-    # update_log(cmd, input$tr_log)
   }
 }
 
@@ -237,7 +231,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## create new variable(s)\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", gsub(";",",",cmd), ")\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -246,7 +239,8 @@ output$ui_Transform <- renderUI({
                     store_dat = "",
                     store = TRUE) {
 
-  cmd <- cmd %>% gsub("\\s","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
+  # cmd <- cmd %>% gsub("\\s","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
+  cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
   if (is_empty(rcname)) rcname <- paste0(var, "_rc")
 
   if (!store || !is.character(dataset)) {
@@ -260,7 +254,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## recode variable\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", rcname, " = recode(", var, ", \"", cmd, "\"))\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -268,8 +261,9 @@ output$ui_Transform <- renderUI({
                     store_dat = "",
                     store = TRUE) {
 
-  rnm <- rnm %>% gsub("\\s","", .) %>% gsub(";",",", .)
-  if (rnm != "") rnm <- unlist(strsplit(rnm, ",")) %>% .[1:min(length(.),length(var))]
+  # rnm <- rnm %>% gsub("\\s","", .) %>% gsub(";",",", .)
+  rnm <- rnm %>% gsub("\\n","", .) %>% gsub(";",",", .)
+  if (gsub("\\s","",rnm) != "") rnm <- unlist(strsplit(rnm, ",")) %>% .[1:min(length(.),length(var))]
 
   if (!store || !is.character(dataset)) {
     if (rnm[1] == "") return(dataset)
@@ -280,7 +274,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## rename variable(s)\nr_data[[\"",store_dat,"\"]] <- rename(r_data[[\"",dataset,"\"]], ", paste(rnm, var, sep = " = ", collapse = ", "), ")\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -293,7 +286,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## replace variable(s)\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", paste(var, rpl, sep = " = ", collapse = ", "), ") %>% select(", paste0("-",rpl, collapse = ", "),")\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -315,7 +307,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## normalize variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(normalize(.,",nzvar,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -333,7 +324,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## created variable to select training sample\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = make_train(", n, ", n()))\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -346,7 +336,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## change factor levels\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", fct, " = factor(", fct, ", levels = c(\"", paste0(levs, collapse = "\",\""), "\")))\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -360,7 +349,6 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## reorder/remove variables\nr_data[[\"",store_dat,"\"]] <- select(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -382,7 +370,6 @@ output$ui_Transform <- renderUI({
     # if (all(vars == "")) vars <- "."
     if (all(vars == "") || length(unique(vars)) == nr_col) vars <- .
     paste0("## remove missing values\nr_data[[\"",store_dat,"\"]] <- r_data[[\"",dataset,"\"]] %>% filter(complete.cases(", vars, "))\n")
-    # %>% update_log(input$tr_log)
   }
 }
 
@@ -451,6 +438,9 @@ inp_vars <- function(inp, rval = "")
 
 transform_main <- reactive({
 
+  if (input$show_filter)
+    updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+
 	if (is.null(input$tr_change_type)) return()
   if (not_available(input$tr_vars)) {
     if (input$tr_change_type == "none") {
@@ -477,9 +467,12 @@ transform_main <- reactive({
   }
 
 	## don't transform when a filter is active
-  selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
-  if (!is_empty(selcom) && input$show_filter == TRUE)
-  	return("A filter is active. Either uncheck the filter checkbox, remove the filter statement,\nor store the filtered data through the Data > View tab")
+  # selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
+  # if (!is_empty(selcom) && input$show_filter == TRUE)
+  	# return("A filter is active. Either uncheck the filter checkbox, remove the filter statement,\nor store the filtered data through the Data > View tab")
+
+  if (input$show_filter)
+    updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
 
   ## get the active dataset
 	dat <- .getdata()
@@ -627,10 +620,14 @@ output$transform_data <- reactive({
 })
 
 tr_summary <- reactive({
-  paste0(capture.output(getsummary(.getdata())), collapse = "\n")
+  # dat <- .getdata()
+  # if (nrow(dat) == 0) return(**invisible())
+  # paste0(capture.output(getsummary(dat)), collapse = "\n")
+  # paste0(capture.output(getsummary(.getdata())), collapse = "\n")
 })
 
 tr_snippet <- reactive({
+  # .getdata() %>% {if (nrow(.) == 0) invisible() else show_data_snippet(.) } %>% return(.)
   show_data_snippet(.getdata())
 })
 

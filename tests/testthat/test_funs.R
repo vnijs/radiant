@@ -95,3 +95,8 @@ test_that("options", {
   expect_equal(options()$width, 200)
   expect_equal(options()$scipen, 100)
 })
+
+test_that("filter", {
+  dat <- getdata("diamonds", filt = "cut == 'Very Good'")
+  expect_equal(nrow(dat), 677)
+})
