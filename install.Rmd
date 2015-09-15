@@ -29,14 +29,14 @@ For example, [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or
 To install Radiant open R(studio) and copy-and-paste the command below to the `Console` window on the bottom left. Then press return. R(studio) will now install Radiant and several dependencies. This may take a few minutes depending on your internet connection.
 
 ```r
-install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
+install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
 ```
 
 If you are asked where to install Radiant and its dependencies (i.e., "Would you like to use a personal library instead?") answer "yes" or "y" and then press return.
 
 #### 5. Create a desktop launcher
 
-To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) one of the commands below into the `Console` window in Rstudio. For the Quantitative Analysis app use `quant`, for the Marketing Research app use `marketing`, and for the Customer Analytics app use `analytics`:
+To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) **one** of the commands below into the `Console` window in Rstudio. For the Quantitative Analysis app use `quant`, for the Marketing Research app use `marketing`, and for the Customer Analytics app use `analytics`:
 
 ```r
 radiant::launcher("quant")
