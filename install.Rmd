@@ -16,7 +16,9 @@ For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">htt
 
 For windows you can get the latest release here: <a href="https://cran.rstudio.com/bin/windows/base/release.htm" target="_blank">https://cran.rstudio.com/bin/windows/base/release.htm</a>
 
-Accept all the defaults. Installing R will create 2 shorcuts on your Desktop. You can remove the icon named ("R i386 3.2.2"). If there is no
+> **Important:** Windows users should install R to directory C:\\R\\R-3.2.2
+
+On Mac you can accept all the defaults. Installing R should create 2 shortcuts on your Desktop. If there are indeed 2 shortcuts you can remove the icon named ("R i386 3.2.2").
 
 #### 2. Install Rstudio (OPTIONAL)
 
