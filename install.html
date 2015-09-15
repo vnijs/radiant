@@ -268,8 +268,9 @@ img {
 </div>
 <div id="create-a-desktop-launcher" class="section level4">
 <h4>5. Create a desktop launcher</h4>
-<p>To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) ONE of the commands below into the <code>Console</code> window in Rstudio. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
-<pre class="r"><code>radiant::launcher(&quot;quant&quot;)
+<p>To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) ONE of the commands below into R (or Rstudio). For the Quantitative Analysis app use the <code>quant</code> command, for the Marketing Research app use the <code>marketing</code> command, and for the Customer Analytics app use the <code>analytics</code> command:</p>
+<pre class="r"><code>## Choose one of the following three commands depending on the class you are in
+radiant::launcher(&quot;quant&quot;)
 
 radiant::launcher(&quot;marketing&quot;)
 
@@ -278,6 +279,7 @@ radiant::launcher(&quot;analytics&quot;)</code></pre>
 <p>Alternatively, you can start Radiant from R (or Rstudio) using one of the commands below. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
 <pre class="r"><code>library(radiant)
 
+## Choose one of the following three commands depending on the class you are in
 radiant(&quot;quant&quot;)
 
 radiant(&quot;marketing&quot;)
@@ -296,10 +298,10 @@ radiant(&quot;analytics&quot;)</code></pre>
 </div>
 <div id="trouble-shooting" class="section level2">
 <h2>Trouble shooting</h2>
-<p>As mentioned above Windows users may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing <code>run as administrator</code>.</p>
+<p>As mentioned above, Windows users may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing <code>run as administrator</code>.</p>
 <p>On rare occasions R(studio) may complain that a package is not yet installed. If so, install the package mentioned using the command below but replace ‘package-that-is-not-yet-installed’ with the package name mentioned in the error message</p>
 <pre class="r"><code>install.packages(&quot;package-that-is-not-yet-installed&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)</code></pre>
-<p>If R(studio) complains about not being able to delete a package or directory please copy-and-paste the commands below into Rstudio and press return. Then double-click the <code>update_radiant</code> icon on your desktop again. If the update is successful (i.e., no error messages) try double clicking the <code>radiant</code> icon on your desktop again.</p>
+<p>If R(studio) complains about not being able to delete a package or directory please copy-and-paste the commands below into R (or Rstudio) and press return. Then double-click the <code>update_radiant</code> icon on your desktop again. If the update is successful (i.e., no error messages) try double clicking the <code>radiant</code> icon on your desktop again.</p>
 <pre class="r"><code>remove.packages(&quot;Rcpp&quot;, lib = .libPaths())
 remove.packages(&quot;dplyr&quot;, lib = .libPaths())</code></pre>
 </div>

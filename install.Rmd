@@ -40,9 +40,10 @@ If you are asked where to install Radiant and its dependencies (i.e., "Would you
 
 #### 5. Create a desktop launcher
 
-To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) ONE of the commands below into the `Console` window in Rstudio. For the Quantitative Analysis app use `quant`, for the Marketing Research app use `marketing`, and for the Customer Analytics app use `analytics`:
+To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) ONE of the commands below into R (or Rstudio). For the Quantitative Analysis app use the `quant` command, for the Marketing Research app use the `marketing` command, and for the Customer Analytics app use the `analytics` command:
 
 ```r
+## Choose one of the following three commands depending on the class you are in
 radiant::launcher("quant")
 
 radiant::launcher("marketing")
@@ -57,6 +58,7 @@ Alternatively, you can start Radiant from R (or Rstudio) using one of the comman
 ```r
 library(radiant)
 
+## Choose one of the following three commands depending on the class you are in
 radiant("quant")
 
 radiant("marketing")
@@ -78,7 +80,7 @@ Want more help getting started? Watch the tutorials on the [documentation site](
 
 ## Trouble shooting
 
-As mentioned above Windows users may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing `run as administrator`.
+As mentioned above, Windows users may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing `run as administrator`.
 
 On rare occasions R(studio) may complain that a package is not yet installed. If so, install the package mentioned using the command below but replace 'package-that-is-not-yet-installed' with the package name mentioned in the error message
 
@@ -86,7 +88,7 @@ On rare occasions R(studio) may complain that a package is not yet installed. If
 install.packages("package-that-is-not-yet-installed", repos = "http://vnijs.github.io/radiant_miniCRAN/")
 ```
 
-If R(studio) complains about not being able to delete a package or directory please copy-and-paste the commands below into Rstudio and press return. Then double-click the `update_radiant` icon on your desktop again. If the update is successful (i.e., no error messages) try double clicking the `radiant` icon on your desktop again.
+If R(studio) complains about not being able to delete a package or directory please copy-and-paste the commands below into R (or Rstudio) and press return. Then double-click the `update_radiant` icon on your desktop again. If the update is successful (i.e., no error messages) try double clicking the `radiant` icon on your desktop again.
 
 ```{r eval = FALSE}
 remove.packages("Rcpp", lib = .libPaths())
