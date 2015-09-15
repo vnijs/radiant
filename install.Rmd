@@ -8,6 +8,8 @@ title: Radiant -- Business analytics using R and Shiny
 
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/vnijs/radiant/issues. For other questions and comments please use radiant@rady.ucsd.edu.
 
+> **Note:** Profiles (or usernames or logins) containing non-ASCII characters will cause problems during the install. To address this issue please use a profile name (login) which contains ASCII (A-E, a-e) Letters only. For example, Ex C:\users\myprofilename
+
 #### 1. Install R for your system
 
 For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">https://cran.rstudio.com/bin/macosx/</a>
@@ -80,7 +82,10 @@ Want more help getting started? Watch the tutorials on the [documentation site](
 
 ## Trouble shooting
 
-As mentioned above, Windows users may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing `run as administrator`.
+As mentioned above, Windows users may need to start R (or Rstudio) by right-clicking on the R (or Rstudio) desktop shortcut and choosing `run as administrator`.
+
+On Windows, if you see a message such as "Warning: unable to move temporary installation 'C:\Users\yourname\Documents\R\win-library\3.2\file54ad976f6\shinyAce' to 'C:\Users\yourname\Documents\R\win-library\3.2\shinyAce'"
+you may need to reinstall R into another directory (e.g., C:/R ).
 
 On rare occasions R(studio) may complain that a package is not yet installed. If so, install the package mentioned using the command below but replace 'package-that-is-not-yet-installed' with the package name mentioned in the error message
 
@@ -94,6 +99,7 @@ If R(studio) complains about not being able to delete a package or directory ple
 remove.packages("Rcpp", lib = .libPaths())
 remove.packages("dplyr", lib = .libPaths())
 ```
+
 
 ## Reporting issues
 
