@@ -87,7 +87,7 @@ Want more help getting started? Watch the tutorials on the [documentation site](
 As mentioned above, Windows users may need to start R (or Rstudio) by right-clicking on the R (or Rstudio) desktop shortcut and choosing `run as administrator`.
 
 On Windows, if you see a message such as "Warning: unable to move temporary installation 'C:\Users\yourname\Documents\R\win-library\3.2\file54ad976f6\shinyAce' to 'C:\Users\yourname\Documents\R\win-library\3.2\shinyAce'"
-you may need to reinstall R into another directory (e.g., C:/R ).
+you may need to reinstall R into another directory (e.g., C:\\R\\R-3.2.2). You should then first remove the directory Documents\\R from your computer
 
 On rare occasions R(studio) may complain that a package is not yet installed. If so, install the package mentioned using the command below but replace 'package-that-is-not-yet-installed' with the package name mentioned in the error message
 
@@ -101,7 +101,6 @@ If R(studio) complains about not being able to delete a package or directory ple
 remove.packages("Rcpp", lib = .libPaths())
 remove.packages("dplyr", lib = .libPaths())
 ```
-
 
 ## Reporting issues
 
