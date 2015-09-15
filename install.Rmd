@@ -8,7 +8,7 @@ title: Radiant -- Business analytics using R and Shiny
 
 Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/vnijs/radiant/issues. For other questions and comments please use radiant@rady.ucsd.edu.
 
-> **Note:** Profiles (or usernames or logins) containing non-ASCII characters will cause problems during the install. To address this issue please use a profile name (login) which contains ASCII (A-E, a-e) Letters only. For example, Ex c:\\users\\myprofilename
+> **Note:** Profiles (or usernames or logins) containing non-ASCII characters will cause problems during the install. To address this issue please use a profile name (login) which contains ASCII (A-E, a-e) Letters only. For example, c:\\users\\myprofilename
 
 #### 1. Install R for your system
 
