@@ -254,6 +254,7 @@ output$ui_glm_reg <- renderUI({
           checkboxGroupInput("glm_sum_check", NULL, glm_sum_check,
             selected = state_init("glm_sum_check", "odds"), inline = TRUE)
   			),
+        ## Using && to check that input.glm_sum_check is not null (must be &&)
   	    conditionalPanel(condition = "(input.glm_sum_check && (input.glm_sum_check.indexOf('odds') >= 0 |
                          input.glm_sum_check.indexOf('confint') >= 0)) |
   	                     input.glm_plots == 'coef' |

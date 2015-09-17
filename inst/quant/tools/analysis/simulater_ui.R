@@ -133,16 +133,17 @@ output$ui_simulater <- renderUI({
     conditionalPanel(condition = "input.tabs_simulate == 'Model'",
       wellPanel(
         uiOutput("ui_sim_types"),
-        conditionalPanel(condition = "input.sim_types.indexOf('const') >= 0",
+        ## Using && to check that input.glm_sum_check is not null (must be &&)
+        conditionalPanel("input.sim_types && input.sim_types.indexOf('const') >= 0",
           textinput_maker("const","Constant")
         ),
-        conditionalPanel(condition = "input.sim_types.indexOf('unif') >= 0",
+        conditionalPanel("input.sim_types && input.sim_types.indexOf('unif') >= 0",
           textinput_maker("unif","Uniform")
         ),
-        conditionalPanel(condition = "input.sim_types.indexOf('norm') >= 0",
+        conditionalPanel("input.sim_types && input.sim_types.indexOf('norm') >= 0",
           textinput_maker("norm","Normal")
         ),
-        conditionalPanel(condition = "input.sim_types.indexOf('discrete') >= 0",
+        conditionalPanel("input.sim_types && input.sim_types.indexOf('discrete') >= 0",
           textinput_maker("discrete","Discrete")
         ),
         textinput_maker("form","Formula"),
