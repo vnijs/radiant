@@ -7,6 +7,7 @@
 #' @return A list with the initial tree and the calculated tree
 #'
 #' @importFrom yaml yaml.load
+#' @importFrom stringr str_match
 #'
 #' @seealso \code{\link{summary.dtree}} to summarize results
 #' @seealso \code{\link{plot.dtree}} to plot results
@@ -16,11 +17,58 @@ dtree <- function(yl) {
   ## most of the code in this function is from
   ## https://github.com/gluc/useR15/blob/master/01_showcase/02_decision_tree.R
 
-  ## load yaml from string of list not provide
+  ## load yaml from string if list not provide
+#   if (is_string(yl)) {
+#     yl <- yaml.load(yl)
+#     if (is_string(yl)) yl <- getdata(yl) %>% yaml.load(.)
+#   }
+
+# yl <- "name: Jenny Lind
+# type: decision
+#  Sign with Movie Company:
+#     type: chance
+#     Small Box Office:
+#         p: 0.3
+#         payoff: 200000
+#     Medium Box Office:
+#         p: 0.6
+#         payoff: 1000000
+#     Large Box Office:
+#         p: 0.1
+#         payoff: 3000000
+# Sign with TV Network:
+#     type: chance
+#     Small Box Office:
+#         p: 0.3
+#         payoff: 900000
+#     Medium Box Office:
+#         p: 0.6
+#         payoff: 900000
+#     Large Box Office:
+#         p: 0.1
+#         payoff: 900000"
+
+
+#   print(yl)
+#   print("-----")
+
+  ## load yaml from string if list not provide
   if (is_string(yl)) {
-    yl <- yaml.load(yl)
-    if (is_string(yl)) yl <- getdata(yl) %>% yaml.load(.)
+    yl <- try(yaml.load(yl), silent = TRUE)
+    if (!is(yl, 'try-error') && is_string(yl)) yl <- try(yaml.load(getdata(yl)), silent = TRUE)
+
+    if (is(yl, 'try-error')) {
+      err_line <- stringr::str_match(attr(yl,"condition")$message, "^Scanner error:.*line\\s([0-9]*),")[2]
+      if (is.na(err_line))
+        err <- paste0("**\nError reading input:", attr(yl,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
+      else
+        err <- paste0("**\nIndentation error at line ", err_line, ".\nUse tabs to separate the branches in the decision tree.\nFix the indentation error and try again. Examples are shown in the help file\n**")
+      return(set_class(err, c("dtree",class(err))))
+    }
+#     print(yl)
+#     print("=====")
   }
+
   # if (length(yl) == 0) return("The provided list is empty or not in the correct format")
 
   ## convert list to node object
@@ -51,6 +99,9 @@ dtree <- function(yl) {
   calc_payoff <- function(x) {
     if (x$type == 'chance') x$payoff <- Aggregate(x, function(node) node$payoff * node$p, sum)
     else if (x$type == 'decision') x$payoff <- Aggregate(x, "payoff", max)
+
+    ## subtract cost if specified
+    if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
   }
 
   jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf)
@@ -78,6 +129,8 @@ dtree <- function(yl) {
 #' @export
 summary.dtree <- function(object, ...) {
 
+  if (is.character(object)) return(cat(object))
+
   print_money <- function(x) {
     x %>% {if (is.na(.)) "" else .} %>%
       format(digits = 10, nsmall = 2, decimal.mark = ".", big.mark = ",", scientific = FALSE)
@@ -97,6 +150,7 @@ summary.dtree <- function(object, ...) {
     Traverse(jl) %>%
       {data.frame(Probability = Get(., "p", format = FormatPercent),
         Payoff = Get(., "payoff", format = print_money),
+        # Cost = Get(., "cost", format = print_money),
         Type = Get(., "ptype", format = rm_terminal),
         check.names = FALSE,
         row.names = Get(.,"levelName"))}
@@ -109,8 +163,8 @@ summary.dtree <- function(object, ...) {
   cat("\n\nFinal decision tree:\n")
   format_dtree(object$jl) %>% print
 
-  cat("\n\nDecision:\n")
-  object$jl$Get("decision") %>% .[!is.na(.)] %>% paste0(collapse = " & ") %>% cat
+  # cat("\n\nDecision:\n")
+  # object$jl$Get("decision") %>% .[!is.na(.)] %>% paste0(collapse = " & ") %>% cat
 
   ## useful to avoid row.names and left-align all character variables
   # format(justify = "left") %>%
@@ -192,11 +246,24 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
     {if (shiny) . else DiagrammeR::DiagrammeR(.)}
 }
 
-# library(data.tree); library(yaml); library(radiant)
-#
-# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
-# object <- x <- dtree(yl)
-# print(object$jl)
+# library(yaml); library(radiant)
+# library(radiant); library(data.tree)
+# # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
+# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
+# dtree(yl)
+# dtree(yl)
+# dtree(yl) %>% summary
+# dtree(yl) %>% plot
+
+
+# dtree(yl) %>% plot(final = TRUE)
+# dtree(yl) %>% plot(final = FALSE)
+# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
+# dtree(yl) %>% summary
+# dtree(yl) %>% plot
+# dtree(yl) %>% plot(final = TRUE)
+
+# shiny::runApp("~/gh/radiant/inst/quant")
 
 # df <- ToDataFrameTree(object$jl, "p", "payoff")
 # df <- ToDataFrameTable(object$jl, "p", "payoff")
@@ -261,13 +328,3 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
 # as.Node(df)
 
 
-# x %>% summary
-# dtree(yl) %>% plot(shiny = TRUE)
-# dtree(yl) %>% plot(final = TRUE)
-# dtree(yl) %>% plot(final = FALSE)
-# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
-# dtree(yl) %>% summary
-# dtree(yl) %>% plot
-# dtree(yl) %>% plot(final = TRUE)
-
-# shiny::runApp("~/gh/radiant/inst/quant")

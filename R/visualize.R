@@ -73,19 +73,23 @@ visualize <- function(dataset, xvar,
     }
   }
 
-  if (color != "none") vars %<>% c(., color)
+  if (color != "none") {
+    vars %<>% c(., color)
+    if (type == "line") byvar <- color
+  }
   if (facet_row != ".") {
     vars %<>% c(., facet_row)
-    byvar <- facet_row
+    # byvar <- facet_row
+    byvar <- if (is.null(byvar)) facet_row else unique(c(byvar, facet_row))
   }
   if (facet_col != ".") {
     vars %<>% c(., facet_col)
-    byvar <- if (is.null(byvar)) facet_col else c(byvar, facet_col)
+    byvar <- if (is.null(byvar)) facet_col else unique(c(byvar, facet_col))
   }
   if (fill != "none") {
     vars %<>% c(., fill)
     if (type == "bar")
-      byvar <- if (is.null(byvar)) fill else c(byvar, fill)
+      byvar <- if (is.null(byvar)) fill else unique(c(byvar, fill))
   }
 
   ## so you can also pass-in a data.frame
@@ -171,6 +175,7 @@ visualize <- function(dataset, xvar,
         } else {
           if (is.factor(dat[[i]])) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
+            print(tbv)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(funs(mean))
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color)) + geom_point() + geom_line(aes(group = 1))
           } else {

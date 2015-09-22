@@ -3,8 +3,7 @@
 #######################################
 
 dtree_example <-
-"## Example from https://github.com/gluc/useR15/blob/master/00_data/jennylind.yaml
-name: Jenny Lind
+"name: Jenny Lind
 type: decision
 Sign with Movie Company:
     type: chance
@@ -31,7 +30,12 @@ Sign with TV Network:
 "
 
 observeEvent(input$dtree_vim_keys, {
-  isolate(r_data$vim_keys %<>% {. == FALSE})
+  isolate({
+     if (!is_empty(input$dtree_edit))
+       r_state$dtree_edit <<- input$dtree_edit
+
+    r_data$vim_keys %<>% {. == FALSE}
+  })
 })
 
 output$ui_dtree_vim <- renderUI({
@@ -165,11 +169,38 @@ observe({
 observe({
   if (not_pressed(input$dtree_report)) return()
   isolate({
-    dtree_name <-
-      sub("^\\s*name:\\s*(.*)\\ntype.*", "\\1", input$dtree_edit) %>% tolower %>%
-      gsub("[^[:alnum:] ]", "", .) %>% gsub("\\s+","_",.) %>%
-      gsub("^([0-9]+)",".",.)
-    if (dtree_name == "") dtree_name <- "dtree"
+
+# input <- list()
+# input$dtree_edit <- " name: Newtowne
+#  type: chance
+#  High:
+#      p: 0.3
+#      type: decision
+#      Accept:
+#          payoff: 4000
+#      Reject:
+#          payoff: 900
+#  Low:
+#      p: 0.7
+#      type: decision
+#      Accept:
+#          payoff: 1000
+#      Reject:
+#          payoff: 900"
+
+
+    dtree_name <- stringr::str_match(input$dtree_edit, "^\\s*name:\\s*(.*)\\n\\s*type:")[2]
+    if (is.na(dtree_name)) {
+      dtree_name <- "dtree"
+    } else {
+      dtree_name %>% tolower %>% gsub("[^[:alnum:] ]", "", .) %>%
+        gsub("\\s+","_",.) %>% gsub("^([0-9]+)",".",.)
+    }
+
+    # dtree_name <-
+    #   sub("^\\s*name:\\s*(.*)\\ntype:.*", "\\1", input$dtree_edit) %>% tolower %>%
+    #   gsub("[^[:alnum:] ]", "", .) %>% gsub("\\s+","_",.) %>%
+    #   gsub("^([0-9]+)",".",.)
 
     r_data[[dtree_name]] <- input$dtree_edit
     update_report(inp_main = list(yl = dtree_name),

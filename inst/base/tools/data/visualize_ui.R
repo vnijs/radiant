@@ -27,6 +27,15 @@ output$ui_viz_type <- renderUI({
     multiple = FALSE)
 })
 
+## use the value in the input list if available
+use_input <- function(var, vars, init = character(0), fun = "state_single") {
+  ivar <- input[[var]]
+  if (available(ivar) && all(ivar %in% vars))
+     ivar
+  else
+    get(fun)(var, vars, init)
+}
+
 ## Y - variable
 output$ui_viz_yvar <- renderUI({
   if (is.null(input$viz_type)) return()
@@ -40,11 +49,12 @@ output$ui_viz_yvar <- renderUI({
 
   isolate({
     ## keep the same y-variable 'active' if possible
-    sel <-
-      if (available(input$viz_yvar) && all(input$viz_yvar %in% vars))
-        input$viz_yvar
-      else
-        state_multiple("viz_yvar", vars)
+    sel <- use_input("viz_yvar", vars, fun = "state_multiple")
+    # sel <-
+    #   if (available(input$viz_yvar) && all(input$viz_yvar %in% vars))
+    #     input$viz_yvar
+    #   else
+    #     state_multiple("viz_yvar", vars)
   })
 
   selectInput(inputId = "viz_yvar", label = "Y-variable:",
@@ -65,11 +75,12 @@ output$ui_viz_xvar <- renderUI({
 
   isolate({
     ## keep the same x-variable 'active' if possible
-    sel <-
-      if (available(input$viz_xvar) && all(input$viz_xvar %in% vars))
-        input$viz_xvar
-      else
-        state_multiple("viz_xvar", vars)
+    sel <- use_input("viz_xvar", vars, fun = "state_multiple")
+    # sel <-
+    #   if (available(input$viz_xvar) && all(input$viz_xvar %in% vars))
+    #     input$viz_xvar
+    #   else
+    #     state_multiple("viz_xvar", vars)
   })
 
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
@@ -79,25 +90,59 @@ output$ui_viz_xvar <- renderUI({
 
 output$ui_viz_facet_row <- renderUI({
   vars <- c("None" = ".", groupable_vars())
+
+  isolate({
+    ## keep the same facet_row variable 'active' if possible
+    sel <- use_input("viz_facet_row", vars, init = ".")
+    # sel <-
+    #   if (available(input$viz_facet_row) && input$viz_facet_row %in% vars)
+    #     input$viz_facet_row
+    #   else
+    #     state_single("viz_facet_row", vars, ".")
+  })
+
   selectizeInput("viz_facet_row", "Facet row", vars,
-    selected = state_single("viz_facet_row", vars, "."), multiple = FALSE)
+    selected = sel, multiple = FALSE)
+    # selected = state_single("viz_facet_row", vars, "."), multiple = FALSE)
 })
 
 output$ui_viz_facet_col <- renderUI({
   vars <- c("None" = ".", groupable_vars())
+
+  isolate({
+    ## keep the same facet_col variable 'active' if possible
+    sel <- use_input("viz_facet_col", vars, init = ".")
+    # sel <-
+    #   if (available(input$viz_facet_col) && input$viz_facet_col %in% vars)
+    #     input$viz_facet_col
+    #   else
+    #     state_single("viz_facet_col", vars, ".")
+  })
+
   selectizeInput("viz_facet_col", 'Facet column', vars,
-    selected = state_single("viz_facet_col", vars, "."), multiple = FALSE)
+    selected = sel, multiple = FALSE)
+    # selected = state_single("viz_facet_col", vars, "."), multiple = FALSE)
 })
 
 output$ui_viz_color <- renderUI({
-  vars <- c("None" = "none", varnames())
-  sel <- state_single("viz_color", vars, "none")
+  if (input$viz_type == "line")
+    vars <- c("None" = "none", groupable_vars())
+  else
+    vars <- c("None" = "none", varnames())
+
+  # sel <- state_single("viz_color", vars, "none")
+  isolate({
+    sel <- use_input("viz_color", vars, init = "none")
+  })
   selectizeInput("viz_color", "Color", vars, selected = sel, multiple = FALSE)
 })
 
 output$ui_viz_fill <- renderUI({
   vars <- c("None" = "none", groupable_vars())
-  sel <- state_single("viz_fill", vars, "none")
+  # sel <- state_single("viz_fill", vars, "none")
+  isolate({
+    sel <- use_input("viz_fill", vars, init = "none")
+  })
   selectizeInput("viz_fill", "Fill", vars, selected = sel, multiple = FALSE)
 })
 
@@ -115,18 +160,10 @@ output$ui_viz_axes <- renderUI({
 
 output$ui_viz_check <- renderUI({
   if (is.null(input$viz_type)) return()
-  # ind <- if (input$viz_type == "scatter") 1:3 else 1
   ind <- 1:3
   checkboxGroupInput("viz_check", NULL, viz_check[ind],
     selected = state_init("viz_check"),
     inline = TRUE)
-})
-
-observeEvent(input$viz_type, {
-  isolate({
-    if (input$viz_type != "hist")
-      updateSliderInput(session, "viz_bins", value = 10)
-  })
 })
 
 output$ui_Visualize <- renderUI({
@@ -220,8 +257,24 @@ output$visualize <- renderPlot({
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
 
+## not working as intended
+# observeEvent(input$viz_type, {
+#   isolate({
+#     # if (input$viz_bins != 10 && input$viz_type != "hist") {
+#     if (input$viz_bins != 10) {
+#       updateSliderInput(session, "viz_bins", value = 10)
+#       viz_inputs()
+#     }
+#   })
+# })
+
 observeEvent(input$visualize_report, {
   isolate({
+
+    ## this seems to work (mostly) as intended - compare to observeEvent above
+    if (input$viz_bins != 10)
+      updateSliderInput(session, "viz_bins", value = 10)
+
     update_report(inp_main = clean_args(viz_inputs(), viz_args),
                   fun_name = "visualize", outputs = character(0),
                   pre_cmd = "", figs = TRUE,
