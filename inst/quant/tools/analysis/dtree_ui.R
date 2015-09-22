@@ -202,6 +202,11 @@ observe({
     #   gsub("[^[:alnum:] ]", "", .) %>% gsub("\\s+","_",.) %>%
     #   gsub("^([0-9]+)",".",.)
 
+    ## code for plotting inside Radiant - can't export yet
+    # DiagrammeR::renderDiagrammeR({
+    #   DiagrammeR::DiagrammeR(plot(result, final = TRUE, shiny=TRUE))
+    # })
+
     r_data[[dtree_name]] <- input$dtree_edit
     update_report(inp_main = list(yl = dtree_name),
                   fun_name = "dtree",
