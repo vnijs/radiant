@@ -8,7 +8,9 @@ knitr::knit('combine.Rmd'); knitr::knit('view.Rmd'); knitr::knit('transform.Rmd'
 setwd('../../base'); system('make')
 setwd('../marketing'); system('make')
 setwd('../analytics'); system('make')
-setwd('../quant'); system('make')
+setwd('../quant/app');
+knitr::knit('dtree.Rmd')
+setwd('../../quant'); system('make')
 setwd('../')
 
 ## making the README.md file after clean-up
