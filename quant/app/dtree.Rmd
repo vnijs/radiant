@@ -42,7 +42,7 @@ $$
 
 In the _Model_ tab:
 
-* To see this help file click the <i class="fa fa-help" ></i> icon
+* To see this help file click the <i class="fa fa-question" ></i> icon
 * To generate a report about the decision tree in the _R > Report_ tab click the <i class="fa fa-edit" ></i> icon
 * To save the tree structure entered into the editor window press the `Save input` button
 * To save the text representation of the initial and final tree to a text file click the `Save output` button
@@ -52,3 +52,9 @@ In the _Plot_ tab:
 
 * Click the download icon in the top right of your browser to save either the initial or final plot to a pdf-file
 
+## Trouble shooting
+
+* Each terminal node must have a payoff (e.g., `payoff: 0`)
+* Node names must be followed by a `:`
+* Use only letters in node names (i.e., no symbols)
+* If you run into an error you cannot debug post a questions to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a>
