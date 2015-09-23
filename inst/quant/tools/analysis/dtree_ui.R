@@ -171,7 +171,7 @@ observe({
   isolate({
 
 # input <- list()
-# input$dtree_edit <- " name: Newtowne
+# input$dtree_edit <- " name: Jenny Lind
 #  type: chance
 #  High:
 #      p: 0.3
@@ -193,7 +193,7 @@ observe({
     if (is.na(dtree_name)) {
       dtree_name <- "dtree"
     } else {
-      dtree_name %>% tolower %>% gsub("[^[:alnum:] ]", "", .) %>%
+      dtree_name %<>% tolower %>% gsub("[^[:alnum:] ]", "", .) %>%
         gsub("\\s+","_",.) %>% gsub("^([0-9]+)",".",.)
     }
 
