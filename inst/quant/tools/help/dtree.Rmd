@@ -42,7 +42,7 @@ $$
 
 In the _Model_ tab:
 
-* To see this help file click the <i class="fa fa-help" ></i> icon
+* To see this help file click the <i class="fa fa-question" ></i> icon
 * To generate a report about the decision tree in the _R > Report_ tab click the <i class="fa fa-edit" ></i> icon
 * To save the tree structure entered into the editor window press the `Save input` button
 * To save the text representation of the initial and final tree to a text file click the `Save output` button

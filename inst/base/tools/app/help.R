@@ -9,6 +9,12 @@ output$help_about <- renderUI({
   file.path(r_path,"base/tools/app/about.md") %>% inclMD %>% HTML
 })
 
+output$help_text <- renderUI({
+  wellPanel(
+    HTML("Help is available on each page by clicking the <i title='Help' class='fa fa-question'></i> icon on the bottom left of your screen.")
+  )
+})
+
 #######################################
 ## Main function of help menu
 #######################################
@@ -45,8 +51,8 @@ output$help_base_menu <- reactive(append_help("help_base_menu", file.path(r_path
 help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.Rmd")
 output$help_regression <- reactive(append_help("help_regression", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
-help_decide <- c("Decision tree" = "dtree.md", "Simulate" = "simulater.md")
-output$help_decide <- reactive(append_help("help_decide", file.path(r_path,"quant/tools/help/"), Rmd = FALSE))
+help_decide <- c("Decision tree" = "dtree.Rmd", "Simulate" = "simulater.md")
+output$help_decide <- reactive(append_help("help_decide", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
 help_switch <- function(help_all, help_str, help_on = TRUE) {
   if (is.null(help_all) || help_all == 0) return()
@@ -82,9 +88,7 @@ output$help_base <- renderUI({
         checkboxGroupInput("help_data", "Data menu:", help_data,
           selected = state_init("help_data"), inline = TRUE)
       ),
-      wellPanel(
-        helpText("Help is available on each page by clicking the ? icon on the bottom left of your screen.")
-      )
+      uiOutput("help_text")
     ),
     mainPanel(
       htmlOutput("help_data")
@@ -139,9 +143,7 @@ output$help_quant <- renderUI({
   sidebarLayout(
     sidebarPanel(
       help_quant_ui,
-      wellPanel(
-        helpText("Help is available on each page by clicking the ? icon on the bottom left of your screen.")
-      )
+      uiOutput("help_text")
     ),
     mainPanel(
       help_quant_main
@@ -202,9 +204,7 @@ output$help_marketing <- renderUI({
     sidebarPanel(
       help_quant_ui,
       help_marketing_ui,
-      wellPanel(
-        helpText("Help is available on each page by clicking the ? icon on the bottom left of your screen.")
-      )
+      uiOutput("help_text")
     ),
     mainPanel(
       help_quant_main,
@@ -230,9 +230,7 @@ output$help_analytics <- renderUI({
     sidebarPanel(
       help_quant_ui,
       help_analytics_ui,
-      wellPanel(
-        helpText("Help is available on each page by clicking the ? icon on the bottom left of your screen.")
-      )
+      uiOutput("help_text")
     ),
     mainPanel(
       help_quant_main,

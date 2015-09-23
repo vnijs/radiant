@@ -51,7 +51,7 @@ output$dtree <- renderUI({
     tabPanel("Model",
     with(tags,
       table(
-            td(help_modal('Decision tree','dtree_help', inclMD(file.path(r_path,"quant/tools/help/dtree.md")))),
+            td(help_modal('Decision tree','dtree_help', inclRmd(file.path(r_path,"quant/tools/help/dtree.Rmd")))),
             td(HTML("&nbsp;&nbsp;")),
             td(HTML("<i title='Report results' class='fa fa-edit action-button shiny-bound-input' href='' id='dtree_report'></i>")),
             td(HTML("&nbsp;&nbsp;")),
