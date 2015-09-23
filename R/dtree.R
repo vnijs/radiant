@@ -25,7 +25,7 @@ dtree <- function(yl) {
 
 # yl <- "name: Jenny Lind
 # type: decision
-#  Sign with Movie Company:
+# Sign with Movie Company:
 #     type: chance
 #     Small Box Office:
 #         p: 0.3
@@ -45,8 +45,16 @@ dtree <- function(yl) {
 #         p: 0.6
 #         payoff: 900000
 #     Large Box Office:
-#         p: 0.1
-#         payoff: 900000"
+#         p: 0.1"
+
+        # payoff: 900000"
+
+# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/newtowne/newtowne-tuesday-input.yaml")
+
+# library(data.tree)
+# library(yaml)
+# result <- dtree(yl)
+# plot(result, final = TRUE)
 
 
 #   print(yl)
@@ -65,8 +73,6 @@ dtree <- function(yl) {
         err <- paste0("**\nIndentation error at line ", err_line, ".\nUse tabs to separate the branches in the decision tree.\nFix the indentation error and try again. Examples are shown in the help file\n**")
       return(set_class(err, c("dtree",class(err))))
     }
-#     print(yl)
-#     print("=====")
   }
 
   # if (length(yl) == 0) return("The provided list is empty or not in the correct format")
@@ -96,22 +102,40 @@ dtree <- function(yl) {
   ## Warning messages: 1: In res[fieldName] <- field : number of items to replace is not a multiple of replacement length
 
   ## calculate payoff
+  # calc_payoff <- function(x) {
+  #   if (x$type == 'chance') x$payoff <- Aggregate(x, function(node) node$payoff * node$p, sum)
+  #   else if (x$type == 'decision') x$payoff <- Aggregate(x, "payoff", max)
+
+  #   ## subtract cost if specified
+  #   if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
+  # }
+
   calc_payoff <- function(x) {
-    if (x$type == 'chance') x$payoff <- Aggregate(x, function(node) node$payoff * node$p, sum)
-    else if (x$type == 'decision') x$payoff <- Aggregate(x, "payoff", max)
+    if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
+    else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
 
     ## subtract cost if specified
     if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
   }
 
-  jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf)
+  err <- try(jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf), silent = TRUE)
+
+  if (is(err, 'try-error')) {
+    err <- paste0("**\nError calculating payoffs associated with a chance or decision node.\nPlease check that each terminal node has a payoff and that probabilities\nare correctly specificied\n**")
+    return(set_class(err, c("dtree",class(err))))
+  }
 
   decision <- function(x) {
     po <- sapply(x$children, function(child) child$payoff)
     x$decision <- names(po[po == x$payoff])
   }
 
-  jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision')
+  err <- try(jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision'), silent = TRUE)
+
+  if (is(err, 'try-error')) {
+    err <- paste0("**\nError calculating payoffs associated with a decision node. Please check\nthat each terminal node has a payoff\n**")
+    return(set_class(err, c("dtree",class(err))))
+  }
 
   list(jl_init = jl_init, jl = jl) %>% set_class(c("dtree",class(.)))
 }
@@ -176,6 +200,8 @@ summary.dtree <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/dtree.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{dtree}}
+#' @param symbol Monetary symbol to use ($ is the default)
+#' @param dec Decimal places to round results to
 #' @param final If TRUE plot the decision tree solution, else the initial decision tree
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
@@ -184,7 +210,7 @@ summary.dtree <- function(object, ...) {
 #' @seealso \code{\link{summary.dtree}} to summarize results
 #'
 #' @export
-plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
+plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, ...) {
 
   ## based on https://gist.github.com/gluc/79ef7a0e747f217ca45e
   jl <- if (final) x$jl else x$jl_init
@@ -217,8 +243,9 @@ plot.dtree <- function(x, final = FALSE, shiny = FALSE, ...) {
   }
 
   FormatPayoff <- function(payoff) {
-    paste0("$", format(payoff, scientific = FALSE, big.mark = ","))
+    paste0(symbol, format(round(payoff, dec), scientific = FALSE, big.mark = ","))
   }
+  ?format
 
   ToLabel <- function(node) {
     po <- if (final) FormatPayoff(node$payoff) else " "

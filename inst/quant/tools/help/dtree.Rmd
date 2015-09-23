@@ -52,3 +52,9 @@ In the _Plot_ tab:
 
 * Click the download icon in the top right of your browser to save either the initial or final plot to a pdf-file
 
+## Trouble shooting
+
+* Each terminal node must have a payoff (e.g., `payoff: 0`)
+* Node names must be followed by a `:`
+* Use only letters in node names (i.e., no symbols)
+* If you run into an error you cannot debug post a questions to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a>

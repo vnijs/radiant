@@ -77,7 +77,10 @@ output$dtree <- renderUI({
         td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
           c("Initial" = FALSE, "Final" = TRUE),
           selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
-        td(actionButton("dtree_eval_plot", "Calculate"))
+        td(actionButton("dtree_eval_plot", "Calculate"), style="padding-top:30px;"),
+        td(numericInput("dtree_round", "Round", value = state_init("dtree_round", 3),
+           min = 0, max = 10, width = "50px")),
+        td(textInput("dtree_symbol", "Symbol", state_init("dtree_symbol", "$"), width = "50px"))
       )),
       DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px"))
     # ,tabPanel("Sensitivity", verbatimTextOutput("something")
@@ -122,7 +125,9 @@ output$dtree_plot <- DiagrammeR::renderDiagrammeR({
   if (is.null(dt)) {
     return(invisible())
   } else {
-    DiagrammeR::DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
+    DiagrammeR::DiagrammeR(plot(dt, symbol = input$dtree_symbol,
+                           dec = input$dtree_round, final = input$dtree_plot_init,
+                           shiny = TRUE))
   }
 })
 
@@ -133,7 +138,8 @@ output$dtree_plot <- DiagrammeR::renderDiagrammeR({
     return(invisible())
   } else {
     # DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
-    plot(dt, final = input$dtree_plot_init, shiny = TRUE)
+    plot(dt, symbol = input$dtree_symbol, dec = input$dtree_round,
+         final = input$dtree_plot_init, shiny = TRUE)
   }
 })
 

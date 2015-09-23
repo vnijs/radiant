@@ -4,10 +4,15 @@
 \alias{plot.dtree}
 \title{Plot method for the dtree function}
 \usage{
-\method{plot}{dtree}(x, final = FALSE, shiny = FALSE, ...)
+\method{plot}{dtree}(x, symbol = "$", dec = 3, final = FALSE,
+  shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{dtree}}}
+
+\item{symbol}{Monetary symbol to use ($ is the default)}
+
+\item{dec}{Decimal places to round results to}
 
 \item{final}{If TRUE plot the decision tree solution, else the initial decision tree}
 

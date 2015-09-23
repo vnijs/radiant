@@ -40,7 +40,7 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
     if (ret == "") ret <- c("### Data in clipboard was not well formatted. Try exporting the data to csv format.")
     upload_error_handler(objname,ret)
   } else {
-    ret <- paste0("### Clipboard data\nData copied from clipboard on", lubridate::now())
+    ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
     r_data[[objname]] <- dat
     r_data[[paste0(objname,"_descr")]] <- ret
   }
