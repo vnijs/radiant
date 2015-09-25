@@ -708,7 +708,7 @@ observeEvent(input$tr_store, {
       r_data[[dataset]][,colnames(dat)] <- dat
 		} else if (input$tr_change_type == 'rename') {
       cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
+      r_data[[dataset]] %<>% rename_(.dots = setNames(input$tr_vars, colnames(dat)))
     } else if (input$tr_change_type == 'create') {
       cmd <- .create(input$dataset, input$tr_create, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat

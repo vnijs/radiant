@@ -8,6 +8,7 @@
 #'
 #' @importFrom yaml yaml.load
 #' @importFrom stringr str_match
+#' @importFrom data.tree as.Node Clone isLeaf isNotLeaf
 #'
 #' @seealso \code{\link{summary.dtree}} to summarize results
 #' @seealso \code{\link{plot.dtree}} to plot results
@@ -16,49 +17,6 @@ dtree <- function(yl) {
 
   ## most of the code in this function is from
   ## https://github.com/gluc/useR15/blob/master/01_showcase/02_decision_tree.R
-
-  ## load yaml from string if list not provide
-#   if (is_string(yl)) {
-#     yl <- yaml.load(yl)
-#     if (is_string(yl)) yl <- getdata(yl) %>% yaml.load(.)
-#   }
-
-# yl <- "name: Jenny Lind
-# type: decision
-# Sign with Movie Company:
-#     type: chance
-#     Small Box Office:
-#         p: 0.3
-#         payoff: 200000
-#     Medium Box Office:
-#         p: 0.6
-#         payoff: 1000000
-#     Large Box Office:
-#         p: 0.1
-#         payoff: 3000000
-# Sign with TV Network:
-#     type: chance
-#     Small Box Office:
-#         p: 0.3
-#         payoff: 900000
-#     Medium Box Office:
-#         p: 0.6
-#         payoff: 900000
-#     Large Box Office:
-#         p: 0.1"
-
-        # payoff: 900000"
-
-# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/newtowne/newtowne-tuesday-input.yaml")
-
-# library(data.tree)
-# library(yaml)
-# result <- dtree(yl)
-# plot(result, final = TRUE)
-
-
-#   print(yl)
-#   print("-----")
 
   ## load yaml from string if list not provide
   if (is_string(yl)) {
@@ -75,7 +33,10 @@ dtree <- function(yl) {
     }
   }
 
-  # if (length(yl) == 0) return("The provided list is empty or not in the correct format")
+  if (length(yl) == 0) {
+    err <- "**\nThe provided list is empty or not in the correct format. Please check the input file.\n**"
+    return(set_class(err, c("dtree",class(err))))
+  }
 
   ## convert list to node object
   jl <- as.Node(yl)
@@ -92,15 +53,9 @@ dtree <- function(yl) {
   # }
 
   ## making a copy of the initial Node object
-#   jl_init <- as.Node(yl)
-#   pt <- . %>% {if (is.null(.$type)) .$Set(type = "terminal")}
-#   jl_init$Do(pt, filterFun = isLeaf)
-  ## see issue https://github.com/gluc/data.tree/issues/22
-  # jl_init <- sshhr(Clone(jl))
   jl_init <- Clone(jl)
-  ## without sshhr:
-  ## Warning messages: 1: In res[fieldName] <- field : number of items to replace is not a multiple of replacement length
 
+  ## Aggregate gives strange errors when used twice (see issue at gluc/data.tree)
   ## calculate payoff
   # calc_payoff <- function(x) {
   #   if (x$type == 'chance') x$payoff <- Aggregate(x, function(node) node$payoff * node$p, sum)
@@ -122,7 +77,7 @@ dtree <- function(yl) {
 
   if (is(err, 'try-error')) {
     err <- paste0("**\nError calculating payoffs associated with a chance or decision node.\nPlease check that each terminal node has a payoff and that probabilities\nare correctly specificied\n**")
-    return(set_class(err, c("dtree",class(err))))
+    return(err %>% set_class(c("dtree", class(.))))
   }
 
   decision <- function(x) {
@@ -134,7 +89,7 @@ dtree <- function(yl) {
 
   if (is(err, 'try-error')) {
     err <- paste0("**\nError calculating payoffs associated with a decision node. Please check\nthat each terminal node has a payoff\n**")
-    return(set_class(err, c("dtree",class(err))))
+    return(err %>% set_class(c("dtree", class(.))))
   }
 
   list(jl_init = jl_init, jl = jl) %>% set_class(c("dtree",class(.)))
@@ -146,6 +101,8 @@ dtree <- function(yl) {
 #'
 #' @param object Return value from \code{\link{simulater}}
 #' @param ... further arguments passed to or from other methods
+#'
+#' @importFrom data.tree Traverse Get FormatPercent
 #'
 #' @seealso \code{\link{dtree}} to generate the results
 #' @seealso \code{\link{plot.dtree}} to plot results
@@ -165,34 +122,32 @@ summary.dtree <- function(object, ...) {
 
   # format_percent <- . %>% as.character %>% sprintf("%.2f%%", . * 100)
 
-  ## format data.tree
   format_dtree <- function(jl) {
     ## set parent type
     nt <- jl$Get(function(x) x$parent$type)
     jl$Set(ptype = nt)
 
     Traverse(jl) %>%
-      {data.frame(Probability = Get(., "p", format = FormatPercent),
+      {data.frame(
+        ` ` = Get(.,"levelName"),
+        Probability = Get(., "p", format = FormatPercent),
         Payoff = Get(., "payoff", format = print_money),
-        # Cost = Get(., "cost", format = print_money),
+        Cost = Get(., "cost", format = print_money),
         Type = Get(., "ptype", format = rm_terminal),
-        check.names = FALSE,
-        row.names = Get(.,"levelName"))}
+        check.names = FALSE
+      )
+    } %>% { .[[" "]] <- format(.[[" "]], justify = "left"); .}
   }
 
   ## initial setup
   cat("Initial decision tree:\n")
-  format_dtree(object$jl_init) %>% print
+  format_dtree(object$jl_init) %>% print(row.names = FALSE)
 
   cat("\n\nFinal decision tree:\n")
-  format_dtree(object$jl) %>% print
+  format_dtree(object$jl) %>% print(row.names = FALSE)
 
   # cat("\n\nDecision:\n")
   # object$jl$Get("decision") %>% .[!is.na(.)] %>% paste0(collapse = " & ") %>% cat
-
-  ## useful to avoid row.names and left-align all character variables
-  # format(justify = "left") %>%
-  # print(row.names = FALSE)
 }
 
 #' Plot method for the dtree function
@@ -206,11 +161,15 @@ summary.dtree <- function(object, ...) {
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
+#' @importFrom data.tree Traverse Get isNotRoot
+#'
 #' @seealso \code{\link{dtree}} to generate the result
 #' @seealso \code{\link{summary.dtree}} to summarize results
 #'
 #' @export
 plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, ...) {
+
+  if (is.character(x)) return(cat(x))
 
   ## based on https://gist.github.com/gluc/79ef7a0e747f217ca45e
   jl <- if (final) x$jl else x$jl_init
@@ -245,7 +204,6 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
   FormatPayoff <- function(payoff) {
     paste0(symbol, format(round(payoff, dec), scientific = FALSE, big.mark = ","))
   }
-  ?format
 
   ToLabel <- function(node) {
     po <- if (final) FormatPayoff(node$payoff) else " "
@@ -273,6 +231,7 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
     {if (shiny) . else DiagrammeR::DiagrammeR(.)}
 }
 
+## some initial ideas for sensitivity analysis
 # library(yaml); library(radiant)
 # library(radiant); library(data.tree)
 # # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
