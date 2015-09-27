@@ -33,7 +33,9 @@ output$ui_correlation <- renderUI({
   	  	selected = state_single("cor_type", cor_type, "pearson"), multiple = FALSE),
 		  conditionalPanel(condition = "input.tabs_correlation == 'Summary'",
      		numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
-    			value = state_init("cor_cutoff",0), step = 0.05)
+    			value = state_init("cor_cutoff",0), step = 0.05),
+     		checkboxInput("cor_covar", label = "Show covariance matrix",
+     		              value = state_init("cor_covar", FALSE))
      	)
 	  ),
   	help_and_report(modal_title = "Correlation",
@@ -89,7 +91,7 @@ output$correlation <- renderUI({
 	if (input$cor_vars %>% not_available) return(rt)
 	if (length(input$cor_vars) < 2) return(rt)
 
-	summary(.correlation(), cutoff = input$cor_cutoff)
+	summary(.correlation(), cutoff = input$cor_cutoff, covar = input$cor_covar)
 })
 
 .plot_correlation <- reactive({
@@ -106,7 +108,7 @@ output$correlation <- renderUI({
 observe({
   if (not_pressed(input$correlation_report)) return()
   isolate({
-    inp_out <- list(cutoff = input$cor_cutoff) %>% list(.,"")
+    inp_out <- list(cutoff = input$cor_cutoff, covar = input$cor_covar) %>% list(.,"")
     update_report(inp_main = clean_args(cor_inputs(), cor_args),
                   fun_name = "correlation",
                   inp_out = inp_out,

@@ -190,6 +190,7 @@ visualize <- function(dataset, xvar,
   } else if (type == "bar") {
     itt <- 1
     for (i in xvar) {
+      dat[,i] %<>% as_factor
       for (j in yvar) {
 
         tbv <- if (is.null(byvar)) i else c(i, byvar)
@@ -208,7 +209,7 @@ visualize <- function(dataset, xvar,
   } else if (type == "box") {
     itt <- 1
     for (i in xvar) {
-      dat[,i] %<>% as.factor
+      dat[,i] %<>% as_factor
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) +
                           geom_boxplot(alpha = alpha) +

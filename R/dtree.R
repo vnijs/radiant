@@ -1,3 +1,92 @@
+#' Parse yaml input for dtree to provide (more) useful error messages
+#'
+#' @details See \url{http://vnijs.github.io/radiant/base/dtree.html} for an example in Radiant
+#'
+#' @param yl A yaml string
+#'
+#' @return An updated yaml string or a vector messages to return to the users
+#'
+#' @seealso \code{\link{dtree}} to calculate tree
+#' @seealso \code{\link{summary.dtree}} to summarize results
+#' @seealso \code{\link{plot.dtree}} to plot results
+#'
+#' @export
+dtree_parser <- function(yl) {
+  # library(radiant)
+  # yl <- readLines("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/bio-imaging/bio-imaging-input.yaml")
+  # yl <- paste0(yl, collapse = "\n")
+  yl <- unlist(strsplit(yl, "\n"))
+
+  ## substitute values
+  var_def <- grepl("=",yl) %>% which
+  if (length(var_def) > 0) {
+    for (i in var_def) {
+      var <- strsplit(yl[i], "=")[[1]]
+      var[1] <- gsub("^\\s+|\\s+$", "", var[1])
+      var[2] <- eval(parse(text = gsub("[a-zA-Z]+","",var[2])))
+      yl[-i] <- gsub(var[1], var[2], yl[-i], fixed = TRUE)
+    }
+    yl[var_def] <- paste0("# ", yl[var_def])
+  }
+
+  ## collect errors
+  err <- c()
+
+  yl %>% grepl("^[^:]+:\\s*$",., perl = TRUE) %>% which
+
+  ## cheching if a : is present
+  # yl <- c(yl, "something without a colon")
+  col_ln <- yl %>% grepl("(?=:)|(?=^\\s*$)|(?=^\\s*#)",., perl = TRUE)
+  if (any(!col_ln))
+    err <- c(err, paste0("Each line must have a ':'. Add a ':' in line(s): ", paste0(which(!col_ln), collapse = ", ")))
+
+  ## replace .4 by 0.4
+  # yl <- c(yl, "p: .4")
+  yl %<>% gsub("(^\\s*p\\s*:)\\s*(\\.[0-9]+$)","\\1 0\\2", .,  perl = TRUE)
+
+  ## check type line is followed by a name
+  # yl <- c(yl, "   type   : another   ")
+  type_id <- yl %>% grepl("^\\s*type\\s*:\\s*(.*)$",., perl = TRUE) %>% which
+  type_cid <- yl %>% grepl("^\\s*type\\s*:\\s*((chance)|(decision))\\s*$",., perl = TRUE) %>% which
+
+  if (!identical(type_id, type_cid))
+    err <- c(err, paste0("Node type should be 'type: chance', or 'type: decision' in line(s): ", paste0(setdiff(type_id, type_cid), collapse = ", ")))
+
+  ## Find node names
+  nn_id <- yl %>% grepl("^[^:]+:\\s*$",., perl = TRUE) %>% which
+
+  ## check that type is followed by a name
+  # yl <- c(yl, "   type   :  decision   ")
+  type_nn <- type_cid %in% (nn_id - 1)
+  if (!all(type_nn))
+    err <- c(err, paste0("The node types defined on line(s) ", paste0(type_cid[!type_nn], collapse = ", "), " must be followed by a node name.\nA valid node name could be 'mud slide:'"))
+
+  ## check indent of next line is the same for type defs
+  indent_type <- yl[type_cid] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
+  indent_next <- yl[type_cid+1] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
+
+  indent_issue <- indent_type == indent_next
+
+  if (any(!indent_issue))
+    err <- c(err, paste0("Indent issue in line(s): ", paste0(type_cid[!indent_issue] + 1, collapse = ", "), "\nUse the tab key to ensure a node name is indented the same amount\nas the node type on the preceding line."))
+
+  ## check indent for node names
+  indent_name <- yl[nn_id] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
+
+   ## check indent of next line for node names
+  indent_next <- yl[nn_id+1] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
+  indent_issue <- indent_name >= indent_next
+  if (any(indent_issue))
+    err <- c(err, paste0("Indent issue in line(s): ", paste0(nn_id[indent_issue] + 1, collapse = ", "), "\nAlways use the tab key to indent the line(s) after specifying a node name."))
+
+  ## determine return value
+  if (length(err) > 0) {
+    paste0("\n**\n", paste0(err, collapse = "\n"), "\n**\n") %>% set_class(c("dtree", class(.)))
+  } else {
+    paste0(yl, collapse = "\n")
+  }
+}
+
 #' Create a decision tree
 #'
 #' @details See \url{http://vnijs.github.io/radiant/base/dtree.html} for an example in Radiant
@@ -12,6 +101,7 @@
 #'
 #' @seealso \code{\link{summary.dtree}} to summarize results
 #' @seealso \code{\link{plot.dtree}} to plot results
+#'
 #' @export
 dtree <- function(yl) {
 
@@ -20,13 +110,21 @@ dtree <- function(yl) {
 
   ## load yaml from string if list not provide
   if (is_string(yl)) {
+
+    yl <- dtree_parser(yl)
+    # return(paste0(paste0("\n**\n", yl, collapse = "\n"), "\n**\n") %>% set_class(c("dtree", class(.))))
+    if (class(yl)[1] == "dtree") return(yl)
+
     yl <- try(yaml.load(yl), silent = TRUE)
+
+    ## if the name of input-list in r_data is provided
     if (!is(yl, 'try-error') && is_string(yl)) yl <- try(yaml.load(getdata(yl)), silent = TRUE)
 
+    ## used when a string is provided
     if (is(yl, 'try-error')) {
       err_line <- stringr::str_match(attr(yl,"condition")$message, "^Scanner error:.*line\\s([0-9]*),")[2]
       if (is.na(err_line))
-        err <- paste0("**\nError reading input:", attr(yl,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
+        err <- paste0("**\nError reading input:\n", attr(yl,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
       else
         err <- paste0("**\nIndentation error at line ", err_line, ".\nUse tabs to separate the branches in the decision tree.\nFix the indentation error and try again. Examples are shown in the help file\n**")
       return(set_class(err, c("dtree",class(err))))

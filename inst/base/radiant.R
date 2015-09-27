@@ -94,13 +94,19 @@ saveStateOnRefresh <- function(session = session) {
 })
 
 ## used for group_by and facet row/column
+# groupable_vars <- reactive({
+#   .getdata() %>%
+#     summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || (n_distinct(., na_rm = TRUE)/n()) < .25)) %>%
+#     {which(. == TRUE)} %>%
+#     varnames()[.]
+# })
+
 groupable_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || (n_distinct(., na_rm = TRUE)/n()) < .25)) %>%
+    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || is.integer(.))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
-
 
 ## used in compare proportions
 two_level_vars <- reactive({

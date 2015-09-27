@@ -41,6 +41,7 @@ correlation <- function(dataset, vars,
 #'
 #' @param object Return value from \code{\link{correlation}}
 #' @param cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
+#' @param covar Show the covariance matrix (default is FALSE)
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
@@ -54,10 +55,14 @@ correlation <- function(dataset, vars,
 #' @export
 summary.correlation_ <- function(object,
                                 cutoff = 0,
+                                covar = FALSE,
                                 ...) {
 
 	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
+
+	# library(psych)
+
 	cmat <- sshhr( corr.test(object$dat, method = object$type) )
 
 	cr <- format(round(cmat$r,2))
@@ -79,8 +84,21 @@ summary.correlation_ <- function(object,
 
 	cat("Correlation matrix:\n")
   print(cr[-1,-ncol(cr)], quote = FALSE)
+
 	cat("\np.values:\n")
   print(cp[-1,-ncol(cp)], quote = FALSE)
+
+	if (covar) {
+	  cvmat <- sshhr( cov(object$dat, method = object$type) )
+		cvr <- format(round(cov(cvmat),2))
+	  cvr[abs(cmat$r) < cutoff] <- ""
+		ltmat <- lower.tri(cvr)
+	  cvr[!ltmat] <- ""
+
+	  cat("\nCovariance matrix:\n")
+	  print(cvr[-1,-ncol(cvr)], quote = FALSE)
+	}
+
   rm(object)
 }
 

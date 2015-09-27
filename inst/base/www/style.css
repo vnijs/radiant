@@ -115,7 +115,12 @@ pre {
   top: 150px;
 }
 
-.mermaid g .edgeLabel span { background: white !important; }
+.mermaid g .edgeLabel span {
+  background: white !important;
+  /* extra padding needed for non-chrome browsers */
+  padding-right: 8px;
+  padding-left: 8px;
+}
 
 /* print option relevant to print a decision tree to pdf */
 /* based on http://stackoverflow.com/a/2618980/1974918 */
