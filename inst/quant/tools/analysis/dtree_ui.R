@@ -156,7 +156,7 @@ output$dtree_save_yaml <- downloadHandler(
   filename = function() {"dtree.yaml"},
   content = function(file) {
     isolate({
-      cat(input$dtree_edit,file=file,sep="\n")
+      cat(paste0(input$dtree_edit,"\n"), file = file)
     })
   }
 )
