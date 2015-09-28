@@ -14,6 +14,19 @@ After providing the name for the decision `Sign with Movie Company` the next lin
 
 In the example, the decision option `Sign with TV Network` has the same structure and terminal nodes but different payoffs.
 
+## Rules for decision tree input
+
+1. Always start with a tree name (e.g., "name: My tree")
+2. The second line always defines a node type (i.e., "type: chance" or "type: decision")
+3. All lines must have a ':'. For node names the ':' ends the line. For all other lines it assigns a value.  Specically, it assigns a name (e.g., "name: My tree"), a node type (e.g., "type: decision"), or a number (e.g., "payoff: 100") 
+4. A node type must be followed on the next line by a node name (e.g., "Cancel orders:")
+5. Use only letters in node names (i.e., no symbols)
+6. The line after a node name must be indented
+7. End (or terminal) nodes must have a payoff
+8. If linked to a chance node, a terminal node must have a probability (e.g, "p: 0.4") and a payoff
+
+If you run into an error you cannot figure out post a question to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a>
+
 After specifying the tree structure in the editor, press the `Calculate` button to see the `Initial` and `Final` decision tree in text format on the right-side of the screen (see screen shot below). The initial tree simply shows the tree structure that was specified, together with the node types, probabilities, and payoffs. The final tree shows the optimal decision strategy determined by `folding-back` the tree. In this case, the optimal decision is to `Sign with Movie Company` because this decision has a higher **Expected Monetary Value (EMV)** or payoff.
 
 ![dtree model](figures_quant/dtree_model.png)
@@ -51,10 +64,3 @@ In the _Model_ tab:
 In the _Plot_ tab:
 
 * Click the download icon in the top right of your browser to save either the initial or final plot to a pdf-file
-
-## Trouble shooting
-
-* Each terminal node must have a payoff (e.g., `payoff: 0`)
-* Node names must be followed by a `:`
-* Use only letters in node names (i.e., no symbols)
-* If you run into an error you cannot debug post a questions to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a>

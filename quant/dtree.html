@@ -253,6 +253,19 @@ img {
 <p><strong>Note:</strong> Probabilities for a chance node should sum to one and all probabilities smaller than 1 <strong>must</strong> be entered with a leading zero (i.e., 0.1 will work but .1 will not). If you do enter a probability without a leading zero anyway you will see the following message: <code>Error: non-numeric argument to a binary operator</code>. Add leading 0’s as needed and the error will go away when you click on the <code>Calculate</code> button again.</p>
 </blockquote>
 <p>In the example, the decision option <code>Sign with TV Network</code> has the same structure and terminal nodes but different payoffs.</p>
+<div id="rules-for-decision-tree-input" class="section level2">
+<h2>Rules for decision tree input</h2>
+<ol style="list-style-type: decimal">
+<li>Always start with a tree name (e.g., “name: My tree”)</li>
+<li>The second line always defines a node type (i.e., “type: chance” or “type: decision”)</li>
+<li>All lines must have a ‘:’. For node names the ‘:’ ends the line. For all other lines it assigns a value. Specically, it assigns a name (e.g., “name: My tree”), a node type (e.g., “type: decision”), or a number (e.g., “payoff: 100”)</li>
+<li>A node type must be followed on the next line by a node name (e.g., “Cancel orders:”)</li>
+<li>Use only letters in node names (i.e., no symbols)</li>
+<li>The line after a node name must be indented</li>
+<li>End (or terminal) nodes must have a payoff</li>
+<li>If linked to a chance node, a terminal node must have a probability (e.g, “p: 0.4”) and a payoff</li>
+</ol>
+<p>If you run into an error you cannot figure out post a question to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a></p>
 <p>After specifying the tree structure in the editor, press the <code>Calculate</code> button to see the <code>Initial</code> and <code>Final</code> decision tree in text format on the right-side of the screen (see screen shot below). The initial tree simply shows the tree structure that was specified, together with the node types, probabilities, and payoffs. The final tree shows the optimal decision strategy determined by <code>folding-back</code> the tree. In this case, the optimal decision is to <code>Sign with Movie Company</code> because this decision has a higher <strong>Expected Monetary Value (EMV)</strong> or payoff.</p>
 <p><img src="figures_quant/dtree_model.png" alt="dtree model" /></p>
 <p>For visual representation of the decision tree click the <em>Plot</em> tab. If you already clicked the <code>Calculate</code> button in the <em>Model</em> tab you will see a graph of the <code>Initial</code> decision tree (see screen shot below). Decision nodes are shown in green and chance nodes in orange. If the tree does not look as you intended/expected please return to the <em>Model</em> tab and edit the tree structure.</p>
@@ -267,6 +280,7 @@ img {
 <p><span class="math">\[
     0.3 \times 900,000 + 0.6 \times 900,000 + 0.1 \times 900,000 = 900,000
 \]</span></p>
+</div>
 <div id="buttons" class="section level2">
 <h2>Buttons</h2>
 <p>In the <em>Model</em> tab:</p>
@@ -280,15 +294,6 @@ img {
 <p>In the <em>Plot</em> tab:</p>
 <ul>
 <li>Click the download icon in the top right of your browser to save either the initial or final plot to a pdf-file</li>
-</ul>
-</div>
-<div id="trouble-shooting" class="section level2">
-<h2>Trouble shooting</h2>
-<ul>
-<li>Each terminal node must have a payoff (e.g., <code>payoff: 0</code>)</li>
-<li>Node names must be followed by a <code>:</code></li>
-<li>Use only letters in node names (i.e., no symbols)</li>
-<li>If you run into an error you cannot debug post a questions to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a></li>
 </ul>
 </div>
 
