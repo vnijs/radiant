@@ -29,8 +29,10 @@ dtree_parser <- function(yl) {
       var <- strsplit(yl[i], "=")[[1]]
       var[1] <- gsub("^\\s+|\\s+$", "", var[1]) %>% gsub("(\\W)", "\\\\\\1", .)
       var[2] <- eval(parse(text = gsub("[a-zA-Z]+","",var[2])))
+      yl[-i] <- gsub(paste0("(\\s*)",var[1]), paste0("\\1",var[2]), yl[-i], perl = TRUE)
       # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i], fixed = TRUE)
-      yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i])
+      ## can't work in the variable definition section
+      # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i])
     }
     yl[var_def] <- paste0("# ", yl[var_def])
   }
@@ -183,7 +185,7 @@ dtree <- function(yl) {
   }
 
   if (length(yl) == 0) {
-    err <- "**\nThe provided list is empty or not in the correct format. Please check the input file.\n**"
+    err <- "**\nThe provided list is empty or not in the correct format.\nPlease check the input file.\n**"
     return(set_class(err, c("dtree",class(err))))
   }
 
@@ -227,7 +229,8 @@ dtree <- function(yl) {
 
   calc_payoff <- function(x) {
     # if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
-    if (x$type == 'chance') x$payoff <- sum(sapply(x$children, chance_payoff))
+    if (is_empty(x$type)) x$payoff <- 0
+    else if (x$type == 'chance') x$payoff <- sum(sapply(x$children, chance_payoff))
     # else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
     else if (x$type == 'decision') x$payoff <- max(sapply(x$children, decision_payoff))
 

@@ -296,6 +296,7 @@ plot_downloader <- function(plot_name, width = plot_width(),
 
         ## needed to get the image quality at the same level as shiny
         pr <- session$clientData$pixelratio
+        if (is.null(pr) || pr < 1) pr <- 1
         png(file=file, width = width*pr, height = height*pr, res=72*pr)
           print(get(paste0(pre, plot_name))())
         dev.off()
