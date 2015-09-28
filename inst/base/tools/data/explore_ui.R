@@ -21,6 +21,8 @@ output$ui_expl_vars <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
+
+
   selectInput("expl_vars", label = "Select variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
     size = min(8, length(vars)), selectize = FALSE)
@@ -30,13 +32,20 @@ output$ui_expl_byvar <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return()
 
+  if (any(vars %in% input$expl_vars)) {
+    vars <- setdiff(vars, input$expl_vars)
+  }
+
   isolate({
     if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars))
       vars <- unique(c(r_state$expl_byvar, vars))
+
+    sel <- use_input("expl_byvar", vars, fun = "state_multiple")
   })
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
+    # selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
+    selected = sel, multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
@@ -90,6 +99,9 @@ output$ui_Explore <- renderUI({
 
 .explore <- reactive({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
+
+  if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
+
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(explore, expl_inputs()) )
   })

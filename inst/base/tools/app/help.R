@@ -129,8 +129,14 @@ help_quant_ui <- tagList(
   )
 )
 
+if ("radiant" %in% (installed.packages()[,'Package'])) {
+  r_version <- packageVersion("radiant")
+} else {
+  r_version <- "unknown"
+}
+
 help_quant_main <- tagList(
-  HTML("<h3>Select one or more help documents</h3>"),
+  HTML(paste0("<h3>Radiant (",r_version, "): Select help files to show and search</h3>")),
   # HTML("<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
   htmlOutput("help_data"),
   htmlOutput("help_sample"),

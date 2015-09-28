@@ -28,8 +28,19 @@ output$ui_pvt_cvars <- renderUI({
 output$ui_pvt_nvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- c("None", varnames()[isNum])
+
+  if (any(vars %in% input$pvt_cvars)) {
+    vars <- setdiff(vars, input$pvt_cvars)
+  }
+
+  isolate({
+    ## keep the same n-variable 'active' if possible
+    sel <- use_input("pvt_nvar", vars)
+  })
+
   selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,
-    selected = state_single("pvt_nvar",vars), multiple = FALSE,
+    # selected = state_single("pvt_nvar",vars), multiple = FALSE,
+    selected = sel, multiple = FALSE,
     options = list(placeholder = 'Select numeric variable'))
 })
 
@@ -136,6 +147,9 @@ pvt_plot_inputs <- reactive({
     updateSelectInput(session, "pvt_nvar", selected = "None")
     return()
   }
+
+  if (any(input$pvt_nvar %in% input$pvt_cvars)) return()
+
   withProgress(message = "Calculating", value = 0, {
     sshhr( do.call(pivotr, pvt_inputs()) )
   })

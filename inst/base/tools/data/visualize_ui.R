@@ -76,11 +76,6 @@ output$ui_viz_xvar <- renderUI({
   isolate({
     ## keep the same x-variable 'active' if possible
     sel <- use_input("viz_xvar", vars, fun = "state_multiple")
-    # sel <-
-    #   if (available(input$viz_xvar) && all(input$viz_xvar %in% vars))
-    #     input$viz_xvar
-    #   else
-    #     state_multiple("viz_xvar", vars)
   })
 
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
@@ -94,11 +89,6 @@ output$ui_viz_facet_row <- renderUI({
   isolate({
     ## keep the same facet_row variable 'active' if possible
     sel <- use_input("viz_facet_row", vars, init = ".")
-    # sel <-
-    #   if (available(input$viz_facet_row) && input$viz_facet_row %in% vars)
-    #     input$viz_facet_row
-    #   else
-    #     state_single("viz_facet_row", vars, ".")
   })
 
   selectizeInput("viz_facet_row", "Facet row", vars,

@@ -12,9 +12,14 @@
 #'
 #' @export
 dtree_parser <- function(yl) {
+  ############################
+  ## test
   # library(radiant)
   # yl <- readLines("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/bio-imaging/bio-imaging-input.yaml")
+  # yl <- readLines("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/tee-times/tee-times-monday-input.yaml")
   # yl <- paste0(yl, collapse = "\n")
+  ############################
+
   yl <- unlist(strsplit(yl, "\n"))
 
   ## substitute values
@@ -22,17 +27,16 @@ dtree_parser <- function(yl) {
   if (length(var_def) > 0) {
     for (i in var_def) {
       var <- strsplit(yl[i], "=")[[1]]
-      var[1] <- gsub("^\\s+|\\s+$", "", var[1])
+      var[1] <- gsub("^\\s+|\\s+$", "", var[1]) %>% gsub("(\\W)", "\\\\\\1", .)
       var[2] <- eval(parse(text = gsub("[a-zA-Z]+","",var[2])))
-      yl[-i] <- gsub(var[1], var[2], yl[-i], fixed = TRUE)
+      # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i], fixed = TRUE)
+      yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i])
     }
     yl[var_def] <- paste0("# ", yl[var_def])
   }
 
   ## collect errors
   err <- c()
-
-  yl %>% grepl("^[^:]+:\\s*$",., perl = TRUE) %>% which
 
   ## cheching if a : is present
   # yl <- c(yl, "something without a colon")
@@ -47,24 +51,70 @@ dtree_parser <- function(yl) {
   ## check type line is followed by a name
   # yl <- c(yl, "   type   : another   ")
   type_id <- yl %>% grepl("^\\s*type\\s*:\\s*(.*)$",., perl = TRUE) %>% which
-  type_cid <- yl %>% grepl("^\\s*type\\s*:\\s*((chance)|(decision))\\s*$",., perl = TRUE) %>% which
+  type_cid <- yl %>% grepl("^\\s*type\\s*:\\s*((chance)|(decision)|())\\s*$",., perl = TRUE) %>% which
 
   if (!identical(type_id, type_cid))
     err <- c(err, paste0("Node type should be 'type: chance', or 'type: decision' in line(s): ", paste0(setdiff(type_id, type_cid), collapse = ", ")))
 
+  ## can't have # signs anywhere if line is not a comment
+  # yl <- c(" # name # 3:")
+  # yl <- c(" storm leaves # 4 now:")
+  # yl <- c(" storm # leaves # 4 now:")
+  # yl %<>% gsub("(^\\s*[^\\s\\#]+\\s*)(\\#)", "\\1//", .,  perl = TRUE)
+  # yl %<>% gsub("(^\\s*[^#][^#]+\\s*)#", "\\1//", .,  perl = TRUE)
+  ## incase there are 2 # signs - should be able to do that in
+  # yl %<>% gsub("(^\\s*[^#][^#]+\\s*)#", "\\1//", .,  perl = TRUE)
+  nc_id <- yl %>% grepl("^\\s*#", .,  perl = TRUE) %>% {. == FALSE} %>% which
+
+  if (length(nc_id) > 0) {
+    yl[nc_id] %<>% gsub("#", "//", .,  perl = TRUE) %>%
+      gsub("(^\\s*)[\\!`@%&\\*-\\+]*\\s*", "\\1", .,  perl = TRUE)
+  }
+
   ## Find node names
-  nn_id <- yl %>% grepl("^[^:]+:\\s*$",., perl = TRUE) %>% which
+  # yl <- c(" # name 3:")
+  # yl <- c(" p:   ", "  type: ")
+  # yl <- c(" name 3:")
+  # nn_id <- yl %>% grepl("^[^:#]+:\\s*$",., perl = TRUE) %>% which
+  # nn_id <- yl %>% grepl("^\\s*[^#]+[^:]+:\\s*$",., perl = TRUE) %>% which
+  nn_id <-
+
+  yl %>% gsub("(^\\s*p\\s*:\\s*$)","\\1 0",.) %>%
+    gsub("(^\\s*type\\s*:\\s*$)","\\1 0",.) %>%
+    gsub("(^\\s*cost\\s*:\\s*$)","\\1 0",.) %>%
+    gsub("(^\\s*payoff\\s*:\\s*$)","\\1 0",.) %>%
+    grepl("^\\s*[^#]+:\\s*$",., perl = TRUE) %>% which
+
+  ## replace ( ) { } [ ]
+  if (length(nn_id) > 0)
+    yl[nn_id] %<>% gsub("[\\(\\)\\{\\}\\[\\]<>\\@;~]", "/", .,  perl = TRUE)
 
   ## check that type is followed by a name
   # yl <- c(yl, "   type   :  decision   ")
-  type_nn <- type_cid %in% (nn_id - 1)
+
+  ## non-commented next line after type
+  ncnl_id <- c()
+  for (i in type_cid) {
+    ncnl_id <- c(ncnl_id, nc_id[nc_id > i][1])
+  }
+
+  # type_nn <- type_cid %in% (nn_id - 1)
+  type_nn <- ncnl_id %in% nn_id
+
   if (!all(type_nn))
     err <- c(err, paste0("The node types defined on line(s) ", paste0(type_cid[!type_nn], collapse = ", "), " must be followed by a node name.\nA valid node name could be 'mud slide:'"))
 
   ## check indent of next line is the same for type defs
   indent_type <- yl[type_cid] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
-  indent_next <- yl[type_cid+1] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
+  # indent_next <- yl[type_cid+1] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
 
+  ## non-commented next node-name after type
+  ncnn_id <- c()
+  for (i in type_cid) {
+    ncnn_id <- c(ncnn_id, nn_id[nn_id > i][1])
+  }
+
+  indent_next <- yl[ncnn_id] %>% gsub("^(\\s*).*","\\1", .) %>% nchar
   indent_issue <- indent_type == indent_next
 
   if (any(!indent_issue))
@@ -112,6 +162,7 @@ dtree <- function(yl) {
   if (is_string(yl)) {
 
     yl <- dtree_parser(yl)
+    ## test
     # return(paste0(paste0("\n**\n", yl, collapse = "\n"), "\n**\n") %>% set_class(c("dtree", class(.))))
     if (class(yl)[1] == "dtree") return(yl)
 
@@ -126,7 +177,7 @@ dtree <- function(yl) {
       if (is.na(err_line))
         err <- paste0("**\nError reading input:\n", attr(yl,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
       else
-        err <- paste0("**\nIndentation error at line ", err_line, ".\nUse tabs to separate the branches in the decision tree.\nFix the indentation error and try again. Examples are shown in the help file\n**")
+        err <- paste0("**\nIndentation error in line ", err_line, ".\nUse tabs to separate the branches in the decision tree.\nFix the indentation error and try again. Examples are shown in the help file\n**")
       return(set_class(err, c("dtree",class(err))))
     }
   }
@@ -163,15 +214,30 @@ dtree <- function(yl) {
   #   if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
   # }
 
+  chance_payoff <- function(node) {
+    if(is.null(node$payoff) || is.null(node$p)) {
+      0
+    } else {
+      node$payoff * node$p
+    }
+  }
+
+  decision_payoff <- function(node)
+    if(is.null(node$payoff)) 0 else node$payoff
+
   calc_payoff <- function(x) {
-    if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
-    else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
+    # if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
+    if (x$type == 'chance') x$payoff <- sum(sapply(x$children, chance_payoff))
+    # else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
+    else if (x$type == 'decision') x$payoff <- max(sapply(x$children, decision_payoff))
 
     ## subtract cost if specified
     if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
   }
 
-  err <- try(jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf), silent = TRUE)
+  # err <- try(jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf), silent = TRUE)
+  jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf)
+  err <- ""
 
   if (is(err, 'try-error')) {
     err <- paste0("**\nError calculating payoffs associated with a chance or decision node.\nPlease check that each terminal node has a payoff and that probabilities\nare correctly specificied\n**")
@@ -179,11 +245,14 @@ dtree <- function(yl) {
   }
 
   decision <- function(x) {
-    po <- sapply(x$children, function(child) child$payoff)
+    # po <- sapply(x$children, function(child) child$payoff)
+    po <- sapply(x$children, decision_payoff)
     x$decision <- names(po[po == x$payoff])
   }
 
-  err <- try(jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision'), silent = TRUE)
+  jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision')
+  # err <- try(jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision'), silent = TRUE)
+  err <- ""
 
   if (is(err, 'try-error')) {
     err <- paste0("**\nError calculating payoffs associated with a decision node. Please check\nthat each terminal node has a payoff\n**")
@@ -300,6 +369,7 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
   }
 
   FormatPayoff <- function(payoff) {
+    if (is.null(payoff)) payoff <- 0
     paste0(symbol, format(round(payoff, dec), scientific = FALSE, big.mark = ","))
   }
 
