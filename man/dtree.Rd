@@ -4,10 +4,12 @@
 \alias{dtree}
 \title{Create a decision tree}
 \usage{
-dtree(yl)
+dtree(yl, opt = "max")
 }
 \arguments{
 \item{yl}{A yaml string or a list (e.g., from yaml::yaml.load_file())}
+
+\item{opt}{Find the maximum ("max") or minimum ("min") value for each decision node}
 }
 \value{
 A list with the initial tree and the calculated tree

@@ -45,6 +45,8 @@ output$ui_dtree_vim <- renderUI({
     if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
 })
 
+dtree_max_min <- c("Max" = "max", "Min" = "min")
+
 output$dtree <- renderUI({
   tabsetPanel(
     id = "tabs_dtree",
@@ -55,6 +57,9 @@ output$dtree <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(HTML("<i title='Report results' class='fa fa-edit action-button shiny-bound-input' href='' id='dtree_report'></i>")),
             td(HTML("&nbsp;&nbsp;")),
+            td(HTML("&nbsp;&nbsp;")),
+            td(radioButtons(inputId = "dtree_opt", label = NULL,
+               dtree_max_min, selected = state_init("dtree_opt", "max"), inline = TRUE)),
             td(actionButton("dtree_eval", "Calculate")),
             td(uiOutput("ui_dtree_vim")),
             td(downloadButton("dtree_save_yaml", "Save input")),
@@ -109,7 +114,7 @@ dtree_eval <- reactive({
   isolate({
     if (input$dtree_edit != "") {
       withProgress(message = 'Creating decision tree', value = 0, {
-        dtree(input$dtree_edit)
+        dtree(input$dtree_edit, opt = input$dtree_opt)
       })
     }
   })
@@ -214,7 +219,7 @@ observe({
     # })
 
     r_data[[dtree_name]] <- input$dtree_edit
-    update_report(inp_main = list(yl = dtree_name),
+    update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
                   fun_name = "dtree",
                   inp_out = list("",""), outputs = "summary",
                   figs = FALSE)

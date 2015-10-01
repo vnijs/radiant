@@ -20,7 +20,7 @@ dtree_parser <- function(yl) {
   # yl <- paste0(yl, collapse = "\n")
   ############################
 
-  yl <- unlist(strsplit(yl, "\n"))
+  if (is_string(yl)) yl <- unlist(strsplit(yl, "\n"))
 
   ## substitute values
   var_def <- grepl("=",yl) %>% which
@@ -144,6 +144,7 @@ dtree_parser <- function(yl) {
 #' @details See \url{http://vnijs.github.io/radiant/base/dtree.html} for an example in Radiant
 #'
 #' @param yl A yaml string or a list (e.g., from yaml::yaml.load_file())
+#' @param opt Find the maximum ("max") or minimum ("min") value for each decision node
 #'
 #' @return A list with the initial tree and the calculated tree
 #'
@@ -155,7 +156,7 @@ dtree_parser <- function(yl) {
 #' @seealso \code{\link{plot.dtree}} to plot results
 #'
 #' @export
-dtree <- function(yl) {
+dtree <- function(yl, opt = "max") {
 
   ## most of the code in this function is from
   ## https://github.com/gluc/useR15/blob/master/01_showcase/02_decision_tree.R
@@ -163,15 +164,20 @@ dtree <- function(yl) {
   ## load yaml from string if list not provide
   if (is_string(yl)) {
 
+    ## get input file from r_data
+    # if (!grepl("name\\s*:", yl)) yl <- getdata(yl)
+    if (!grepl("\\n", yl)) yl <- getdata(yl)
+
     yl <- dtree_parser(yl)
     ## test
     # return(paste0(paste0("\n**\n", yl, collapse = "\n"), "\n**\n") %>% set_class(c("dtree", class(.))))
     if (class(yl)[1] == "dtree") return(yl)
 
-    yl <- try(yaml.load(yl), silent = TRUE)
+    # yl <- try(yaml.load(yl), silent = TRUE)
 
     ## if the name of input-list in r_data is provided
-    if (!is(yl, 'try-error') && is_string(yl)) yl <- try(yaml.load(getdata(yl)), silent = TRUE)
+    # if (!is(yl, 'try-error') && is_string(yl)) yl <- try(yaml.load(getdata(yl)), silent = TRUE)
+    yl <- try(yaml.load(yl), silent = TRUE)
 
     ## used when a string is provided
     if (is(yl, 'try-error')) {
@@ -217,10 +223,13 @@ dtree <- function(yl) {
   # }
 
   chance_payoff <- function(node) {
-    if(is.null(node$payoff) || is.null(node$p)) {
+    if (is.null(node$payoff) || is.null(node$p)) {
       0
     } else {
-      node$payoff * node$p
+      # if (is_string(node$p)) node$p <- eval(parse(text = node$p))
+      # node$payoff * node$p
+      p <- if (is_string(node$p)) eval(parse(text = node$p)) else node$p
+      node$payoff * p
     }
   }
 
@@ -232,7 +241,8 @@ dtree <- function(yl) {
     if (is_empty(x$type)) x$payoff <- 0
     else if (x$type == 'chance') x$payoff <- sum(sapply(x$children, chance_payoff))
     # else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
-    else if (x$type == 'decision') x$payoff <- max(sapply(x$children, decision_payoff))
+    # else if (x$type == 'decision') x$payoff <- max(sapply(x$children, decision_payoff))
+    else if (x$type == 'decision') x$payoff <- get(opt)(sapply(x$children, decision_payoff))
 
     ## subtract cost if specified
     if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
@@ -287,6 +297,11 @@ summary.dtree <- function(object, ...) {
       format(digits = 10, nsmall = 2, decimal.mark = ".", big.mark = ",", scientific = FALSE)
   }
 
+  print_percent <- function(x) {
+    if (is_string(x)) x <- eval(parse(text = x))
+    FormatPercent(x)
+  }
+
   rm_terminal <- function(x)
     x %>% {if (is.na(.)) "" else .} %>% {if (. == "terminal") "" else .}
 
@@ -300,7 +315,8 @@ summary.dtree <- function(object, ...) {
     Traverse(jl) %>%
       {data.frame(
         ` ` = Get(.,"levelName"),
-        Probability = Get(., "p", format = FormatPercent),
+        # Probability = Get(., "p", format = FormatPercent),
+        Probability = Get(., "p", format = print_percent),
         Payoff = Get(., "payoff", format = print_money),
         Cost = Get(., "cost", format = print_money),
         Type = Get(., "ptype", format = rm_terminal),
@@ -405,7 +421,15 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
 ## some initial ideas for sensitivity analysis
 # library(yaml); library(radiant)
 # library(radiant); library(data.tree)
-# # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind.yaml")
+# yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind-variables.yaml")
+# eval(parse(text = yl$variables))
+# p_medium
+# p_large
+
+# names(yl)
+
+# yl$test <- function(x) x + 1
+# yl$test(2)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
 # dtree(yl)
 # dtree(yl)

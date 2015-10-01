@@ -1,6 +1,3 @@
-###############################
-# Sample size
-###############################
 #' Sample size calculation
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/sample_size.html} for an example in Radiant

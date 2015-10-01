@@ -90,7 +90,7 @@ summary.correlation_ <- function(object,
 
 	if (covar) {
 	  cvmat <- sshhr( cov(object$dat, method = object$type) )
-		cvr <- format(round(cov(cvmat),2))
+		cvr <- format(round(cvmat,2))
 	  cvr[abs(cmat$r) < cutoff] <- ""
 		ltmat <- lower.tri(cvr)
 	  cvr[!ltmat] <- ""

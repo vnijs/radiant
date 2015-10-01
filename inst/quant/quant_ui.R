@@ -1,5 +1,6 @@
 quant_ui <- tagList(
   navbarMenu("Sample",
+    tabPanel("Probability calculator", uiOutput("prob_calc")),
     tabPanel("Sampling", uiOutput("sampling")),
     tabPanel("Sample size", uiOutput("sample_size"))
   ),
