@@ -29,7 +29,8 @@ dtree_parser <- function(yl) {
       var <- strsplit(yl[i], "=")[[1]]
       var[1] <- gsub("^\\s+|\\s+$", "", var[1]) %>% gsub("(\\W)", "\\\\\\1", .)
       var[2] <- eval(parse(text = gsub("[a-zA-Z]+","",var[2])))
-      yl[-i] <- gsub(paste0("(\\s*)",var[1]), paste0("\\1",var[2]), yl[-i], perl = TRUE)
+      yl[-i] <- gsub(paste0("(\\s*)",var[1],"\\s*$"), paste0("\\1",var[2]), yl[-i], perl = TRUE)
+
       # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i], fixed = TRUE)
       ## can't work in the variable definition section
       # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i])
@@ -45,6 +46,9 @@ dtree_parser <- function(yl) {
   col_ln <- yl %>% grepl("(?=:)|(?=^\\s*$)|(?=^\\s*#)",., perl = TRUE)
   if (any(!col_ln))
     err <- c(err, paste0("Each line must have a ':'. Add a ':' in line(s): ", paste0(which(!col_ln), collapse = ", ")))
+
+  ## add a space to input after the : YAML needs this
+  yl %<>% gsub(":([^\\s$])",": \\1", .) %>% gsub("  ", " ", .)
 
   ## replace .4 by 0.4
   # yl <- c(yl, "p: .4")
@@ -80,12 +84,11 @@ dtree_parser <- function(yl) {
   # nn_id <- yl %>% grepl("^[^:#]+:\\s*$",., perl = TRUE) %>% which
   # nn_id <- yl %>% grepl("^\\s*[^#]+[^:]+:\\s*$",., perl = TRUE) %>% which
   nn_id <-
-
-  yl %>% gsub("(^\\s*p\\s*:\\s*$)","\\1 0",.) %>%
-    gsub("(^\\s*type\\s*:\\s*$)","\\1 0",.) %>%
-    gsub("(^\\s*cost\\s*:\\s*$)","\\1 0",.) %>%
-    gsub("(^\\s*payoff\\s*:\\s*$)","\\1 0",.) %>%
-    grepl("^\\s*[^#]+:\\s*$",., perl = TRUE) %>% which
+    yl %>% gsub("(^\\s*p\\s*:\\s*$)","\\1 0",.) %>%
+      gsub("(^\\s*type\\s*:\\s*$)","\\1 0",.) %>%
+      gsub("(^\\s*cost\\s*:\\s*$)","\\1 0",.) %>%
+      gsub("(^\\s*payoff\\s*:\\s*$)","\\1 0",.) %>%
+      grepl("^\\s*[^#]+:\\s*$",., perl = TRUE) %>% which
 
   ## replace ( ) { } [ ]
   if (length(nn_id) > 0)
@@ -299,6 +302,8 @@ summary.dtree <- function(object, ...) {
 
   print_percent <- function(x) {
     if (is_string(x)) x <- eval(parse(text = x))
+    # print(x)
+    # if (!is.numeric(x)) x <- 0
     FormatPercent(x)
   }
 
@@ -404,12 +409,25 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
     paste0(" ", node$id, lbl)
   }
 
+  # style <- paste0(
+  #   "classDef default fill:none, bg:none, stroke-width:0px;
+  #   classDef chance fill:#FF8C00,stroke:#333,stroke-width:1px;
+  #   classDef decision fill:#9ACD32,stroke:#333,stroke-width:1px;
+  #   class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
+  #   class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
+
+  style_decision <- jl$Get("id", filterFun = function(x) x$type == "decision")
+  if (is.null(style_decision)) style_decision <- "id_null"
+  style_chance <- jl$Get("id", filterFun = function(x) x$type == "chance")
+  if (is.null(style_chance)) style_chance <- "id_null"
+
   style <- paste0(
     "classDef default fill:none, bg:none, stroke-width:0px;
     classDef chance fill:#FF8C00,stroke:#333,stroke-width:1px;
     classDef decision fill:#9ACD32,stroke:#333,stroke-width:1px;
-    class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
-    class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
+    class ", paste(style_decision, collapse = ","), " decision;
+    class ", paste(style_chance, collapse = ","), " chance;")
+
   trv <- Traverse(jl, traversal = "level", filterFun = isNotRoot)
   df <- data.frame(from = Get(trv, FromLabel), edge = Get(trv, EdgeLabel), to = Get(trv, ToLabel))
 

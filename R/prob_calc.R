@@ -33,7 +33,7 @@ prob_calc <- function(dist = "normal", mean = 0, stdev = 1, lb = -Inf, ub = Inf)
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	ggplot(data.frame(x=limits), aes(x=x)) +
+	ggplot(data.frame(x=limits), aes_string(x="x")) +
 	  stat_function(fun=dnorm, args = list(mean = mean, sd = stdev)) +
 	  stat_function(fun=dnorm_limit, geom="area", fill="blue", alpha=0.2) +
 	  xlab("") + ylab("")
@@ -55,7 +55,7 @@ plot_prob_calc <- function(dist = "normal", mean = 0, stdev = 1, lb = -Inf, ub =
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	ggplot(data.frame(x=limits), aes(x=x)) +
+	ggplot(data.frame(x=limits), aes_string(x="x")) +
 	  stat_function(fun=dnorm, args = list(mean = mean, sd = stdev)) +
 	  stat_function(fun=dnorm_limit, geom="area", fill="blue", alpha=0.2) +
 	  xlab("") + ylab("")
