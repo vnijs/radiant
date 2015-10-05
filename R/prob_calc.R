@@ -1,28 +1,64 @@
-#' Probability calculator
+#' Probability calculator for the normal distrubution
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
 #'
-#' @param dist Distribution
 #' @param mean Mean
 #' @param stdev Standard deviation
-#' @param lb Lower bound
-#' @param ub Upper bound
-#'
-#' @return Probability stuff
+#' @param lb Lower bound (default is -Inf)
+#' @param ub Upper bound (default is Inf)
+#' @param plb Lower probability bound
+#' @param pub Upper probability bound
+#' @param dec Number of decimals to show
 #'
 #' @export
+prob_norm <- function(mean,
+                      stdev,
+                      lb = -Inf,
+                      ub = Inf,
+                      plb = NA,
+                      pub = NA,
+                      dec = 3) {
 
-# pnorm(600, 500, 100)
-# p <- 1 - pnorm(600, 500, 100)
-# qnorm(p, 500, 100, lower.tail = FALSE)
-# lb <- mean - 4*sd
-# ub <- mean + 4*sd
-# lb <- 8
-# ub <- 11
-# min <- -Inf
-# max <- Inf
+	p_ub <- pnorm(ub, mean, stdev)
+	p_lb <- pnorm(lb, mean, stdev)
+	p_int <- max(p_ub - p_lb, 0)
 
-prob_calc <- function(dist = "normal", mean = 0, stdev = 1, lb = -Inf, ub = Inf) {
+	p_ub %<>% round(dec)
+	p_lb %<>% round(dec)
+	p_int %<>% round(dec)
+
+	v_ub <- qnorm(pub, mean, stdev)
+	v_lb <- qnorm(plb, mean, stdev)
+
+	v_ub %<>% round(dec)
+	v_lb %<>% round(dec)
+
+  environment() %>% as.list %>% set_class(c("prob_norm",class(.)))
+}
+
+#' Plot method for the probability calculator (normal)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{prob_norm}}
+#' @param type Probabilities or values
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
+
+	object <- x; rm(x)
+	if (type == "values") {
+		lb <- object$lb
+		ub <- object$ub
+	} else {
+		lb <- object$v_lb
+		ub <- object$v_ub
+	}
+
+	mean <- object$mean
+	stdev <- object$stdev
 
   limits <- c(mean - 3*stdev, mean + 3*stdev)
   dnorm_limit <- function(x) {
@@ -33,42 +69,529 @@ prob_calc <- function(dist = "normal", mean = 0, stdev = 1, lb = -Inf, ub = Inf)
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	ggplot(data.frame(x=limits), aes_string(x="x")) +
+	plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
 	  stat_function(fun=dnorm, args = list(mean = mean, sd = stdev)) +
 	  stat_function(fun=dnorm_limit, geom="area", fill="blue", alpha=0.2) +
+	  # geom_vline(xintercept = c(lb,ub), color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
+
+
+   if (shiny) plt else print(plt)
 }
 
-# plot_prob_calc(mean = 500, stdev = 100, ub = 600)
-# plot_prob_calc(mean = 500, stdev = 100, lb = 600)
-# plot_prob_calc(mean = 0, stdev = 1, ub = 1)
-# plot_prob_calc(mean = 20, stdev = 1, ub = 20)
+#' Summary method for the probability calculator function (normal)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{prob_norm}}
+#' @param type Probabilities or values
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+summary.prob_norm <- function(object, type = "values",  ...) {
 
-plot_prob_calc <- function(dist = "normal", mean = 0, stdev = 1, lb = -Inf, ub = Inf) {
+	# suppressMessages(attach(object))
 
-  limits <- c(mean - 3*stdev, mean + 3*stdev)
-  dnorm_limit <- function(x) {
-    y <- dnorm(x, mean = mean, sd = stdev)
+	mean <- object$mean
+	stdev <- object$stdev
+	dec <- object$dec
+
+	ub <- object$ub
+	lb <- object$lb
+	p_ub <- object$p_ub
+	p_lb <- object$p_lb
+	p_int <- object$p_int
+
+	pub <- object$pub
+	plb <- object$plb
+
+	v_ub <- object$v_ub
+	v_lb <- object$v_lb
+
+  cat("Probability calculator\n")
+  cat("Distribution: Normal\n")
+	cat("Mean       :", mean, "\n")
+	cat("St. dev    :", stdev, "\n")
+
+	if (type == "values") {
+		cat("Lower bound:", if (is.na(lb)) "-Inf" else lb, "\n")
+		cat("Upper bound:", if (is.na(ub)) "Inf" else ub, "\n")
+
+		if (!is.na(ub) || !is.na(lb)) {
+		  cat("\n")
+
+			if (!is.na(lb)) {
+				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
+				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+			}
+
+			if (!is.na(ub)) {
+				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
+				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+			}
+
+			if (!is.na(lb) && !is.na(ub)) {
+				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+		  }
+		}
+
+	} else {
+		pub <- if (is.na(pub)) 2 else pub
+		plb <- if (is.na(plb)) -1 else plb
+
+		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
+		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
+
+		if (pub < 1 || plb > 0) {
+		  cat("\n")
+
+			if (plb > 0) {
+				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
+				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			}
+
+			if (pub < 1) {
+				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
+				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			}
+
+		  if (pub < 1 && plb > 0) {
+				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
+				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+			}
+		}
+	}
+}
+
+#' Probability calculator for the binomial distrubution (binomial)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param n Number of trials
+#' @param p Probability
+#' @param lb Lower bound on the number of successes
+#' @param ub Upper bound on the number of successes
+#' @param plb Lower probability bound
+#' @param pub Upper probability bound
+#' @param dec Number of decimals to show
+#'
+#' @export
+prob_binom <- function(n,
+                       p,
+                       lb = NA,
+                       ub = NA,
+                       plb = NA,
+                       pub = NA,
+                       dec = 3) {
+
+	if (is.na(lb) || lb < 0) {
+		p_elb <- p_lb <- lb <- NA
+	} else {
+		if (lb > n) lb <- n
+		p_elb <- dbinom(lb, n, p) %>% round(dec)
+		p_lelb <- pbinom(lb, n, p) %>% round(dec)
+	  p_lb <- sum(dbinom(0:(lb-1), n, p)) %>% round(dec)
+	}
+
+	if (is.na(ub) || ub < 0) {
+		p_eub <- p_ub <- ub <- NA
+	} else {
+		if (ub > n) ub <- n
+		p_eub <- dbinom(ub, n, p) %>% round(dec)
+		p_leub <- pbinom(ub, n, p) %>% round(dec)
+		p_ub <- sum(dbinom(0:(ub-1), n, p)) %>% round(dec)
+	}
+
+	if (!is.na(ub) && !is.na(lb)) {
+	  p_int <- sum(dbinom(lb:ub, n, p)) %>% max(0) %>% round(dec)
+	} else {
+		p_int <- NA
+	}
+
+	if (is.na(plb) || plb < 0) {
+		vlb <- NA
+	} else {
+		if (plb > 1) plb <- 1
+	  vlb <- qbinom(plb, n, p)
+
+		vp_elb <- dbinom(vlb, n, p) %>% round(dec)
+		vp_lelb <- pbinom(vlb, n, p) %>% round(dec)
+	  vp_lb <- sum(dbinom(0:(vlb-1), n, p)) %>% round(dec)
+	}
+
+	if (is.na(pub) || pub < 0) {
+		vub <- NA
+	} else {
+		if (pub > 1) plb <- 1
+	  vub <- qbinom(pub, n, p)
+
+		vp_eub <- dbinom(vub, n, p) %>% round(dec)
+		vp_leub <- pbinom(vub, n, p) %>% round(dec)
+		vp_ub <- sum(dbinom(0:(vub-1), n, p)) %>% round(dec)
+	}
+
+	if (!is.na(pub) && !is.na(plb)) {
+
+	  vub <- qbinom(pub, n, p)
+	  vlb <- qbinom(plb, n, p)
+
+	  vp_int <- sum(dbinom(vlb:vub, n, p)) %>% max(0) %>% round(dec)
+	} else {
+		vp_int <- NA
+	}
+
+  environment() %>% as.list %>% set_class(c("prob_binom",class(.)))
+}
+
+#' Plot method for the probability calculator function (binomial)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{prob_binom}}
+#' @param type Probabilities or values
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
+
+	object <- x; rm(x)
+	if (type == "values") {
+		lb <- object$lb
+		ub <- object$ub
+	} else {
+		lb <- object$vub
+		ub <- object$vub
+	}
+
+	n <- object$n
+	p <- object$p
+
+  limits <- 0:n
+
+  k <- factor(rep("below",n+1), levels = c("below","equal","above"))
+  if (!is.null(ub) && !is.na(ub)) {
+  	k[ub+1] <- "equal"
+    if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
+  	k[0:n > ub] <- "above"
+  } else {
+  	# if (!is.na(lb)) {
+  	k[lb+1] <- "equal"
+  	k[0:n > lb] <- "above"
+  }
+
+  dat <- data.frame(
+    x = limits %>% as_factor,
+    Probability = dbinom(limits, size = n, prob = p),
+    k = k
+  ) %>% filter(., .$Probability > 0.00001)
+
+  ?filter_
+
+  if (nrow(dat) < 40) {
+  	breaks <- dat$x
+  } else {
+  	x <- as_integer(dat$x)
+  	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
+  }
+
+  # cols <- c(below = "red", equal = "blue", above = "darkgreen")
+  cols <- c(below = "red", equal = "blue", above = "black")
+
+	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+	## and R Graphics Cookbook
+	plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
+	  geom_bar(stat="identity", alpha = .3) +
+	  xlab("") + scale_fill_manual(values = cols) +
+	  theme(legend.position="none") +
+	  scale_x_discrete(breaks = breaks)
+
+   if (shiny) plt else print(plt)
+}
+
+#' Summary method for the probability calculator function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{prob_binom}}
+#' @param type Probabilities or values
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+summary.prob_binom <- function(object, type = "values",  ...) {
+
+	# suppressMessages(attach(object))
+	n <- object$n
+	p <- object$p
+	dec <- object$dec
+
+	ub <- object$ub
+	lb <- object$lb
+	p_ub <- object$p_ub
+	p_lb <- object$p_lb
+	p_eub <- object$p_eub
+	p_elb <- object$p_elb
+	p_leub <- object$p_leub
+	p_lelb <- object$p_lelb
+	p_int <- object$p_int
+
+	pub <- object$pub
+	plb <- object$plb
+	vub <- object$vub
+	vlb <- object$vlb
+
+	vp_ub <- object$vp_ub
+	vp_lb <- object$vp_lb
+	vp_eub <- object$vp_eub
+	vp_elb <- object$vp_elb
+	vp_leub <- object$vp_leub
+	vp_lelb <- object$vp_lelb
+	vp_int <- object$vp_int
+
+  cat("Probability calculator\n")
+  cat("Distribution: Binomial\n")
+	cat("n          :", n, "\n")
+	cat("p          :", p, "\n")
+	cat("Mean       :", n*p, "\n")
+	cat("St. dev    :", sqrt(n*p*(1-p)) %>% round(dec), "\n")
+
+
+
+	if (type == "values") {
+		cat("Lower bound:", if (is.na(lb)) "" else lb, "\n")
+		cat("Upper bound:", if (is.na(ub)) "" else ub, "\n")
+
+		if (!is.na(ub) || !is.na(lb)) {
+		  cat("\n")
+
+			if (!is.na(lb)) {
+				if (lb > 0)
+					cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
+				cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
+				cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+				if (lb < n)
+				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+			}
+
+			if (!is.na(ub)) {
+				if (ub > 0)
+					cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
+				cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
+				cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+				if (ub < n)
+				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+			}
+
+			if (!is.na(lb) && !is.na(ub)) {
+				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+		  }
+		}
+
+	} else {
+
+		cat("Lower bound:", if (is.na(plb)) "" else paste0(plb, " (", vlb, ")\n"))
+		cat("Upper bound:", if (is.na(pub)) "" else paste0(pub, " (", vub, ")\n"))
+
+		if (!is.na(pub) || !is.na(plb)) {
+		  cat("\n")
+
+			if (!is.na(plb)) {
+				if (vlb > 0)
+					cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
+				cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
+				cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+				if (vlb < n)
+				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+			}
+
+			if (!is.na(pub)) {
+				if (vub > 0)
+					cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
+				cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
+				cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+				if (vub < n)
+				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+			}
+
+			if (!is.na(plb) && !is.na(pub)) {
+				cat(paste0("P(", vlb, " < X < ", vub,")     = ", vp_int, "\n"))
+				cat(paste0("1 - P(", vlb, " < X < ", vub,") = ", round(1 - vp_int, dec), "\n"))
+		  }
+		}
+	}
+}
+
+#' Probability calculator for the uniforem distrubution
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param min Minmum value
+#' @param max Maximum value
+#' @param lb Lower bound
+#' @param ub Upper bound
+#' @param plb Lower probability bound
+#' @param pub Upper probability bound
+#' @param dec Number of decimals to show
+#'
+#' @export
+prob_unif <- function(min,
+                      max,
+                      lb = NA,
+                      ub = NA,
+                      plb = NA,
+                      pub = NA,
+                      dec = 3) {
+
+	p_ub <- punif(ub, min, max)
+	p_lb <- punif(lb, min, max)
+	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
+
+	p_ub %<>% round(dec)
+	p_lb %<>% round(dec)
+
+	v_ub <- qunif(pub, min, max) %>% round(dec)
+	v_lb <- qunif(plb, min, max) %>% round(dec)
+
+	mean <- (max+min) / 2
+	stdev <- (max-min)^2 / (1/12)
+
+  environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+}
+
+#' Plot method for the probability calculator (uniform)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{prob_norm}}
+#' @param type Probabilities or values
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
+
+	object <- x; rm(x)
+	if (type == "values") {
+		lb <- object$lb
+		ub <- object$ub
+	} else {
+		lb <- object$v_lb
+		ub <- object$v_ub
+	}
+
+	min <- object$min
+	max <- object$max
+
+  limits <- c(min, max)
+  dunif_limit <- function(x) {
+    y <- dunif(x, min = min, max = max)
     y[x < lb | x > ub] <- NA
     y
   }
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	ggplot(data.frame(x=limits), aes_string(x="x")) +
-	  stat_function(fun=dnorm, args = list(mean = mean, sd = stdev)) +
-	  stat_function(fun=dnorm_limit, geom="area", fill="blue", alpha=0.2) +
+	plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
+	  stat_function(fun=dunif, args = list(min = min, max = max)) +
+	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2) +
+	  # geom_vline(xintercept = c(lb,ub), color = 'black', linetype = 'dashed', size = .5) +
+	  geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
 	  xlab("") + ylab("")
+
+
+   if (shiny) plt else print(plt)
 }
 
-# output$mc3_density_interactive <- renderUI({
-#   tagList(
-#     sliderInput("mc3_area", label = "Spending area:",
-#       min = 0, max = 16, value = state_init("mc3_area",c(0,16)), step = .5),
-#     renderPlot({
-#       if(is_empty(input$mc3_area)) return()
-#       density_plot(lb = input$mc3_area[1], ub = input$mc3_area[2],
-#                    dat = mc3_dat$spending)
-#     })
-#   )
-# })
+#' Summary method for the probability calculator function (normal)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{prob_norm}}
+#' @param type Probabilities or values
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+summary.prob_unif <- function(object, type = "values",  ...) {
+
+	# suppressMessages(attach(object))
+
+	min <- object$min
+	max <- object$max
+	mean <- object$mean
+	stdev <- object$stdev
+	dec <- object$dec
+
+	ub <- object$ub
+	lb <- object$lb
+	p_ub <- object$p_ub
+	p_lb <- object$p_lb
+	p_int <- object$p_int
+
+	pub <- object$pub
+	plb <- object$plb
+
+	v_ub <- object$v_ub
+	v_lb <- object$v_lb
+
+	# print(object)
+
+  cat("Probability calculator\n")
+  cat("Distribution: Uniform\n")
+	cat("Min        :", min, "\n")
+	cat("Max        :", max, "\n")
+	cat("Mean       :", mean, "\n")
+	cat("St. dev    :", stdev, "\n")
+
+	if (type == "values") {
+		cat("Lower bound:", if (is.na(lb)) min else lb, "\n")
+		cat("Upper bound:", if (is.na(ub)) max else ub, "\n")
+
+		if (!is.na(ub) || !is.na(lb)) {
+		  cat("\n")
+
+			if (!is.na(lb)) {
+				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
+				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+			}
+
+			if (!is.na(ub)) {
+				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
+				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+			}
+
+			if (!is.na(lb) && !is.na(ub)) {
+				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+		  }
+		}
+
+	} else {
+		pub <- if (is.na(pub)) 2 else pub
+		plb <- if (is.na(plb)) -1 else plb
+
+		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
+		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
+
+		if (pub < 1 || plb > 0) {
+		  # cat("\nValues:\n")
+		  cat("\n")
+
+			if (plb > 0) {
+				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
+				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			}
+
+			if (pub < 1) {
+				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
+				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			}
+
+		  if (pub < 1 && plb > 0) {
+				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
+				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+			}
+		}
+	}
+}

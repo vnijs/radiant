@@ -113,8 +113,7 @@ output$hier_clus <- renderUI({
     }
 })
 
-observe({
-  if (not_pressed(input$hier_clus_report)) return()
+observeEvent(input$hier_clus_report, {
   isolate({
     if (length(input$hc_plots) > 0) {
       inp_out <- list(plots = input$hc_plots) %>% list("",.)

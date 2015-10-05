@@ -1,129 +1,254 @@
-# alternative hypothesis options
-# pc_alt <- c("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
-# pc_plots <- c("Histogram" = "hist", "Simulate" = "simulate")
+pc_dist <- c("Normal" = "norm", "Binomial" = "binom", "Uniform" = "unif")
+pc_type <- c("Values" = "values", "Probabilities" = "probs")
 
-pc_dist <- c("Normal" = "normal")
+output$ui_pc_norm <- renderUI({
+  tagList(
+    div(class="row",
+        div(class="col-xs-6", numericInput("pc_mean", label = "Mean:",
+                              value = state_init("pc_mean", 0))),
+        div(class="col-xs-6",numericInput("pc_stdev", label = "St. dev:", min = 0,
+                             value = state_init("pc_stdev", 1)))
+    )
+  )
+})
 
-# list of function arguments
-# pc_args <- as.list(formals(prob_calc))
+output$ui_pc_input_norm <- renderUI({
 
-# list of function inputs selected by user
-# sm_inputs <- reactive({
-#   # loop needed because reactive values don't allow single bracket indexing
-#   sm_args$data_filter <- if (input$show_filter) input$data_filter else ""
-#   sm_args$dataset <- input$dataset
-#   for (i in r_drop(names(sm_args)))
-#     sm_args[[i]] <- input[[paste0("sm_",i)]]
-#   sm_args
-# })
+  mean <- if (is_empty(input$mean)) NA else input$mean
 
-# output$ui_pc_var <- renderUI({
-#   isNum <- "numeric" == .getclass() | "integer" == .getclass()
-#   vars <- varnames()[isNum]
-#   selectInput(inputId = "sm_var", label = "Variable (select one):",
-#     choices = vars, selected = state_single("sm_var",vars), multiple = FALSE)
-# })
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pc_lb", label = "Lower bound:",
+                              value = state_init("pc_lb", -Inf))),
+        div(class="col-xs-6",numericInput("pc_ub", label = "Upper bound:",
+                             value = state_init("pc_ub", mean)))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pc_plb", label = "Lower bound:",
+                              value = state_init("pc_plb", NA))),
+        div(class="col-xs-6",numericInput("pc_pub", label = "Upper bound:",
+                             value = state_init("pc_pub", 0.5)))
+    )
+  }
+})
+
+output$ui_pc_binom <- renderUI({
+  tagList(
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcb_n", label = "n:",
+                              value = state_init("pcb_n", 10)), min = 0),
+        div(class="col-xs-6",numericInput("pcb_p", label = "p:", min = 0, max = 1,
+                             value = state_init("pcb_p", .5)))
+    )
+  )
+})
+
+output$ui_pc_input_binom <- renderUI({
+
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcb_lb", label = "Lower bound:",
+                              value = state_init("pcb_lb", NA), min = 0, step = 1)),
+        div(class="col-xs-6",numericInput("pcb_ub", label = "Upper bound:",
+                             value = state_init("pcb_ub", 3), min = 0, step = 1))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcb_plb", label = "Lower bound:",
+                              value = state_init("pcb_plb", NA), min = 0, max = 1)),
+        div(class="col-xs-6",numericInput("pcb_pub", label = "Upper bound:",
+                             value = state_init("pcb_pub", 0.5), min = 0, max = 1))
+    )
+  }
+})
+
+output$ui_pc_unif <- renderUI({
+  tagList(
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcu_min", label = "Min:",
+                              value = state_init("pcu_min", 0))),
+        div(class="col-xs-6",numericInput("pcu_max", label = "Max:",
+                             value = state_init("pcu_max", 1)))
+    )
+  )
+})
+
+output$ui_pc_input_unif <- renderUI({
+
+  # mean <- if (is_empty(input$mean)) NA else input$mean
+
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcu_lb", label = "Lower bound:",
+                              value = state_init("pcu_lb", NA))),
+        div(class="col-xs-6",numericInput("pcu_ub", label = "Upper bound:",
+                             value = state_init("pcu_ub", 0.5)))
+                             # value = state_init("pc_ub", input$pc_mean)))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcu_plb", label = "Lower bound:",
+                              value = state_init("pcu_plb", NA))),
+        div(class="col-xs-6",numericInput("pcu_pub", label = "Upper bound:",
+                             value = state_init("pcu_pub", 0.5)))
+    )
+  }
+})
 
 output$ui_prob_calc <- renderUI({
   tagList(
     wellPanel(
       selectizeInput("pc_dist", label = "Distribution:",
         choices = pc_dist,
-        selected = state_single("pc_dist", pc_dist, "normal"),
+        selected = state_single("pc_dist", pc_dist, "norm"),
         multiple = FALSE),
-    	numericInput("pc_mean", "Mean:", state_init('pc_mean',0)),
-      numericInput("pc_stdev", "St. dev:", state_init('pc_stdev',1)),
-      sliderInput('pc_range',"Range:", min = -3, max = max,
-        value = state_init('pc_range',c(-3,3), step = 0.1))
-    )
-  	# help_and_report(modal_title = 'Single mean', fun_name = 'single_mean',
-  	#                 help_file = inclMD(file.path(r_path,"quant/tools/help/single_mean.md")))
- 	)
+      conditionalPanel("input.pc_dist == 'norm'",
+        uiOutput("ui_pc_norm")
+      ),
+      conditionalPanel("input.pc_dist == 'binom'",
+        uiOutput("ui_pc_binom")
+      ),
+      conditionalPanel("input.pc_dist == 'unif'",
+        uiOutput("ui_pc_unif")
+      )
+    ),
+    wellPanel(
+      radioButtons("pc_type", label = "Input type:", choices = pc_type,
+                   selected = state_init("pc_type", "values"),
+                   inline = TRUE),
+      conditionalPanel("input.pc_dist == 'norm'",
+        uiOutput("ui_pc_input_norm")
+      ),
+      conditionalPanel("input.pc_dist == 'binom'",
+        uiOutput("ui_pc_input_binom")
+      ),
+      conditionalPanel("input.pc_dist == 'unif'",
+        uiOutput("ui_pc_input_unif")
+      ),
+      numericInput("pc_dec", label = "Decimals:",
+                   value = state_init("pc_dec", 3), min = 0)
+    ),
+    help_and_report(modal_title = 'Probability calculator', fun_name = 'prob_calc',
+                    help_file = inclMD(file.path(r_path,"quant/tools/help/prob_calc.md")))
+  )
 })
 
-pc_plot_width <- function() 600
+pc_plot_width <- function() 700
 
 pc_plot_height <- function() 400
 
-# output$sample_size <- renderUI({
+pc_args <- reactive({
+  pc_dist <- input$pc_dist
+  if (is_empty(pc_dist) || pc_dist == "norm") {
+    as.list(formals(prob_norm))
+  } else if (pc_dist == "binom") {
+    as.list(formals(prob_binom))
+  } else {
+    as.list(formals(prob_unif))
+  }
+})
 
-#     register_print_output("summary_sample_size", ".summary_sample_size")
+## list of function inputs selected by user
+pc_inputs <- reactive({
 
-#     ## one output with components stacked
-#     ss_output_panels <- tagList(
-#        tabPanel("Summary", verbatimTextOutput("summary_sample_size"))
-#     )
+  pc_dist <- input$pc_dist
+  if (is_empty(pc_dist) || pc_dist == "norm") {
+    pre <- "pc_"
+  } else if (pc_dist == "binom") {
+    pre <- "pcb_"
+  } else {
+    pre <- "pcu_"
+  }
 
-#     stat_tab_panel(menu = "Sample",
-#                   tool = "Sample size",
-#                   data = NULL,
-#                   tool_ui = "ui_sample_size",
-#                   output_panels = ss_output_panels)
-# })
+  # loop needed because reactive values don't allow single bracket indexing
+  args <- pc_args()
+  for (i in names(args)) {
+    args[[i]] <- input[[paste0(pre,i)]]
+  }
 
+  args[["dec"]] <- input$pc_dec
+
+  args
+})
+
+## output is called from the main radiant ui.R
 output$prob_calc <- renderUI({
 
     register_print_output("summary_prob_calc", ".summary_prob_calc")
     register_plot_output("plot_prob_calc", ".plot_prob_calc",
-                          width_fun = "pc_plot_width",
-                          height_fun = "pc_plot_height")
+                          height_fun = "pc_plot_height",
+                          width_fun = "pc_plot_width")
 
-    # one output with components stacked
+    ## two separate tabs
     pc_output_panels <- tagList(
-       tabPanel("Summary", verbatimTextOutput("summary_prob_calc")),
-       tabPanel("Plot", plotOutput("plot_prob_calc", height = "100%"))
+      tabPanel("Summary", verbatimTextOutput("summary_prob_calc")),
+      tabPanel("Plot",
+               plot_downloader("prob_calc", height = pc_plot_height()),
+               plotOutput("plot_prob_calc", width = "100%", height = "100%"))
     )
 
     stat_tab_panel(menu = "Sample",
                    tool = "Probability calculator",
-                  tool_ui = "ui_prob_calc",
-                  output_panels = pc_output_panels)
+                   data = NULL,
+                   tool_ui = "ui_prob_calc",
+                   output_panels = pc_output_panels)
 
+})
+
+pc_available <- reactive({
+
+  if (is_empty(input$pc_dist) || is_empty(input$pc_type)) {
+    ""
+  } else {
+    a <- "available"
+    if (input$pc_dist == "norm") {
+      if (is_not(input$pc_mean) || is_not(input$pc_stdev)) a <- ""
+    } else if (input$pc_dist == "binom") {
+      if (is_not(input$pcb_n) || is_not(input$pcb_p)) a <- ""
+    } else if (input$pc_dist == "unif") {
+      if (is_not(input$pcu_min) || is_not(input$pcu_max)) a <- ""
+    } else {
+      a <- ""
+    }
+    a
+  }
 })
 
 .prob_calc <- reactive({
-  1:10
-  # do.call(proc_calc, sm_inputs())
+  do.call(get(paste0("prob_",input$pc_dist)), pc_inputs())
 })
 
 .summary_prob_calc <- reactive({
-
-  # if (not_available(input$sm_var))
-  #   return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
-
-  # if (is.na(input$sm_comp_value))
-  #   return("Please choose a comparison value")
-
-  summary(.prob_calc())
+  if (pc_available() != "available") return(pc_available())
+  type <- if (is.null(input$pc_type)) "values" else input$pc_type
+  summary(.prob_calc(), type = type)
 })
 
 .plot_prob_calc <- reactive({
-
-  # if (not_available(input$sm_var))
-  #   return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
-
-  # if (is.na(input$sm_comp_value))
-  #   return("Please choose a comparison value")
-
-  # plot(.proc_calc(), shiny = TRUE)
-  plot(.prob_calc())
+  if (pc_available() != "available") return(pc_available())
+  type <- if (is.null(input$pc_type)) "values" else input$pc_type
+  plot(.prob_calc(), type = type, shiny = TRUE)
 })
 
-# observe({
-#   if (not_pressed(input$single_mean_report)) return()
-#   isolate({
-#     outputs <- c("summary","plot")
-#     inp_out <- list(plots = input$sm_plots) %>% list("",.)
-#     figs <- TRUE
-#     if (length(input$sm_plots) == 0) {
-#       figs <- FALSE
-#       outputs <- c("summary")
-#       inp_out <- list("","")
-#     }
-#     update_report(inp_main = clean_args(sm_inputs(), sm_args),
-#                   fun_name = "single_mean", inp_out = inp_out,
-#                   outputs = outputs, figs = figs,
-#                   fig.width = round(7 * sm_plot_width()/650,2),
-#                   fig.height = round(7 * sm_plot_height()/650,2))
-#   })
-# })
+observeEvent(input$prob_calc_report, {
+  isolate({
+    type <- input$pc_type
+    inp <- pc_inputs()
+    if (!is.null(type) && type == "probs") {
+      inp_out <- list(type = type) %>% list(.,.)
+      inp[["ub"]] <- inp[["lb"]] <- NA
+    } else {
+      inp_out <- list("","")
+      inp[["pub"]] <- inp[["plb"]] <- NA
+    }
+    outputs <- c("summary","plot")
+    update_report(inp_main = clean_args(inp, pc_args()),
+                  fun_name = paste0("prob_",input$pc_dist),
+                  inp_out = inp_out,
+                  outputs = outputs,
+                  figs = TRUE,
+                  fig.width = round(7 * pc_plot_width()/650,2),
+                  fig.height = round(7 * pc_plot_height()/650,2))
+  })
+})

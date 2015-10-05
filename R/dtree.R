@@ -251,9 +251,9 @@ dtree <- function(yl, opt = "max") {
     if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
   }
 
-  # err <- try(jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf), silent = TRUE)
-  jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf)
-  err <- ""
+  err <- try(jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf), silent = TRUE)
+  # jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf)
+  # err <- ""
 
   if (is(err, 'try-error')) {
     err <- paste0("**\nError calculating payoffs associated with a chance or decision node.\nPlease check that each terminal node has a payoff and that probabilities\nare correctly specificied\n**")
@@ -266,9 +266,9 @@ dtree <- function(yl, opt = "max") {
     x$decision <- names(po[po == x$payoff])
   }
 
-  jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision')
-  # err <- try(jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision'), silent = TRUE)
-  err <- ""
+  # jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision')
+  # err <- ""
+  err <- try(jl$Do(decision, filterFun = function(x) !is.null(x$type) && x$type == 'decision'), silent = TRUE)
 
   if (is(err, 'try-error')) {
     err <- paste0("**\nError calculating payoffs associated with a decision node. Please check\nthat each terminal node has a payoff\n**")
@@ -408,13 +408,6 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
     }
     paste0(" ", node$id, lbl)
   }
-
-  # style <- paste0(
-  #   "classDef default fill:none, bg:none, stroke-width:0px;
-  #   classDef chance fill:#FF8C00,stroke:#333,stroke-width:1px;
-  #   classDef decision fill:#9ACD32,stroke:#333,stroke-width:1px;
-  #   class ", paste(jl$Get("id", filterFun = function(x) x$type == "decision"), collapse = ","), " decision;
-  #   class ", paste(jl$Get("id", filterFun = function(x) x$type == "chance"), collapse = ","), " chance;")
 
   style_decision <- jl$Get("id", filterFun = function(x) x$type == "decision")
   if (is.null(style_decision)) style_decision <- "id_null"
