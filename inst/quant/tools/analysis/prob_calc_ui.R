@@ -39,7 +39,7 @@ output$ui_pc_binom <- renderUI({
         div(class="col-xs-6", numericInput("pcb_n", label = "n:",
                               value = state_init("pcb_n", 10)), min = 0),
         div(class="col-xs-6",numericInput("pcb_p", label = "p:", min = 0, max = 1,
-                             value = state_init("pcb_p", .5)))
+                             value = state_init("pcb_p", .2)))
     )
   )
 })
