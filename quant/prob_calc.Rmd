@@ -1,0 +1,8 @@
+---
+title: Base > Probability calculator
+---
+
+***
+
+```{r child='app/prob_calc.md'}
+```
