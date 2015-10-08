@@ -20,5 +20,6 @@ as_numeric(rnorm(10))
 as_numeric(letters)
 as_numeric(5:10 \%>\% as.factor)
 as.numeric(5:10 \%>\% as.factor)
+as_numeric(c("1","2"))
 }
 
