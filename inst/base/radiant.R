@@ -146,10 +146,10 @@ clean_args <- function(rep_args, rep_default = list()) {
   ## removing default arguments before sending to report feature
   for (i in names(rep_args)) {
     # if (is.na(rep_args[[i]])) || all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
-    if (is.na(rep_args[[i]])) {rep_args[[i]] <- NULL; next}
+    if (all(is.na(rep_args[[i]]))) {rep_args[[i]] <- NULL; next}
     # if (rep_default[[i]] == Inf || rep_default[[i]] == -Inf) next
     # if (is.symbol(rep_default[[i]])) next
-    if (!is.symbol(rep_default[[i]]) && is_not(rep_default[[i]])) next
+    if (!all(is.symbol(rep_default[[i]])) && all(is_not(rep_default[[i]]))) next
     # print(rep_default[[i]])
     # if (rep_default[[i]] == NA) next
     if (all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL

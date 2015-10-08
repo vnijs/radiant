@@ -200,13 +200,15 @@ as_integer <- function(x) {
 #' as_numeric(letters)
 #' as_numeric(5:10 %>% as.factor)
 #' as.numeric(5:10 %>% as.factor)
+#' as_numeric(c("1","2"))
 #'
 #' @export
 as_numeric <- function(x) {
 	if (is.factor(x)) {
 		levels(x) %>% .[x] %>% as.numeric
   } else if (is.character(x)) {
-    x
+    num <- sshhr( try(as.numeric(x), silent = TRUE))
+    if (length(na.omit(num)) == 0) x else num
 	} else {
     as.numeric(x)
 	}

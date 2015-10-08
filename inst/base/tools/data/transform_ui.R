@@ -261,13 +261,12 @@ output$ui_Transform <- renderUI({
                     store_dat = "",
                     store = TRUE) {
 
-  # rnm <- rnm %>% gsub("\\s","", .) %>% gsub(";",",", .)
-  rnm <- rnm %>% gsub("\\n","", .) %>% gsub(";",",", .)
+  rnm <- rnm %>% gsub("\\s","", .) %>% gsub(";",",", .)
   if (gsub("\\s","",rnm) != "") rnm <- unlist(strsplit(rnm, ",")) %>% .[1:min(length(.),length(var))]
 
   if (!store || !is.character(dataset)) {
     if (rnm[1] == "") return(dataset)
-    names(dataset)[1:length(rnm)] <- rnm
+    names(dataset)[1:length(rnm)] <- rnm %>% gsub("^\\s+|\\s+$", "", .)
     ## dplyr alternative has the same dplyr::changes result
     # rename_(dat, .dots = setNames(l2,l1))
     dataset
