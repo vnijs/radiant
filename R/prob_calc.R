@@ -275,7 +275,7 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
 		lb <- object$lb
 		ub <- object$ub
 	} else {
-		lb <- object$vub
+		lb <- object$vlb
 		ub <- object$vub
 	}
 
@@ -289,10 +289,11 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
   	k[ub+1] <- "equal"
     if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
   	k[0:n > ub] <- "above"
-  } else {
-  	# if (!is.na(lb)) {
+  } else if (!is.null(lb) && !is.na(lb)) {
   	k[lb+1] <- "equal"
   	k[0:n > lb] <- "above"
+  } else {
+  	return(invisible())
   }
 
   dat <- data.frame(
@@ -308,7 +309,6 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
   	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
   }
 
-  # cols <- c(below = "red", equal = "blue", above = "darkgreen")
   cols <- c(below = "red", equal = "blue", above = "black")
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
@@ -456,6 +456,20 @@ prob_unif <- function(min,
                       pub = NA,
                       dec = 3) {
 
+	if (min > max) {
+		lb <- ub <- plb <- pub <- NA
+    environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+  }
+
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- plb <- pub <- NA
+		} else {
+    	environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+    }
+  }
+
+
 	p_ub <- punif(ub, min, max)
 	p_lb <- punif(lb, min, max)
 	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -506,6 +520,8 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 	min <- object$min
 	max <- object$max
 
+	if (min > max) return(invisible())
+
   limits <- c(min, max)
   dunif_limit <- function(x) {
     y <- dunif(x, min = min, max = max)
@@ -515,11 +531,21 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
-	  stat_function(fun=dunif, args = list(min = min, max = max)) +
+	# plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
+	plt <- ggplot(data.frame(x=limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x="x")) +
+	  # stat_function(fun=dunif, args = list(min = min, max = max)) +
 	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2) +
 	  # geom_vline(xintercept = c(lb,ub), color = 'black', linetype = 'dashed', size = .5) +
-	  geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
+	  # geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
+	  # geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = dunif(x[1], x[1], x[2]))) +
+	  geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
+	  # geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
+	  geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = y[2])) +
+	  # geom_segment(aes(x = x[1], y = dunif(x[1], x[1], x[2]), xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
+	  geom_segment(aes(x = x[1], y = y[1], xend = x[2], yend = y[2])) +
+	  # geom_segment(aes(x = x[1], y = 0, xend = x[1] - abs(.05*(x[2]-x[1])), yend = 0)) +
+	  # geom_segment(aes(x = x[2], y = 0, xend = x[2] + abs(.05*(x[2]-x[1])), yend = 0)) +
+	  # geom_rect(aes(ymin = 0, ymax = y[1], xmin = lb, xmax = ub), fill = "blue", alpha = 0.2) +
 	  xlab("") + ylab("")
 
 
@@ -565,6 +591,11 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 	cat("Max        :", max, "\n")
 	cat("Mean       :", mean, "\n")
 	cat("St. dev    :", stdev, "\n")
+
+	if (min > max) {
+		cat("\nThe maximum value must be larger than the minimum value\n")
+		return(invisible())
+	}
 
 	if (type == "values") {
 		cat("Lower bound:", {if (is.na(lb)) min else lb}, "\n")
@@ -617,3 +648,15 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 		}
 	}
 }
+
+
+# set.seed(2710)
+
+# ## Figure 1
+# d <- rnorm(50)
+
+# plot(density(d)); rug(d)
+
+# ggplot(data=data.frame(value=d))+
+# 	stat_density(aes(x=value))+
+# 	geom_segment(aes(x=value,xend=value),y=0,yend=0.025,col='white')
