@@ -223,7 +223,7 @@ prob_binom <- function(n,
 	if (is.na(pub) || pub < 0) {
 		vub <- NA
 	} else {
-		if (pub > 1) plb <- 1
+		if (pub > 1) pub <- 1
 	  vub <- qbinom(pub, n, p)
 
 		vp_eub <- dbinom(vub, n, p) %>% round(dec)
@@ -384,8 +384,8 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 			}
 
 			if (!is.na(lb) && !is.na(ub)) {
-				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+				cat(paste0("P(", lb, " <= X <= ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " <= X <= ", ub,") = ", round(1 - p_int, dec), "\n"))
 		  }
 		}
 
@@ -416,8 +416,8 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 			}
 
 			if (!is.na(plb) && !is.na(pub)) {
-				cat(paste0("P(", vlb, " < X < ", vub,")     = ", vp_int, "\n"))
-				cat(paste0("1 - P(", vlb, " < X < ", vub,") = ", round(1 - vp_int, dec), "\n"))
+				cat(paste0("P(", vlb, " <= X <= ", vub,")     = ", vp_int, "\n"))
+				cat(paste0("1 - P(", vlb, " <= X <= ", vub,") = ", round(1 - vp_int, dec), "\n"))
 		  }
 		}
 	}
