@@ -27,6 +27,16 @@ prob_norm <- function(mean,
 	p_lb %<>% round(dec)
 	p_int %<>% round(dec)
 
+	if (!is.na(pub)) {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	}
+
+	if (!is.na(plb)) {
+		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
+	}
+
 	v_ub <- qnorm(pub, mean, stdev)
 	v_lb <- qnorm(plb, mean, stdev)
 
@@ -143,20 +153,20 @@ summary.prob_norm <- function(object, type = "values",  ...) {
 		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
 		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
 
-		if (pub < 1 || plb > 0) {
+		if (pub <= 1 || plb >= 0) {
 		  cat("\n")
 
-			if (plb > 0) {
+			if (plb >= 0) {
 				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
 				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
 			}
 
-			if (pub < 1) {
+			if (pub <= 1) {
 				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
 				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
 			}
 
-		  if (pub < 1 && plb > 0) {
+		  if (pub <= 1 && plb >= 0) {
 				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
 				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
 			}
@@ -209,10 +219,12 @@ prob_binom <- function(n,
 		p_int <- NA
 	}
 
-	if (is.na(plb) || plb < 0) {
+	# if (is.na(plb) || plb < 0) {
+	if (is.na(plb)) {
 		vlb <- NA
 	} else {
 		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
 	  vlb <- qbinom(plb, n, p)
 
 		vp_elb <- dbinom(vlb, n, p) %>% round(dec)
@@ -220,10 +232,12 @@ prob_binom <- function(n,
 	  vp_lb <- sum(dbinom(0:(vlb-1), n, p)) %>% round(dec)
 	}
 
-	if (is.na(pub) || pub < 0) {
+	# if (is.na(pub) || pub < 0) {
+	if (is.na(pub)) {
 		vub <- NA
 	} else {
 		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
 	  vub <- qbinom(pub, n, p)
 
 		vp_eub <- dbinom(vub, n, p) %>% round(dec)
@@ -233,8 +247,8 @@ prob_binom <- function(n,
 
 	if (!is.na(pub) && !is.na(plb)) {
 
-	  vub <- qbinom(pub, n, p)
-	  vlb <- qbinom(plb, n, p)
+	  # vub <- qbinom(pub, n, p)
+	  # vlb <- qbinom(plb, n, p)
 
 	  vp_int <- sum(dbinom(vlb:vub, n, p)) %>% max(0) %>% round(dec)
 	} else {
@@ -286,8 +300,6 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
     Probability = dbinom(limits, size = n, prob = p),
     k = k
   ) %>% filter(., .$Probability > 0.00001)
-
-  ?filter_
 
   if (nrow(dat) < 40) {
   	breaks <- dat$x
@@ -359,8 +371,8 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 
 
 	if (type == "values") {
-		cat("Lower bound:", if (is.na(lb)) "" else lb, "\n")
-		cat("Upper bound:", if (is.na(ub)) "" else ub, "\n")
+		cat("Lower bound:", {if (is.na(lb)) "" else lb}, "\n")
+		cat("Upper bound:", {if (is.na(ub)) "" else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
@@ -391,8 +403,8 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 
 	} else {
 
-		cat("Lower bound:", if (is.na(plb)) "" else paste0(plb, " (", vlb, ")\n"))
-		cat("Upper bound:", if (is.na(pub)) "" else paste0(pub, " (", vub, ")\n"))
+		cat("Lower bound:", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
+		cat("Upper bound:", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
 		if (!is.na(pub) || !is.na(plb)) {
 		  cat("\n")
@@ -450,6 +462,16 @@ prob_unif <- function(min,
 
 	p_ub %<>% round(dec)
 	p_lb %<>% round(dec)
+
+	if (!is.na(pub)) {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	}
+
+	if (!is.na(plb)) {
+		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
+	}
 
 	v_ub <- qunif(pub, min, max) %>% round(dec)
 	v_lb <- qunif(plb, min, max) %>% round(dec)
@@ -545,8 +567,8 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 	cat("St. dev    :", stdev, "\n")
 
 	if (type == "values") {
-		cat("Lower bound:", if (is.na(lb)) min else lb, "\n")
-		cat("Upper bound:", if (is.na(ub)) max else ub, "\n")
+		cat("Lower bound:", {if (is.na(lb)) min else lb}, "\n")
+		cat("Upper bound:", {if (is.na(ub)) max else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
@@ -574,21 +596,21 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
 		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
 
-		if (pub < 1 || plb > 0) {
+		if (pub <= 1 || plb >= 0) {
 		  # cat("\nValues:\n")
 		  cat("\n")
 
-			if (plb > 0) {
+			if (plb >= 0) {
 				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
 				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
 			}
 
-			if (pub < 1) {
+			if (pub <= 1) {
 				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
 				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
 			}
 
-		  if (pub < 1 && plb > 0) {
+		  if (pub <= 1 && plb >= 0) {
 				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
 				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
 			}
