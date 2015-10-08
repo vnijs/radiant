@@ -259,9 +259,11 @@ update_report_fun <- function(cmd) {
       } else {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
       }
+      shinyAce::updateAceEditor(session, "rmd_report",
+                                value = r_state$rmd_report)
     } else {
       shinyAce::updateAceEditor(session, "rmd_report",
-                      value = paste0(input$rmd_report,"\n",cmd))
+                                value = paste0(input$rmd_report,"\n",cmd))
     }
   }
 
