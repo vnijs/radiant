@@ -7,7 +7,7 @@
 \method{summary}{prob_unif}(object, type = "values", ...)
 }
 \arguments{
-\item{object}{Return value from \code{\link{prob_norm}}}
+\item{object}{Return value from \code{\link{prob_unif}}}
 
 \item{type}{Probabilities or values}
 

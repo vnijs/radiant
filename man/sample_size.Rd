@@ -5,7 +5,7 @@
 \title{Sample size calculation}
 \usage{
 sample_size(type = "mean", err_mean = 2, sd_mean = 10, err_prop = 0.1,
-  p_prop = 0.5, zval = 1.96, incidence = 1, response = 1,
+  p_prop = 0.5, conf_lev = 1.96, incidence = 1, response = 1,
   pop_correction = "no", pop_size = 1000000)
 }
 \arguments{
@@ -19,7 +19,7 @@ sample_size(type = "mean", err_mean = 2, sd_mean = 10, err_prop = 0.1,
 
 \item{p_prop}{Initial proportion estimate for Proportion}
 
-\item{zval}{Z-value}
+\item{conf_lev}{Confidence level}
 
 \item{incidence}{Incidence rate (i.e., fraction of valid respondents)}
 
