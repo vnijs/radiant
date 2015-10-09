@@ -43,9 +43,12 @@ single_prop <- function(dataset, var,
 	n <- nrow(dat)
 	ns <- sum(dat == lev)
 
+	# res <- prop.test(ns, n, p = comp_value, alternative = alternative,
+	#                  conf.level = conf_lev, correct = FALSE) %>% tidy
+
 	## use binom.test for exact
-	res <- prop.test(ns, n, p = comp_value, alternative = alternative,
-	                 conf.level = conf_lev, correct = FALSE) %>% tidy
+	res <- binom.test(ns, n, p = comp_value, alternative = alternative,
+	                  conf.level = conf_lev) %>% tidy
 
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }
@@ -68,7 +71,7 @@ single_prop <- function(dataset, var,
 #' @export
 summary.single_prop <- function(object, ...) {
 
-  cat("Single proportion test\n")
+  cat("Single proportion test (binomial exact)\n")
 	cat("Data      :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
@@ -90,11 +93,18 @@ summary.single_prop <- function(object, ...) {
 		round(1) %>%
 		paste0(.,"%") -> ci_perc
 
+	# res <- round(object$res, 3) 	## restrict to 3 decimal places
+	# res$ns <- object$ns
+	# res$n <- object$n
+	# names(res) <- c("prop","chisq.value","p.value","df", ci_perc[1], ci_perc[2],
+	# 								"ns","n")
+
 	res <- round(object$res, 3) 	## restrict to 3 decimal places
+	res$statistic <- NULL
 	res$ns <- object$ns
 	res$n <- object$n
-	names(res) <- c("prop","chisq.value","p.value","df", ci_perc[1], ci_perc[2],
-									"ns","n")
+	names(res) <- c("prop","p.value","df", ci_perc[1], ci_perc[2], "ns","n")
+
 	if (res$p.value < .001) res$p.value <- "< .001"
 
 	print(res, row.names = FALSE)

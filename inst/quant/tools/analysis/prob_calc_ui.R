@@ -1,5 +1,28 @@
-pc_dist <- c("Normal" = "norm", "Binomial" = "binom", "Uniform" = "unif")
+pc_dist <- c("Normal" = "norm", "Binomial" = "binom", "Uniform" = "unif", "t" = "tdist")
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
+
+output$ui_pc_tdist <- renderUI({
+  numericInput("pct_df", label = "Degrees of freedom:", value = state_init("pct_df", 2), min = 2)
+})
+
+output$ui_pc_input_tdist <- renderUI({
+
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pct_lb", label = "Lower bound:",
+                              value = state_init("pct_lb", -Inf))),
+        div(class="col-xs-6",numericInput("pct_ub", label = "Upper bound:",
+                             value = state_init("pct_ub", Inf)))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pct_plb", label = "Lower bound:",
+                              value = state_init("pct_plb", .025))),
+        div(class="col-xs-6",numericInput("pct_pub", label = "Upper bound:",
+                             value = state_init("pct_pub", 0.975)))
+    )
+  }
+})
 
 output$ui_pc_norm <- renderUI({
   tagList(
@@ -32,6 +55,7 @@ output$ui_pc_input_norm <- renderUI({
     )
   }
 })
+
 
 output$ui_pc_binom <- renderUI({
   tagList(
@@ -111,6 +135,9 @@ output$ui_prob_calc <- renderUI({
       ),
       conditionalPanel("input.pc_dist == 'unif'",
         uiOutput("ui_pc_unif")
+      ),
+      conditionalPanel("input.pc_dist == 'tdist'",
+        uiOutput("ui_pc_tdist")
       )
     ),
     wellPanel(
@@ -125,6 +152,9 @@ output$ui_prob_calc <- renderUI({
       ),
       conditionalPanel("input.pc_dist == 'unif'",
         uiOutput("ui_pc_input_unif")
+      ),
+      conditionalPanel("input.pc_dist == 'tdist'",
+        uiOutput("ui_pc_input_tdist")
       ),
       numericInput("pc_dec", label = "Decimals:",
                    value = state_init("pc_dec", 3), min = 0)
@@ -144,8 +174,10 @@ pc_args <- reactive({
     as.list(formals(prob_norm))
   } else if (pc_dist == "binom") {
     as.list(formals(prob_binom))
-  } else {
+  } else if (pc_dist == "unif") {
     as.list(formals(prob_unif))
+  } else if (pc_dist == "tdist") {
+    as.list(formals(prob_tdist))
   }
 })
 
@@ -157,8 +189,10 @@ pc_inputs <- reactive({
     pre <- "pc_"
   } else if (pc_dist == "binom") {
     pre <- "pcb_"
-  } else {
+  } else if (pc_dist == "unif") {
     pre <- "pcu_"
+  } else if (pc_dist == "tdist") {
+    pre <- "pct_"
   }
 
   # loop needed because reactive values don't allow single bracket indexing
@@ -188,7 +222,7 @@ output$prob_calc <- renderUI({
                plotOutput("plot_prob_calc", width = "100%", height = "100%"))
     )
 
-    stat_tab_panel(menu = "Sample",
+    stat_tab_panel(menu = "Base",
                    tool = "Probability calculator",
                    data = NULL,
                    tool_ui = "ui_prob_calc",
@@ -208,6 +242,8 @@ pc_available <- reactive({
       if (is_not(input$pcb_n) || is_not(input$pcb_p)) a <- ""
     } else if (input$pc_dist == "unif") {
       if (is_not(input$pcu_min) || is_not(input$pcu_max)) a <- ""
+    } else if (input$pc_dist == "tdist") {
+      if (is_not(input$pct_df)) a <- ""
     } else {
       a <- ""
     }

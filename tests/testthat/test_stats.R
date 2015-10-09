@@ -39,25 +39,25 @@ test_that("compare_props 2", {
   expect_equal(res1,res2)
 })
 
-context("Single proportion")
+# context("Single proportion")
+#
+# test_that("single_prop 1", {
+#   result <- single_prop("diamonds", "color")
+#   expect_equal(result$lev, "D")
+#   res1 <- capture.output(summary(result))[9] %>% trim
+#   # cat(paste0(res1, "\n"))
+#   res2 <- "0.127    1666.565  < .001  1 0.116  0.14 382 3000"
+#   expect_equal(res1,res2)
+# })
 
-test_that("single_prop 1", {
-  result <- single_prop("diamonds", "color")
-  expect_equal(result$lev, "D")
-  res1 <- capture.output(summary(result))[9] %>% trim
-  # cat(paste0(res1, "\n"))
-  res2 <- "0.127    1666.565  < .001  1 0.116  0.14 382 3000"
-  expect_equal(res1,res2)
-})
-
-test_that("single_prop 2", {
-  result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
-  expect_equal(result$lev, "IF")
-  res1 <- capture.output(summary(result))[9] %>% trim
-  # cat(paste0(res1, "\n"))
-  res2 <- "0.033      18.253  < .001  1 0.027  0.04 99 3000"
-  expect_equal(res1,res2)
-})
+# test_that("single_prop 2", {
+#   result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
+#   expect_equal(result$lev, "IF")
+#   res1 <- capture.output(summary(result))[9] %>% trim
+#   # cat(paste0(res1, "\n"))
+#   res2 <- "0.033      18.253  < .001  1 0.027  0.04 99 3000"
+#   expect_equal(res1,res2)
+# })
 
 context("Regression")
 

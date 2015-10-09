@@ -56,10 +56,13 @@ output$ui_single_prop <- renderUI({
     		value = state_init('sp_conf_lev', sp_args$conf_lev), step = 0.01),
       numericInput("sp_comp_value", "Comparison value:",
                    state_init('sp_comp_value', sp_args$comp_value),
-                   min = 0.01, max = 0.99, step = 0.01)),
-
+                   min = 0.01, max = 0.99, step = 0.01)
+      # radioButtons("sp_type", label = "Test:", c("Binomial" = "binom", "Chi-square" = "chisq"),
+      #     selected = state_init("sp_type", "binom"),
+      #     inline = TRUE)
+    ),
     help_and_report(modal_title = 'Single proportion',
-  	                fun_name = 'single_prop',
+                    fun_name = 'single_prop',
                     help_file = inclMD(file.path(r_path,"quant/tools/help/single_prop.md")))
   )
 })
@@ -104,7 +107,7 @@ output$single_prop <- renderUI({
   if (not_available(input$sp_var))
     return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
 
- if (input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
+ if (input$sp_comp_value %>% { is.na(.) | . > 1 | . <= 0 })
     return("Please choose a comparison value between 0 and 1")
 
   summary(.single_prop())

@@ -7,7 +7,7 @@
 #' @param sd_mean Standard deviation for Mean
 #' @param err_prop Acceptable Error for Proportion
 #' @param p_prop Initial proportion estimate for Proportion
-#' @param zval Z-value
+#' @param conf_lev Confidence level
 #' @param incidence Incidence rate (i.e., fraction of valid respondents)
 #' @param response Response rate
 #' @param pop_correction Apply correction for population size ("yes","no")
@@ -25,11 +25,22 @@ sample_size <- function(type = "mean",
                         sd_mean = 10,
                         err_prop = .1,
                         p_prop = .5,
-                        zval = 1.96,
+                        # conf_lev = .95,
+                        conf_lev = 1.96,
                         incidence = 1,
                         response = 1,
                         pop_correction = "no",
                         pop_size = 1000000) {
+
+	# if (is.na(conf_lev) || is.null(conf_lev) || conf_lev < 0 || conf_lev > 1)
+	# 	conf_lev <- .95
+
+	# zval <- qnorm(conf_lev + (1 - conf_lev)/2, 0, 1)
+
+	if (is.na(conf_lev) || is.null(conf_lev) || conf_lev < 0)
+		conf_lev <- 1.96
+
+	zval <- conf_lev
 
 	if (type == 'mean') {
 		if (is.na(err_mean)) return("Please select an error value greater 0.")
@@ -76,7 +87,8 @@ summary.sample_size <- function(object, ...) {
 		cat("Sample proportion    :", object$p_prop, "\n")
 	}
 
-	cat("Confidence level     :", object$zval, "\n")
+	# cat("Confidence level     :", object$zval, "\n")
+	cat("Confidence level     :", object$conf_lev, "\n")
 	cat("Incidence rate       :", object$incidence, "\n")
 	cat("Response rate        :", object$response, "\n")
 

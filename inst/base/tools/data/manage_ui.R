@@ -118,6 +118,7 @@ output$ui_Manage <- renderUI({
 observeEvent(input$updateDescr, {
   isolate({
     r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
+    attr(r_data[[input$dataset]],"description") <- input$man_data_descr
     updateCheckboxInput(session = session, "man_add_descr",
                         "Add/edit data description", FALSE)
   })
