@@ -392,7 +392,10 @@ prob_binom <- function(n,
 		if (lb > n) lb <- n
 		p_elb <- dbinom(lb, n, p) %>% round(dec)
 		p_lelb <- pbinom(lb, n, p) %>% round(dec)
-	  p_lb <- sum(dbinom(0:(lb-1), n, p)) %>% round(dec)
+		if (lb > 0)
+	    p_lb <- sum(dbinom(0:max((lb-1),0), n, p)) %>% round(dec)
+	  else
+	  	p_lb <- 0
 	}
 
 	if (is.na(ub) || ub < 0) {
@@ -401,7 +404,10 @@ prob_binom <- function(n,
 		if (ub > n) ub <- n
 		p_eub <- dbinom(ub, n, p) %>% round(dec)
 		p_leub <- pbinom(ub, n, p) %>% round(dec)
-		p_ub <- sum(dbinom(0:(ub-1), n, p)) %>% round(dec)
+		if (ub > 0)
+		  p_ub <- sum(dbinom(0:max((ub-1),0), n, p)) %>% round(dec)
+		else
+			p_ub <- 0
 	}
 
 	if (!is.na(ub) && !is.na(lb)) {
@@ -420,7 +426,10 @@ prob_binom <- function(n,
 
 		vp_elb <- dbinom(vlb, n, p) %>% round(dec)
 		vp_lelb <- pbinom(vlb, n, p) %>% round(dec)
-	  vp_lb <- sum(dbinom(0:(vlb-1), n, p)) %>% round(dec)
+		if (vlb > 0)
+	    vp_lb <- sum(dbinom(0:max((vlb-1),0), n, p)) %>% round(dec)
+	  else
+	  	vp_lb <- 0
 	}
 
 	# if (is.na(pub) || pub < 0) {
@@ -433,14 +442,13 @@ prob_binom <- function(n,
 
 		vp_eub <- dbinom(vub, n, p) %>% round(dec)
 		vp_leub <- pbinom(vub, n, p) %>% round(dec)
-		vp_ub <- sum(dbinom(0:(vub-1), n, p)) %>% round(dec)
+		if (vub > 0)
+		  vp_ub <- sum(dbinom(0:max((vub-1),0), n, p)) %>% round(dec)
+		else
+			vp_ub <- 0
 	}
 
 	if (!is.na(pub) && !is.na(plb)) {
-
-	  # vub <- qbinom(pub, n, p)
-	  # vlb <- qbinom(plb, n, p)
-
 	  vp_int <- sum(dbinom(vlb:vub, n, p)) %>% max(0) %>% round(dec)
 	} else {
 		vp_int <- NA
@@ -567,21 +575,33 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 		  cat("\n")
 
 			if (!is.na(lb)) {
-				if (lb > 0)
-					cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
 				cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
-				cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
-				if (lb < n)
+				if (lb > 0) {
+					cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
+				  cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+				}
+				if (lb < n) {
 				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+					# if (lb > 0)
+				  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
+				  # else
+				  	# cat(paste0("P(X >= ", lb,") = ", 1, "\n"))
+				}
 			}
 
 			if (!is.na(ub)) {
-				if (ub > 0)
-					cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
 				cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
-				cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
-				if (ub < n)
+				if (ub > 0) {
+					cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
+				  cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+				}
+				if (ub < n) {
 				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+				  # if (ub > 0)
+				  	cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
+				  # else
+				  	# cat(paste0("P(X >= ", ub,") = ", 1, "\n"))
+				}
 			}
 
 			if (!is.na(lb) && !is.na(ub)) {
@@ -599,21 +619,33 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 		  cat("\n")
 
 			if (!is.na(plb)) {
-				if (vlb > 0)
-					cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
 				cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
-				cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
-				if (vlb < n)
+				if (vlb > 0) {
+					cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
+				  cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+				}
+				if (vlb < n) {
 				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+				  # if (vlb > 0)
+				  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
+				  # else
+				  	# cat(paste0("P(X >= ", vlb,") = ", 1, "\n"))
+				}
 			}
 
 			if (!is.na(pub)) {
-				if (vub > 0)
-					cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
 				cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
-				cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
-				if (vub < n)
+				if (vub > 0) {
+					cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
+				  cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+				}
+				if (vub < n) {
 				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+				  # if (vub > 0)
+				    cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
+				  # else
+				    # cat(paste0("P(X >= ", vub,") = ", 1, "\n"))
+				}
 			}
 
 			if (!is.na(plb) && !is.na(pub)) {
