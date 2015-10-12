@@ -43,6 +43,20 @@ prob_norm <- function(mean,
 	v_ub %<>% round(dec)
 	v_lb %<>% round(dec)
 
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  if (!is.na(plb) && !is.na(pub)) {
+		if (plb > pub) {
+			plb <- pub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
   environment() %>% as.list %>% set_class(c("prob_norm",class(.)))
 }
 
@@ -58,7 +72,11 @@ prob_norm <- function(mean,
 #' @export
 plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
+
 	object <- x; rm(x)
+
 	if (type == "values") {
 		lb <- object$lb
 		ub <- object$ub
@@ -71,20 +89,46 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 	stdev <- object$stdev
 
   limits <- c(mean - 3*stdev, mean + 3*stdev)
+
+  # if (!is.null(ub) && !is.na(ub)) limits <- sort(c(limits, ub))
+  # if (!is.null(lb) && !is.na(lb)) limits <- sort(c(limits, lb))
+
   dnorm_limit <- function(x) {
+  	# print(x)
+  	# print(ub)
     y <- dnorm(x, mean = mean, sd = stdev)
     y[x < lb | x > ub] <- NA
     y
   }
 
+  dnorm_lb <- function(x) {
+  	if (is.na(lb)) return(0)
+    y <- dnorm(x, mean = mean, sd = stdev)
+    # y[x >= lb] <- NA
+    y[x > lb] <- NA
+    y
+  }
+
+  dnorm_ub <- function(x) {
+  	if (is.na(ub)) return(0)
+    y <- dnorm(x, mean = mean, sd = stdev)
+    # y[x <= ub] <- NA
+    y[x < ub] <- NA
+    y
+  }
+
+  dnorm_lines <- c(ub,lb) %>% na.omit
+  if (length(dnorm_lines) == 0) dnorm_lines <- c(-Inf, Inf)
+
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
 	plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
 	  stat_function(fun=dnorm, args = list(mean = mean, sd = stdev)) +
-	  stat_function(fun=dnorm_limit, geom="area", fill="blue", alpha=0.2) +
-	  # geom_vline(xintercept = c(lb,ub), color = 'black', linetype = 'dashed', size = .5) +
+	  stat_function(fun=dnorm_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
+	  stat_function(fun=dnorm_lb, geom="area", fill="red", alpha=0.2, n = 501) +
+	  stat_function(fun=dnorm_ub, geom="area", fill="red", alpha=0.2, n = 501) +
+	  geom_vline(xintercept = dnorm_lines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
-
 
    if (shiny) plt else print(plt)
 }
@@ -122,6 +166,9 @@ summary.prob_norm <- function(object, type = "values",  ...) {
   cat("Distribution: Normal\n")
 	cat("Mean        :", mean, "\n")
 	cat("St. dev     :", stdev, "\n")
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
 		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
@@ -193,11 +240,6 @@ prob_tdist <- function(df,
                        pub = NA,
                        dec = 3) {
 
-	# ub <- 1
-	# mean <- 0
-	# stdev <- 1
-	# df <- 1000
-
 	p_ub <- pt(ub, df)
 	p_lb <- pt(lb, df)
 	p_int <- max(p_ub - p_lb, 0)
@@ -222,6 +264,20 @@ prob_tdist <- function(df,
 	v_ub %<>% round(dec)
 	v_lb %<>% round(dec)
 
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  if (!is.na(plb) && !is.na(pub)) {
+		if (plb > pub) {
+			plb <- pub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
   environment() %>% as.list %>% set_class(c("prob_tdist",class(.)))
 }
 
@@ -237,6 +293,9 @@ prob_tdist <- function(df,
 #' @export
 plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
 
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
+
 	object <- x; rm(x)
 	if (type == "values") {
 		lb <- object$lb
@@ -251,30 +310,35 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- c(-3, 3)
   dt_limit <- function(x) {
     y <- dt(x, df = df)
-    y[x <= lb | x >= ub] <- NA
+    y[x < lb | x > ub] <- NA
     y
   }
 
   dt_lb <- function(x) {
+  	if (is.na(lb)) return(0)
     y <- dt(x, df = df)
-    y[x >= lb] <- NA
+    y[x > lb] <- NA
     y
   }
 
   dt_ub <- function(x) {
+  	if (is.na(ub)) return(0)
     y <- dt(x, df = df)
-    y[x <= ub] <- NA
+    y[x < ub] <- NA
     y
   }
+
+  dt_lines <- c(ub,lb) %>% na.omit
+  if (length(dt_lines) == 0) dt_lines <- c(-Inf, Inf)
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
 	plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
 	  stat_function(fun=dt, args = list(df = df)) +
-	  stat_function(fun=dt_limit, geom="area", fill="blue", alpha=0.2) +
-	  stat_function(fun=dt_lb, geom="area", fill="red", alpha=0.2) +
-	  stat_function(fun=dt_ub, geom="area", fill="red", alpha=0.2) +
-	  geom_vline(xintercept = c(lb,ub), color = 'black', linetype = 'dashed', size = .5) +
+	  stat_function(fun=dt_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
+	  stat_function(fun=dt_lb, geom="area", fill="red", alpha=0.2, n = 501) +
+	  stat_function(fun=dt_ub, geom="area", fill="red", alpha=0.2, n = 501) +
+	  geom_vline(xintercept = dt_lines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
 
    if (shiny) plt else print(plt)
@@ -295,6 +359,7 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
 	# suppressMessages(attach(object))
 
 	df <- object$df
+	n <- df + 1
 	dec <- object$dec
 
 	ub <- object$ub
@@ -309,9 +374,22 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
 	v_ub <- object$v_ub
 	v_lb <- object$v_lb
 
+
+	# - FIX COLORS (OVERLAP) AND ALLOW EASY 2-SIDED INPUT
+	# - ADD Chi-square
+	# - ADD F-test
+	# - Standard practice is to standardize the test-statistic so we can compare it
+	# to a distribution and determine probabilities of getting a value that size by-chance
+
+
   cat("Probability calculator\n")
   cat("Distribution: t\n")
 	cat("Df          :", df, "\n")
+	cat("Mean        :", 0, "\n")
+	cat("St. dev     :", {if (n > 2) round(n/(n-2),3) else "NA"}, "\n")
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
 		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
@@ -454,6 +532,21 @@ prob_binom <- function(n,
 		vp_int <- NA
 	}
 
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  if (!is.na(vlb) && !is.na(vub)) {
+		if (vlb > vub) {
+			plb <- pub <- vlb <- vub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+
   environment() %>% as.list %>% set_class(c("prob_binom",class(.)))
 }
 
@@ -468,6 +561,9 @@ prob_binom <- function(n,
 #'
 #' @export
 plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
+
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
 
 	object <- x; rm(x)
 	if (type == "values") {
@@ -566,6 +662,9 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 	cat("p          :", p, "\n")
 	cat("Mean       :", n*p, "\n")
 	cat("St. dev    :", sqrt(n*p*(1-p)) %>% round(dec), "\n")
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
 		cat("Lower bound:", {if (is.na(lb)) "" else lb}, "\n")
@@ -677,19 +776,26 @@ prob_unif <- function(min,
                       pub = NA,
                       dec = 3) {
 
-	if (min > max) {
-		lb <- ub <- plb <- pub <- NA
-    environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
-  }
+	# if (min > max) {
+	# 	lb <- ub <- plb <- pub <- NA
+ #    # environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+ #    # return("Max larger than min" %>% set_class(c("prob_unif",class(.))))
+	# 	mess <- "\nPlease ensure the minimum value is smaller than the maximum value"
+ #  }
 
 	if (!is.na(lb) && !is.na(ub)) {
 		if (lb > ub) {
-			lb <- ub <- plb <- pub <- NA
-		} else {
-    	environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
-    }
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
   }
 
+  if (!is.na(plb) && !is.na(pub)) {
+		if (plb > pub) {
+			plb <- pub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
 
 	p_ub <- punif(ub, min, max)
 	p_lb <- punif(lb, min, max)
@@ -729,6 +835,9 @@ prob_unif <- function(min,
 #' @export
 plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
+
 	object <- x; rm(x)
 	if (type == "values") {
 		lb <- object$lb
@@ -750,13 +859,32 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
     y
   }
 
+  dunif_lb <- function(x) {
+  	if (is.na(lb)) return(0)
+    y <- dunif(x, min = min, max = max)
+    y[x > lb] <- NA
+    y
+  }
+
+  dunif_ub <- function(x) {
+  	if (is.na(ub)) return(0)
+    y <- dunif(x, min = min, max = max)
+    y[x < ub] <- NA
+    y
+  }
+
+  dunif_lines <- c(ub,lb) %>% na.omit %>% setdiff(c(min,max))
+  if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
+
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
 	# plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
 	plt <- ggplot(data.frame(x=limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x="x")) +
 	  # stat_function(fun=dunif, args = list(min = min, max = max)) +
-	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2) +
-	  # geom_vline(xintercept = c(lb,ub), color = 'black', linetype = 'dashed', size = .5) +
+	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
+	  stat_function(fun=dunif_lb, geom="area", fill="red", alpha=0.2, n = 501) +
+	  stat_function(fun=dunif_ub, geom="area", fill="red", alpha=0.2, n = 501) +
+	  geom_vline(xintercept = dunif_lines, color = 'black', linetype = 'dashed', size = .5) +
 	  # geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
 	  # geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = dunif(x[1], x[1], x[2]))) +
 	  geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
@@ -768,7 +896,6 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 	  # geom_segment(aes(x = x[2], y = 0, xend = x[2] + abs(.05*(x[2]-x[1])), yend = 0)) +
 	  # geom_rect(aes(ymin = 0, ymax = y[1], xmin = lb, xmax = ub), fill = "blue", alpha = 0.2) +
 	  xlab("") + ylab("")
-
 
    if (shiny) plt else print(plt)
 }
@@ -813,10 +940,18 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 	cat("Mean       :", mean, "\n")
 	cat("St. dev    :", stdev, "\n")
 
-	if (min > max) {
-		cat("\nThe maximum value must be larger than the minimum value\n")
-		return(invisible())
-	}
+	# if (is.null(min) || is.na(min) || is.null(max) || is.na(max)) {
+	# 	cat("\nPlease specify both a minimum and maximum value\n")
+	# 	return(invisible())
+	# }
+
+	# if (min > max) {
+	# 	cat("\nThe maximum value must be larger than the minimum value\n")
+	# 	return(invisible())
+	# }
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
 		cat("Lower bound:", {if (is.na(lb)) min else lb}, "\n")

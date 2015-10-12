@@ -179,6 +179,40 @@ factorizer <- function(dat, safx = 20) {
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
 
+#' Load an rda file and add it to the radiant data list (r_data)
+#'
+#' @param fn File name string
+#' @param ext File extension ("rda" is the default)
+#'
+#' @return Data.frame in r_data
+#'
+#' @export
+loadrda <- function(fn, ext = "rda") {
+
+  filename <- basename(fname)
+  ## objname is used as the name of the data.frame
+  objname <- sub(paste0(".",ext,"$"),"", filename)
+
+  ## if ext isn't in the filename nothing was replaced and so ...
+  if (objname == filename) {
+    fext <- tools::file_ext(filename) %>% tolower
+    message(paste0("### The filename extension (",fext,") does not match the one expected (",ext,"). Please specify the file extension used for the r-data file"))
+    return()
+  }
+
+  ## objname will hold the name of the object(s) inside the R datafile
+  robjname <- try(load(uFile), silent = TRUE)
+  if (is(robjname, 'try-error')) {
+    message("### There was an error loading the data. Please make sure the data are in r-data format and the correct file extension has been specified.")
+  } else {
+    if (exists("r_data") && length(robjname == 1)) {
+      r_data[[objname]] <<- as.data.frame(get(robjname))
+      r_data[[paste0(objname,"_descr")]] <<- attr(r_data[[objname]], "description")
+      r_data[['datasetlist']] <<- c(objname, r_data[['datasetlist']]) %>% unique
+    }
+  }
+}
+
 #' Load a csv file with read.csv and read_csv
 #'
 #' @param fn File name string

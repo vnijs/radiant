@@ -6,6 +6,7 @@ quant_ui <- tagList(
 
   navbarMenu("Base",
     tabPanel("Probability calculator", uiOutput("prob_calc")),
+    tabPanel("Central Limit Theorem", uiOutput("clt")),
     tabPanel("Single mean", uiOutput("single_mean")),
     tabPanel("Compare means", uiOutput("compare_means")),
     tabPanel("Single proportion", uiOutput("single_prop")),
