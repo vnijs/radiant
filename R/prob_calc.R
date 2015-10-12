@@ -90,12 +90,7 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 
   limits <- c(mean - 3*stdev, mean + 3*stdev)
 
-  # if (!is.null(ub) && !is.na(ub)) limits <- sort(c(limits, ub))
-  # if (!is.null(lb) && !is.na(lb)) limits <- sort(c(limits, lb))
-
   dnorm_limit <- function(x) {
-  	# print(x)
-  	# print(ub)
     y <- dnorm(x, mean = mean, sd = stdev)
     y[x < lb | x > ub] <- NA
     y
@@ -104,7 +99,6 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
   dnorm_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dnorm(x, mean = mean, sd = stdev)
-    # y[x >= lb] <- NA
     y[x > lb] <- NA
     y
   }
@@ -112,7 +106,6 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
   dnorm_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dnorm(x, mean = mean, sd = stdev)
-    # y[x <= ub] <- NA
     y[x < ub] <- NA
     y
   }
@@ -143,8 +136,6 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 #'
 #' @export
 summary.prob_norm <- function(object, type = "values",  ...) {
-
-	# suppressMessages(attach(object))
 
 	mean <- object$mean
 	stdev <- object$stdev
@@ -356,8 +347,6 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
 #' @export
 summary.prob_tdist <- function(object, type = "values",  ...) {
 
-	# suppressMessages(attach(object))
-
 	df <- object$df
 	n <- df + 1
 	dec <- object$dec
@@ -373,14 +362,6 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
 
 	v_ub <- object$v_ub
 	v_lb <- object$v_lb
-
-
-	# - FIX COLORS (OVERLAP) AND ALLOW EASY 2-SIDED INPUT
-	# - ADD Chi-square
-	# - ADD F-test
-	# - Standard practice is to standardize the test-statistic so we can compare it
-	# to a distribution and determine probabilities of getting a value that size by-chance
-
 
   cat("Probability calculator\n")
   cat("Distribution: t\n")

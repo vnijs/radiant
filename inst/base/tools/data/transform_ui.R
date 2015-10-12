@@ -240,7 +240,8 @@ output$ui_Transform <- renderUI({
                     store = TRUE) {
 
   # cmd <- cmd %>% gsub("\\s","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
-  cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
+  # cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
+  cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   if (is_empty(rcname)) rcname <- paste0(var, "_rc")
 
   if (!store || !is.character(dataset)) {
