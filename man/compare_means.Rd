@@ -5,8 +5,8 @@
 \title{Compare means for two or more variables}
 \usage{
 compare_means(dataset, var1, var2, samples = "independent",
-  alternative = "two.sided", conf_lev = 0.95, adjust = "none",
-  test = "t", data_filter = "")
+  alternative = "two.sided", conf_lev = 0.95, comb = "",
+  adjust = "none", test = "t", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -20,6 +20,8 @@ compare_means(dataset, var1, var2, samples = "independent",
 \item{alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
 
 \item{conf_lev}{Span of the confidence interval}
+
+\item{comb}{Combinations to evaluate}
 
 \item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
