@@ -72,7 +72,13 @@ compare_means <- function(dataset, var1, var2,
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1","group2")
 
-	if (!is_empty(comb)) cmb <- cmb[comb, ]
+	if (!is_empty(comb)) {
+		if (all(comb %in% rownames(cmb))) {
+			cmb <- cmb[comb, ]
+		} else {
+			cmb <- cmb[1,]
+  	}
+	}
 
   res <- as.data.frame(matrix(nrow = nrow(cmb), ncol = 3))
   colnames(res) <- c("t.value", "p.value")
@@ -133,6 +139,9 @@ compare_means <- function(dataset, var1, var2,
 summary.compare_means <- function(object, ...) {
 
 	if (is.character(object)) return(object)
+
+	# print(object$cmb)
+	# print(object$comb)
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")

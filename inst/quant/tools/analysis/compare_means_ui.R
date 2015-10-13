@@ -63,15 +63,24 @@ output$ui_cm_var2 <- renderUI({
 })
 
 output$ui_cm_comb <- renderUI({
-  if (not_available(input$cm_var1)) levs <- c()
-  else levs <- .getdata()[1,input$cm_var1] %>% as.factor %>% levels
-  if (length(levs) < 3) return()
+  if (not_available(input$cm_var1)) return()
 
-  cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
+  if (.getclass()[[input$cm_var1]] == "factor")
+    levs <- .getdata()[1,input$cm_var1] %>% as.factor %>% levels
+  else
+    levs <- c(input$cm_var1, input$cm_var2)
+
+  if (length(levs) > 2) {
+    cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
+  } else {
+    # updateSelectInput(session = session, inputId = "cm_comb", selected = NULL)
+    # r_state[["cm_comb"]] <- NULL
+    return()
+  }
 
   selectizeInput("cm_comb", label = "Choose combinations:",
     choices = cmb,
-    selected = state_single("cm_comb",cmb, cmb[1]),
+    selected = state_multiple("cm_comb", cmb, cmb[1]),
     multiple = TRUE,
     options = list(plugins = list('remove_button', 'drag_drop')))
 })
@@ -164,6 +173,24 @@ output$compare_means <- renderUI({
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if (input$cm_var1 %in% input$cm_var2) return(" ")
 
+  # if (!is_empty(input$cm_comb)){
+  #   if (.getclass()[[input$cm_var1]] == "factor")
+  #     levs <- .getdata()[1,input$cm_var1] %>% as.factor %>% levels
+  #   else
+  #     levs <- c(input$cm_var1, input$cm_var2)
+
+  #   if (length(levs) > 2)
+  #     cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
+  #   else
+  #     cmb <- c()
+  #   print(cmb)
+  #   print(input$cm_comb)
+  #   if (!all(input$cm_comb %in% cmb)) {
+  #     if (length(cmb) > 0) cmb <- cmb[1]
+  #     # updateSelectInput(session = session, inputId = "cm_comb", selected = cmb)
+  #   }
+  # }
+
   summary(.compare_means())
 })
 
@@ -176,6 +203,15 @@ output$compare_means <- renderUI({
     return(" ")
   # cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if (input$cm_var1 %in% input$cm_var2) return(" ")
+
+  # if (!is.empty(input$cm_comb)){
+  #   if (.getclass()[[input$cm_var1]] == "factor")
+  #     levs <- .getdata()[1,input$cm_var1] %>% as.factor %>% levels
+  #   else
+  #     levs <- c(input$cm_var1, input$cm_var2)
+  #   if (!all(input$cm_comb %in% levs)) return()
+  # }
+
 
   plot(.compare_means(), plots = input$cm_plots, shiny = TRUE)
 })
