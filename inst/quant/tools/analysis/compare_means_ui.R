@@ -62,6 +62,21 @@ output$ui_cm_var2 <- renderUI({
   }
 })
 
+output$ui_cm_comb <- renderUI({
+  if (not_available(input$cm_var1)) levs <- c()
+  else levs <- .getdata()[1,input$cm_var1] %>% as.factor %>% levels
+  if (length(levs) < 3) return()
+
+  cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
+
+  selectizeInput("cm_comb", label = "Choose combinations:",
+    choices = cmb,
+    selected = state_single("cm_comb",cmb, cmb[1]),
+    multiple = TRUE,
+    options = list(plugins = list('remove_button', 'drag_drop')))
+})
+
+
 output$ui_compare_means <- renderUI({
   tagList(
     conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
@@ -83,16 +98,18 @@ output$ui_compare_means <- renderUI({
                                                cm_args$alternative)),
         sliderInput('cm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
           value = state_init("cm_conf_lev",cm_args$conf_lev), step = 0.01),
+        uiOutput("ui_cm_comb"),
         radioButtons(inputId = "cm_samples", label = "Sample type:", cm_samples,
           selected = state_init("cm_samples", cm_args$samples),
           inline = TRUE),
         radioButtons(inputId = "cm_adjust", label = "Multiple comp. adjustment:", cm_adjust,
           selected = state_init("cm_adjust", cm_args$adjust),
-          inline = TRUE),
-        radioButtons(inputId = "cm_test", label = "Test type:",
-          c("t-test" = "t", "Wilcox" = "wilcox"),
-          selected = state_init("cm_test", cm_args$test),
           inline = TRUE)
+        # ,
+        # radioButtons(inputId = "cm_test", label = "Test type:",
+        #   c("t-test" = "t", "Wilcox" = "wilcox"),
+        #   selected = state_init("cm_test", cm_args$test),
+        #   inline = TRUE)
       )
     ),
     help_and_report(modal_title = "Compare means",

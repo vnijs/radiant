@@ -8,6 +8,7 @@
 #' @param samples Are samples indepent ("independent") or not ("paired")
 #' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param conf_lev Span of the confidence interval
+#' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param test T-test ("t") or Wilcox ("wilcox")
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -26,9 +27,17 @@ compare_means <- function(dataset, var1, var2,
                           samples = "independent",
                           alternative = "two.sided",
                           conf_lev = .95,
+                          comb = "",
                           adjust = "none",
                           test = "t",
                           data_filter = "") {
+
+	# var1 <- "color"
+	# var2 <- "price"
+	# data_filter <- ""
+	# dataset <- "diamonds"
+	# test <- "t"
+	# adjust <- "none"
 
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
@@ -48,7 +57,8 @@ compare_means <- function(dataset, var1, var2,
 	## check there is variation in the data
   # if (dat %>% summarise_each(., funs(var(., na.rm = TRUE))) %>% min %>% {. == 0})
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
-  	return("Test could not be calculated. Please select another variable.")
+  	return("Test could not be calculated. Please select another variable." %>%
+  	       set_class(c("compare_means",class(.))))
 
 	## resetting option to independent if the number of observations is unequal
   ## summary on factor gives counts
@@ -57,31 +67,35 @@ compare_means <- function(dataset, var1, var2,
       samples <- "independent (obs. per level unequal)"
   }
 
-	##############################################
-	## flip the order of pairwise testing - part 1
-	##############################################
-  flip_alt <- c("two.sided" = "two.sided",
-                "less" = "greater",
-                "greater" = "less")
-	##############################################
+	levs <- levels(dat[["variable"]])
+  cmb <- combn(levs, 2) %>% t %>% as.data.frame
+  rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
+  colnames(cmb) <- c("group1","group2")
 
-	# pairwise.t.test(dat[,"values"], dat[,"variable"], pool.sd = FALSE,
-	# res <- pairwise.t.test(dat[["values"]], dat[["variable"]], pool.sd = FALSE,
-	# res <- pairwise.t.test(dat[["values"]], dat[["variable"]],
-	#          p.adjust.method = adjust, paired = samples == "paired",
-	#          alternative = flip_alt[alternative]) %>% tidy
+	if (!is_empty(comb)) cmb <- cmb[comb, ]
 
-	res <- get(paste0("pairwise.", test, ".test"))(dat[["values"]], dat[["variable"]],
-	         p.adjust.method = adjust, paired = samples == "paired",
-	         alternative = flip_alt[alternative]) %>% tidy
+  res <- as.data.frame(matrix(nrow = nrow(cmb), ncol = 3))
+  colnames(res) <- c("t.value", "p.value")
+  for (i in 1:nrow(cmb)) {
+  	sel <- cmb[i,]
+  	x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
+  	y <- filter_(dat, paste0("variable == '", sel[[2]], "'")) %>% .[["values"]]
+  	res[i,] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
+  	                    conf.level = conf_lev) %>% tidy %>%
+  											.[1, c("statistic", "p.value")]
 
-	##############################################
-	# flip the order of pairwise testing - part 2
-	##############################################
-	res[,c("group1","group2")] <- res[,c("group2","group1")]
-	##############################################
+		# res2[i,] <- get(paste0(test, ".test"))(x, y, paired = samples == "paired", alternative = alternative,
+    # 	                    conf.level = conf_lev) %>% tidy %>%
+    # 											.[1, c("statistic", "p.value")]
+  }
+  rm(x,y,sel)
 
-	# from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+	res <- bind_cols(cmb, select_(res, "t.value", "p.value")) %>% as.data.frame
+
+	if (adjust != "none")
+		res$p.value %<>% p.adjust(method = adjust)
+
+	## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, n, conf.lev = .95)
 	 	se * qt(conf.lev/2 + .5, n - 1)
 
@@ -118,6 +132,8 @@ compare_means <- function(dataset, var1, var2,
 #' @export
 summary.compare_means <- function(object, ...) {
 
+	if (is.character(object)) return(object)
+
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
@@ -142,7 +158,7 @@ summary.compare_means <- function(object, ...) {
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
 	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(3)
-	mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
+	mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "p.value")]
 	mod$` ` <- sig_stars(mod$p.value)
 	mod$p.value <- round(mod$p.value,3)
 	mod$p.value[ mod$p.value < .001 ] <- "< .001"
@@ -172,6 +188,7 @@ plot.compare_means <- function(x,
                                shiny = FALSE,
                                ...) {
 
+	if (is.character(x)) return(x)
 	object <- x; rm(x)
 
 	dat <- object$dat
