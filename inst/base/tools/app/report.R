@@ -251,10 +251,12 @@ update_report_fun <- function(cmd) {
     cmd <- ""
   }
 
+  # cat(cmd, file = "~/r_cat.txt", append = TRUE)
+  # cat(r_state$rmd_report, file = "~/r_cat.txt", append = TRUE)
+
   if (cmd != "") {
     if (is_empty(input$rmd_report)) {
-      if (is.null(r_state$rmd_report)) {
-      # if (is_empty(is.null(r_state$rmd_report))) {
+      if (is_empty(r_state$rmd_report)) {
         r_state$rmd_report <<- paste0("## Your report title\n", cmd)
       } else {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)

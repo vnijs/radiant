@@ -86,6 +86,10 @@ compare_means <- function(dataset, var1, var2,
   	sel <- cmb[i,]
   	x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
   	y <- filter_(dat, paste0("variable == '", sel[[2]], "'")) %>% .[["values"]]
+
+  	# res2 <- t.test(x, y, paired = samples == "paired", alternative = alternative,
+  	#                     conf.level = conf_lev) %>% tidy
+
   	res[i,] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
   	                    conf.level = conf_lev) %>% tidy %>%
   											.[1, c("statistic", "p.value")]
@@ -140,8 +144,7 @@ summary.compare_means <- function(object, ...) {
 
 	if (is.character(object)) return(object)
 
-	# print(object$cmb)
-	# print(object$comb)
+	# print(object$res2)
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")

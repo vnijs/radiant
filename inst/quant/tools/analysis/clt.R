@@ -188,7 +188,7 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
                                 sd = sd(sstat[,1])), color = "black")
 
   withProgress(message = 'Making plots', value = 0, {
-    do.call(grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
+    do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(2,length(plots)))))
   })
 
 }
