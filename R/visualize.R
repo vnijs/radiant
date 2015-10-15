@@ -105,10 +105,20 @@ visualize <- function(dataset, xvar,
 
   isChar <- sapply(dat, class) == "character"
   if (sum(isChar) > 0) {
+
+    # library(magrittr)
+    # library(radiant)
+    # dat <- mtcars
+    # dat[,1] %<>% as.character
+    # dat[,4] %<>% as.character
+
+    # for (i in )
+    #   names(dat)[isChar]
+
     if (type == "density")
-      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as.numeric))
+      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as_numeric))
     else
-      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as.factor))
+      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as_factor))
   }
 
   plot_list <- list()

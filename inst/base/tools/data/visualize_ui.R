@@ -50,11 +50,6 @@ output$ui_viz_yvar <- renderUI({
   isolate({
     ## keep the same y-variable 'active' if possible
     sel <- use_input("viz_yvar", vars, fun = "state_multiple")
-    # sel <-
-    #   if (available(input$viz_yvar) && all(input$viz_yvar %in% vars))
-    #     input$viz_yvar
-    #   else
-    #     state_multiple("viz_yvar", vars)
   })
 
   selectInput(inputId = "viz_yvar", label = "Y-variable:",
