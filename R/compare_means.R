@@ -80,8 +80,15 @@ compare_means <- function(dataset, var1, var2,
   	}
 	}
 
-  res <- as.data.frame(matrix(nrow = nrow(cmb), ncol = 3))
-  colnames(res) <- c("t.value", "p.value")
+  # res <- as.data.frame(matrix(nrow = nrow(cmb), ncol = 3))
+  res <- cmb
+  res$t.value <- 0
+  res$p.value <- 0
+  res$df <- 0
+  res$ci_low <- 0
+  res$ci_high <- 0
+
+  # colnames(res) <- c("t.value", "p.value")
   for (i in 1:nrow(cmb)) {
   	sel <- cmb[i,]
   	x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
@@ -90,9 +97,18 @@ compare_means <- function(dataset, var1, var2,
   	# res2 <- t.test(x, y, paired = samples == "paired", alternative = alternative,
   	#                     conf.level = conf_lev) %>% tidy
 
-  	res[i,] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
+
+  	# res[i,] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
+
+# library(broom)
+# library(dplyr)
+# t.test(1:10, 1:8) %>% tidy
+
+
+  	res[i,3:7] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
   	                    conf.level = conf_lev) %>% tidy %>%
-  											.[1, c("statistic", "p.value")]
+  											.[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
+  											# .[1, c("statistic", "p.value")]
 
 		# res2[i,] <- get(paste0(test, ".test"))(x, y, paired = samples == "paired", alternative = alternative,
     # 	                    conf.level = conf_lev) %>% tidy %>%
@@ -100,7 +116,7 @@ compare_means <- function(dataset, var1, var2,
   }
   rm(x,y,sel)
 
-	res <- bind_cols(cmb, select_(res, "t.value", "p.value")) %>% as.data.frame
+	# res <- bind_cols(cmb, select_(res, "t.value", "p.value")) %>% as.data.frame
 
 	if (adjust != "none")
 		res$p.value %<>% p.adjust(method = adjust)
@@ -170,6 +186,9 @@ summary.compare_means <- function(object, ...) {
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
 	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(3)
+	mod$t.value %<>% round(3)
+	# mod$df %<>% round(3)
+	# mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "p.value")]
 	mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "p.value")]
 	mod$` ` <- sig_stars(mod$p.value)
 	mod$p.value <- round(mod$p.value,3)

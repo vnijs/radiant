@@ -296,8 +296,14 @@ mutate_each <- function(tbl, funs, ..., ext = "") {
     vars <- pryr::named_dots(...) %>% names
     if (is.null(vars)) vars <- colnames(tbl)
 
-    tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
-      set_colnames(paste0(vars, ext)) %>% bind_cols(tbl, .)
+    new <- paste0(vars, ext)
+    tbl[,new] <- tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
+      set_colnames(new)
+
+    tbl
+
+    # tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
+    #   set_colnames(paste0(vars, ext)) %>% bind_cols(tbl, .)
   }
 }
 
