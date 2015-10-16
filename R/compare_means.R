@@ -55,9 +55,8 @@ compare_means <- function(dataset, var1, var2,
   }
 
 	## check there is variation in the data
-  # if (dat %>% summarise_each(., funs(var(., na.rm = TRUE))) %>% min %>% {. == 0})
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
-  	return("Test could not be calculated. Please select another variable." %>%
+  	return("Test could not be calculated (no variation). Please select another variable." %>%
   	       set_class(c("compare_means",class(.))))
 
 	## resetting option to independent if the number of observations is unequal
@@ -80,43 +79,33 @@ compare_means <- function(dataset, var1, var2,
   	}
 	}
 
-  # res <- as.data.frame(matrix(nrow = nrow(cmb), ncol = 3))
   res <- cmb
-  res$t.value <- 0
-  res$p.value <- 0
-  res$df <- 0
-  res$ci_low <- 0
-  res$ci_high <- 0
+  res[ ,c("t.value","p.value", "df", "ci_low", "ci_high", "cis_low", "cis_high")] <- 0
 
-  # colnames(res) <- c("t.value", "p.value")
   for (i in 1:nrow(cmb)) {
   	sel <- cmb[i,]
   	x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
   	y <- filter_(dat, paste0("variable == '", sel[[2]], "'")) %>% .[["values"]]
 
-  	# res2 <- t.test(x, y, paired = samples == "paired", alternative = alternative,
-  	#                     conf.level = conf_lev) %>% tidy
+  	res[i,c("t.value","p.value", "df", "ci_low", "ci_high")] <-
+  	  t.test(x, y, paired = samples == "paired", alternative = alternative, conf.level = conf_lev) %>%
+  	  tidy %>% .[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
 
+  	## bootstrap confidence intervals
+  	## seem almost identical, even with highly skewed data
+		# nr_x <- length(x)
+		# nr_y <- length(y)
 
-  	# res[i,] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
+  #   sim_ci <-
+  #     replicate(1000,
+  #               mean(sample(x, nr_x, replace = TRUE)) -
+  #               mean(sample(y, nr_y, replace = TRUE))) %>%
+		# 						quantile(probs = {(1-conf_lev)/2} %>% c(., 1 - .))
 
-# library(broom)
-# library(dplyr)
-# t.test(1:10, 1:8) %>% tidy
+		# res[i, c("cis_low", "cis_high")] <- sim_ci
 
-
-  	res[i,3:7] <- t.test(x, y, paired = samples == "paired", alternative = alternative,
-  	                    conf.level = conf_lev) %>% tidy %>%
-  											.[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
-  											# .[1, c("statistic", "p.value")]
-
-		# res2[i,] <- get(paste0(test, ".test"))(x, y, paired = samples == "paired", alternative = alternative,
-    # 	                    conf.level = conf_lev) %>% tidy %>%
-    # 											.[1, c("statistic", "p.value")]
   }
   rm(x,y,sel)
-
-	# res <- bind_cols(cmb, select_(res, "t.value", "p.value")) %>% as.data.frame
 
 	if (adjust != "none")
 		res$p.value %<>% p.adjust(method = adjust)
@@ -142,6 +131,7 @@ compare_means <- function(dataset, var1, var2,
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{compare_means}}
+#' @param show Show additional output (i.e., t.value, df, and confidence interval)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -156,7 +146,7 @@ compare_means <- function(dataset, var1, var2,
 #' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-summary.compare_means <- function(object, ...) {
+summary.compare_means <- function(object, show = FALSE, ...) {
 
 	if (is.character(object)) return(object)
 
@@ -182,14 +172,29 @@ summary.compare_means <- function(object, ...) {
   means <- object$dat_summary$mean
   names(means) <- object$dat_summary[[1]] %>% as.character
 
+	# determine lower and upper % for ci
+	ci_perc <-
+	  {100 * (1-object$conf_lev)/2} %>%
+		c(., 100 - .) %>%
+		round(1) %>%
+		paste0(.,"%")
+
 	mod <- object$res
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
 	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(3)
-	mod$t.value %<>% round(3)
-	# mod$df %<>% round(3)
-	# mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "p.value")]
-	mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "p.value")]
+	# mod[,"t.value"] %<>% round(3)
+
+	if (show) {
+	  mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "p.value")]
+	  # mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "cis_low", "cis_high", "p.value")]
+		if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(3)
+		mod[,c("t.value", "ci_low","ci_high")] %<>% round(3)
+	  mod <- rename_(mod, .dots = setNames(c("ci_low","ci_high"), ci_perc))
+	} else {
+	  mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
+	}
+
 	mod$` ` <- sig_stars(mod$p.value)
 	mod$p.value <- round(mod$p.value,3)
 	mod$p.value[ mod$p.value < .001 ] <- "< .001"

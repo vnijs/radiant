@@ -122,15 +122,14 @@ plot.single_mean <- function(x,
 	}
 	if ("simulate" %in% plots) {
 
-		simdat <- matrix(0, nrow = 1000)
-		for (i in 1:nrow(simdat)) {
-			simdat[i] <- object$dat[[object$var]] %>%
-										 sample(., length(.), replace = TRUE) %>%
-										 mean
-		}
+		var <- object$dat[[object$var]]
+		nr <- length(var)
 
-		simdat %<>% { (. - mean(.)) + object$comp_value } %>%
-									as.data.frame %>% set_colnames(object$var)
+    simdat <-
+      replicate(1000, mean(sample(var, nr, replace = TRUE))) %>%
+      { (. - mean(.)) + object$comp_value } %>%
+      as.data.frame %>%
+      set_colnames(object$var)
 
 		ci_perc <- {if (object$alternative == 'two.sided') {
 									{(1-object$conf_lev)/2}  %>% c(., 1 - .)

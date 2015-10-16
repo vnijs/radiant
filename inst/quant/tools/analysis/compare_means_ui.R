@@ -108,6 +108,7 @@ output$ui_compare_means <- renderUI({
         sliderInput('cm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
           value = state_init("cm_conf_lev",cm_args$conf_lev), step = 0.01),
         uiOutput("ui_cm_comb"),
+        checkboxInput("cm_show", "Show t.value, df, and ci", value = state_init("cm_show", FALSE)),
         radioButtons(inputId = "cm_samples", label = "Sample type:", cm_samples,
           selected = state_init("cm_samples", cm_args$samples),
           inline = TRUE),
@@ -190,8 +191,7 @@ output$compare_means <- renderUI({
   #     # updateSelectInput(session = session, inputId = "cm_comb", selected = cmb)
   #   }
   # }
-
-  summary(.compare_means())
+  if (input$cm_show) summary(.compare_means(), show = TRUE) else summary(.compare_means())
 })
 
 .plot_compare_means <- reactive({

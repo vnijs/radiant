@@ -8,6 +8,7 @@
 #' @param levs The factor level selected for the proportion comparison
 #' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param conf_lev Span of the confidence interval
+#' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
@@ -27,8 +28,20 @@ compare_props <- function(dataset, var1, var2,
                          levs = "",
                          alternative = "two.sided",
                          conf_lev = .95,
+                         comb = "",
                          adjust = "none",
                          data_filter = "") {
+
+	# dat <- titanic
+	# var1 <- "pclass"
+	# var2 <- "survived"
+	# levs <- "Yes"
+	# alternative <- "two.sided"
+	# conf.lev <- .95
+	# adjust <- "none"
+	# dataset <- "titanic"
+	# data_filter <- ""
+	# comb <- NULL
 
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
@@ -42,9 +55,11 @@ compare_props <- function(dataset, var1, var2,
 		}
 	}
 
-	## check variances in the data
+  ## check there is variation in the data
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
-  	return("Test could not be calculated. Please select another variable.")
+  	return("Test could not be calculated (no variation). Please select another variable." %>%
+  	       set_class(c("compare_props",class(.))))
+
 
   rn <- ""
   prop_input <-
@@ -58,20 +73,49 @@ compare_props <- function(dataset, var1, var2,
 		  set_rownames(rn)
 	  }
 
-	##############################################
-	## flip the order of pairwise testing - part 1
-	##############################################
-  flip_alt <- c("two.sided" = "two.sided", "less" = "greater", "greater" = "less")
-	##############################################
+	prop_input[is.na(prop_input)] <- 0
 
-	res <- sshhr( pairwise.prop.test(prop_input, p.adjust.method = adjust,
-	              alternative = flip_alt[alternative]) ) %>% tidy
+  # if (any(is.na(prop_input)))
+  # 	return("Test could not be calculated (missing values). Please select another variable." %>%
+  # 	       set_class(c("compare_props",class(.))))
 
-	##############################################
-	## flip the order of pairwise testing - part 2
-	##############################################
-	res[,c("group1","group2")] <- res[,c("group2","group1")]
-	##############################################
+  levs <- levels(dat[[var1]])
+  cmb <- combn(levs, 2) %>% t %>% as.data.frame
+  rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
+  colnames(cmb) <- c("group1","group2")
+
+	if (!is_empty(comb)) {
+		if (all(comb %in% rownames(cmb))) {
+			cmb <- cmb[comb, ]
+		} else {
+			cmb <- cmb[1,]
+  	}
+	}
+
+  res <- cmb
+  res[ ,c("chisq.value","p.value", "df", "ci_low", "ci_high", "sim")] <- 0
+  for (i in 1:nrow(cmb)) {
+  	ind <- c(which(cmb[i,1] == rownames(prop_input)), which(cmb[i,2] == rownames(prop_input)))
+  	# ind <- which(cmb[i,] %in% rownames(prop_input))  	# pinp <- prop_input[ind,]
+
+    pinp <- prop_input[ind,]
+  	res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
+	    sshhr( prop.test(pinp, alternative = alternative, conf.level = conf_lev,
+	             correct = FALSE) )%>%
+	    tidy %>% .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
+
+    n <- rowSums(pinp)
+    p <- pinp[,1] / n
+    E <- cbind(n * p, n * (1 - p))
+    if (any(E < 5)) {
+    	res[i, "p.value"] <- sshhr( chisq.test(pinp, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value )
+    	# res[i, "sim"] <- 2000
+    	res[i, "df"] <- NA
+    }
+  }
+
+	if (adjust != "none")
+		res$p.value %<>% p.adjust(method = adjust)
 
 	## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	ci_calc <- function(se, conf.lev = .95)
@@ -95,6 +139,7 @@ compare_props <- function(dataset, var1, var2,
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{compare_props}}
+#' @param show Show additional output (i.e., chisq.value, df, and confidence interval)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -106,7 +151,9 @@ compare_props <- function(dataset, var1, var2,
 #' @seealso \code{\link{plot.compare_props}} to plot results
 #'
 #' @export
-summary.compare_props <- function(object, ...) {
+summary.compare_props <- function(object, show = FALSE, ...) {
+
+	if (is.character(object)) return(object)
 
   cat("Pairwise proportion comparisons\n")
 	cat("Data      :", object$dataset, "\n")
@@ -127,14 +174,35 @@ summary.compare_props <- function(object, ...) {
 
   props <- object$dat_summary$p
   names(props) <- object$rn
+
+	## determine lower and upper % for ci
+	ci_perc <-
+	  {100 * (1-object$conf_lev)/2} %>%
+		c(., 100 - .) %>%
+		round(1) %>%
+		paste0(.,"%")
+
 	res <- object$res
 	res$`Alt. hyp.` <- paste(res$group1,hyp_symbol,res$group2," ")
 	res$`Null hyp.` <- paste(res$group1,"=",res$group2, " ")
 	res$diff <- (props[res$group1 %>% as.character] - props[res$group2 %>% as.character]) %>% round(3)
-	res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
+
+	# res_sim <- res$sim > 0
+	res_sim <- is.na(res$df)
+	if (show) {
+	  res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "chisq.value", "df", "ci_low", "ci_high", "p.value")]
+		res[,c("chisq.value","ci_low","ci_high")] %<>% round(3)
+	  res <- rename_(res, .dots = setNames(c("ci_low","ci_high"), ci_perc))
+	  # res$df[res_sim] <- NA
+	} else {
+	  res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
+	}
+
 	res$` ` <- sig_stars(res$p.value)
 	res$p.value <- round(res$p.value,3)
 	res$p.value[ res$p.value < .001 ] <- "< .001"
+	# res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
+	res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
 	print(res, row.names = FALSE, right = FALSE)
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
@@ -163,6 +231,7 @@ plot.compare_props <- function(x,
                                shiny = FALSE,
                                ...) {
 
+	if (is.character(x)) return(x)
 	object <- x; rm(x)
 
 	dat <- object$dat

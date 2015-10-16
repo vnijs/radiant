@@ -48,6 +48,24 @@ output$ui_cp_levs <- renderUI({
               selected = state_single("cp_levs",levs), multiple = FALSE)
 })
 
+output$ui_cp_comb <- renderUI({
+  if (not_available(input$cp_var1)) return()
+
+  levs <- .getdata()[1,input$cp_var1] %>% as.factor %>% levels
+  if (length(levs) > 2) {
+    cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
+  } else {
+    return()
+  }
+
+  selectizeInput("cp_comb", label = "Choose combinations:",
+    choices = cmb,
+    selected = state_multiple("cp_comb", cmb, cmb[1]),
+    multiple = TRUE,
+    options = list(plugins = list('remove_button', 'drag_drop')))
+})
+
+
 output$ui_compare_props <- renderUI({
   tagList(
     conditionalPanel(condition = "input.tabs_compare_props == 'Plot'",
@@ -68,6 +86,8 @@ output$ui_compare_props <- renderUI({
                     choices = cp_alt,
                     selected = state_single("cp_alternative", cp_alt,
                                                cp_args$alternative)),
+        uiOutput("ui_cp_comb"),
+        checkboxInput("cp_show", "Show chisq.value, df, and ci", value = state_init("cp_show", FALSE)),
         sliderInput("cp_conf_lev","Significance level:", min = 0.85, max = 0.99,
           value = state_init("cp_conf_lev",cp_args$conf_lev), step = 0.01),
         radioButtons(inputId = "cp_adjust", label = "Multiple comp. adjustment:", cp_adjust,
@@ -124,7 +144,7 @@ output$compare_props <- renderUI({
   # cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
   if (input$cp_var1 %in% input$cp_var2) return(" ")
 
-  summary(.compare_props())
+  if (input$cp_show) summary(.compare_props(), show = TRUE) else summary(.compare_props())
 })
 
 .plot_compare_props <- reactive({

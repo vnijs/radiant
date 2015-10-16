@@ -23,13 +23,23 @@ cross_tabs <- function(dataset, var1, var2,
 	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
+  ## Use simulated p-values when
+  # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r
+  # http://stats.stackexchange.com/questions/14226/given-the-power-of-computers-these-days-is-there-ever-a-reason-to-do-a-chi-squa/14230#14230
+  # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
+
 	tab <- table(dat[[var1]], dat[[var2]])
 
-	cst <- sshhr( chisq.test(tab, correct = FALSE) )
+	# if (is.na(nrsim)) nrsim <- 0
+	# if (nrsim == 0)
+	  cst <- sshhr( chisq.test(tab, correct = FALSE) )
+	# else
+	  # cst <- chisq.test(tab, simulate.p.value = TRUE, B = nrsim)
 
 	# adding the % deviation table
 	cst$deviation <- with(cst, (observed-expected) / expected)
 	cst$chi_sq	<- with(cst, (observed - expected)^2 / expected)
+
 
 	# dat not needed in summary or plot
 	rm(dat)
@@ -57,6 +67,9 @@ cross_tabs <- function(dataset, var1, var2,
 summary.cross_tabs <- function(object,
                                check = "",
                                ...) {
+
+
+	# print(object$cst2)
 
   cat("Cross-tabs\n")
 	cat("Data     :", object$dataset, "\n")
@@ -124,10 +137,28 @@ summary.cross_tabs <- function(object,
 	# 	print(prop.table(object$table, 2), digits = 2) # column percentages
 	# }
 
-	object$cst %>% tidy %>% round(3) -> res
+	# res <- object$cst %>% tidy %>% round(3)
+	res <- object$cst %>% tidy
+
+	elow <- sum(object$cst$expected < 5)
+
+	# sim_mess <- ""
+  # if (any(object$cst$expected < 5)) {
+  if (elow > 0) {
+  	res$p.value <- chisq.test(object$cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
+  	res$parameter <- NA
+		# sim_mess <- " (5000 replicates)"
+  }
+
+	# sim_mess <- if (object$nrsim > 0) paste0(" (",object$nrsim," replicates)") else ""
+
+	res[!is.na(res)] %<>% round(3)
+
 	if (res$p.value < .001) res$p.value  <- "< .001"
+	# cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value, sim_mess), "\n\n")
 	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")
-	cat(paste(sprintf("%.1f",100 * (sum(object$cst$expected < 5) / length(object$cst$expected))),"% of cells have expected values below 5"), sep = "")
+	cat(paste(sprintf("%.1f",100 * (elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
+	if (elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
 }
 
 #' Plot method for the cross_tabs function
