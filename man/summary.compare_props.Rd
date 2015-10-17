@@ -4,10 +4,12 @@
 \alias{summary.compare_props}
 \title{Summary method for the compare_props function}
 \usage{
-\method{summary}{compare_props}(object, ...)
+\method{summary}{compare_props}(object, show = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{compare_props}}}
+
+\item{show}{Show additional output (i.e., chisq.value, df, and confidence interval)}
 
 \item{...}{further arguments passed to or from other methods}
 }

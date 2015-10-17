@@ -20,15 +20,18 @@ sp_inputs <- reactive({
 })
 
 output$ui_sp_var <- renderUI({
-  vars <- groupable_vars()
+  # vars <- groupable_vars()
+  vars <- c("None", groupable_vars())
   selectInput(inputId = "sp_var", label = "Variable (select one):",
               choices = vars,
               selected = state_single("sp_var",vars), multiple = FALSE)
 })
 
 output$up_sp_lev <- renderUI({
-  levs <- if (not_available(input$sp_var)) c()
-          else .getdata()[1,input$sp_var] %>% as.factor %>% levels
+  if (not_available(input$sp_var)) return()
+  # levs <- if (not_available(input$sp_var)) c()
+  #         else .getdata()[1,input$sp_var] %>% as.factor %>% levels
+  levs <- .getdata()[1,input$sp_var] %>% as.factor %>% levels
 
   selectInput(inputId = "sp_lev", label = "Choose level:", choices = levs,
               selected = state_single("sp_lev",levs), multiple = FALSE)
@@ -98,34 +101,31 @@ output$single_prop <- renderUI({
 		             	output_panels = sp_output_panels)
 })
 
+sp_available <- reactive({
+  if (not_available(input$sp_var))
+    return("This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("diamonds"))
+
+  if (input$sp_comp_value %>% { is.na(.) | . > 1 | . <= 0 })
+    return("Please choose a comparison value between 0 and 1")
+
+  "available"
+})
+
 .single_prop <- reactive({
 	do.call(single_prop, sp_inputs())
 })
 
 .summary_single_prop <- reactive({
-
-  if (not_available(input$sp_var))
-    return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
-
- if (input$sp_comp_value %>% { is.na(.) | . > 1 | . <= 0 })
-    return("Please choose a comparison value between 0 and 1")
-
+  if (sp_available() != "available") return(sp_available())
   summary(.single_prop())
 })
 
 .plot_single_prop <- reactive({
-
-  if (not_available(input$sp_var))
-    return("This analysis requires a variable of type factor.\nPlease select another dataset.\n\n" %>% suggest_data("diamonds"))
-
- if (input$sp_comp_value %>% { is.na(.) | . > 1 | . < 0 })
-    return("Please choose a comparison value between 0 and 1")
-
+  if (sp_available() != "available") return(sp_available())
   plot(.single_prop(), plots = input$sp_plots, shiny = TRUE)
 })
 
-observe({
-  if (not_pressed(input$single_prop_report)) return()
+observeEvent(input$single_prop_report, {
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list(plots = input$sp_plots) %>% list("",.)

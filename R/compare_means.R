@@ -32,13 +32,6 @@ compare_means <- function(dataset, var1, var2,
                           test = "t",
                           data_filter = "") {
 
-	# var1 <- "color"
-	# var2 <- "price"
-	# data_filter <- ""
-	# dataset <- "diamonds"
-	# test <- "t"
-	# adjust <- "none"
-
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
 	if (!is_string(dataset)) dataset <- "-----"
@@ -149,8 +142,6 @@ compare_means <- function(dataset, var1, var2,
 summary.compare_means <- function(object, show = FALSE, ...) {
 
 	if (is.character(object)) return(object)
-
-	# print(object$res2)
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")

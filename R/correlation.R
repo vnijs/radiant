@@ -10,6 +10,7 @@
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
 #' @examples
+#' result <- correlation("diamonds", c("price","carat"))
 #' result <- correlation("diamonds", c("price","carat","clarity"))
 #' result <- correlation("diamonds", "price:table")
 #' result <- diamonds %>% correlation("price:table")
@@ -60,8 +61,9 @@ summary.correlation_ <- function(object,
 
 	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
-
+	# object <- result
 	# library(psych)
+	# cutoff <- 0
 
 	cmat <- sshhr( corr.test(object$dat, method = object$type) )
 
@@ -83,10 +85,10 @@ summary.correlation_ <- function(object,
 	cat("Alt. hyp.: variables x and y are correlated\n\n")
 
 	cat("Correlation matrix:\n")
-  print(cr[-1,-ncol(cr)], quote = FALSE)
+  print(cr[-1,-ncol(cr), drop = FALSE], quote = FALSE)
 
 	cat("\np.values:\n")
-  print(cp[-1,-ncol(cp)], quote = FALSE)
+  print(cp[-1,-ncol(cp), drop = FALSE], quote = FALSE)
 
 	if (covar) {
 	  cvmat <- sshhr( cov(object$dat, method = object$type) )
@@ -96,7 +98,7 @@ summary.correlation_ <- function(object,
 	  cvr[!ltmat] <- ""
 
 	  cat("\nCovariance matrix:\n")
-	  print(cvr[-1,-ncol(cvr)], quote = FALSE)
+	  print(cvr[-1,-ncol(cvr), drop = FALSE], quote = FALSE)
 	}
 
   rm(object)
@@ -116,6 +118,8 @@ summary.correlation_ <- function(object,
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation_}} to summarize results
+#'
+#' @importFrom scales alpha
 #'
 #' @export
 plot.correlation_ <- function(x, ...) {
@@ -139,7 +143,7 @@ plot.correlation_ <- function(x, ...) {
 	    text(.8, .8, sig, cex = cex, col = 'blue')
 	}
 	panel.smooth <- function(x, y) {
-    points(x, y)
+    points(jitter(x,.3), jitter(y,.3), pch = 16, col = alpha("black", 0.5))
     ## uncomment the lines below if you want linear and loess lines
     ## in the scatter plot matrix
 		# abline(lm(y~x), col="red")

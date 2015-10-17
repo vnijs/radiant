@@ -32,17 +32,6 @@ compare_props <- function(dataset, var1, var2,
                          adjust = "none",
                          data_filter = "") {
 
-	# dat <- titanic
-	# var1 <- "pclass"
-	# var2 <- "survived"
-	# levs <- "Yes"
-	# alternative <- "two.sided"
-	# conf.lev <- .95
-	# adjust <- "none"
-	# dataset <- "titanic"
-	# data_filter <- ""
-	# comb <- NULL
-
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
 	if (!is_string(dataset)) dataset <- "-----"
@@ -57,9 +46,8 @@ compare_props <- function(dataset, var1, var2,
 
   ## check there is variation in the data
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
-  	return("Test could not be calculated (no variation). Please select another variable." %>%
+  	return("One or more selected variables show no variation. Please select other variables." %>%
   	       set_class(c("compare_props",class(.))))
-
 
   rn <- ""
   prop_input <-
@@ -75,11 +63,7 @@ compare_props <- function(dataset, var1, var2,
 
 	prop_input[is.na(prop_input)] <- 0
 
-  # if (any(is.na(prop_input)))
-  # 	return("Test could not be calculated (missing values). Please select another variable." %>%
-  # 	       set_class(c("compare_props",class(.))))
-
-  levs <- levels(dat[[var1]])
+  levs <- rownames(prop_input)
   cmb <- combn(levs, 2) %>% t %>% as.data.frame
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1","group2")
@@ -109,7 +93,6 @@ compare_props <- function(dataset, var1, var2,
     E <- cbind(n * p, n * (1 - p))
     if (any(E < 5)) {
     	res[i, "p.value"] <- sshhr( chisq.test(pinp, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value )
-    	# res[i, "sim"] <- 2000
     	res[i, "df"] <- NA
     }
   }
@@ -123,12 +106,14 @@ compare_props <- function(dataset, var1, var2,
 
 	dat_summary <-
 		prop_input %>%
-			data.frame %>%
+			data.frame(check.names = FALSE) %>%
 			mutate(n = .[,1:2] %>% rowSums, p = .[,1] / n,
 						 se = (p * (1 - p) / n) %>% sqrt,
 	       		 ci = ci_calc(se, conf_lev)) %>%
 			set_rownames({prop_input %>% rownames}) %>%
 			add_rownames(var = var1)
+
+	dat_summary[[var1]] %<>% factor(., levels = .)
 
 	vars <- paste0(vars, collapse = ", ")
   environment() %>% as.list %>% set_class(c("compare_props",class(.)))
@@ -187,13 +172,11 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 	res$`Null hyp.` <- paste(res$group1,"=",res$group2, " ")
 	res$diff <- (props[res$group1 %>% as.character] - props[res$group2 %>% as.character]) %>% round(3)
 
-	# res_sim <- res$sim > 0
 	res_sim <- is.na(res$df)
 	if (show) {
 	  res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "chisq.value", "df", "ci_low", "ci_high", "p.value")]
 		res[,c("chisq.value","ci_low","ci_high")] %<>% round(3)
 	  res <- rename_(res, .dots = setNames(c("ci_low","ci_high"), ci_perc))
-	  # res$df[res_sim] <- NA
 	} else {
 	  res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
 	}
@@ -201,7 +184,6 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 	res$` ` <- sig_stars(res$p.value)
 	res$p.value <- round(res$p.value,3)
 	res$p.value[ res$p.value < .001 ] <- "< .001"
-	# res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
 	res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
 	print(res, row.names = FALSE, right = FALSE)
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
@@ -212,13 +194,13 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_props}}
-#' @param plots One or more plots of proportions or counts ("props" or "counts")
+#' @param plots One or more plots of proportions ("bar" or "dodge")
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- compare_props("titanic", "pclass", "survived")
-#' plot(result, plots = c("props","counts"))
+#' plot(result, plots = c("bar","dodge"))
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
@@ -227,7 +209,7 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 #'
 #' @export
 plot.compare_props <- function(x,
-                               plots = "props",
+                               plots = "bar",
                                shiny = FALSE,
                                ...) {
 
@@ -241,21 +223,30 @@ plot.compare_props <- function(x,
 
 	## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	plot_list <- list()
-	if ("props" %in% plots) {
+	if ("bar" %in% plots) {
 		## use of `which` allows the user to change the order of the plots shown
-		plot_list[[which("props" == plots)]] <-
+		plot_list[[which("bar" == plots)]] <-
 			ggplot(object$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
-			geom_bar(stat = "identity") +
-	 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
-	 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
-	 		theme(legend.position = "none") +
-	 		scale_y_continuous(labels = percent)
+				geom_bar(stat = "identity") +
+		 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
+		 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
+		 		theme(legend.position = "none") +
+		 		scale_y_continuous(labels = percent) +
+		 		ylab(paste0("Proportion of \"", lev_name, "\" in ", v2))
+
 	}
 
-	if ("counts" %in% plots) {
-		plot_list[[which("counts" == plots)]] <-
-			ggplot(object$dat, aes_string(x = v1, fill = v2)) +
-			geom_bar(position = "dodge")
+	if ("dodge" %in% plots) {
+		plot_list[[which("dodge" == plots)]] <-
+			dat %>%
+				group_by_(v1, v2) %>%
+				summarise(count = n()) %>%
+				group_by_(v1) %>%
+				mutate(perc = count/ sum(count)) %>%
+				ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
+					geom_bar(stat = "identity", position = "dodge") +
+			 		scale_y_continuous(labels = percent) +
+			 		ylab(paste0("Proportions per level of ", v1))
 	}
 
 	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%

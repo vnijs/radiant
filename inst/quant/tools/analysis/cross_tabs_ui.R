@@ -2,7 +2,10 @@
 base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 ct_check <- c("Observed" = "observed", "Expected" = "expected",
               "Chi-squared" = "chi_sq", "Deviation std." = "dev_std",
-              "Deviation %" = "dev_perc")
+              "Row percentages" = "row_perc",
+              "Column percentages" = "col_perc",
+              "Table percentages" = "perc")
+              # "Deviation %" = "dev_perc")
 
 ## list of function arguments
 ct_args <- as.list(formals(cross_tabs))
@@ -21,18 +24,26 @@ ct_inputs <- reactive({
 # Cross-tabs
 ###############################
 output$ui_ct_var1 <- renderUI({
-	vars <- groupable_vars()
-  selectInput(inputId = "ct_var1", label = "Select a grouping factor:", choices = vars,
-  	selected = state_single("ct_var1",vars), multiple = FALSE)
+	vars <- c("None", groupable_vars())
+  selectInput(inputId = "ct_var1", label = "Select a categorical variable:",
+    choices = vars, selected = state_single("ct_var1",vars), multiple = FALSE)
 })
 
 output$ui_ct_var2 <- renderUI({
-	vars <- groupable_vars()
-	# vars <- c("None", groupable_vars())
-  if (not_available(input$ct_var1)) vars <- character(0)
+  if (not_available(input$ct_var1)) return()
+  vars <- c("None", groupable_vars())
+
+  ## if possible, keep current indep value when depvar changes
+  ## after storing residuals or predictions
+  isolate({
+    init <- input$ct_var2 %>%
+      {if (!is_empty(.) && . %in% vars) . else character(0)}
+  })
+
   if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
-  selectInput(inputId = "ct_var2", label = "Select a factor:", choices = vars,
-  	selected = state_single("ct_var2",vars), multiple = FALSE)
+  selectInput(inputId = "ct_var2", label = "Select a categorical variable:",
+    selected = state_single("ct_var2", vars, init),
+    choices = vars, multiple = FALSE)
 })
 
 output$ui_cross_tabs <- renderUI({
@@ -85,26 +96,28 @@ output$cross_tabs <- renderUI({
 
 })
 
+ct_available <- reactive({
+  if (not_available(input$ct_var1) || not_available(input$ct_var2))
+    return("This analysis requires two categorical variables. Both must have two or more levels.\n If these variable types\nare not available please select another dataset.\n\n" %>% suggest_data("newspaper"))
+
+  "available"
+})
+
 .cross_tabs <- reactive({
 	do.call(cross_tabs, ct_inputs())
 })
 
 .summary_cross_tabs <- reactive({
-	if (input$ct_var2 %>% not_available)
-		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
-
+  if (ct_available() != "available") return(ct_available())
 	summary(.cross_tabs(), check = input$ct_check)
 })
 
 .plot_cross_tabs <- reactive({
-	if (input$ct_var2 %>% not_available)
-		return("This analysis requires variables of type factor.\nIf none are available please select another dataset.")
-
+  if (ct_available() != "available") return(ct_available())
 	plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
 })
 
-observe({
-  if (not_pressed(input$cross_tabs_report)) return()
+observeEvent(input$cross_tabs_report, {
   isolate({
   	outputs <- inp_out <- character(0)
   	figs <- FALSE

@@ -42,7 +42,8 @@ output$help_data <- reactive(append_help("help_data", file.path(r_path,"base/too
 help_sample <- c("Sampling" = "sampling.md", "Sample size" = "sample_size.Rmd")
 output$help_sample <- reactive(append_help("help_sample", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
-help_base_menu <- c("Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
+help_base_menu <- c("Probability calculator" = "prob_calc.md", "Central limit theorem" = "clt.md",
+                    "Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
                     "Single proportion" = "single_prop.md", "Compare proportions" = "compare_props.md",
                     "Cross-tabs" = "cross_tabs.md")
 

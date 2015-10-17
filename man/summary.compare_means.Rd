@@ -4,10 +4,12 @@
 \alias{summary.compare_means}
 \title{Summary method for the compare_means function}
 \usage{
-\method{summary}{compare_means}(object, ...)
+\method{summary}{compare_means}(object, show = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{compare_means}}}
+
+\item{show}{Show additional output (i.e., t.value, df, and confidence interval)}
 
 \item{...}{further arguments passed to or from other methods}
 }

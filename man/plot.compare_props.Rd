@@ -4,12 +4,12 @@
 \alias{plot.compare_props}
 \title{Plot method for the compare_props function}
 \usage{
-\method{plot}{compare_props}(x, plots = "props", shiny = FALSE, ...)
+\method{plot}{compare_props}(x, plots = "bar", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{compare_props}}}
 
-\item{plots}{One or more plots of proportions or counts ("props" or "counts")}
+\item{plots}{One or more plots of proportions ("bar" or "dodge")}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -23,7 +23,7 @@ See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example
 }
 \examples{
 result <- compare_props("titanic", "pclass", "survived")
-plot(result, plots = c("props","counts"))
+plot(result, plots = c("bar","dodge"))
 }
 \seealso{
 \code{\link{compare_props}} to calculate results

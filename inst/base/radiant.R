@@ -212,7 +212,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
 }
 
 suggest_data <- function(text = "", dat = "diamonds")
-  paste0(text, "For an example dataset go to Data > Manage, select the 'examples' radio button,\nand press the 'Load examples' button. Then select the \'", dat, "\' dataset")
+  paste0(text, "For an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'", dat, "\' dataset.")
 
 ## function written by @wch https://github.com/rstudio/shiny/issues/781#issuecomment-87135411
 capture_plot <- function(expr, env = parent.frame()) {
@@ -282,7 +282,8 @@ register_plot_output <- function(fun_name, rfun_name,
     ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>% { if (is.null(.)) " " else . } %>%
     { if (is.character(.)) {
-        plot(x = 1, type = 'n', main= . , axes = FALSE, xlab = "", ylab = "")
+        plot(x = 1, type = 'n', main = paste0("\n\n\n\n\n\n\n\n",.) ,
+             axes = FALSE, xlab = "", ylab = "")
       } else {
         withProgress(message = 'Making plot', value = 0, print(.))
       }

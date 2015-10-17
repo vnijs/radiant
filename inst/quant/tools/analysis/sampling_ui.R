@@ -65,8 +65,7 @@ output$sampling <- renderUI({
   summary(.sampling(), print_sf = TRUE)
 })
 
-observe({
-  if (not_pressed(input$sampling_report)) return()
+observeEvent(input$sampling_report, {
   isolate({
     update_report(inp_main = clean_args(smp_inputs(), smp_args),
                   fun_name = "sampling", outputs = "summary", figs = FALSE)

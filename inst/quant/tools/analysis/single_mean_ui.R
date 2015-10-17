@@ -21,7 +21,7 @@ sm_inputs <- reactive({
 
 output$ui_sm_var <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
-  vars <- varnames()[isNum]
+  vars <- c("None", varnames()[isNum])
   selectInput(inputId = "sm_var", label = "Variable (select one):",
     choices = vars, selected = state_single("sm_var",vars), multiple = FALSE)
 })
@@ -92,34 +92,31 @@ output$single_mean <- renderUI({
 		# add "data = NULL" if the app doesn't doesn't use data
 })
 
+sm_available <- reactive({
+  if (not_available(input$sm_var))
+    return("This analysis requires a variable of type numeric or interval. If none are\navailable please select another dataset.\n\n" %>% suggest_data("demand_uk"))
+
+  if (is.na(input$sm_comp_value))
+    return("Please choose a comparison value")
+
+  "available"
+})
+
 .single_mean <- reactive({
 	do.call(single_mean, sm_inputs())
 })
 
 .summary_single_mean <- reactive({
-
-  if (not_available(input$sm_var))
-    return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
-
-  if (is.na(input$sm_comp_value))
-    return("Please choose a comparison value")
-
+  if (sm_available() != "available") return(sm_available())
   summary(.single_mean())
 })
 
 .plot_single_mean <- reactive({
-
-  if (not_available(input$sm_var))
-    return("This analysis requires a variable of type numeric or interval.\nIf none are available please select another dataset")
-
-  if (is.na(input$sm_comp_value))
-    return("Please choose a comparison value")
-
+  if (sm_available() != "available") return(sm_available())
   plot(.single_mean(), plots = input$sm_plots, shiny = TRUE)
 })
 
-observe({
-  if (not_pressed(input$single_mean_report)) return()
+observeEvent(input$single_mean_report, {
   isolate({
     outputs <- c("summary","plot")
     inp_out <- list(plots = input$sm_plots) %>% list("",.)

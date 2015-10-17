@@ -79,34 +79,30 @@ output$correlation <- renderUI({
 
 })
 
+cor_available <- reactive({
+
+  if (not_available(input$cor_vars) || length(input$cor_vars) < 2)
+    return("This analysis requires two or more variables or type numeric, integer,\nor factor. If these variable types are not available please select\nanother dataset.\n\n" %>% suggest_data("diamonds"))
+
+  "available"
+})
+
+
 .correlation <- reactive({
 	do.call(correlation, cor_inputs())
 })
 
 .summary_correlation <- reactive({
-
-	"Please select two or more variables.\n\n" %>%
-		suggest_data("diamonds") -> rt
-
-	if (input$cor_vars %>% not_available) return(rt)
-	if (length(input$cor_vars) < 2) return(rt)
-
+  if (cor_available() != "available") return(cor_available())
 	summary(.correlation(), cutoff = input$cor_cutoff, covar = input$cor_covar)
 })
 
 .plot_correlation <- reactive({
-
-	"Please select two or more variables.\n\n" %>%
-		suggest_data("diamonds") -> rt
-
-	if (not_available(input$cor_vars)) return(rt)
-	if (length(input$cor_vars) < 2) return(rt)
-
+  if (cor_available() != "available") return(cor_available())
 	capture_plot(plot(.correlation()))
 })
 
-observe({
-  if (not_pressed(input$correlation_report)) return()
+observeEvent(input$correlation_report, {
   isolate({
     inp_out <- list(cutoff = input$cor_cutoff, covar = input$cor_covar) %>% list(.,"")
     update_report(inp_main = clean_args(cor_inputs(), cor_args),

@@ -4,7 +4,7 @@
 \alias{prob_tdist}
 \title{Probability calculator for the t distribution}
 \usage{
-prob_tdist(df, lb = -Inf, ub = Inf, plb = NA, pub = NA, dec = 3)
+prob_tdist(df, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 }
 \arguments{
 \item{df}{Degrees of freedom}
@@ -23,6 +23,6 @@ prob_tdist(df, lb = -Inf, ub = Inf, plb = NA, pub = NA, dec = 3)
 Probability calculator for the t distribution
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/probability.html} for an example in Radiant
+See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 }
 

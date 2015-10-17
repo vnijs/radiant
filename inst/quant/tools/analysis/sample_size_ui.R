@@ -79,8 +79,7 @@ output$sample_size <- renderUI({
   summary(.sample_size())
 })
 
-observe({
-  if (not_pressed(input$sample_size_report)) return()
+observeEvent(input$sample_size_report, {
   isolate({
     update_report(inp_main = clean_args(ss_inputs(), ss_args),
                    fun_name = "sample_size", outputs = "summary", figs = FALSE)

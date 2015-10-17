@@ -367,31 +367,7 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-# library(radiant)
-# remove.packages('tidyr')
-# devtools::install_github("hadley/tidyr")
-# install.packages("tidyr", repos = "http://vnijs.github.io/radiant_miniCRAN/")
-# packageVersion('tidyr')
-
-# object <- pivotr("diamonds", cvars = "cut")
-# object <- pivotr("diamonds", cvars = c("cut","clarity"))
-# object <- pivotr("diamonds", cvars = c("cut","clarity","color"))
-
-# cvars <- object$cvars
-# nvar <- object$nvar
-# tab <- object$tab %>% {filter(., .[[1]] != "Total")}
-# tab
-
-# tab %>% gather(cut, n, -clarity)
-# tab %>% gather_("cut", "n")
-# tab %>% gather_("cut", "n", setdiff(colnames(.),cvars[2]))
-# ## makes a nice long data set with 0.2
-# tab %>% gather_(cvars[1], nvar)
-# type = "dodge"
-# # ggplot(tab %>% gather_(cvars[1], nvar) %>% na.omit, aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
-
     plot_list[[1]] <-
-      # tab %>% gather_(cvars[1], nvar) %>% na.omit %>% ## stopped working moving from tidyr 0.2 to 0.3
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7)
@@ -400,7 +376,6 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
     plot_list[[1]] <-
-      # tab %>% gather_(cvars[1], nvar) %>% na.omit %>% ## stopped working moving from tidyr 0.2 to 0.3
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7) +

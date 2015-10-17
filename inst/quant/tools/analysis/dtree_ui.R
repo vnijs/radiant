@@ -177,28 +177,8 @@ observe({
   }
 })
 
-observe({
-  if (not_pressed(input$dtree_report)) return()
+observeEvent(input$dtree_report, {
   isolate({
-
-# input <- list()
-# input$dtree_edit <- " name: Jenny Lind
-#  type: chance
-#  High:
-#      p: 0.3
-#      type: decision
-#      Accept:
-#          payoff: 4000
-#      Reject:
-#          payoff: 900
-#  Low:
-#      p: 0.7
-#      type: decision
-#      Accept:
-#          payoff: 1000
-#      Reject:
-#          payoff: 900"
-
 
     dtree_name <- stringr::str_match(input$dtree_edit, "^\\s*name:\\s*(.*)\\n\\s*type:")[2]
     if (is.na(dtree_name)) {
@@ -207,16 +187,6 @@ observe({
       dtree_name %<>% tolower %>% gsub("[^[:alnum:] ]", "", .) %>%
         gsub("\\s+","_",.) %>% gsub("^([0-9]+)",".",.)
     }
-
-    # dtree_name <-
-    #   sub("^\\s*name:\\s*(.*)\\ntype:.*", "\\1", input$dtree_edit) %>% tolower %>%
-    #   gsub("[^[:alnum:] ]", "", .) %>% gsub("\\s+","_",.) %>%
-    #   gsub("^([0-9]+)",".",.)
-
-    ## code for plotting inside Radiant - can't export yet
-    # DiagrammeR::renderDiagrammeR({
-    #   DiagrammeR::DiagrammeR(plot(result, final = TRUE, shiny=TRUE))
-    # })
 
     r_data[[dtree_name]] <- input$dtree_edit
     update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
