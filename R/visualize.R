@@ -11,7 +11,8 @@
 #' @param color Adds color to a scatter plot to generate a heat map. For a line plot one line is created for each group and each is assigned a different color
 #' @param fill Group bar, histogram, and density plots by group, each with a different color
 #' @param bins Number of bins used for a histogram (1 - 50)
-#' @param smooth Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)
+#' @param smooth Adjust the flexibility of the loess line for scatter plots
+#' @param sbar Plot an error bar in a scatter plot where the xvar is a factor. Options are "mean" and/or "median". Default is "mean"
 #' @param check Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot
 #' @param axes Flip the axes in a plot ("flip") or apply a log transformation (base e) to the y-axis ("log_y") or the x-axis ("log_x")
 #' @param alpha Opacity for plot elements (0 to 1)
@@ -41,6 +42,7 @@ visualize <- function(dataset, xvar,
                       fill = "none",
                       bins = 10,
                       smooth = 1,
+                      sbar = "mean",
                       check = "",
                       axes = "",
                       alpha = .5,
@@ -162,9 +164,15 @@ visualize <- function(dataset, xvar,
           ymin <- min(dat[[j]]) %>% {if (. > 0) 0 else .}
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
 
-          plot_list[[itt]] <- plot_list[[itt]] +
-            geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
-            # geom_errorbar(stat = "hline", yintercept = "median", width = .8, size = 1, color = "red", aes(ymax = ..y.., ymin = ..y..))
+          if ("mean" %in% sbar) {
+            plot_list[[itt]] <- plot_list[[itt]] +
+              geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
+          }
+
+          if ("median" %in% sbar) {
+            plot_list[[itt]] <- plot_list[[itt]] +
+            geom_errorbar(stat = "hline", yintercept = "median", width = .8, size = 1, color = "red", aes(ymax = ..y.., ymin = ..y..))
+          }
         }
 
         itt <- itt + 1

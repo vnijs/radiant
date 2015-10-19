@@ -172,12 +172,18 @@ output$ui_Visualize <- renderUI({
         uiOutput("ui_viz_color"),
         uiOutput("ui_viz_check")
       ),
+      uiOutput("ui_viz_axes"),
       conditionalPanel(condition = "input.viz_type == 'hist'",
         sliderInput("viz_bins", label = "Number of bins:",
           min = 1, max = 50, value = state_init("viz_bins",10),
           step = 1)
       ),
-      uiOutput("ui_viz_axes"),
+      conditionalPanel("input.viz_type == 'density' |
+                       (input.viz_type == 'scatter' & (input.viz_check && input.viz_check.indexOf('loess') >= 0))",
+        sliderInput("viz_smooth", label = "Smooth:",
+                    value = state_init("viz_smooth", 1),
+                    min = 0.1, max = 3, step = .1)
+      ),
       sliderInput("viz_alpha", label = "Opacity:", min = 0, max = 1,
         value = state_init("viz_alpha",.5), step = .01),
       div(class="row",

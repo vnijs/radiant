@@ -2,7 +2,7 @@
 cm_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 cm_samples <- c("independent" = "independent", "paired" = "paired")
 cm_adjust <- c("None" = "none", "Bonferroni" = "bonf")
-cm_plots <- c("Bar" = "bar", "Box" = "box", "Density" = "density")
+cm_plots <- c("Scatter" = "scatter", "Box" = "box", "Density" = "density", "Bar" = "bar")
 
 ## list of function arguments
 cm_args <- as.list(formals(compare_means))

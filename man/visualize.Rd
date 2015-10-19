@@ -6,8 +6,8 @@
 \usage{
 visualize(dataset, xvar, yvar = "", type = "hist", facet_row = ".",
   facet_col = ".", color = "none", fill = "none", bins = 10,
-  smooth = 1, check = "", axes = "", alpha = 0.5, data_filter = "",
-  shiny = FALSE, custom = FALSE)
+  smooth = 1, sbar = "mean", check = "", axes = "", alpha = 0.5,
+  data_filter = "", shiny = FALSE, custom = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -28,7 +28,9 @@ visualize(dataset, xvar, yvar = "", type = "hist", facet_row = ".",
 
 \item{bins}{Number of bins used for a histogram (1 - 50)}
 
-\item{smooth}{Adjust the flexibility of the loess line for scatter plots (not accessible in Radiant)}
+\item{smooth}{Adjust the flexibility of the loess line for scatter plots}
+
+\item{sbar}{Plot an error bar in a scatter plot where the xvar is a factor. Options are "mean" and/or "median". Default is "mean"}
 
 \item{check}{Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot}
 

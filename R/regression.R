@@ -3,8 +3,8 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param dep_var The dependent variable in the regression
-#' @param indep_var Independent variables in the regression
+#' @param dep_var The response variable in the regression
+#' @param indep_var Explanatory variables in the regression
 #' @param int_var Interaction terms to include in the model
 #' @param check "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -99,33 +99,46 @@ summary.regression <- function(object,
 
   if (class(object$model)[1] != 'lm') return(object)
 
+  if ("stepwise" %in% object$check) cat("\n-----------------------------------------------\n\n")
+
   # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
   cat("Data     :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-  cat("Dependent variable   :", object$dep_var, "\n")
-  cat("Independent variables:", paste0(object$indep_var, collapse=", "), "\n")
+  cat("Response variable    :", object$dep_var, "\n")
+  cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n")
+  expl_var <- if (length(object$indep_var) == 1) object$indep_var else "x"
+  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$dep_var, " is zero\n"))
+  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$dep_var, " is not zero\n"))
   if ("standardize" %in% object$check)
     cat("Standardized coefficients shown\n")
+
   cat("\n")
-  # cat("Null hyp.: variables x and y are not correlated\n")
-  # cat("Alt. hyp.: variables x and y are correlated\n\n")
-  print(object$reg_coeff, row.names=FALSE)
+  if (all(object$reg_coeff$p.value == "NaN")) {
+    print(object$reg_coeff[,1:2], row.names=FALSE)
+    cat("\nInsufficient variation in explanatory variable(s) to report additional statistics")
+    return()
+  } else {
+    print(object$reg_coeff, row.names=FALSE)
+  }
 
   if (nrow(object$model$model) <= (length(object$indep_var) + 1))
     return("\nInsufficient observations to estimate model")
+
+  ## adjusting df for included intercept term
+  df_int <- if (attr(object$model$terms, "intercept")) 1L else 0L
 
   reg_fit <- glance(object$model) %>% round(3)
   if (reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
-  cat("F-statistic:", reg_fit$statistic, paste0("df(", reg_fit$df, ",", reg_fit$df.residual, "), p.value"), reg_fit$p.value)
+  cat("F-statistic:", reg_fit$statistic, paste0("df(", reg_fit$df - df_int, ",", reg_fit$df.residual, "), p.value"), reg_fit$p.value)
   cat(paste0("\nNr obs: ", reg_fit$df + reg_fit$df.residual))
   cat("\n\n")
 
   if ("rmse" %in% sum_check) {
-    mean(object$model$residual^2, na.rm=TRUE) %>% sqrt %>%
+    mean(object$model$residuals^2, na.rm=TRUE) %>% sqrt %>% round(3) %>%
     cat("Prediction error (RMSE): ", ., "\n\n")
   }
 
@@ -151,19 +164,19 @@ summary.regression <- function(object,
 
   if ("vif" %in% sum_check) {
     if (anyNA(object$model$coeff)) {
-      cat("The set of independent variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+      cat("The set of explanatory variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
     } else {
       if (length(object$indep_var) > 1) {
         cat("Variance Inflation Factors\n")
         vif (object$model) %>%
-          { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
+          { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(2) %>%
           .[order(.$VIF, decreasing=T),] %>%
           { if (nrow(.) < 8) t(.) else . } %>%
           print
       } else {
-        cat("Insufficient number of independent variables selected to calculate\nmulti-collinearity diagnostics")
+        cat("Insufficient explanatory variables to calculate\nmulti-collinearity diagnostics (VIF)")
       }
     }
     cat("\n")
@@ -171,7 +184,7 @@ summary.regression <- function(object,
 
   if ("confint" %in% sum_check) {
     if (anyNA(object$model$coeff)) {
-      cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation. Confidence\nintervals were not calculated.\n")
+      cat("There is perfect multi-collineary in the set of explanatory variables.\nOne or more variables were dropped from the estimation. Confidence\nintervals were not calculated.\n")
     } else {
 
       cl_split <- function(x) 100*(1-x)/2
@@ -199,7 +212,7 @@ summary.regression <- function(object,
 
       vars <- object$indep_var
       if (object$int_var != "" && length(vars) > 1) {
-        # updating test_var if needed
+        ## updating test_var if needed
         test_var <- test_specs(test_var, object$int_var)
         vars <- c(vars,object$int_var)
       }
@@ -212,7 +225,6 @@ summary.regression <- function(object,
       if (sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
       p.value <- sub_mod[,"Pr(>F)"][2] %>% { if (. < .001) "< .001" else round(.,3) }
 
-      # cat("\n")
       cat(attr(sub_mod,"heading")[2])
         object$model$model[,1] %>%
         { sum((. - mean(.))^2) } %>%
@@ -229,7 +241,7 @@ summary.regression <- function(object,
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{regression}}
-#' @param plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each independent variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the independent variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each independent variable
+#' @param plots Regression plots to produce for the specified regression model. Enter "" to avoid showing any plots (default). "hist" to show histograms of all variables in the model. "correlations" for a visual representation of the correlation matrix selected variables. "scatter" to show scatter plots (or box plots for factors) for the dependent variables with each explanatory variable. "dashboard" for a series of six plots that can be used to evaluate model fit visually. "resid_pred" to plot the explanatory variables against the model residuals. "coef" for a coefficient plot with adjustable confidence intervals. "leverage" to show leverage plots for each explanatory variable
 #' @param lines Optional lines to include in the select plot. "line" to include a line through a scatter plot. "loess" to include a polynomial regression fit line. To include both use c("line","loess")
 #' @param conf_lev Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param intercept Include the intercept in the coefficient plot (TRUE, FALSE). FALSE is the default
@@ -502,8 +514,8 @@ predict.regression <- function(object,
       cat("Data     :", object$dataset, "\n")
       if (object$data_filter %>% gsub("\\s","",.) != "")
         cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-      cat("Dependent variable   :", object$dep_var, "\n")
-      cat("Independent variables:", paste0(object$indep_var, collapse=", "), "\n\n")
+      cat("Response variable    :", object$dep_var, "\n")
+      cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n\n")
 
       if (pred_type == "cmd") {
         cat("Predicted values for:\n")
@@ -631,19 +643,36 @@ store_reg <- function(object, data = object$dataset,
                       type = "residuals", name = paste0(type, "_reg")) {
   if (!is.null(object$data_filter) && object$data_filter != "")
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
-  store <- if (type == "residuals") object$model$residuals else object$Prediction
-    changedata(data, vars = store, var_names = name)
+
+  ## fix empty name input
+  if (gsub("\\s","",name) == "") name <- paste0(type, "_reg")
+
+  if (type == "residuals") {
+    store <- object$model$residuals
+  } else {
+    ## gsub needed because trailing/leading spaces may be added to the variable name
+    name <- unlist(strsplit(name, ",")) %>% gsub("\\s","",.)
+    if (length(name) > 1) {
+      name <- name[1:min(3, length(name))]
+      ind <- which(colnames(object) == "Prediction") %>% {.:(. + length(name[-1]))}
+      store <- object[,ind]
+    } else {
+      store <- object$Prediction
+    }
+  }
+
+  changedata(data, vars = store, var_names = name)
 }
 
 #' Check if main effects for all interaction effects are included in the model
 #' If ':' is used to select a range _indep_var_ is updated
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param iv List of independent variables provided to _regression_ or _glm_
-#' @param cn Column names for all independent variables in _dat_
+#' @param iv List of explanatory variables provided to _regression_ or _glm_
+#' @param cn Column names for all explanatory variables in _dat_
 #' @param intv Interaction terms specified
 #'
-#' @return 'vars' is a vector of right-hand side variables, possibly with interactions, 'iv' is the list of independent variables, and intv are interaction terms
+#' @return 'vars' is a vector of right-hand side variables, possibly with interactions, 'iv' is the list of explanatory variables, and intv are interaction terms
 #'
 #' @examples
 #' var_check("a:d", c("a","b","c","d"))

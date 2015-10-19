@@ -86,7 +86,7 @@ reg_pred_plot_inputs <- reactive({
 output$ui_reg_dep_var <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
-  selectInput(inputId = "reg_dep_var", label = "Dependent variable:", choices = vars,
+  selectInput(inputId = "reg_dep_var", label = "Response variable:", choices = vars,
     selected = state_single("reg_dep_var",vars), multiple = FALSE)
 })
 
@@ -103,7 +103,7 @@ output$ui_reg_indep_var <- renderUI({
       {if (!is_empty(.) && . %in% vars) . else character(0)}
   })
 
-  selectInput(inputId = "reg_indep_var", label = "Independent variables:", choices = vars,
+  selectInput(inputId = "reg_indep_var", label = "Explanatory variables:", choices = vars,
     selected = state_multiple("reg_indep_var", vars, init),
     multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
@@ -344,10 +344,10 @@ output$regression <- renderUI({
 reg_available <- reactive({
 
   if (not_available(input$reg_dep_var))
-    return("This analysis requires a dependent variable of type integer\nor numeric and one or more independent variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
+    return("This analysis requires a response variable of type integer\nor numeric and one or more explanatory variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
 
   if (not_available(input$reg_indep_var))
-    return("Please select one or more independent variables.\n\n" %>% suggest_data("diamonds"))
+    return("Please select one or more explanatory variables.\n\n" %>% suggest_data("diamonds"))
 
   "available"
 })

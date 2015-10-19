@@ -8,14 +8,14 @@ If ':' is used to select a range _indep_var_ is updated}
 var_check(iv, cn, intv = "")
 }
 \arguments{
-\item{iv}{List of independent variables provided to _regression_ or _glm_}
+\item{iv}{List of explanatory variables provided to _regression_ or _glm_}
 
-\item{cn}{Column names for all independent variables in _dat_}
+\item{cn}{Column names for all explanatory variables in _dat_}
 
 \item{intv}{Interaction terms specified}
 }
 \value{
-'vars' is a vector of right-hand side variables, possibly with interactions, 'iv' is the list of independent variables, and intv are interaction terms
+'vars' is a vector of right-hand side variables, possibly with interactions, 'iv' is the list of explanatory variables, and intv are interaction terms
 }
 \description{
 Check if main effects for all interaction effects are included in the model

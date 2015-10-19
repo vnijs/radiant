@@ -198,7 +198,7 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/compare_means.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_means}}
-#' @param plots One or more plots ("bar", "box", or "density")
+#' @param plots One or more plots ("bar", "density", "box", or "scatter")
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
@@ -211,7 +211,7 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 #'
 #' @export
 plot.compare_means <- function(x,
-                               plots = "bar",
+                               plots = "scatter",
                                shiny = FALSE,
                                ...) {
 
@@ -221,31 +221,51 @@ plot.compare_means <- function(x,
 	dat <- object$dat
 	v1 <- colnames(dat)[1]
 	v2 <- colnames(dat)[-1]
+	var1 <- object$var1
+	var2 <- object$var2
 
 	## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	plot_list <- list()
 	if ("bar" %in% plots) {
 		colnames(object$dat_summary)[1] <- "variable"
 		## use of `which` allows the user to change the order of the plots shown
-		plot_list[[which("bar" == plots)]] <- ggplot(object$dat_summary,
-	    aes_string(x = "variable", y = "mean", fill = "variable")) +
-	    geom_bar(stat = "identity")  +
-	 		geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
-	 		geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), colour = "blue") +
-	 		theme(legend.position = "none")
+		plot_list[[which("bar" == plots)]] <-
+		  ggplot(object$dat_summary,
+		    aes_string(x = "variable", y = "mean", fill = "variable")) +
+		    geom_bar(stat = "identity")  +
+		 		geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
+		 		geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), colour = "blue") +
+		 		theme(legend.position = "none") +
+		 		xlab(var1) + ylab(var2)
 	}
 
 	## graphs on full data
 	if ("box" %in% plots) {
 		plot_list[[which("box" == plots)]] <-
 			ggplot(dat, aes_string(x = v1, y = v2, fill = v1)) +
-				geom_boxplot(alpha = .7) + theme(legend.position = "none")
+				geom_boxplot(alpha = .7) + theme(legend.position = "none") +
+	 		  xlab(var1) + ylab(var2)
 	}
 
 	if ("density" %in% plots) {
 		plot_list[[which("density" == plots)]] <-
-			ggplot(dat, aes_string(x = v2, fill = v1)) + geom_density(alpha = .7)
+			ggplot(dat, aes_string(x = v2, fill = v1)) + geom_density(alpha = .7) +
+	 		  xlab(var1) + ylab(var2) +
+	 		  guides(fill = guide_legend(title = var1))
+
 	}
+
+	if ("scatter" %in% plots) {
+
+    ymax <- max(dat[[v2]]) %>% {if (. < 0) 0 else .}
+    ymin <- min(dat[[v2]]) %>% {if (. > 0) 0 else .}
+		plot_list[[which("scatter" == plots)]] <-
+      ggplot(dat, aes_string(x=v1, y=v2)) +
+        geom_jitter(alpha = .3, position = position_jitter(width = 0.4, height = 0.1)) +
+        geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..)) +
+        ylim(ymin,ymax) +
+	 		  xlab(var1) + ylab(var2)
+  }
 
 	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }

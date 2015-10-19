@@ -579,7 +579,24 @@ store_glm <- function(object,
   if (!is.null(object$data_filter) && object$data_filter != "")
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
 
-  store <- if (type == "residuals") object$model$residuals else object$Prediction
+  ## fix empty name input
+  if (gsub("\\s","",name) == "") name <- paste0(type, "_glm")
+
+  if (type == "residuals") {
+    store <- object$model$residuals
+  } else {
+    ## gsub needed because trailing/leading spaces may be added to the variable name
+    name <- unlist(strsplit(name, ",")) %>% gsub("\\s","",.)
+    if (length(name) > 1) {
+      name <- name[1:min(2, length(name))]
+      ind <- which(colnames(object) == "Prediction") %>% {.:(. + length(name[-1]))}
+      store <- object[,ind]
+    } else {
+      store <- object$Prediction
+    }
+  }
+
+  # store <- if (type == "residuals") object$model$residuals else object$Prediction
 
   changedata(data, vars = store, var_names = name)
 }

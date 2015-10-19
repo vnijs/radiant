@@ -313,10 +313,12 @@ make_dt <- function(pvt,
       backgroundRepeat = "no-repeat",
       backgroundPosition = "center")
   } else if (format == "heat") {
-    brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE)
+    ## round seems to ensure that 'cuts' are ordered according to DT::stylInterval
+    brks <- quantile(tab[, cn_nt], probs = seq(.05, .95, .05), na.rm = TRUE) %>% round(5)
     clrs <- seq(255, 40, length.out = length(brks) + 1) %>%
       round(0) %>%
       {paste0("rgb(255,", ., ",", .,")")}
+
     dt_tab %<>% DT::formatStyle(cn_nt, backgroundColor = DT::styleInterval(brks, clrs))
   }
 
