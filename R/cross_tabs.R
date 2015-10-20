@@ -221,10 +221,10 @@ plot.cross_tabs <- function(x,
 		tab[[2]] %<>% as.factor %>% factor(levels = fact_names[[2]])
 
 		plots[['observed']] <-
-		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
-				  	 x = "", y = "", fill = object$var2)) +
+				  	 x = object$var2, y = "", fill = object$var1)) +
 		    scale_y_continuous(labels = percent)
 	}
 
@@ -234,10 +234,11 @@ plot.cross_tabs <- function(x,
 		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
 		plots[['expected']] <-
-		  ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
+		  # ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
+		  ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
-		         x = "", y = "", fill = object$var2)) +
+		         x = object$var2, y = "", fill = object$var1)) +
 		    scale_y_continuous(labels = percent)
 	}
 
@@ -245,23 +246,23 @@ plot.cross_tabs <- function(x,
   	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
 		plots[['chi_sq']] <-
-		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 		    labs(list(title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""),
-		         x = object$var1, y = ""))
+		         x = object$var2, y = ""))
   }
 
 	if ("dev_std" %in% check) {
   	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
 		plots[['dev_std']] <-
-		  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
+		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
 		    geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
 		    geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
 		    labs(list(title = paste("Deviation standardized for ",object$var2," versus ",object$var1, sep = ""),
-		         x = object$var1, y = ""))
+		         x = object$var2, y = ""))
 	}
 
 	# if ("dev_perc" %in% check) {
@@ -282,11 +283,11 @@ plot.cross_tabs <- function(x,
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  group_by_("Var1") %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
-			  ggplot(aes_string(x = "Var1", y = "perc", fill = "Var2")) +
+			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
-			 		labs(fill = object$var2) +
+			 		labs(fill = object$var1) +
 			 		scale_y_continuous(labels = percent) +
-			 		ylab("Percentage") + xlab(object$var1) +
+			 		ylab("Percentage") + xlab(object$var2) +
 			    ggtitle("Row percentages")
 	}
 
@@ -307,9 +308,9 @@ plot.cross_tabs <- function(x,
 		plots[['perc']] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
-			  ggplot(aes_string(x = "Var1", y = "perc", fill = "Var2")) +
+			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
-			 		labs(fill = object$var2) +
+			 		labs(fill = object$var1) +
 			 		scale_y_continuous(labels = percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
 			    ggtitle("Table percentages")
