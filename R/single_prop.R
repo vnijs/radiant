@@ -100,10 +100,11 @@ summary.single_prop <- function(object, ...) {
 	# 								"ns","n")
 
 	res <- round(object$res, 3) 	## restrict to 3 decimal places
-	res$statistic <- NULL
+	res$statistic <- res$parameter <- NULL
 	res$ns <- object$ns
 	res$n <- object$n
-	names(res) <- c("prop","p.value","df", ci_perc[1], ci_perc[2], "ns","n")
+	# names(res) <- c("prop","p.value","df", ci_perc[1], ci_perc[2], "ns","n")
+	names(res) <- c("prop","p.value", ci_perc[1], ci_perc[2], "ns","n")
 
 	if (res$p.value < .001) res$p.value <- "< .001"
 

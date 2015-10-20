@@ -19,15 +19,18 @@ compare_output <- function(res1, res2) {
 
 ######### tests ########
 
-# context("Compare means")
-#
-# test_that("compare_means 1", {
-#   result <- compare_means("diamonds","cut","price")
-#   res1 <- capture.output(summary(result))[17] %>% trim
-#   # cat(paste0(res1, "\n"))
-#   res2 <- "Fair not equal to Very Good      Fair = Very Good       545.322 0.195"
-#   expect_equal(res1,res2)
-# })
+# library(radiant)
+# library(testthat)
+
+context("Compare means")
+
+test_that("compare_means 1", {
+  result <- compare_means("diamonds","cut","price")
+  res1 <- capture.output(summary(result))[17] %>% trim
+  # cat(paste0(res1, "\n"))
+  res2 <- "Fair not equal to Very Good      Fair = Very Good       545.322 0.177"
+  expect_equal(res1,res2)
+})
 
 context("Compare proportions")
 
@@ -39,31 +42,31 @@ test_that("compare_props 2", {
   expect_equal(res1,res2)
 })
 
-# context("Single proportion")
-#
-# test_that("single_prop 1", {
-#   result <- single_prop("diamonds", "color")
-#   expect_equal(result$lev, "D")
-#   res1 <- capture.output(summary(result))[9] %>% trim
-#   # cat(paste0(res1, "\n"))
-#   res2 <- "0.127    1666.565  < .001  1 0.116  0.14 382 3000"
-#   expect_equal(res1,res2)
-# })
+context("Single proportion")
 
-# test_that("single_prop 2", {
-#   result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
-#   expect_equal(result$lev, "IF")
-#   res1 <- capture.output(summary(result))[9] %>% trim
-#   # cat(paste0(res1, "\n"))
-#   res2 <- "0.033      18.253  < .001  1 0.027  0.04 99 3000"
-#   expect_equal(res1,res2)
-# })
+test_that("single_prop 1", {
+  result <- single_prop("diamonds", "color")
+  expect_equal(result$lev, "D")
+  res1 <- capture.output(summary(result))[9] %>% trim
+  # cat(paste0(res1, "\n"))
+  res2 <- "0.127  < .001 0.116  0.14 382 3000"
+  expect_equal(res1,res2)
+})
+
+test_that("single_prop 2", {
+  result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
+  expect_equal(result$lev, "IF")
+  res1 <- capture.output(summary(result))[9] %>% trim
+  # cat(paste0(res1, "\n"))
+  res2 <- "0.033  < .001 0.027  0.04 99 3000"
+  expect_equal(res1,res2)
+})
 
 context("Regression")
 
 test_that("regression", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
-  res1 <- capture.output(summary(result))[8] %>% trim
+  res1 <- capture.output(summary(result))[10] %>% trim
   # cat(paste0(res1, "\n"))
   res2 <- "carat    8438.030    51.101 165.125  < .001 ***"
   expect_equal(res1,res2)
@@ -78,8 +81,8 @@ test_that("regression", {
 test_that("regression - plots", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
   grb <- plot(result, plots = "dashboard", shiny = TRUE)
-  class(grb)
-  library(testthat)
+  # class(grb)
+  # library(testthat)
   expect_true(all(c("gtable","grob") %in% class(grb)))
   expect_equal(try(print(grb), silent = TRUE), NULL)
   # expect_true(file.exists("Rplots.pdf"))  # not always created it seems

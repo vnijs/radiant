@@ -231,7 +231,7 @@ summary.regression <- function(object,
         {1 - (sub_mod$RSS / .)} %>%
         round(3) %>%
         cat("\nR-squared, Model 1 vs 2:", .)
-      cat("\nF-statistic:", sub_mod$F[2] %>% round(3), paste0("df(", sub_mod$Res.Df[1], ",", sub_mod$Res.Df[2], "), p.value ", p.value))
+      cat("\nF-statistic:", sub_mod$F[2] %>% round(3), paste0("df(", sub_mod$Res.Df[1]-sub_mod$Res.Df[2], ",", sub_mod$Res.Df[2], "), p.value ", p.value))
     }
   }
 }

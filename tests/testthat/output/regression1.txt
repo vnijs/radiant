@@ -1,7 +1,9 @@
 Linear regression (OLS)
  Data     : diamonds
- Dependent variable   : price
- Independent variables: carat, clarity
+ Response variable    : price
+ Explanatory variables: carat, clarity
+ Null hyp.: the effect of x on price is zero
+ Alt. hyp.: the effect of x on price is not zero
  
  coefficient std.error t.value p.value
  (Intercept)   -6780.993   204.952 -33.086  < .001 ***
@@ -17,6 +19,6 @@ Linear regression (OLS)
  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
  
  R-squared: 0.904,  Adjusted R-squared: 0.904
- F-statistic: 3530.024 df(9,2991), p.value < .001
+ F-statistic: 3530.024 df(8,2991), p.value < .001
  Nr obs: 3000
  
