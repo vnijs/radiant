@@ -886,6 +886,248 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
 	}
 }
 
+
+
+#' Probability calculator for the uniform distribution
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param min Minmum value
+#' @param max Maximum value
+#' @param lb Lower bound
+#' @param ub Upper bound
+#' @param plb Lower probability bound
+#' @param pub Upper probability bound
+#' @param dec Number of decimals to show
+#'
+#' @export
+prob_unif <- function(min,
+                      max,
+                      lb = NA,
+                      ub = NA,
+                      plb = NA,
+                      pub = NA,
+                      dec = 3) {
+
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  if (!is.na(plb) && !is.na(pub)) {
+		if (plb > pub) {
+			plb <- pub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+	p_ub <- punif(ub, min, max)
+	p_lb <- punif(lb, min, max)
+	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
+
+	p_ub %<>% round(dec)
+	p_lb %<>% round(dec)
+
+	if (!is.na(pub)) {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	}
+
+	if (!is.na(plb)) {
+		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
+	}
+
+	v_ub <- qunif(pub, min, max) %>% round(dec)
+	v_lb <- qunif(plb, min, max) %>% round(dec)
+
+	mean <- (max+min) / 2
+	stdev <- (max-min)^2 / (1/12)
+
+  environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+}
+
+#' Plot method for the probability calculator (uniform)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{prob_unif}}
+#' @param type Probabilities or values
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
+
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
+
+	object <- x; rm(x)
+	if (type == "values") {
+		lb <- object$lb
+		ub <- object$ub
+	} else {
+		lb <- object$v_lb
+		ub <- object$v_ub
+	}
+
+	min <- object$min
+	max <- object$max
+
+	if (min > max) return(invisible())
+
+  limits <- c(min, max)
+  dunif_limit <- function(x) {
+    y <- dunif(x, min = min, max = max)
+    y[x < lb | x > ub] <- NA
+    y
+  }
+
+  dunif_lb <- function(x) {
+  	if (is.na(lb)) return(0)
+    y <- dunif(x, min = min, max = max)
+    y[x > lb] <- NA
+    y
+  }
+
+  dunif_ub <- function(x) {
+  	if (is.na(ub)) return(0)
+    y <- dunif(x, min = min, max = max)
+    y[x < ub] <- NA
+    y
+  }
+
+  dunif_lines <- c(ub,lb) %>% na.omit %>% setdiff(c(min,max))
+  if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
+
+	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+	## and R Graphics Cookbook
+	# plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
+	plt <- ggplot(data.frame(x=limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x="x")) +
+	  # stat_function(fun=dunif, args = list(min = min, max = max)) +
+	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
+	  stat_function(fun=dunif_lb, geom="area", fill="red", alpha=0.2, n = 501) +
+	  stat_function(fun=dunif_ub, geom="area", fill="red", alpha=0.2, n = 501) +
+	  geom_vline(xintercept = dunif_lines, color = 'black', linetype = 'dashed', size = .5) +
+	  # geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
+	  # geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = dunif(x[1], x[1], x[2]))) +
+	  geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
+	  # geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
+	  geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = y[2])) +
+	  # geom_segment(aes(x = x[1], y = dunif(x[1], x[1], x[2]), xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
+	  geom_segment(aes(x = x[1], y = y[1], xend = x[2], yend = y[2])) +
+	  # geom_segment(aes(x = x[1], y = 0, xend = x[1] - abs(.05*(x[2]-x[1])), yend = 0)) +
+	  # geom_segment(aes(x = x[2], y = 0, xend = x[2] + abs(.05*(x[2]-x[1])), yend = 0)) +
+	  # geom_rect(aes(ymin = 0, ymax = y[1], xmin = lb, xmax = ub), fill = "blue", alpha = 0.2) +
+	  xlab("") + ylab("")
+
+   if (shiny) plt else print(plt)
+}
+
+#' Summary method for the probability calculator function (uniform)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{prob_unif}}
+#' @param type Probabilities or values
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+summary.prob_unif <- function(object, type = "values",  ...) {
+
+	# suppressMessages(attach(object))
+
+	min <- object$min
+	max <- object$max
+	mean <- object$mean
+	stdev <- object$stdev
+	dec <- object$dec
+
+	ub <- object$ub
+	lb <- object$lb
+	p_ub <- object$p_ub
+	p_lb <- object$p_lb
+	p_int <- object$p_int
+
+	pub <- object$pub
+	plb <- object$plb
+
+	v_ub <- object$v_ub
+	v_lb <- object$v_lb
+
+  cat("Probability calculator\n")
+  cat("Distribution: Uniform\n")
+	cat("Min        :", min, "\n")
+	cat("Max        :", max, "\n")
+	cat("Mean       :", mean, "\n")
+	cat("St. dev    :", stdev, "\n")
+
+	# if (is.null(min) || is.na(min) || is.null(max) || is.na(max)) {
+	# 	cat("\nPlease specify both a minimum and maximum value\n")
+	# 	return(invisible())
+	# }
+
+	# if (min > max) {
+	# 	cat("\nThe maximum value must be larger than the minimum value\n")
+	# 	return(invisible())
+	# }
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
+
+	if (type == "values") {
+		cat("Lower bound:", {if (is.na(lb)) min else lb}, "\n")
+		cat("Upper bound:", {if (is.na(ub)) max else ub}, "\n")
+
+		if (!is.na(ub) || !is.na(lb)) {
+		  cat("\n")
+
+			if (!is.na(lb)) {
+				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
+				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+			}
+
+			if (!is.na(ub)) {
+				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
+				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+			}
+
+			if (!is.na(lb) && !is.na(ub)) {
+				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+		  }
+		}
+
+	} else {
+		pub <- if (is.na(pub)) 2 else pub
+		plb <- if (is.na(plb)) -1 else plb
+
+		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
+		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
+
+		if (pub <= 1 || plb >= 0) {
+		  cat("\n")
+
+			if (plb >= 0) {
+				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
+				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			}
+
+			if (pub <= 1) {
+				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
+				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			}
+
+		  if (pub <= 1 && plb >= 0) {
+				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
+				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+			}
+		}
+	}
+}
+
 #' Probability calculator for the binomial distribution (binomial)
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
@@ -1198,26 +1440,144 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 	}
 }
 
-#' Probability calculator for the uniforem distribution
+
+
+#' Probability calculator for the discrete distribution (discrete)
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
-#' @param min Minmum value
-#' @param max Maximum value
-#' @param lb Lower bound
-#' @param ub Upper bound
+#' @param v Values
+#' @param p Probabilities
+#' @param lb Lower bound on the number of successes
+#' @param ub Upper bound on the number of successes
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_unif <- function(min,
-                      max,
+prob_disc <- function(v, p,
                       lb = NA,
                       ub = NA,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
+
+
+# dunifdisc<-function(x, min=0, max=1) ifelse(x>=min & x<=max & round(x)==x, 1/(max-min+1), 0)
+# punifdisc<-function(q, min=0, max=1) ifelse(q<min, 0, ifelse(q>max, 1, floor(q)/(max-min+1)))
+# qunifdisc<-function(p, min=0, max=1) floor(p*(max-min+1))
+# runifdisc<-function(n, min=0, max=1) sample(min:max, n, replace=T)
+
+# v <- 1:6
+# p <- rep(1/6,6)
+# p <- 1/6
+
+# # library(dplyr)
+
+# lb <- 3
+# plb <- .8
+# dec <- 3
+
+	# v <- paste(1:5, collapse = " ")
+	# p <- paste(1/6)
+	# library(radiant)
+
+
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+
+	v <- unlist(strsplit(v, "\\s")) %>% as_numeric
+	p <- unlist(strsplit(p, "\\s")) %>% {eval(parse(text = .))} %>% as_numeric
+
+  df <- data.frame(v = v, p = p) %>% arrange(v)
+
+	if (sum(df$p) < .99) {
+		mess_probs <- mess_values <- "Probabilities do not sum to 1"
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	}
+
+	ddisc <- function(b, df) filter(df, v == b)$p
+	pdisc <- function(b, df) filter(df, v < b)$p  %>% sum
+	qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1) %>% .$v
+
+	# qdisc(0,df)
+	# prob <- 1
+	# mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1)
+	# %>% .$v
+
+
+	# if (is.na(lb) || !lb %in% v) {
+	if (is.na(lb)) {
+		p_elb <- p_lb <- lb <- NA
+	} else if (!lb %in% v) {
+		mess_values <- "Lower bound is not in the list of values"
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	} else {
+		p_elb <- ddisc(lb, df) %>% round(dec)
+		p_lb <- pdisc(lb, df) %>% round(dec)
+		p_lelb <- p_elb + p_lb
+	}
+
+	if (is.na(ub)) {
+		p_eub <- p_ub <- ub <- NA
+	} else if (!ub %in% v) {
+		mess_values <- "Upper bound is not in the list of values"
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	} else {
+		p_eub <- ddisc(ub, df) %>% round(dec)
+		p_ub <- pdisc(ub, df) %>% round(dec)
+		p_leub <- p_eub + p_ub
+	}
+
+	if (!is.na(ub) && !is.na(lb)) {
+	  p_int <- p_leub - p_lb
+	} else {
+		p_int <- NA
+	}
+
+	# if (is.na(plb) || length(qdisc(plb, df)) == 0) {
+	if (is.na(plb)) {
+		plb <- vlb <- NA
+	} else if (length(qdisc(plb, df)) == 0) {
+		mess_probs <- "Lower bound is too low"
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	} else {
+		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
+
+	  vlb <- qdisc(plb, df)
+	  # if (length(vlb) == 0) vub <- min(v)
+		vp_elb <- ddisc(vlb, df) %>% round(dec)
+	  vp_lb <- pdisc(vlb, df) %>% round(dec)
+		vp_lelb <-  vp_elb + vp_lb
+	}
+
+	# if (is.na(pub) || length(qdisc(pub, df)) == 0) {
+	if (is.na(pub)) {
+		pub <- vub <- NA
+	} else if (length(qdisc(pub, df)) == 0) {
+		mess_probs <- "Upper bound is too low"
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	} else {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	  vub <- qdisc(pub, df)
+	  # if (length(vub) == 0) vub <- min(v)
+		vp_eub <- ddisc(vub, df) %>% round(dec)
+	  vp_ub <- pdisc(vub, df) %>% round(dec)
+		vp_leub <-  vp_eub + vp_ub
+	}
+
+	if (!is.na(pub) && !is.na(plb)) {
+	  vp_int <- vp_leub - vp_lb
+	} else {
+		vp_int <- NA
+	}
 
 	if (!is.na(lb) && !is.na(ub)) {
 		if (lb > ub) {
@@ -1226,50 +1586,27 @@ prob_unif <- function(min,
 		}
   }
 
-  if (!is.na(plb) && !is.na(pub)) {
-		if (plb > pub) {
-			plb <- pub <- NA
+  if (!is.na(vlb) && !is.na(vub)) {
+		if (vlb > vub) {
+			plb <- pub <- vlb <- vub <- NA
 			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
 		}
   }
 
-	p_ub <- punif(ub, min, max)
-	p_lb <- punif(lb, min, max)
-	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
-
-	p_ub %<>% round(dec)
-	p_lb %<>% round(dec)
-
-	if (!is.na(pub)) {
-		if (pub > 1) pub <- 1
-		if (pub < 0) pub <- 0
-	}
-
-	if (!is.na(plb)) {
-		if (plb > 1) plb <- 1
-		if (plb < 0) plb <- 0
-	}
-
-	v_ub <- qunif(pub, min, max) %>% round(dec)
-	v_lb <- qunif(plb, min, max) %>% round(dec)
-
-	mean <- (max+min) / 2
-	stdev <- (max-min)^2 / (1/12)
-
-  environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+  environment() %>% as.list %>% set_class(c("prob_disc",class(.)))
 }
 
-#' Plot method for the probability calculator (uniform)
+#' Plot method for the probability calculator function (discrete)
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
-#' @param x Return value from \code{\link{prob_unif}}
+#' @param x Return value from \code{\link{prob_disc}}
 #' @param type Probabilities or values
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -1279,161 +1616,191 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 		lb <- object$lb
 		ub <- object$ub
 	} else {
-		lb <- object$v_lb
-		ub <- object$v_ub
+		lb <- object$vlb
+		ub <- object$vub
 	}
 
-	min <- object$min
-	max <- object$max
+	v <- object$v
+	p <- object$p
 
-	if (min > max) return(invisible())
+  limits <- v
 
-  limits <- c(min, max)
-  dunif_limit <- function(x) {
-    y <- dunif(x, min = min, max = max)
-    y[x < lb | x > ub] <- NA
-    y
+  k <- factor(rep("below",length(v)), levels = c("below","equal","above"))
+  if (!is.null(ub) && !is.na(ub)) {
+    if (!is.na(lb)) k[lb:ub] <- "equal"
+  	k[ub] <- "equal"
+  	k[v > ub] <- "above"
+  } else if (!is.null(lb) && !is.na(lb)) {
+  	k[lb] <- "equal"
+  	k[v > lb] <- "above"
+  } else {
+  	return(invisible())
   }
 
-  dunif_lb <- function(x) {
-  	if (is.na(lb)) return(0)
-    y <- dunif(x, min = min, max = max)
-    y[x > lb] <- NA
-    y
+  dat <- data.frame(
+    x = limits %>% as_factor,
+    Probability = p,
+    k = k
+  )
+
+  if (nrow(dat) < 40) {
+  	breaks <- dat$x
+  } else {
+  	x <- as_integer(dat$x)
+  	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
   }
 
-  dunif_ub <- function(x) {
-  	if (is.na(ub)) return(0)
-    y <- dunif(x, min = min, max = max)
-    y[x < ub] <- NA
-    y
-  }
-
-  dunif_lines <- c(ub,lb) %>% na.omit %>% setdiff(c(min,max))
-  if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
+  cols <- c(below = "red", equal = "blue", above = "black")
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	# plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
-	plt <- ggplot(data.frame(x=limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x="x")) +
-	  # stat_function(fun=dunif, args = list(min = min, max = max)) +
-	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
-	  stat_function(fun=dunif_lb, geom="area", fill="red", alpha=0.2, n = 501) +
-	  stat_function(fun=dunif_ub, geom="area", fill="red", alpha=0.2, n = 501) +
-	  geom_vline(xintercept = dunif_lines, color = 'black', linetype = 'dashed', size = .5) +
-	  # geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
-	  # geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = dunif(x[1], x[1], x[2]))) +
-	  geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
-	  # geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
-	  geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = y[2])) +
-	  # geom_segment(aes(x = x[1], y = dunif(x[1], x[1], x[2]), xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
-	  geom_segment(aes(x = x[1], y = y[1], xend = x[2], yend = y[2])) +
-	  # geom_segment(aes(x = x[1], y = 0, xend = x[1] - abs(.05*(x[2]-x[1])), yend = 0)) +
-	  # geom_segment(aes(x = x[2], y = 0, xend = x[2] + abs(.05*(x[2]-x[1])), yend = 0)) +
-	  # geom_rect(aes(ymin = 0, ymax = y[1], xmin = lb, xmax = ub), fill = "blue", alpha = 0.2) +
-	  xlab("") + ylab("")
+	plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
+	  geom_bar(stat="identity", alpha = .3) +
+	  xlab("") + scale_fill_manual(values = cols) +
+	  theme(legend.position="none") +
+	  scale_x_discrete(breaks = breaks)
 
    if (shiny) plt else print(plt)
 }
 
-#' Summary method for the probability calculator function (normal)
+#' Summary method for the probability calculator function (discrete)
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
-#' @param object Return value from \code{\link{prob_unif}}
+#' @param object Return value from \code{\link{prob_disc}}
 #' @param type Probabilities or values
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_unif <- function(object, type = "values",  ...) {
+summary.prob_disc <- function(object, type = "values",  ...) {
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
 
 	# suppressMessages(attach(object))
-
-	min <- object$min
-	max <- object$max
-	mean <- object$mean
-	stdev <- object$stdev
+	v <- object$v
+	p <- object$p
 	dec <- object$dec
 
 	ub <- object$ub
 	lb <- object$lb
 	p_ub <- object$p_ub
 	p_lb <- object$p_lb
+	p_eub <- object$p_eub
+	p_elb <- object$p_elb
+	p_leub <- object$p_leub
+	p_lelb <- object$p_lelb
 	p_int <- object$p_int
 
 	pub <- object$pub
 	plb <- object$plb
+	vub <- object$vub
+	vlb <- object$vlb
 
-	v_ub <- object$v_ub
-	v_lb <- object$v_lb
+	vp_ub <- object$vp_ub
+	vp_lb <- object$vp_lb
+	vp_eub <- object$vp_eub
+	vp_elb <- object$vp_elb
+	vp_leub <- object$vp_leub
+	vp_lelb <- object$vp_lelb
+	vp_int <- object$vp_int
 
   cat("Probability calculator\n")
-  cat("Distribution: Uniform\n")
-	cat("Min        :", min, "\n")
-	cat("Max        :", max, "\n")
-	cat("Mean       :", mean, "\n")
-	cat("St. dev    :", stdev, "\n")
+  cat("Distribution: Discrete\n")
+  cat("Values       :", paste0(v, collapse=", "), "\n")
+  cat("Probabilities:", paste0(p, collapse=", "), "\n")
+  m <- sum(v*p); std <- sum(p * (v - m)^2) %>% sqrt
+	cat("Mean         :", m %>% round(dec), "\n")
+	cat("St. dev      :", std %>% round(dec), "\n")
 
-	# if (is.null(min) || is.na(min) || is.null(max) || is.na(max)) {
-	# 	cat("\nPlease specify both a minimum and maximum value\n")
-	# 	return(invisible())
-	# }
-
-	# if (min > max) {
-	# 	cat("\nThe maximum value must be larger than the minimum value\n")
-	# 	return(invisible())
-	# }
-
-	mess <- object[[paste0("mess_",type)]]
-	if (!is.null(mess)) return(mess)
+	# mess <- object[[paste0("mess_",type)]]
+	# if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound:", {if (is.na(lb)) min else lb}, "\n")
-		cat("Upper bound:", {if (is.na(ub)) max else ub}, "\n")
+		cat("Lower bound:", {if (is.na(lb)) "" else lb}, "\n")
+		cat("Upper bound:", {if (is.na(ub)) "" else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
 
 			if (!is.na(lb)) {
-				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+				cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
+				if (lb > min(v)) {
+					cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
+				  cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+				}
+				if (lb < max(v)) {
+				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+					# if (lb > 0)
+				  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
+				  # else
+				  	# cat(paste0("P(X >= ", lb,") = ", 1, "\n"))
+				}
 			}
 
 			if (!is.na(ub)) {
-				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+				cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
+				if (ub > min(v)) {
+					cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
+				  cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+				}
+				if (ub < max(v)) {
+				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+				  # if (ub > 0)
+				  	cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
+				  # else
+				  	# cat(paste0("P(X >= ", ub,") = ", 1, "\n"))
+				}
 			}
 
 			if (!is.na(lb) && !is.na(ub)) {
-				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+				cat(paste0("P(", lb, " <= X <= ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " <= X <= ", ub,") = ", round(1 - p_int, dec), "\n"))
 		  }
 		}
 
 	} else {
-		pub <- if (is.na(pub)) 2 else pub
-		plb <- if (is.na(plb)) -1 else plb
 
-		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
-		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
+		cat("Lower bound:", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
+		cat("Upper bound:", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
-		if (pub <= 1 || plb >= 0) {
+		if (!is.na(pub) || !is.na(plb)) {
 		  cat("\n")
 
-			if (plb >= 0) {
-				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			if (!is.na(plb)) {
+				cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
+				if (vlb > min(v)) {
+					cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
+				  cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+				}
+				if (vlb < max(v)) {
+				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+				  # if (vlb > 0)
+				  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
+				  # else
+				  	# cat(paste0("P(X >= ", vlb,") = ", 1, "\n"))
+				}
 			}
 
-			if (pub <= 1) {
-				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			if (!is.na(pub)) {
+				cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
+				if (vub > min(v)) {
+					cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
+				  cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+				}
+				if (vub < max(v)) {
+				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+				  # if (vub > 0)
+				    cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
+				  # else
+				    # cat(paste0("P(X >= ", vub,") = ", 1, "\n"))
+				}
 			}
 
-		  if (pub <= 1 && plb >= 0) {
-				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
-			}
+			if (!is.na(plb) && !is.na(pub)) {
+				cat(paste0("P(", vlb, " <= X <= ", vub,")     = ", vp_int, "\n"))
+				cat(paste0("1 - P(", vlb, " <= X <= ", vub,") = ", round(1 - vp_int, dec), "\n"))
+		  }
 		}
 	}
 }

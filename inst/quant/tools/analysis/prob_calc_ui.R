@@ -1,6 +1,32 @@
 pc_dist <- c("Normal" = "norm", "Binomial" = "binom", "Uniform" = "unif",
-             "t" = "tdist", "F" = "fdist", "Chi-squared" = "chisq")
+             "t" = "tdist", "F" = "fdist", "Chi-squared" = "chisq", "Discrete" = "disc")
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
+
+output$ui_pc_disc <- renderUI({
+  tagList(
+    returnTextInput("pcd_v", label = "Values:", value = state_init("pcd_v", 1:6)),
+    returnTextInput("pcd_p", label = "Probabilities:", value = state_init("pcd_p", 1/6))
+  )
+})
+
+output$ui_pc_input_disc   <- renderUI({
+
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcd_lb", label = "Lower bound:",
+                              value = state_init("pcd_lb", NA))),
+        div(class="col-xs-6",numericInput("pcd_ub", label = "Upper bound:",
+                             value = state_init("pcd_ub", NA)))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcd_plb", label = "Lower bound:",
+                              value = state_init("pcd_plb", NA), step = .005)),
+        div(class="col-xs-6",numericInput("pcd_pub", label = "Upper bound:",
+                             value = state_init("pcd_pub", 0.95), step = .005))
+    )
+  }
+})
 
 output$ui_pc_fdist <- renderUI({
   tagList(
@@ -14,7 +40,7 @@ output$ui_pc_input_fdist   <- renderUI({
   if (input$pc_type == "values") {
     div(class="row",
         div(class="col-xs-6", numericInput("pcf_lb", label = "Lower bound:",
-                              value = state_init("pcf_lb", -Inf))),
+                              value = state_init("pcf_lb", NA))),
         div(class="col-xs-6",numericInput("pcf_ub", label = "Upper bound:",
                              value = state_init("pcf_ub", Inf)))
     )
@@ -194,6 +220,9 @@ output$ui_prob_calc <- renderUI({
       ),
       conditionalPanel("input.pc_dist == 'chisq'",
         uiOutput("ui_pc_chisq")
+      ),
+      conditionalPanel("input.pc_dist == 'disc'",
+        uiOutput("ui_pc_disc")
       )
     ),
     wellPanel(
@@ -217,6 +246,9 @@ output$ui_prob_calc <- renderUI({
       ),
       conditionalPanel("input.pc_dist == 'chisq'",
         uiOutput("ui_pc_input_chisq")
+      ),
+      conditionalPanel("input.pc_dist == 'disc'",
+        uiOutput("ui_pc_input_disc")
       ),
       numericInput("pc_dec", label = "Decimals:",
                    value = state_init("pc_dec", 3), min = 0)
@@ -244,6 +276,8 @@ pc_args <- reactive({
     as.list(formals(prob_fdist))
   } else if (pc_dist == "chisq") {
     as.list(formals(prob_chisq))
+  } else if (pc_dist == "disc") {
+    as.list(formals(prob_disc))
   }
 })
 
@@ -263,6 +297,8 @@ pc_inputs <- reactive({
     pre <- "pcf_"
   } else if (pc_dist == "chisq") {
     pre <- "pcc_"
+  } else if (pc_dist == "disc") {
+    pre <- "pcd_"
   }
 
   # loop needed because reactive values don't allow single bracket indexing
@@ -324,6 +360,9 @@ pc_available <- reactive({
     } else if (input$pc_dist == "chisq") {
       if (is_not(input$pcc_df))
         a <- "Please provide a value for the degrees of freedom"
+    } else if (input$pc_dist == "disc") {
+      if (is_empty(input$pcd_v) || is_empty(input$pcd_p))
+        a <- "Please provide a set of values and probabilities. Separate numbers using spaces"
     } else {
       a <- ""
     }
