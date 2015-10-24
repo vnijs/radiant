@@ -298,34 +298,34 @@ Adjustment: None
       IF 2411.697  99 3330.560 334.734 664.268
 
  Alt. hyp.                Null hyp.     diff     p.value    
- I1 not equal to SI2      I1 = SI2      -905.414 0.157      
- I1 not equal to SI1      I1 = SI1       196.198 0.757      
- I1 not equal to VS2      I1 = VS2       371.808 0.558      
- I1 not equal to VS1      I1 = VS1       405.594 0.529      
- I1 not equal to VVS2     I1 = VVS2      856.955 0.193      
- I1 not equal to VVS1     I1 = VVS1     1586.315 0.018   *  
- I1 not equal to IF       I1 = IF       1783.078 0.015   *  
+ I1 not equal to SI2      I1 = SI2      -905.414 0.045   *  
+ I1 not equal to SI1      I1 = SI1       196.198 0.645      
+ I1 not equal to VS2      I1 = VS2       371.808 0.387      
+ I1 not equal to VS1      I1 = VS1       405.594 0.36       
+ I1 not equal to VVS2     I1 = VVS2      856.955 0.068   .  
+ I1 not equal to VVS1     I1 = VVS1     1586.315 0.001   ***
+ I1 not equal to IF       I1 = IF       1783.078 0.001   ***
  SI2 not equal to SI1     SI2 = SI1     1101.612 &lt; .001  ***
  SI2 not equal to VS2     SI2 = VS2     1277.222 &lt; .001  ***
  SI2 not equal to VS1     SI2 = VS1     1311.008 &lt; .001  ***
  SI2 not equal to VVS2    SI2 = VVS2    1762.369 &lt; .001  ***
  SI2 not equal to VVS1    SI2 = VVS1    2491.729 &lt; .001  ***
  SI2 not equal to IF      SI2 = IF      2688.492 &lt; .001  ***
- SI1 not equal to VS2     SI1 = VS2      175.610 0.403      
- SI1 not equal to VS1     SI1 = VS1      209.396 0.374      
+ SI1 not equal to VS2     SI1 = VS2      175.610 0.399      
+ SI1 not equal to VS1     SI1 = VS1      209.396 0.369      
  SI1 not equal to VVS2    SI1 = VVS2     660.757 0.016   *  
  SI1 not equal to VVS1    SI1 = VVS1    1390.117 &lt; .001  ***
  SI1 not equal to IF      SI1 = IF      1586.880 &lt; .001  ***
  VS2 not equal to VS1     VS2 = VS1       33.786 0.888      
- VS2 not equal to VVS2    VS2 = VVS2     485.147 0.08    .  
+ VS2 not equal to VVS2    VS2 = VVS2     485.147 0.082   .  
  VS2 not equal to VVS1    VS2 = VVS1    1214.507 &lt; .001  ***
- VS2 not equal to IF      VS2 = IF      1411.270 0.001   ***
- VS1 not equal to VVS2    VS1 = VVS2     451.361 0.128      
+ VS2 not equal to IF      VS2 = IF      1411.270 &lt; .001  ***
+ VS1 not equal to VVS2    VS1 = VVS2     451.361 0.13       
  VS1 not equal to VVS1    VS1 = VVS1    1180.721 &lt; .001  ***
- VS1 not equal to IF      VS1 = IF      1377.484 0.002   ** 
- VVS2 not equal to VVS1   VVS2 = VVS1    729.360 0.036   *  
- VVS2 not equal to IF     VVS2 = IF      926.123 0.042   *  
- VVS1 not equal to IF     VVS1 = IF      196.763 0.676      
+ VS1 not equal to IF      VS1 = IF      1377.484 &lt; .001  ***
+ VVS2 not equal to VVS1   VVS2 = VVS1    729.360 0.022   *  
+ VVS2 not equal to IF     VVS2 = IF      926.123 0.024   *  
+ VVS1 not equal to IF     VVS1 = IF      196.763 0.621      
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result, plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
@@ -349,7 +349,7 @@ Adjustment: None
       Prof 126772.11 266 27718.675 1699.541 3346.322
 
  Alt. hyp.                         Null hyp.              diff      p.value    
- AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 0.002   ** 
+ AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 &lt; .001  ***
  AsstProf not equal to Prof        AsstProf = Prof        -45996.12 &lt; .001  ***
  AssocProf not equal to Prof       AssocProf = Prof       -32895.67 &lt; .001  ***
 
@@ -373,7 +373,7 @@ Adjustment: None
       Prof 126772.11 266 27718.675 1699.541 3346.322
 
  Alt. hyp.                         Null hyp.              diff      p.value    
- AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 0.002   ** 
+ AsstProf not equal to AssocProf   AsstProf = AssocProf   -13100.45 &lt; .001  ***
  AsstProf not equal to Prof        AsstProf = Prof        -45996.12 &lt; .001  ***
  AssocProf not equal to Prof       AssocProf = Prof       -32895.67 &lt; .001  ***
 
@@ -383,8 +383,10 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 summary(result, sum_check = &quot;confint&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
 Data     : diamonds 
-Dependent variable   : price 
-Independent variables: carat, clarity 
+Response variable    : price 
+Explanatory variables: carat, clarity 
+Null hyp.: the effect of x on price is zero
+Alt. hyp.: the effect of x on price is not zero
 
                 coefficient std.error t.value p.value    
     (Intercept)   -6780.993   204.952 -33.086  &lt; .001 ***
@@ -400,7 +402,7 @@ Independent variables: carat, clarity
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
 R-squared: 0.904,  Adjusted R-squared: 0.904 
-F-statistic: 3530.024 df(9,2991), p.value &lt; .001
+F-statistic: 3530.024 df(8,2991), p.value &lt; .001
 Nr obs: 3000
 
                coefficient      2.5%     97.5%     +/-
@@ -416,8 +418,8 @@ clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
 <pre class="r"><code>predict(result, pred_cmd = &quot;carat = 1:10&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
 Data     : diamonds 
-Dependent variable   : price 
-Independent variables: carat, clarity 
+Response variable    : price 
+Explanatory variables: carat, clarity 
 
 Predicted values for:
  clarity carat Prediction      2.5%     97.5%      +/-

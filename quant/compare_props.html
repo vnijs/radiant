@@ -256,6 +256,10 @@ img {
 <p>In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of the survival proportion with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the proportions across passenger classes. We can also choose to plot the data using a bar-chart of the survival counts.</p>
 <p><img src="figures_quant/compare_props_plot.png" alt="Plot" /></p>
 </div>
+<div id="technical-note" class="section level3">
+<h3>Technical note</h3>
+<p>Radiant uses R’s <code>prop.test</code> function to compare proportions. When one or more expected values are small (e.g., 5 or less) the p.value for this test is calculated using simulation methods. When this occurs it is recommended to rerun the test using <em>Base &gt; Cross-tab</em> and evaluate if some cells may have an expected value below 1.</p>
+</div>
 
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>

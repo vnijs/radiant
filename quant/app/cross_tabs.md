@@ -17,7 +17,7 @@ The (Pearson) chi-squared test evaluates if we can reject the null-hypothesis th
 
 In order to determine if the chi-square value can be considered _large_ we first determine the degrees of freedom (df). In particular: df = (# rows - 1) x (# columns - 1). In a 2x2 table, we have (2-1) x (2-1) = 1 df. The output in the Summary tab shows the value of the chi-square statistic, the associated df, and the p-value associated with the test. We also see the contribution from each cells to the overall chi-square statistic.
 
-Remember to check the expected values: None of of the cells should have an expected count of less than 5. If necessary, _collapse_ rows and/or columns. All expected frequencies are > 5 therefore the chi-square statistic is unlikely to be biased. As usual we reject the null-hypothesis when the p-value is smaller 0.05. Since our p-value is very small (< .001) we can reject the null-hypothesis (i.e., the data support the conclusion that there is an association between newspaper readership and income).
+Remember to check the expected values: All expected frequencies are larger than 5 therefore the p.value for the chi-square statistic is unlikely to be biased. As usual we reject the null-hypothesis when the p-value is smaller 0.05. Since our p-value is very small (< .001) we can reject the null-hypothesis (i.e., the data suggest there is an association between newspaper readership and income).
 
 In addition to the numerical output provided in the Summary tab we can evaluate the hypothesis visually (see Plots). We choose the same variables as before. However, we will plot the standardized deviations. This measure is calculated as (o-e)/sqrt(e), i.e., a score of how different the observed and expected frequencies in one cell in our table are. When a cell's standardized deviation is greater than 1.96 (in absolute value) the cell has a significant deviation from the model of independence (or no association).
 
@@ -27,4 +27,8 @@ In the plot we see that all cells contribute to the association between income a
 
 In other words, there seem to be fewer low income respondents that read WSJ and more high income respondents that read WSJ than would be expected if the null hypothesis of no-association were true. Furthermore, there are more low income respondents that read USA today and fewer high income respondents that read USA Today than would be expected if the null hypothesis of no-association were true.
 
-Note: The description for the `goals2` dataset has information on how rows or columns in a cross-tab can be collapsed when some of the expected values are below 5.
+Note: The description for the `goals2` dataset has information on how rows or columns in a cross-tab can be collapsed when some of the expected values are low.
+
+### Technical note
+
+When one or more expected values are small (e.g., 5 or less) the p.value for the Chi-squared test is calculated using simulation methods. If some cells have an expected count below 1 it may be necessary to _collapse_ rows and/or columns.
