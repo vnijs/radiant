@@ -49,7 +49,7 @@ output$ui_single_mean <- renderUI({
     	  state_init('sm_comp_value',sm_args$comp_value))
     ),
   	help_and_report(modal_title = 'Single mean', fun_name = 'single_mean',
-  	                help_file = inclMD(file.path(r_path,"quant/tools/help/single_mean.md")))
+  	                help_file = inclRmd(file.path(r_path,"quant/tools/help/single_mean.md")))
  	)
 })
 

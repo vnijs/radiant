@@ -78,7 +78,15 @@ output$ui_pc_input_chisq   <- renderUI({
 })
 
 output$ui_pc_tdist <- renderUI({
-  numericInput("pct_df", label = "Degrees of freedom:", value = state_init("pct_df", 10), min = 3)
+  tagList(
+    numericInput("pct_df", label = "Degrees of freedom:", value = state_init("pct_df", 10), min = 3)
+    # , div(class="row",
+    #     div(class="col-xs-6", numericInput("pct_mean", label = "Mean:",
+    #                           value = state_init("pct_mean", 0))),
+    #     div(class="col-xs-6",numericInput("pct_stdev", label = "St. dev:", min = 0,
+    #                          value = state_init("pct_stdev", 1)))
+    # )
+  )
 })
 
 output$ui_pc_input_tdist <- renderUI({
@@ -113,21 +121,22 @@ output$ui_pc_norm <- renderUI({
 
 output$ui_pc_input_norm <- renderUI({
 
-  mean <- if (is_empty(input$mean)) NA else input$mean
+  # mean <- if (is_empty(input$mean)) NA else input$mean
 
   if (input$pc_type == "values") {
     div(class="row",
         div(class="col-xs-6", numericInput("pc_lb", label = "Lower bound:",
                               value = state_init("pc_lb", -Inf))),
         div(class="col-xs-6",numericInput("pc_ub", label = "Upper bound:",
-                             value = state_init("pc_ub", mean)))
+                             value = state_init("pc_ub", 0)))
+                             # value = state_init("pc_ub", mean)))
     )
   } else {
     div(class="row",
         div(class="col-xs-6", numericInput("pc_plb", label = "Lower bound:",
-                              value = state_init("pc_plb", NA), step = .005)),
+                              value = state_init("pc_plb", .025), step = .005)),
         div(class="col-xs-6",numericInput("pc_pub", label = "Upper bound:",
-                             value = state_init("pc_pub", 0.2), step = .005))
+                             value = state_init("pc_pub", 0.975), step = .005))
     )
   }
 })

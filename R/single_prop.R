@@ -43,9 +43,6 @@ single_prop <- function(dataset, var,
 	n <- nrow(dat)
 	ns <- sum(dat == lev)
 
-	# res <- prop.test(ns, n, p = comp_value, alternative = alternative,
-	#                  conf.level = conf_lev, correct = FALSE) %>% tidy
-
 	## use binom.test for exact
 	res <- binom.test(ns, n, p = comp_value, alternative = alternative,
 	                  conf.level = conf_lev) %>% tidy

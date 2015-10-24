@@ -217,6 +217,8 @@ summary.prob_norm <- function(object, type = "values",  ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
 #' @param df Degrees of freedom
+#' @param mean Mean
+#' @param stdev Standard deviation
 #' @param lb Lower bound (default is -Inf)
 #' @param ub Upper bound (default is Inf)
 #' @param plb Lower probability bound
@@ -225,11 +227,20 @@ summary.prob_norm <- function(object, type = "values",  ...) {
 #'
 #' @export
 prob_tdist <- function(df,
+                       mean = 0,
+                       stdev = 1,
                        lb = NA,
                        ub = NA,
                        plb = NA,
                        pub = NA,
                        dec = 3) {
+
+	## transform ub and lb to t-stats
+	## values need to be transformed to regular units using sd and mean
+
+	# tstdev <- n/(n-2)
+	# r_pt <- pt(ub, df)
+
 
 	p_ub <- pt(ub, df)
 	p_lb <- pt(lb, df)
@@ -944,7 +955,7 @@ prob_unif <- function(min,
 	v_lb <- qunif(plb, min, max) %>% round(dec)
 
 	mean <- (max+min) / 2
-	stdev <- (max-min)^2 / (1/12)
+	stdev <- (max-min)^2 / 12
 
   environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
 }
@@ -1061,8 +1072,8 @@ summary.prob_unif <- function(object, type = "values",  ...) {
   cat("Distribution: Uniform\n")
 	cat("Min        :", min, "\n")
 	cat("Max        :", max, "\n")
-	cat("Mean       :", mean, "\n")
-	cat("St. dev    :", stdev, "\n")
+	cat("Mean       :", mean %>% round(dec), "\n")
+	cat("St. dev    :", stdev %>% round(dec), "\n")
 
 	# if (is.null(min) || is.na(min) || is.null(max) || is.na(max)) {
 	# 	cat("\nPlease specify both a minimum and maximum value\n")
@@ -1470,6 +1481,14 @@ prob_disc <- function(v, p,
 
 # v <- 1:6
 # p <- rep(1/6,6)
+
+# rowSums(expand.grid(v,v))
+
+# df <- data.frame(v = v, p = p) %>% arrange(v)
+# df <- bind_cols(expand.grid(df), expand.grid(df)) %>% set_colnames(c("v1","p1","v2","p2"))
+# rowSums(select(df, starts_with("v")))
+# ?select
+
 # p <- 1/6
 
 # # library(dplyr)
@@ -1478,25 +1497,65 @@ prob_disc <- function(v, p,
 # plb <- .8
 # dec <- 3
 
-	# v <- paste(1:5, collapse = " ")
+	# v <- paste(1:6, collapse = " ")
 	# p <- paste(1/6)
+
 	# library(radiant)
 
 
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding a "comb" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+	# expand.grid(height = 1:6, weight = 1:6)
+	# expand.grid(1, 1:6)
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
+
+	# p <- "1/6 1/12 1/6 1/4"
+	# p <- "1/6 1/12 1/6 abbb"
 
 	v <- unlist(strsplit(v, "\\s")) %>% as_numeric
-	p <- unlist(strsplit(p, "\\s")) %>% {eval(parse(text = .))} %>% as_numeric
+	# p <- unlist(strsplit(p, "\\s")) %>% {eval(parse(text = .))} %>% as_numeric
+	# create_number <- function(x) {
+		# res <- try(eval(parse(text = x)), silent = TRUE)
+		# try(eval(parse(text = x)), silent = TRUE)
+	  # if (is(res, 'try-error')) {
+			# mess_probs <- mess_values <- paste0("Invalid inputs: \"", attr(res,"condition")$message,"\". Update the inputs")
+   #    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	  # }
+	  # res
+	# }
+
+
+	p <- unlist(strsplit(p, "\\s"))
+
+	cp <- c()
+	for (i in p) {
+		res <- try(eval(parse(text = i)), silent = TRUE)
+	  if (is(res, 'try-error')) {
+			mess_probs <- mess_values <- paste0("Invalid inputs: \"", attr(res,"condition")$message,"\". Update the inputs")
+      return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	  }
+	  cp <- c(cp, res)
+	}
+	p <- cp %>% set_names(NULL)
+
+	if (any(is(p, 'try-error'))) {
+		mess_probs <- mess_values <- paste0("Invalid inputs: \"", attr(p,"condition")$message,"\". Update the inputs")
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	}
+
+	if(length(v) %% length(p) > 0) {
+		mess_probs <- mess_values <- "The number of values entered must be a multiple of the number of probabilities"
+    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	}
 
   df <- data.frame(v = v, p = p) %>% arrange(v)
+  p <- df$p
 
-	if (sum(df$p) < .99) {
+	if (sum(p) < .99 || sum(p) > 1.01) {
 		mess_probs <- mess_values <- "Probabilities do not sum to 1"
     return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
 	}
@@ -1505,13 +1564,6 @@ prob_disc <- function(v, p,
 	pdisc <- function(b, df) filter(df, v < b)$p  %>% sum
 	qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1) %>% .$v
 
-	# qdisc(0,df)
-	# prob <- 1
-	# mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1)
-	# %>% .$v
-
-
-	# if (is.na(lb) || !lb %in% v) {
 	if (is.na(lb)) {
 		p_elb <- p_lb <- lb <- NA
 	} else if (!lb %in% v) {
@@ -1540,7 +1592,6 @@ prob_disc <- function(v, p,
 		p_int <- NA
 	}
 
-	# if (is.na(plb) || length(qdisc(plb, df)) == 0) {
 	if (is.na(plb)) {
 		plb <- vlb <- NA
 	} else if (length(qdisc(plb, df)) == 0) {
@@ -1549,15 +1600,12 @@ prob_disc <- function(v, p,
 	} else {
 		if (plb > 1) plb <- 1
 		if (plb < 0) plb <- 0
-
 	  vlb <- qdisc(plb, df)
-	  # if (length(vlb) == 0) vub <- min(v)
 		vp_elb <- ddisc(vlb, df) %>% round(dec)
 	  vp_lb <- pdisc(vlb, df) %>% round(dec)
 		vp_lelb <-  vp_elb + vp_lb
 	}
 
-	# if (is.na(pub) || length(qdisc(pub, df)) == 0) {
 	if (is.na(pub)) {
 		pub <- vub <- NA
 	} else if (length(qdisc(pub, df)) == 0) {
@@ -1567,7 +1615,6 @@ prob_disc <- function(v, p,
 		if (pub > 1) pub <- 1
 		if (pub < 0) pub <- 0
 	  vub <- qdisc(pub, df)
-	  # if (length(vub) == 0) vub <- min(v)
 		vp_eub <- ddisc(vub, df) %>% round(dec)
 	  vp_ub <- pdisc(vub, df) %>% round(dec)
 		vp_leub <-  vp_eub + vp_ub
@@ -1708,13 +1755,10 @@ summary.prob_disc <- function(object, type = "values",  ...) {
   cat("Probability calculator\n")
   cat("Distribution: Discrete\n")
   cat("Values       :", paste0(v, collapse=", "), "\n")
-  cat("Probabilities:", paste0(p, collapse=", "), "\n")
+  cat("Probabilities:", paste0(p %>% round(dec), collapse=", "), "\n")
   m <- sum(v*p); std <- sum(p * (v - m)^2) %>% sqrt
 	cat("Mean         :", m %>% round(dec), "\n")
 	cat("St. dev      :", std %>% round(dec), "\n")
-
-	# mess <- object[[paste0("mess_",type)]]
-	# if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
 		cat("Lower bound:", {if (is.na(lb)) "" else lb}, "\n")

@@ -350,7 +350,7 @@ p95 <- function(x, na.rm = TRUE) quantile(x,.95, na.rm = na.rm)
 #' serr(rnorm(100))
 #'
 #' @export
-serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / length(na.omit(x))
+serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / sqrt(length(na.omit(x)))
 
 #' Coefficient of variation
 #' @param x Input variable

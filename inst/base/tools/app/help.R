@@ -20,14 +20,16 @@ output$help_text <- renderUI({
 #######################################
 # help2html <- function(x) x %>% gsub("\\\\%","%",.) %>% HTML
 
-append_help <- function(help_str, help_path, Rmd = FALSE) {
+# append_help <- function(help_str, help_path, Rmd = FALSE) {
+append_help <- function(help_str, help_path, Rmd = TRUE) {
   if (length(input[[help_str]]) == 0) return()
   help_block <- get(help_str)
   local_hd <- help_block[which(help_block %in% input[[help_str]])]
   all_help <- c()
   for (i in names(local_hd)) {
     all_help <- paste(all_help, paste0("<h2>",i,"</h2>"),
-                      inclMD(file.path(help_path,local_hd[i])),
+                      # inclMD(file.path(help_path,local_hd[i])),
+                      inclRmd(file.path(help_path,local_hd[i])),
                       sep="\n")
   }
   mathjax_script <- ifelse (Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
