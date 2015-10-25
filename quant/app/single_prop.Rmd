@@ -78,7 +78,7 @@ The 95% confidence bound is **0.11**. If repeated samples were taken and the 95%
 
 <sup>1</sup> The **significance level**, often denoted by $\alpha$, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)
 
-<sup>2</sup> $1 - \alpha$ is called the **confidence level**. A commonly used significance level is 0.95 (or 95%)
+<sup>2</sup> $1 - \alpha$ is called the **confidence level**. A commonly used confidence level is 0.95 (or 95%)
 
 <!--
 To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean

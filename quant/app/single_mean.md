@@ -48,13 +48,13 @@ In addition to the numerical output provided in the _Summary_ tab we can visuali
 
 This is a **single mean** test of the null hypothesis that the true population **mean** is equal to **1750**. Using a significance level of 0.05, we reject the null hypothesis, and conclude that the true population **mean** is **larger** than **1750**.
 
-The p.value for this test is **< .001**. This is the probability of observing a sample **mean** that is as or more extreme than the sample **mean** from the data if the null hypothesis is true. In this case, it is the probability of observing a sample **mean** that is larger than (or equal to) **1953.393**if the true population **mean** is **1750**.
+The p.value for this test is **< .001**. This is the probability of observing a sample **mean** that is as or more extreme than the sample **mean** from the data if the null hypothesis is true. In this case, it is the probability of observing a sample **mean** that is larger than (or equal to) **1953.393** if the true population **mean** is **1750**.
 
 The 5% confidence bound is **1897.233**. If repeated samples were taken and the 5% confidence bound computed for each one, the true population mean would exceed the lower bound in 95% of the samples
 
 <sup>1</sup> The **significance level**, often denoted by $\alpha$, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)
 
-<sup>2</sup> $1 - \alpha$ is called the **confidence level**. A commonly used significance level is 0.95 (or 95%)
+<sup>2</sup> $1 - \alpha$ is called the **confidence level**. A commonly used confidence level is 0.95 (or 95%)
 
 <!--
 To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean
