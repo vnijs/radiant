@@ -4,10 +4,15 @@
 \alias{prob_tdist}
 \title{Probability calculator for the t distribution}
 \usage{
-prob_tdist(df, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
+prob_tdist(df, mean = 0, stdev = 1, lb = NA, ub = NA, plb = NA,
+  pub = NA, dec = 3)
 }
 \arguments{
 \item{df}{Degrees of freedom}
+
+\item{mean}{Mean}
+
+\item{stdev}{Standard deviation}
 
 \item{lb}{Lower bound (default is -Inf)}
 

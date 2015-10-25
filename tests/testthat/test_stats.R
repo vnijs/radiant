@@ -1,6 +1,6 @@
 # library(png)
-# library(radiant)
-# library(testthat)
+library(radiant)
+library(testthat)
 
 trim_trailing <- function(x) sub("\\s+$", "", x)
 trim_leading <- function(x) sub("^\\s+", "", x)
@@ -47,18 +47,36 @@ context("Single proportion")
 test_that("single_prop 1", {
   result <- single_prop("diamonds", "color")
   expect_equal(result$lev, "D")
-  res1 <- capture.output(summary(result))[9] %>% trim
+  res1 <- capture.output(summary(result))[12] %>% trim
   # cat(paste0(res1, "\n"))
-  res2 <- "0.127  < .001 0.116  0.14 382 3000"
+  res2 <- "-0.373 382  < .001 0.116  0.14"
   expect_equal(res1,res2)
 })
 
 test_that("single_prop 2", {
   result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
   expect_equal(result$lev, "IF")
-  res1 <- capture.output(summary(result))[9] %>% trim
+  res1 <- capture.output(summary(result))[12] %>% trim
   # cat(paste0(res1, "\n"))
-  res2 <- "0.033  < .001 0.027  0.04 99 3000"
+  res2 <- "-0.017 99  < .001 0.027  0.04"
+  expect_equal(res1,res2)
+})
+
+context("Single mean")
+
+test_that("single_mean 1", {
+  result <- single_mean("diamonds", "carat")
+  res1 <- capture.output(summary(result))[12] %>% trim
+  # cat(paste0(res1, "\n"))
+  res2 <- "0.794 0.009  91.816  < .001 2999 0.777 0.811"
+  expect_equal(res1,res2)
+})
+
+test_that("single_mean 2", {
+  result <- single_mean("titanic", "age", comp_value = 40)
+  res1 <- capture.output(summary(result))[12] %>% trim
+  # cat(paste0(res1, "\n"))
+  res2 <- "-10.187 0.445   -22.9  < .001 1042 28.94 30.686"
   expect_equal(res1,res2)
 })
 

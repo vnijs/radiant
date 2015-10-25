@@ -35,7 +35,6 @@ single_mean <- function(dataset, var,
 	dat_summary <-
 	  dat %>% summarise_each(funs(diff = mean_rm(.) - comp_value, se = serr(.), mean = mean_rm(.),
 	                         sd = sd_rm(.), n = length(na.omit(.)), n_missing = n_missing(.)))
-	  # %>% set_rownames(var)
 
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }
@@ -76,17 +75,7 @@ summary.single_mean <- function(object, ...) {
 	    object$comp_value, "\n\n")
 
 	# determine lower and upper % for ci
-	if (object$alternative == "less") {
-		ci_perc <- c("0%", paste0(100*object$conf_lev,"%"))
-	} else if (object$alternative == "greater") {
-		ci_perc <- c(paste0(100*(1-object$conf_lev),"%"), "100%")
-	} else {
-		ci_perc <-
-		  {100 * (1-object$conf_lev)/2} %>%
-				c(., 100 - .) %>%
-				round(1) %>%
-				paste0(.,"%")
-	}
+	ci_perc <- ci_label(object$alternative, object$conf_lev)
 
 	## print summary statistics
   print(object$dat_summary[-(1:2)] %>% round(dec) %>% as.data.frame, row.names = FALSE)
@@ -158,14 +147,7 @@ plot.single_mean <- function(x,
       as.data.frame %>%
       set_colnames(object$var)
 
-		ci_perc <- {if (object$alternative == 'two.sided') {
-									{(1-object$conf_lev)/2}  %>% c(., 1 - .)
-								} else if (object$alternative == 'less') {
-									1-object$conf_lev
-								} else {
-									object$conf_lev
-								}} %>%
-									quantile(simdat[[object$var]], probs = .)
+    cip <- ci_perc(simdat[[object$var]], object$alternative, object$conf_lev)
 
 		bw <- simdat %>% range %>% diff %>% divide_by(20)
 
@@ -176,7 +158,7 @@ plot.single_mean <- function(x,
 				           linetype = 'solid', size = 1) +
 				geom_vline(xintercept = object$res$estimate, color = 'black',
 				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = ci_perc,
+				geom_vline(xintercept = cip,
 				           color = 'red', linetype = 'longdash', size = .5) +
 	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", object$var, ")"))
 	}

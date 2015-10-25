@@ -4,10 +4,14 @@
 ################################################################################
 
 ## options to set for debugging
+# options(shiny.trace = FALSE)
 # options(shiny.trace = TRUE)
 # options(shiny.error = recover)
 # options(warn = 2)
 # options(warn = 0)
+## turn off warnings globally
+# options(warn=-1)
+
 
 init_state <- function(r_data) {
 

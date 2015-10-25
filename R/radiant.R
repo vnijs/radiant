@@ -862,3 +862,54 @@ print.gtable <- function(x, ...) {
   if (is.ggplot(x)) x <- ggplotGrob(x)
   grid::grid.draw(x)
 }
+
+#' Labels for confidence intervals
+#'
+#' @param alt Type of hypothesis ("two.sided","less","greater")
+#' @param cl Confidence level
+#'
+#' @return A charater vector with labels for a confidence interval
+#'
+#' @examples
+#' ci_label("less",.95)
+#' ci_label("two.sided",.95)
+#' ci_label("greater",.9)
+#'
+#' @export
+ci_label <- function(alt, cl) {
+  if (alt == "less") {
+    c("0%", paste0(100*cl,"%"))
+  } else if (alt == "greater") {
+    c(paste0(100*(1-cl),"%"), "100%")
+  } else {
+    {100 * (1-cl)/2} %>%
+      c(., 100 - .) %>%
+      round(1) %>%
+      paste0(.,"%")
+  }
+}
+
+#' Values at confidence levels
+#'
+#' @param dat Data
+#' @param alt Type of hypothesis ("two.sided","less","greater")
+#' @param cl Confidence level
+#'
+#' @return A charater vector with labels for a confidence interval
+#'
+#' @examples
+#' ci_perc(0:100, "less",.95)
+#' ci_perc(0:100, "greater",.95)
+#' ci_perc(0:100, "two.sided",.80)
+#'
+#' @export
+ci_perc <- function(dat, alt, cl) {
+  probs <- if (alt == 'two.sided') {
+    (1-cl/2) %>% c(., 1 - .)
+  } else if (alt == 'less') {
+    1-cl
+  } else {
+    cl
+  }
+  quantile(dat, probs = probs)
+}

@@ -32,13 +32,6 @@ explore <- function(dataset,
                     data_filter = "",
                     shiny = FALSE) {
 
-  # dataset <- "diamonds"
-  # # vars <- c("price","carat")
-  # vars <- "price"
-  # byvar <- "cut"
-  # fun <- c("mean_rm","n_missing")
-  # data_filter <- ""
-
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar)
 
@@ -73,25 +66,38 @@ explore <- function(dataset,
       }
     }
 
-    ## avoiding issues with n_missing and n_distinct
-    names(pfun) %<>% sub("n_","n.",.)
+    ## avoiding issues with n_missing and n_distinct in dplyr
+    ## have to reverse this later
+    # names(pfun) %<>% sub("n_","n.",.)
+    # names(pfun) %<>% sub("n_missing","n.missing",.) %>% sub("n_distinct","n.distinct",.)
+    # mutate(fun = sub("n.","n_",fun)) %>%
+    # set_colnames(., sub("^n\\.","n_",colnames(.))) %>%
+    fix_uscore <- function(x, org = "_", repl = ".") {
+      stats <-  c("missing","distinct")
+      org <- paste0("n",org,stats)
+      repl <- paste0("n",repl,stats)
+      for (i in seq_along(org)) {
+        x %<>% sub(org[i],repl[i],.)
+      }
+      x
+    }
+
+    names(pfun) %<>% fix_uscore
 
     ## for median issue in dplyr < .5
     ## https://github.com/hadley/dplyr/issues/893
     tab <-
       dat %>% group_by_(.dots = byvar) %>%
-      # select(isNum) %>% mutate_each("as.numeric") %>%
       summarise_each(pfun)
 
     ## avoiding issues with n_missing and n_distinct
     names(pfun) %<>% sub("n.","n_",.)
-    tab
 
     if (length(vars) > 1 && length(fun) > 1) {
       ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
       tab %<>% gather("variable", "value", -(1:length(byvar))) %>%
         separate(variable, into = c("variable", "fun"), sep = "_(?=[^_]*$)") %>%
-        mutate(fun = sub("n.","n_",fun)) %>%
+        mutate(fun = fix_uscore(fun, ".","_")) %>%
         mutate(fun = factor(fun, levels = names(pfun)), variable = factor(variable, levels = vars)) %>%
         spread_("fun","value")
     } else if (length(fun) == 1) {
@@ -100,7 +106,7 @@ explore <- function(dataset,
         rename_(.dots = setNames("value", names(pfun)))
     } else if (length(vars) == 1){
       tab %<>% mutate(variable = factor(vars, levels = vars)) %>%
-        set_colnames(., sub("^n.","n_",colnames(.))) %>%
+        set_colnames(., fix_uscore(colnames(.), ".","_")) %>%
         select_(.dots = c(byvar, "variable", names(pfun)))
     }
   }
@@ -192,29 +198,6 @@ flip <- function(expl, top = "fun") {
   cvars <- expl$byvar %>% {if (.[1] == "") character(0) else .}
   if (top[1] == "var")
     expl$tab %>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
-
-# https://github.com/hadley/tidyr/issues/104
-# library(tidyr)
-# tab <- structure(list(variable = structure(1:5, .Label = c("price", "carat", "depth", "table", "x"), class = "factor"), mean = c(3907.186,
-#   0.794283333333333, 61.7526666666667, 57.4653333333333, 5.72182333333333
-#   )), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA,
-#   -5L), .Names = c("variable", "mean"))
-
-# tab %>% gather("function", "value", -1)
-# tab %>% gather("function", "value", -variable)
-
-
-# tab %>% gather("function", "value", -1)
-# Source: local data frame [5 x 3]
-
-#   variable function        value
-#     (fctr)   (fctr)        (dbl)
-# 1    price     mean 3907.1860000
-# 2    carat     mean    0.7942833
-# 3    depth     mean   61.7526667
-# 4    table     mean   57.4653333
-# 5        x     mean    5.7218233
-
   else if (top[1] == "byvar" && length(cvars) > 0)
     expl$tab %>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_(cvars[1], "value")
   else

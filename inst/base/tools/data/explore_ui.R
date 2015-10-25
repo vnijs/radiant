@@ -51,11 +51,11 @@ output$ui_expl_byvar <- renderUI({
   )
 })
 
-for houseprices - sample midterm
+# for houseprices - sample midterm
 
-error: object 'neighborhood' not found
+# error: object 'neighborhood' not found
 
-probably skip this question unless you decide to talk about CV
+# probably skip this question unless you decide to talk about CV
 
 # output$ui_pvt_cvars <- renderUI({
 #   vars <- groupable_vars()

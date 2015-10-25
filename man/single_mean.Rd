@@ -5,7 +5,7 @@
 \title{Compare a sample mean to a population mean}
 \usage{
 single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
-  conf_lev = 0.95, data_filter = "")
+  conf_lev = 0.95, dec = 3, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -17,6 +17,8 @@ single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
 \item{alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
 
 \item{conf_lev}{Span for the confidence interval}
+
+\item{dec}{Number of decimals to show}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

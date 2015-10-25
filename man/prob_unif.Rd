@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{prob_unif}
 \alias{prob_unif}
-\title{Probability calculator for the uniforem distribution}
+\title{Probability calculator for the uniform distribution}
 \usage{
 prob_unif(min, max, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 }
@@ -22,7 +22,7 @@ prob_unif(min, max, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 \item{dec}{Number of decimals to show}
 }
 \description{
-Probability calculator for the uniforem distribution
+Probability calculator for the uniform distribution
 }
 \details{
 See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant

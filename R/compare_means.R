@@ -39,12 +39,13 @@ compare_means <- function(dataset, var1, var2,
 	## in case : was used for var2
 	vars <- colnames(dat)
 
-	if (dat[[var1]] %>% is.factor) {
-		colnames(dat) <- c("variable","values")
-		cname <- var1
-	} else {
+  if (is.numeric(dat[[var1]])) {
 		dat %<>% gather_("variable", "values", vars)
 		cname <- " "
+	} else {
+    if (is.character(dat[[var1]])) dat[[var1]] <- as.factor(dat[[var1]])
+		colnames(dat) <- c("variable","values")
+		cname <- var1
   }
 
 	## check there is variation in the data

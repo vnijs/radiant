@@ -21,10 +21,17 @@ cm_inputs <- reactive({
 # Compare means
 ###############################
 output$ui_cm_var1 <- renderUI({
-  isNumOrFct <- "numeric" == .getclass() |
-                "integer" == .getclass() |
-                "factor" == .getclass()
-  vars <- c("None", varnames()[isNumOrFct])
+  # isNumOrFct <- "numeric" == .getclass() |
+  #               "integer" == .getclass() |
+  #               "factor" == .getclass()
+  # vars <- c("None", varnames()[isNumOrFct])
+
+  vars <- c("None", groupable_vars())
+
+  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+
+  vars <- c(vars, varnames()[isNum]) %>% unique
+
   selectInput(inputId = "cm_var1",
               label = "Select a factor or numeric variable:",
               choices = vars,

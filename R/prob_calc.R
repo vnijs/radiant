@@ -1070,10 +1070,10 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 
   cat("Probability calculator\n")
   cat("Distribution: Uniform\n")
-	cat("Min        :", min, "\n")
-	cat("Max        :", max, "\n")
-	cat("Mean       :", mean %>% round(dec), "\n")
-	cat("St. dev    :", stdev %>% round(dec), "\n")
+	cat("Min         :", min, "\n")
+	cat("Max         :", max, "\n")
+	cat("Mean        :", mean %>% round(dec), "\n")
+	cat("St. dev     :", stdev %>% round(dec), "\n")
 
 	# if (is.null(min) || is.na(min) || is.null(max) || is.na(max)) {
 	# 	cat("\nPlease specify both a minimum and maximum value\n")
@@ -1089,8 +1089,8 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound:", {if (is.na(lb)) min else lb}, "\n")
-		cat("Upper bound:", {if (is.na(ub)) max else ub}, "\n")
+		cat("Lower bound :", {if (is.na(lb)) min else lb}, "\n")
+		cat("Upper bound :", {if (is.na(ub)) max else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
@@ -1115,8 +1115,8 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 		pub <- if (is.na(pub)) 2 else pub
 		plb <- if (is.na(plb)) -1 else plb
 
-		cat("Lower bound:", if (plb < 0) "0" else plb, "\n")
-		cat("Upper bound:", if (pub > 1) "1" else pub, "\n")
+		cat("Lower bound :", if (plb < 0) "0" else plb, "\n")
+		cat("Upper bound :", if (pub > 1) "1" else pub, "\n")
 
 		if (pub <= 1 || plb >= 0) {
 		  cat("\n")
@@ -1354,17 +1354,17 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 
   cat("Probability calculator\n")
   cat("Distribution: Binomial\n")
-	cat("n          :", n, "\n")
-	cat("p          :", p, "\n")
-	cat("Mean       :", n*p, "\n")
-	cat("St. dev    :", sqrt(n*p*(1-p)) %>% round(dec), "\n")
+	cat("n           :", n, "\n")
+	cat("p           :", p, "\n")
+	cat("Mean        :", n*p, "\n")
+	cat("St. dev     :", sqrt(n*p*(1-p)) %>% round(dec), "\n")
 
 	mess <- object[[paste0("mess_",type)]]
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound:", {if (is.na(lb)) "" else lb}, "\n")
-		cat("Upper bound:", {if (is.na(ub)) "" else ub}, "\n")
+		cat("Lower bound :", {if (is.na(lb)) "" else lb}, "\n")
+		cat("Upper bound :", {if (is.na(ub)) "" else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
@@ -1407,8 +1407,8 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 
 	} else {
 
-		cat("Lower bound:", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
-		cat("Upper bound:", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
+		cat("Lower bound :", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
+		cat("Upper bound :", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
 		if (!is.na(pub) || !is.na(plb)) {
 		  cat("\n")
@@ -1753,7 +1753,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 	vp_int <- object$vp_int
 
   cat("Probability calculator\n")
-  cat("Distribution: Discrete\n")
+  cat("Distribution : Discrete\n")
   cat("Values       :", paste0(v, collapse=", "), "\n")
   cat("Probabilities:", paste0(p %>% round(dec), collapse=", "), "\n")
   m <- sum(v*p); std <- sum(p * (v - m)^2) %>% sqrt
@@ -1761,8 +1761,8 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 	cat("St. dev      :", std %>% round(dec), "\n")
 
 	if (type == "values") {
-		cat("Lower bound:", {if (is.na(lb)) "" else lb}, "\n")
-		cat("Upper bound:", {if (is.na(ub)) "" else ub}, "\n")
+		cat("Lower bound  :", {if (is.na(lb)) "" else lb}, "\n")
+		cat("Upper bound  :", {if (is.na(ub)) "" else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
@@ -1805,8 +1805,8 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 
 	} else {
 
-		cat("Lower bound:", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
-		cat("Upper bound:", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
+		cat("Lower bound  :", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
+		cat("Upper bound  :", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
 		if (!is.na(pub) || !is.na(plb)) {
 		  cat("\n")

@@ -5,8 +5,7 @@ The single proportion (or one-sample) binomial test is used to compare the propo
 We can perform either a one-sided test (i.e., `less than` or `greater than`) or a two-sided test (see the `Alternative hypothesis` dropdown). We use one-sided tests to evaluate if the available data provide evidence if a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).
 
 <!--
-
-```r
+```{r}
 nr <- 93
 consider <-
 	data.frame(
