@@ -242,8 +242,73 @@ img {
 <blockquote>
 <p>Compare a single proportion to the population proportion</p>
 </blockquote>
-<p>The single proportion (or one-sample) test is used to compare a sample proportion in our data to a hypothesized proportion in the population from which our sample data are drawn. This is important since we seldom have access to data for an entire population. The hypothesized value in the population is specified in the ‘Comparsion value’ box.</p>
-<p>We can perform either a one-tailed test (i.e., less than or greater than) or two-tailed test (see ‘Alternative hypothesis’). We use one-tailed tests to evaluate if the available data provide evidence that a proportion is larger (or smaller) than some base-value (i.e., the value specified in the null-hypothesis).</p>
+<p>The single proportion (or one-sample) binomial test is used to compare the proportion of a variable in our data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the <code>Comparison value</code> box.</p>
+<p>We can perform either a one-sided test (i.e., <code>less than</code> or <code>greater than</code>) or a two-sided test (see the <code>Alternative hypothesis</code> dropdown). We use one-sided tests to evaluate if the available data provide evidence if a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).</p>
+<!--
+
+```r
+nr <- 93
+consider <-
+    data.frame(
+      id = runif(2000, 1000, 4000) %>% round(0) %>% unique %>% .[1:1000],
+      consider = c(rep("yes",nr),rep("no",1000-nr)) %>% sample()
+    )
+
+save(consider, file = "~/Desktop/consider.rda")
+```
+-->
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>A car manufacturers conducted a study by randomly sampling and interviewing 1,000 consumers in a new target market to determine if consumers would consider purchasing this brand of car.</p>
+<p>Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong liking.</p>
+<p>You can find information on the responses by survey participants in the <strong>consider.rda</strong> data set. The data set contains two variables, <code>id</code> and <code>consider</code>.</p>
+<p>Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. Because we want to determine if the available data provides sufficient support to reject the null-hypothesis in favor of the alternative (i.e., that proportion of consumers that will consider the brand is less than 10%) we choose the <code>Less than</code> option from the <code>Alternative hypothesis</code> drop-down.</p>
+<p><img src="figures_quant/single_proportion_summary.png" alt="Summary" /></p>
+<p>The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., the proportion of “yes” responses). The final row of output shows the following:</p>
+<ul>
+<li><code>diff</code> is the difference between the sample proportion (0.093) and the comparison value (0.1)</li>
+<li><code>ns</code> is the number of <em>successes</em>. This is the number we can compare to a binomial-distribution with paramters <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.10\)</span>.</li>
+<li><code>p.value</code> is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)</li>
+<li><code>0% 95%</code> show the 95% confidence interval around the sample proportion (0 to 0.11). These numbers provide a range within which the true population mean is likely to fall</li>
+</ul>
+<div id="testing" class="section level3">
+<h3>Testing</h3>
+<p>There are three approaches we can use to evaluate the null hypothesis. We will choose significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.</p>
+<div id="p.value" class="section level4">
+<h4>p.value</h4>
+<p>Because the p.value is <strong>larger</strong> than the conventional significance level (<span class="math">\(0.249 &gt; 0.05\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
+<p>We can also obtain the p.value by using the probability calculator in the <em>Base</em> menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.1\)</span>. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that <span class="math">\(P(X &lt;= 93) = 0.249\)</span> which is the same value we got from <em>Base &gt; Single proportion</em>.</p>
+<p><img src="figures_quant/single_proportion_prob_calc_v.png" alt="prob_calc" /></p>
+</div>
+<div id="confidence-interval" class="section level4">
+<h4>confidence interval</h4>
+<p>Because the <code>comparison value</code> <strong>is</strong> contained in the confidence interval (i.e., <span class="math">\(0 &lt; 0.1 &lt; 0.11\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
+</div>
+<div id="number-of-successes" class="section level4">
+<h4>number of successes</h4>
+<p>Because the number of successes is <strong>larger</strong> than the <em>critical</em> value (85) we <strong>cannot</strong> reject the null hypothesis and suggest that management should enter the UK market.</p>
+<p>Because the number of successes (i.e., the number of “yes” responses) <strong>is</strong> larger than the critical value (85) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
+<p>We can obtain the critical value by using the probability calculator in the <em>Base</em> menu. For a binomial-distribution with <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.1\)</span> the critical value is 83. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is <code>Less than</code>.<sup>2</sup></p>
+<p><img src="figures_quant/single_proportion_prob_calc_p.png" alt="prob_calc" /></p>
+<!--
+In addition to the numerical output provided in the _Summary_ tab we can visualize the data in the _Plot_ tab. The settings in the side-panel are the same as before. The black lines in the histogram show the sample mean (solid) and the confidence interval around the sample mean (dashed). The red line shows the comparison value (i.e., unit sales under the null-hypothesis). Because the red line does **not** fall within the confidence interval (1897 to Inf.) we reject the null-hypothesis in favor of the alternative.
+
+![Plot](figures_quant/single_proportion_plot.png)
+-->
+</div>
+</div>
+<div id="stats-speak" class="section level3">
+<h3><em>Stats speak</em></h3>
+<p>This is a <strong>single proportion</strong> test of the null hypothesis that the true population <strong>proportion</strong> is equal to <strong>0.1</strong>. Using a significance level of 0.05, we <strong>cannot</strong> reject the null hypothesis, and <strong>cannot</strong> conclude that the true population <strong>proportion</strong> is <strong>less</strong> than <strong>0.1</strong>.</p>
+<p>The p.value for this test is <strong>0.249</strong>. This is the probability of observing a sample <strong>proportion</strong> (or <strong>number of successes</strong>) that is as or more extreme than the sample value we estimated from the data if the null hypothesis is true. In this case, it is the probability of observing a sample <strong>proportion</strong> (<strong>number of successes</strong>) that is less than (or equal to) <strong>0.093</strong> (<strong>93</strong>) if the true population <strong>proportion</strong> is <strong>0.1</strong>.</p>
+<p>The 95% confidence bound is <strong>0.11</strong>. If repeated samples were taken and the 95% confidence bound computed for each one, the true population proportion would be below that bound in 95% of the samples</p>
+<p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
+<p><sup>2</sup> <span class="math">\(1 - \alpha\)</span> is called the <strong>confidence level</strong>. A commonly used significance level is 0.95 (or 95%)</p>
+<!--
+To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean
+-->
+</div>
+</div>
 
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>

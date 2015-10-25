@@ -250,8 +250,11 @@ Confidence: 0.95
 Null hyp. : the mean of price = 0 
 Alt. hyp. : the mean of price is not equal to 0 
 
-     mean t.value p.value   df     2.5%    97.5%       sd    n
- 3907.186  54.084  &lt; .001 2999 3765.535 4048.837 3956.915 3000</code></pre>
+     mean       sd    n n_missing
+ 3907.186 3956.915 3000         0
+
+     diff     se t.value p.value   df     2.5%    97.5%
+ 3907.186 72.243  54.084  &lt; .001 2999 3765.535 4048.837</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-2-1.png" title="" alt="" width="672" /></p>
 <p>You can also call functions for visualization (see below) and access help from the console using <code>?visualize</code></p>
@@ -273,8 +276,11 @@ Confidence: 0.95
 Null hyp. : the mean of mpg = 20 
 Alt. hyp. : the mean of mpg is &gt; 20 
 
-   mean t.value p.value df   2.5% 97.5%    sd  n
- 20.091   0.085   0.466 31 18.284   Inf 6.027 32</code></pre>
+   mean    sd  n n_missing
+ 20.091 6.027 32         0
+
+  diff    se t.value p.value df     5% 100%
+ 0.091 1.065   0.085   0.466 31 18.284  Inf</code></pre>
 <pre class="r"><code>plot(result, plots = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-4-1.png" title="" alt="" width="672" /></p>
 <p>To compare the mean price of diamonds across different levels of clarity we can call the <code>compare_means</code> function:</p>

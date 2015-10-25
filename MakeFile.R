@@ -1,4 +1,5 @@
 library(knitr)
+library(dplyr)
 setwd("~/gh/radiant_gh-pages/")
 # file.copy("../radiant/inst/marketing/data/shopping.rda",
 #           "~/Desktop/shopping.rda",overwrite = TRUE)
