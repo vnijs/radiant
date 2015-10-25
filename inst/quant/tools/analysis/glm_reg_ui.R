@@ -259,7 +259,7 @@ output$ui_glm_reg <- renderUI({
                          input.glm_sum_check.indexOf('confint') >= 0)) |
   	                     input.glm_plots == 'coef' |
                          input.tabs_glm_reg == 'Predict'",
-   					 sliderInput("glm_conf_lev", "Adjust confidence level:", min = 0.70,
+   					 sliderInput("glm_conf_lev", "Adjust confidence level:", min = 0.80,
    					             max = 0.99, value = state_init("glm_conf_lev",.95),
    					             step = 0.01)
   		  ),

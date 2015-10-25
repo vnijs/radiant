@@ -258,7 +258,7 @@ output$ui_regression <- renderUI({
                          input.reg_predict == 'data' |
                          (input.reg_sum_check && input.reg_sum_check.indexOf('confint') >= 0) |
                          input.reg_plots == 'coef'",
-             sliderInput("reg_conf_lev", "Adjust confidence level:", min = 0.70,
+             sliderInput("reg_conf_lev", "Adjust confidence level:", min = 0.80,
                          max = 0.99, value = state_init("reg_conf_lev",.95),
                          step = 0.01)
         ),

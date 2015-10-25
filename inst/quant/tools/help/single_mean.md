@@ -2,13 +2,13 @@
 
 The single mean (or one-sample) t-test is used to compare the mean of a variable in our data to a (hypothesized) mean in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the `Comparison value` box.
 
-We can perform either a one-sided test (i.e., `less than` or `greater than`) or a two-sided test (see the `Alternative hypothesis` dropdown). We use one-sided tests to evaluate if the available data provide evidence that the mean for a variable is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).
+We can perform either a one-sided test (i.e., `less than` or `greater than`) or a two-sided test (see the `Alternative hypothesis` dropdown). We use one-sided tests to evaluate if the available data provide evidence that the sample mean is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).
 
 ## Example
 
 We have access to data from a random sample of grocery stores in the UK. Management will consider entering this market if consumer demand for the product category exceeds 100M units, or, approximately, 1750 units per store. The average demand per store in the sample is equal to 1953. While this number is larger than 1750 we need to determine if the difference could be attributed to sampling error.
 
-You can find the information on unit sales in each of the sample stores in the **demand\_uk.rda** data set. The data set contains two variables, `store_id` and `demand_uk`. Our null-hypothesis is that the average store demand in the UK is equal to 1750 unit so we enter that number into the `Comparison value` box. Because we want to determine if the available data provides sufficient support to reject the null-hypothesis about the population of stores in favor of the alternative (i.e., that average store demand in the UK is larger than 1750) we choose the `Greater than` option from the `Alternative hypothesis` drop-down.
+You can find the information on unit sales in each of the sample stores in the **demand\_uk.rda** data set. The data set contains two variables, `store_id` and `demand_uk`. Our null-hypothesis is that the average store demand in the UK is equal to 1750 unit so we enter that number into the `Comparison value` box. We choose the `Greater than` option from the `Alternative hypothesis` drop-down because we want to determine if the available data provides sufficient evidence to reject the null-hypothesis favor of the alternative that average store demand in the UK is **larger than 1750**.
 
 ![Summary](figures_quant/single_mean_summary.png)
 
