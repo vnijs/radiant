@@ -91,10 +91,12 @@ summary.single_mean <- function(object, ...) {
 	       ) %>% as.data.frame
 	names(res) <- c("diff","se","t.value","p.value","df", ci_perc[1], ci_perc[2])
 	res %<>% round(dec) 	# restrict the number of decimals
+	res$` ` <- sig_stars(res$p.value)
 	if (res$p.value < .001) res$p.value <- "< .001"
 
 	## print statistics
 	print(res, row.names = FALSE)
+	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 
 #' Plot method for the single_mean function

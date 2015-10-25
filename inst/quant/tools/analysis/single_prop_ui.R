@@ -103,7 +103,7 @@ output$single_prop <- renderUI({
 
 sp_available <- reactive({
   if (not_available(input$sp_var))
-    return("This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("diamonds"))
+    return("This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("consider"))
 
   if (input$sp_comp_value %>% { is.na(.) | . > 1 | . <= 0 })
     return("Please choose a comparison value between 0 and 1")
