@@ -20,7 +20,7 @@ save(consider, file = "~/Desktop/consider.rda")
 
 ## Example
 
-A car manufacturers conducted a study by randomly sampling and interviewing 1,000 consumers in a new target market to determine if consumers would consider purchasing this brand of car.
+A car manufacturer conducted a study by randomly sampling and interviewing 1,000 consumers in a new target market. The goal of the study was to determine if consumers would consider purchasing this brand of car.
 
 Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong liking.
 
