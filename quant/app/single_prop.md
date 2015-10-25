@@ -1,8 +1,8 @@
 > Compare a single proportion to the population proportion
 
-The single proportion (or one-sample) binomial test is used to compare the proportion of a variable in our data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the `Comparison value` box.
+The single proportion (or one-sample) binomial test is used to compare a proportion of responses or values in our data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the `Comparison value` box.
 
-We can perform either a one-sided test (i.e., `less than` or `greater than`) or a two-sided test (see the `Alternative hypothesis` dropdown). We use one-sided tests to evaluate if the available data provide evidence if a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).
+We can perform either a one-sided test (i.e., `less than` or `greater than`) or a two-sided test (see the `Alternative hypothesis` dropdown). We use one-sided tests to evaluate if the available data provide evidence that a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).
 
 <!--
 
@@ -22,11 +22,11 @@ save(consider, file = "~/Desktop/consider.rda")
 
 A car manufacturer conducted a study by randomly sampling and interviewing 1,000 consumers in a new target market. The goal of the study was to determine if consumers would consider purchasing this brand of car.
 
-Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong liking.
+Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong brand liking.
 
 You can find information on the responses by survey participants in the **consider.rda** data set. The data set contains two variables, `id` and `consider`.
 
-Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. Because we want to determine if the available data provides sufficient support to reject the null-hypothesis in favor of the alternative (i.e., that proportion of consumers that will consider the brand is less than 10%) we choose the `Less than` option from the `Alternative hypothesis` drop-down.
+Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. We choose the `Less than` option from the `Alternative hypothesis` drop-down because we want to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is **less than 10%**.
 
 ![Summary](figures_quant/single_proportion_summary.png)
 

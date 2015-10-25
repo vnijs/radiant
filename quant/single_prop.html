@@ -242,8 +242,8 @@ img {
 <blockquote>
 <p>Compare a single proportion to the population proportion</p>
 </blockquote>
-<p>The single proportion (or one-sample) binomial test is used to compare the proportion of a variable in our data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the <code>Comparison value</code> box.</p>
-<p>We can perform either a one-sided test (i.e., <code>less than</code> or <code>greater than</code>) or a two-sided test (see the <code>Alternative hypothesis</code> dropdown). We use one-sided tests to evaluate if the available data provide evidence if a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).</p>
+<p>The single proportion (or one-sample) binomial test is used to compare a proportion of responses or values in our data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the <code>Comparison value</code> box.</p>
+<p>We can perform either a one-sided test (i.e., <code>less than</code> or <code>greater than</code>) or a two-sided test (see the <code>Alternative hypothesis</code> dropdown). We use one-sided tests to evaluate if the available data provide evidence that a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).</p>
 <!--
 
 ```r
@@ -260,9 +260,9 @@ save(consider, file = "~/Desktop/consider.rda")
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>A car manufacturer conducted a study by randomly sampling and interviewing 1,000 consumers in a new target market. The goal of the study was to determine if consumers would consider purchasing this brand of car.</p>
-<p>Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong liking.</p>
+<p>Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong brand liking.</p>
 <p>You can find information on the responses by survey participants in the <strong>consider.rda</strong> data set. The data set contains two variables, <code>id</code> and <code>consider</code>.</p>
-<p>Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. Because we want to determine if the available data provides sufficient support to reject the null-hypothesis in favor of the alternative (i.e., that proportion of consumers that will consider the brand is less than 10%) we choose the <code>Less than</code> option from the <code>Alternative hypothesis</code> drop-down.</p>
+<p>Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. We choose the <code>Less than</code> option from the <code>Alternative hypothesis</code> drop-down because we want to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is <strong>less than 10%</strong>.</p>
 <p><img src="figures_quant/single_proportion_summary.png" alt="Summary" /></p>
 <p>The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., the proportion of “yes” responses). The final row of output shows the following:</p>
 <ul>
