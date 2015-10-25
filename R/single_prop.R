@@ -29,19 +29,12 @@ single_prop <- function(dataset, var,
                         dec = 3,
                         data_filter = "") {
 
-
-	# var <- "consider"
-	# comp_value = 0.1
-	# alternative = "less"
-	# conf_lev = .95
-	# data_filter = ""
-	# lev = ""
-	# library(broom)
-	# library(dplyr)
-	# library(radiant)
-
 	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_each(funs(as.factor))
 	if (!is_string(dataset)) dataset <- "-----"
+
+  ## removing any missing values
+	miss <- n_missing(dat)
+  dat <- na.omit(dat)
 
 	levs <- levels(dat[[var]])
 	if (lev != "") {
@@ -53,7 +46,7 @@ single_prop <- function(dataset, var,
 		lev <- levs[1]
 	}
 
-	n <- nrow(na.omit(dat))
+	n <- nrow(dat)
 	ns <- sum(dat == lev)
 	p <- ns / n
 
@@ -63,19 +56,12 @@ single_prop <- function(dataset, var,
     mean = n*p,
 		sd = sqrt(n*p*(1-p)),
 		n = n,
-	  n_missing = n_missing(dat)
+	  n_missing = miss
   )
 
 	## use binom.test for exact
 	res <- binom.test(ns, n, p = comp_value, alternative = alternative,
 	                  conf.level = conf_lev) %>% tidy
-
-	# cat("Mean        :", n*p, "\n")
-	# cat("St. dev     :", sqrt(n*p*(1-p)) %>% round(dec), "\n")
-
-	# dat_summary <-
-	#   dat %>% summarise_each(funs(diff = p - comp_value, mean = m,
-	#                          sd = s, n = n, n_missing = n_missing(.)))
 
   environment() %>% as.list %>% set_class(c("single_prop",class(.)))
 }

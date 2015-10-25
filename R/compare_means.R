@@ -178,13 +178,13 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 	# mod[,"t.value"] %<>% round(3)
 
 	if (show) {
-	  mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "p.value")]
+	  mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "p.value")]
 	  # mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "cis_low", "cis_high", "p.value")]
 		if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(3)
 		mod[,c("t.value", "ci_low","ci_high")] %<>% round(3)
 	  mod <- rename_(mod, .dots = setNames(c("ci_low","ci_high"), ci_perc))
 	} else {
-	  mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
+	  mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
 	}
 
 	mod$` ` <- sig_stars(mod$p.value)

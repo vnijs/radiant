@@ -29,12 +29,19 @@ single_mean <- function(dataset, var,
 	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
 	if (!is_string(dataset)) dataset <- "-----"
 
+  ## removing any missing values
+	miss <- n_missing(dat)
+  dat <- na.omit(dat)
+
 	res <- t.test(dat[[var]], mu = comp_value, alternative = alternative,
 	              conf.level = conf_lev) %>% tidy
 
 	dat_summary <-
 	  dat %>% summarise_each(funs(diff = mean_rm(.) - comp_value, se = serr(.), mean = mean_rm(.),
-	                         sd = sd_rm(.), n = length(na.omit(.)), n_missing = n_missing(.)))
+	                         sd = sd_rm(.), n = length(na.omit(.))))
+	dat_summary$n_missing <- miss
+
+	dat <- na.omit(dat)
 
   environment() %>% as.list %>% set_class(c("single_mean",class(.)))
 }

@@ -905,7 +905,7 @@ ci_label <- function(alt, cl) {
 #' @export
 ci_perc <- function(dat, alt, cl) {
   probs <- if (alt == 'two.sided') {
-    (1-cl/2) %>% c(., 1 - .)
+    ((1-cl)/2) %>% c(., 1 - .)
   } else if (alt == 'less') {
     1-cl
   } else {
