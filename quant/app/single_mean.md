@@ -28,7 +28,7 @@ There are three approaches we can use to evaluate the null hypothesis. We will c
 
 #### p.value
 
-Because the p.value is **smaller** than the conventional significance level (i.e., 0.05) we reject the null hypothesis and suggest that management should enter the UK market.
+Because the p.value is **smaller** than the conventional significance level (i.e., 0.05) we reject the null hypothesis and suggest that management should enter the UK market. Note also the '***' that are used as an indicator for significance.
 
 #### confidence interval
 
