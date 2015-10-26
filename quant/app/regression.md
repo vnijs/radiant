@@ -61,6 +61,9 @@ Ha: The coefficient associated with independent variable X is not equal to 0
 
 The coefficients for `Income` and `HH.size` are both significant (p-values < 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value > 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.
 
+We can also use the t.values to evaluate the null and alternative hypotheses for the coefficients. Because the calculated t.value for `Income` and `HH.size` is **larger** than the _critical_ t.value we reject the null hypothesis for both effects. We can obtain the critical t.value by using the probability calculator in the _Base_ menu. For a t-distribution with 196 degrees of freedom (see the `Errors` line in the `Sum of Squares` table shown above) the critical t.value is 1.972. We have to enter 0.025 and 0.975 as the lower and upper probability bounds in the probability calculator because the alternative hypothesis is `two.sided`.
+
+![prob_calc](figures_quant/regression_catalog_prob_calc.png)
 
 ### Example 2: Ideal data for regression
 
