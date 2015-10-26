@@ -242,7 +242,8 @@ img {
 <blockquote>
 <p>Compare proportions for two or more groups in the data</p>
 </blockquote>
-<p>The compare proportions test is used to evaluate if the frequency of occurrence of some event, behavior, intention, etc. differs across groups. We can perform either a one-tailed test (i.e., <code>less than</code> or <code>greater than</code>) or a two-tailed test (see the <code>Alternative hypothesis</code> dropdown). A one-tailed test is useful if we want to evaluate if the available sample data suggest that, for example, the proportion of dropped calls is larger (or smaller) for one wireless provider compared to others.</p>
+<p>The compare proportions test is used to evaluate if the frequency of occurrence of some event, behavior, intention, etc. differs across groups. The null hypothesis for the difference in proportions across groups in the population is set to zero. We test this hypothesis using sample data.</p>
+<p>We can perform either a one-tailed test (i.e., <code>less than</code> or <code>greater than</code>) or a two-tailed test (see the <code>Alternative hypothesis</code> dropdown). A one-tailed test is useful if we want to evaluate if the available sample data suggest that, for example, the proportion of dropped calls is larger (or smaller) for one wireless provider compared to others.</p>
 <div id="example" class="section level3">
 <h3>Example</h3>
 <p>We will use a sample from a dataset that describes the survival status of individual passengers on the Titanic. The principal source for data about Titanic passengers is the Encyclopedia Titanic. One of the original sources is Eaton &amp; Haas (1994) Titanic: Triumph and Tragedy, Patrick Stephens Ltd, which includes a passenger list created by many researchers and edited by Michael A. Findlay. Lets focus on two variables in the database:</p>
@@ -264,7 +265,7 @@ img {
 <ul>
 <li><code>chisq.value</code> is the chi-squared statistic associated with <code>diff</code> that we can compare to a chi-squared distribution. For additional discussion on how this metric is calculated see the help file in <em>Base &gt; Cross-tabs</em>. For each combination the equivalent of a 2X2 cross-tab is calculated.</li>
 <li><code>df</code> is the degrees of freedom associated with each statistical test (1).</li>
-<li><code>5% 100%</code> show the 95% confidence interval around the difference in sample proportions. These numbers provide a range within which the true population difference is likely to fall</li>
+<li><code>2.5% 97.5%</code> show the 95% confidence interval around the difference in sample proportions. These numbers provide a range within which the true population difference is likely to fall</li>
 </ul>
 </div>
 <div id="testing" class="section level3">

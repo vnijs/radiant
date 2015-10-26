@@ -1,6 +1,6 @@
 > Compare the means of two or more variables or groups in the data
 
-The compare means t-test is used to compare the mean of a variable for one sample in our data to the mean of the same variable in one, or more, other samples. The null hypothesis for the difference between the samples (or groups) is set to zero.
+The compare means t-test is used to compare the mean of a variable in one group to the mean of the same variable in one, or more, other groups. The null hypothesis for the difference between the groups in the population is set to zero. We test this hypothesis using sample data.
 
 We can perform either a one-tailed test (i.e., `less than` or `greater than`) or a two-tailed test (see the 'Alternative hypothesis' dropdown). We use one-tailed tests to evaluate if the available data provide evidence that the difference in sample means between groups is less than (or greater than ) zero.
 
@@ -24,7 +24,7 @@ Suppose we want to test if professors of lower rank earn lower salaries compared
 The first two blocks of output show basic information about the test (e.g.,. selected variables and confidence levels) and summary statistics (e.g., mean, standard deviation, etc. per group). The final block of output shows the following:
 
 * `Null hyp.` is the null hypothesis and `Alt. hyp.` the alternative hypothesis
-* `diff` is the difference between the sample means for two groups (e.g., 80775 - 93876.44 = -13100.45). If the null hypothesis is true we expect this difference to be small (i.e., close to zero)
+* `diff` is the difference between the sample means for two groups (e.g., 80775.99 - 93876.44 = -13100.45). If the null hypothesis is true we expect this difference to be small (i.e., close to zero)
 * `p.value` is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)
 
 If we check `Show additional statistics` the following output is added:
@@ -34,7 +34,7 @@ If we check `Show additional statistics` the following output is added:
 * `se` is the standard error (i.e., the standard deviation of the sampling distribution of `diff`)
 * `t.value` is the _t_ statistic associated with `diff` that we can compare to a t-distribution (i.e., `diff` / `se`)
 * `df` is the degrees of freedom associated with the statistical test. Note that the Welch approximation is used for the degrees of freedom
-* `5% 100%` show the 95% confidence interval around the difference in sample means. These numbers provide a range within which the true population difference is likely to fall
+* `0% 95%` show the 95% confidence interval around the difference in sample means. These numbers provide a range within which the true population difference is likely to fall
 
 ### Testing
 

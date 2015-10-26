@@ -242,7 +242,7 @@ img {
 <blockquote>
 <p>Compare the means of two or more variables or groups in the data</p>
 </blockquote>
-<p>The compare means t-test is used to compare the mean of a variable for one sample in our data to the mean of the same variable in one, or more, other samples. The null hypothesis for the difference between the samples (or groups) is set to zero.</p>
+<p>The compare means t-test is used to compare the mean of a variable in one group to the mean of the same variable in one, or more, other groups. The null hypothesis for the difference between the groups in the population is set to zero. We test this hypothesis using sample data.</p>
 <p>We can perform either a one-tailed test (i.e., <code>less than</code> or <code>greater than</code>) or a two-tailed test (see the ‘Alternative hypothesis’ dropdown). We use one-tailed tests to evaluate if the available data provide evidence that the difference in sample means between groups is less than (or greater than ) zero.</p>
 <div id="example-professor-salaries" class="section level3">
 <h3>Example: Professor salaries</h3>
@@ -261,7 +261,7 @@ img {
 <p>The first two blocks of output show basic information about the test (e.g.,. selected variables and confidence levels) and summary statistics (e.g., mean, standard deviation, etc. per group). The final block of output shows the following:</p>
 <ul>
 <li><code>Null hyp.</code> is the null hypothesis and <code>Alt. hyp.</code> the alternative hypothesis</li>
-<li><code>diff</code> is the difference between the sample means for two groups (e.g., 80775 - 93876.44 = -13100.45). If the null hypothesis is true we expect this difference to be small (i.e., close to zero)</li>
+<li><code>diff</code> is the difference between the sample means for two groups (e.g., 80775.99 - 93876.44 = -13100.45). If the null hypothesis is true we expect this difference to be small (i.e., close to zero)</li>
 <li><code>p.value</code> is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)</li>
 </ul>
 <p>If we check <code>Show additional statistics</code> the following output is added:</p>
@@ -270,7 +270,7 @@ img {
 <li><code>se</code> is the standard error (i.e., the standard deviation of the sampling distribution of <code>diff</code>)</li>
 <li><code>t.value</code> is the <em>t</em> statistic associated with <code>diff</code> that we can compare to a t-distribution (i.e., <code>diff</code> / <code>se</code>)</li>
 <li><code>df</code> is the degrees of freedom associated with the statistical test. Note that the Welch approximation is used for the degrees of freedom</li>
-<li><code>5% 100%</code> show the 95% confidence interval around the difference in sample means. These numbers provide a range within which the true population difference is likely to fall</li>
+<li><code>0% 95%</code> show the 95% confidence interval around the difference in sample means. These numbers provide a range within which the true population difference is likely to fall</li>
 </ul>
 </div>
 <div id="testing" class="section level3">
