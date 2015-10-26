@@ -292,19 +292,26 @@ plot.regression <- function(x,
   indep_var <- object$indep_var
   vars <- c(dep_var, indep_var)
 
+  flines <- sub("loess","",lines) %>% sub("line","",.)
+  nlines <- sub("jitter","",lines)
+
   plot_list <- list()
   if ("hist" %in% plots)
-    for (i in vars) plot_list[[paste0("hist",i)]] <- ggplot(model[,vars], aes_string(x = i)) + geom_histogram()
+    for (i in vars) {
+      plot_list[[paste0("hist",i)]] <-
+        visualize(select_(model, .dots = i), xvar = i, bins = 10, custom = TRUE)
+        # ggplot(model[,vars], aes_string(x = i)) + geom_histogram(alpha = 0.5)
+    }
 
   if ("dashboard" %in% plots) {
 
-    plot_list[[1]] <- ggplot(model, aes_string(x=".fitted", y=dep_var)) +
-      labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual")) +
-      geom_point(alpha = .5)
+    plot_list[[1]] <-
+      visualize(model, xvar = ".fitted", yvar = dep_var, type = "scatter", custom = TRUE) +
+      labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual"))
 
-    plot_list[[2]] <- ggplot(model, aes_string(x=".fitted", y='.resid')) +
-      labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals")) +
-      geom_point(alpha = .5)
+    plot_list[[2]] <-
+      visualize(model, xvar = ".fitted", yvar = ".resid", type = "scatter", custom = TRUE) +
+      labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals"))
 
     plot_list[[3]] <- ggplot(model, aes(y=.resid, x=seq_along(.resid))) + geom_line() +
       labs(list(title = "Residuals vs Row order", x = "Row order", y = "Residuals"))
@@ -312,7 +319,8 @@ plot.regression <- function(x,
     plot_list[[4]] <- ggplot(model, aes_string(sample=".stdresid")) + stat_qq(alpha = .5) +
       labs(list(title = "Normal Q-Q", x = "Theoretical quantiles", y = "Standardized residuals"))
 
-    plot_list[[5]] <- ggplot(model, aes_string(x = ".resid")) + geom_histogram() +
+    plot_list[[5]] <-
+      visualize(model, xvar = ".resid", custom = TRUE) +
       labs(list(title = "Histogram of residuals", x = "Residuals"))
 
     plot_list[[6]] <- ggplot(model, aes_string(x=".resid")) + geom_density(alpha=.3, fill = "green") +
@@ -333,14 +341,11 @@ plot.regression <- function(x,
   if ("scatter" %in% plots) {
     for (i in indep_var) {
       if ('factor' %in% class(model[,i])) {
-        plot_list[[paste0("scatter",i)]] <- ggplot(model, aes_string(x=i, y=dep_var, fill=i)) +
-                                          geom_boxplot(alpha = .7) +
-                                          theme(legend.position = "none")
+        plot_list[[paste0("scatter",i)]] <-
+          visualize(select_(model, .dots = c(i,dep_var)), xvar = i, yvar = dep_var, type = "scatter", check = flines, alpha = .2, custom = TRUE)
       } else {
-        p <- ggplot(model, aes_string(x=i, y=dep_var)) + geom_point()
-        if ("line" %in% lines) p <- p + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
-        if ("loess" %in% lines) p <- p + geom_smooth(size = .75, linetype = "dotdash")
-        plot_list[[paste0("scatter",i)]] <- p
+        plot_list[[paste0("scatter",i)]] <-
+          visualize(select_(model, .dots = c(i,dep_var)), xvar = i, yvar = dep_var, type = "scatter", check = nlines, custom = TRUE)
       }
     }
   }
@@ -348,16 +353,13 @@ plot.regression <- function(x,
   if ("resid_pred" %in% plots) {
     for (i in indep_var) {
       if ('factor' %in% class(model[,i])) {
-        plot_list[[i]] <- ggplot(model, aes_string(x=i, y=".resid")) +
-                        geom_boxplot(fill = 'blue', alpha = .7) +
-                        ylab("residuals") + theme(legend.position = "none")
+        plot_list[[i]] <-
+          visualize(select_(model, .dots = c(i,".resid")), xvar = i, yvar = ".resid", type = "scatter", check = flines, alpha = .2, custom = TRUE)
+          ylab("residuals")
       } else {
-        p <- ggplot(model, aes_string(x=i, y=".resid")) + geom_point(alpha = .5) + ylab("residuals")
-        if ("line" %in% lines)
-          p <- p + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
-        if ("loess" %in% lines)
-          p <- p + geom_smooth(size = .75, linetype = "dotdash")
-        plot_list[[i]] <- p
+        plot_list[[i]] <-
+          visualize(select_(model, .dots = c(i,".resid")), xvar = i, yvar = ".resid", type = "scatter", check = nlines, custom = TRUE) +
+          ylab("residuals")
       }
     }
   }

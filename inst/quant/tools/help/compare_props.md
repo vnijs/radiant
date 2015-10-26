@@ -1,6 +1,8 @@
 > Compare proportions for two or more groups in the data
 
-The compare proportions test is used to evaluate if the frequency of occurrence of some event, behavior, intention, etc. differs across groups. We can perform either a one-tailed test (i.e., `less than` or `greater than`) or a two-tailed test (see the `Alternative hypothesis` dropdown). A one-tailed test is useful if we want to evaluate if the available sample data suggest that, for example, the proportion of dropped calls is larger (or smaller) for one wireless provider compared to others.
+The compare proportions test is used to evaluate if the frequency of occurrence of some event, behavior, intention, etc. differs across groups. The null hypothesis for the difference in proportions across groups in the population is set to zero. We test this hypothesis using sample data.
+
+We can perform either a one-tailed test (i.e., `less than` or `greater than`) or a two-tailed test (see the `Alternative hypothesis` dropdown). A one-tailed test is useful if we want to evaluate if the available sample data suggest that, for example, the proportion of dropped calls is larger (or smaller) for one wireless provider compared to others.
 
 ### Example
 
@@ -27,7 +29,7 @@ If we check `Show additional statistics` the following output is added:
 
 * `chisq.value` is the chi-squared statistic associated with `diff` that we can compare to a chi-squared distribution. For additional discussion on how this metric is calculated see the help file in _Base > Cross-tabs_. For each combination the equivalent of a 2X2 cross-tab is calculated.
 * `df` is the degrees of freedom associated with each statistical test (1).
-* `5% 100%` show the 95% confidence interval around the difference in sample proportions. These numbers provide a range within which the true population difference is likely to fall
+* `2.5% 97.5%` show the 95% confidence interval around the difference in sample proportions. These numbers provide a range within which the true population difference is likely to fall
 
 ### Testing
 

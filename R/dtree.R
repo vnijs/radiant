@@ -405,6 +405,7 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
       lbl <- paste0("((", po, "))")
     } else if (node$type == "terminal") {
       lbl <- paste0("[", FormatPayoff(node$payoff), "]")
+      # lbl <- paste0("[<span title='test'>", FormatPayoff(node$payoff), "</span>]")
     }
     paste0(" ", node$id, lbl)
   }

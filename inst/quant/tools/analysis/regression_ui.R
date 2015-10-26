@@ -8,11 +8,11 @@ reg_check <- c("Standardized coefficients" = "standardize",
                "Stepwise selection" = "stepwise")
 reg_sum_check <- c("RMSE" = "rmse", "Sum of squares" = "sumsquares",
                    "VIF" = "vif", "Confidence intervals" = "confint")
-reg_lines <- c("Line" = "line", "Loess" = "loess")
+reg_lines <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
 reg_plots <- c("None" = "", "Histograms" = "hist",
                "Correlations" = "correlations", "Scatter" = "scatter",
                "Dashboard" = "dashboard",
-               "Residual vs predictor" = "resid_pred",
+               "Residual vs explanatory" = "resid_pred",
                "Coefficient plot" = "coef",
                "Leverage plots" = "leverage")
 

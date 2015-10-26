@@ -149,10 +149,12 @@ visualize <- function(dataset, xvar,
         # if ("log_x" %in% axes)
         #   hist_par[["binwidth"]] <- select_(dat,i) %>% filter(. > 0) %>% mutate_each(funs(log)) %>% range %>% {diff(.)/bins}
         # else
-        #   hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
+        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
       } else {
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       }
+
+      # print(bins)
 
       plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))

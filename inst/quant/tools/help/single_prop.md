@@ -1,6 +1,6 @@
 > Compare a single proportion to the population proportion
 
-The single proportion (or one-sample) binomial test is used to compare a proportion of responses or values in our data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the `Comparison value` box.
+The single proportion (or one-sample) binomial test is used to compare a proportion of responses or values in a sample of data to a (hypothesized) proportion in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the `Comparison value` box.
 
 We can perform either a one-sided test (i.e., `less than` or `greater than`) or a two-sided test (see the `Alternative hypothesis` dropdown). We use one-sided tests to evaluate if the available data provide evidence that a sample proportion is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).
 
