@@ -4,7 +4,7 @@
 
 ## alternative hypothesis options
 sp_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
-sp_plots <- c("Histogram" = "hist", "Simulate" = "simulate")
+sp_plots <- c("Bar" = "bar", "Simulate" = "simulate")
 
 ## list of function arguments
 sp_args <- as.list(formals(single_prop))
@@ -41,7 +41,7 @@ output$ui_single_prop <- renderUI({
       wellPanel(
         selectizeInput(inputId = "sp_plots", label = "Select plots:",
                 choices = sp_plots,
-                selected = state_single("sp_plots", sp_plots, "hist"),
+                selected = state_single("sp_plots", sp_plots, "bar"),
                 multiple = TRUE,
                 options = list(plugins = list('remove_button', 'drag_drop')))
       )

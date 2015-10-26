@@ -1,3 +1,17 @@
+
+# visNetwork looks fantastic!!
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+# https://github.com/rich-iannone/DiagrammeR/issues/110
+
 #' Parse yaml input for dtree to provide (more) useful error messages
 #'
 #' @details See \url{http://vnijs.github.io/radiant/base/dtree.html} for an example in Radiant
@@ -429,6 +443,8 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
     style, sep = "\n") %>%
     {if (shiny) . else DiagrammeR::DiagrammeR(.)}
 }
+
+    # "click id1 callback 'Tooltip';\n"
 
 ## some initial ideas for sensitivity analysis
 # library(yaml); library(radiant)

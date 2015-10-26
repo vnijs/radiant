@@ -134,7 +134,7 @@ summary.single_prop <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{single_prop}}
-#' @param plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
+#' @param plots Plots to generate. "bar" shows a bar chart of the data. The "simulate" chart shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
@@ -149,21 +149,33 @@ summary.single_prop <- function(object, ...) {
 #'
 #' @export
 plot.single_prop <- function(x,
-                             plots = "hist",
+                             plots = "bar",
                              shiny = FALSE,
                              ...) {
+
+	## bar used to called hist - changed for consistency with compare_props
+	plots %<>% gsub("hist","bar",.)
 
   object <- x; rm(x)
 
 	lev_name <- object$levs[1]
 
  	plot_list <- list()
-	if ("hist" %in% plots) {
-		plot_list[[which("hist" == plots)]] <-
+	if ("bar" %in% plots) {
+		plot_list[[which("bar" == plots)]] <-
+			# ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
+	 	# 		geom_histogram(alpha = .7) +
+		 # 		scale_y_continuous(labels = percent) +
+	 	#  		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$var)) +
+	 	#  		theme(legend.position = "none")
+
+
 			ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
-	 			geom_histogram(alpha = .7) +
+	 	 		geom_bar(aes(y = (..count..)/sum(..count..)), alpha = .7) +
+		 		scale_y_continuous(labels = percent) +
 	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$var)) +
-	 	 		theme(legend.position = "none")
+	 	 		ylab("") + theme(legend.position = "none")
+
 	}
 	if ("simulate" %in% plots) {
 		simdat <- rbinom(1000, prob = object$comp_value, object$n) %>%
