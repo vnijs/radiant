@@ -10,6 +10,7 @@
 #' @param conf_lev Span of the confidence interval
 #' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
+#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_props
@@ -30,6 +31,7 @@ compare_props <- function(dataset, var1, var2,
                          conf_lev = .95,
                          comb = "",
                          adjust = "none",
+                         dec = 3,
                          data_filter = "") {
 
 	vars <- c(var1, var2)
@@ -63,8 +65,9 @@ compare_props <- function(dataset, var1, var2,
 
 	prop_input[is.na(prop_input)] <- 0
 
-  levs <- rownames(prop_input)
-  cmb <- combn(levs, 2) %>% t %>% as.data.frame
+  lv <- rownames(prop_input)
+  cmb <- combn(lv, 2) %>% t %>% as.data.frame
+
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1","group2")
 
@@ -85,7 +88,7 @@ compare_props <- function(dataset, var1, var2,
     pinp <- prop_input[ind,]
   	res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
 	    sshhr( prop.test(pinp, alternative = alternative, conf.level = conf_lev,
-	             correct = FALSE) )%>%
+	             correct = FALSE) ) %>%
 	    tidy %>% .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
 
     n <- rowSums(pinp)
@@ -139,6 +142,7 @@ compare_props <- function(dataset, var1, var2,
 summary.compare_props <- function(object, show = FALSE, ...) {
 
 	if (is.character(object)) return(object)
+	dec <- object$dec
 
   cat("Pairwise proportion comparisons\n")
 	cat("Data      :", object$dataset, "\n")
@@ -149,9 +153,11 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 	cat("Confidence:", object$conf_lev, "\n")
 	cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  object$dat_summary[,-1] %<>% round(3)
+  object$dat_summary[,-1] %<>% round(dec)
   print(object$dat_summary %>% as.data.frame, row.names = FALSE)
 	cat("\n")
+
+	# print(object$prop_input)
 
   hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
@@ -161,28 +167,28 @@ summary.compare_props <- function(object, show = FALSE, ...) {
   names(props) <- object$rn
 
 	## determine lower and upper % for ci
-	ci_perc <-
-	  {100 * (1-object$conf_lev)/2} %>%
-		c(., 100 - .) %>%
-		round(1) %>%
-		paste0(.,"%")
+	ci_perc <- ci_label(object$alternative, object$conf_lev)
 
 	res <- object$res
 	res$`Alt. hyp.` <- paste(res$group1,hyp_symbol,res$group2," ")
 	res$`Null hyp.` <- paste(res$group1,"=",res$group2, " ")
-	res$diff <- (props[res$group1 %>% as.character] - props[res$group2 %>% as.character]) %>% round(3)
+	res$diff <- (props[res$group1 %>% as.character] - props[res$group2 %>% as.character]) %>% round(dec)
 
 	res_sim <- is.na(res$df)
 	if (show) {
-	  res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "chisq.value", "df", "ci_low", "ci_high", "p.value")]
-		res[,c("chisq.value","ci_low","ci_high")] %<>% round(3)
+	  res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high")]
+		res[,c("chisq.value","ci_low","ci_high")] %<>% round(dec)
+
+		## apparantely you can get negative number here
+		res$ci_low[res$ci_low < 0] <- 0
+
 	  res <- rename_(res, .dots = setNames(c("ci_low","ci_high"), ci_perc))
 	} else {
-	  res <- res[,c("Alt. hyp.", "Null hyp.", "diff", "p.value")]
+	  res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
 	}
 
 	res$` ` <- sig_stars(res$p.value)
-	res$p.value <- round(res$p.value,3)
+	res$p.value <- round(res$p.value,dec)
 	res$p.value[ res$p.value < .001 ] <- "< .001"
 	res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
 	print(res, row.names = FALSE, right = FALSE)
@@ -219,7 +225,7 @@ plot.compare_props <- function(x,
 	dat <- object$dat
 	v1 <- colnames(dat)[1]
 	v2 <- colnames(dat)[-1]
-	lev_name <- object$lv[1]
+	lev_name <- object$levs
 
 	## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
 	plot_list <- list()

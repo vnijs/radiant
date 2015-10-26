@@ -62,10 +62,13 @@ visualize <- function(dataset, xvar,
   ## variable to use if bar chart is specified
   byvar <- NULL
 
-  if (identical(yvar,"")) {
+  # return(yvar)
+
+  if (is.null(yvar) || identical(yvar,"")) {
     if (!type %in% c("hist","density")) {
-      message("No yvar provided for a plot that requires a yvar")
-      return(invisible())
+      # message("No yvar provided for a plot that requires a yvar")
+      return("No yvar provided for a plot that requires a yvar")
+      # return(invisible())
     }
   } else {
     if (type %in% c("hist","density")) {
@@ -105,22 +108,31 @@ visualize <- function(dataset, xvar,
     xvar <- cn[which(fl[1] == cn):which(fl[2] == cn)]
   }
 
+  ## convertising factor variables if needed
   isChar <- sapply(dat, class) == "character"
   if (sum(isChar) > 0) {
+    if (type == "density") {
+      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_numeric))
+      if ("character" %in% getclass(select(dat,which(isChar))))
+        return("Character variable(s) were not converted to numeric.\nTo use these variables in a plot convert them to numeric\nvariables (or factors) in the Data > Transform tab")
+    } else {
+      dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_factor))
+      nrlev <- sapply(dat, function(x) if (is.factor(x)) length(levels(x)) else 0)
+      if (max(nrlev) > 50)
+        return("Character variable(s) were not converted to factors.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
+    }
+  }
 
-    # library(magrittr)
-    # library(radiant)
-    # dat <- mtcars
-    # dat[,1] %<>% as.character
-    # dat[,4] %<>% as.character
+  log_trans <- function(x) ifelse(x > 0, log(x), NA)
 
-    # for (i in )
-    #   names(dat)[isChar]
+  if ("log_x" %in% axes) {
+    to_log <- (getclass(select_(dat, .dots = xvar)) %in% c("integer","numeric")) %>% xvar[.]
+    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
+  }
 
-    if (type == "density")
-      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as_numeric))
-    else
-      dat[,isChar] %<>% data.frame %>% mutate_each(funs(as_factor))
+  if ("log_y" %in% axes) {
+    to_log <- (getclass(select_(dat, .dots = yvar)) %in% c("integer","numeric")) %>% yvar[.]
+    dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
   plot_list <- list()
@@ -134,10 +146,16 @@ visualize <- function(dataset, xvar,
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
       if (!"factor" %in% class(dat[[i]])) {
-        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
+        # if ("log_x" %in% axes)
+        #   hist_par[["binwidth"]] <- select_(dat,i) %>% filter(. > 0) %>% mutate_each(funs(log)) %>% range %>% {diff(.)/bins}
+        # else
+        #   hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
+      } else {
+        if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       }
 
       plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
+      if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
     }
   } else if (type == "density") {
     for (i in xvar) {
@@ -146,14 +164,18 @@ visualize <- function(dataset, xvar,
           geom_density(adjust = smooth, color = "blue", fill = "blue", alpha = alpha, size = 1)
         else
           geom_density(adjust = smooth, alpha = alpha, size = 1)
+
+      if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
     }
   } else if (type == "scatter") {
 
     itt <- 1
     gs <- if ("jitter" %in% check) geom_blank() else geom_point(alpha = alpha)
     for (i in xvar) {
+      if ("log_x" %in% axes && "factor" %in% class(dat[[i]])) axes <- sub("log_x","",axes)
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + gs
+
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
@@ -209,7 +231,9 @@ visualize <- function(dataset, xvar,
     itt <- 1
     for (i in xvar) {
       dat[,i] %<>% as_factor
+      if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
+        # if ("log_y" %in% axes && i == j) axes <- sub("log_y","",axes)
 
         tbv <- if (is.null(byvar)) i else c(i, byvar)
         tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
@@ -221,6 +245,9 @@ visualize <- function(dataset, xvar,
 
         plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) +
           geom_bar(stat="identity", position = "dodge", alpha = alpha)
+
+        if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
+
         itt <- itt + 1
       }
     }
@@ -229,9 +256,13 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       dat[,i] %<>% as_factor
       for (j in yvar) {
+        # if ("log_y" %in% axes && i == j) axes <- sub("log_y","",axes)
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) +
                           geom_boxplot(alpha = alpha) +
                           theme(legend.position = "none")
+
+        if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
+
         itt <- itt + 1
       }
     }
@@ -282,15 +313,15 @@ visualize <- function(dataset, xvar,
     for (i in 1:length(plot_list)) plot_list[[i]] <- plot_list[[i]] + coord_flip()
   }
 
-  if ("log_y" %in% axes) {
-    for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + scale_y_continuous(trans = "log")
-  }
+  # if ("log_y" %in% axes) {
+  #   for (i in 1:length(plot_list))
+  #     plot_list[[i]] <- plot_list[[i]] + scale_y_continuous(trans = "log")
+  # }
 
-  if ("log_x" %in% axes) {
-    for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + scale_x_continuous(trans = "log")
-  }
+  # if ("log_x" %in% axes) {
+  #   for (i in 1:length(plot_list))
+  #     plot_list[[i]] <- plot_list[[i]] + scale_x_continuous(trans = "log")
+  # }
 
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)

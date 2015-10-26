@@ -62,7 +62,18 @@ output$ui_cp_levs <- renderUI({
 output$ui_cp_comb <- renderUI({
   if (not_available(input$cp_var1)) return()
 
-  levs <- .getdata()[1,input$cp_var1] %>% as.factor %>% levels
+  levs <- .getdata()[ ,input$cp_var1] %>% as.factor %>% levels
+  alevs <- .getdata()[ ,input$cp_var1] %>% unique
+
+  # levs <- c("a","b","c")
+  # alevs <- c("b","a")
+  # levs <-
+  # alevs %in% levs
+  levs <- levs[levs %in% alevs]
+  # levs
+
+
+
   if (length(levs) > 2) {
     cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
   } else {
@@ -98,8 +109,8 @@ output$ui_compare_props <- renderUI({
                     choices = cp_alt,
                     selected = state_single("cp_alternative", cp_alt,
                                                cp_args$alternative)),
-        checkboxInput("cp_show", "Show chisq.value, df, and ci", value = state_init("cp_show", FALSE)),
-        sliderInput("cp_conf_lev","Significance level:", min = 0.85, max = 0.99,
+        checkboxInput("cp_show", "Show additional statistics", value = state_init("cp_show", FALSE)),
+        sliderInput("cp_conf_lev","Confidence level:", min = 0.85, max = 0.99,
           value = state_init("cp_conf_lev",cp_args$conf_lev), step = 0.01),
         radioButtons(inputId = "cp_adjust", label = "Multiple comp. adjustment:", cp_adjust,
           selected = state_init("cp_adjust", cp_args$adjust),

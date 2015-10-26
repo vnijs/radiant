@@ -11,6 +11,7 @@
 #' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param test T-test ("t") or Wilcox ("wilcox")
+#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_means
@@ -30,6 +31,7 @@ compare_means <- function(dataset, var1, var2,
                           comb = "",
                           adjust = "none",
                           test = "t",
+                          dec = 3,
                           data_filter = "") {
 
 	vars <- c(var1, var2)
@@ -143,6 +145,7 @@ compare_means <- function(dataset, var1, var2,
 summary.compare_means <- function(object, show = FALSE, ...) {
 
 	if (is.character(object)) return(object)
+	dec <- object$dec
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")
@@ -153,7 +156,7 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 	cat("Confidence:", object$conf_lev, "\n")
 	cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  object$dat_summary[,-1] %<>% round(3)
+  object$dat_summary[,-1] %<>% round(dec)
   print(object$dat_summary %>% as.data.frame, row.names = FALSE)
 	cat("\n")
 
@@ -164,31 +167,28 @@ summary.compare_means <- function(object, show = FALSE, ...) {
   means <- object$dat_summary$mean
   names(means) <- object$dat_summary[[1]] %>% as.character
 
-	# determine lower and upper % for ci
-	ci_perc <-
-	  {100 * (1-object$conf_lev)/2} %>%
-		c(., 100 - .) %>%
-		round(1) %>%
-		paste0(.,"%")
+	## determine lower and upper % for ci
+	ci_perc <- ci_label(object$alternative, object$conf_lev)
 
 	mod <- object$res
 	mod$`Alt. hyp.` <- paste(mod$group1,hyp_symbol,mod$group2," ")
 	mod$`Null hyp.` <- paste(mod$group1,"=",mod$group2, " ")
-	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(3)
-	# mod[,"t.value"] %<>% round(3)
+	mod$diff <- { means[mod$group1 %>% as.character] - means[mod$group2 %>% as.character] } %>% round(dec)
 
 	if (show) {
-	  mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "p.value")]
+	  # mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "p.value")]
+	  mod$se <- (mod$diff / mod$t.value) %>% round(dec)
+	  mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "p.value", "se", "t.value", "df", "ci_low", "ci_high")]
 	  # mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "cis_low", "cis_high", "p.value")]
-		if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(3)
-		mod[,c("t.value", "ci_low","ci_high")] %<>% round(3)
+		if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(dec)
+		mod[,c("t.value", "ci_low","ci_high")] %<>% round(dec)
 	  mod <- rename_(mod, .dots = setNames(c("ci_low","ci_high"), ci_perc))
 	} else {
 	  mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
 	}
 
 	mod$` ` <- sig_stars(mod$p.value)
-	mod$p.value <- round(mod$p.value,3)
+	mod$p.value <- round(mod$p.value,dec)
 	mod$p.value[ mod$p.value < .001 ] <- "< .001"
 	print(mod, row.names = FALSE, right = FALSE)
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")

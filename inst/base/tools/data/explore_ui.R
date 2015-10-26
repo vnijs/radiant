@@ -37,42 +37,20 @@ output$ui_expl_byvar <- renderUI({
   }
 
   isolate({
-    if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars))
-      vars <- unique(c(r_state$expl_byvar, vars))
+    if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
+      ## can't use unique here - removes variable type information
+      vars <- c(r_state$expl_byvar, vars) %>% .[!duplicated(.)]
+    }
 
     sel <- use_input("expl_byvar", vars, fun = "state_multiple")
   })
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    # selected = state_multiple("expl_byvar", vars, ""), multiple = TRUE,
     selected = sel, multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
-
-# for houseprices - sample midterm
-
-# error: object 'neighborhood' not found
-
-# probably skip this question unless you decide to talk about CV
-
-# output$ui_pvt_cvars <- renderUI({
-#   vars <- groupable_vars()
-#   if (not_available(vars)) return()
-
-#   isolate({
-#     if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars))
-#       vars <- unique(c(r_state$pvt_cvars, vars))
-#   })
-
-#   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-#     selected = state_multiple("pvt_cvars",vars, ""),
-#     multiple = TRUE,
-#     options = list(placeholder = 'Select categorical variables',
-#                    plugins = list('remove_button', 'drag_drop'))
-#   )
-# })
 
 output$ui_expl_fun <- renderUI({
   isolate({

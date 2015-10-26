@@ -53,7 +53,7 @@ output$ui_single_prop <- renderUI({
   	  	choices = sp_alt,
         selected = state_single("sp_alternative", sp_alt, sp_args$alternative),
   	  	multiple = FALSE),
-    	sliderInput('sp_conf_lev',"Significance level:", min = 0.85, max = 0.99,
+    	sliderInput('sp_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
     		value = state_init('sp_conf_lev', sp_args$conf_lev), step = 0.01),
       numericInput("sp_comp_value", "Comparison value:",
                    state_init('sp_comp_value', sp_args$comp_value),

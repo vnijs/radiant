@@ -135,7 +135,8 @@ output$ui_viz_axes <- renderUI({
   if (is.null(input$viz_type)) return()
   ind <- 1
   if (input$viz_type %in% c("line","scatter")) ind <- 1:3
-  if (input$viz_type == "hist") ind <- c(ind, 5)
+  if (input$viz_type %in% c("hist","density")) ind <- c(1:2, 5)
+  if (input$viz_type %in% c("bar","box")) ind <- c(1, 3)
   if (!is_empty(input$viz_facet_row, ".") || !is_empty(input$viz_facet_col, "."))  ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
@@ -146,6 +147,7 @@ output$ui_viz_axes <- renderUI({
 output$ui_viz_check <- renderUI({
   if (is.null(input$viz_type)) return()
   ind <- 1:3
+  if (input$viz_type == "box") ind <- 3
   checkboxGroupInput("viz_check", NULL, viz_check[ind],
     selected = state_init("viz_check"),
     inline = TRUE)
@@ -231,9 +233,19 @@ output$visualize <- renderPlot({
            axes = FALSE, xlab = "", ylab = "")
     )
 
-  withProgress(message = 'Making plot', value = 0, {
-    .visualize() %>% { if (grid::is.grob(.)) . else return(invisible()) } %>% print
-  })
+  .visualize() %>% { if (is.character(.)) {
+      plot(x = 1, type = 'n', main = paste0("\n",.) ,
+           axes = FALSE, xlab = "", ylab = "")
+    } else if (is.null(.)) {
+      return(invisible())
+    } else {
+      withProgress(message = 'Making plot', value = 0, print(.))
+    }
+  }
+
+  # withProgress(message = 'Making plot', value = 0, {
+  #   .visualize() %>% { if (grid::is.grob(.)) . else return(invisible()) } %>% print
+  # })
 }, width = viz_plot_width, height = viz_plot_height)
 
 .visualize <- reactive({
@@ -263,10 +275,14 @@ observeEvent(input$visualize_report, {
   isolate({
 
     ## this seems to work (mostly) as intended - compare to observeEvent above
-    if (input$viz_bins != 10)
-      updateSliderInput(session, "viz_bins", value = 10)
+    # if (input$viz_bins != 10)
+      # updateSliderInput(session, "viz_bins", value = 10)
+    vi <- viz_inputs()
+    if (input$viz_type != "hist") vi$bins <- viz_args$bins
+    if (!input$viz_type %in% c("density","scatter")) vi$smooth <- viz_args$smooth
 
-    update_report(inp_main = clean_args(viz_inputs(), viz_args),
+    # update_report(inp_main = clean_args(viz_inputs(), viz_args),
+    update_report(inp_main = clean_args(vi, viz_args),
                   fun_name = "visualize", outputs = character(0),
                   pre_cmd = "", figs = TRUE,
                   fig.width = round(7 * viz_plot_width()/600,2),

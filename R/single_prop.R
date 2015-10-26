@@ -91,6 +91,7 @@ summary.single_prop <- function(object, ...) {
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variable  :", object$var, "\n")
+	cat("Level     :", object$lev, "in", object$var, "\n")
 	cat("Confidence:", object$conf_lev, "\n")
 
 	hyp_symbol <- c("two.sided" = "not equal to",

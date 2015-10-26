@@ -6,7 +6,7 @@
 \usage{
 compare_means(dataset, var1, var2, samples = "independent",
   alternative = "two.sided", conf_lev = 0.95, comb = "",
-  adjust = "none", test = "t", data_filter = "")
+  adjust = "none", test = "t", dec = 3, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -26,6 +26,8 @@ compare_means(dataset, var1, var2, samples = "independent",
 \item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
 \item{test}{T-test ("t") or Wilcox ("wilcox")}
+
+\item{dec}{Number of decimals to show}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

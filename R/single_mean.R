@@ -81,7 +81,7 @@ summary.single_mean <- function(object, ...) {
 	cat("Alt. hyp. : the mean of", object$var, "is", hyp_symbol,
 	    object$comp_value, "\n\n")
 
-	# determine lower and upper % for ci
+	## determine lower and upper % for ci
 	ci_perc <- ci_label(object$alternative, object$conf_lev)
 
 	## print summary statistics

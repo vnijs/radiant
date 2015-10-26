@@ -43,7 +43,7 @@ output$ui_single_mean <- renderUI({
   	  	choices = sm_alt,
         selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
   	  	multiple = FALSE),
-    	sliderInput('sm_conf_lev',"Significance level:", min = 0.85, max = 0.99,
+    	sliderInput('sm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
     		value = state_init('sm_conf_lev',sm_args$conf_lev), step = 0.01),
     	numericInput("sm_comp_value", "Comparison value:",
     	  state_init('sm_comp_value',sm_args$comp_value))

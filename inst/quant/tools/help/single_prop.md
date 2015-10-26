@@ -26,9 +26,11 @@ Management has already determined that the company will enter this segment. Howe
 
 You can find information on the responses by survey participants in the **consider.rda** data set. The data set contains two variables, `id` and `consider`.
 
-Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. We choose the `Less than` option from the `Alternative hypothesis` drop-down because we want to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is **less than 10%**.
+Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. Select the `consider` variable from the `Variable` dropdown. To evaluate the proportion of `yes` responses in the sample select `yes` from the `Choose level` dropdown.
 
-![Summary](figures_quant/single_proportion_summary.png)
+Choose the `Less than` option from the `Alternative hypothesis` drop-down to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is **less than 10%**.
+
+![Summary](figures_quant/single_prop_summary.png)
 
 The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., the proportion of "yes" responses). The final row of output shows the following:
 
@@ -39,7 +41,7 @@ The first two blocks of output show basic information about the test (e.g.,. the
 
 ### Testing
 
-There are three approaches we can use to evaluate the null hypothesis. We will choose significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.
+There are three approaches we can use to evaluate the null hypothesis. We will choose a significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.
 
 #### p.value
 
@@ -47,7 +49,7 @@ Because the p.value is **larger** than the conventional significance level ($0.2
 
 We can also obtain the p.value by using the probability calculator in the _Base_ menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with $n = 1000$ and $p = 0.1$. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that $P(X <= 93) = 0.249$ which is the same value we got from _Base > Single proportion_.
 
-![prob_calc](figures_quant/single_proportion_prob_calc_v.png)
+![prob_calc](figures_quant/single_prop_prob_calc_v.png)
 
 #### confidence interval
 
@@ -61,7 +63,7 @@ Because the number of successes (i.e., the number of "yes" responses) **is** lar
 
 We can obtain the critical value by using the probability calculator in the _Base_ menu. For a binomial-distribution with $n = 1000$ and $p = 0.1$ the critical value is 83. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.<sup>2</sup>
 
-![prob_calc](figures_quant/single_proportion_prob_calc_p.png)
+![prob_calc](figures_quant/single_prop_prob_calc_p.png)
 
 <!--
 In addition to the numerical output provided in the _Summary_ tab we can visualize the data in the _Plot_ tab. The settings in the side-panel are the same as before. The black lines in the histogram show the sample mean (solid) and the confidence interval around the sample mean (dashed). The red line shows the comparison value (i.e., unit sales under the null-hypothesis). Because the red line does **not** fall within the confidence interval (1897 to Inf.) we reject the null-hypothesis in favor of the alternative.
@@ -80,7 +82,3 @@ The 95% confidence bound is **0.11**. If repeated samples were taken and the 95%
 <sup>1</sup> The **significance level**, often denoted by $\alpha$, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)
 
 <sup>2</sup> $1 - \alpha$ is called the **confidence level**. A commonly used confidence level is 0.95 (or 95%)
-
-<!--
-To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean
--->
