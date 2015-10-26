@@ -107,7 +107,7 @@ test_that("regression", {
   expect_equal(res1,res2)
 
   res1 <- capture.output(summary(result)) %>% trim
-  cat(paste0(res1,"\n"), file = "~/gh/radiant/tests/testthat/output/regression1.txt")
+  # cat(paste0(res1,"\n"), file = "~/gh/radiant/tests/testthat/output/regression1.txt")
   ## full output - cannot open file when testing the tests
   res2 <- paste0(readLines("output/regression1.txt")) %>% trim
   expect_equal(res1,res2)
