@@ -21,10 +21,9 @@ The first two blocks of output show basic information about the test (e.g.,. the
 * `df` is the degrees of freedom associated with the statistical test (i.e., _n_ - 1)
 * `5% 100%` show the 95% confidence interval around the sample mean (1897 to Inf.). These numbers provide a range within which the true population mean is likely to fall
 
-
 ### Testing
 
-There are three approaches we can use to evaluate the null hypothesis. We will choose significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.
+There are three approaches we can use to evaluate the null hypothesis. We will choose a significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.
 
 #### p.value
 

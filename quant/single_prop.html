@@ -262,8 +262,9 @@ save(consider, file = "~/Desktop/consider.rda")
 <p>A car manufacturer conducted a study by randomly sampling and interviewing 1,000 consumers in a new target market. The goal of the study was to determine if consumers would consider purchasing this brand of car.</p>
 <p>Management has already determined that the company will enter this segment. However, if brand preference is lower than 10% additional resources will be committed to advertising and sponsorship in an effort to enhance brand awareness amongst the target consumers. In the sample, 93 consumers exhibited what the company the company considered strong brand liking.</p>
 <p>You can find information on the responses by survey participants in the <strong>consider.rda</strong> data set. The data set contains two variables, <code>id</code> and <code>consider</code>.</p>
-<p>Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. We choose the <code>Less than</code> option from the <code>Alternative hypothesis</code> drop-down because we want to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is <strong>less than 10%</strong>.</p>
-<p><img src="figures_quant/single_proportion_summary.png" alt="Summary" /></p>
+<p>Our null-hypothesis is that the proportion of consumers that would consider the car brand for a future purchase is equal to 10%. Select the <code>consider</code> variable from the <code>Variable</code> dropdown. To evaluate the proportion of <code>yes</code> responses in the sample select <code>yes</code> from the <code>Choose level</code> dropdown.</p>
+<p>Choose the <code>Less than</code> option from the <code>Alternative hypothesis</code> drop-down to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is <strong>less than 10%</strong>.</p>
+<p><img src="figures_quant/single_prop_summary.png" alt="Summary" /></p>
 <p>The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., the proportion of “yes” responses). The final row of output shows the following:</p>
 <ul>
 <li><code>diff</code> is the difference between the sample proportion (0.093) and the comparison value (0.1)</li>
@@ -273,12 +274,12 @@ save(consider, file = "~/Desktop/consider.rda")
 </ul>
 <div id="testing" class="section level3">
 <h3>Testing</h3>
-<p>There are three approaches we can use to evaluate the null hypothesis. We will choose significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.</p>
+<p>There are three approaches we can use to evaluate the null hypothesis. We will choose a significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.</p>
 <div id="p.value" class="section level4">
 <h4>p.value</h4>
 <p>Because the p.value is <strong>larger</strong> than the conventional significance level (<span class="math">\(0.249 &gt; 0.05\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
 <p>We can also obtain the p.value by using the probability calculator in the <em>Base</em> menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.1\)</span>. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that <span class="math">\(P(X &lt;= 93) = 0.249\)</span> which is the same value we got from <em>Base &gt; Single proportion</em>.</p>
-<p><img src="figures_quant/single_proportion_prob_calc_v.png" alt="prob_calc" /></p>
+<p><img src="figures_quant/single_prop_prob_calc_v.png" alt="prob_calc" /></p>
 </div>
 <div id="confidence-interval" class="section level4">
 <h4>confidence interval</h4>
@@ -289,7 +290,7 @@ save(consider, file = "~/Desktop/consider.rda")
 <p>Because the number of successes is <strong>larger</strong> than the <em>critical</em> value (85) we <strong>cannot</strong> reject the null hypothesis and suggest that management should enter the UK market.</p>
 <p>Because the number of successes (i.e., the number of “yes” responses) <strong>is</strong> larger than the critical value (85) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
 <p>We can obtain the critical value by using the probability calculator in the <em>Base</em> menu. For a binomial-distribution with <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.1\)</span> the critical value is 83. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is <code>Less than</code>.<sup>2</sup></p>
-<p><img src="figures_quant/single_proportion_prob_calc_p.png" alt="prob_calc" /></p>
+<p><img src="figures_quant/single_prop_prob_calc_p.png" alt="prob_calc" /></p>
 <!--
 In addition to the numerical output provided in the _Summary_ tab we can visualize the data in the _Plot_ tab. The settings in the side-panel are the same as before. The black lines in the histogram show the sample mean (solid) and the confidence interval around the sample mean (dashed). The red line shows the comparison value (i.e., unit sales under the null-hypothesis). Because the red line does **not** fall within the confidence interval (1897 to Inf.) we reject the null-hypothesis in favor of the alternative.
 
@@ -304,9 +305,6 @@ In addition to the numerical output provided in the _Summary_ tab we can visuali
 <p>The 95% confidence bound is <strong>0.11</strong>. If repeated samples were taken and the 95% confidence bound computed for each one, the true population proportion would be below that bound in 95% of the samples</p>
 <p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
 <p><sup>2</sup> <span class="math">\(1 - \alpha\)</span> is called the <strong>confidence level</strong>. A commonly used confidence level is 0.95 (or 95%)</p>
-<!--
-To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean
--->
 </div>
 </div>
 
