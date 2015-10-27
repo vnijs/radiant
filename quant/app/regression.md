@@ -4,9 +4,9 @@ All example files discussed below can be loaded from the Data > Manage page. Cli
 
 ### Functionality
 
-Start by selecting a dependent variable and one or more independents variables. If two or more Independent variables are included in the model we may want to investigate if any interactions are present. An interaction exists when the effect of an independent variable on the dependent variable is determined, at least partially, by the level of another independent variable. For example, the increase in price for a 1 versus a 2 carrot diamond may depend on the clarity level of the diamond.
+Start by selecting a response variable and one or more explanatory variables. If two or more explanatory variables are included in the model we may want to investigate if any interactions are present. An interaction exists when the effect of an explanatory variable on the response variable is determined, at least partially, by the level of another explanatory variable. For example, the increase in price for a 1 versus a 2 carrot diamond may depend on the clarity level of the diamond.
 
-The `Predict` box allows you calculate predicted values from a regression model. You must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., `carat` must one of the selected independent variables to predict the `price` of a 2-carat diamond)
+The `Predict` box allows you calculate predicted values from a regression model. You must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., `carat` must one of the selected explanatory variables to predict the `price` of a 2-carat diamond)
 
 * To predict the price of a 1-carat diamond type `carat = 1` and press return
 * To predict the price of diamonds ranging from .5 to 1 carat at steps of size .05 type `carat = seq(.5.1,.05)` and press return
@@ -17,11 +17,10 @@ We can test if two or more variables together add significantly to the fit of a 
 Various additional outputs and options can be selected:
 
 * RMSE: Root Mean Squared Error (Prediction error)
-* Sum of Squares: The total variance in the dependent variable split into the variance explained by the model and the remainder
-* VIF: Variance Inflation Factors and Rsq. These are measures of multi-collinearity for the independent variables
-* Standardized coefficients: Coefficients may be hard to compare of the independent variables are measured on different scales. By standardizing the data before estimation we can see which variables move-the-needle most
+* Sum of Squares: The total variance in the response variable split into the variance explained by the model and the remainder
+* VIF: Variance Inflation Factors and Rsq. These are measures of multi-collinearity for the explanatory variables
+* Standardized coefficients: Coefficients may be hard to compare of the explanatory variables are measured on different scales. By standardizing the data before estimation we can see which variables move-the-needle most
 * Step-wise: A data-mining approach to select the best fitting model
-
 
 ### Example 1: Catalog sales
 
@@ -55,9 +54,9 @@ The coefficients from the regression can be interpreted as follows:
 - For an increase in household size of 1 person we expect, on average, to see an increase in sales of \$22.1218, keeping all other variables constant.
 - For an increase in the age of the head of the household of 1 year we expect, on average, to see an increase in sales of \$0.45, keeping all other variables constant.
 
-For each of the independent variables the following null and alternate hypotheses can be formulated:
-H0: The coefficient associated with independent variable X is equal to 0
-Ha: The coefficient associated with independent variable X is not equal to 0
+For each of the explanatory variables the following null and alternate hypotheses can be formulated:
+H0: The coefficient associated with explanatory variable X is equal to 0
+Ha: The coefficient associated with explanatory variable X is not equal to 0
 
 The coefficients for `Income` and `HH.size` are both significant (p-values < 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value > 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.
 
@@ -67,25 +66,25 @@ We can also use the t.values to evaluate the null and alternative hypotheses for
 
 ### Example 2: Ideal data for regression
 
-The data `ideal` contains simulated data that is very useful to demonstrate what data for and residuals from a regression should ideally look like.  The r-data file contains a data-frame with 1000 observations on 4 variables. y is the dependent variable and x1, x2, and x3 are independent variables. The plots shown below can be used as a bench mark for regressions on real world data. We will use Regression > Linear (OLS) to conduct the analysis. First go the the Plots tab and select y as the dependent variable and x1, x2, and x3 as the independent variables.
+The data `ideal` contains simulated data that is very useful to demonstrate what data for and residuals from a regression should ideally look like.  The r-data file contains a data-frame with 1000 observations on 4 variables. y is the response variable and x1, x2, and x3 are explanatory variables. The plots shown below can be used as a bench mark for regressions on real world data. We will use Regression > Linear (OLS) to conduct the analysis. First go the the Plots tab and select y as the response variable and x1, x2, and x3 as the explanatory variables.
 
 y, x2, and x3 appear roughly normally distributed whereas x1 appears roughly uniformly distributed. No indication of outliers or severely skewed distributions.
 
 ![Regression 2 - ideal histograms](figures_quant/regression_ideal_hist.png)
 
-In the plot of correlations there are clear associations among the dependent and independent variables as well as among the independent variables themselves. Recall that in an experiment the x's of interest would have a zero correlation. The scatter plots in the lower-diagonal part of the plot show that the relationships between the variables are (approximately) linear.
+In the plot of correlations there are clear associations among the response and explanatory variables as well as among the explanatory variables themselves. Recall that in an experiment the x's of interest would have a zero correlation. The scatter plots in the lower-diagonal part of the plot show that the relationships between the variables are (approximately) linear.
 
 ![Regression 2 - ideal correlations](figures_quant/regression_ideal_corr.png)
 
-The scatter plots of y (the dependent variable) against each of the independent variables confirm the insight from the correlation plot. The line fitted through the scatter plots is sufficiently flexible that it would pickup any non-linearities. The lines are, however, very straight suggesting that a basic linear will likely be appropriate.
+The scatter plots of y (the response variable) against each of the explanatory variables confirm the insight from the correlation plot. The line fitted through the scatter plots is sufficiently flexible that it would pickup any non-linearities. The lines are, however, very straight suggesting that a basic linear will likely be appropriate.
 
 ![Regression 2 - ideal scatter](figures_quant/regression_ideal_scatter.png)
 
-The dashboard of six residual plots looks excellent, as we might expect for these data. True values and predicted values from the regression form a straight line with random scatter, i.e., as the actual values of the dependent variable go up, so do the predicted values from the model. The residuals (i.e., the differences between the values of the dependent variable data and the values predicted by the regression) show no pattern and are randomly scattered around a horizontal axis. Any pattern would suggest that the model is better (or worse) at predicting some parts of the data compared to others. If a pattern were visible in the Residual vs Row order plot we might be concerned about auto-correlation. Again, the residuals are nicely scattered about a horizontal axis. Note that auto-correlation is problem we are concerned about when we have time-series data. The Q-Q plot shows a nice straight and diagonal line, evidence that the residuals are normally distributed. This conclusion is confirmed by the histogram of the residuals and the density plot of the residuals (green) versus the theoretical density of a normally distributed variable (blue line).
+The dashboard of six residual plots looks excellent, as we might expect for these data. True values and predicted values from the regression form a straight line with random scatter, i.e., as the actual values of the response variable go up, so do the predicted values from the model. The residuals (i.e., the differences between the values of the response variable data and the values predicted by the regression) show no pattern and are randomly scattered around a horizontal axis. Any pattern would suggest that the model is better (or worse) at predicting some parts of the data compared to others. If a pattern were visible in the Residual vs Row order plot we might be concerned about auto-correlation. Again, the residuals are nicely scattered about a horizontal axis. Note that auto-correlation is problem we are concerned about when we have time-series data. The Q-Q plot shows a nice straight and diagonal line, evidence that the residuals are normally distributed. This conclusion is confirmed by the histogram of the residuals and the density plot of the residuals (green) versus the theoretical density of a normally distributed variable (blue line).
 
 ![Regression 2 - ideal dashboard](figures_quant/regression_ideal_dashboard.png)
 
-The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). There is no indication of any trends or heteroscedasticity. Any patterns in these plots would be cause for concern. There are also no outliers, i.e., points that are far from the main cloud of data points.
+The final diagnostic we will discuss is a set of plots of the residuals versus the explanatory variables (or predictors). There is no indication of any trends or heteroscedasticity. Any patterns in these plots would be cause for concern. There are also no outliers, i.e., points that are far from the main cloud of data points.
 
 ![Regression 2 - ideal residual vs predicted](figures_quant/regression_ideal_res_vs_pred.png)
 
@@ -99,15 +98,15 @@ Increases in x1 and x3 are associated with increases in y whereas increases in x
 
 Both linear and log-log regressions are commonly applied to business data. In this example we will look for evidence in the data and residuals that may which model specification is more appropriate for the available data.
 
-The data `diamonds` contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable `price` as the dependent variable and `carat` and `clarity` as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the _tail_ is.
+The data `diamonds` contains information on prices of 3000 diamonds. A more complete description of the data and variables is available from the Data > Manage page. Select the variable `price` as the response variable and `carat` and `clarity` as the explanatory variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. Prices and carats seem skewed to the right. Note that the direction of skew is determined by where the _tail_ is.
 
 ![Regression 3 - histograms](figures_quant/regression_diamonds_hist.png)
 
-In the plot of correlations there are clear associations among the dependent and independent variables. The correlation between price and carat is extremely large (i.e., .93). The correlation between carat and clarity of the diamond is significant and negative.
+In the plot of correlations there are clear associations among the response and explanatory variables. The correlation between price and carat is extremely large (i.e., .93). The correlation between carat and clarity of the diamond is significant and negative.
 
 ![Regression 3 - correlations](figures_quant/regression_diamonds_corr.png)
 
-The scatter plots of price (the dependent variable) against the independent variables are not as clean as for the 'ideal' data in example 2. The line fitted through the scatter plots is sufficiently flexible to pickup non-linearities. The line for carat seems to have some curvature and the points do not look randomly scattered around that line. In fact the points seem to fan-out for higher prices and number of carats. There does not seem to be very much movement in price for different levels of clarity. If anything, the price of the diamond seems to go down as clarity increase. A surprising result we will discuss in more detail below.
+The scatter plots of price (the response variable) against the explanatory variables are not as clean as for the 'ideal' data in example 2. The line fitted through the scatter plots is sufficiently flexible to pickup non-linearities. The line for carat seems to have some curvature and the points do not look randomly scattered around that line. In fact the points seem to fan-out for higher prices and number of carats. There does not seem to be very much movement in price for different levels of clarity. If anything, the price of the diamond seems to go down as clarity increase. A surprising result we will discuss in more detail below.
 
 ![Regression 3 - scatter](figures_quant/regression_diamonds_scatter.png)
 
@@ -115,7 +114,7 @@ The dashboard of six residual plots looks less than stellar. The true values and
 
 ![Regression 3 - dashboard](figures_quant/regression_diamonds_dashboard.png)
 
-The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). The residuals fan-out from left to right in the plot of residuals vs carats. The box-plot of clarity versus residuals shows outliers with strong negative values for lower levels of clarity and outliers with strong positive values for diamonds with higher levels of clarity.
+The final diagnostic we will discuss is a set of plots of the residuals versus the explanatory variables (or predictors). The residuals fan-out from left to right in the plot of residuals vs carats. The box-plot of clarity versus residuals shows outliers with strong negative values for lower levels of clarity and outliers with strong positive values for diamonds with higher levels of clarity.
 ![Regression 3 - residual vs predicted](figures_quant/regression_diamonds_res_vs_pred.png)
 
 Since the diagnostics do not look good, we should **not** draw inferences from this regression. A log-log specification may be preferable. A quick way to check the validity of this model change is available through the Data > Visualize tab. Select `price` as the Y-variable and `carat` as the X-variable in a `Scatter` plot. Check the `log X` and `log Y` boxes to produce the plot below. The relationship between log-price and log-carat looks close to linear. Exactly what we are looking for.
@@ -124,15 +123,15 @@ Since the diagnostics do not look good, we should **not** draw inferences from t
 
 We will apply a log transformation to both price and carat and rerun the analysis to see if the log-log specification is more appropriate for the data. This transformation can be done in Data > Transform. Select the variables price and carat. Choose `change` from the Transformation type drop-down and choose `Log` from the Apply function drop-down. Make sure to `Save changes` so the new variables are added to the dataset. Note that we cannot apply a log transformation to clarity because it is a <a href="http://en.wikipedia.org/wiki/Categorical_variable" target="_blank">categorical</a> variable.
 
-In Regression > Linear (OLS) select the variable `log_price` as the dependent variable and `log_carat` and `clarity` as the independent variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. log_price and log_carat are no longer right skewed, a good sign.
+In Regression > Linear (OLS) select the variable `log_price` as the response variable and `log_carat` and `clarity` as the explanatory variables. Before looking at the parameter estimates from the regression go to the Plots tab to take a look at the data and residuals. Below are the set of histograms for the variables in the model. log_price and log_carat are no longer right skewed, a good sign.
 
 ![Regression 3 - log histograms](figures_quant/regression_log_diamonds_hist.png)
 
-In the plot of correlations there are still clear associations among the dependent and independent variables. The correlation between log_price and log_carat is extremely large (i.e., .93). The correlation between log_carat and clarity of the diamond is significant and negative.
+In the plot of correlations there are still clear associations among the response and explanatory variables. The correlation between log_price and log_carat is extremely large (i.e., .93). The correlation between log_carat and clarity of the diamond is significant and negative.
 
 ![Regression 3 - log correlations](figures_quant/regression_log_diamonds_corr.png)
 
-The scatter plots of log\_price (the dependent variable) against the independent variables are now much cleaner. The line through the scatter plot of log\_price versus log\_carat is (mostly) straight. Although the points do have a bit of a blocked shape around the line the scattering seem mostly random. We no longer see the points fan-out for higher values of log\_price and log\_carat. There seems to be a bit more movement in log\_price for different levels of clarity. However, the log_price of the diamond still goes down as clarity increase which is unexpected. We will discuss this result below.
+The scatter plots of log\_price (the response variable) against the explanatory variables are now much cleaner. The line through the scatter plot of log\_price versus log\_carat is (mostly) straight. Although the points do have a bit of a blocked shape around the line the scattering seem mostly random. We no longer see the points fan-out for higher values of log\_price and log\_carat. There seems to be a bit more movement in log\_price for different levels of clarity. However, the log_price of the diamond still goes down as clarity increase which is unexpected. We will discuss this result below.
 
 ![Regression 3 - log scatter](figures_quant/regression_log_diamonds_scatter.png)
 
@@ -140,7 +139,7 @@ The dashboard of six residual plots looks much better than for the linear model.
 
 ![Regression 3 - log dashboard](figures_quant/regression_log_diamonds_dashboard.png)
 
-The final diagnostic we will discuss is a set of plots of the residuals versus the independent variables (or predictors). The residuals look much closer to random scatter around a horizontal line compared to the linear model, although for low (high) values of log_carat the residuals may be a bit higher (lower). The box-plot of clarity versus residuals now only shows a few outliers.
+The final diagnostic we will discuss is a set of plots of the residuals versus the explanatory variables (or predictors). The residuals look much closer to random scatter around a horizontal line compared to the linear model, although for low (high) values of log_carat the residuals may be a bit higher (lower). The box-plot of clarity versus residuals now only shows a few outliers.
 
 ![Regression 3 - log residual vs predicted](figures_quant/regression_log_diamonds_res_vs_pred.png)
 
@@ -161,9 +160,9 @@ The coefficients from the regression can be interpreted as follows:
 
 The coefficients for each of the levels of clarity imply that an increase in clarity will increase the price of diamond. Why then did the boxplot of clarity versus (log) price show price decreasing with clarity? The difference is that in a regression we can determine the effect of a change in one variable (e.g., clarity) keeping all else constant (e.g., carat). Bigger, heavier, diamonds are more likely to have flaws compared to small diamonds so when we look at the boxplot we are really seeing the effect of not only improving clarity on price but also the effect of carats which are negatively correlated with clarity. In a regression we can compare the effects of different levels of clarity on (log) price for a diamond of **the same size** (i.e., keeping carat constant). Without (log) carat in the model the estimated effect of clarity would be incorrect due to <a href="http://en.wikipedia.org/wiki/Omitted-variable_bias" target="_blank">omitted variable bias</a>. In fact, from a regression of log_price on clarity we would conclude that a diamond of the highest clarity in the data (IF) would cost 59.22% less compared to a diamond of the lowest clarity (I1). Clearly this is not a sensible conclusion.
 
-For each of the independent variables the following null and alternate hypotheses can be formulated:
-H0: The coefficient associated with independent variable X is equal to 0
-Ha: The coefficient associated with independent variable X is not equal to 0
+For each of the explanatory variables the following null and alternate hypotheses can be formulated:
+H0: The coefficient associated with explanatory variable X is equal to 0
+Ha: The coefficient associated with explanatory variable X is not equal to 0
 
 All coefficients in this regression are highly significant.
 
