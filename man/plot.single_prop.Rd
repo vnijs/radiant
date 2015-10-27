@@ -4,12 +4,12 @@
 \alias{plot.single_prop}
 \title{Plot method for the single_prop function}
 \usage{
-\method{plot}{single_prop}(x, plots = "hist", shiny = FALSE, ...)
+\method{plot}{single_prop}(x, plots = "bar", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_prop}}}
 
-\item{plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample proportion and the confidence interval. "simulate" shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
+\item{plots}{Plots to generate. "bar" shows a bar chart of the data. The "simulate" chart shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 

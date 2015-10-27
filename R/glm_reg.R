@@ -3,9 +3,9 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param dep_var The dependent variable in the logit (probit) model
-#' @param indep_var Independent variables in the model
-#' @param lev The level in the dependent variable defined as _success_
+#' @param dep_var The response variable in the logit (probit) model
+#' @param indep_var Explanatory variables in the model
+#' @param lev The level in the response variable defined as _success_
 #' @param link Link function for _glm_ ('logit' or 'probit'). 'logit' is the default
 #' @param int_var Interaction term to include in the model (not implement)
 #' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
@@ -122,9 +122,9 @@ summary.glm_reg <- function(object,
   cat("\nData         :", object$dataset)
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("\nFilter       :", gsub("\\n","", object$data_filter))
-  cat("\nDependent variable   :", object$dep_var)
+  cat("\nResponse variable   :", object$dep_var)
   cat("\nLevel                :", object$lev, "in", object$dep_var)
-  cat("\nIndependent variables:", paste0(object$indep_var, collapse=", "))
+  cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "))
   if ("standardize" %in% object$check)
     cat("\nStandardized coefficients shown")
   cat("\n\n")
@@ -149,7 +149,7 @@ summary.glm_reg <- function(object,
 
   if ("vif" %in% sum_check) {
     if (anyNA(object$model$coeff)) {
-      cat("The set of independent variables exhibit perfect multi-collinearity.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+      cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
       if (length(object$indep_var) > 1) {
         cat("Variance Inflation Factors\n")
@@ -160,7 +160,7 @@ summary.glm_reg <- function(object,
           .[order(.$VIF, decreasing=T),] %>%
           { if (nrow(.) < 8) t(.) else . } %>% print
       } else {
-        cat("Insufficient number of independent variables selected to calculate\nmulti-collinearity diagnostics")
+        cat("Insufficient number of explanatory variables selected to calculate\nmulticollinearity diagnostics")
       }
     }
     cat("\n")
@@ -168,7 +168,7 @@ summary.glm_reg <- function(object,
 
   if (c("confint","odds") %in% sum_check %>% any) {
     if (object$model$coeff %>% is.na %>% any) {
-      cat("There is perfect multi-collineary in the set of independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+      cat("There is perfect multicollineary in the set of explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
       cl_split <- function(x) 100*(1-x)/2
       cl_split(conf_lev) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
@@ -193,7 +193,7 @@ summary.glm_reg <- function(object,
 
   if ("odds" %in% sum_check) {
     if (object$model$coeff %>% is.na %>% any) {
-      cat("There is perfect multi-collinearity in the set of selected independent variables.\nOne or more variables were dropped from the estimation.\nMulti-collinearity diagnostics were not calculated.\n")
+      cat("There is perfect multicollinearity in the set of selected explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
       if (object$link == "logit") {
         exp(ci_tab[-1,]) %>% round(3) %>%
@@ -250,7 +250,7 @@ summary.glm_reg <- function(object,
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{glm_reg}}
-#' @param plots Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot
+#' @param plots Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the response variable with each explanatory variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot
 #' @param conf_lev Confidence level to use for coefficient and odds confidence intervals (.95 is the default)
 #' @param intercept Include the intercept in the coefficient plot (TRUE or FALSE). FALSE is the default
 #' @param shiny Did the function call originate inside a shiny app
@@ -463,9 +463,9 @@ predict.glm_reg <- function(object,
       cat("\nData         :", object$dataset)
       if (object$data_filter %>% gsub("\\s","",.) != "")
         cat("\nFilter       :", gsub("\\n","", object$data_filter))
-      cat("\nDependent variable   :", object$dep_var)
+      cat("\nResponse variable   :", object$dep_var)
       cat("\nLevel                :", object$lev, "in", object$dep_var)
-      cat("\nIndependent variables:", paste0(object$indep_var, collapse=", "),"\n\n")
+      cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "),"\n\n")
 
       if (pred_type == "cmd") {
         cat("Predicted values for:\n")

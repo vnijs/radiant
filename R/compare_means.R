@@ -5,7 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param var1 A numeric variable or factor selected for comparison
 #' @param var2 One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r
-#' @param samples Are samples indepent ("independent") or not ("paired")
+#' @param samples Are samples independent ("independent") or not ("paired")
 #' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param conf_lev Span of the confidence interval
 #' @param comb Combinations to evaluate

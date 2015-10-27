@@ -10,11 +10,11 @@ glm_reg(dataset, dep_var, indep_var, lev = "", link = "logit",
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{dep_var}{The dependent variable in the logit (probit) model}
+\item{dep_var}{The response variable in the logit (probit) model}
 
-\item{indep_var}{Independent variables in the model}
+\item{indep_var}{Explanatory variables in the model}
 
-\item{lev}{The level in the dependent variable defined as _success_}
+\item{lev}{The level in the response variable defined as _success_}
 
 \item{link}{Link function for _glm_ ('logit' or 'probit'). 'logit' is the default}
 

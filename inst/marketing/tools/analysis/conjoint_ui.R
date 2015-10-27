@@ -110,10 +110,10 @@ output$conjoint <- renderUI({
 
 .summary_conjoint <- reactive({
 	if (not_available(input$ca_dep_var))
-		return("This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nIf these variables are not available please select another dataset")
+		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset")
 
 	if (not_available(input$ca_indep_var))
-		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
+		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset ")
 
   summary(.conjoint(), mc_diag = input$ca_mc_diag)
 })
@@ -125,10 +125,10 @@ output$conjoint <- renderUI({
 
 .plot_conjoint <- reactive({
 	if (not_available(input$ca_dep_var))
-		return("This analysis requires a dependent variable of type integer or \nnumeric and one or more independent variables of type factor.\nIf these variables are not available please select another dataset")
+		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset")
 
 	if (not_available(input$ca_indep_var))
-		return("Please select one or more independent variables of type factor.\nIf none are available please choose another dataset ")
+		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset ")
 
   plot(.conjoint(), plots = input$ca_plots,
        							scale_plot = input$ca_scale_plot,

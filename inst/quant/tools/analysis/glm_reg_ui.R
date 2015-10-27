@@ -78,7 +78,7 @@ glm_pred_plot_inputs <- reactive({
 
 output$ui_glm_dep_var <- renderUI({
  	vars <- two_level_vars()
-  selectInput(inputId = "glm_dep_var", label = "Dependent variable:", choices = vars,
+  selectInput(inputId = "glm_dep_var", label = "Response variable:", choices = vars,
   	selected = state_single("glm_dep_var",vars), multiple = FALSE)
 })
 
@@ -104,7 +104,7 @@ output$ui_glm_indep_var <- renderUI({
     {if (!is_empty(.) && . %in% vars) . else character(0)}
   })
 
-  selectInput(inputId = "glm_indep_var", label = "Independent variables:", choices = vars,
+  selectInput(inputId = "glm_indep_var", label = "Explanatory variables:", choices = vars,
   	selected = state_multiple("glm_indep_var", vars, init),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
@@ -343,10 +343,10 @@ output$glm_reg <- renderUI({
 
 glm_available <- reactive({
   if (not_available(input$glm_dep_var))
-    return("This analysis requires a dependent variable with two levels and one\nor more independent variables. If these variables are not available\nplease select another dataset.\n\n" %>% suggest_data("titanic"))
+    return("This analysis requires a response variable with two levels and one\nor more explanatory variables. If these variables are not available\nplease select another dataset.\n\n" %>% suggest_data("titanic"))
 
   if (not_available(input$glm_indep_var))
-    return("Please select one or more independent variables.\n\n" %>% suggest_data("titanic"))
+    return("Please select one or more explanatory variables.\n\n" %>% suggest_data("titanic"))
 
   "available"
 })

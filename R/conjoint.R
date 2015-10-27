@@ -3,9 +3,9 @@
 #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param dep_var The dependent variable (e.g., profile ratings)
-#' @param indep_var Independent variables in the regression
-#' @param reverse Reverse the values of the dependent variable (`dep_var`)
+#' @param dep_var The response variable (e.g., profile ratings)
+#' @param indep_var Explanatory variables in the regression
+#' @param reverse Reverse the values of the response variable (`dep_var`)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list with all variables defined in the function as an object of class conjoint
@@ -71,8 +71,8 @@ summary.conjoint <- function(object,
   cat("Data     :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-  cat("Dependent variable   :", object$dep_var, "\n")
-  cat("Independent variables:", paste0(object$indep_var, collapse=", "), "\n\n")
+  cat("Response variable   :", object$dep_var, "\n")
+  cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n\n")
 
 	object$the_table %>%
 	{ cat("Conjoint part-worths:\n")
@@ -99,7 +99,7 @@ summary.conjoint <- function(object,
         .[order(.$VIF, decreasing=T),] %>%
         { if (nrow(.) < 8) t(.) else . } %>% print
     } else {
-      cat("Insufficient number of attributes selected to calculate\nmulti-collinearity diagnostics")
+      cat("Insufficient number of attributes selected to calculate\nmulticollinearity diagnostics")
     }
 	}
 }
@@ -174,7 +174,7 @@ plot.conjoint <- function(x,
 #'
 #' @param model Tidied model results (broom) output from \code{\link{conjoint}} passed on by summary.conjoint
 #' @param dat Conjoint data
-#' @param indep_var Independent variables used in the conjoint regression
+#' @param indep_var Explanatory variables used in the conjoint regression
 #'
 #' @examples
 #' result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")

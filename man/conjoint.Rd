@@ -9,11 +9,11 @@ conjoint(dataset, dep_var, indep_var, reverse = FALSE, data_filter = "")
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{dep_var}{The dependent variable (e.g., profile ratings)}
+\item{dep_var}{The response variable (e.g., profile ratings)}
 
-\item{indep_var}{Independent variables in the regression}
+\item{indep_var}{Explanatory variables in the regression}
 
-\item{reverse}{Reverse the values of the dependent variable (`dep_var`)}
+\item{reverse}{Reverse the values of the response variable (`dep_var`)}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

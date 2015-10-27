@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{Return value from \code{\link{glm_reg}}}
 
-\item{plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the dependent variable with each independent variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
+\item{plots}{Plots to produce for the specified GLM model. Use "" to avoid showing any plots (default). "hist" shows histograms of all variables in the model. "scatter" shows scatter plots (or box plots for factors) for the response variable with each explanatory variable. "dashboard" is a series of four plots used to visually evaluate model. "coef" provides a coefficient plot}
 
 \item{conf_lev}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
 

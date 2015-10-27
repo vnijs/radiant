@@ -15,7 +15,7 @@ compare_means(dataset, var1, var2, samples = "independent",
 
 \item{var2}{One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r}
 
-\item{samples}{Are samples indepent ("independent") or not ("paired")}
+\item{samples}{Are samples independent ("independent") or not ("paired")}
 
 \item{alternative}{The alternative hypothesis ("two.sided", "greater" or "less")}
 

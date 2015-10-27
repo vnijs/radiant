@@ -11,7 +11,7 @@ the_table(model, dat, indep_var)
 
 \item{dat}{Conjoint data}
 
-\item{indep_var}{Independent variables used in the conjoint regression}
+\item{indep_var}{Explanatory variables used in the conjoint regression}
 }
 \description{
 Function to calculate the PW and IW table for conjoint
