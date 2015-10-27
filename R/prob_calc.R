@@ -955,7 +955,7 @@ prob_unif <- function(min,
 	v_lb <- qunif(plb, min, max) %>% round(dec)
 
 	mean <- (max+min) / 2
-	stdev <- (max-min)^2 / 12
+	stdev <- sqrt((max-min)^2 / 12)
 
   environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
 }
