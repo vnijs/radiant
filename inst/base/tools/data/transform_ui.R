@@ -79,6 +79,19 @@ output$ui_tr_rcname <- renderUI({
   returnTextInput("tr_rcname", "Recoded variable name:", rcname)
 })
 
+output$ui_tr_roname <- renderUI({
+  if (is_empty(input$tr_vars)) return()
+  # roname <- paste0(input$tr_vars, "_ro")
+  # roname <- paste0(input$tr_vars)
+  # returnTextInput("tr_roname", "Reordered variable name:", roname)
+  returnTextInput("tr_roname", "Variable name:", input$tr_vars[1])
+})
+
+output$ui_tr_typename <- renderUI({
+  if (is_empty(input$tr_vars)) return()
+  returnTextInput("tr_typename", "Variable name extension:", "")
+})
+
 output$ui_tr_dataset <- renderUI({
   tr_dataset <- input$dataset
   if (input$tr_change_type == "show_dup") tr_dataset <- paste0(tr_dataset, "_dup")
@@ -167,6 +180,12 @@ output$ui_Transform <- renderUI({
     conditionalPanel("input.tr_change_type == 'normalize'",
       uiOutput("ui_tr_ext_nz")
     ),
+    conditionalPanel("input.tr_change_type == 'reorg_levs'",
+      uiOutput("ui_tr_roname")
+    ),
+    conditionalPanel("input.tr_change_type == 'type'",
+      uiOutput("ui_tr_typename")
+    ),
     conditionalPanel(condition = "input.tr_change_type != 'none'",
       uiOutput("ui_tr_dataset")
 	  )),
@@ -178,15 +197,24 @@ output$ui_Transform <- renderUI({
 
 .change_type <- function(dataset, fun,
                          vars = "",
+                         ext = "",
                          store_dat = "",
                          store = TRUE) {
 
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
-    return(mutate_each_(dataset, funs(fun), vars))
+    if (ext == "") {
+      mutate_each_(dataset, funs(fun), vars)
+    } else {
+      mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, ext))
+    }
+    # return(mutate_each_(dataset, funs(fun), vars))
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
+    if (ext == "")
+      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
+    else
+      paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
 
@@ -328,14 +356,16 @@ output$ui_Transform <- renderUI({
 }
 
 .reorg_levs <- function(dataset, fct, levs,
+                        name = fct,
                         store_dat = "",
                         store = TRUE) {
 
+  if (is_empty(name)) name <- fct
   if (!store || !is.character(dataset)) {
-    data.frame(factor(dataset[[fct]], levels = levs)) %>% setNames(fct)
+    data.frame(factor(dataset[[fct]], levels = levs)) %>% setNames(name)
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## change factor levels\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", fct, " = factor(", fct, ", levels = c(\"", paste0(levs, collapse = "\",\""), "\")))\n")
+    paste0("## change factor levels\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = factor(", fct, ", levels = c(\"", paste0(levs, collapse = "\",\""), "\")))\n")
   }
 }
 
@@ -386,7 +416,7 @@ output$ui_Transform <- renderUI({
       dat <- distinct_(dataset, .dots = vars)
 
     if (nrow(dat) == nrow(dataset))
-      "No duplicates found"
+      paste0("No duplicates found (n = ", nrow(dat),")")
     else
       dat
   } else {
@@ -394,8 +424,6 @@ output$ui_Transform <- renderUI({
       paste0("## remove duplicate rows\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]])\n")
     else
       paste0("## remove rows with duplicate values\nr_data[[\"",store_dat,"\"]] <- distinct(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
-
-    # update_log(cmd, input$tr_log)
   }
 }
 
@@ -428,8 +456,6 @@ output$ui_Transform <- renderUI({
       paste0("## show duplicate rows\nr_data[[\"",store_dat,"\"]] <- r_data[[\"",dataset,"\"]] %>% filter(duplicated(.))\n")
     else
       paste0("## show rows with duplicate values\nr_data[[\"",store_dat,"\"]] <- show_duplicated(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
-
-    # update_log(cmd, input$tr_log)
   }
 }
 
@@ -565,7 +591,7 @@ transform_main <- reactive({
       if (input$tr_typefunction == "none")
         return("Select a transformation type for the selected variables")
       else
-        return(.change_type(dat, input$tr_typefunction, inp_vars("tr_vars"), store = FALSE))
+        return(.change_type(dat, input$tr_typefunction, inp_vars("tr_vars"), input$tr_typename, store = FALSE))
     }
 
     ## change in type is always done in-place
@@ -580,7 +606,7 @@ transform_main <- reactive({
     if (input$tr_change_type == 'reorg_levs') {
         fct <- input$tr_vars[1]
         if (is.factor(dat[[fct]])) {
-          return(.reorg_levs(dat, fct, input$tr_reorg_levs, store = FALSE))
+          return(.reorg_levs(dat, fct, input$tr_reorg_levs, input$tr_roname, store = FALSE))
         } else {
           return("Select a variable of type factor to change the ordering and/or number of levels")
         }
@@ -689,7 +715,7 @@ observeEvent(input$tr_store, {
       cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'type') {
-      cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, input$tr_dataset)
+      cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, ext = input$tr_typename, input$tr_dataset)
 	  	r_data[[dataset]][,colnames(dat)] <- dat
     } else if (input$tr_change_type == 'transform') {
       cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, ext = input$tr_ext, input$tr_dataset)
@@ -701,7 +727,7 @@ observeEvent(input$tr_store, {
       cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, ext = input$tr_ext_nz, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
     } else if (input$tr_change_type == 'reorg_levs') {
-      cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_dataset)
+      cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
     } else if (input$tr_change_type == 'recode') {
       cmd <- .recode(input$dataset, input$tr_vars[1], input$tr_recode, input$tr_rcname, input$tr_dataset)

@@ -354,7 +354,7 @@ plot.regression <- function(x,
     for (i in indep_var) {
       if ('factor' %in% class(model[,i])) {
         plot_list[[i]] <-
-          visualize(select_(model, .dots = c(i,".resid")), xvar = i, yvar = ".resid", type = "scatter", check = flines, alpha = .2, custom = TRUE)
+          visualize(select_(model, .dots = c(i,".resid")), xvar = i, yvar = ".resid", type = "scatter", check = flines, alpha = .2, custom = TRUE) +
           ylab("residuals")
       } else {
         plot_list[[i]] <-
