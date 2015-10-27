@@ -242,12 +242,12 @@ img {
 <blockquote>
 <p>Compare a single mean to the mean value in the population</p>
 </blockquote>
-<p>The single mean (or one-sample) t-test is used to compare the mean of a variable in our data to a (hypothesized) mean in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the <code>Comparison value</code> box.</p>
-<p>We can perform either a one-sided test (i.e., <code>less than</code> or <code>greater than</code>) or a two-sided test (see the <code>Alternative hypothesis</code> dropdown). We use one-sided tests to evaluate if the available data provide evidence that mean for a variable is larger (or smaller) than the comparison value (i.e., the value specified in the null-hypothesis).</p>
-<div id="example" class="section level3">
-<h3>Example</h3>
+<p>The single mean (or one-sample) t-test is used to compare the mean of a variable in a sample of data to a (hypothesized) mean in the population from which our sample data are drawn. This is important because we seldom have access to data for an entire population. The hypothesized value in the population is specified in the <code>Comparison value</code> box.</p>
+<p>We can perform either a one-sided test (i.e., <code>less than</code> or <code>greater than</code>) or a two-sided test (see the <code>Alternative hypothesis</code> dropdown). We use one-sided tests to evaluate if the available data provide evidence that the sample mean is larger (or smaller) than the comparison value (i.e., the population value in the null-hypothesis).</p>
+<div id="example" class="section level2">
+<h2>Example</h2>
 <p>We have access to data from a random sample of grocery stores in the UK. Management will consider entering this market if consumer demand for the product category exceeds 100M units, or, approximately, 1750 units per store. The average demand per store in the sample is equal to 1953. While this number is larger than 1750 we need to determine if the difference could be attributed to sampling error.</p>
-<p>You can find the information on unit sales in each of the sample stores in the <strong>demand_uk.rda</strong> data set. The data set contains one variable, <code>demand_uk</code>. Our null-hypothesis is that the average store demand is equal to 1750 unit so we enter that number into the <code>Comparison value</code> box. Because we want to determine if the available data provides sufficient support to reject the null-hypothesis in favor of the alternative (i.e., that average store demand in the UK is larger than 1750) we choose the <code>Greater than</code> option from the <code>Alternative hypothesis</code> drop-down.</p>
+<p>You can find the information on unit sales in each of the sample stores in the <strong>demand_uk.rda</strong> data set. The data set contains two variables, <code>store_id</code> and <code>demand_uk</code>. Our null-hypothesis is that the average store demand in the UK is equal to 1750 unit so we enter that number into the <code>Comparison value</code> box. We choose the <code>Greater than</code> option from the <code>Alternative hypothesis</code> drop-down because we want to determine if the available data provides sufficient evidence to reject the null-hypothesis favor of the alternative that average store demand in the UK is <strong>larger than 1750</strong>.</p>
 <p><img src="figures_quant/single_mean_summary.png" alt="Summary" /></p>
 <p>The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., mean, standard deviation). The final row of output shows the following:</p>
 <ul>
@@ -256,12 +256,14 @@ img {
 <li><code>t.value</code> is the <em>t</em> statistic associated with <code>diff</code> that we can compare to a t-distribution (i.e., <code>diff</code> / <code>se</code>)</li>
 <li><code>p.value</code> is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)</li>
 <li><code>df</code> is the degrees of freedom associated with the statistical test (i.e., <em>n</em> - 1)</li>
-<li><code>5% 100%</code> show the 95% confidence interval around the sample mean (1897 to Inf.). These numbers provide a range within which the true population mean is likely to fall <sup>1</sup></li>
+<li><code>5% 100%</code> show the 95% confidence interval around the sample mean (1897 to Inf.). These numbers provide a range within which the true population mean is likely to fall</li>
 </ul>
-<p>There are three approaches we can use to evaluate the null hypothesis is we choose a significance level of 0.05.<sup>2</sup> Of course, each approach will lead to the same conclusion.</p>
+<div id="testing" class="section level3">
+<h3>Testing</h3>
+<p>There are three approaches we can use to evaluate the null hypothesis. We will choose a significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.</p>
 <div id="p.value" class="section level4">
 <h4>p.value</h4>
-<p>Because the p.value is <strong>smaller</strong> than the conventional significance level (i.e., 0.05) we reject the null hypothesis and suggest that management should enter the UK market.</p>
+<p>Because the p.value is <strong>smaller</strong> than the conventional significance level (i.e., 0.05) we reject the null hypothesis and suggest that management should enter the UK market. Note also the ’***’ that are used as an indicator for significance.</p>
 </div>
 <div id="confidence-interval" class="section level4">
 <h4>confidence interval</h4>
@@ -269,12 +271,22 @@ img {
 </div>
 <div id="t.value" class="section level4">
 <h4>t.value</h4>
-<p>Because the calculated t.value (5.967) is <strong>larger</strong> than the <em>critical</em> t.value we reject the null hypothesis and suggest that management should enter the UK market. We can obtain the critical t.value by using the probability calculator in the <em>Base</em> menu. For a t-distribution with 571 degrees of freedom (see <code>df</code>) the critical t.value is 1.648. Note that we enter 0.95 as the upper probability bound (i.e., 1 - 0.05) because the alternative hypothesis is <code>Greater than</code>.</p>
+<p>Because the calculated t.value (5.967) is <strong>larger</strong> than the <em>critical</em> t.value we reject the null hypothesis and suggest that management should enter the UK market. We can obtain the critical t.value by using the probability calculator in the <em>Base</em> menu. For a t-distribution with 571 degrees of freedom (see <code>df</code>) the critical t.value is 1.648. We have to enter 0.95 as the upper probability bound (i.e., 1 - 0.05) because the alternative hypothesis is <code>Greater than</code>.<sup>2</sup></p>
 <p><img src="figures_quant/single_mean_prob_calc.png" alt="prob_calc" /></p>
 <p>In addition to the numerical output provided in the <em>Summary</em> tab we can visualize the data in the <em>Plot</em> tab. The settings in the side-panel are the same as before. The black lines in the histogram show the sample mean (solid) and the confidence interval around the sample mean (dashed). The red line shows the comparison value (i.e., unit sales under the null-hypothesis). Because the red line does <strong>not</strong> fall within the confidence interval (1897 to Inf.) we reject the null-hypothesis in favor of the alternative.</p>
 <p><img src="figures_quant/single_mean_plot.png" alt="Plot" /></p>
-<p><sup>1</sup> To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean</p>
-<p><sup>2</sup> The significance level, often denoted by <span class="math">\(\alpha\)</span>, is the probability of rejecting the null hypothesis when it is actually true that you are willing to accept. A commonly used significance level is 0.05</p>
+</div>
+</div>
+<div id="stats-speak" class="section level3">
+<h3><em>Stats speak</em></h3>
+<p>This is a <strong>single mean</strong> test of the null hypothesis that the true population <strong>mean</strong> is equal to <strong>1750</strong>. Using a significance level of 0.05, we reject the null hypothesis, and conclude that the true population <strong>mean</strong> is <strong>larger</strong> than <strong>1750</strong>.</p>
+<p>The p.value for this test is <strong>&lt; .001</strong>. This is the probability of observing a sample <strong>mean</strong> that is as or more extreme than the sample <strong>mean</strong> from the data if the null hypothesis is true. In this case, it is the probability of observing a sample <strong>mean</strong> that is larger than (or equal to) <strong>1953.393</strong> if the true population <strong>mean</strong> is <strong>1750</strong>.</p>
+<p>The 5% confidence bound is <strong>1897.233</strong>. If repeated samples were taken and the 5% confidence bound computed for each one, the true population mean would exceed the lower bound in 95% of the samples</p>
+<p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
+<p><sup>2</sup> <span class="math">\(1 - \alpha\)</span> is called the <strong>confidence level</strong>. A commonly used confidence level is 0.95 (or 95%)</p>
+<!--
+To be more precise, if repeated samples were taken and the 95% confidence interval was computed for each sample, 95% of the intervals would contain the true population mean
+-->
 </div>
 </div>
 

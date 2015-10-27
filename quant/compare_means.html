@@ -242,11 +242,11 @@ img {
 <blockquote>
 <p>Compare the means of two or more variables or groups in the data</p>
 </blockquote>
-<p>The compare means t-test is used to compare the mean of a variable for one sample in our data to the mean of the same variable in one, or more, other samples. This is important since we seldom have access to data for an entire population. The hypothesized value in the population is specified in the ‘Comparsion value’ box.</p>
-<p>We can perform either a one-tailed test (i.e., less than or greater than) or two-tailed test (see ‘Alternative hypothesis’). We use one-tailed tests to evaluate if the available data provide evidence that a variable or effect is larger (or smaller) in one sample than another.</p>
+<p>The compare means t-test is used to compare the mean of a variable in one group to the mean of the same variable in one, or more, other groups. The null hypothesis for the difference between the groups in the population is set to zero. We test this hypothesis using sample data.</p>
+<p>We can perform either a one-tailed test (i.e., <code>less than</code> or <code>greater than</code>) or a two-tailed test (see the ‘Alternative hypothesis’ dropdown). We use one-tailed tests to evaluate if the available data provide evidence that the difference in sample means between groups is less than (or greater than ) zero.</p>
 <div id="example-professor-salaries" class="section level3">
 <h3>Example: Professor salaries</h3>
-<p>We have access to the 2008-09 nine-month academic salary for Assistant Professors, Associate Professors and Professors in a college in the U.S. The data were collected as part of the on-going effort of the college’s administration to monitor salary differences between male and female faculty members. A data frame with 397 observations on the following 6 variables.</p>
+<p>We have access to the nine-month academic salary for Assistant Professors, Associate Professors and Professors in a college in the U.S (2008-09). The data were collected as part of an on-going effort by the college’s administration to monitor salary differences between male and female faculty members. The data has 397 observations and the following 6 variables.</p>
 <ul>
 <li>rank = a factor with levels AsstProf, AssocProf, and Prof</li>
 <li>discipline = a factor with levels A (“theoretical” departments) or B (“applied” departments)</li>
@@ -255,12 +255,54 @@ img {
 <li>sex = a factor with levels Female and Male</li>
 <li>salary = nine-month salary, in dollars</li>
 </ul>
-<p>The data are part of the CAR package for R and are linked to the book: Fox J. and Weisberg, S. (2011) An R Companion to Applied Regression, Second Edition Sage.</p>
-<p>Suppose we want to test if, as we might expect, professors of higher rank earn a higher income compared to those of lower rank. To test this hypothesis we first select professor <code>rank</code> and select <code>salary</code> as the numerical variable to compare across ranks. Radiant will do a pair-wise comparison of salaries across the three levels. We are interested in a one-sided hypothesis.</p>
-<p><img src="figures_quant/compare_means_summary.png" alt="Summary" /></p>
-<p>Because the p-values are smaller than the conventional level of significance (i.e. &lt; 0.05) for each pair-wise comparison we can reject the null hypothesis based on the available sample of salaries. The data suggest that associate professors make more than assistant professors and professors make more than assistant and associate professors.</p>
-<p>In addition to the numerical output provided in the Summary tab we can also evaluate the hypothesis visually (see Plot tab). The settings in the side-panel are the same as before. The tab displays a bar chart of professor salaries with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the Summary tab there is clear separation between the salaries across ranks. We can also choose to plot the data as a box plot or as a set of density curves.</p>
-<p><img src="figures_quant/compare_means_plot.png" alt="Plot" /></p>
+<p>The data are part of the CAR package and are linked to the book: Fox J. and Weisberg, S. (2011) An R Companion to Applied Regression, Second Edition Sage.</p>
+<p>Suppose we want to test if professors of lower rank earn lower salaries compared to those of higher rank. To test this hypothesis we first select professor <code>rank</code> and select <code>salary</code> as the numerical variable to compare across ranks. In the <code>Choose combinations</code> box select all available entries to conduct pair-wise comparisons across the three levels. Note that removing all entries will automatically select all combinations. We are interested in a one-sided hypothesis (i.e., <code>less than</code>).</p>
+<p><img src="figures_quant/compare_means_summary.png" alt="summary" /></p>
+<p>The first two blocks of output show basic information about the test (e.g.,. selected variables and confidence levels) and summary statistics (e.g., mean, standard deviation, etc. per group). The final block of output shows the following:</p>
+<ul>
+<li><code>Null hyp.</code> is the null hypothesis and <code>Alt. hyp.</code> the alternative hypothesis</li>
+<li><code>diff</code> is the difference between the sample means for two groups (e.g., 80775.99 - 93876.44 = -13100.45). If the null hypothesis is true we expect this difference to be small (i.e., close to zero)</li>
+<li><code>p.value</code> is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)</li>
+</ul>
+<p>If we check <code>Show additional statistics</code> the following output is added:</p>
+<p><img src="figures_quant/compare_means_summary_additional.png" alt="summary additional" /></p>
+<ul>
+<li><code>se</code> is the standard error (i.e., the standard deviation of the sampling distribution of <code>diff</code>)</li>
+<li><code>t.value</code> is the <em>t</em> statistic associated with <code>diff</code> that we can compare to a t-distribution (i.e., <code>diff</code> / <code>se</code>)</li>
+<li><code>df</code> is the degrees of freedom associated with the statistical test. Note that the Welch approximation is used for the degrees of freedom</li>
+<li><code>0% 95%</code> show the 95% confidence interval around the difference in sample means. These numbers provide a range within which the true population difference is likely to fall</li>
+</ul>
+</div>
+<div id="testing" class="section level3">
+<h3>Testing</h3>
+<p>There are three approaches we can use to evaluate the null hypothesis. We will choose a significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.</p>
+<div id="p.value" class="section level4">
+<h4>p.value</h4>
+<p>Because each of the p.values is <strong>smaller</strong> than the significance level we reject the null hypothesis for each evaluated pair of professor ranks. The data suggest that associate professors make more than assistant professors and professors make more than assistant and associate professors. Note also the ’***’ that are used as an indicator for significance.</p>
+</div>
+<div id="confidence-interval" class="section level4">
+<h4>confidence interval</h4>
+<p>Because zero is <strong>not</strong> contained in any of the confidence intervals we reject the null hypothesis for each evaluated combination of ranks. Because our alternative hypothesis is <code>Less than</code> the confidence interval is actually an upper bound for the difference in salaries in the population at a 95% confidence level (i.e., -9785.958, -42744.474, and -28889.256)</p>
+</div>
+<div id="t.value" class="section level4">
+<h4>t.value</h4>
+<p>Because the calculated t.values (-6.561, -23.334, and -13.569) are <strong>smaller</strong> than the corresponding <em>critical</em> t.value we reject the null hypothesis for each evaluated combination of ranks. We can obtain the critical t.value by using the probability calculator in the <em>Base</em> menu. Using the test for assistant versus associate professors as an example, we find that for a t-distribution with 101.286 degrees of freedom (see <code>df</code>) the critical t.value is 1.66. We choose 0.05 as the lower probability bound because the alternative hypothesis is <code>Less than</code>.</p>
+<p><img src="figures_quant/compare_means_prob_calc.png" alt="prob_calc" /></p>
+<p>In addition to the numerical output provided in the <em>Summary</em> tab we can also investigate the association between <code>rank</code> and <code>salary</code> visually (see the <em>Plot</em> tab). The screen shot below shows a scatter plot of professor salaries and a bar chart with confidence interval (black) and standard error (blue) bars. Consistent with the results shown in the <em>Summary</em> tab there is clear separation between the salaries across ranks. We could also choose to plot the sample data as a box plot or as a set of density curves.</p>
+<p><img src="figures_quant/compare_means_plot.png" alt="plot" /></p>
+</div>
+</div>
+<div id="multiple-comparison-adjustment" class="section level3">
+<h3>Multiple comparison adjustment</h3>
+<p>The more comparisons we evaluate the more likely we are to find a “significant” result just by chance even if the null hypothesis is true. If we conduct 100 tests and set our <strong>significance level</strong> at 0.05 (or 5%) we can expect to find 5 p.values smaller than or equal to 0.05 even if the are no associations in the population.</p>
+<p>Bonferroni adjustment ensures the p.values are scaled appropriately given the number of tests conducted. <a href="https://xkcd.com/882/" target="blank">This XKCD cartoon</a> expresses the need for this type of adjustments very clearly.</p>
+</div>
+<div id="stats-speak" class="section level3">
+<h3><em>Stats speak</em></h3>
+<p>This is a <strong>comparison of means</strong> test of the null hypothesis that the true population <strong>difference in means</strong> is equal to <strong>0</strong>. Using a significance level of 0.05, we reject the null hypothesis for each pair of ranks evaluated, and conclude that the true population <strong>difference in means</strong> is <strong>less</strong> than <strong>0</strong>.</p>
+<p>The p.value for the test of differences in salaries between assistant and associate professors is <strong>&lt; .001</strong>. This is the probability of observing a sample <strong>difference in means</strong> that is as or more extreme than the sample <strong>difference in means</strong> from the data if the null hypothesis is true. In this case, it is the probability of observing a sample <strong>difference in means</strong> that is less than (or equal to) <strong>-13100.45</strong> if the true population <strong>difference in means</strong> is <strong>0</strong>.</p>
+<p>The 95% confidence bound is <strong>-9785.958</strong>. If repeated samples were taken and the 95% confidence bound computed for each one, the true population mean would be below the lower bound in 95% of the samples</p>
+<p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
 </div>
 
 
