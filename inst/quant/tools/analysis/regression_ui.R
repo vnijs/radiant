@@ -61,7 +61,7 @@ reg_pred_inputs <- reactive({
 
   reg_pred_args$pred_cmd <- reg_pred_args$pred_data <- reg_pred_args$pred_vars <- ""
   if (input$reg_predict == "cmd")
-    reg_pred_args$pred_cmd <- gsub("\\n", "", input$reg_pred_cmd)
+    reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd) %>% gsub("\"","\'",.)
   else if (input$reg_predict == "data")
     reg_pred_args$pred_data <- input$reg_pred_data
   else if (input$reg_predict == "vars")
@@ -173,7 +173,7 @@ output$ui_reg_facet_row <- renderUI({
 output$ui_reg_facet_col <- renderUI({
   vars <- input$reg_indep_var
   vars <- c("None" = ".", vars)
-  selectizeInput("reg_facet_col", 'Facet column', vars,
+  selectizeInput("reg_facet_col", "Facet column", vars,
                  selected = state_single("reg_facet_col", vars, "."),
                  multiple = FALSE)
 })
@@ -289,11 +289,11 @@ reg_plot <- reactive({
   plot_width <- 650
   nrVars <- length(input$reg_indep_var) + 1
 
-  if (input$reg_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
-  if (input$reg_plots == 'dashboard') plot_height <- 1.5 * plot_height
-  if (input$reg_plots == 'correlations') { plot_height <- 150 * nrVars; plot_width <- 150 * nrVars }
-  if (input$reg_plots == 'coef') plot_height <- 300 + 20 * length(.regression()$model$coefficients)
-  if (input$reg_plots %in% c('scatter','leverage','resid_pred'))
+  if (input$reg_plots == "hist") plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
+  if (input$reg_plots == "dashboard") plot_height <- 1.5 * plot_height
+  if (input$reg_plots == "correlations") { plot_height <- 150 * nrVars; plot_width <- 150 * nrVars }
+  if (input$reg_plots == "coef") plot_height <- 300 + 20 * length(.regression()$model$coefficients)
+  if (input$reg_plots %in% c("scatter","leverage","resid_pred"))
     plot_height <- (plot_height/2) * ceiling((nrVars-1) / 2)
 
   list(plot_width = plot_width, plot_height = plot_height)
@@ -405,8 +405,8 @@ observeEvent(input$regression_report, {
       inp_out[[2 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
       xcmd <-
-        paste0("# store_reg(result, data = \"", input$dataset, "\", type = \"prediction\", name = \"", input$reg_store_pred_name,"\")\n") %>%
-        paste0("# write.csv(result, file = \"~/reg_predictions.csv\", row.names = FALSE)")
+        paste0("# store_reg(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+        paste0("# write.csv(result, file = '~/reg_predictions.csv', row.names = FALSE)")
       if (!is_empty(input$reg_xvar)) {
         inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
         outputs <- c(outputs, "plot")

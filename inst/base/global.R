@@ -95,7 +95,8 @@ r_sessions <- new.env(parent = emptyenv())
 ## create directory to hold session files
 # if (!r_local)
 # "~/r_sessions/" %>% { if (!file.exists(.)) dir.create(., recursive = TRUE) }
-if (!file.exists("~/r_sessions/")) dir.create("~/r_sessions")
+# if (!file.exists("~/r_sessions/")) dir.create("~/r_sessions")
+file.path(normalizePath("~"),"r_sessions") %>% {if (!file.exists(.)) dir.create(.)}
 # "~/r_sessions/" %>% {if (!file.exists(.)) sshhr( dir.create(., recursive = TRUE) )}
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
@@ -111,7 +112,6 @@ if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
   withMathJax <- MathJaxR::withMathJaxR
 }
-
 
 ## Windows or Mac
 # if (.Platform$OS.type == 'windows') {

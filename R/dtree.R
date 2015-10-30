@@ -253,10 +253,15 @@ dtree <- function(yl, opt = "max") {
   decision_payoff <- function(node)
     if(is.null(node$payoff)) 0 else node$payoff
 
+  type_none <- ""
   calc_payoff <- function(x) {
     # if (x$type == 'chance') x$payoff <- sum(sapply(x$children, function(node) node$payoff * node$p))
-    if (is_empty(x$type)) x$payoff <- 0
-    else if (x$type == 'chance') x$payoff <- sum(sapply(x$children, chance_payoff))
+    # if (is_empty(x$type)) x$payoff <- 0
+    if (is_empty(x$type)) {
+      x$payoff <- 0
+      x$type <- "NONE"
+      type_none <<- "One or more nodes do not have a 'type'. Search for 'NONE' in the output\nbelow and then update the input file"
+    } else if (x$type == 'chance') x$payoff <- sum(sapply(x$children, chance_payoff))
     # else if (x$type == 'decision') x$payoff <- max(sapply(x$children, function(node) node$payoff))
     # else if (x$type == 'decision') x$payoff <- max(sapply(x$children, decision_payoff))
     else if (x$type == 'decision') x$payoff <- get(opt)(sapply(x$children, decision_payoff))
@@ -289,7 +294,7 @@ dtree <- function(yl, opt = "max") {
     return(err %>% set_class(c("dtree", class(.))))
   }
 
-  list(jl_init = jl_init, jl = jl) %>% set_class(c("dtree",class(.)))
+  list(jl_init = jl_init, jl = jl, type_none = type_none) %>% set_class(c("dtree",class(.)))
 }
 
 #' Summary method for the dree function
@@ -345,11 +350,16 @@ summary.dtree <- function(object, ...) {
   }
 
   ## initial setup
-  cat("Initial decision tree:\n")
-  format_dtree(object$jl_init) %>% print(row.names = FALSE)
+  if (object$type_none != "") {
+    cat(paste0("\n\n**\n",object$type_none,"\n**\n\n"))
+  } else {
+    cat("Initial decision tree:\n")
+    format_dtree(object$jl_init) %>% print(row.names = FALSE)
+  }
 
   cat("\n\nFinal decision tree:\n")
   format_dtree(object$jl) %>% print(row.names = FALSE)
+
 
   # cat("\n\nDecision:\n")
   # object$jl$Get("decision") %>% .[!is.na(.)] %>% paste0(collapse = " & ") %>% cat
@@ -374,7 +384,9 @@ summary.dtree <- function(object, ...) {
 #' @export
 plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, ...) {
 
-  if (is.character(x)) return(cat(x))
+  # if (is.character(x)) return(cat(x))
+  if (is.character(x)) return(paste0("graph LR\n A[Errors in the input file]\n"))
+  if (x$type_none != "") return(paste0("graph LR\n A[Node does not have a type. Fix the input file]\n"))
 
   ## based on https://gist.github.com/gluc/79ef7a0e747f217ca45e
   jl <- if (final) x$jl else x$jl_init

@@ -607,7 +607,7 @@ plot.reg_predict <- function(x,
   # print(getclass(object))
 
 
-  if (color == 'none') {
+  if (color == "none") {
     p <- ggplot(object, aes_string(x=xvar, y="Prediction")) +
            geom_line(aes(group=1))
   } else {
@@ -615,8 +615,8 @@ plot.reg_predict <- function(x,
                 geom_line(aes_string(group=color))
   }
 
-  facets <- paste(facet_row, '~', facet_col)
-  if (facets != '. ~ .') p <- p + facet_grid(facets)
+  facets <- paste(facet_row, "~", facet_col)
+  if (facets != ". ~ .") p <- p + facet_grid(facets)
 
   if (length(unique(object[[xvar]])) < 10)
     p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)

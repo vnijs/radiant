@@ -56,7 +56,7 @@ glm_pred_inputs <- reactive({
 
   glm_pred_args$pred_cmd <- glm_pred_args$pred_data <- glm_pred_args$pred_vars <- ""
   if (input$glm_predict == "cmd")
-    glm_pred_args$pred_cmd <- gsub('\\s', '', input$glm_pred_cmd)
+    glm_pred_args$pred_cmd <- gsub("\\s", "", input$glm_pred_cmd) %>% gsub("\"","\'",.)
   else if (input$glm_predict == "data")
     glm_pred_args$pred_data <- input$glm_pred_data
   else if (input$glm_predict == "vars")
@@ -123,7 +123,7 @@ output$ui_glm_test_var <- renderUI({
   selectizeInput(inputId = "glm_test_var", label = "Variables to test:",
     choices = vars, selected = state_multiple("glm_test_var", vars),
     multiple = TRUE,
-    options = list(placeholder = 'None', plugins = list('remove_button'))
+    options = list(placeholder = "None", plugins = list("remove_button"))
   )
 })
 
@@ -154,7 +154,7 @@ output$ui_glm_int_var <- renderUI({
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
-# X - variable
+## X - variable
 output$ui_glm_xvar <- renderUI({
   vars <- input$glm_indep_var
   selectizeInput(inputId = "glm_xvar", label = "X-variable:", choices = vars,
@@ -173,7 +173,7 @@ output$ui_glm_facet_row <- renderUI({
 output$ui_glm_facet_col <- renderUI({
   vars <- input$glm_indep_var
   vars <- c("None" = ".", vars)
-  selectizeInput("glm_facet_col", 'Facet column', vars,
+  selectizeInput("glm_facet_col", "Facet column", vars,
                  selected = state_single("glm_facet_col", vars, "."),
                  multiple = FALSE)
 })
@@ -405,8 +405,8 @@ observeEvent(input$glm_reg_report, {
       inp_out[[2 + figs]] <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
       outputs <- c(outputs,"result <- predict")
       xcmd <-
-        paste0("# store_glm(result, data = \"", input$dataset, "\", type = \"prediction\", name = \"", input$glm_store_pred_name,"\")\n") %>%
-        paste0("# write.csv(result, file = \"~/glm_predictions.csv\", row.names = FALSE)")
+        paste0("# store_glm(result, data = '", input$dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
+        paste0("# write.csv(result, file = '~/glm_predictions.csv', row.names = FALSE)")
       if (!is_empty(input$glm_xvar)) {
         inp_out[[3 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
         outputs <- c(outputs, "plot")
