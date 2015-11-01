@@ -42,11 +42,30 @@ Output from Radiant (Regression > Linear (OLS)) is provided below:
 
 ![Regression 1 - summary](figures_quant/regression_catalog_summary.png)
 
-The F-statistic suggests that the regression model as a whole explains a significant amount of variance in Sales. The calculated F-value is equal to 32.33 and has a very small p-value (< 0.001). The amount of variance in sales explained by the model is equal to 33.1%
-
 The null and alternate hypothesis for the F-test test can be formulated as follows:
-H0: All regression coefficients are equal to 0
-Ha: At least one regression coefficient is not equal to zero
+
+* $H_0$: All regression coefficients are equal to 0
+* $H_a$: At least one regression coefficient is not equal to zero
+
+The F-statistic suggests that the regression model as a whole explains a significant amount of variance in Sales. The calculated F-value is equal to 32.33 and has a very small p-value (< 0.001). The amount of variance in sales explained by the model is equal to 33.1% (see R-squared).
+
+We can replicate the standard F-test that is reported as part of all regression output. To do so, select `income`, `HH.size`, and `Age` in the `Variables to test` box. The relevant output is shown below.
+
+<img src="figures_quant/regression_catalog_F_test.png" alt="Regression 1 - F-test" width="400" />
+
+Note that in this example, "model 1" is a regression without explanatory variables. As you might expect, the explained variance for model 1 is equal to zero. The F-test compares the _fit_ of model 1 and model 2, adjusted for the difference in the number of coefficients estimated in each model. The test statistic to use is described below. $R^2_2$ is the explained variance for model 2 and $R^2_1$ is the explained variance for model 1. $n$ is equal to the number of rows in the data, and $k_2$ ($k_1$) is equal to the number of estimated coefficients in model 2 (model 1).
+
+$$
+\begin{eqnarray}
+	F & = & \frac{(R^2_2 - R^2_1)/(k_2 - k_1)}{(1 - R^2_2)/(n - k_2 - 1)} \\\\
+	  & = & \frac{(0.331 - 0)/(3 - 0)}{(1 - 0.331)/(200 - 3 - 1)} \\\\
+	  & = & 32.325
+\end{eqnarray}
+$$
+
+We can use the provided p.value associated with an F-statistic of 32.325 to evalaute the null hypothesis. We can also calculate the critical F-statistic using the probability calculator. As we can see from the output below that value is 2.651. Because the provided p.value is < 0.001 and the calculated F-statistic is larger than the critical value (32.325 > 2.651) we reject null hypothesis that all coefficient are equal to zero.
+
+![Regression 1 - Critical F-statistics](figures_quant/regression_catalog_F_critical.png)
 
 The coefficients from the regression can be interpreted as follows:
 
@@ -55,8 +74,8 @@ The coefficients from the regression can be interpreted as follows:
 - For an increase in the age of the head of the household of 1 year we expect, on average, to see an increase in sales of \$0.45, keeping all other variables constant.
 
 For each of the explanatory variables the following null and alternate hypotheses can be formulated:
-H0: The coefficient associated with explanatory variable X is equal to 0
-Ha: The coefficient associated with explanatory variable X is not equal to 0
+H0: The coefficient associated with explanatory variable x is equal to 0
+Ha: The coefficient associated with explanatory variable x is not equal to 0
 
 The coefficients for `Income` and `HH.size` are both significant (p-values < 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value > 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.
 
@@ -90,7 +109,7 @@ The final diagnostic we will discuss is a set of plots of the residuals versus t
 
 Since the diagnostics look good, we can draw inferences from the regression. First, the model is significant as a whole: the p-value on the F-statistic is less than 0.05 therefore we reject the null hypothesis that all three variables in the regression have slope equal to zero. Second, each variable is statistically significant: for example, the p-value on the t-statistic for x1 is less than 0.05 therefore we reject the null hypothesis that x1 has slope equal to zero when x2 and x3 are also in the model (i.e., 'holding all other variables constant').
 
-Increases in x1 and x3 are associated with increases in y whereas increases in x2 are associated with decreases in y. Since these are simulated data the exact interpretation of the coefficient is not interesting. However, in the scatterplot it looks like increases in x3 are associated with decreases in y. What explains the difference? Hint: consider the correlation plots.
+Increases in x1 and x3 are associated with increases in y whereas increases in x2 are associated with decreases in y. Since these are simulated data the exact interpretation of the coefficient is not very interesting. However, in the scatterplot it looks like increases in x3 are associated with decreases in y. What explains the difference? Hint: consider the correlation plots.
 
 ![Regression 2 - ideal summary](figures_quant/regression_ideal_summary.png)
 
@@ -171,7 +190,7 @@ All coefficients in this regression are highly significant.
 
 ### Technical notes
 
-#### Coefficient interpretation for linear model
+#### Coefficient interpretation for a linear model
 
 To illustrate the interpretation of coefficients in a regression model we start with the following equation:
 
