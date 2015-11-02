@@ -172,7 +172,14 @@ visualize <- function(dataset, xvar,
   } else if (type == "scatter") {
 
     itt <- 1
-    gs <- if ("jitter" %in% check) geom_blank() else geom_point(alpha = alpha)
+    if ("jitter" %in% check) {
+      # gs <- geom_blank() + geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
+      gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
+      check <- sub("jitter","", check)
+    } else {
+      gs <- geom_point(alpha = alpha)
+    }
+
     for (i in xvar) {
       if ("log_x" %in% axes && "factor" %in% class(dat[[i]])) axes <- sub("log_x","",axes)
       for (j in yvar) {
@@ -187,6 +194,7 @@ visualize <- function(dataset, xvar,
           ymax <- max(dat[[j]]) %>% {if (. < 0) 0 else .}
           ymin <- min(dat[[j]]) %>% {if (. > 0) 0 else .}
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
+
 
           if ("mean" %in% sbar) {
             plot_list[[itt]] <- plot_list[[itt]] +

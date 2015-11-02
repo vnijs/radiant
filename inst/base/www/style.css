@@ -4,6 +4,8 @@
 
 th, td {
   text-align: left;
+/*  padding-top: "0px";
+  padding-top: "0px"; */
 }
 
 table.dataTable tfoot td, table.dataTable thead td {
@@ -82,7 +84,7 @@ pre {
 }
 
 .color_bar {
-    background-color: blue;
+  background-color: blue;
 }
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
@@ -108,11 +110,11 @@ pre {
 
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
 #dtree_print {
-  top: 150px;
+  top: 170px;
 }
 
 #dtree_edit {
-  top: 150px;
+  top: 170px;
 }
 
 .mermaid g .edgeLabel span {
