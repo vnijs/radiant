@@ -15,7 +15,7 @@ This is an example of the type of report you can write in Radiant.
 
 You can even include math if you want:
 
-$$y_t = \\alpha + \\beta x_t + \\epsilon_t.$$
+$$y_t = \\\\alpha + \\\\beta x_t + \\\\epsilon_t.$$
 
 To show the output press the `Update` button.
 
