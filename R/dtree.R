@@ -43,7 +43,12 @@ dtree_parser <- function(yl) {
       var <- strsplit(yl[i], "=")[[1]]
       var[1] <- gsub("^\\s+|\\s+$", "", var[1]) %>% gsub("(\\W)", "\\\\\\1", .)
       var[2] <- eval(parse(text = gsub("[a-zA-Z]+","",var[2])))
-      yl[-i] <- gsub(paste0("(\\s*)",var[1],"\\s*$"), paste0("\\1",var[2]), yl[-i], perl = TRUE)
+      # yl[-i] <- gsub(paste0(":(\\s*)",var[1],"\\s*$"), paste0(":\\1 ",var[2]), yl[-i], perl = TRUE)
+      yl[-i] <- gsub(paste0(":\\s*",var[1],"\\s*$"), paste0(": ",var[2]), yl[-i], perl = TRUE)
+
+      # var <- c("MF", .15)
+      # var <- c("MF", .15)
+      # gsub(paste0(":(\\s*)",var[1],"\\s*$"), paste0(":\\1 ",var[2]), ": NMF\n :MF", perl = TRUE)
 
       # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i], fixed = TRUE)
       ## can't work in the variable definition section
@@ -67,6 +72,13 @@ dtree_parser <- function(yl) {
   ## replace .4 by 0.4
   # yl <- c(yl, "p: .4")
   yl %<>% gsub("(^\\s*p\\s*:)\\s*(\\.[0-9]+$)","\\1 0\\2", .,  perl = TRUE)
+
+  ## make sure the labels are in lower case
+  yl %<>% gsub("(^\\s*)name(\\s*:)","\\1name\\2", ., ignore.case = TRUE, perl = TRUE)
+  yl %<>% gsub("(^\\s*)type(\\s*:)","\\1type\\2", ., ignore.case = TRUE, perl = TRUE)
+  yl %<>% gsub("(^\\s*)p(\\s*:)","\\1p\\2", ., ignore.case = TRUE, perl = TRUE)
+  yl %<>% gsub("(^\\s*)payoff(\\s*:)","\\1payoff\\2", ., ignore.case = TRUE, perl = TRUE)
+  yl %<>% gsub("(^\\s*)cost(\\s*:)","\\1cost\\2", ., ignore.case = TRUE, perl = TRUE)
 
   ## check type line is followed by a name
   # yl <- c(yl, "   type   : another   ")
@@ -186,8 +198,11 @@ dtree <- function(yl, opt = "max") {
     if (!grepl("\\n", yl)) yl <- getdata(yl)
 
     yl <- dtree_parser(yl)
-    ## test
+
+    ####### test #######
     # return(paste0(paste0("\n**\n", yl, collapse = "\n"), "\n**\n") %>% set_class(c("dtree", class(.))))
+    ####### test #######
+
     if (class(yl)[1] == "dtree") return(yl)
 
     # yl <- try(yaml.load(yl), silent = TRUE)
