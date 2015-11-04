@@ -427,7 +427,13 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
       lbl <- paste0(node$name,": ", node$p)
     }
 
-    if (!is.null(node$parent$decision) && node$name == node$parent$decision)
+    # print("decision")
+    # print(node$parent$decision)
+    # print("name")
+    # print(node$name)
+
+    # if (!is.null(node$parent$decision) && !is.null(node$name) && node$name == node$parent$decision)
+    if (length(node$parent$decision) > 0 && length(node$name) > 0 && node$name == node$parent$decision)
       paste0(" === |", lbl, "|")
     else
       paste0(" --- |", lbl, "|")
