@@ -243,16 +243,16 @@ update_report_fun <- function(cmd) {
     if (os_type == 'Windows') {
       cat(cmd, file = "clipboard")
     } else if (os_type == "Darwin") {
+      # cmd <- "test"
+      # library(magrittr)
       cat(cmd, file = pipe("pbcopy"))
+      # on.exit(close(file))
     } else if (os_type == "Linux") {
       cat("Clipboard not supported on linux")
     }
     ## nothing is added to report
     cmd <- ""
   }
-
-  # cat(cmd, file = "~/r_cat.txt", append = TRUE)
-  # cat(r_state$rmd_report, file = "~/r_cat.txt", append = TRUE)
 
   if (cmd != "") {
     if (is_empty(input$rmd_report)) {

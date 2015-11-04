@@ -328,13 +328,13 @@ plot.regression <- function(x,
       labs(list(title = "Residual vs Normal density", x = "Residuals", y = "")) + theme(axis.text.y = element_blank())
 
     if ("loess" %in% lines)
-      for (i in 1:3) plot_list[[i]] <- plot_list[[i]] + geom_smooth(size = .75, linetype = "dotdash")
+      for (i in 1:3) plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(method = "loess", size = .75, linetype = "dotdash") )
 
     if ("line" %in% lines) {
       for (i in c(1,4))
         plot_list[[i]] <- plot_list[[i]] + geom_abline(linetype = 'dotdash')
       for (i in 2:3)
-        plot_list[[i]] <- plot_list[[i]] + geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black')
+        plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(method = "lm", se = FALSE, size = .75, linetype = "dotdash", colour = 'black') )
     }
   }
 

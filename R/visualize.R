@@ -315,7 +315,7 @@ visualize <- function(dataset, xvar,
 
   if ("loess" %in% check) {
     for (i in 1:length(plot_list))
-      plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(span = smooth, size = .75,
+      plot_list[[i]] <- plot_list[[i]] + sshhr( geom_smooth(span = smooth, method = "loess", size = .75,
                                              linetype = "dotdash", aes(group=1)) )
   }
 

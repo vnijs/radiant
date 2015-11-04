@@ -26,14 +26,29 @@ upload_error_handler <- function(objname, ret) {
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
 
+
+  # if (Sys.info()["sysname"] == "Darwin") {
+  #   cb <- pipe("pbpaste")
+  #   str(cb)
+  #   read.table(cb)
+  #   on.exit(close(cb))
+  # }
+
+   # bah <- read.table(pipe("pbpaste"), header = TRUE, sep = "\t", comment.char = "", fill = TRUE,  as.is = TRUE)
+   # showConnections(all=TRUE)
+
   dat <- sshhr(try(
          {if (Sys.info()["sysname"] == "Windows") {
             read.table("clipboard", header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
           } else if (Sys.info()["sysname"] == "Darwin") {
+            # cb <- pipe("pbpaste")
+            # read.table(cb, header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
+            # on.exit(close(cb))
             read.table(pipe("pbpaste"), header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
           } else {
             if (!is_empty(input$load_cdata))
               read.table(text = input$load_cdata, header = header, sep = sep, comment.char = "", fill = TRUE,  as.is = TRUE)
+          # }}, silent = TRUE))
           }} %>% as.data.frame(check.names = FALSE), silent = TRUE))
 
   if (is(dat, 'try-error') || nrow(dat) == 0) {
@@ -41,10 +56,11 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
     upload_error_handler(objname,ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
-    r_data[[objname]] <- dat
+    r_data[[objname]] <- dat %>% as.data.frame(check.names = FALSE)
     r_data[[paste0(objname,"_descr")]] <- ret
   }
   r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique
+  # on.exit(close(dat))
 }
 
 saveClipboardData <- function() {
