@@ -297,7 +297,8 @@ mutate_each <- function(tbl, funs, ..., ext = "") {
     if (is.null(vars)) vars <- colnames(tbl)
 
     new <- paste0(vars, ext)
-    tbl[,new] <- tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
+    # tbl[,new] <- tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
+    tbl[,new] <- tbl %>% mutate_each_(funs, vars = vars) %>% select_(.dots = vars) %>%
       set_colnames(new)
 
     tbl

@@ -146,9 +146,6 @@ if (exists("r_state") && exists("r_data")) {
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", mrsf, ".rds")
   rs <- readRDS(fn)
-
-  rs <- readRDS(fn)
-
   unlink(fn, force = TRUE)
 
   if (length(rs$r_data) == 0)

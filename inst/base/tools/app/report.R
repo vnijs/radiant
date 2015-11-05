@@ -55,8 +55,9 @@ output$ui_manual <- renderUI({
 
 observeEvent(input$vim_keys, {
   isolate({
-    if (!is_empty(input$rmd_report))
-      r_state$rmd_report <<- input$rmd_report
+
+    # if (!is_empty(input$rmd_report))
+    # r_state$rmd_report <<- input$rmd_report
 
     r_data$vim_keys %<>% {. == FALSE}
   })
@@ -70,6 +71,7 @@ output$ui_vim <- renderUI({
 })
 
 output$report <- renderUI({
+  init <- isolate(if (is_empty(input$rmd_report)) rmd_example else input$rmd_report)
   tagList(
     with(tags,
       table(
@@ -92,7 +94,8 @@ output$report <- renderUI({
               wordWrap = TRUE,
               height = "auto",
               selectionId = "rmd_selection",
-              value = state_init("rmd_report",rmd_example),
+              # value = state_init("rmd_report",rmd_example),
+              value = state_init("rmd_report", init),
               hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     htmlOutput("rmd_knitted")
   )
@@ -194,6 +197,7 @@ observe({
     isolate({
       rmdfile <- paste0(readLines(inFile$datapath), collapse = "\n")
       shinyAce::updateAceEditor(session, "rmd_report", value = rmdfile)
+      # r_state$rmd_report <<- rmdfile
     })
   }
 })
@@ -236,6 +240,11 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
   update_report_fun(cmd)
 }
 
+observeEvent(input$rmd_report, {
+  if (input$rmd_report != rmd_example)
+    r_state$rmd_report <<- input$rmd_report
+})
+
 update_report_fun <- function(cmd) {
 
   if (isolate(r_data$manual)) {
@@ -255,18 +264,25 @@ update_report_fun <- function(cmd) {
   }
 
   if (cmd != "") {
-    if (is_empty(input$rmd_report)) {
+
+    # print(input$rmd_report == rmd_example)
+
+    # if (is_empty(input$rmd_report)) {
       if (is_empty(r_state$rmd_report)) {
         r_state$rmd_report <<- paste0("## Your report title\n", cmd)
+        # cmd <- paste0("## Your report title\n", cmd)
       } else {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
+        # cmd <- paste0(r_state$rmd_report,"\n",cmd)
       }
       shinyAce::updateAceEditor(session, "rmd_report",
                                 value = r_state$rmd_report)
-    } else {
-      shinyAce::updateAceEditor(session, "rmd_report",
-                                value = paste0(input$rmd_report,"\n",cmd))
-    }
+      #                           value = cmd)
+    # } else {
+      # shinyAce::updateAceEditor(session, "rmd_report",
+                                # value = paste0(input$rmd_report,"\n",cmd))
+      # r_state$rmd_report <<- paste0(input$rmd_report,"\n",cmd)
+    # }
   }
 
   ## move to the report panel so see the commands created
