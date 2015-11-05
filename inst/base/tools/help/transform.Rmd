@@ -88,11 +88,11 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 8. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press `return` and `Store` to add the new `sales_rc` variable. Note that if we had entered `sales` on the left-hand side of the `=` sign the original variable would have been overwritten
 
-  sales_rc = ifelse(sales > 400, NA, sales)
+	sales_rc = ifelse(sales > 400, NA, sales)
 
-9. Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add the new `sales_rc` variable.
+9. Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add the new `sales_rc` variable
 
-  income_rc = ifelse(ID == 3, income/1000, income)
+	income_rc = ifelse(ID == 3, income/1000, income)
 
 10. If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use `Create` and enter:
 
@@ -100,7 +100,7 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 11. If you have a date in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
 
-  date = parse\_date\_time(x, "%m%d%y")
+	date = parse\_date\_time(x, "%m%d%y")
 
 12. Determine the time difference between two dates/times in seconds
 
