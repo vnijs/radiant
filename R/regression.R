@@ -7,6 +7,7 @@
 #' @param indep_var Explanatory variables in the regression
 #' @param int_var Interaction terms to include in the model
 #' @param check "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
+#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables used in regression as an object of class regression
@@ -23,6 +24,7 @@
 regression <- function(dataset, dep_var, indep_var,
                        int_var = "",
                        check = "",
+                       dec = 3,
                        data_filter = "") {
 
   dat <- getdata(dataset, c(dep_var, indep_var), filt = data_filter)
@@ -49,7 +51,16 @@ regression <- function(dataset, dep_var, indep_var,
 
   reg_coeff <- tidy(model)
   reg_coeff$` ` <- sig_stars(reg_coeff$p.value)
-  reg_coeff[,c(2:5)] %<>% round(3)
+  reg_coeff[,c(2:5)] %<>% round(dec)
+
+  ## print -0 when needed
+  cz <- reg_coeff[[2]] == 0
+  if (length(cz) > 0 && sum(cz) > 0) {
+    tz <- reg_coeff[[4]] < 0
+    reg_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
+    reg_coeff[[2]][tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
+  }
+
   reg_coeff$p.value[reg_coeff$p.value < .001] <- "< .001"
   colnames(reg_coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
 
@@ -61,7 +72,7 @@ regression <- function(dataset, dep_var, indep_var,
     rm(i, isFct)
   }
 
-  # dat not needed elsewhere
+  ## dat is not needed elsewhere and is already in "model" anyway
   rm(dat)
 
   environment() %>% as.list %>% set_class(c("regression",class(.)))
@@ -99,6 +110,8 @@ summary.regression <- function(object,
 
   if (class(object$model)[1] != 'lm') return(object)
 
+  dec <- object$dec
+
   if ("stepwise" %in% object$check) cat("\n-----------------------------------------------\n\n")
 
   # cat("Time",now(),"\n")
@@ -129,7 +142,7 @@ summary.regression <- function(object,
   ## adjusting df for included intercept term
   df_int <- if (attr(object$model$terms, "intercept")) 1L else 0L
 
-  reg_fit <- glance(object$model) %>% round(3)
+  reg_fit <- glance(object$model) %>% round(dec)
   if (reg_fit['p.value'] < .001) reg_fit['p.value'] <- "< .001"
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
@@ -138,7 +151,7 @@ summary.regression <- function(object,
   cat("\n\n")
 
   if ("rmse" %in% sum_check) {
-    mean(object$model$residuals^2, na.rm=TRUE) %>% sqrt %>% round(3) %>%
+    mean(object$model$residuals^2, na.rm=TRUE) %>% sqrt %>% round(dec) %>%
     cat("Prediction error (RMSE): ", ., "\n\n")
   }
 
@@ -195,7 +208,7 @@ summary.regression <- function(object,
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
         cbind(select(object$reg_coeff,2),.) %>%
-        round(3) %>%
+        round(dec) %>%
         set_rownames(object$reg_coeff$`  `) %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
         set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
@@ -223,15 +236,15 @@ summary.regression <- function(object,
                    anova(object$model, test='F')
 
       if (sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
-      p.value <- sub_mod[,"Pr(>F)"][2] %>% { if (. < .001) "< .001" else round(.,3) }
+      p.value <- sub_mod[,"Pr(>F)"][2] %>% { if (. < .001) "< .001" else round(.,dec) }
 
       cat(attr(sub_mod,"heading")[2])
         object$model$model[,1] %>%
         { sum((. - mean(.))^2) } %>%
         {1 - (sub_mod$RSS / .)} %>%
-        round(3) %>%
+        round(dec) %>%
         cat("\nR-squared, Model 1 vs 2:", .)
-      cat("\nF-statistic:", sub_mod$F[2] %>% round(3), paste0("df(", sub_mod$Res.Df[1]-sub_mod$Res.Df[2], ",", sub_mod$Res.Df[2], "), p.value ", p.value))
+      cat("\nF-statistic:", sub_mod$F[2] %>% round(dec), paste0("df(", sub_mod$Res.Df[1]-sub_mod$Res.Df[2], ",", sub_mod$Res.Df[2], "), p.value ", p.value))
     }
   }
 }
@@ -276,6 +289,8 @@ plot.regression <- function(x,
                             ...) {
 
   object <- x; rm(x)
+
+  dec <- object$dec
 
   if (class(object$model)[1] != 'lm') return(object)
 
@@ -374,7 +389,7 @@ plot.regression <- function(x,
         data.frame %>%
         set_colnames(c("Low","High")) %>%
         cbind(select(object$reg_coeff,2),.) %>%
-        round(3) %>%
+        round(dec) %>%
         set_rownames(object$reg_coeff$`  `) %>%
         { if (!intercept) .[-1,] else . } %>%
         mutate(variable = rownames(.)) %>%

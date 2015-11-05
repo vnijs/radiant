@@ -4,7 +4,7 @@
 \alias{regression}
 \title{Linear regression using OLS}
 \usage{
-regression(dataset, dep_var, indep_var, int_var = "", check = "",
+regression(dataset, dep_var, indep_var, int_var = "", check = "", dec = 3,
   data_filter = "")
 }
 \arguments{
@@ -17,6 +17,8 @@ regression(dataset, dep_var, indep_var, int_var = "", check = "",
 \item{int_var}{Interaction terms to include in the model}
 
 \item{check}{"standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation}
+
+\item{dec}{Number of decimals to show}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
