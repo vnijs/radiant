@@ -311,20 +311,14 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <p>z = ifelse(x &lt; y, ‘smaller’, ‘bigger’)</p></li>
 <li><p>Create a categorical variable with three levels. An alternative approach would be to use the <code>Recode</code> function described below</p>
 <p>z = ifelse(x &lt; 60, ‘&lt; 60’, ifelse(x &gt; 65, ‘&gt; 65’, ‘60-65’))</p></li>
-<li><p>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press <code>return</code> and <code>Store</code> to add the new <code>sales_rc</code> variable. Note that if we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the original variable would have been overwritten</p></li>
-</ol>
-<p>sales_rc = ifelse(sales &gt; 400, NA, sales)</p>
-<ol start="9" style="list-style-type: decimal">
-<li>Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in $1s rather than in $1000s) we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. As before, press <code>return</code> and <code>Store</code> to add the new <code>sales_rc</code> variable.</li>
-</ol>
-<p>income_rc = ifelse(ID == 3, income/1000, income)</p>
-<ol start="10" style="list-style-type: decimal">
+<li><p>Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called <code>sales</code> that is equal to 400 we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. Press <code>return</code> and <code>Store</code> to add the new <code>sales_rc</code> variable. Note that if we had entered <code>sales</code> on the left-hand side of the <code>=</code> sign the original variable would have been overwritten</p>
+<p>sales_rc = ifelse(sales &gt; 400, NA, sales)</p></li>
+<li><p>Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in $1s rather than in $1000s) we could use an <code>ifelse</code> statement and enter the command below in the <code>Create</code> box. As before, press <code>return</code> and <code>Store</code> to add the new <code>sales_rc</code> variable</p>
+<p>income_rc = ifelse(ID == 3, income/1000, income)</p></li>
 <li><p>If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use <code>Create</code> and enter:</p>
 <p>income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)</p></li>
-<li><p>If you have a date in a format not available through the <code>Type</code> menu you can use the <code>parse_date_time</code> function. For a date formated as “2-1-14” you would specify the command below (note that this format will also be parsed correctly by the <code>mdy</code> function in the <code>Type</code> menu)</p></li>
-</ol>
-<p>date = parse_date_time(x, “%m%d%y”)</p>
-<ol start="12" style="list-style-type: decimal">
+<li><p>If you have a date in a format not available through the <code>Type</code> menu you can use the <code>parse_date_time</code> function. For a date formated as “2-1-14” you would specify the command below (note that this format will also be parsed correctly by the <code>mdy</code> function in the <code>Type</code> menu)</p>
+<p>date = parse_date_time(x, “%m%d%y”)</p></li>
 <li><p>Determine the time difference between two dates/times in seconds</p>
 <p>time_diff = as_duration(time2 - time2)</p></li>
 <li><p>Extract the month from a date variable</p>
