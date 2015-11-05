@@ -5,7 +5,7 @@
 \title{Generalized linear models (GLM)}
 \usage{
 glm_reg(dataset, dep_var, indep_var, lev = "", link = "logit",
-  int_var = "", check = "", data_filter = "")
+  int_var = "", check = "", dec = 3, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -21,6 +21,8 @@ glm_reg(dataset, dep_var, indep_var, lev = "", link = "logit",
 \item{int_var}{Interaction term to include in the model (not implement)}
 
 \item{check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
+
+\item{dec}{Number of decimals to show}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

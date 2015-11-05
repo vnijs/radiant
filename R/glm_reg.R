@@ -9,6 +9,7 @@
 #' @param link Link function for _glm_ ('logit' or 'probit'). 'logit' is the default
 #' @param int_var Interaction term to include in the model (not implement)
 #' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
+#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list with all variables defined in glm_reg as an object of class glm_reg
@@ -28,6 +29,7 @@ glm_reg <- function(dataset, dep_var, indep_var,
                     link = "logit",
                     int_var = "",
                     check = "",
+                    dec = 3,
                     data_filter = "") {
 
   dat <- getdata(dataset, c(dep_var, indep_var), filt = data_filter)
@@ -66,7 +68,16 @@ glm_reg <- function(dataset, dep_var, indep_var,
 
   glm_coeff <- tidy(model)
   glm_coeff$` ` <- sig_stars(glm_coeff$p.value)
-  glm_coeff[,c(2:5)] %<>% round(3)
+  glm_coeff[,c(2:5)] %<>% round(dec)
+
+  ## print -0 when needed
+  cz <- glm_coeff[[2]] == 0
+  if (length(cz) > 0 && sum(cz) > 0) {
+    tz <- glm_coeff[[4]] < 0
+    glm_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
+    glm_coeff[[2]][tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
+  }
+
   glm_coeff$p.value[glm_coeff$p.value < .001] <- "< .001"
   colnames(glm_coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
 
@@ -117,6 +128,8 @@ summary.glm_reg <- function(object,
 
   if (class(object$model)[1] != 'glm') return(object)
 
+  dec <- object$dec
+
   cat("Generalized linear model (glm)")
   cat("\nLink function:", object$link)
   cat("\nData         :", object$dataset)
@@ -135,15 +148,15 @@ summary.glm_reg <- function(object,
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
   ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
-  glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
+  glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(dec)
 
   ## chi-squared test of overall model fit (p-value) - http://www.ats.ucla.edu/stat/r/dae/logit.htm
   chi_pval <- with(object$model, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
-  chi_pval %<>% { if (. < .001) "< .001" else round(.,3) }
+  chi_pval %<>% { if (. < .001) "< .001" else round(.,dec) }
 
   cat("\nPseudo R-squared:", glm_fit$r2)
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
-  cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(3), " df(",
+  cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(dec), " df(",
          with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
   cat("Nr obs: ", glm_fit$df.null + 1, "\n\n")
 
@@ -156,7 +169,7 @@ summary.glm_reg <- function(object,
         vif (object$model) %>%
           { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
-          round(3) %>%
+          round(dec) %>%
           .[order(.$VIF, decreasing=T),] %>%
           { if (nrow(.) < 8) t(.) else . } %>% print
       } else {
@@ -181,7 +194,7 @@ summary.glm_reg <- function(object,
         set_rownames(object$glm_coeff$`  `) -> ci_tab
 
       if ("confint" %in% sum_check) {
-        ci_tab %>% round(3) %T>%
+        ci_tab %>% round(dec) %T>%
         # set_rownames(object$glm_coeff$`  `) %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
         set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
@@ -196,7 +209,7 @@ summary.glm_reg <- function(object,
       cat("There is perfect multicollinearity in the set of selected explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
       if (object$link == "logit") {
-        exp(ci_tab[-1,]) %>% round(3) %>%
+        exp(ci_tab[-1,]) %>% round(dec) %>%
           set_colnames(c("odds ratio", cl_low, cl_high)) %>% print
           # .[-1, ] %>% print
 
@@ -226,7 +239,6 @@ summary.glm_reg <- function(object,
         vars <- c(vars,object$int_var)
       }
 
-      # test_var <- "pclass"
       not_selected <- setdiff(vars, test_var)
       if (length(not_selected) > 0) sub_formula <- paste(object$dep_var, "~", paste(not_selected, collapse = " + "))
       ## update with glm_sub NOT working when called from radiant - strange
@@ -235,12 +247,12 @@ summary.glm_reg <- function(object,
       glm_sub_fit <- glance(glm_sub)
       glm_sub <- anova(glm_sub, object$model, test='Chi')
 
-      # pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
-      glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(3)
-      glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(.3) }
+      ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
+      glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(dec)
+      glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(., dec) }
       cat(attr(glm_sub,"heading")[2])
       cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
-      cat(paste0("\nChi-statistic: ", glm_sub$Deviance[2] %>% round(3), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
+      cat(paste0("\nChi-statistic: ", round(glm_sub$Deviance[2], dec), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
     }
   }
 }
@@ -383,13 +395,14 @@ predict.glm_reg <- function(object,
                             ...) {
 
   pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
-
   ## used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% object$check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (pred_count == 3) {
     return(cat("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in Excel and use the\npaste feature in Data > Manage to bring it into Radiant"))
   }
+
+  dec <- object$dec
 
   if (pred_count < 2) {
     if (pred_cmd != "")
@@ -474,7 +487,7 @@ predict.glm_reg <- function(object,
       }
 
       isNum <- c("Prediction", "std.error")
-      pred %>% {.[, isNum] <- round(.[, isNum],4); .} %>%
+      pred %>% {.[, isNum] <- round(.[, isNum],dec); .} %>%
         print(row.names = FALSE)
     }
 

@@ -5,6 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars Variables to include in the analysis
 #' @param type Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
+#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list with all variables defined in the function as an object of class compare_means
@@ -23,6 +24,7 @@
 #' @export
 correlation <- function(dataset, vars,
                         type = "pearson",
+                        dec = 2,
                         data_filter = "") {
 
 	## data.matrix as the last step in the chain is about 25% slower using
@@ -66,13 +68,14 @@ summary.correlation_ <- function(object,
 	# cutoff <- 0
 
 	cmat <- sshhr( corr.test(object$dat, method = object$type) )
+	dec <- object$dec
 
-	cr <- format(round(cmat$r,2))
+	cr <- format(round(cmat$r, dec))
   cr[abs(cmat$r) < cutoff] <- ""
 	ltmat <- lower.tri(cr)
   cr[!ltmat] <- ""
 
-	cp <- format(round(cmat$p,2))
+	cp <- format(round(cmat$p, dec))
   cp[abs(cmat$r) < cutoff] <- ""
   cp[!ltmat] <- ""
 
@@ -92,7 +95,7 @@ summary.correlation_ <- function(object,
 
 	if (covar) {
 	  cvmat <- sshhr( cov(object$dat, method = object$type) )
-		cvr <- format(round(cvmat,2))
+		cvr <- format(round(cvmat, dec))
 	  cvr[abs(cmat$r) < cutoff] <- ""
 		ltmat <- lower.tri(cvr)
 	  cvr[!ltmat] <- ""

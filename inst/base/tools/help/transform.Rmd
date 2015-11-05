@@ -90,27 +90,35 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
   sales_rc = ifelse(sales > 400, NA, sales)
 
-9. If you have a date in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
+9. Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add the new `sales_rc` variable.
+
+  income_rc = ifelse(ID == 3, income/1000, income)
+
+10. If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use `Create` and enter:
+
+	income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
+
+11. If you have a date in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
 
   date = parse\_date\_time(x, "%m%d%y")
 
-10. Determine the time difference between two dates/times in seconds
+12. Determine the time difference between two dates/times in seconds
 
 	time\_diff = as\_duration(time2 - time2)
 
-11. Extract the month from a date variable
+13. Extract the month from a date variable
 
 	month = month(date)
 
-12. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
+14. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
 
 	weekday = wday(date, label = TRUE)
 
-13. Calculating the distance between two locations using lat-long information
+15. Calculating the distance between two locations using lat-long information
 
 	trip\_distance = as_distance(lat1, long1, lat2, long2)
 
-Note: For examples 6, 7, and 12 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
+Note: For examples 6, 7, and 14 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
 
 ### Recode
 
@@ -136,7 +144,11 @@ To use the recode feature select the variable you want to change and choose `Rec
 
 	400 = NA
 
-**Note:** Never use a `=` symbol in a label (e.g., 50:hi = '>= 50') as this will cause an error.
+5. To recode specific numeric values (e.g., carat) to a new value (1) select the variable `carat` in the `Select variable(s)` box and enter the command below in the `Recode` box to set the value for carat to 2 in all rows where carat is currently larger than or equal to 2. Press `return` and `Store` to add the recoded variable to the data
+
+	2:hi = 2
+
+**Note:** Never use a `=` symbol in a label when using the recode function (e.g., 50:hi = '>= 50') as this will cause an error.
 
 ### Rename
 
@@ -170,7 +182,7 @@ Choose `Remove missing` from the `Transformation type` drop-down to eliminate ro
 
 ### Remove duplicates
 
-It is common to have one or more variables in a dataset that have only unique values (i.e., no duplicates). Customers id's, for example, should be unique unless the dataset contains multiple orders for the same customer. In that case the combination of customer id **and** order id should be unique. To remove duplicate select one or more variables to determine _uniqueness_. Choose `Remove duplicates` from the `Transformation type` drop-down and check how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change).
+It is common to have one or more variables in a dataset that **should** have only unique values (i.e., no duplicates). Customers id's, for example, should be unique unless the dataset contains multiple orders for the same customer. In that case the combination of customer id **and** order id should be unique. To remove duplicate select one or more variables to determine _uniqueness_. Choose `Remove duplicates` from the `Transformation type` drop-down and check how the summary statistics change. Press `Store` to change the data. If there are duplicate rows you will see the number of observations in the data summary change (i.e., the value of _n_ and _n\_distinct_ will change).
 
 ### Show duplicates
 
