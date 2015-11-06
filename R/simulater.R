@@ -104,7 +104,7 @@ simulater <- function(const = "",
   if (discrete != "") {
     s <- discrete %>% spliter
     for (i in 1:length(s)) {
-      par <- s[[i]][-1] %>% as.numeric %>% matrix(nrow = 2)
+      par <- s[[i]][-1] %>% as.numeric %>% matrix(ncol = 2)
       if (sum(par[,2]) != 1) message("Probabilities for discrete variable do not sum to 1!")
       dat[[s[[i]][1]]] <- sample(par[,1], nr, replace = TRUE, prob = par[,2])
 
@@ -213,7 +213,7 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
     }
 
     plot_list[[i]] <-
-      visualize(select_(object, .dots = i), xvar = i, bins = 10, custom = TRUE)
+      visualize(select_(object, .dots = i), xvar = i, bins = 20, custom = TRUE)
   }
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
@@ -359,13 +359,17 @@ plot.repeater <- function(x,
     for (i in names(expl$pfun)) {
 
       dat <- expl$tab %>% filter_(paste0("variable == \"", l,"\"")) %>% select_(i)
-      bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
+
+      plot_list[[paste0(l,"_",i)]] <-
+        visualize(select_(dat, .dots = i), xvar = i, bins = 20, custom = TRUE) +
+        xlab(paste0(i," (",l,")"))
 
       ## plot results
-      plot_list[[paste0(l,"_",i)]] <- ggplot(dat, aes_string(x = i)) +
-        geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
-        geom_density(adjust = 1.5, color = "blue") +
-        xlab(paste0(i," (",l,")"))
+      # bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
+      # plot_list[[paste0(l,"_",i)]] <- ggplot(dat, aes_string(x = i)) +
+      #   geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
+      #   geom_density(adjust = 1.5, color = "blue") +
+      #   xlab(paste0(i," (",l,")"))
     }
   }
 
