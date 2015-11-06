@@ -99,13 +99,18 @@ simulater <- function(const = "",
   }
 
   ## parsing discrete
+  # discrete = "price 6 .30 8 .70"
   discrete %<>% cleaner
   if (discrete != "") {
     s <- discrete %>% spliter
     for (i in 1:length(s)) {
       par <- s[[i]][-1] %>% as.numeric %>% matrix(nrow = 2)
-      if (sum(par[2,]) != 1) message("Probabilities for discrete variable do not sum to 1!")
-      dat[[s[[i]][1]]] <- sample(par[1,], nr, replace = TRUE, prob = par[2,])
+      if (sum(par[,2]) != 1) message("Probabilities for discrete variable do not sum to 1!")
+      dat[[s[[i]][1]]] <- sample(par[,1], nr, replace = TRUE, prob = par[,2])
+
+      # par <- s[[i]][-1] %>% as.numeric %>% matrix(nrow = 2)
+      # if (sum(par[2,]) != 1) message("Probabilities for discrete variable do not sum to 1!")
+      # dat[[s[[i]][1]]] <- sample(par[1,], nr, replace = TRUE, prob = par[2,])
     }
   }
 
@@ -144,9 +149,9 @@ simulater <- function(const = "",
       return(ret)
     }
 
-    mess <- paste0("\n### Simulated data\n\nFormula: ", form, "\n\nOn: ",
+    mess <- paste0("\n### Simulated data\n\nFormula:\n\n",
+                   gsub("*","\\*",form, fixed = TRUE) %>% gsub(";","\n\n", .), "\n\nOn: ",
                    lubridate::now())
-
     env$r_data[[name]] <- ret$dat
     env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
     env$r_data[[paste0(name,"_descr")]] <- mess
@@ -201,19 +206,14 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
     dat <- select_(object, .dots = i)
     if (sd(object[[i]]) == 0) {
       ## plot constants - keep??
-      dat$sim <- 1:nrow(dat)
-      plot_list[[i]] <- ggplot(dat, aes_string(x = "sim", y = i)) +
-        geom_line(color = "blue")
+      # dat$sim <- 1:nrow(dat)
+      # plot_list[[i]] <- ggplot(dat, aes_string(x = "sim", y = i)) +
+      #   geom_line(color = "blue")
       next
     }
 
-    bw <- diff(range(dat[[1]], na.rm = TRUE)) / 20
-
-    ## plot results
     plot_list[[i]] <-
-      ggplot(dat, aes_string(x = i)) +
-      geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
-      geom_density(adjust = 1.5, color = "blue")
+      visualize(select_(object, .dots = i), xvar = i, bins = 10, custom = TRUE)
   }
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%

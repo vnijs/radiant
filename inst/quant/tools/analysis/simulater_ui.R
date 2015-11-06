@@ -64,7 +64,7 @@ textinput_maker <- function(id = "const", lab = "Constant") {
   id <- paste0("sim_", id)
 
   tagList(
-    tags$label(lab, `for` = id), br(),
+    # tags$label(lab, `for` = id), br(),
     tags$textarea(state_init(id), id = id, type = "text", rows="2",
                   class = "form-control")
   )
@@ -128,25 +128,124 @@ output$ui_rep_fun <- renderUI({
     )
 })
 
+var_updater <- function(variable, var_str, var_inputs) {
+  if (is.null(variable) || variable == 0) return()
+  inp <- paste(var_inputs, collapse = " ")
+
+  if (is_empty(input[[var_str]]))
+    val <- paste0(inp, ";")
+  else
+    val <- paste0(inp, ";\n", input[[var_str]])
+
+  updateTextInput(session = session, var_str, value = val)
+}
+
+var_remover <- function(variable) {
+  input[[variable]] %>% strsplit("\n") %>% unlist %>% .[-1] %>% paste0(collapse = "\n") %>%
+    updateTextInput(session = session, variable, value = .)
+}
+
+observeEvent(input$sim_const_add, {
+  isolate({
+    var_updater(input$sim_const_add, "sim_const", c(input$sim_const_name, input$sim_const_nr))
+  })
+})
+
+observeEvent(input$sim_unif_add, {
+  isolate({
+    var_updater(input$sim_unif_add, "sim_unif", c(input$sim_unif_name, input$sim_unif_min, input$sim_unif_max))
+  })
+})
+
+observeEvent(input$sim_norm_add, {
+  isolate({
+    var_updater(input$sim_norm_add, "sim_norm", c(input$sim_norm_name, input$sim_norm_mean, input$sim_norm_sd))
+  })
+})
+
+observeEvent(input$sim_discrete_add, {
+  isolate({
+    var_updater(input$sim_discrete_add, "sim_discrete",
+                c(input$sim_discrete_name, input$sim_discrete_val, input$sim_discrete_prob))
+  })
+})
+
+observeEvent(input$sim_const_del, {
+  isolate(var_remover("sim_const"))
+})
+
+observeEvent(input$sim_unif_del, {
+  isolate(var_remover("sim_const"))
+})
+
+observeEvent(input$sim_norm_del, {
+  isolate(var_remover("sim_norm"))
+})
+
+observeEvent(input$sim_discrete_del, {
+  isolate(var_remover("sim_discrete"))
+})
+
+
 output$ui_simulater <- renderUI({
   tagList(
     conditionalPanel(condition = "input.tabs_simulate == 'Model'",
       wellPanel(
-        uiOutput("ui_sim_types"),
+        uiOutput("ui_sim_types")
+      ),
         ## Using && to check that input.glm_sum_check is not null (must be &&)
         conditionalPanel("input.sim_types && input.sim_types.indexOf('const') >= 0",
-          textinput_maker("const","Constant")
+          wellPanel(
+            HTML("<label>Constant variables: <i id='sim_const_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                  <i id='sim_const_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+            with(tags, table(
+                td(textInput("sim_const_name", "Name:", value = state_init("sim_const_name", ""))),
+                td(numericInput("sim_const_nr", "Value:", value = state_init("sim_const_nr")))
+              )
+            ),
+            textinput_maker("const","Constant")
+          )
         ),
         conditionalPanel("input.sim_types && input.sim_types.indexOf('unif') >= 0",
-          textinput_maker("unif","Uniform")
+          wellPanel(
+            HTML("<label>Uniform variables: <i id='sim_unif_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                  <i id='sim_unif_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+            with(tags, table(
+                td(textInput("sim_unif_name", "Name:", value = state_init("sim_unif_name", ""))),
+                td(numericInput("sim_unif_min", "Min:", value = state_init("sim_unif_min"))),
+                td(numericInput("sim_unif_max", "Max:", value = state_init("sim_unif_max")))
+              )
+            ),
+            textinput_maker("unif","Uniform")
+          )
         ),
         conditionalPanel("input.sim_types && input.sim_types.indexOf('norm') >= 0",
-          textinput_maker("norm","Normal")
+          wellPanel(
+            HTML("<label>Normal variables: <i id='sim_norm_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                  <i id='sim_norm_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+            with(tags, table(
+                td(textInput("sim_norm_name", "Name:", value = state_init("sim_norm_name", ""))),
+                td(numericInput("sim_norm_mean", "Mean:", value = state_init("sim_norm_mean"))),
+                td(numericInput("sim_norm_sd", "St.dev.:", value = state_init("sim_norm_sd")))
+              )
+            ),
+            textinput_maker("norm","Normal")
+          )
         ),
         conditionalPanel("input.sim_types && input.sim_types.indexOf('discrete') >= 0",
-          textinput_maker("discrete","Discrete")
+          wellPanel(
+            HTML("<label>Discrete variables: <i id='sim_discrete_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                  <i id='sim_discrete_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+            with(tags, table(
+                td(textInput("sim_discrete_name", "Name:", value = state_init("sim_discrete_name", ""))),
+                td(textInput("sim_discrete_val", "Values:", value = state_init("sim_discrete_val"))),
+                td(textInput("sim_discrete_prob", "Prob.:", value = state_init("sim_discrete_prob")))
+              )
+            ),
+            textinput_maker("discrete","Discrete")
+          )
         ),
-        textinput_maker("form","Formula"),
+      wellPanel(
         with(tags, table(
           td(textInput("sim_seed", "Set random seed:",
                        value = state_init('sim_seed', 1234))),
@@ -203,7 +302,11 @@ output$simulater <- renderUI({
     sim_output_panels <- tabsetPanel(
       id = "tabs_simulate",
       tabPanel("Model",
+        HTML("<label>Simulation formulas:</label>"),
+        textinput_maker("form","Formula"),
+        HTML("<label>Simulation summary:</label>"),
         verbatimTextOutput("summary_simulate"),
+        HTML("<label>Simulation plots:</label>"),
         plotOutput("plot_simulate", height = "100%")
       ),
       tabPanel("Repeat",
@@ -244,8 +347,6 @@ sim_plot_height <- function()
   })
 })
 
-
-
 .summary_repeat <- reactive({
   object <- .repeater()
   if (is.null(object)) return(invisible())
@@ -265,7 +366,6 @@ rep_plot_height <- function() {
   if (is.null(object)) return(invisible())
 
   # do.call(summary, c(list(object = object), rep_sum_inputs()))
-
   rep_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
     { do.call(plot, c(list(x = object), .)) }
   # .repeater() %>% { if (is.null(.)) invisible() else plot(., shiny = TRUE) }
@@ -273,8 +373,6 @@ rep_plot_height <- function() {
 
 report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
 
-# observe({
-# if (not_pressed(input$simulater_report)) return()
 observeEvent(input$simulater_report, {
   isolate({
     update_report(inp_main = clean_args(sim_inputs(), sim_args) %>% lapply(report_cleaner),
