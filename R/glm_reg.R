@@ -551,11 +551,13 @@ plot.glm_predict <- function(x,
   object$ymax <- object$Prediction + qnorm(.5 + conf_lev/2)*object$std.error
 
   if (color == 'none') {
-    p <- ggplot(object, aes_string(x=xvar, y="Prediction")) +
-           geom_line(aes(group=1))
+    p <- ggplot(object, aes_string(x = xvar, y = "Prediction")) + geom_line()
+           # geom_line(aes(group=1))
   } else {
-    p <- ggplot(object, aes_string(x=xvar, y="Prediction", color=color)) +
-                geom_line(aes_string(group=color))
+    # p <- ggplot(object, aes_string(x = xvar, y = "Prediction", color = color)) +
+    p <- ggplot(object, aes_string(x = xvar, y = "Prediction", color = color, group = color)) +
+                geom_line()
+                # geom_line(aes_string(group=color))
   }
 
   facets <- paste(facet_row, '~', facet_col)

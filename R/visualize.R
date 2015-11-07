@@ -225,11 +225,12 @@ visualize <- function(dataset, xvar,
         } else {
           if (is.factor(dat[[i]])) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
-            print(tbv)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(funs(mean))
-            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color)) + geom_point() + geom_line(aes(group = 1))
+            # plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color)) + geom_point() + geom_line(aes(group = 1))
+            plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_point() + geom_line()
           } else {
-            plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
+            # plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
+            plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color, group = color)) + geom_line()
           }
         }
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
