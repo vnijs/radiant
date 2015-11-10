@@ -4,8 +4,8 @@
 \alias{plot.repeater}
 \title{Plot repeated simulation}
 \usage{
-\method{plot}{repeater}(x, sum_vars = "", byvar = "sim", fun = c("sum_rm",
-  "mean_rm", "sd_rm"), shiny = FALSE, ...)
+\method{plot}{repeater}(x, sum_vars = "", byvar = "sim", fun = "sum_rm",
+  form = "", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{repeater}}}
@@ -15,6 +15,8 @@
 \item{byvar}{Variable(s) to group data by before summarizing}
 
 \item{fun}{Functions to use for summarizing}
+
+\item{form}{A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 

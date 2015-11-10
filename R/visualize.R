@@ -139,6 +139,10 @@ visualize <- function(dataset, xvar,
 
   if (type == "hist") {
     for (i in xvar) {
+
+      ## can't create a histogram for a logical
+      if ("logical" %in% class(dat[[i]])) dat[[i]] <- as_factor(dat[[i]])
+
       hist_par <- list(alpha = alpha, position = "dodge")
       plot_list[[i]] <- ggplot(dat, aes_string(x=i))
       if ("density" %in% axes) {

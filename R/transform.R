@@ -409,8 +409,8 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
   if (sum(isLogic) > 0) {
     cat("Summarize logical variables:\n")
-    select(dat, which(isLogic)) %>% summarise_each(funs(sum)) %>%
-      as.data.frame %>% set_rownames("# True") %>% print
+    select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% matrix(ncol = 2) %>%
+      set_colnames(c("# TRUE", "% TRUE")) %>% set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
   }
 }

@@ -4,8 +4,8 @@
 \alias{simulater}
 \title{Simulate data for decision analysis}
 \usage{
-simulater(const = "", norm = "", unif = "", discrete = "", form = "",
-  seed = "", name = "", nr = 1000, dat = NULL)
+simulater(const = "", norm = "", unif = "", discrete = "", binom = "",
+  form = "", seed = "", name = "", nr = 1000, dat = NULL)
 }
 \arguments{
 \item{const}{A string listing the constants to include in the analysis (e.g., "cost = 3; size = 4")}
@@ -15,6 +15,8 @@ simulater(const = "", norm = "", unif = "", discrete = "", form = "",
 \item{unif}{A string listing the uniformly distributed random variables to include in the analysis (e.g., "demand 0 1" where the first number is the minimum value and the second is the maximum value)}
 
 \item{discrete}{A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability}
+
+\item{binom}{A string listing the random variables with a binomail distribution to include in the analysis (e.g., "crash 100 .01") where the first number is the number of trials and the second is the probability of success)}
 
 \item{form}{A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")}
 

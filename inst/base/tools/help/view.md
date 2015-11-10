@@ -26,45 +26,59 @@ You can also use string matching to select rows. For example, type `grepl("ood",
 
 It is important to note that these filters are _persistent_. A filter entered in one of the Data-tabs will also be applied to other tabs and to any analysis conducted through the Radiant menus. To deactivate a  filter uncheck the `Filter` check-box. To remove a filter simply erase it.
 
-<table class='table table-condensed table-hover' style='width:30%;'>
+<table class='table table-condensed table-hover' style='width:60%;'>
  <thead>
   <tr>
    <th style="text-align:left;"> Operator </th>
    <th style="text-align:left;"> Description </th>
+   <th style="text-align:left;"> Example </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> &lt; </td>
+   <td style="text-align:left;"> `<` </td>
    <td style="text-align:left;"> less than </td>
+   <td style="text-align:left;"> `price < 5000` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> &lt;= </td>
+   <td style="text-align:left;"> `<=` </td>
    <td style="text-align:left;"> less than or equal to </td>
+   <td style="text-align:left;"> `carat <= 2` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> &gt; </td>
+   <td style="text-align:left;"> `>` </td>
    <td style="text-align:left;"> greater than </td>
+   <td style="text-align:left;"> `price > 1000` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> &gt;= </td>
+   <td style="text-align:left;"> `>=` </td>
    <td style="text-align:left;"> greater than or equal to </td>
+   <td style="text-align:left;"> `carat >= 2` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> == </td>
+   <td style="text-align:left;"> `==` </td>
    <td style="text-align:left;"> exactly equal to </td>
+   <td style="text-align:left;"> `cut == 'Fair'` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> != </td>
+   <td style="text-align:left;"> `!=` </td>
    <td style="text-align:left;"> not equal to </td>
+   <td style="text-align:left;"> `cut != 'Fair'` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> x | y </td>
+   <td style="text-align:left;"> `|` </td>
    <td style="text-align:left;"> x OR y </td>
+   <td style="text-align:left;"> `price > 10000 | cut == 'Premium'` </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> x &amp; y </td>
+   <td style="text-align:left;"> `&` </td>
    <td style="text-align:left;"> x AND y </td>
+   <td style="text-align:left;"> `carat < 2 & cut == 'Fair'` </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> `%in%` </td>
+   <td style="text-align:left;"> x is one of y </td>
+   <td style="text-align:left;"> `cut %in% c('Fair', 'Good')` </td>
   </tr>
 </tbody>
 </table>

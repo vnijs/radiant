@@ -2,8 +2,9 @@
 ## Simulate data
 #######################################
 
-sim_types <- list("Constant" = "const", "Normal" = "norm", "Uniform" = "unif",
-                  "Discrete" = "discrete")
+sim_types <- list("Constant" = "const", "Binomial" = "binom",
+                  "Discrete" = "discrete", "Normal" = "norm",
+                  "Uniform" = "unif")
 
 sim_args <- as.list(formals(simulater))
 
@@ -58,14 +59,14 @@ rep_plot_inputs <- reactive({
   rep_plot_args
 })
 
-textinput_maker <- function(id = "const", lab = "Constant") {
+textinput_maker <- function(id = "const", lab = "Constant", rows = "2", pre = "sim_") {
 
-  lab <- paste0(lab, if (id == "form") ":" else " variables:")
-  id <- paste0("sim_", id)
+  # lab <- paste0(lab, if (id == "form") ":" else " variables:")
+  id <- paste0(pre, id)
 
   tagList(
     # tags$label(lab, `for` = id), br(),
-    tags$textarea(state_init(id), id = id, type = "text", rows="2",
+    tags$textarea(state_init(id), id = id, type = "text", rows = rows,
                   class = "form-control")
   )
 }
@@ -80,16 +81,24 @@ output$ui_sim_types <- renderUI({
 })
 
 sim_vars <- reactive({
-  .simulater() %>% { if (is.null(.)) character(0) else colnames(.$dat) }
+  .simulater() %>% { if (is.null(.)) character(0) else colnames(getdata(.)$dat) }
 })
 
 output$ui_rep_vars <- renderUI({
   # vars <- .simulater() %>% { if (is.null(.)) character(0) else colnames(.$dat) }
   vars <- sim_vars()
+
+  ## if possible, keep current indep value when depvar changes
+  ## after storing residuals or predictions
+  isolate({
+    init <- input$rep_vars %>%
+      {if (!is_empty(.) && . %in% vars) . else character(0)}
+  })
+
   # if (is.null(vars)) return()
   selectizeInput("rep_vars", label = "Select variables:",
     choices = vars, multiple = TRUE,
-    selected = state_multiple("rep_vars", vars),
+    selected = state_multiple("rep_vars", vars, init),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button', 'drag_drop'))
     )
@@ -97,9 +106,15 @@ output$ui_rep_vars <- renderUI({
 
 output$ui_rep_sum_vars <- renderUI({
   vars <- sim_vars()
+
+  isolate({
+    init <- input$rep_sum_vars %>%
+      {if (!is_empty(.) && . %in% vars) . else character(0)}
+  })
+
   selectizeInput("rep_sum_vars", label = "Output variables:",
     choices = vars, multiple = TRUE,
-    selected = state_multiple("rep_sum_vars", vars),
+    selected = state_multiple("rep_sum_vars", vars, init),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button', 'drag_drop'))
     )
@@ -116,16 +131,24 @@ output$ui_rep_byvar <- renderUI({
 })
 
 output$ui_rep_fun <- renderUI({
-  sel <- if (is_empty(input$rep_fun)) state_multiple("rep_fun", r_functions, c("sum_rm","mean_rm"))
+  # choices <- c("sum_rm","mean_rm","median_rm", "min_rm","max_rm")
+  # choices <- r_functions[c("sum","mean","median","min","max")]
+  # choices <- c("sum","mean","median","min","max")]
+
+choices <-
+  list("sum" = "sum_rm", "mean" = "mean_rm", "median" = "median_rm", "min" = "min_rm", "max" = "max_rm")
+  # sel <- if (is_empty(input$rep_fun)) state_multiple("rep_fun", r_functions, "sum_rm"))
+  sel <- if (is_empty(input$rep_fun)) state_single("rep_fun", choices, "sum_rm")
          else input$rep_fun
 
-  selectizeInput("rep_fun", label = "Apply function(s):",
-                 choices = r_functions,
-                 selected = sel,
-                 multiple = TRUE,
-                 options = list(placeholder = 'Select functions',
-                                plugins = list('remove_button', 'drag_drop'))
-    )
+  # selectizeInput("rep_fun", label = "Apply function(s):",
+  selectInput("rep_fun", label = "Apply function(s):",
+              choices = choices,
+              selected = sel,
+              multiple = FALSE)
+                 # options = list(placeholder = 'Select functions',
+                                # plugins = list('remove_button', 'drag_drop'))
+    # )
 })
 
 var_updater <- function(variable, var_str, var_inputs) {
@@ -170,6 +193,13 @@ observeEvent(input$sim_discrete_add, {
   })
 })
 
+observeEvent(input$sim_binom_add, {
+  isolate({
+    var_updater(input$sim_binom_add, "sim_binom",
+                c(input$sim_binom_name, input$sim_binom_n, input$sim_binom_p))
+  })
+})
+
 observeEvent(input$sim_const_del, {
   isolate(var_remover("sim_const"))
 })
@@ -186,6 +216,9 @@ observeEvent(input$sim_discrete_del, {
   isolate(var_remover("sim_discrete"))
 })
 
+observeEvent(input$sim_binom_del, {
+  isolate(var_remover("sim_binom"))
+})
 
 output$ui_simulater <- renderUI({
   tagList(
@@ -204,6 +237,19 @@ output$ui_simulater <- renderUI({
               )
             ),
             textinput_maker("const","Constant")
+          )
+        ),
+        conditionalPanel("input.sim_types && input.sim_types.indexOf('binom') >= 0",
+          wellPanel(
+            HTML("<label>Binomial variables: <i id='sim_binom_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                  <i id='sim_binom_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+            with(tags, table(
+                td(textInput("sim_binom_name", "Name:", value = state_init("sim_binom_name", ""))),
+                td(numericInput("sim_binom_n", "n:", value = state_init("sim_binom_n"))),
+                td(numericInput("sim_binom_p", "p:", value = state_init("sim_binom_p")))
+              )
+            ),
+            textinput_maker("binom","Binomial")
           )
         ),
         conditionalPanel("input.sim_types && input.sim_types.indexOf('unif') >= 0",
@@ -248,12 +294,12 @@ output$ui_simulater <- renderUI({
       wellPanel(
         with(tags, table(
           td(textInput("sim_seed", "Set random seed:",
-                       value = state_init('sim_seed', 1234))),
-          td(numericInput("sim_nr", "# runs:", min = 1, max = 10^6,
+                       value = state_init('sim_seed'))),
+          td(numericInput("sim_nr", "# sims:", min = 1, max = 10^6,
                           value = state_init('sim_nr', 1000)))
         )),
         with(tags, table(
-          td(textInput("sim_name", "Sim name:", state_init("sim_name", "simdat"))),
+          td(textInput("sim_name", "Simulated data:", state_init("sim_name", "simdat"))),
           td(actionButton("runSim", "Simulate"), style="padding-top:30px;")
         ))
       ),
@@ -263,20 +309,20 @@ output$ui_simulater <- renderUI({
     conditionalPanel(condition = "input.tabs_simulate == 'Repeat'",
       wellPanel(
         uiOutput("ui_rep_vars"),
-        textInput("rep_grid", "Grid search", value = state_init("rep_grid", "")),
+        textInput("rep_grid", "Grid search:", value = state_init("rep_grid", "")),
         uiOutput("ui_rep_sum_vars"),
         uiOutput("ui_rep_byvar"),
         uiOutput("ui_rep_fun"),
         with(tags, table(
           td(textInput("rep_seed", "Set random seed:",
-                       value = state_init('rep_seed', 1234))),
+                       value = state_init('rep_seed'))),
           td(numericInput("rep_nr", "# runs:", min = 1, max = 10^6,
                           value = state_init('rep_nr', 12)))
           )
         ),
         with(tags, table(
-          td(textInput("rep_name", "Repeat sim name:", state_init("rep_name", "simdat_repeat"))),
-          td(actionButton("runRepeat", "Simulate"), style="padding-top:30px;")
+          td(textInput("rep_name", "Repeat data:", state_init("rep_name", "simdat_repeat"))),
+          td(actionButton("runRepeat", "Repeat"), style="padding-top:30px;")
         ))
       ),
       help_and_report(modal_title = "Repeat simulation", fun_name = "repeater",
@@ -303,14 +349,19 @@ output$simulater <- renderUI({
       id = "tabs_simulate",
       tabPanel("Model",
         HTML("<label>Simulation formulas:</label>"),
-        textinput_maker("form","Formula"),
+        textinput_maker("form","Formula", rows = "5"),
         HTML("<label>Simulation summary:</label>"),
         verbatimTextOutput("summary_simulate"),
         HTML("<label>Simulation plots:</label>"),
         plotOutput("plot_simulate", height = "100%")
       ),
       tabPanel("Repeat",
+
+        HTML("<label>Repeated simulation formulas:</label>"),
+        textinput_maker("form","Rformula", rows = "3", pre = "rep_"),
+        HTML("<label>Repeated simulation summary:</label>"),
         verbatimTextOutput("summary_repeat"),
+        HTML("<label>Repeated simulation plots:</label>"),
         plotOutput("plot_repeat", height = "100%")
       )
     )
@@ -333,8 +384,24 @@ output$simulater <- renderUI({
 })
 
 sim_plot_width <- function() 650
-sim_plot_height <- function()
-  .simulater() %>% { if (is.list(.)) ceiling(ncol(.$dat)/2) * 200 else 200 }
+sim_plot_height <- function() {
+  sim <- .simulater()
+  if (is.character(sim)) {
+    if (sim[1] == "error") return(200)
+    sim <- getdata(sim)$dat
+    if (dim(sim)[1] == 0) {
+      200
+    } else {
+      ceiling(sum(sapply(sim, does_vary)) / 2) * 200
+      # 200
+    }
+  } else {
+    200
+  }
+  # { if (is.character(.)) ceiling(ncol(getdata(.)$dat)/2) * 200 else 200 }
+}
+
+  # .simulater() %>% { if (is.list(.)) ceiling(ncol(getdata(.)$dat)/2) * 200 else 200 }
 
 .plot_simulate <- reactive({
   .simulater() %>% { if (is.null(.)) invisible() else plot(., shiny = TRUE) }
@@ -347,28 +414,31 @@ sim_plot_height <- function()
   })
 })
 
-.summary_repeat <- reactive({
+.summary_repeat <- eventReactive(input$runRepeat, {
   object <- .repeater()
   if (is.null(object)) return(invisible())
 
   do.call(summary, c(list(object = object), rep_sum_inputs()))
 })
 
+rep_plot <- eventReactive(input$runRepeat, {
+  # isolate({
+    nrPlots <- length(input$rep_fun) * length(input$rep_sum_vars) + length(strsplit(input$rep_form,"\n") %>% unlist)
+    # nr <<- if (nrPlots == 0) 200 else ceiling(nrPlots/2) * 200
+    if (nrPlots == 0) 300 else ceiling(nrPlots/2) * 300
+  # })
+})
+
 rep_plot_width <- function() 650
 rep_plot_height <- function() {
-  nrPlots <- length(input$rep_fun) * length(input$rep_sum_vars)
-  if (nrPlots == 0) 200 else ceiling(nrPlots/2) * 200
+  rep_plot()
 }
 
-.plot_repeat <- reactive({
-
-  object <- .repeater()
-  if (is.null(object)) return(invisible())
-
-  # do.call(summary, c(list(object = object), rep_sum_inputs()))
-  rep_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
-    { do.call(plot, c(list(x = object), .)) }
-  # .repeater() %>% { if (is.null(.)) invisible() else plot(., shiny = TRUE) }
+.plot_repeat <- eventReactive(input$runRepeat, {
+    object <- .repeater()
+    if (is.null(object)) return(invisible())
+    rep_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
+      { do.call(plot, c(list(x = object), .)) }
 })
 
 report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
@@ -379,18 +449,22 @@ observeEvent(input$simulater_report, {
                   fun_name = "simulater", inp_out = list("",""),
                   outputs = c("summary","plot"), figs = TRUE,
                   fig.width = round(7 * sim_plot_width()/650,2),
-                  fig.height = round(7 * sim_plot_height()/400,2))
+                  fig.height = round(7 * (sim_plot_height()/650),2))
   })
 })
-
 
 observeEvent(input$repeater_report, {
   isolate({
+
+    outputs <- c("summary", "plot")
+    inp_out <- list("","")
+    inp_out[[1]] <- clean_args(rep_sum_inputs(), rep_sum_args[-1])
+    inp_out[[2]] <- clean_args(rep_plot_inputs(), rep_plot_args[-1])
+
     update_report(inp_main = clean_args(rep_inputs(), rep_args) %>% lapply(report_cleaner),
-                  fun_name = "repeater", inp_out = list("",""),
-                  outputs = c("summary","plot"), figs = TRUE,
+                  fun_name = "repeater", inp_out = inp_out,
+                  outputs = outputs, figs = TRUE,
                   fig.width = round(7 * rep_plot_width()/650,2),
-                  fig.height = round(7 * rep_plot_height()/400,2))
+                  fig.height = round(7 * (rep_plot_height()/650),2))
   })
 })
-
