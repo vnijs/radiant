@@ -54,11 +54,15 @@ regression <- function(dataset, dep_var, indep_var,
   reg_coeff[,c(2:5)] %<>% round(dec)
 
   ## print -0 when needed
-  cz <- reg_coeff[[2]] == 0
-  if (length(cz) > 0 && sum(cz) > 0) {
-    tz <- reg_coeff[[4]] < 0
-    reg_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
-    reg_coeff[[2]][tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
+  if (!"standardize" %in% check) {
+    cz <- reg_coeff[[2]] == 0
+    if (length(cz) > 0 && sum(cz) > 0) {
+      tz <- reg_coeff[[4]] < 0
+      ## added to 0.000 isn't rounded to 0
+      reg_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
+      ## print -0 when needed
+      reg_coeff[[2]][cz & tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
+    }
   }
 
   reg_coeff$p.value[reg_coeff$p.value < .001] <- "< .001"
