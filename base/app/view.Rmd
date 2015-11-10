@@ -27,10 +27,13 @@ You can also use string matching to select rows. For example, type `grepl("ood",
 It is important to note that these filters are _persistent_. A filter entered in one of the Data-tabs will also be applied to other tabs and to any analysis conducted through the Radiant menus. To deactivate a  filter uncheck the `Filter` check-box. To remove a filter simply erase it.
 
 ```{r results = 'asis', echo = FALSE}
-tab_small <- "class='table table-condensed table-hover' style='width:30%;'"
-data.frame("Operator" = c("<","<=",">",">=","==","!=","x | y","x & y"),
-  "Description" = c("less than", "less than or equal to", "greater than", "greater than or equal to", "exactly equal to", "not equal to", "x OR y", "x AND y")) %>%
-knitr::kable(align = 'l', format = 'html', table.attr = tab_small)
+tab_large <- "class='table table-condensed table-hover' style='width:60%;'"
+data.frame(
+  "Operator" = c("`<`","`<=`","`>`","`>=`","`==`","`!=`","`|`","`&`", "`%in%`"),
+  "Description" = c("less than", "less than or equal to", "greater than", "greater than or equal to", "exactly equal to", "not equal to", "x OR y", "x AND y", "x is one of y"),
+  "Example" = c("`price < 5000`", "`carat <= 2`", "`price > 1000`", "`carat >= 2`", "`cut == 'Fair'`", "`cut != 'Fair'`", "`price > 10000 | cut == 'Premium'`", "`carat < 2 & cut == 'Fair'`", "`cut %in% c('Fair', 'Good')`")
+  ) %>%
+knitr::kable(align = 'l', format = 'html', escape = FALSE, table.attr = tab_large)
 ```
 
 ### Column filters and Search

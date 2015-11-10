@@ -240,23 +240,44 @@ img {
 
 <hr />
 <blockquote>
-<p>Simulate data for decision analysis</p>
+<p>Simulation for decision analysis</p>
 </blockquote>
-<p>Select the types of variables to use in the analysis from the <code>Select types</code> dropdown.</p>
-<p>List the constants to include in the analysis in the <code>Constant variables</code> text area (e.g., “cost 3”). If there are multiple variables to include simply press <code>return</code> on your keyboard and write out the information for the next variable. You can also separate constants using a <code>;</code>.</p>
-<p>List the uniformly distributed random variables to include in the analysis in the <code>Uniform variables</code> text area (e.g., “demand 1000 2000”). Note that the first number is the <strong>minimum</strong> and the second is the <strong>maximum</strong> value.</p>
-<p>As for constant variables, if there are multiple uniformly distributed variables to include simply press <code>return</code> (or use <code>;</code>) and write out the information for the next variable.</p>
-<p>List the normally distributed random variables in the <code>Normal variables</code> text area (e.g., “demand 2000 1000”). Note that the first number is the <strong>mean</strong> and the second the <strong>standard deviation</strong>.</p>
-<p>List the random variables with a discrete distribution in the <code>Discrete variables</code> text area (e.g., “price 5 .3 8 .7)” where <strong>for each pair of numbers the first is the value and the second the probability</strong>). Note that the probabilities should sum to 1.</p>
-<p>To perform a calculation using the variables specified in the various text input boxes create a formula in the <code>Formula</code> input box (e.g., “profit = demand * (price - cost)”). Note that you can enter multiple formulas. If, for example, you would also like to calculate the margin for each simulation press <code>return</code> (or use <code>;</code>) after the first formula and type “margin = price - cost”.</p>
-<p>The value shown in the <code># runs</code> input determines the number of simulation runs that will be used. To repeat a simulation with the same randomly generated values enter a number into <code>Random seed</code> input.</p>
-<p>To save the simulated data for further analysis in Radiant specify a name in the <code>Sim name</code> input box. You can then investigate the simulated data by choosing the specified name from the <code>Datasets</code> dropdown in any of the other Data tabs.</p>
-<p>When all desired inputs have been specified press the <code>Simulate</code> button to generate output.</p>
-<p>In the screen shot shown below <code>var_cost</code> and <code>fixed_cost</code> are specified as constants. <code>demand</code> is a normally distributed with a mean of 1000 and a standard deviation of 100. <code>price</code> is a discrete random variable that is set to $5 (30% probability) or $8 (70% probability). There are two formulas. The first updates the demand variable and specifies how demand levels change as a function of price. The second formula specifies the profit function.</p>
+<p>Start by selecting the types of variables to use in the analysis from the <code>Select types</code> dropdown. Available types include Constant, Binomial, Discrete, Normal, and Uniform.</p>
+<div id="constant" class="section level3">
+<h3>Constant</h3>
+<p>List the constants to include in the analysis in the <code>Constant variables</code> input. You can either enter names and values directly into the text area (e.g., “cost 3”) or enter a name (“cost”) and a value (5) in the <code>Name</code> and <code>Value</code> input respectively and then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Press the <i title='Remove variable' href='#' class='fa fa-plus-circle'></i> icon to remove a variable. Note that only variables listed in the (larger) text-input boxes will be included in the simulation.</p>
+</div>
+<div id="binomial" class="section level3">
+<h3>Binomial</h3>
+<p>Add random variables with a binomial distribution using the <code>Binomial variables</code> inputs. Start by specifying a <code>Name</code> (“crash”), the number of trials (n) (e.g., 20) and the probability (p) of a “success” (.01). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., crash 20 .01).</p>
+</div>
+<div id="discrete" class="section level3">
+<h3>Discrete</h3>
+<p>Define random variables with a discrete distribution using the <code>Discrete variables</code> inputs. Start by specifying a <code>Name</code> (“price”), the values (6 8), and their associated probabilities (.3 .7). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., price 6 8 .3 .7). Note that the probabilities must sum to 1. If not, a message will be displayed and the simulation cannot be run.</p>
+</div>
+<div id="normal" class="section level3">
+<h3>Normal</h3>
+<p>To include normally distributed random variables in the analysis select <code>Normal</code> from the <code>Select types</code> dropdown and use <code>Normal variables</code> inputs. For example, enter a <code>Name</code> (“demand”), the <code>Mean</code> (1000) and the standard deviation (<code>St.dev.</code>, 100). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., “demand 1000 2000”).</p>
+</div>
+<div id="uniform" class="section level3">
+<h3>Uniform</h3>
+<p>To include uniformly distributed random variables in the analysis select <code>Uniform</code> from the <code>Select types</code> dropdown. Provide parameters in the <code>Uniform variables</code> inputs. For example, enter a <code>Name</code> (“cost”), the <code>Min</code> (10) and the <code>Max</code> (15). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., “cost 10 15”).</p>
+</div>
+<div id="formula" class="section level3">
+<h3>Formula</h3>
+<p>To perform a calculation using the generated variables create a formula in the <code>Formula</code> input box in the main panel (e.g., “profit = demand * (price - cost)”). Note that you can enter multiple formulas. If, for example, you would also like to calculate the margin in each simulation press <code>return</code> (or use <code>;</code>) after the first formula and type “margin = price - cost”.</p>
+</div>
+<div id="running-the-simulation" class="section level3">
+<h3>Running the simulation</h3>
+<p>The value shown in the <code># sims</code> input determines the number of simulation <em>draws</em>. To rerun a simulation with the same randomly generated values, specify a number in the <code>Set random seed</code> input (e.g., 1234).</p>
+<p>To save the simulated data for further analysis specify a name in the <code>Simulated data</code> input box. You can then investigate the simulated data by choosing the data with the specified name from the <code>Datasets</code> dropdown in any of the <em>Data</em> tabs (e.g., <em>Data &gt; View</em>, <em>Data &gt; Visualize</em>, or <em>Data &gt; Explore</em>).</p>
+<p>When all required inputs have been specified press the <code>Simulate</code> button to run the simulation.</p>
+<p>In the screen shot below <code>var_cost</code> and <code>fixed_cost</code> are specified as constants. <code>demand</code> is normally distributed with a mean of 1000 and a standard deviation of 100. <code>price</code> is a discrete random variable that is set to $5 (30% probability) or $8 (70% probability). There are two formulas in the <code>Simulation formulas</code> text-input. The first updates the demand variable to ensure the demand level is a function of price. The second formula specifies the profit function.</p>
 <p><img src="figures_quant/simulater.png" alt="sim output" /></p>
-<p>Because we specified a name in the <code>Sim name</code> box the data are available as <code>sim1</code> within Radiant (see screen shots below). To use the data in Excel go to the Manage tab and save the data to a csv file or use the clipboard feature. For more information see the help file for the Manage tab.</p>
-<p><img src="figures_quant/simulater_view.png" alt="sim output" /> <img src="figures_quant/simulater_viz.png" alt="sim output" /></p>
-<p>The state file for the example above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_state.rda">here</a></p>
+<p>Because we specified a name in the <code>Simulated data</code> box the data are available as <code>simdat</code> within Radiant (see screen shots below). To use the data in Excel click the download icon on the top-right of the screen in the <em>Data &gt; View</em> tab or go to the <em>Data &gt; Manage</em> tab and save the data to a csv file (or use the clipboard feature). For more information see the help file for the <em>Data &gt; Manage</em> tab.</p>
+<p><img src="figures_quant/simulater_view.png" alt="sim output" /></p>
+<p>The state file for the example in the screenshot above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a></p>
+</div>
 
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
