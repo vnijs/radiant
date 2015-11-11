@@ -83,9 +83,16 @@ compare_means <- function(dataset, var1, var2,
   	x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
   	y <- filter_(dat, paste0("variable == '", sel[[2]], "'")) %>% .[["values"]]
 
-  	res[i,c("t.value","p.value", "df", "ci_low", "ci_high")] <-
-  	  t.test(x, y, paired = samples == "paired", alternative = alternative, conf.level = conf_lev) %>%
-  	  tidy %>% .[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
+	  	res[i,c("t.value","p.value", "df", "ci_low", "ci_high")] <-
+	  	  t.test(x, y, paired = samples == "paired", alternative = alternative, conf.level = conf_lev) %>%
+	  	  tidy %>% .[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
+
+  	if (test != "t") {
+			  res[i,"p.value"] <-
+			    wilcox.test(x, y, paired = samples == "paired", alternative = alternative,
+			                conf.int = TRUE, conf.level = conf_lev) %>%
+			    tidy %>% .[1,"p.value"]
+		}
 
   	## bootstrap confidence intervals
   	## seem almost identical, even with highly skewed data

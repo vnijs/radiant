@@ -11,6 +11,7 @@
 #' @param unif A string listing the uniformly distributed random variables to include in the analysis (e.g., "demand 0 1" where the first number is the minimum value and the second is the maximum value)
 #' @param discrete A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability
 #' @param binom A string listing the random variables with a binomail distribution to include in the analysis (e.g., "crash 100 .01") where the first number is the number of trials and the second is the probability of success)
+#' @param sequ A string listing the start, end, and step size for a sequence to include in the analysis (e.g., "trend 1 100 1")
 #' @param form A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
 #' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
@@ -32,6 +33,7 @@ simulater <- function(const = "",
                       unif = "",
                       discrete = "",
                       binom = "",
+                      sequ = "",
                       form = "",
                       seed = "",
                       name = "",
@@ -108,6 +110,14 @@ simulater <- function(const = "",
       s[[i]] %>% { dat[[.[1]]] <<- rbinom(nr, as.numeric(.[2]) , as.numeric(.[3]))}
   }
 
+  ## parsing sequence
+  sequ %<>% cleaner
+  if (sequ != "") {
+    s <- sequ %>% spliter
+    for (i in 1:length(s))
+      s[[i]] %>% { dat[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), length.out = nr)}
+  }
+
   ## parsing discrete
   # discrete = "price 6 .30 8 .70"
   discrete %<>% cleaner
@@ -131,8 +141,22 @@ simulater <- function(const = "",
   # form <- "profit = (price - cost)*nr_meals - labor_cost - non_labor_cost\n ; \n margin = price - cost ;;;   ; \n  \n  "
   # form = "demand = demand -50*price;profit = demand*(price-var_cost) - fixed_cost"
   # form = "demand = demand - .1*lag(demand, 0);profit = demand*(price-var_cost) - fixed_cost"
-  # form = "demand = demand - .1*lag(demand, default=0);profit = demand*(price-var_cost) - fixed_cost"
+  # form = "demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
+  # form = "#demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
+  # library(magrittr)
   form %<>% cleaner
+  # form %<>% gsub("^\\s*#.*[\n;]","",.) %>%
+  #   gsub(";\\s*\\#.*$","",.) %>%
+  #   gsub(";\\s*\\#.*;","",.)
+
+  # gsub(";\\s*\\#.*$","",form, perl = TRUE)
+  # gsub("[;\\^]\\s*#.*[\n;$]","",form)
+  # gsub(";\\s*#.*[\n|;|$]","",form)
+  # gsub(";\\s*#.*[\\n$]","",form)
+  # gsub(";\\s*\\#.*[\\n;$]","",form, perl = TRUE)
+  # gsub(";#.*$","",form)
+  # gsub(";#.*[;$]","",form)
+
   if (form != "") {
     s <- form %>% gsub(" ","",.) %>% spliter("=")
     for (i in 1:length(s)) {
@@ -198,11 +222,32 @@ simulater <- function(const = "",
 summary.simulater <- function(object, ...) {
 
   if (is.character(object)) {
-    if (object[1] == "error") cat(object[2])
-    else sim_summary(getdata(object)$dat)
-  } else {
-    sim_summary(object$dat)
+    if (object[1] == "error") return(cat(object[2]))
+    # else sim_summary(getdata(object)$dat)
+    else object <- getdata(object)
   }
+
+  cat("Simulation\n")
+  # print(str(object))
+  cat("Simulations:", object$sim_call$nr, "\n")
+  cat("Random seed:", object$sim_call$seed, "\n")
+  cat("Sim data   :", object$sim_call$name, "\n")
+  # print(str(object))
+  if (!is_empty(object$sim_call$const))
+    cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$binom))
+    cat("Binomial   :", gsub(";", "; ", object$sim_call$binom) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$discrete))
+    cat("Discrete   :", gsub(";", "; ", object$sim_call$discrete) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$norm))
+    cat("Normal     :", gsub(";", "; ", object$sim_call$norm) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$unif))
+    cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$form))
+    cat(paste0("Formulas   :\n\t", gsub("[\n;]","\n\t",object$sim_call$form), "\n"))
+  cat("\n")
+
+  sim_summary(object$dat)
 }
 
 #' Plot method for the simulater function
@@ -364,10 +409,27 @@ summary.repeater <- function(object,
   runs <- length(unique(object$run))
 
   ## show results
-  cat("Simulations:", sim, "\n")
-  cat("Runs       :", runs, "\n")
+  cat("Repeated simulation\n")
+  cat("Simulations :", sim, "\n")
+  cat("Runs        :", runs, "\n")
+  cat("Group by    :", byvar, "\n")
   cfun <- sub("_rm$","",fun)
-  cat("Function   :", cfun, "\n\n")
+  cat("Function    :", cfun, "\n")
+  # cat("Random  seed:", object$sim_call$seed, "\n")
+  cat("Repeat  data:", name, "\n")
+  cat("Summary data:", paste0(name,"_",cfun) , "\n")
+  # print(str(object))
+
+  # if (object$sim_call$const != "")
+  #   cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
+  # if (object$sim_call$binom != "")
+  #   cat("Binomial   :", gsub(";", "; ", object$sim_call$binom) %>% gsub("\\n","",.), "\n")
+  # if (object$sim_call$discrete != "")
+  #   cat("Discrete   :", gsub(";", "; ", object$sim_call$discrete) %>% gsub("\\n","",.), "\n")
+  # if (object$sim_call$norm != "")
+  #   cat("Normal     :", gsub(";", "; ", object$sim_call$norm) %>% gsub("\\n","",.), "\n")
+  # if (object$sim_call$unif != "")
+  #   cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
 
   object %<>% group_by_(byvar) %>%
     summarise_each_(make_funs(fun), vars = sum_vars) %>%
@@ -399,6 +461,10 @@ summary.repeater <- function(object,
       }
     }
   }
+
+  if (form != "")
+    cat(paste0("Formulas   :\n\t", gsub("\n","\n\t",form), "\n"))
+  cat("\n")
 
   name %<>% gsub(" ","",.)
   if (name != "") {

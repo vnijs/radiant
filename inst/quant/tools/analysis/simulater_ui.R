@@ -4,7 +4,7 @@
 
 sim_types <- list("Constant" = "const", "Binomial" = "binom",
                   "Discrete" = "discrete", "Normal" = "norm",
-                  "Uniform" = "unif")
+                  "Uniform" = "unif", "Sequence" = "sequ")
 
 sim_args <- as.list(formals(simulater))
 
@@ -28,8 +28,8 @@ rep_inputs <- reactive({
   for (i in names(rep_args))
     rep_args[[i]] <- input[[paste0("rep_",i)]]
 
-  # rep_args[[sim_ret]] <- sim_inputs()
-  rep_args[["sim"]] <- .simulater()
+  # rep_args[["sim"]] <- .simulater()
+  rep_args[["sim"]] <- paste0(input$sim_name,"_list")
 
   # print(rep_args[["grid"]])
 
@@ -81,15 +81,20 @@ output$ui_sim_types <- renderUI({
 })
 
 sim_vars <- reactive({
-  .simulater() %>% { if (is.null(.)) character(0) else colnames(getdata(.)$dat) }
+  # print(input$sim_name)
+  # print(getdata(input$sim_name))
+  # print(colnames(getdata(input$sim_name)$dat))
+  input$sim_name %>% { if (is.null(.)) character(0) else colnames(getdata(.)) }
+  # .simulater() %>% { if (is.null(.)) character(0) else colnames(getdata(.)$dat) }
 })
 
 output$ui_rep_vars <- renderUI({
   # vars <- .simulater() %>% { if (is.null(.)) character(0) else colnames(.$dat) }
   vars <- sim_vars()
+  # if (is.null(vars)) return()
+  if (length(vars) == 0) return()
 
-  ## if possible, keep current indep value when depvar changes
-  ## after storing residuals or predictions
+  ## if possible, keep current values when
   isolate({
     init <- input$rep_vars %>%
       {if (!is_empty(.) && . %in% vars) . else character(0)}
@@ -99,6 +104,7 @@ output$ui_rep_vars <- renderUI({
   selectizeInput("rep_vars", label = "Select variables:",
     choices = vars, multiple = TRUE,
     selected = state_multiple("rep_vars", vars, init),
+    # selected = state_multiple("rep_vars", vars),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button', 'drag_drop'))
     )
@@ -106,6 +112,7 @@ output$ui_rep_vars <- renderUI({
 
 output$ui_rep_sum_vars <- renderUI({
   vars <- sim_vars()
+  if (length(vars) == 0) return()
 
   isolate({
     init <- input$rep_sum_vars %>%
@@ -174,6 +181,13 @@ observeEvent(input$sim_const_add, {
   })
 })
 
+observeEvent(input$sim_sequ_add, {
+  isolate({
+    var_updater(input$sim_sequ_add, "sim_sequ", c(input$sim_sequ_name, input$sim_sequ_min, input$sim_sequ_max))
+  })
+})
+
+
 observeEvent(input$sim_unif_add, {
   isolate({
     var_updater(input$sim_unif_add, "sim_unif", c(input$sim_unif_name, input$sim_unif_min, input$sim_unif_max))
@@ -204,8 +218,12 @@ observeEvent(input$sim_const_del, {
   isolate(var_remover("sim_const"))
 })
 
+observeEvent(input$sim_sequ_del, {
+  isolate(var_remover("sim_sequ"))
+})
+
 observeEvent(input$sim_unif_del, {
-  isolate(var_remover("sim_const"))
+  isolate(var_remover("sim_unif"))
 })
 
 observeEvent(input$sim_norm_del, {
@@ -237,6 +255,19 @@ output$ui_simulater <- renderUI({
               )
             ),
             textinput_maker("const","Constant")
+          )
+        ),
+        conditionalPanel("input.sim_types && input.sim_types.indexOf('sequ') >= 0",
+          wellPanel(
+            HTML("<label>Sequence variables: <i id='sim_sequ_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                  <i id='sim_sequ_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+            with(tags, table(
+                td(textInput("sim_sequ_name", "Name:", value = state_init("sim_sequ_name", ""))),
+                td(numericInput("sim_sequ_min", "Min:", value = state_init("sim_sequ_min"))),
+                td(numericInput("sim_sequ_max", "Max:", value = state_init("sim_sequ_max")))
+              )
+            ),
+            textinput_maker("sequ","Sequence")
           )
         ),
         conditionalPanel("input.sim_types && input.sim_types.indexOf('binom') >= 0",

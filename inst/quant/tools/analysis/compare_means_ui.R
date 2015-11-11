@@ -121,11 +121,11 @@ output$ui_compare_means <- renderUI({
         radioButtons(inputId = "cm_adjust", label = "Multiple comp. adjustment:", cm_adjust,
           selected = state_init("cm_adjust", cm_args$adjust),
           inline = TRUE)
-        # ,
-        # radioButtons(inputId = "cm_test", label = "Test type:",
-        #   c("t-test" = "t", "Wilcox" = "wilcox"),
-        #   selected = state_init("cm_test", cm_args$test),
-        #   inline = TRUE)
+        ,
+        radioButtons(inputId = "cm_test", label = "Test type:",
+          c("t-test" = "t", "Wilcox" = "wilcox"),
+          selected = state_init("cm_test", cm_args$test),
+          inline = TRUE)
       )
     ),
     help_and_report(modal_title = "Compare means",
