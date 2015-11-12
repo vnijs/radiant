@@ -63,7 +63,7 @@ $$
 \end{eqnarray}
 $$
 
-We can use the provided p.value associated with an F-statistic of 32.325 to evalaute the null hypothesis. We can also calculate the critical F-statistic using the probability calculator. As we can see from the output below that value is 2.651. Because the provided p.value is < 0.001 and the calculated F-statistic is larger than the critical value (32.325 > 2.651) we reject null hypothesis that all coefficient are equal to zero.
+We can use the provided p.value associated with an F-statistic of 32.325 to evaluate the null hypothesis. We can also calculate the critical F-statistic using the probability calculator. As we can see from the output below that value is 2.651. Because the provided p.value is < 0.001 and the calculated F-statistic is larger than the critical value (32.325 > 2.651) we reject null hypothesis that all coefficient are equal to zero.
 
 ![Regression 1 - Critical F-statistics](figures_quant/regression_catalog_F_critical.png)
 
@@ -74,8 +74,9 @@ The coefficients from the regression can be interpreted as follows:
 - For an increase in the age of the head of the household of 1 year we expect, on average, to see an increase in sales of \$0.45, keeping all other variables constant.
 
 For each of the explanatory variables the following null and alternate hypotheses can be formulated:
-H0: The coefficient associated with explanatory variable x is equal to 0
-Ha: The coefficient associated with explanatory variable x is not equal to 0
+
+* H0: The coefficient associated with explanatory variable x is equal to 0
+* Ha: The coefficient associated with explanatory variable x is not equal to 0
 
 The coefficients for `Income` and `HH.size` are both significant (p-values < 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value > 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.
 

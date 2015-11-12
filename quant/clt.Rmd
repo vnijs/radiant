@@ -4,5 +4,5 @@ title: Random > Central Limit Theorem
 
 ***
 
-```{r child='app/ctl.md'}
+```{r child='app/clt.md'}
 ```

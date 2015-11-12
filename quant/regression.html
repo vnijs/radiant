@@ -126,6 +126,8 @@ img {
              <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
@@ -295,7 +297,7 @@ img {
       &amp; = &amp; 32.325
 \end{eqnarray}
 \]</span></p>
-<p>We can use the provided p.value associated with an F-statistic of 32.325 to evalaute the null hypothesis. We can also calculate the critical F-statistic using the probability calculator. As we can see from the output below that value is 2.651. Because the provided p.value is &lt; 0.001 and the calculated F-statistic is larger than the critical value (32.325 &gt; 2.651) we reject null hypothesis that all coefficient are equal to zero.</p>
+<p>We can use the provided p.value associated with an F-statistic of 32.325 to evaluate the null hypothesis. We can also calculate the critical F-statistic using the probability calculator. As we can see from the output below that value is 2.651. Because the provided p.value is &lt; 0.001 and the calculated F-statistic is larger than the critical value (32.325 &gt; 2.651) we reject null hypothesis that all coefficient are equal to zero.</p>
 <p><img src="figures_quant/regression_catalog_F_critical.png" alt="Regression 1 - Critical F-statistics" /></p>
 <p>The coefficients from the regression can be interpreted as follows:</p>
 <ul>
@@ -303,7 +305,11 @@ img {
 <li>For an increase in household size of 1 person we expect, on average, to see an increase in sales of $22.1218, keeping all other variables constant.</li>
 <li>For an increase in the age of the head of the household of 1 year we expect, on average, to see an increase in sales of $0.45, keeping all other variables constant.</li>
 </ul>
-<p>For each of the explanatory variables the following null and alternate hypotheses can be formulated: H0: The coefficient associated with explanatory variable x is equal to 0 Ha: The coefficient associated with explanatory variable x is not equal to 0</p>
+<p>For each of the explanatory variables the following null and alternate hypotheses can be formulated:</p>
+<ul>
+<li>H0: The coefficient associated with explanatory variable x is equal to 0</li>
+<li>Ha: The coefficient associated with explanatory variable x is not equal to 0</li>
+</ul>
 <p>The coefficients for <code>Income</code> and <code>HH.size</code> are both significant (p-values &lt; 0.05), i.e., we can reject H0 for each of these coefficients. The coefficient for Age HH is not significant (p-value &gt; 0.05), i.e., we cannot reject H0 for Age HH. We conclude that a change in Age of the household head does not lead to a significant change in sales.</p>
 <p>We can also use the t.values to evaluate the null and alternative hypotheses for the coefficients. Because the calculated t.value for <code>Income</code> and <code>HH.size</code> is <strong>larger</strong> than the <em>critical</em> t.value we reject the null hypothesis for both effects. We can obtain the critical t.value by using the probability calculator in the <em>Base</em> menu. For a t-distribution with 196 degrees of freedom (see the <code>Errors</code> line in the <code>Sum of Squares</code> table shown above) the critical t.value is 1.972. We have to enter 0.025 and 0.975 as the lower and upper probability bounds in the probability calculator because the alternative hypothesis is <code>two.sided</code>.</p>
 <p><img src="figures_quant/regression_catalog_prob_calc.png" alt="prob_calc" /></p>

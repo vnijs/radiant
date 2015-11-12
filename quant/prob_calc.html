@@ -126,6 +126,8 @@ img {
              <li><a href="/radiant/quant/sample_size.html">Sample size</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Base</li>
+             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
              <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
              <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
              <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
@@ -242,7 +244,23 @@ img {
 <blockquote>
 <p>Probability calculator</p>
 </blockquote>
-<p>Calculate probabilities or values based on the <em>Normal</em>, <em>Binomial</em>, or <em>Uniform</em> distribution.</p>
+<p>Calculate probabilities or values based on the <em>Binomial</em>, <em>Chi-squared</em>, <em>Discrete</em>, <em>F</em>, <em>Normal</em>, <em>t</em>, or <em>Uniform</em> distribution.</p>
+<div id="testing-batteries" class="section level2">
+<h2>Testing batteries</h2>
+<p>Suppose a consumer reports (CR) wants to test manufacturer claims about battery life. The manufacturer claims that more than 90% of their batteries will power a laptop for at least 12 hours of continues use. CR sets up 20 identical laptops with the manufacturer’s batteries. If the manufacturer’s claims are accurate, what is the probability that 15 or more laptops are still running after 12 hours?</p>
+<p>The description of the problem suggests we should select <code>Binomial</code> from the <code>Distribution</code> dropdown. To find the probability, select <code>Values</code> as the <code>Input type</code> and enter <code>15</code> as the <code>Upper bound</code>. In the output below we can see that the probability is 0.989. The probability that exactly 15 laptops are still running after 12 hours is 0.032.</p>
+<p><img src="figures_quant/prob_calc_batteries.png" alt="Prob-calc - batteries" /></p>
+</div>
+<div id="demand-for-headphones" class="section level2">
+<h2>Demand for headphones</h2>
+<p>A manufacturer wants to determine the appropriate inventory level for headphones required to achieve a 95% <a href="https://en.wikipedia.org/wiki/Service_level" target="_blank">service level</a>. Demand for the headphones obeys a normal distribution with a mean of 5000 and a standard deviation of 800.</p>
+<p>First select <code>Normal</code> from the <code>Distribution</code> dropdown. To find the required number of headphones to hold in inventory choose <code>Normal</code> from the <code>Distribution</code> dropdown and then select <code>Probability</code> as the <code>Input type</code>. Finally, enter <code>.95</code> as the <code>Upper bound</code>. In the output below we see the number of units to stock is 4316.</p>
+<p><img src="figures_quant/prob_calc_headphones.png" alt="Prob-calc - headphones" /></p>
+</div>
+<div id="hypothesis-testing" class="section level2">
+<h2>Hypothesis testing</h2>
+<p>You can also use the probability calculator to determine a <code>p.value</code> or a <code>critical value</code> for a statistical test. See the helpfiles for <code>Single mean</code>, <code>Single proportion</code>, <code>Compare means</code>, <code>Compare proportions</code>, <code>Cross-tabs</code> in the <code>Base</code> menu and <code>Linear (OLS)</code> in the <code>Regression</code> menu for details.</p>
+</div>
 
 
 &copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
