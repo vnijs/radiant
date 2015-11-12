@@ -101,7 +101,7 @@ output$ui_rep_vars <- renderUI({
   })
 
   # if (is.null(vars)) return()
-  selectizeInput("rep_vars", label = "Select variables:",
+  selectizeInput("rep_vars", label = "Variables to re-simulate:",
     choices = vars, multiple = TRUE,
     selected = state_multiple("rep_vars", vars, init),
     # selected = state_multiple("rep_vars", vars),

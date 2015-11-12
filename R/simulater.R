@@ -248,7 +248,9 @@ summary.simulater <- function(object, ...) {
   if (!is_empty(object$sim_call$unif))
     cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$form))
-    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]","\n\t",.) %>% gsub(";\n", "\n\t",.),"\n"))
+    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
+
+    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]","\n\t",.) %>% gsub(";\n", "\n\t",.),"\n"))
 
     # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]", "\n\t",.)))
     # cat(paste0("Formulas   :\n\t", gsub("[\n;]","\n\t",object$sim_call$form), "\n"))
