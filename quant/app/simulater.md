@@ -20,7 +20,11 @@ To include normally distributed random variables in the analysis select `Normal`
 
 ### Uniform
 
-To include uniformly distributed random variables in the analysis select `Uniform` from the `Select types` dropdown. Provide parameters in the `Uniform variables` inputs. For example, enter a `Name` ("cost"), the `Min` (10) and the `Max` (15). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., "cost 10 15").
+To include uniformly distributed random variables in the analysis select `Uniform` from the `Select types` dropdown. Provide parameters in the `Uniform variables` inputs. For example, enter a `Name` ("cost"), the `Min` (10) and the `Max` (15) value. Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., "cost 10 15").
+
+### Sequence
+
+To include a sequence of values select `Sequence` from the `Select types` dropdown. Provide the minimum and maximum values in the `Sequence variables` inputs. For example, enter a `Name` ("trend"), the `Min` (1) and the `Max` (1000) value. Note that the number of 'steps' is determined by the number of simulations. Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., "trend 1 1000").
 
 ### Formula
 

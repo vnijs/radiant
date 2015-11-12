@@ -9,7 +9,7 @@ Start by selecting a response variable and one or more explanatory variables. If
 The `Predict` box allows you calculate predicted values from a regression model. You must specify at least one variable and value to get a prediction. If you do not specify a value for each variable in the model either the mean value or the most frequent factor level will be used. It is only possible to predict outcomes based on variables in the model (e.g., `carat` must one of the selected explanatory variables to predict the `price` of a 2-carat diamond)
 
 * To predict the price of a 1-carat diamond type `carat = 1` and press return
-* To predict the price of diamonds ranging from .5 to 1 carat at steps of size .05 type `carat = seq(.5.1,.05)` and press return
+* To predict the price of diamonds ranging from .5 to 1 carat at steps of size .05 type `carat = seq(.5,.1,.05)` and press return
 * To predict the price of 1,2, or 3 carat diamonds with an ideal cut type `carat = 1:3, cut = "Ideal"` and press return
 
 We can test if two or more variables together add significantly to the fit of a model. This function can be very useful to test if the overall influence of a variable of type `factor` is significant.
@@ -240,7 +240,7 @@ $$
   \frac {1}{S_t} \frac{\partial S_t}{\partial P_t} = b \; \text{or} \; \frac {\Delta S_t}{S_t} \approx b
 $$
 
-So a \$1 change in price leads to a $b$% change in sales. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and will again compare sales levels when $D = 1$ to sales levels when $D = 0$ to get $\frac {\Delta S_t}{S_t}$. To get $S_t$ rather than $ln S_t$ on the left hand side we take the exponent of both sides. This gives $S_t = e^{a + b P_t + c D_t}$. The percentage change in $S_t$ when $D_t$ changes from 0 to 1 is then given by:
+So a \$1 change in price leads to a $b\%$ change in sales. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and will again compare sales levels when $D = 1$ to sales levels when $D = 0$ to get $\frac {\Delta S_t}{S_t}$. To get $S_t$ rather than $ln S_t$ on the left hand side we take the exponent of both sides. This gives $S_t = e^{a + b P_t + c D_t}$. The percentage change in $S_t$ when $D_t$ changes from 0 to 1 is then given by:
 
 $$
   \begin{aligned}
