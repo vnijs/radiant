@@ -88,11 +88,32 @@ sim_vars <- reactive({
   # .simulater() %>% { if (is.null(.)) character(0) else colnames(getdata(.)$dat) }
 })
 
+cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
+    gsub("[ ]*[\n;]+[ ]*",";",.) %>%
+    gsub("[;]{2,}",";",.) %>%
+    gsub(";$","",.)
+
+spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+
 output$ui_rep_vars <- renderUI({
   # vars <- .simulater() %>% { if (is.null(.)) character(0) else colnames(.$dat) }
   vars <- sim_vars()
   # if (is.null(vars)) return()
-  if (length(vars) == 0) return()
+  # if (length(vars) == 0) return()
+  if (is_empty(vars)) return()
+
+  form <- input$sim_form %>% cleaner
+  if (!is_empty(form)) {
+    s <- form %>% gsub(" ","",.) %>% spliter("=")
+    svars <- c()
+    for (i in 1:length(s)) {
+      if (grepl("^#",s[[i]][1])) next
+      if (grepl(s[[i]][1], s[[i]][2])) next
+      svars <- c(svars, s[[i]][1])
+    }
+    if (length(svars) > 0) vars <- setdiff(vars, svars)
+    # print(vars)
+  }
 
   ## if possible, keep current values when
   isolate({
@@ -340,6 +361,16 @@ output$ui_simulater <- renderUI({
     conditionalPanel(condition = "input.tabs_simulate == 'Repeat'",
       wellPanel(
         uiOutput("ui_rep_vars"),
+
+
+        ## replace with an input like `sequ` so you can get multiple inputs for grid-search
+        ## replace with an input like `sequ` so you can get multiple inputs for grid-search
+        ## replace with an input like `sequ` so you can get multiple inputs for grid-search
+        ## replace with an input like `sequ` so you can get multiple inputs for grid-search
+        ## replace with an input like `sequ` so you can get multiple inputs for grid-search
+        ## replace with an input like `sequ` so you can get multiple inputs for grid-search
+
+
         textInput("rep_grid", "Grid search:", value = state_init("rep_grid", "")),
         uiOutput("ui_rep_sum_vars"),
         uiOutput("ui_rep_byvar"),

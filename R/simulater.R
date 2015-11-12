@@ -162,7 +162,6 @@ simulater <- function(const = "",
   if (form != "") {
     s <- form %>% gsub(" ","",.) %>% spliter("=")
     for (i in 1:length(s)) {
-      # print(s[[i]][1])
       if (grepl("^#",s[[i]][1])) next
       obj <- s[[i]][1]
       fobj <- s[[i]][-1]
@@ -172,7 +171,6 @@ simulater <- function(const = "",
         dat[[obj]] <- out
       } else {
         dat[[obj]] <- NA
-        # message(cat("Formula was not successfully evaluated\n\n", form))
         mess <- c("error",paste0("Formula was not successfully evaluated:\n\n", strsplit(form,";") %>% unlist %>% paste0(collapse="\n"),"\n\nMessage: ", attr(out,"condition")$message))
         return(mess %>% set_class(c("simulater", class(.))))
       }
@@ -646,7 +644,7 @@ sim_summary <- function(dat, dc = getclass(dat)) {
   if (sum(isLogic) > 0) {
     cat("Logicals:\n")
     select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% matrix(ncol = 2) %>%
-      set_colnames(c("# TRUE", "% TRUE")) %>% set_rownames(names(dat)[isLogic]) %>% print
+      set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>% set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
   }
 }

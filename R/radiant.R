@@ -448,7 +448,9 @@ getclass <- function(dat) {
 #' is_empty(NULL)
 #'
 #' @export
-is_empty <- function(x, empty = "") if (is.null(x) || x == empty) TRUE else FALSE
+is_empty <- function(x, empty = "") if (length(x) == 0 || x == empty) TRUE else FALSE
+
+# is_empty <- function(x, empty = "") if (is.null(x) || x == empty) TRUE else FALSE
 
 #' Is input a string?
 #'
