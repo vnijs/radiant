@@ -1,5 +1,7 @@
 pc_dist <- c("Normal" = "norm", "Binomial" = "binom", "Uniform" = "unif",
-             "t" = "tdist", "F" = "fdist", "Chi-squared" = "chisq", "Discrete" = "disc")
+             "t" = "tdist", "F" = "fdist", "Chi-squared" = "chisq", "Discrete" = "disc") %>%
+            sort
+
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
 
 output$ui_pc_disc <- renderUI({
