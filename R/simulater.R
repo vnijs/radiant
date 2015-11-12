@@ -11,7 +11,7 @@
 #' @param unif A string listing the uniformly distributed random variables to include in the analysis (e.g., "demand 0 1" where the first number is the minimum value and the second is the maximum value)
 #' @param discrete A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability
 #' @param binom A string listing the random variables with a binomail distribution to include in the analysis (e.g., "crash 100 .01") where the first number is the number of trials and the second is the probability of success)
-#' @param sequ A string listing the start, end, and step size for a sequence to include in the analysis (e.g., "trend 1 100 1")
+#' @param sequ A string listing the start and end for a sequence to include in the analysis (e.g., "trend 1 100 1"). The number of 'steps' is determined by the number of simulations.
 #' @param form A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
 #' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
@@ -112,10 +112,11 @@ simulater <- function(const = "",
 
   ## parsing sequence
   sequ %<>% cleaner
+  # print(sequ)
   if (sequ != "") {
     s <- sequ %>% spliter
     for (i in 1:length(s))
-      s[[i]] %>% { dat[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), length.out = nr)}
+      s[[i]] %>% { dat[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), length.out = as.numeric(nr))}
   }
 
   ## parsing discrete
@@ -144,9 +145,9 @@ simulater <- function(const = "",
   # form = "demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
   # form = "#demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
   # library(magrittr)
-  form %<>% cleaner
-  # form %<>% gsub("^\\s*#.*[\n;]","",.) %>%
-  #   gsub(";\\s*\\#.*$","",.) %>%
+  # form %>% gsub(";\\s*\\#.*$","",.)
+  # form %>% gsub("^\\s*#.*[\n;]","",.)
+  # form %>% gsub(";\\s*\\#.*$","",.) %>%
   #   gsub(";\\s*\\#.*;","",.)
 
   # gsub(";\\s*\\#.*$","",form, perl = TRUE)
@@ -157,9 +158,12 @@ simulater <- function(const = "",
   # gsub(";#.*$","",form)
   # gsub(";#.*[;$]","",form)
 
+  form %<>% cleaner
   if (form != "") {
     s <- form %>% gsub(" ","",.) %>% spliter("=")
     for (i in 1:length(s)) {
+      # print(s[[i]][1])
+      if (grepl("^#",s[[i]][1])) next
       obj <- s[[i]][1]
       fobj <- s[[i]][-1]
       if (length(fobj) > 1) fobj <- paste0(fobj, collapse = "=")
@@ -169,7 +173,7 @@ simulater <- function(const = "",
       } else {
         dat[[obj]] <- NA
         # message(cat("Formula was not successfully evaluated\n\n", form))
-        mess <- c("error",paste0("Formula was not successfully evaluated:\n\n", strsplit(form,";") %>% unlist %>% paste0(collapse="\n"),"\n"))
+        mess <- c("error",paste0("Formula was not successfully evaluated:\n\n", strsplit(form,";") %>% unlist %>% paste0(collapse="\n"),"\n\nMessage: ", attr(out,"condition")$message))
         return(mess %>% set_class(c("simulater", class(.))))
       }
     }
@@ -244,7 +248,11 @@ summary.simulater <- function(object, ...) {
   if (!is_empty(object$sim_call$unif))
     cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$form))
-    cat(paste0("Formulas   :\n\t", gsub("[\n;]","\n\t",object$sim_call$form), "\n"))
+    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]","\n\t",.) %>% gsub(";\n", "\n\t",.),"\n"))
+
+    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]", "\n\t",.)))
+    # cat(paste0("Formulas   :\n\t", gsub("[\n;]","\n\t",object$sim_call$form), "\n"))
+    # cat(paste0("Formulas   :\n\t", gsub("\n;*","\n\t",object$sim_call$form), "\n"))
   cat("\n")
 
   sim_summary(object$dat)

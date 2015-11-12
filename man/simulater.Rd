@@ -5,7 +5,7 @@
 \title{Simulate data for decision analysis}
 \usage{
 simulater(const = "", norm = "", unif = "", discrete = "", binom = "",
-  form = "", seed = "", name = "", nr = 1000, dat = NULL)
+  sequ = "", form = "", seed = "", name = "", nr = 1000, dat = NULL)
 }
 \arguments{
 \item{const}{A string listing the constants to include in the analysis (e.g., "cost = 3; size = 4")}
@@ -17,6 +17,8 @@ simulater(const = "", norm = "", unif = "", discrete = "", binom = "",
 \item{discrete}{A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability}
 
 \item{binom}{A string listing the random variables with a binomail distribution to include in the analysis (e.g., "crash 100 .01") where the first number is the number of trials and the second is the probability of success)}
+
+\item{sequ}{A string listing the start and end for a sequence to include in the analysis (e.g., "trend 1 100 1"). The number of 'steps' is determined by the number of simulations.}
 
 \item{form}{A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")}
 
