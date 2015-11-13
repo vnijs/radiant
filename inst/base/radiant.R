@@ -17,9 +17,18 @@
 
 saveSession <- function(session = session) {
   if (!exists("r_sessions")) return()
+  if (exists("r_state") && !is_empty(r_state)) {
+    rs <- r_state
+    rs_input <- reactiveValuesToList(input)
+    rs[names(rs_input)] <- rs_input
+  } else {
+    rs <- reactiveValuesToList(input)
+  }
+
   r_sessions[[r_ssuid]] <- list(
     r_data    = reactiveValuesToList(r_data),
-    r_state   = reactiveValuesToList(input),
+    # r_state = reactiveValuesToList(input),
+    r_state = rs,
     timestamp = Sys.time()
   )
 

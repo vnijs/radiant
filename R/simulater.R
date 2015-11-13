@@ -225,16 +225,13 @@ summary.simulater <- function(object, ...) {
 
   if (is.character(object)) {
     if (object[1] == "error") return(cat(object[2]))
-    # else sim_summary(getdata(object)$dat)
     else object <- getdata(object)
   }
 
   cat("Simulation\n")
-  # print(str(object))
   cat("Simulations:", object$sim_call$nr, "\n")
   cat("Random seed:", object$sim_call$seed, "\n")
   cat("Sim data   :", object$sim_call$name, "\n")
-  # print(str(object))
   if (!is_empty(object$sim_call$const))
     cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$binom))
@@ -249,7 +246,6 @@ summary.simulater <- function(object, ...) {
     cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
 
     # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]","\n\t",.) %>% gsub(";\n", "\n\t",.),"\n"))
-
     # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]", "\n\t",.)))
     # cat(paste0("Formulas   :\n\t", gsub("[\n;]","\n\t",object$sim_call$form), "\n"))
     # cat(paste0("Formulas   :\n\t", gsub("\n;*","\n\t",object$sim_call$form), "\n"))
@@ -376,8 +372,6 @@ repeater <- function(nr = 12,
       return(ret)
     }
 
-    # mess <- paste0("\n### Data from repeated simulation\n\nFormula: ", sc$form, "\n\nOn: ",
-                   # lubridate::now())
     mess <- paste0("\n### Repeated simulation data\n\nFormula:\n\n",
                    gsub("*","\\*",sc$form, fixed = TRUE) %>% gsub(";","\n\n", .), "\n\nDate: ",
                    lubridate::now())
@@ -428,17 +422,6 @@ summary.repeater <- function(object,
   cat("Summary data:", paste0(name,"_",cfun) , "\n")
   # print(str(object))
 
-  # if (object$sim_call$const != "")
-  #   cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
-  # if (object$sim_call$binom != "")
-  #   cat("Binomial   :", gsub(";", "; ", object$sim_call$binom) %>% gsub("\\n","",.), "\n")
-  # if (object$sim_call$discrete != "")
-  #   cat("Discrete   :", gsub(";", "; ", object$sim_call$discrete) %>% gsub("\\n","",.), "\n")
-  # if (object$sim_call$norm != "")
-  #   cat("Normal     :", gsub(";", "; ", object$sim_call$norm) %>% gsub("\\n","",.), "\n")
-  # if (object$sim_call$unif != "")
-  #   cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
-
   object %<>% group_by_(byvar) %>%
     summarise_each_(make_funs(fun), vars = sum_vars) %>%
     select(-1)
@@ -471,7 +454,7 @@ summary.repeater <- function(object,
   }
 
   if (form != "")
-    cat(paste0("Formulas   :\n\t", gsub("\n","\n\t",form), "\n"))
+    cat(paste0("Formulas    :\n\t", form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
   cat("\n")
 
   name %<>% gsub(" ","",.)
@@ -494,23 +477,7 @@ summary.repeater <- function(object,
     env$r_data[[paste0(name,"_descr")]] <- mess
   }
 
-
-  sim_summary(object)
-
-  # expl <- explore(object, sum_vars, byvar = byvar, fun = fun)
-  # for (l in levels(expl$tab$variable)) {
-  #   for (i in names(expl$pfun)) {
-
-  #     dat <- expl$tab %>% filter_(paste0("variable == \"", l,"\"")) %>% select_(i)
-
-  #     sim_summary(dat)
-  #   }
-  # }
-
-  # explore(object, sum_vars, byvar = byvar, fun = fun) %>% summary %>% print
-  # object %<>% group_by(sim) %>% summarise(total_profit = sum(profit)) %>%
-  #   select(total_profit)
-
+  sim_summary(object, fun = cfun)
 }
 
 #' Plot repeated simulation
@@ -534,8 +501,6 @@ plot.repeater <- function(x,
   object <- x; rm(x)
 
   if (identical(sum_vars, "")) return(invisible())
-
-  # if (is.character(object)) object <- getdata(object)
   if (is.character(object)) object <- getdata(object)
 
 
@@ -572,44 +537,16 @@ plot.repeater <- function(x,
   for (i in colnames(object)) {
     dat <- select_(object, .dots = i)
     if (!does_vary(object[[i]])) next
-    # if (sd(object[[i]]) == 0) next
 
     plot_list[[i]] <-
       visualize(select_(object, .dots = i), xvar = i, bins = 20, custom = TRUE)
-      #+ xlab(paste0(fun,"(",i,")"))
   }
-
-  # plot_list <- list()
-  # for (l in levels(expl$tab$variable)) {
-  #   for (i in names(expl$pfun)) {
-
-  #     dat <- expl$tab %>% filter_(paste0("variable == \"", l,"\"")) %>% select_(i)
-
-  #     plot_list[[paste0(l,"_",i)]] <-
-  #       visualize(select_(dat, .dots = i), xvar = i, bins = 20, custom = TRUE) +
-  #       xlab(paste0(i," (",l,")"))
-  #   }
-  # }
-
-
-  # expl <- explore(object, sum_vars, byvar = byvar, fun = fun)
-  # plot_list <- list()
-  # for (l in levels(expl$tab$variable)) {
-  #   for (i in names(expl$pfun)) {
-
-  #     dat <- expl$tab %>% filter_(paste0("variable == \"", l,"\"")) %>% select_(i)
-
-  #     plot_list[[paste0(l,"_",i)]] <-
-  #       visualize(select_(dat, .dots = i), xvar = i, bins = 20, custom = TRUE) +
-  #       xlab(paste0(i," (",l,")"))
-  #   }
-  # }
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 
-sim_summary <- function(dat, dc = getclass(dat)) {
+sim_summary <- function(dat, dc = getclass(dat), fun = "") {
 
   isLogic <- "logical" == dc
   isNum <- !isLogic
@@ -634,6 +571,8 @@ sim_summary <- function(dat, dc = getclass(dat)) {
         group_by_("variable") %>%
         summarise_each(funs(n = length, mean = mean_rm, sd = sd_rm, min = min_rm, `5%` = p05, `25%` = p25,
                        median = median_rm, `75%` = p75, `95%` = p95, max = max_rm)) %>%
+        { if (fun == "") . else {.[[1]] <- paste0(fun, " of ", .[[1]])}; . } %>%
+        { .[[1]] <- format(.[[1]], justify = "left"); .} %>%
         data.frame(check.names = FALSE) %>%
         { .[,-1] %<>% round(.,3); colnames(.)[1] <- ""; . } %>%
         print(row.names = FALSE)
@@ -648,61 +587,3 @@ sim_summary <- function(dat, dc = getclass(dat)) {
     cat("\n")
   }
 }
-
-
-# result <- simulater(const = "cost 1.25\nsalvage .5\nprice 5\nq .5", norm = "demand 535.74 145", form = "profit = -cost*q + 5*pmin(q,demand) + .5 * pmax(0, q - demand)", seed = "1234", name = "sim1", nr = 10)
-# summary(result)
-# plot(result)
-
-# object <- repeater(vars = "q", sim = result, grid = "400:420")
-# object %>% print(n = 1020)
-# summary(object, sum_vars = c("profit","q"))
-# plot(object, sum_vars = c("profit","q"))
-
-# object <- repeater(vars = "q", grid = "500:600", seed = "1234", sim = result)
-# class(object)
-# summary(object)
-# plot(object)
-
-# result <- simulater(const = "non_labor_cost 3995;cost 11", norm = "nr_meals 3000 1000", unif = "labor_cost 5040 6860", discrete = "price 20 .25 18.5 .35 16.5 .3 15 .1", form = "profit = (price - cost)*nr_meals - labor_cost - non_labor_cost", seed = "1234", name = "sim1")
-# summary(result)
-# plot(result)
-# object <- repeater(vars = "nr_meals", sim = result, grid = "")
-# viewdata(object)
-# summary(object)
-# plot(object, sum_vars = "profit")
-
-# library(radiant)
-# library(gridExtra)
-# result <- simulater(const = "var_cost 5;fixed_cost 1000", norm = "demand 1000 100", discrete = "price 6 .30 8 .70", form = "demand = demand - 50*price;profit = demand*(price-var_cost) - fixed_cost", seed = "1234", name = "sim1")
-# summary(result)
-# plot(result)
-
-# object <- repeater(vars = "demand", sim = result)
-# summary(object, sum_vars = "demand")
-# plot(object, sum_vars = "demand")
-
-# nr_meals_sim <- rnorm(nr_sim*12,nr_meals[1],nr_meals[2])
-# nr_meals_sim <- matrix(nr_meals_sim, nrow = nr_sim, ncol = 12)
-
-# Es <- (price_sim - cost)*nr_meals_sim - labor_cost_sim - non_labor_cost
-# dim(Es)
-
-# Es_annual <- rowSums(Es)
-
-# mean(Es_annual)
-# sd(Es_annual)
-
-# Es_annual <- data.frame(Es_annual = Es_annual)
-# bw <- diff(range(Es_annual, na.rm = TRUE)) / 20
-
-# # histogram of profits
-# ggplot(Es_annual, aes(x=Es_annual)) +
-#   geom_histogram(aes(y = ..density..), binwidth = bw, alpha = .3) +
-#   geom_density(adjust=1.5, color = "blue", alpha=.3) + labs(y = "") +
-#   theme(axis.text.y = element_blank())
-
-
-# demand <- rnorm(10, 1000,100)
-# dyn <- demand + lag(demand, default = 0)
-# dyn

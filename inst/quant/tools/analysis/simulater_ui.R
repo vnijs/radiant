@@ -14,8 +14,10 @@ sim_inputs <- reactive({
   for (i in names(sim_args))
     sim_args[[i]] <- input[[paste0("sim_",i)]]
 
-  for (i in sim_types)
-    if (!i %in% input$sim_types) sim_args[[i]] <- ""
+  if (!is.null(input$sym_types)) {
+    for (i in sim_types)
+      if (!i %in% input$sim_types) sim_args[[i]] <- ""
+  }
 
   sim_args
 })
@@ -28,10 +30,7 @@ rep_inputs <- reactive({
   for (i in names(rep_args))
     rep_args[[i]] <- input[[paste0("rep_",i)]]
 
-  # rep_args[["sim"]] <- .simulater()
   rep_args[["sim"]] <- paste0(input$sim_name,"_list")
-
-  # print(rep_args[["grid"]])
 
   rep_args
 
@@ -60,32 +59,21 @@ rep_plot_inputs <- reactive({
 })
 
 textinput_maker <- function(id = "const", lab = "Constant", rows = "2", pre = "sim_") {
-
-  # lab <- paste0(lab, if (id == "form") ":" else " variables:")
   id <- paste0(pre, id)
-
-  tagList(
-    # tags$label(lab, `for` = id), br(),
-    tags$textarea(state_init(id), id = id, type = "text", rows = rows,
-                  class = "form-control")
-  )
+  tags$textarea(state_init(id), id = id, type = "text", rows = rows, class = "form-control")
 }
 
 output$ui_sim_types <- renderUI({
   selectizeInput("sim_types", label = "Select types:",
     choices = sim_types, multiple = TRUE,
-    selected = state_multiple("sim_types", sim_types, "const"),
+    selected = state_multiple("sim_types", sim_types),
     options = list(placeholder = 'Select types',
-                   plugins = list('remove_button', 'drag_drop'))
-    )
+                   plugins = list('remove_button'))
+  )
 })
 
 sim_vars <- reactive({
-  # print(input$sim_name)
-  # print(getdata(input$sim_name))
-  # print(colnames(getdata(input$sim_name)$dat))
-  input$sim_name %>% { if (is.null(.)) character(0) else colnames(getdata(.)) }
-  # .simulater() %>% { if (is.null(.)) character(0) else colnames(getdata(.)$dat) }
+  if (is_empty(input$sim_name)) character(0) else colnames(getdata(input$sim_name))
 })
 
 cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
@@ -96,10 +84,7 @@ cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
 spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
 output$ui_rep_vars <- renderUI({
-  # vars <- .simulater() %>% { if (is.null(.)) character(0) else colnames(.$dat) }
   vars <- sim_vars()
-  # if (is.null(vars)) return()
-  # if (length(vars) == 0) return()
   if (is_empty(vars)) return()
 
   form <- input$sim_form %>% cleaner
@@ -112,71 +97,59 @@ output$ui_rep_vars <- renderUI({
       svars <- c(svars, s[[i]][1])
     }
     if (length(svars) > 0) vars <- setdiff(vars, svars)
-    # print(vars)
   }
 
   ## if possible, keep current values when
-  isolate({
-    init <- input$rep_vars %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-  })
+  # isolate({
+  #   init <- input$rep_vars %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
 
-  # if (is.null(vars)) return()
   selectizeInput("rep_vars", label = "Variables to re-simulate:",
     choices = vars, multiple = TRUE,
-    selected = state_multiple("rep_vars", vars, init),
-    # selected = state_multiple("rep_vars", vars),
+    # selected = state_multiple("rep_vars", vars, init),
+    selected = state_multiple("rep_vars", vars),
     options = list(placeholder = 'Select variables',
-                   plugins = list('remove_button', 'drag_drop'))
+                   plugins = list('remove_button'))
     )
 })
 
 output$ui_rep_sum_vars <- renderUI({
   vars <- sim_vars()
-  if (length(vars) == 0) return()
+  if (is_empty(vars)) return()
 
-  isolate({
-    init <- input$rep_sum_vars %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-  })
+  # isolate({
+  #   init <- input$rep_sum_vars %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
 
   selectizeInput("rep_sum_vars", label = "Output variables:",
     choices = vars, multiple = TRUE,
-    selected = state_multiple("rep_sum_vars", vars, init),
+    # selected = state_multiple("rep_sum_vars", vars, init),
+    selected = state_multiple("rep_sum_vars", vars),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button', 'drag_drop'))
     )
 })
 
 output$ui_rep_byvar <- renderUI({
-  # vars <- c("sim","run",sim_vars())
   vars <- c("sim","run")
   selectizeInput("rep_byvar", label = "Group by:", choices = vars,
-    selected = state_single("rep_byvar",vars, ""), multiple = FALSE,
+    selected = state_single("rep_byvar", vars), multiple = FALSE,
     options = list(placeholder = 'Select group-by variable')
-    #                plugins = list('remove_button', 'drag_drop'))
   )
 })
 
 output$ui_rep_fun <- renderUI({
-  # choices <- c("sum_rm","mean_rm","median_rm", "min_rm","max_rm")
-  # choices <- r_functions[c("sum","mean","median","min","max")]
-  # choices <- c("sum","mean","median","min","max")]
+  choices <-
+    list("sum" = "sum_rm", "mean" = "mean_rm", "median" = "median_rm", "min" = "min_rm", "max" = "max_rm")
+    # sel <- if (is_empty(input$rep_fun)) state_single("rep_fun", choices, "sum_rm")
+           # else input$rep_fun
 
-choices <-
-  list("sum" = "sum_rm", "mean" = "mean_rm", "median" = "median_rm", "min" = "min_rm", "max" = "max_rm")
-  # sel <- if (is_empty(input$rep_fun)) state_multiple("rep_fun", r_functions, "sum_rm"))
-  sel <- if (is_empty(input$rep_fun)) state_single("rep_fun", choices, "sum_rm")
-         else input$rep_fun
-
-  # selectizeInput("rep_fun", label = "Apply function(s):",
-  selectInput("rep_fun", label = "Apply function(s):",
+  selectInput("rep_fun", label = "Apply function:",
               choices = choices,
-              selected = sel,
+              selected = state_single("rep_fun", choices, "sum_rm"),
               multiple = FALSE)
-                 # options = list(placeholder = 'Select functions',
-                                # plugins = list('remove_button', 'drag_drop'))
-    # )
 })
 
 var_updater <- function(variable, var_str, var_inputs) {
@@ -455,40 +428,38 @@ sim_plot_height <- function() {
       200
     } else {
       ceiling(sum(sapply(sim, does_vary)) / 2) * 200
-      # 200
     }
   } else {
     200
   }
-  # { if (is.character(.)) ceiling(ncol(getdata(.)$dat)/2) * 200 else 200 }
 }
 
-  # .simulater() %>% { if (is.list(.)) ceiling(ncol(getdata(.)$dat)/2) * 200 else 200 }
-
 .plot_simulate <- reactive({
-  .simulater() %>% { if (is.null(.)) invisible() else plot(., shiny = TRUE) }
+  # .simulater() %>% { if (is.null(.)) invisible() else plot(., shiny = TRUE) }
+  .simulater() %>% { if (is_empty(.)) invisible() else plot(., shiny = TRUE) }
 })
 
 .repeater <- eventReactive(input$runRepeat, {
-  withProgress(message = 'Replicating simulation', value = 0, {
-    # print(rep_inputs())
-    do.call(repeater, rep_inputs())
+  isolate({
+    withProgress(message = 'Replicating simulation', value = 0, {
+      do.call(repeater, rep_inputs())
+    })
   })
 })
 
 .summary_repeat <- eventReactive(input$runRepeat, {
-  object <- .repeater()
-  if (is.null(object)) return(invisible())
-
-  do.call(summary, c(list(object = object), rep_sum_inputs()))
+  isolate({
+    object <- .repeater()
+    if (is.null(object)) return(invisible())
+    do.call(summary, c(list(object = object), rep_sum_inputs()))
+  })
 })
 
 rep_plot <- eventReactive(input$runRepeat, {
-  # isolate({
+  isolate({
     nrPlots <- length(input$rep_fun) * length(input$rep_sum_vars) + length(strsplit(input$rep_form,"\n") %>% unlist)
-    # nr <<- if (nrPlots == 0) 200 else ceiling(nrPlots/2) * 200
     if (nrPlots == 0) 300 else ceiling(nrPlots/2) * 300
-  # })
+  })
 })
 
 rep_plot_width <- function() 650
@@ -497,10 +468,12 @@ rep_plot_height <- function() {
 }
 
 .plot_repeat <- eventReactive(input$runRepeat, {
+  isolate({
     object <- .repeater()
     if (is.null(object)) return(invisible())
     rep_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
       { do.call(plot, c(list(x = object), .)) }
+  })
 })
 
 report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
@@ -520,8 +493,8 @@ observeEvent(input$repeater_report, {
 
     outputs <- c("summary", "plot")
     inp_out <- list("","")
-    inp_out[[1]] <- clean_args(rep_sum_inputs(), rep_sum_args[-1])
-    inp_out[[2]] <- clean_args(rep_plot_inputs(), rep_plot_args[-1])
+    inp_out[[1]] <- clean_args(rep_sum_inputs(), rep_sum_args[-1]) %>% lapply(report_cleaner)
+    inp_out[[2]] <- clean_args(rep_plot_inputs(), rep_plot_args[-1]) %>% lapply(report_cleaner)
 
     update_report(inp_main = clean_args(rep_inputs(), rep_args) %>% lapply(report_cleaner),
                   fun_name = "repeater", inp_out = inp_out,

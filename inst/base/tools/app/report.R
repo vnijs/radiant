@@ -241,8 +241,12 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
 }
 
 observeEvent(input$rmd_report, {
-  if (input$rmd_report != rmd_example)
+  if (input$rmd_report != rmd_example) {
+    # path <- file.path(normalizePath("~"),"r_sessions")
+    # if (file.exists(path))
+    #   cat(r_state$rmd_report, file = file.path(path,"rmd_report.Rmd"), append = TRUE)
     r_state$rmd_report <<- input$rmd_report
+  }
 })
 
 update_report_fun <- function(cmd) {
@@ -252,10 +256,7 @@ update_report_fun <- function(cmd) {
     if (os_type == 'Windows') {
       cat(cmd, file = "clipboard")
     } else if (os_type == "Darwin") {
-      # cmd <- "test"
-      # library(magrittr)
       cat(cmd, file = pipe("pbcopy"))
-      # on.exit(close(file))
     } else if (os_type == "Linux") {
       cat("Clipboard not supported on linux")
     }
@@ -264,8 +265,6 @@ update_report_fun <- function(cmd) {
   }
 
   if (cmd != "") {
-
-    # print(input$rmd_report == rmd_example)
 
     # if (is_empty(input$rmd_report)) {
       if (is_empty(r_state$rmd_report)) {
