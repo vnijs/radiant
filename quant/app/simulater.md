@@ -133,10 +133,11 @@ To determine, the probability that annual profits are below \$36,500 we enter th
 
 When you are done with the input values click the `Repeat` button. Because we specified a name for `Repeat data` two data sets will be created. "simdat_repeat" will have all elements of the repeated simulation (i.e., 1000 x 365 rows) and "simdat_repeat_sum" will have the summarized data grouped by simulation run. Note that the extension "_sum" was used because we selected `sum` from the `Apply function` dropdown.
 
-Descriptive statistics for the repeated simulation are shown in the main panel under `Repeated simulation summary`. We see that the annual expected profit (i.e., the mean of `sum of profit`) for the company is 472087.2 with a standard deviation of 17498.2. Although we found above that daily profits can be below 100, the chance that profits are below $365 \times 100$ for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below \$36,500 is equal to 0).
+Descriptive statistics for the repeated simulation are shown in the main panel under `Repeated simulation summary`. We see that the annual expected profit (i.e., the mean of `sum of profit`) for the company is 172311.8 with a standard deviation of 10772.29. Although we found above that daily profits can be below 100, the chance that profits are below $365 \times 100$ for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below \$36,500 is equal to 0).
 
 ![sim output](figures_quant/simulater_repeat.png)
 
-A histogram of annual profits (`sum of profit`) is shown in the main panel under `Repeated simulation plots`.
+A histogram of annual profits (`sum of profit`) is shown in the main panel under `Repeated simulation plots`. There is no plot for `profit_365` because it only has one value (i.e., FALSE).
 
 The state file for the example in the screenshot above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a>
+
