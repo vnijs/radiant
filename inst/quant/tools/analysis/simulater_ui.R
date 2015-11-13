@@ -133,7 +133,7 @@ output$ui_rep_sum_vars <- renderUI({
 })
 
 output$ui_rep_byvar <- renderUI({
-  vars <- c("sim","run")
+  vars <- c("Simulation" = "sim", "Repeat" = "run")
   selectizeInput("rep_byvar", label = "Group by:", choices = vars,
     selected = state_single("rep_byvar", vars), multiple = FALSE,
     options = list(placeholder = 'Select group-by variable')
@@ -234,7 +234,7 @@ observeEvent(input$sim_binom_del, {
 
 output$ui_simulater <- renderUI({
   tagList(
-    conditionalPanel(condition = "input.tabs_simulate == 'Model'",
+    conditionalPanel(condition = "input.tabs_simulate == 'Simulate'",
       wellPanel(
         uiOutput("ui_sim_types")
       ),
@@ -382,7 +382,7 @@ output$simulater <- renderUI({
     ## mulitple tabs with components stacked
     sim_output_panels <- tabsetPanel(
       id = "tabs_simulate",
-      tabPanel("Model",
+      tabPanel("Simulate",
         HTML("<label>Simulation formulas:</label>"),
         textinput_maker("form","Formula", rows = "5"),
         HTML("<label>Simulation summary:</label>"),

@@ -420,7 +420,6 @@ summary.repeater <- function(object,
   # cat("Random  seed:", object$sim_call$seed, "\n")
   cat("Repeat  data:", name, "\n")
   cat("Summary data:", paste0(name,"_",cfun) , "\n")
-  # print(str(object))
 
   object %<>% group_by_(byvar) %>%
     summarise_each_(make_funs(fun), vars = sum_vars) %>%
@@ -503,7 +502,6 @@ plot.repeater <- function(x,
   if (identical(sum_vars, "")) return(invisible())
   if (is.character(object)) object <- getdata(object)
 
-
   object %<>% group_by_(byvar) %>%
     summarise_each_(make_funs(fun), vars = sum_vars) %>%
     select(-1)
@@ -540,6 +538,11 @@ plot.repeater <- function(x,
 
     plot_list[[i]] <-
       visualize(select_(object, .dots = i), xvar = i, bins = 20, custom = TRUE)
+
+    if (i %in% sum_vars) {
+      cfun <- sub("_rm$","",fun)
+      plot_list[[i]] <- plot_list[[i]] + xlab(paste0(cfun, " of ", i))
+    }
   }
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%

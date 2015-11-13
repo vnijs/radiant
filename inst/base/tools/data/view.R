@@ -28,7 +28,7 @@ output$ui_View <- renderUI({
         tags$td(actionButton("view_store", "Store"), style="padding-top:30px;")
       )
     ),
-    help_modal('View','view_help',inclMD(file.path(r_path,"base/tools/help/view.md")))
+    help_modal('View','view_help',inclMD(file.path(r_path,"base/tools/help/view.md")) %>% gsub("`","",.))
   )
 })
 
