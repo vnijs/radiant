@@ -64,42 +64,18 @@ A few additional examples of formulas are shown below:
 
 See the table below for an example:
 
-<table class='table table-condensed table-hover' style='width:40%;'>
- <thead>
-  <tr>
-   <th style="text-align:left;"> x </th>
-   <th style="text-align:left;"> y </th>
-   <th style="text-align:left;"> pmax(x,y) </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> 3 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> 8 </td>
-   <td style="text-align:left;"> 8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 4 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 5 </td>
-   <td style="text-align:left;"> 10 </td>
-   <td style="text-align:left;"> 10 </td>
-  </tr>
-</tbody>
-</table>
+```{r results = 'asis', echo = FALSE}
+x <- c(1,2,3,4,5)
+y <- c(0,3,8,2,10)
+tab_large <- "class='table table-condensed table-hover' style='width:40%;'"
+data.frame(
+  x = x,
+  y = y,
+  `pmax(x,y)` = pmax(x,y),
+ 	check.names = FALSE
+) %>%
+knitr::kable(align = 'l', format = 'html', escape = FALSE, table.attr = tab_large)
+```
 
 ### Running the simulation
 
