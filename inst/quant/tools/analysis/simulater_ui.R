@@ -14,7 +14,7 @@ sim_inputs <- reactive({
   for (i in names(sim_args))
     sim_args[[i]] <- input[[paste0("sim_",i)]]
 
-  if (!is.null(input$sym_types)) {
+  if (!is.null(input$sim_types)) {
     for (i in sim_types)
       if (!i %in% input$sim_types) sim_args[[i]] <- ""
   }
@@ -435,7 +435,6 @@ sim_plot_height <- function() {
 }
 
 .plot_simulate <- reactive({
-  # .simulater() %>% { if (is.null(.)) invisible() else plot(., shiny = TRUE) }
   .simulater() %>% { if (is_empty(.)) invisible() else plot(., shiny = TRUE) }
 })
 
