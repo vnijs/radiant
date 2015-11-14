@@ -4,7 +4,7 @@ Start by selecting the types of variables to use in the analysis from the `Selec
 
 ### Constant
 
-List the constants to include in the analysis in the `Constant variables` input. You can either enter names and values directly into the text area (e.g., "cost 3") or enter a name ("cost") and a value (5) in the `Name` and `Value` input respectively and then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Press the <i title='Remove variable' href='#' class='fa fa-plus-circle'></i> icon to remove a variable. Note that only variables listed in the (larger) text-input boxes will be included in the simulation.
+List the constants to include in the analysis in the `Constant variables` input. You can either enter names and values directly into the text area (e.g., "cost 3") or enter a name ("cost") and a value (5) in the `Name` and `Value` input respectively and then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Press the <i title='Remove variable' href='#' class='fa fa-minus-circle'></i> icon to remove a variable. Note that only variables listed in the (larger) text-input boxes will be included in the simulation.
 
 ### Binomial
 
@@ -16,7 +16,7 @@ Define random variables with a discrete distribution using the `Discrete variabl
 
 ### Normal
 
-To include normally distributed random variables in the analysis select `Normal` from the `Select types` dropdown and use `Normal variables` inputs. For example, enter a `Name` ("demand"), the `Mean` (1000) and the standard deviation (`St.dev.`, 100). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., "demand 1000 2000").
+To include normally distributed random variables in the analysis select `Normal` from the `Select types` dropdown and use `Normal variables` inputs. For example, enter a `Name` ("demand"), the `Mean` (1000) and the standard deviation (`St.dev.`, 100). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., "demand 1000 100").
 
 ### Uniform
 
