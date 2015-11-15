@@ -283,7 +283,7 @@ img {
 <p>z = x == y</p></li>
 <li><p>The command above is equivalent to the one below using <code>ifelse</code>. Note the similarity to <code>if</code> statements in Excel</p>
 <p>z = ifelse(x &lt; y, TRUE, FALSE)</p></li>
-<li><p><code>ifelse</code> statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 1 if x is smaller than 60. If x is larger than 100 z is set equal to 1. Finally, when x is between 60 and 100, z is set to 2. <strong>Note:</strong> make sure to include the appropriate number of opening <code>(</code> and closing <code>)</code> brackets</p>
+<li><p><code>ifelse</code> statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 0 if x is smaller than 60. If x is larger than 100 z is set equal to 1. Finally, when x is between 60 and 100, z is set to 2. <strong>Note:</strong> make sure to include the appropriate number of opening <code>(</code> and closing <code>)</code> brackets</p>
 <p>z = ifelse(x &lt; 60, 0, ifelse(x &gt; 100, 1, 2))</p></li>
 <li><p>To create a new variable z that is a transformation of variable x but with mean equal to zero:</p>
 <p>z = x - mean(x)</p></li>
