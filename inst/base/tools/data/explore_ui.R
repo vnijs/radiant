@@ -203,6 +203,9 @@ output$expl_summary <- renderPrint({
 
 observeEvent(input$explore_report, {
   isolate({
+    ## add command to store data and/or download it
+    # xcmd <-
+    #     paste0("# store_reg(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
     update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),
                   fun_name = "explore",
                   inp_out = list(list(top = input$expl_top)),

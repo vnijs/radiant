@@ -50,7 +50,7 @@ A few additional examples of formulas are shown below:
 
 	z = ifelse(x < y, TRUE, FALSE)
 
-5. `ifelse` statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 1 if x is smaller than 60. If x is larger than 100 z is set equal to 1. Finally, when x is between 60 and 100, z is set to 2. **Note:** make sure to include the appropriate number of opening `(` and closing `)` brackets
+5. `ifelse` statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 0 if x is smaller than 60. If x is larger than 100 z is set equal to 1. Finally, when x is 60, 100, or between 60 and 100, z is set to 2. **Note:** make sure to include the appropriate number of opening `(` and closing `)` brackets
 
 	z = ifelse(x < 60, 0, ifelse(x > 100, 1, 2))
 

@@ -321,9 +321,39 @@ repeater <- function(nr = 12,
                      sim = "") {
 
   if (is.character(sim)) sim <- getdata(sim)
-
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
-  if (identical(vars, "")) return()
+
+  if (identical(vars, "") && identical(grid, "")) {
+    mess <- c("error",paste0("Select variables to re-simulate and/or a specify a constant\nto change using 'Grid search'"))
+    return(mess %>% set_class(c("repeater", class(.))))
+  }
+
+  cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
+    gsub("[ ]*[\n;]+[ ]*",";",.) %>%
+    gsub("[;]{2,}",";",.) %>%
+    gsub(";$","",.)
+
+  spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+
+  # grid <- "q 100 200 1; a 1 5 1"
+  # grid <- "q 100 200 1"
+  # library(magrittr)
+  # vars <- c("a","b")
+  if (identical(vars, "")) vars <- character(0)
+
+  grid_list <- list()
+  if (!identical(grid, "")) {
+    grid %<>% cleaner
+    if (grid != "") {
+      s <- grid %>% spliter
+      for (i in 1:length(s)) {
+        if (is_empty(s[[i]][4])) s[[i]][4] <- 1
+        s[[i]] %>% { grid_list[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), as.numeric(.[4]))}
+      }
+    }
+    ## expanding list of variables but removing ""
+    vars <- c(vars, names(grid_list)) %>% unique
+  }
 
   ## from http://stackoverflow.com/a/7664655/1974918
   ## keep those list elements that, e.g., q is in
@@ -334,7 +364,6 @@ repeater <- function(nr = 12,
   sc[1:which(names(sc) == "form")] <- ""
   sc[names(sc_keep)] <- sc_keep
   sc$dat <- sim$dat %>% as.list
-  sc$form
 
   rep_sim <- function(run_nr) {
     bind_cols(
@@ -344,23 +373,54 @@ repeater <- function(nr = 12,
   }
 
   rep_grid_sim <- function(gval) {
-    sc_grid <- grep(paste(vars, collapse = "|"), sc_keep, value=TRUE) %>% {.[which(names(.) != "form")]}
-    sc[names(sc_grid)] <- sub(paste0("[;\n]", vars, " [.0-9]+"), paste0("\n", vars, " ", gval), sc_grid) %>%
-                          sub(paste0("^", vars, " [.0-9]+"), paste0(vars, " ", gval), .)
+    # print(gval)
+    # print(sc_keep)
+    # print(vars)
+    # vars <-  c("q","price")
+    # sc_keep <- c("const" = "q 535;cost 1.25;salvage .5;price 5;")
+    # gval <- c(price = 4, q = 990)
+    # gval <- gval[1]
+    gvars <- names(gval)
+
+    ## removing form ...
+    sc_grid <- grep(paste(gvars, collapse = "|"), sc_keep, value=TRUE) %>% {.[which(names(.) != "form")]}
+    for (i in 1:length(gvars)) {
+      sc_grid %<>% sub(paste0("[;\n]", gvars[i], " [.0-9]+"), paste0("\n", gvars[i], " ", gval[gvars[i]]), .) %>%
+      sub(paste0("^", gvars[i], " [.0-9]+"), paste0(gvars[i], " ", gval[gvars[i]]), .)
+    }
+
+    sc[names(sc_grid)] <- sc_grid
+
+      # sub(paste0("[;\n]", vars, " [.0-9]+"), paste0("\n", vars, " ", gval), sc_grid)
+      # paste0("[;\n]", vars, " [.0-9]+")
+      # paste0("\n", vars, " ", gval)
+      # %>%
+    # print(sc)
+    # print(sc[c("const","norm","form")])
 
     bind_cols(
-      data_frame(run = rep(gval, nr_sim), sim = 1:nr_sim),
+      data_frame(run = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)$dat
     )
   }
 
-  if (grid == "") {
+  if (length(grid_list) == 0) {
     ret <- bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
   } else {
-    grid %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
-    grid <- try(eval(parse(text = paste0("with(sim$dat, expand.grid(", grid ,"))"))), silent = TRUE)
-    ret <- bind_rows(lapply(grid[,1], rep_grid_sim)) %>% set_class(c("repeater", class(.)))
+
+    # grid %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
+    # grid <- try(eval(parse(text = paste0("with(sim$dat, expand.grid(", grid ,"))"))), silent = TRUE)
+    grid <- expand.grid(grid_list)
+    # ret <- bind_rows(lapply(grid[,1], rep_grid_sim)) %>% set_class(c("repeater", class(.)))
+    ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
+    # ret <- bind_rows(lapply(grid, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
+
+  # prn <- function(x) print(x)
+  # apply(mtcars, 1, prn)
+  # ?lapply
+
+
 
   name %<>% gsub(" ","",.)
   if (name != "") {
@@ -405,7 +465,12 @@ summary.repeater <- function(object,
                              ...) {
 
   if (identical(sum_vars, "")) return("Select one or more 'Output variables'")
-  if (is.character(object)) object <- getdata(object)
+
+  # if (is.character(object)) object <- getdata(object)
+  if (is.character(object)) {
+    if (object[1] == "error") return(cat(object[2]))
+    else object <- getdata(object)
+  }
 
   sim <- max(object$sim)
   runs <- length(unique(object$run))
@@ -497,10 +562,20 @@ plot.repeater <- function(x,
                           form = "",
                           shiny = FALSE, ...) {
 
-  object <- x; rm(x)
 
   if (identical(sum_vars, "")) return(invisible())
-  if (is.character(object)) object <- getdata(object)
+
+  # if (is.character(object)) object <- getdata(object)
+
+  if (is.character(x)) {
+    if (x[1] == "error") return(invisible())
+    object <- getdata(x)
+    if (nrow(object) == 0) return(invisible())
+  }
+  rm(x)
+
+  # object <- x; rm(x)
+
 
   object %<>% group_by_(byvar) %>%
     summarise_each_(make_funs(fun), vars = sum_vars) %>%
