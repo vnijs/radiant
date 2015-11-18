@@ -65,6 +65,11 @@ simulater <- function(const = "",
   # name = "sim1"
   # nr = 1000
 
+  if (is_empty(nr)) {
+    mess <- c("error",paste0("Please specify the number of simulations in '# sims'"))
+    return(mess %>% set_class(c("simulater", class(.))))
+  }
+
   ## remove any non-numbers from seed, including spaces
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
@@ -83,7 +88,7 @@ simulater <- function(const = "",
   if (const != "") {
     s <- const %>% spliter
     for (i in 1:length(s))
-      s[[i]] %>% { dat[[.[1]]] <<- as.numeric(.[2]) %>% rep(,nr) }
+      s[[i]] %>% { dat[[.[1]]] <<- as.numeric(.[2]) %>% rep(nr) }
   }
 
   ## parsing uniform
@@ -320,6 +325,15 @@ repeater <- function(nr = 12,
                      name = "",
                      sim = "") {
 
+  if (is_empty(nr)) {
+    if (is_empty(grid)) {
+      mess <- c("error",paste0("Please specify the number of repetitions in '# runs'"))
+      return(mess %>% set_class(c("repeater", class(.))))
+    } else {
+      nr = 1
+    }
+  }
+
   if (is.character(sim)) sim <- getdata(sim)
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
@@ -415,12 +429,6 @@ repeater <- function(nr = 12,
     ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
     # ret <- bind_rows(lapply(grid, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
-
-  # prn <- function(x) print(x)
-  # apply(mtcars, 1, prn)
-  # ?lapply
-
-
 
   name %<>% gsub(" ","",.)
   if (name != "") {
@@ -574,9 +582,6 @@ plot.repeater <- function(x,
   }
   rm(x)
 
-  # object <- x; rm(x)
-
-
   object %<>% group_by_(byvar) %>%
     summarise_each_(make_funs(fun), vars = sum_vars) %>%
     select(-1)
@@ -619,6 +624,8 @@ plot.repeater <- function(x,
       plot_list[[i]] <- plot_list[[i]] + xlab(paste0(cfun, " of ", i))
     }
   }
+
+  if (length(plot_list) == 0) return(invisible())
 
   sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
