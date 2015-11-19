@@ -5,7 +5,7 @@
 \title{Summarize repeated simulation}
 \usage{
 \method{summary}{repeater}(object, sum_vars = "", byvar = "",
-  fun = "sum_rm", form = "", name = "", ...)
+  fun = "sum_rm", form = "", name = "", dec = 3, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{repeater}}}
@@ -19,6 +19,8 @@
 \item{form}{A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")}
 
 \item{name}{To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods}
 }

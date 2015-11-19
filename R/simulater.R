@@ -216,6 +216,7 @@ simulater <- function(const = "",
 #' @details See \url{http://vnijs.github.io/radiant/quant/simulater.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{simulater}}
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -226,7 +227,7 @@ simulater <- function(const = "",
 #' @seealso \code{\link{plot.simulater}} to plot results
 #'
 #' @export
-summary.simulater <- function(object, ...) {
+summary.simulater <- function(object, dec = 3, ...) {
 
   if (is.character(object)) {
     if (object[1] == "error") return(cat(object[2]))
@@ -256,7 +257,7 @@ summary.simulater <- function(object, ...) {
     # cat(paste0("Formulas   :\n\t", gsub("\n;*","\n\t",object$sim_call$form), "\n"))
   cat("\n")
 
-  sim_summary(object$dat)
+  sim_summary(object$dat, dec = ifelse(is.na(dec),3,dec))
 }
 
 #' Plot method for the simulater function
@@ -461,6 +462,7 @@ repeater <- function(nr = 12,
 #' @param fun Functions to use for summarizing
 #' @param form A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")
 #' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
@@ -470,6 +472,7 @@ summary.repeater <- function(object,
                              fun = "sum_rm",
                              form = "",
                              name = "",
+                             dec = 3,
                              ...) {
 
   if (identical(sum_vars, "")) return("Select one or more 'Output variables'")
@@ -549,7 +552,7 @@ summary.repeater <- function(object,
     env$r_data[[paste0(name,"_descr")]] <- mess
   }
 
-  sim_summary(object, fun = cfun)
+  sim_summary(object, fun = cfun, dec = ifelse(is.na(dec),3,dec))
 }
 
 #' Plot repeated simulation
@@ -631,7 +634,7 @@ plot.repeater <- function(x,
     { if (shiny) . else print(.) }
 }
 
-sim_summary <- function(dat, dc = getclass(dat), fun = "") {
+sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
 
   isLogic <- "logical" == dc
   isNum <- !isLogic
@@ -643,7 +646,7 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "") {
       cn <- names(dc)[isConst]
       cat("Constants:\n")
       select(dat, which(isConst)) %>% na.omit %>% .[1,] %>% as.data.frame %>%
-        set_rownames("") %>% set_colnames(cn) %>% print
+        round(dec) %>% set_rownames("") %>% set_colnames(cn) %>% print
       cat("\n")
     }
 
@@ -659,7 +662,7 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "") {
         { if (fun == "") . else {.[[1]] <- paste0(fun, " of ", .[[1]])}; . } %>%
         { .[[1]] <- format(.[[1]], justify = "left"); .} %>%
         data.frame(check.names = FALSE) %>%
-        { .[,-1] %<>% round(.,3); colnames(.)[1] <- ""; . } %>%
+        { .[,-1] %<>% round(.,dec); colnames(.)[1] <- ""; . } %>%
         print(row.names = FALSE)
       cat("\n")
     }
@@ -668,7 +671,8 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "") {
   if (sum(isLogic) > 0) {
     cat("Logicals:\n")
     select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% matrix(ncol = 2) %>%
-      set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>% set_rownames(names(dat)[isLogic]) %>% print
+      round(dec) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
+      set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
   }
 }

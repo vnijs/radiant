@@ -4,10 +4,12 @@
 \alias{summary.simulater}
 \title{Summary method for the simulater function}
 \usage{
-\method{summary}{simulater}(object, ...)
+\method{summary}{simulater}(object, dec = 3, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{simulater}}}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods}
 }

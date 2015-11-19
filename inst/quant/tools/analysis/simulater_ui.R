@@ -355,7 +355,9 @@ output$ui_simulater <- renderUI({
         with(tags, table(
           td(textInput("sim_name", "Simulated data:", state_init("sim_name", "simdat"))),
           td(actionButton("runSim", "Simulate"), style="padding-top:30px;")
-        ))
+        )),
+        numericInput("sim_dec", label = "Decimals:",
+                     value = state_init("sim_dec", 3), min = 0)
       ),
       help_and_report(modal_title = "Simulate", fun_name = "simulater",
         help_file = inclMD(file.path(r_path,"quant/tools/help/simulater.md")))
@@ -372,11 +374,14 @@ output$ui_simulater <- renderUI({
             td(numericInput("rep_grid_max", "Max:", value = state_init("rep_grid_max"))),
             td(numericInput("rep_grid_step", "Step:", value = state_init("rep_grid_step")))
         )),
-        textinput_maker("grid","",pre = "rep_"),
-        # textInput("rep_grid", "Grid search:", value = state_init("rep_grid", "")),
+        textinput_maker("grid","",pre = "rep_")
+      ),
+      wellPanel(
         uiOutput("ui_rep_sum_vars"),
         uiOutput("ui_rep_byvar"),
-        uiOutput("ui_rep_fun"),
+        uiOutput("ui_rep_fun")
+      ),
+      wellPanel(
         with(tags, table(
           td(textInput("rep_seed", "Set random seed:",
                        value = state_init('rep_seed'))),
@@ -387,7 +392,9 @@ output$ui_simulater <- renderUI({
         with(tags, table(
           td(textInput("rep_name", "Repeat data:", state_init("rep_name", "simdat_repeat"))),
           td(actionButton("runRepeat", "Repeat"), style="padding-top:30px;")
-        ))
+        )),
+        numericInput("rep_dec", label = "Decimals:",
+                     value = state_init("rep_dec", 3), min = 0)
       ),
       help_and_report(modal_title = "Repeat simulation", fun_name = "repeater",
                       help_file = inclMD(file.path(r_path,"quant/tools/help/simulater.md")))
@@ -442,8 +449,10 @@ output$simulater <- renderUI({
   })
 })
 
-.summary_simulate <- reactive({
-  .simulater() %>% { if (is.null(.)) invisible() else summary(.) }
+.summary_simulate <- eventReactive(input$runSim, {
+  isolate({
+    .simulater() %>% { if (is.null(.)) invisible() else summary(., dec = input$sim_dec) }
+  })
 })
 
 sim_plot_width <- function() 650
@@ -507,8 +516,10 @@ report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
 
 observeEvent(input$simulater_report, {
   isolate({
+    sim_dec <- input$sim_dec %>% {ifelse(is.na(.), 3, .)}
     update_report(inp_main = clean_args(sim_inputs(), sim_args) %>% lapply(report_cleaner),
-                  fun_name = "simulater", inp_out = list("",""),
+                  fun_name = "simulater", inp_out = list(list(dec = sim_dec),""),
+                  # fun_name = "simulater", inp_out = list("",""),
                   outputs = c("summary","plot"), figs = TRUE,
                   fig.width = round(7 * sim_plot_width()/650,2),
                   fig.height = round(7 * (sim_plot_height()/650),2))
