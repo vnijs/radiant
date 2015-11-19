@@ -211,10 +211,10 @@ summary.regression <- function(object,
       confint(object$model, level = conf_lev) %>%
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
-        cbind(select(object$reg_coeff,2),.) %>%
+        { .$`+/-` <- (.$High - .$Low)/2; . } %>%
         round(dec) %>%
-        set_rownames(object$reg_coeff$`  `) %T>%
-        { .$`+/-` <- (.$High - .$coefficient) } %>%
+        cbind(object$reg_coeff[[2]],.) %>%
+        set_rownames(object$reg_coeff$`  `) %>%
         set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
         print
       cat("\n")
