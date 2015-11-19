@@ -257,8 +257,11 @@ summary.simulater <- function(object, dec = 3, ...) {
     # cat(paste0("Formulas   :\n\t", gsub("\n;*","\n\t",object$sim_call$form), "\n"))
   cat("\n")
 
-  sim_summary(object$dat, dec = ifelse(is.na(dec),3,dec))
+  # sim_summary(object$dat, dec = ifelse(is.na(dec), 3, dec))
+  sim_summary(object$dat, dec = 3)
 }
+
+is.na("3")
 
 #' Plot method for the simulater function
 #'
@@ -552,7 +555,8 @@ summary.repeater <- function(object,
     env$r_data[[paste0(name,"_descr")]] <- mess
   }
 
-  sim_summary(object, fun = cfun, dec = ifelse(is.na(dec),3,dec))
+  # sim_summary(object, fun = cfun, dec = ifelse(is.na(dec),3,dec))
+  sim_summary(object, fun = cfun, dec = 3)
 }
 
 #' Plot repeated simulation
@@ -639,6 +643,9 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
   isLogic <- "logical" == dc
   isNum <- !isLogic
 
+  # dec <- ifelse(is.na(dec), 3, as_numeric(dec))
+  dec <- 3
+
   if (sum(isNum) > 0) {
 
     isConst <- !sapply(dat, does_vary) & isNum
@@ -646,7 +653,9 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
       cn <- names(dc)[isConst]
       cat("Constants:\n")
       select(dat, which(isConst)) %>% na.omit %>% .[1,] %>% as.data.frame %>%
-        round(dec) %>% set_rownames("") %>% set_colnames(cn) %>% print
+        # round(dec) %>% set_rownames("") %>% set_colnames(cn) %>% print
+        # round(3) %>% set_rownames("") %>% set_colnames(cn) %>% print
+        set_rownames("") %>% set_colnames(cn) %>% print
       cat("\n")
     }
 
@@ -662,7 +671,9 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
         { if (fun == "") . else {.[[1]] <- paste0(fun, " of ", .[[1]])}; . } %>%
         { .[[1]] <- format(.[[1]], justify = "left"); .} %>%
         data.frame(check.names = FALSE) %>%
-        { .[,-1] %<>% round(.,dec); colnames(.)[1] <- ""; . } %>%
+        # { .[,-1] %<>% round(.,dec); colnames(.)[1] <- ""; . } %>%
+        # { .[,-1] %<>% round(., 3); colnames(.)[1] <- ""; . } %>%
+        { colnames(.)[1] <- ""; . } %>%
         print(row.names = FALSE)
       cat("\n")
     }
@@ -671,7 +682,9 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
   if (sum(isLogic) > 0) {
     cat("Logicals:\n")
     select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% matrix(ncol = 2) %>%
-      round(dec) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
+      # round(dec) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
+      # round(3) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
+      set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
       set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
   }
