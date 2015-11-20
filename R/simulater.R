@@ -105,12 +105,11 @@ simulater <- function(const = "",
   if (binom != "") {
     s <- binom %>% sim_splitter
     for (i in 1:length(s))
-      s[[i]] %>% { dat[[.[1]]] <<- rbinom(nr, as.numeric(.[2]) , as.numeric(.[3]))}
+      s[[i]] %>% { dat[[.[1]]] <<- rbinom(nr, as_integer(.[2]) , as_numeric(.[3]))}
   }
 
   ## parsing sequence
   sequ %<>% sim_cleaner
-  # print(sequ)
   if (sequ != "") {
     s <- sequ %>% sim_splitter
     for (i in 1:length(s))
@@ -220,7 +219,7 @@ simulater <- function(const = "",
 #' @seealso \code{\link{plot.simulater}} to plot results
 #'
 #' @export
-summary.simulater <- function(object, dec = 3, ...) {
+summary.simulater <- function(object, dec = 4, ...) {
 
   if (is.character(object)) {
     if (object[1] == "error") return(cat(object[2]))
@@ -243,15 +242,9 @@ summary.simulater <- function(object, dec = 3, ...) {
     cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$form))
     cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
-
-    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]","\n\t",.) %>% gsub(";\n", "\n\t",.),"\n"))
-    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("[^;]\n","\n\t",.) %>% gsub(";[^\n]", "\n\t",.)))
-    # cat(paste0("Formulas   :\n\t", gsub("[\n;]","\n\t",object$sim_call$form), "\n"))
-    # cat(paste0("Formulas   :\n\t", gsub("\n;*","\n\t",object$sim_call$form), "\n"))
   cat("\n")
 
-  sim_summary(object$dat, dec = ifelse(is.na(dec), 3, dec))
-  # sim_summary(object$dat, dec = 3)
+  sim_summary(object$dat, dec = ifelse(is.na(dec), 4, dec))
 }
 
 #' Plot method for the simulater function
@@ -337,13 +330,6 @@ repeater <- function(nr = 12,
     return(mess %>% set_class(c("repeater", class(.))))
   }
 
-  # sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-  #   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-  #   gsub("[;]{2,}",";",.) %>%
-  #   gsub(";$","",.)
-
-  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
-
   # grid <- "q 100 200 1; a 1 5 1"
   # grid <- "q 100 200 1"
   # library(magrittr)
@@ -382,13 +368,6 @@ repeater <- function(nr = 12,
   }
 
   rep_grid_sim <- function(gval) {
-    # print(gval)
-    # print(sc_keep)
-    # print(vars)
-    # vars <-  c("q","price")
-    # sc_keep <- c("const" = "q 535;cost 1.25;salvage .5;price 5;")
-    # gval <- c(price = 4, q = 990)
-    # gval <- gval[1]
     gvars <- names(gval)
 
     ## removing form ...
@@ -400,13 +379,6 @@ repeater <- function(nr = 12,
 
     sc[names(sc_grid)] <- sc_grid
 
-      # sub(paste0("[;\n]", vars, " [.0-9]+"), paste0("\n", vars, " ", gval), sc_grid)
-      # paste0("[;\n]", vars, " [.0-9]+")
-      # paste0("\n", vars, " ", gval)
-      # %>%
-    # print(sc)
-    # print(sc[c("const","norm","form")])
-
     bind_cols(
       data_frame(run = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)$dat
@@ -416,13 +388,8 @@ repeater <- function(nr = 12,
   if (length(grid_list) == 0) {
     ret <- bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
   } else {
-
-    # grid %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
-    # grid <- try(eval(parse(text = paste0("with(sim$dat, expand.grid(", grid ,"))"))), silent = TRUE)
     grid <- expand.grid(grid_list)
-    # ret <- bind_rows(lapply(grid[,1], rep_grid_sim)) %>% set_class(c("repeater", class(.)))
     ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
-    # ret <- bind_rows(lapply(grid, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
 
   name %<>% gsub(" ","",.)
@@ -466,12 +433,11 @@ summary.repeater <- function(object,
                              fun = "sum_rm",
                              form = "",
                              name = "",
-                             dec = 3,
+                             dec = 4,
                              ...) {
 
   if (identical(sum_vars, "")) return("Select one or more 'Output variables'")
 
-  # if (is.character(object)) object <- getdata(object)
   if (is.character(object)) {
     if (object[1] == "error") return(cat(object[2]))
     else object <- getdata(object)
@@ -496,13 +462,6 @@ summary.repeater <- function(object,
     select(-1)
 
   if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
-
-  # sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-  #   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-  #   gsub("[;]{2,}",";",.) %>%
-  #   gsub(";$","",.)
-
-  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
   form %<>% sim_cleaner
   if (form != "") {
@@ -547,8 +506,7 @@ summary.repeater <- function(object,
     env$r_data[[paste0(name,"_descr")]] <- mess
   }
 
-  # sim_summary(object, fun = cfun, dec = ifelse(is.na(dec),3,dec))
-  sim_summary(object, fun = cfun, dec = 3)
+  sim_summary(object, fun = cfun, dec = ifelse (is.na(dec), 4, dec))
 }
 
 #' Plot repeated simulation
@@ -572,8 +530,6 @@ plot.repeater <- function(x,
 
   if (identical(sum_vars, "")) return(invisible())
 
-  # if (is.character(object)) object <- getdata(object)
-
   if (is.character(x)) {
     if (x[1] == "error") return(invisible())
     object <- getdata(x)
@@ -586,13 +542,6 @@ plot.repeater <- function(x,
     select(-1)
 
   if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
-
-  # sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-  #   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-  #   gsub("[;]{2,}",";",.) %>%
-  #   gsub(";$","",.)
-
-  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
   form %<>% sim_cleaner
   if (form != "") {
@@ -631,14 +580,20 @@ plot.repeater <- function(x,
     { if (shiny) . else print(.) }
 }
 
-sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
+#' Print simulation summary
+#'
+#' @param dat Simulated data
+#' @param dc Variable classes
+#' @param fun Summary function to apply
+#' @param dec Number of decimals to show
+#'
+#' @export
+sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 4) {
 
   isLogic <- "logical" == dc
   isNum <- !isLogic
 
-  print(dec)
-  # dec <- ifelse(is.na(dec), 3, as_numeric(dec))
-  dec <- 3
+  dec <- ifelse(is.na(dec), 4, as_integer(dec))
 
   if (sum(isNum) > 0) {
 
@@ -647,9 +602,9 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
       cn <- names(dc)[isConst]
       cat("Constants:\n")
       select(dat, which(isConst)) %>% na.omit %>% .[1,] %>% as.data.frame %>%
-        # round(dec) %>% set_rownames("") %>% set_colnames(cn) %>% print
-        # round(3) %>% set_rownames("") %>% set_colnames(cn) %>% print
-        set_rownames("") %>% set_colnames(cn) %>% print
+        round(dec) %>% mutate_each(funs(formatC(., big.mark = ",", digits = dec, format = "f"))) %>%
+        set_rownames("") %>% set_colnames(cn) %>%
+        print
       cat("\n")
     }
 
@@ -665,9 +620,8 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
         { if (fun == "") . else {.[[1]] <- paste0(fun, " of ", .[[1]])}; . } %>%
         { .[[1]] <- format(.[[1]], justify = "left"); .} %>%
         data.frame(check.names = FALSE) %>%
-        # { .[,-1] %<>% round(.,dec); colnames(.)[1] <- ""; . } %>%
-        # { .[,-1] %<>% round(., 3); colnames(.)[1] <- ""; . } %>%
-        { colnames(.)[1] <- ""; . } %>%
+        { .[,-1] %<>% round(.,dec); colnames(.)[1] <- ""; . } %>%
+        { .[,-(1:2)] %<>% mutate_each(funs(formatC(., big.mark = ",", digits = dec, format = "f"))); . } %>%
         print(row.names = FALSE)
       cat("\n")
     }
@@ -675,19 +629,31 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
 
   if (sum(isLogic) > 0) {
     cat("Logicals:\n")
-    select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% matrix(ncol = 2) %>%
-      # round(dec) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
-      # round(3) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
-      set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
+    select(dat, which(isLogic)) %>% summarise_each(funs(sum, mean)) %>% round(dec) %>%
+      matrix(ncol = 2) %>% set_colnames(c("TRUE (nr)  ", "TRUE (prop)")) %>%
       set_rownames(names(dat)[isLogic]) %>% print
     cat("\n")
   }
 }
 
+#' Clean input command string
+#'
+#' @param x Input string
+#'
+#' @return Cleaned string
+#'
+#' @export
 sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
   gsub("[;]{2,}",";",.) %>%
   gsub(";$","",.) %>%
   gsub("^;","",.)
 
+#' Split input command string
+#'
+#' @param x Input string
+#'
+#' @return Split input command string
+#'
+#' @export
 sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)

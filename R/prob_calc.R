@@ -1160,6 +1160,9 @@ prob_binom <- function(n,
                        pub = NA,
                        dec = 3) {
 
+	## making sure n is integer
+	n <- as_integer(n)
+
 	if (is.na(lb) || lb < 0) {
 		p_elb <- p_lb <- lb <- NA
 	} else {

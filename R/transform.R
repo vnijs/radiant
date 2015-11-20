@@ -186,7 +186,8 @@ as_integer <- function(x) {
 	if (is.factor(x)) {
 		levels(x) %>% .[x] %>% as.integer
 	} else if (is.character(x)) {
-    x
+    int <- sshhr( try(as.integer(x), silent = TRUE))
+    if (length(na.omit(int)) == 0) x else int
   } else {
 		as.integer(x)
 	}
