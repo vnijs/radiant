@@ -652,6 +652,7 @@ sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
 #' Split input command string
 #'
 #' @param x Input string
+#' @param symbol Symbol used to split the command string
 #'
 #' @return Split input command string
 #'

@@ -35,6 +35,10 @@ glm_reg <- function(dataset, dep_var, indep_var,
   dat <- getdata(dataset, c(dep_var, indep_var), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
+  if (any(summarise_each(dat, funs(does_vary)) == FALSE))
+    return("One or more selected variables show no variation. Please select other variables." %>%
+           set_class(c("glm_reg",class(.))))
+
   glm_dv <- dat[[dep_var]]
   if (lev == "") {
     if (is.factor(glm_dv))
@@ -126,6 +130,7 @@ summary.glm_reg <- function(object,
                             test_var = "",
                             ...) {
 
+  if (is.character(object)) return(object)
   if (class(object$model)[1] != 'glm') return(object)
 
   dec <- object$dec
@@ -286,6 +291,7 @@ plot.glm_reg <- function(x,
                          ...) {
 
   object <- x; rm(x)
+  if (is.character(object)) return(object)
 
   if (class(object$model)[1] != 'glm') return(object)
 
@@ -394,6 +400,7 @@ predict.glm_reg <- function(object,
                             prn = TRUE,
                             ...) {
 
+  if (is.character(object)) return(object)
   pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
   ## used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% object$check) {
@@ -546,6 +553,7 @@ plot.glm_predict <- function(x,
   if (is.null(xvar) || xvar == "") return(invisible())
 
   object <- x; rm(x)
+  if (is.character(object)) return(object)
 
   object$ymin <- object$Prediction - qnorm(.5 + conf_lev/2)*object$std.error
   object$ymax <- object$Prediction + qnorm(.5 + conf_lev/2)*object$std.error
@@ -610,8 +618,6 @@ store_glm <- function(object,
       store <- object$Prediction
     }
   }
-
-  # store <- if (type == "residuals") object$model$residuals else object$Prediction
 
   changedata(data, vars = store, var_names = name)
 }

@@ -5,7 +5,7 @@
 \title{Summarize repeated simulation}
 \usage{
 \method{summary}{repeater}(object, sum_vars = "", byvar = "",
-  fun = "sum_rm", form = "", name = "", dec = 3, ...)
+  fun = "sum_rm", form = "", name = "", dec = 4, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{repeater}}}

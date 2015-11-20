@@ -4,7 +4,7 @@
 \alias{summary.simulater}
 \title{Summary method for the simulater function}
 \usage{
-\method{summary}{simulater}(object, dec = 3, ...)
+\method{summary}{simulater}(object, dec = 4, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{simulater}}}
