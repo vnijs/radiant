@@ -75,60 +75,53 @@ simulater <- function(const = "",
 
   if (is.null(dat)) dat <- list()
 
-  cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-    gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-    gsub("[;]{2,}",";",.) %>%
-    gsub(";$","",.)
-
-  spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
-
   ## parsing constant
   # const <- "non_labor_cost 3995;\n;\n;cost 11\n   \n \n\n\n\n\n     \n    \n   "
-  const %<>% cleaner
+  const %<>% sim_cleaner
   if (const != "") {
-    s <- const %>% spliter
+    s <- const %>% sim_splitter
     for (i in 1:length(s))
       s[[i]] %>% { dat[[.[1]]] <<- as.numeric(.[2]) %>% rep(nr) }
   }
 
   ## parsing uniform
-  unif %<>% cleaner
+  unif %<>% sim_cleaner
   if (unif != "") {
-    s <- unif %>% spliter
+    s <- unif %>% sim_splitter
     for (i in 1:length(s))
       s[[i]] %>% { dat[[.[1]]] <<- runif(nr, as.numeric(.[2]) , as.numeric(.[3]))}
   }
 
   ## parsing normal
-  norm %<>% cleaner
+  norm %<>% sim_cleaner
   if (norm != "") {
-    s <- norm %>% spliter
+    s <- norm %>% sim_splitter
     for (i in 1:length(s))
       s[[i]] %>% { dat[[.[1]]] <<- rnorm(nr, as.numeric(.[2]) , as.numeric(.[3]))}
   }
 
   ## parsing binomial
-  binom %<>% cleaner
+  binom %<>% sim_cleaner
   if (binom != "") {
-    s <- binom %>% spliter
+    s <- binom %>% sim_splitter
     for (i in 1:length(s))
       s[[i]] %>% { dat[[.[1]]] <<- rbinom(nr, as.numeric(.[2]) , as.numeric(.[3]))}
   }
 
   ## parsing sequence
-  sequ %<>% cleaner
+  sequ %<>% sim_cleaner
   # print(sequ)
   if (sequ != "") {
-    s <- sequ %>% spliter
+    s <- sequ %>% sim_splitter
     for (i in 1:length(s))
       s[[i]] %>% { dat[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), length.out = as.numeric(nr))}
   }
 
   ## parsing discrete
   # discrete = "price 6 .30 8 .70"
-  discrete %<>% cleaner
+  discrete %<>% sim_cleaner
   if (discrete != "") {
-    s <- discrete %>% spliter
+    s <- discrete %>% sim_splitter
     for (i in 1:length(s)) {
       par <- s[[i]][-1] %>% as.numeric %>% matrix(ncol = 2)
       if (sum(par[,2]) != 1) {
@@ -163,9 +156,9 @@ simulater <- function(const = "",
   # gsub(";#.*$","",form)
   # gsub(";#.*[;$]","",form)
 
-  form %<>% cleaner
+  form %<>% sim_cleaner
   if (form != "") {
-    s <- form %>% gsub(" ","",.) %>% spliter("=")
+    s <- form %>% gsub("\\s+","",.) %>% sim_splitter("=")
     for (i in 1:length(s)) {
       if (grepl("^#",s[[i]][1])) next
       obj <- s[[i]][1]
@@ -257,11 +250,9 @@ summary.simulater <- function(object, dec = 3, ...) {
     # cat(paste0("Formulas   :\n\t", gsub("\n;*","\n\t",object$sim_call$form), "\n"))
   cat("\n")
 
-  # sim_summary(object$dat, dec = ifelse(is.na(dec), 3, dec))
-  sim_summary(object$dat, dec = 3)
+  sim_summary(object$dat, dec = ifelse(is.na(dec), 3, dec))
+  # sim_summary(object$dat, dec = 3)
 }
-
-is.na("3")
 
 #' Plot method for the simulater function
 #'
@@ -346,12 +337,12 @@ repeater <- function(nr = 12,
     return(mess %>% set_class(c("repeater", class(.))))
   }
 
-  cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-    gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-    gsub("[;]{2,}",";",.) %>%
-    gsub(";$","",.)
+  # sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
+  #   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
+  #   gsub("[;]{2,}",";",.) %>%
+  #   gsub(";$","",.)
 
-  spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
   # grid <- "q 100 200 1; a 1 5 1"
   # grid <- "q 100 200 1"
@@ -361,9 +352,9 @@ repeater <- function(nr = 12,
 
   grid_list <- list()
   if (!identical(grid, "")) {
-    grid %<>% cleaner
+    grid %<>% sim_cleaner
     if (grid != "") {
-      s <- grid %>% spliter
+      s <- grid %>% sim_splitter
       for (i in 1:length(s)) {
         if (is_empty(s[[i]][4])) s[[i]][4] <- 1
         s[[i]] %>% { grid_list[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), as.numeric(.[4]))}
@@ -506,17 +497,18 @@ summary.repeater <- function(object,
 
   if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
 
-  cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-    gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-    gsub("[;]{2,}",";",.) %>%
-    gsub(";$","",.)
+  # sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
+  #   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
+  #   gsub("[;]{2,}",";",.) %>%
+  #   gsub(";$","",.)
 
-  spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
-  form %<>% cleaner
+  form %<>% sim_cleaner
   if (form != "") {
-    s <- form %>% gsub(" ","",.) %>% spliter("=")
+    s <- form %>% gsub("\\s+","",.) %>% sim_splitter("=")
     for (i in 1:length(s)) {
+      if (grepl("^#",s[[i]][1])) next
       obj <- s[[i]][1]
       fobj <- s[[i]][-1]
       if (length(fobj) > 1) fobj <- paste0(fobj, collapse = "=")
@@ -595,17 +587,18 @@ plot.repeater <- function(x,
 
   if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
 
-  cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-    gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-    gsub("[;]{2,}",";",.) %>%
-    gsub(";$","",.)
+  # sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
+  #   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
+  #   gsub("[;]{2,}",";",.) %>%
+  #   gsub(";$","",.)
 
-  spliter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
-  form %<>% cleaner
+  form %<>% sim_cleaner
   if (form != "") {
-    s <- form %>% gsub(" ","",.) %>% spliter("=")
+    s <- form %>% gsub(" ","",.) %>% sim_splitter("=")
     for (i in 1:length(s)) {
+      if (grepl("^#",s[[i]][1])) next
       obj <- s[[i]][1]
       fobj <- s[[i]][-1]
       if (length(fobj) > 1) fobj <- paste0(fobj, collapse = "=")
@@ -643,6 +636,7 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
   isLogic <- "logical" == dc
   isNum <- !isLogic
 
+  print(dec)
   # dec <- ifelse(is.na(dec), 3, as_numeric(dec))
   dec <- 3
 
@@ -689,3 +683,11 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 3) {
     cat("\n")
   }
 }
+
+sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
+  gsub("[ ]*[\n;]+[ ]*",";",.) %>%
+  gsub("[;]{2,}",";",.) %>%
+  gsub(";$","",.) %>%
+  gsub("^;","",.)
+
+sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
