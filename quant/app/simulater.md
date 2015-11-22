@@ -57,6 +57,10 @@ A few additional examples of formulas are shown below:
 6. To create a new variable z that is a transformation of variable x but with mean equal to zero:
 
 	z = x - mean(x)
+	
+7. To find the value for `price` that maximizes `profit` use the `find_max` command. In this example `price` could be a random or `Sequence variable`. There is also a `find_min` command.
+
+	optimal_price = find_max(profit, price)
 
 7. To determine the minimum (maximum) value for each pair of values across two columns in the data (e.g., x and y) use the functions `pmin` and `pmax`. In the example below, z will take on the value of x when x is larger than y and take on the value of y otherwise
 
@@ -141,3 +145,4 @@ A histogram of annual profits (`sum of profit`) is shown in the main panel under
 
 The state file for the example in the screenshot above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a>
 
+For a simple example of how the simulate tool could be used to find the price that maximizes profits see the state-file available for download <a href="https://vnijs.github.io/radiant/examples/iceskimo_optimal_price_state.rda">here</a>

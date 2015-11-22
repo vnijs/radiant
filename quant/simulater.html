@@ -287,6 +287,8 @@ img {
 <p>z = ifelse(x &lt; 60, 0, ifelse(x &gt; 100, 1, 2))</p></li>
 <li><p>To create a new variable z that is a transformation of variable x but with mean equal to zero:</p>
 <p>z = x - mean(x)</p></li>
+<li><p>To find the value for <code>price</code> that maximizes <code>profit</code> use the <code>find_max</code> command. In this example <code>price</code> could be a random or <code>Sequence variable</code>. There is also a <code>find_min</code> command.</p>
+<p>optimal_price = find_max(profit, price)</p></li>
 <li><p>To determine the minimum (maximum) value for each pair of values across two columns in the data (e.g., x and y) use the functions <code>pmin</code> and <code>pmax</code>. In the example below, z will take on the value of x when x is larger than y and take on the value of y otherwise</p>
 <p>z = pmax(x,y)</p></li>
 </ol>
@@ -387,6 +389,7 @@ pmax(x,y)
 <p><img src="figures_quant/simulater_repeat.png" alt="sim output" /></p>
 <p>A histogram of annual profits (<code>sum of profit</code>) is shown in the main panel under <code>Repeated simulation plots</code>. There is no plot for <code>profit_365</code> because it only has one value (i.e., FALSE).</p>
 <p>The state file for the example in the screenshot above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a></p>
+<p>For a simple example of how the simulate tool could be used to find the price that maximizes profits see the state-file available for download <a href="https://vnijs.github.io/radiant/examples/iceskimo_optimal_price_state.rda">here</a></p>
 </div>
 
 
