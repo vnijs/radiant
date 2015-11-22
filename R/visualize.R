@@ -5,6 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param xvar One or more variables to display along the X-axis of the plot
 #' @param yvar Variable to display along the Y-axis of the plot (default = "none")
+#' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
 #' @param type Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
@@ -35,6 +36,7 @@
 #' @export
 visualize <- function(dataset, xvar,
                       yvar = "",
+                      comby = FALSE,
                       type = "hist",
                       facet_row = ".",
                       facet_col = ".",
@@ -62,13 +64,9 @@ visualize <- function(dataset, xvar,
   ## variable to use if bar chart is specified
   byvar <- NULL
 
-  # return(yvar)
-
-  if (is.null(yvar) || identical(yvar,"")) {
+  if (length(yvar) == 0 || identical(yvar, "")) {
     if (!type %in% c("hist","density")) {
-      # message("No yvar provided for a plot that requires a yvar")
-      return("No yvar provided for a plot that requires a yvar")
-      # return(invisible())
+      return("No Y-variable provided for a plot that requires one")
     }
   } else {
     if (type %in% c("hist","density")) {
@@ -84,7 +82,6 @@ visualize <- function(dataset, xvar,
   }
   if (facet_row != ".") {
     vars %<>% c(., facet_row)
-    # byvar <- facet_row
     byvar <- if (is.null(byvar)) facet_row else unique(c(byvar, facet_row))
   }
   if (facet_col != ".") {
@@ -135,8 +132,19 @@ visualize <- function(dataset, xvar,
     dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
-  plot_list <- list()
+  ## combining yvariables if needed
+  if (comby && length(yvar) > 1) {
+    if (any(xvar %in% yvar)) return("X-variables cannot be part of Y-variables when combining Y-variables")
+    if (!is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
+    if (!is_empty(fill, "none")) return("Cannot use Fill when combining Y-variables")
 
+    dat <- gather_(dat, "yvar", "values", gather_cols = yvar)
+    yvar <- "values"
+    byvar <- if (is.null(byvar)) "yvar" else c("yvar", byvar)
+    color <- fill <- "yvar"
+  }
+
+  plot_list <- list()
   if (type == "hist") {
     for (i in xvar) {
 
@@ -157,8 +165,6 @@ visualize <- function(dataset, xvar,
       } else {
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       }
-
-      # print(bins)
 
       plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))

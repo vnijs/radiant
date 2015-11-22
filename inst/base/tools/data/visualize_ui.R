@@ -58,6 +58,11 @@ output$ui_viz_yvar <- renderUI({
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
+output$ui_viz_comby <- renderUI({
+  if (length(input$viz_yvar) < 2) return()
+  checkboxInput("viz_comby", "Combine Y-variables in one plot", state_init("viz_comby", FALSE))
+})
+
 ## X - variable
 output$ui_viz_xvar <- renderUI({
   if (is.null(input$viz_type)) return()
@@ -158,7 +163,8 @@ output$ui_Visualize <- renderUI({
     wellPanel(
       uiOutput("ui_viz_type"),
       conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
-        uiOutput("ui_viz_yvar")
+        uiOutput("ui_viz_yvar"),
+        uiOutput("ui_viz_comby")
       ),
       uiOutput("ui_viz_xvar"),
       uiOutput("ui_viz_facet_row"),
@@ -214,14 +220,13 @@ viz_plot_height <- reactive({
     r_data$plot_height
   } else {
     lx <- if (not_available(input$viz_xvar)) 1 else length(input$viz_xvar)
-    ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("hist","density"),
-                  1, length(input$viz_yvar))
-    (lx * ly) %>%
-    { if (. > 1)
-        (input$viz_plot_height/2) * ceiling(. / 2)
-      else
-        input$viz_plot_height
-    }
+    ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("hist","density") ||
+                  (!is.null(input$viz_comby) && input$viz_comby), 1, length(input$viz_yvar))
+    nr <- lx * ly
+    if (nr > 1)
+      (input$viz_plot_height/2) * ceiling(nr / 2)
+    else
+      input$viz_plot_height
   }
 })
 
