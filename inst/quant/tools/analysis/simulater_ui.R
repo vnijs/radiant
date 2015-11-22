@@ -491,16 +491,31 @@ sim_plot_height <- function() {
   })
 })
 
-rep_plot <- eventReactive(input$runRepeat, {
-  isolate({
-    nrPlots <- length(input$rep_fun) * length(input$rep_sum_vars) + length(strsplit(input$rep_form,"\n") %>% unlist)
-    if (nrPlots == 0) 300 else ceiling(nrPlots/2) * 300
-  })
-})
+# rep_plot <- eventReactive(input$runRepeat, {
+#   isolate({
+#     nrPlots <- length(input$rep_fun) * length(input$rep_sum_vars) + length(strsplit(input$rep_form,"\n") %>% unlist)
+#     if (nrPlots == 0) 300 else ceiling(nrPlots/2) * 300
+#   })
+# })
 
 rep_plot_width <- function() 650
 rep_plot_height <- function() {
-  rep_plot()
+  # rep_plot()
+  rp <- .repeater()
+  if (is.character(rp)) {
+    if (rp[1] == "error") return(200)
+    if (length(input$rep_fun) == 0) return(200)
+    rp_name <- paste0(rp,"_",gsub("_rm$","",input$rep_fun))
+    if (!rp_name %in% r_data[["datasetlist"]]) return(200)
+    rp <- getdata(rp_name)
+    if (dim(rp)[1] == 0) {
+      200
+    } else {
+      ceiling(sum(sapply(rp, does_vary)) / 2) * 200
+    }
+  } else {
+    200
+  }
 }
 
 .plot_repeat <- eventReactive(input$runRepeat, {
@@ -519,7 +534,6 @@ observeEvent(input$simulater_report, {
     sim_dec <- input$sim_dec %>% {ifelse(is.na(.), 3, .)}
     update_report(inp_main = clean_args(sim_inputs(), sim_args) %>% lapply(report_cleaner),
                   fun_name = "simulater", inp_out = list(list(dec = sim_dec),""),
-                  # fun_name = "simulater", inp_out = list("",""),
                   outputs = c("summary","plot"), figs = TRUE,
                   fig.width = round(7 * sim_plot_width()/650,2),
                   fig.height = round(7 * (sim_plot_height()/650),2))

@@ -12,7 +12,7 @@ ci_label(alt, cl)
 \item{cl}{Confidence level}
 }
 \value{
-A charater vector with labels for a confidence interval
+A character vector with labels for a confidence interval
 }
 \description{
 Labels for confidence intervals

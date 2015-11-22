@@ -868,7 +868,7 @@ print.gtable <- function(x, ...) {
 #' @param alt Type of hypothesis ("two.sided","less","greater")
 #' @param cl Confidence level
 #'
-#' @return A charater vector with labels for a confidence interval
+#' @return A character vector with labels for a confidence interval
 #'
 #' @examples
 #' ci_label("less",.95)
@@ -895,7 +895,7 @@ ci_label <- function(alt, cl) {
 #' @param alt Type of hypothesis ("two.sided","less","greater")
 #' @param cl Confidence level
 #'
-#' @return A charater vector with labels for a confidence interval
+#' @return A vector with values at a confidence level
 #'
 #' @examples
 #' ci_perc(0:100, "less",.95)

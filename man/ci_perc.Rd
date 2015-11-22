@@ -14,7 +14,7 @@ ci_perc(dat, alt, cl)
 \item{cl}{Confidence level}
 }
 \value{
-A charater vector with labels for a confidence interval
+A vector with values at a confidence level
 }
 \description{
 Values at confidence levels

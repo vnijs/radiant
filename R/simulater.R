@@ -659,3 +659,29 @@ sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
 #'
 #' @export
 sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+
+#' Find maxium value of a vector
+#'
+#' @param var Variable to find the maximum for
+#' @param val Variable to find the value for at the maxium of var
+#'
+#' @return Value of val at the maximum of var
+#'
+#' @export
+find_max <- function(var, val = "") {
+  if (is_empty(val)) stop("Error in find_max (2 inputs required)\nSpecify the variable to evaluate at the maxium of the first input")
+  val[which.max(var)]
+}
+
+#' Find minimum value of a vector
+#'
+#' @param var Variable to find the minimum for
+#' @param val Variable to find the value for at the maxium of var
+#'
+#' @return Value of val at the minimum of var
+#'
+#' @export
+find_min <- function(var, val = "") {
+  if (is_empty(val)) stop("Error in find_min (2 inputs required)\nSpecify the variable to evaluate at the minimum of the first input")
+  val[which.min(var)]
+}
