@@ -122,16 +122,17 @@ simulater <- function(const = "",
   if (discrete != "") {
     s <- discrete %>% sim_splitter
     for (i in 1:length(s)) {
-      par <- s[[i]][-1] %>% as.numeric %>% matrix(ncol = 2)
-      if (sum(par[,2]) != 1) {
+
+      dpar <- sshhr( try(s[[i]][-1] %>% as.numeric %>% matrix(ncol = 2), silent = TRUE) )
+      if (is(dpar, 'try-error') || any(is.na(dpar))) {
+        mess <- c("error",paste0("Input for a discrete variable contains an error. Please review the input carefully"))
+        return(mess %>% set_class(c("simulater", class(.))))
+      } else if (sum(dpar[,2]) != 1) {
         mess <- c("error",paste0("Probabilities for discrete variable do not sum to 1"))
         return(mess %>% set_class(c("simulater", class(.))))
       }
-      dat[[s[[i]][1]]] <- sample(par[,1], nr, replace = TRUE, prob = par[,2])
 
-      # par <- s[[i]][-1] %>% as.numeric %>% matrix(nrow = 2)
-      # if (sum(par[2,]) != 1) message("Probabilities for discrete variable do not sum to 1!")
-      # dat[[s[[i]][1]]] <- sample(par[1,], nr, replace = TRUE, prob = par[2,])
+      dat[[s[[i]][1]]] <- sample(dpar[,1], nr, replace = TRUE, prob = dpar[,2])
     }
   }
 

@@ -85,7 +85,7 @@ To save the simulated data for further analysis specify a name in the `Simulated
 
 When all required inputs have been specified press the `Simulate` button to run the simulation.
 
-In the screen shot below `var_cost` and `fixed_cost` are specified as constants. `demand` is normally distributed with a mean of 1000 and a standard deviation of 100. `price` is a discrete random variable that is set to \$5 (30% probability) or $8 (70% probability). There are three formulas in the `Simulation formulas` text-input. The first updates `demand` to establish a dependence on the simulated variable `price`. The second formula specifies the profit function. The final formula is used to determine the number (and proportion) of cases where profit is below 100. The result is assigned to a new variable `profit_small`.
+In the screen shot below `var_cost` and `fixed_cost` are specified as constants. `E` is normally distributed with a mean of 0 and a standard deviation of 100. `price` is a discrete random variable that is set to \$5 (30% probability) or $8 (70% probability). There are three formulas in the `Simulation formulas` text-input. The first establishes the dependence of `demand` on the simulated variable `price`. The second formula specifies the profit function. The final formula is used to determine the number (and proportion) of cases where profit is below 100. The result is assigned to a new variable `profit_small`.
 
 ![sim output](figures_quant/simulater.png)
 
@@ -99,9 +99,9 @@ Because we specified a name in the `Simulated data` box the data are available a
 
 ## Repeating the simulation
 
-Suppose the simulation discussed above was used to get a better understanding of daily profits. To develop insights into annual profits we could re-run the simulation 365 times. This can be done easily by using the functionality available in the _Repeat_ tab. First, select the `Variables to re-simulate`, here `demand` and `price`. Then select the variable(s) of interest in the `Output variables` box (e.g., `profit`). Set `# runs` to 365.
+Suppose the simulation discussed above was used to get a better understanding of daily profits. To develop insights into annual profits we could re-run the simulation 365 times. This can be done easily by using the functionality available in the _Repeat_ tab. First, select the `Variables to re-simulate`, here `E` and `price`. Then select the variable(s) of interest in the `Output variables` box (e.g., `profit`). Set `# runs` to 365.
 
-Next, we need to determine how to summarize the data. If we select `Simulation` in `Group by` the data will be summarized **across** 365 repeated simulations resulting in 1000 values. If we select `Repeat` in `Group by` the data will be summarized **across** 1000 simulations resulting in 365 values. If you imagine the full set of repeated simulated data as a table with 1000 rows and 365 columns, grouping by `Simulation` will create a summary statistic for each row and grouping by `Repeat` will create a summary statistic for each column. In this example we want to determine the `sum` of simulated daily profits across 365 repetitions so we select `Simulation` in the `Group by` box and `sum` in the `Apply function` box.
+Next, we need to determine how to summarize the data. If we select `Simulation` in `Group by` the data will be summarized for each draw in the simulation **across** 365 repeated simulations resulting in 1000 values. If we select `Repeat` in `Group by` the data will be summarized for each repetition **across** 1000 simulations resulting in 365 values. If you imagine the full set of repeated simulated data as a table with 1000 rows and 365 columns, grouping by `Simulation` will create a summary statistic for each row and grouping by `Repeat` will create a summary statistic for each column. In this example we want to determine the `sum` of simulated daily profits across 365 repetitions so we select `Simulation` in the `Group by` box and `sum` in the `Apply function` box.
 
 To determine, the probability that annual profits are below \$36,500 we enter the formula below into the `Repeated simulation formula` text input.
 
@@ -109,7 +109,7 @@ To determine, the probability that annual profits are below \$36,500 we enter th
 
 When you are done with the input values click the `Repeat` button. Because we specified a name for `Repeat data` two data sets will be created. "simdat_repeat" will have all elements of the repeated simulation (i.e., 1000 x 365 rows) and "simdat_repeat_sum" will have the summarized data grouped by simulation run. Note that the extension "_sum" was used because we selected `sum` from the `Apply function` dropdown.
 
-Descriptive statistics for the repeated simulation are shown in the main panel under `Repeated simulation summary`. We see that the annual expected profit (i.e., the mean of `sum of profit`) for the company is 172311.8 with a standard deviation of 10772.29. Although we found above that daily profits can be below 100, the chance that profits are below $365 \times 100$ for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below \$36,500 is equal to 0).
+Descriptive statistics for the repeated simulation are shown in the main panel under `Repeated simulation summary`. We see that the annual expected profit (i.e., the mean of `sum of profit`) for the company is 172,311.836 with a standard deviation of 10,772.291. Although we found above that daily profits can be below 100, the chance that profits are below $365 \times 100$ for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below \$36,500 is equal to 0).
 
 ![sim output](figures_quant/simulater_repeat.png)
 

@@ -71,8 +71,13 @@ pre {
 }
 
 #data_filter, #tr_transform, #tr_recode, #tr_rename, #tr_paste,
-#glm_predict_cmd, #reg_predict_cmd {
+#glm_predict_cmd, #reg_predict_cmd, #sim_const, #sim_discrete,
+#sim_binom, #sim_norm, #sim_unif, #sim_sequ, #rep_grid {
   max-width: 234px;
+}
+
+#sim_form, #rep_form {
+  width: 100%;
 }
 
 .alignleft {

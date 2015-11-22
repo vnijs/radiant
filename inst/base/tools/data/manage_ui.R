@@ -333,19 +333,15 @@ observe({
       tmpEnv <- new.env()
       load(inFile$datapath, envir=tmpEnv)
 
-      if (!is.null(tmpEnv$r_state$rmd_report)) {
-        # Encoding(tmpEnv$r_state$rmd_report) <- "UTF-8"
-        # tmpEnv$r_state$rmd_report <- iconv(tmpEnv$r_state$rmd_report, to = "UTF-8")
-        # tmpEnv$r_state$rmd_report %<>% iconv("UTF-8", "UTF-8",sub ="")
-        tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .)
-      }
+      ## remove characters the may cause problems in shinyAce
+      if (!is.null(tmpEnv$r_state$rmd_report))
+        tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
 
       r_sessions[[r_ssuid]] <- list(
         r_data = tmpEnv$r_data,
         r_state = tmpEnv$r_state,
         timestamp = Sys.time()
       )
-
 
       rm(tmpEnv)
     })

@@ -131,32 +131,50 @@ if (exists("r_state") && exists("r_data")) {
 } else if (file.exists(paste0("~/r_sessions/r_", r_ssuid, ".rds"))) {
   ## read from file if not in global
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
-  rs <- readRDS(fn)
-  unlink(fn, force = TRUE)
 
-  if (length(rs$r_data) == 0)
+  rs <- try(readRDS(fn), silent = TRUE)
+  if (is(rs, 'try-error')) {
     r_data  <- init_state(reactiveValues())
-  else
-    r_data  <- do.call(reactiveValues, rs$r_data)
+    r_state <- list()
+  } else {
+    if (length(rs$r_data) == 0)
+      r_data  <- init_state(reactiveValues())
+    else
+      r_data  <- do.call(reactiveValues, rs$r_data)
 
-  r_state <- rs$r_state
+    if (length(rs$r_state) == 0)
+      r_state <- list()
+    else
+      r_state <- rs$r_state
+  }
+
+  unlink(fn, force = TRUE)
   rm(rs)
 } else if (r_local && file.exists(paste0("~/r_sessions/r_", mrsf, ".rds"))) {
 
   ## restore from local folder but assign new ssuid
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", mrsf, ".rds")
-  rs <- readRDS(fn)
-  unlink(fn, force = TRUE)
 
-  if (length(rs$r_data) == 0)
+  rs <- try(readRDS(fn), silent = TRUE)
+  if (is(rs, 'try-error')) {
     r_data  <- init_state(reactiveValues())
-  else
-    r_data  <- do.call(reactiveValues, rs$r_data)
+    r_state <- list()
+  } else {
+    if (length(rs$r_data) == 0)
+      r_data  <- init_state(reactiveValues())
+    else
+      r_data  <- do.call(reactiveValues, rs$r_data)
 
-  r_state <- rs$r_state
+    if (length(rs$r_state) == 0)
+      r_state <- list()
+    else
+      r_state <- rs$r_state
+  }
 
   ## don't navigate to same tab in case the app locks again
   r_state$nav_radiant <- NULL
+
+  unlink(fn, force = TRUE)
   rm(rs)
 } else {
   r_data  <- init_state(reactiveValues())
@@ -166,7 +184,8 @@ if (exists("r_state") && exists("r_data")) {
 if (r_local) {
   ## reference to radiant environment that can be accessed by exported functions
   ## does *not* make a copy of the data - nice
-  r_env <<- pryr::where("r_data")
+  # r_env <<- pryr::where("r_data")
+  r_env <<- environment()
 
   ## adding any data.frame from the global environment to r_data should not affect
   ## memory usage ... at least until the entry in r_data is changed
