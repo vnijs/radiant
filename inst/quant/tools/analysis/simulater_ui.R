@@ -160,7 +160,8 @@ output$ui_rep_byvar <- renderUI({
 
 output$ui_rep_fun <- renderUI({
   choices <-
-    list("sum" = "sum_rm", "mean" = "mean_rm", "median" = "median_rm", "min" = "min_rm", "max" = "max_rm")
+    list("sum" = "sum_rm", "mean" = "mean_rm", "median" = "median_rm",
+         "min" = "min_rm", "max" = "max_rm", "none" = "none")
     # sel <- if (is_empty(input$rep_fun)) state_single("rep_fun", choices, "sum_rm")
            # else input$rep_fun
 

@@ -185,7 +185,7 @@ if (r_local) {
   ## reference to radiant environment that can be accessed by exported functions
   ## does *not* make a copy of the data - nice
   # r_env <<- pryr::where("r_data")
-  r_env <<- environment()
+  r_env <- environment()
 
   ## adding any data.frame from the global environment to r_data should not affect
   ## memory usage ... at least until the entry in r_data is changed

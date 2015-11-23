@@ -451,18 +451,22 @@ summary.repeater <- function(object,
   cat("Repeated simulation\n")
   cat("Simulations :", sim, "\n")
   cat("Runs        :", runs, "\n")
-  cat("Group by    :", byvar, "\n")
+  cat("Group by    :", ifelse (byvar == "run", "Repeat", "Simulation"), "\n")
   cfun <- sub("_rm$","",fun)
   cat("Function    :", cfun, "\n")
   # cat("Random  seed:", object$sim_call$seed, "\n")
   cat("Repeat  data:", name, "\n")
   cat("Summary data:", paste0(name,"_",cfun) , "\n")
 
-  object %<>% group_by_(byvar) %>%
-    summarise_each_(make_funs(fun), vars = sum_vars) %>%
-    select(-1)
+  if (fun != "none") {
+    object %<>% group_by_(byvar) %>%
+      summarise_each_(make_funs(fun), vars = sum_vars) %>%
+      select(-1)
 
-  if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
+    if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
+  } else {
+    object %<>% select_(.dots = sum_vars)
+  }
 
   form %<>% sim_cleaner
   if (form != "") {
@@ -497,8 +501,12 @@ summary.repeater <- function(object,
       return(object)
     }
 
-    mess <- paste0("\n### Repeated simulation summary\n\nFunction:\n\n", fun, "\n\nDate: ",
-                   lubridate::now())
+    if (fun != "none") {
+      mess <- paste0("\n### Repeated simulation summary\n\nFunction:\n\n", fun, "\n\nDate: ",
+                     lubridate::now())
+    } else {
+      mess <- paste0("\n### Repeated simulation:\n\nDate: ", lubridate::now())
+    }
 
     name <- paste0(name,"_",cfun)
 
@@ -528,7 +536,6 @@ plot.repeater <- function(x,
                           form = "",
                           shiny = FALSE, ...) {
 
-
   if (identical(sum_vars, "")) return(invisible())
 
   if (is.character(x)) {
@@ -538,11 +545,15 @@ plot.repeater <- function(x,
   }
   rm(x)
 
-  object %<>% group_by_(byvar) %>%
-    summarise_each_(make_funs(fun), vars = sum_vars) %>%
-    select(-1)
+  if (fun != "none") {
+    object %<>% group_by_(byvar) %>%
+      summarise_each_(make_funs(fun), vars = sum_vars) %>%
+      select(-1)
 
-  if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
+    if (length(sum_vars) == 1 && length(fun) > 1) colnames(object) <- paste0(sum_vars, "_", colnames(object))
+  } else {
+    object %<>% select_(.dots = sum_vars)
+  }
 
   form %<>% sim_cleaner
   if (form != "") {
@@ -556,7 +567,7 @@ plot.repeater <- function(x,
       if (!is(out, 'try-error')) {
         object[[obj]] <- out
       } else {
-        return(invisible)
+        return(invisible())
       }
     }
   }
@@ -569,9 +580,9 @@ plot.repeater <- function(x,
     plot_list[[i]] <-
       visualize(select_(object, .dots = i), xvar = i, bins = 20, custom = TRUE)
 
-    if (i %in% sum_vars) {
-      cfun <- sub("_rm$","",fun)
-      plot_list[[i]] <- plot_list[[i]] + xlab(paste0(cfun, " of ", i))
+    if (i %in% sum_vars && fun != "" && fun != "none") {
+        cfun <- sub("_rm$","",fun)
+        plot_list[[i]] <- plot_list[[i]] + xlab(paste0(cfun, " of ", i))
     }
   }
 
@@ -618,7 +629,7 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 4) {
         group_by_("variable") %>%
         summarise_each(funs(n = length, mean = mean_rm, sd = sd_rm, min = min_rm, `5%` = p05, `25%` = p25,
                        median = median_rm, `75%` = p75, `95%` = p95, max = max_rm)) %>%
-        { if (fun == "") . else {.[[1]] <- paste0(fun, " of ", .[[1]])}; . } %>%
+        { if (fun == "" || fun == "none") . else {.[[1]] <- paste0(fun, " of ", .[[1]])}; . } %>%
         { .[[1]] <- format(.[[1]], justify = "left"); .} %>%
         data.frame(check.names = FALSE) %>%
         { .[,-1] %<>% round(.,dec); colnames(.)[1] <- ""; . } %>%
@@ -670,6 +681,7 @@ sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1)
 #' @export
 find_max <- function(var, val = "") {
   if (is_empty(val)) stop("Error in find_max (2 inputs required)\nSpecify the variable to evaluate at the maxium of the first input")
+  # vars <- pryr::named_dots(...) %>% names
   val[which.max(var)]
 }
 
