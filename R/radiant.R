@@ -392,7 +392,7 @@ viewdata <- function(dataset,
                   onclick = "window.close();", "Stop")
     ),
     server = function(input, output, session) {
-      widget <- DT::datatable(dat,
+      widget <- DT::datatable(dat, selection = "none",
         rownames = FALSE, style = "bootstrap",
         filter = filt,
         # filter = alist(position = "top", clear = FALSE, plain = FALSE),
@@ -777,8 +777,12 @@ copy_all <- function(.from) {
 #' @export
 state_init <- function(inputvar, init = "") {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
+  if (is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
 }
+
+# state_init <- function(inputvar, init = "", pf = parent.frame()) {
+# print(parent.frame())
+# r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
 
 #' Set initial value for shiny input from a list of values
 #'

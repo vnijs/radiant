@@ -184,7 +184,16 @@ if (exists("r_state") && exists("r_data")) {
 if (r_local) {
   ## reference to radiant environment that can be accessed by exported functions
   ## does *not* make a copy of the data - nice
+  ## relevant when you want to access Radiant functions outside of a Shiny app
   # r_env <<- pryr::where("r_data")
+
+  ## doesn't work when Radiant is loaded and in the search path
+  ## i.e., it is not 'sourced' inside server.R
+  # r_env <- environment()
+  # ?shiny::getDefaultReactiveDomain
+
+  ## works but puts r_env in the global environment so 'new session' doesn't work properly
+  ## when run locally
   r_env <<- environment()
 
   ## adding any data.frame from the global environment to r_data should not affect
@@ -289,6 +298,7 @@ for (i in names(url_list)) {
     # r_data$r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
   # })
 # }
+
 
 if (!exists("r_knitr")) {
   r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()

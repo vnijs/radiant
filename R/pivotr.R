@@ -287,7 +287,8 @@ make_dt <- function(pvt,
   tab <- filter(tab, tab[,1] != "Total")
 
   dt_tab <- tab %>%
-  DT::datatable(container = sketch, rownames = FALSE,
+  DT::datatable(container = sketch, selection = "none",
+    rownames = FALSE,
     filter = list(position = "top"),
     # filter = list(position = "top", clear = FALSE, plain = TRUE),
     style = ifelse (pvt$shiny, "bootstrap", "default"),

@@ -68,7 +68,7 @@ output$dataviewer <- DT::renderDataTable({
   if (nrow(dat) > 100000)  filt <- 'none'
   else filt <- list(position = "top")
   # else filt <- list(position = "top", clear = FALSE, plain = TRUE)
-  DT::datatable(dat, filter = filt,
+  DT::datatable(dat, filter = filt, selection = "none",
     rownames = FALSE, style = "bootstrap", escape = FALSE,
     options = list(
 

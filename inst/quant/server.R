@@ -18,18 +18,20 @@ shinyServer(function(input, output, session) {
       set_class <- radiant::set_class
     }
   } else {
-     copy_from(radiant, state_init, state_single, state_multiple)
+    copy_from(radiant, state_init, state_single, state_multiple)
+    # radiant::copy_all(radiant)
+    # set_class <- radiant::set_class
   }
 
   ## source data & app tools from base
   for (file in list.files(c(file.path(r_path,"base/tools/app"),file.path(r_path,"base/tools/data")), pattern="\\.(r|R)$", full.names = TRUE))
     source(file, encoding = r_encoding, local = TRUE)
 
-	# source analysis tools for quant app
+	## source analysis tools for quant app
   for (file in list.files(c("tools/analysis"), pattern="\\.(r|R)$", full.names = TRUE))
     source(file, encoding = r_encoding, local = TRUE)
 
-  # save state on refresh or browser close
+  ## save state on refresh or browser close
   saveStateOnRefresh(session)
 
 })
