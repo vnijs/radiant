@@ -118,6 +118,10 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
+
+  # print(search())
+  # print(parent.frame())
+
   # filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
   filt %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   { if (!is_string(dataset)) {

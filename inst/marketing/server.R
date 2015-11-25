@@ -18,6 +18,7 @@ shinyServer(function(input, output, session) {
       set_class <- radiant::set_class
     }
   } else {
+    # environment(radiant) <- environment()
     copy_from(radiant, state_init, state_single, state_multiple)
   }
 

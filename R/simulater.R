@@ -40,6 +40,8 @@ simulater <- function(const = "",
                       nr = 1000,
                       dat = NULL) {
 
+  # print(environment())
+  # print(parent.frame())
   # rm(list = ls())
   # const <- "non_labor_cost 3995; cost 11"
   # unif <- "labor_cost 5040 6860"
