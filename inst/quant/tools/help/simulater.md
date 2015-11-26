@@ -113,7 +113,7 @@ To save the simulated data for further analysis specify a name in the `Simulated
 
 When all required inputs have been specified press the `Simulate` button to run the simulation.
 
-In the screen shot below `var_cost` and `fixed_cost` are specified as constants. `E` is normally distributed with a mean of 0 and a standard deviation of 100. `price` is a discrete random variable that is set to \$5 (30% probability) or $8 (70% probability). There are three formulas in the `Simulation formulas` text-input. The first establishes the dependence of `demand` on the simulated variable `price`. The second formula specifies the profit function. The final formula is used to determine the number (and proportion) of cases where profit is below 100. The result is assigned to a new variable `profit_small`.
+In the screen shot below `var_cost` and `fixed_cost` are specified as constants. `E` is normally distributed with a mean of 0 and a standard deviation of 100. `price` is a discrete random variable that is set to \$6 (30% probability) or $8 (70% probability). There are three formulas in the `Simulation formulas` text-input. The first establishes the dependence of `demand` on the simulated variable `price`. The second formula specifies the profit function. The final formula is used to determine the number (and proportion) of cases where profit is below 100. The result is assigned to a new variable `profit_small`.
 
 ![sim output](figures_quant/simulater.png)
 
