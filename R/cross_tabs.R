@@ -316,6 +316,6 @@ plot.cross_tabs <- function(x,
 			    ggtitle("Table percentages")
 	}
 
-	sshhr( do.call(arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = 1))) ) %>%
 	  { if (shiny) . else print(.) }
 }

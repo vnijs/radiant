@@ -275,7 +275,7 @@ plot.compare_means <- function(x,
 	 		  xlab(var1) + ylab(var2)
   }
 
-	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }
 
 }

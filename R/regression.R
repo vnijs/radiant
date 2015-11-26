@@ -420,7 +420,7 @@ plot.regression <- function(x,
            layout = c(ceiling(length(indep_var)/2),2)))
 
   if (exists("plot_list")) {
-    sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 2))) ) %>%
+    sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 2))) ) %>%
         {if (shiny) . else print(.)}
   }
 }

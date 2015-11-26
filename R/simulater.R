@@ -287,7 +287,7 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
       visualize(select_(object, .dots = i), xvar = i, bins = 20, custom = TRUE)
   }
 
-  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
+  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 
@@ -590,7 +590,7 @@ plot.repeater <- function(x,
 
   if (length(plot_list) == 0) return(invisible())
 
-  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
+  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
     { if (shiny) . else print(.) }
 }
 

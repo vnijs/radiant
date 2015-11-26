@@ -396,7 +396,7 @@ viewdata <- function(dataset,
                   onclick = "window.close();", "Stop")
     ),
     server = function(input, output, session) {
-      widget <- DT::datatable(dat,
+      widget <- DT::datatable(dat, selection = "none",
         rownames = FALSE, style = "bootstrap",
         filter = filt,
         # filter = alist(position = "top", clear = FALSE, plain = FALSE),
@@ -722,6 +722,38 @@ copy_from <- function(.from, ...) {
   invisible(NULL)
 }
 
+#' Import all functions that a package imports for use with Shiny
+#'
+#' @param .from The package to pull the function from
+#'
+#' @examples
+#'
+#' copy_imported(radiant)
+#'
+#' @export
+copy_imported <- function(.from) {
+
+  from <- as.character(substitute(.from))
+
+  import_list <- getNamespaceImports(from)
+  parent  <- parent.frame()
+  import_names <- names(import_list)
+
+  for (i in unique(import_names)) {
+    if (i %in% c("base","shiny","magrittr")) next
+
+    symbols <- unlist(import_list[which(i == import_names)])
+
+    for (j in symbols) {
+      # do.call(import::from, list(i = as.symbol(i), j = as.symbol(j)))
+      fn <- get(j, envir = asNamespace(i), inherits = TRUE)
+      assign(j, eval.parent(call("function", formals(fn), body(fn))), parent)
+    }
+  }
+
+  invisible(NULL)
+}
+
 #' Source all package functions
 #'
 #' @details Equivalent of source with local=TRUE for all package functions. Adapted from functions by smbache, author of the import package. See \url{https://github.com/smbache/import/issues/4} for a discussion. This function will be depracated when (if) it is included in \url{https://github.com/smbache/import}
@@ -736,12 +768,13 @@ copy_from <- function(.from, ...) {
 copy_all <- function(.from) {
 
   from <- as.character(substitute(.from))
+
   ls(getNamespace(from), all.names=TRUE) %>%
     .[grep("^\\.", ., invert = TRUE)] %>%
     set_names(.,.) -> symbols
 
   parent  <- parent.frame()
-  from    <- as.character(substitute(.from))
+  # from    <- as.character(substitute(.from))
 
   for (s in seq_along(symbols)) {
     fn <- get(symbols[s], envir = asNamespace(from), inherits = TRUE)
@@ -781,8 +814,12 @@ copy_all <- function(.from) {
 #' @export
 state_init <- function(inputvar, init = "") {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
+  if (is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
 }
+
+# state_init <- function(inputvar, init = "", pf = parent.frame()) {
+# print(parent.frame())
+# r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
 
 #' Set initial value for shiny input from a list of values
 #'

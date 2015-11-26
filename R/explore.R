@@ -249,7 +249,7 @@ make_expl <- function(expl,
   ))
 
   dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
-    DT::datatable(container = sketch,
+    DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
       filter = list(position = "top"),
       style = ifelse (expl$shiny, "bootstrap", "default"),

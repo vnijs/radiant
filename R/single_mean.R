@@ -172,6 +172,6 @@ plot.single_mean <- function(x,
 	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", object$var, ")"))
 	}
 
-	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	  { if (shiny) . else print(.) }
 }

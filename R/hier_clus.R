@@ -154,7 +154,7 @@ plot.hier_clus <- function(x,
 		}
 	}
 
-	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	 	{ if (shiny) . else print(.) }
 
 }

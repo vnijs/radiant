@@ -363,7 +363,7 @@ plot.glm_reg <- function(x,
   }
 
   if (length(plot_list) > 0) {
-    sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = nrCol))) ) %>%
+    sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = nrCol))) ) %>%
       { if (shiny) . else print(.) }
   }
 }

@@ -287,7 +287,8 @@ make_dt <- function(pvt,
   tab <- filter(tab, tab[,1] != "Total")
 
   dt_tab <- tab %>%
-  DT::datatable(container = sketch, rownames = FALSE,
+  DT::datatable(container = sketch, selection = "none",
+    rownames = FALSE,
     filter = list(position = "top"),
     # filter = list(position = "top", clear = FALSE, plain = TRUE),
     style = ifelse (pvt$shiny, "bootstrap", "default"),
@@ -390,6 +391,6 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
   if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
   if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = percent)
 
-  sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
     { if (shiny) . else print(.) }
 }

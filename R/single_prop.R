@@ -203,6 +203,6 @@ plot.single_prop <- function(x,
 	 	 		labs(x = paste0("Level ",lev_name, " in variable ", object$var))
 	}
 
-	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	  { if (shiny) . else print(.) }
 }

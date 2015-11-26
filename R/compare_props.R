@@ -255,6 +255,6 @@ plot.compare_props <- function(x,
 			 		ylab(paste0("Proportions per level of ", v1))
 	}
 
-	sshhr( do.call(arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }
 }

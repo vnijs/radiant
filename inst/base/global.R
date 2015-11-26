@@ -1,19 +1,5 @@
-## No longer need when dplyr 0.5 comes out
-# if (packageVersion("Rcpp") < "0.12.0") {
-#   stop(
-#   "Radiant requires Rcpp >= 0.12.0. ",
-#   "Please install the latest version of Rcpp from CRAN: ",
-#   "install.packages('Rcpp', repo = 'http://cran.rstudio.com')"
-#   )
-# }
-
-# if (packageVersion("dplyr") < "0.4.3") {
-#   stop(
-#   "Radiant requires dplyr >= 0.4.3. ",
-#   "Please install the latest version of dplyr from CRAN: ",
-#   "install.packages('dplyr', repo = 'http://cran.rstudio.com')"
-#   )
-# }
+# library(shiny)
+# library(magrittr)
 
 ## turn off warnings globally
 # options(warn=-1)
@@ -22,7 +8,6 @@
 # options(r_encoding = getOption("encoding"))
 # r_encoding = getOption("encoding")
 r_encoding = "UTF-8"
-
 
 ## path to use for local and server use
 # r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
@@ -68,11 +53,6 @@ knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE, message = FALSE,
                       warning = FALSE, fig.path = "~/r_figures/")
 
-## using DT rather than Shiny versions of datatable
-# renderDataTable <- DT::renderDataTable
-# dataTableOutput <- DT::dataTableOutput
-# datatable       <- DT::datatable
-
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
 
@@ -80,24 +60,28 @@ if (Sys.getenv('SHINY_PORT') == "") {
   options(shiny.maxRequestSize = -1) ## no limit to filesize locally
 
   ## if radiant package was not loaded load dependencies
-  if (!"package:radiant" %in% search())
-    sapply(r_pkgs, require, character.only = TRUE)
+  # if (!"package:radiant" %in% search())
+    # sapply(r_pkgs, require, character.only = TRUE)
+
+  ## needed but clunky
+  # sapply(r_pkgs, require, character.only = TRUE)
 
 } else {
   r_local <- FALSE
   options(shiny.maxRequestSize = 10 * 1024^2)   ## limit upload filesize on server (5MB)
-  sapply(r_pkgs, require, character.only = TRUE)
+
+  ## needed but clunky
+  # sapply(r_pkgs, require, character.only = TRUE)
 }
+
+## needed but clunky
+sapply(r_pkgs, require, character.only = TRUE)
 
 ## environment to hold session information
 r_sessions <- new.env(parent = emptyenv())
 
 ## create directory to hold session files
-# if (!r_local)
-# "~/r_sessions/" %>% { if (!file.exists(.)) dir.create(., recursive = TRUE) }
-# if (!file.exists("~/r_sessions/")) dir.create("~/r_sessions")
 file.path(normalizePath("~"),"r_sessions") %>% {if (!file.exists(.)) dir.create(.)}
-# "~/r_sessions/" %>% {if (!file.exists(.)) sshhr( dir.create(., recursive = TRUE) )}
 
 ## adding the figures path to avoid making a copy of all figures in www/figures
 addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
@@ -112,13 +96,6 @@ if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
   withMathJax <- MathJaxR::withMathJaxR
 }
-
-## Windows or Mac
-# if (.Platform$OS.type == 'windows') {
-#   Sys.setlocale(category = 'LC_ALL','English_United States.1252')
-# } else {
-#   Sys.setlocale(category = 'LC_ALL','en_US.UTF-8')
-# }
 
 nav_ui <-
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
