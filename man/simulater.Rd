@@ -4,11 +4,14 @@
 \alias{simulater}
 \title{Simulate data for decision analysis}
 \usage{
-simulater(const = "", norm = "", unif = "", discrete = "", binom = "",
-  sequ = "", form = "", seed = "", name = "", nr = 1000, dat = NULL)
+simulater(const = "", lnorm = "", norm = "", unif = "", discrete = "",
+  binom = "", sequ = "", grid = "", data = "", form = "", seed = "",
+  name = "", nr = 1000, dat = NULL)
 }
 \arguments{
 \item{const}{A string listing the constants to include in the analysis (e.g., "cost = 3; size = 4")}
+
+\item{lnorm}{A string listing the log-normally distributed random variables to include in the analysis (e.g., "demand 2000 1000" where the first number is the log-mean and the second is the log-standard deviation)}
 
 \item{norm}{A string listing the normally distributed random variables to include in the analysis (e.g., "demand 2000 1000" where the first number is the mean and the second is the standard deviation)}
 
@@ -19,6 +22,10 @@ simulater(const = "", norm = "", unif = "", discrete = "", binom = "",
 \item{binom}{A string listing the random variables with a binomail distribution to include in the analysis (e.g., "crash 100 .01") where the first number is the number of trials and the second is the probability of success)}
 
 \item{sequ}{A string listing the start and end for a sequence to include in the analysis (e.g., "trend 1 100 1"). The number of 'steps' is determined by the number of simulations.}
+
+\item{grid}{A string listing the start, end, and step for a set of sequences to include in the analysis (e.g., "trend 1 100 1"). The number of rows in the expanded will over ride the number of simulations}
+
+\item{data}{Name of a dataset to be used in the calculations}
 
 \item{form}{A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")}
 

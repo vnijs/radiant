@@ -2,9 +2,10 @@
 ## Simulate data
 #######################################
 
-sim_types <- c("Constant" = "const", "Binomial" = "binom",
-               "Discrete" = "discrete", "Normal" = "norm",
-               "Uniform" = "unif", "Sequence" = "sequ") %>% sort
+sim_types <- c("Binomial" = "binom","Constant" = "const",
+               "Discrete" = "discrete", "Log normal" = "lnorm",
+               "Normal" = "norm", "Uniform" = "unif", "Data" = "data",
+               "Grid search" = "grid", "Sequence" = "sequ")
 
 sim_args <- as.list(formals(simulater))
 
@@ -64,6 +65,7 @@ textinput_maker <- function(id = "const", lab = "Constant", rows = "2", pre = "s
 }
 
 output$ui_sim_types <- renderUI({
+
   selectizeInput("sim_types", label = "Select types:",
     choices = sim_types, multiple = TRUE,
     selected = state_multiple("sim_types", sim_types),
@@ -72,16 +74,27 @@ output$ui_sim_types <- renderUI({
   )
 })
 
+output$ui_sim_data <- renderUI({
+
+  ## keep current selection if possible
+  choices <- c("None" = "none", r_data$datasetlist)
+  isolate({
+    if (is_empty(input$sim_data)) {
+      init <- if (is_empty(r_state$sim_data)) "none" else r_state$sim_data
+    } else {
+      init <- input$sim_data
+    }
+  })
+
+  selectizeInput(inputId = "sim_data", label = "Input data for calculations:",
+    choices = choices,
+    selected = state_single("sim_data", choices, init),
+    multiple = FALSE)
+})
+
 sim_vars <- reactive({
   if (is_empty(input$sim_name)) character(0) else colnames(getdata(input$sim_name))
 })
-
-# sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
-#     gsub("[ ]*[\n;]+[ ]*",";",.) %>%
-#     gsub("[;]{2,}",";",.) %>%
-#     gsub(";$","",.)
-
-# sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
 
 output$ui_rep_vars <- renderUI({
   vars <- sim_vars()
@@ -100,15 +113,23 @@ output$ui_rep_vars <- renderUI({
   }
 
   ## if possible, keep current values when
+  # isolate({
+  #   init <- input$rep_vars %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
+
   isolate({
-    init <- input$rep_vars %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
+    if (is_empty(input$rep_vars)) {
+      init <- if (is_empty(r_state$rep_vars)) "none" else r_state$rep_vars
+    } else {
+      init <- input$rep_vars
+    }
   })
 
   selectizeInput("rep_vars", label = "Variables to re-simulate:",
     choices = vars, multiple = TRUE,
-    # selected = state_multiple("rep_vars", vars, init),
-    selected = state_multiple("rep_vars", vars),
+    selected = state_multiple("rep_vars", vars, init),
+    # selected = state_multiple("rep_vars", vars),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button'))
     )
@@ -213,6 +234,13 @@ observeEvent(input$sim_norm_add, {
   })
 })
 
+observeEvent(input$sim_lnorm_add, {
+  isolate({
+    var_updater(input$sim_lnorm_add, "sim_lnorm", c(input$sim_lnorm_name, input$sim_lnorm_mean, input$sim_lnorm_sd))
+  })
+})
+
+
 observeEvent(input$sim_discrete_add, {
   isolate({
     var_updater(input$sim_discrete_add, "sim_discrete",
@@ -231,6 +259,16 @@ observeEvent(input$rep_grid_add, {
   isolate({
     var_updater(input$rep_grid_add, "rep_grid",
                 c(input$rep_grid_name, input$rep_grid_min, input$rep_grid_max, input$rep_grid_step))
+    updateNumericInput(session = session, "rep_nr", value = NA)
+  })
+})
+
+observeEvent(input$sim_grid_add, {
+  isolate({
+    var_updater(input$sim_grid_add, "sim_grid",
+                c(input$sim_grid_name, input$sim_grid_min, input$sim_grid_max, input$sim_grid_step))
+
+    updateNumericInput(session = session, "sim_nr", value = NA)
   })
 })
 
@@ -250,6 +288,10 @@ observeEvent(input$sim_norm_del, {
   isolate(var_remover("sim_norm"))
 })
 
+observeEvent(input$sim_lnorm_del, {
+  isolate(var_remover("sim_lnorm"))
+})
+
 observeEvent(input$sim_discrete_del, {
   isolate(var_remover("sim_discrete"))
 })
@@ -260,6 +302,10 @@ observeEvent(input$sim_binom_del, {
 
 observeEvent(input$rep_grid_del, {
   isolate(var_remover("rep_grid"))
+})
+
+observeEvent(input$sim_grid_del, {
+  isolate(var_remover("sim_grid"))
 })
 
 output$ui_simulater <- renderUI({
@@ -275,8 +321,8 @@ output$ui_simulater <- renderUI({
                 <i id='sim_binom_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
           with(tags, table(
               td(textInput("sim_binom_name", "Name:", value = state_init("sim_binom_name", ""))),
-              td(numericInput("sim_binom_n", "n:", value = state_init("sim_binom_n"))),
-              td(numericInput("sim_binom_p", "p:", value = state_init("sim_binom_p")))
+              td(numericInput("sim_binom_n", "n:", value = state_init("sim_binom_n"), min = 1)),
+              td(numericInput("sim_binom_p", "p:", value = state_init("sim_binom_p"), min = 0))
             )
           ),
           textinput_maker("binom","Binomial")
@@ -307,6 +353,19 @@ output$ui_simulater <- renderUI({
           textinput_maker("discrete","Discrete")
         )
       ),
+      conditionalPanel("input.sim_types && input.sim_types.indexOf('lnorm') >= 0",
+        wellPanel(
+          HTML("<label>Log-normal variables: <i id='sim_lnorm_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                <i id='sim_lnorm_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+          with(tags, table(
+              td(textInput("sim_lnorm_name", "Name:", value = state_init("sim_lnorm_name", ""))),
+              td(numericInput("sim_lnorm_mean", "Mean:", value = state_init("sim_lnorm_mean"))),
+              td(numericInput("sim_lnorm_sd", "St.dev.:", value = state_init("sim_lnorm_sd"), min = 1))
+            )
+          ),
+          textinput_maker("lnorm","Log normal")
+        )
+      ),
       conditionalPanel("input.sim_types && input.sim_types.indexOf('norm') >= 0",
         wellPanel(
           HTML("<label>Normal variables: <i id='sim_norm_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
@@ -314,10 +373,23 @@ output$ui_simulater <- renderUI({
           with(tags, table(
               td(textInput("sim_norm_name", "Name:", value = state_init("sim_norm_name", ""))),
               td(numericInput("sim_norm_mean", "Mean:", value = state_init("sim_norm_mean"))),
-              td(numericInput("sim_norm_sd", "St.dev.:", value = state_init("sim_norm_sd")))
+              td(numericInput("sim_norm_sd", "St.dev.:", value = state_init("sim_norm_sd"), min = 0))
             )
           ),
           textinput_maker("norm","Normal")
+        )
+      ),
+      conditionalPanel("input.sim_types && input.sim_types.indexOf('unif') >= 0",
+        wellPanel(
+          HTML("<label>Uniform variables: <i id='sim_unif_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                <i id='sim_unif_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+          with(tags, table(
+              td(textInput("sim_unif_name", "Name:", value = state_init("sim_unif_name", ""))),
+              td(numericInput("sim_unif_min", "Min:", value = state_init("sim_unif_min"))),
+              td(numericInput("sim_unif_max", "Max:", value = state_init("sim_unif_max")))
+            )
+          ),
+          textinput_maker("unif","Uniform")
         )
       ),
       conditionalPanel("input.sim_types && input.sim_types.indexOf('sequ') >= 0",
@@ -333,17 +405,22 @@ output$ui_simulater <- renderUI({
           textinput_maker("sequ","Sequence")
         )
       ),
-      conditionalPanel("input.sim_types && input.sim_types.indexOf('unif') >= 0",
+      conditionalPanel("input.sim_types && input.sim_types.indexOf('grid') >= 0",
         wellPanel(
-          HTML("<label>Uniform variables: <i id='sim_unif_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
-                <i id='sim_unif_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
+          HTML("<label>Grid search: <i id='sim_grid_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
+                <i id='sim_grid_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
           with(tags, table(
-              td(textInput("sim_unif_name", "Name:", value = state_init("sim_unif_name", ""))),
-              td(numericInput("sim_unif_min", "Min:", value = state_init("sim_unif_min"))),
-              td(numericInput("sim_unif_max", "Max:", value = state_init("sim_unif_max")))
-            )
-          ),
-          textinput_maker("unif","Uniform")
+              td(textInput("sim_grid_name", "Name:", value = state_init("sim_grid_name", ""))),
+              td(numericInput("sim_grid_min", "Min:", value = state_init("sim_grid_min"))),
+              td(numericInput("sim_grid_max", "Max:", value = state_init("sim_grid_max"))),
+              td(numericInput("sim_grid_step", "Step:", value = state_init("sim_grid_step")))
+          )),
+          textinput_maker("grid")
+        )
+      ),
+      conditionalPanel("input.sim_types && input.sim_types.indexOf('data') >= 0",
+        wellPanel(
+          uiOutput("ui_sim_data")
         )
       ),
       wellPanel(
@@ -473,7 +550,9 @@ sim_plot_height <- function() {
 }
 
 .plot_simulate <- reactive({
-  .simulater() %>% { if (is_empty(.)) invisible() else plot(., shiny = TRUE) }
+  withProgress(message = 'Generating simulation plots', value = 0, {
+    .simulater() %>% { if (is_empty(.)) invisible() else plot(., shiny = TRUE) }
+  })
 })
 
 .repeater <- eventReactive(input$runRepeat, {
@@ -523,8 +602,10 @@ rep_plot_height <- function() {
   isolate({
     object <- .repeater()
     if (is.null(object)) return(invisible())
-    rep_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
-      { do.call(plot, c(list(x = object), .)) }
+    withProgress(message = 'Generating repeated simulation plots', value = 0, {
+      rep_plot_inputs() %>% { .$shiny <- TRUE; . } %>%
+        { do.call(plot, c(list(x = object), .)) }
+    })
   })
 })
 

@@ -6,7 +6,7 @@ pc_type <- c("Values" = "values", "Probabilities" = "probs")
 
 output$ui_pc_disc <- renderUI({
   tagList(
-    returnTextInput("pcd_v", label = "Values:", value = state_init("pcd_v", paste(1:6))),
+    returnTextInput("pcd_v", label = "Values:", value = state_init("pcd_v", "1 2 3 4 5 6")),
     returnTextInput("pcd_p", label = "Probabilities:", value = state_init("pcd_p", "1/6"))
   )
 })

@@ -1380,10 +1380,7 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 				}
 				if (lb < n) {
 				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
-					# if (lb > 0)
-				  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
-				  # else
-				  	# cat(paste0("P(X >= ", lb,") = ", 1, "\n"))
+			  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
 				}
 			}
 
@@ -1395,10 +1392,7 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 				}
 				if (ub < n) {
 				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
-				  # if (ub > 0)
-				  	cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
-				  # else
-				  	# cat(paste0("P(X >= ", ub,") = ", 1, "\n"))
+				  cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
 				}
 			}
 
@@ -1424,10 +1418,7 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 				}
 				if (vlb < n) {
 				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
-				  # if (vlb > 0)
-				  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
-				  # else
-				  	# cat(paste0("P(X >= ", vlb,") = ", 1, "\n"))
+			  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
 				}
 			}
 
@@ -1439,10 +1430,7 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 				}
 				if (vub < n) {
 				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
-				  # if (vub > 0)
-				    cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
-				  # else
-				    # cat(paste0("P(X >= ", vub,") = ", 1, "\n"))
+		      cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
 				}
 			}
 
@@ -1453,8 +1441,6 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 		}
 	}
 }
-
-
 
 #' Probability calculator for the discrete distribution (discrete)
 #'
@@ -1476,63 +1462,19 @@ prob_disc <- function(v, p,
                       pub = NA,
                       dec = 3) {
 
-
-# dunifdisc<-function(x, min=0, max=1) ifelse(x>=min & x<=max & round(x)==x, 1/(max-min+1), 0)
-# punifdisc<-function(q, min=0, max=1) ifelse(q<min, 0, ifelse(q>max, 1, floor(q)/(max-min+1)))
-# qunifdisc<-function(p, min=0, max=1) floor(p*(max-min+1))
-# runifdisc<-function(n, min=0, max=1) sample(min:max, n, replace=T)
-
-# v <- 1:6
-# p <- rep(1/6,6)
-
-# rowSums(expand.grid(v,v))
-
-# df <- data.frame(v = v, p = p) %>% arrange(v)
-# df <- bind_cols(expand.grid(df), expand.grid(df)) %>% set_colnames(c("v1","p1","v2","p2"))
-# rowSums(select(df, starts_with("v")))
-# ?select
-
-# p <- 1/6
-
-# # library(dplyr)
-
-# lb <- 3
-# plb <- .8
-# dec <- 3
-
-	# v <- paste(1:6, collapse = " ")
-	# p <- paste(1/6)
-
-	# library(radiant)
-
-
 	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
 	# expand.grid(height = 1:6, weight = 1:6)
 	# expand.grid(1, 1:6)
 	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
-	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
 
-	# p <- "1/6 1/12 1/6 1/4"
+	# library(radiant)
+	# v <- "1 2 3 4 5"
+	# p <- ".2 .3 .3 .15 .05"
+	# p <- "1/6    \n1/12 1/6 1/4"
 	# p <- "1/6 1/12 1/6 abbb"
 
-	v <- unlist(strsplit(v, "\\s")) %>% as_numeric
-	# p <- unlist(strsplit(p, "\\s")) %>% {eval(parse(text = .))} %>% as_numeric
-	# create_number <- function(x) {
-		# res <- try(eval(parse(text = x)), silent = TRUE)
-		# try(eval(parse(text = x)), silent = TRUE)
-	  # if (is(res, 'try-error')) {
-			# mess_probs <- mess_values <- paste0("Invalid inputs: \"", attr(res,"condition")$message,"\". Update the inputs")
-   #    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
-	  # }
-	  # res
-	# }
-
-
-	p <- unlist(strsplit(p, "\\s"))
+	v <- unlist(strsplit(v, "\\s+")) %>% as_numeric
+	p <- unlist(strsplit(p, "\\s+"))
 
 	cp <- c()
 	for (i in p) {
@@ -1559,7 +1501,7 @@ prob_disc <- function(v, p,
   p <- df$p
 
 	if (sum(p) < .99 || sum(p) > 1.01) {
-		mess_probs <- mess_values <- "Probabilities do not sum to 1"
+		mess_probs <- mess_values <- paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(p),3),")")
     return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
 	}
 
@@ -1570,8 +1512,9 @@ prob_disc <- function(v, p,
 	if (is.na(lb)) {
 		p_elb <- p_lb <- lb <- NA
 	} else if (!lb %in% v) {
-		mess_values <- "Lower bound is not in the list of values"
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+		p_elb <- 0
+		p_lb <- ifelse ( lb < min(v), 0, pdisc(lb, df) %>% round(dec))
+		p_lelb <- p_elb + p_lb
 	} else {
 		p_elb <- ddisc(lb, df) %>% round(dec)
 		p_lb <- pdisc(lb, df) %>% round(dec)
@@ -1581,8 +1524,9 @@ prob_disc <- function(v, p,
 	if (is.na(ub)) {
 		p_eub <- p_ub <- ub <- NA
 	} else if (!ub %in% v) {
-		mess_values <- "Upper bound is not in the list of values"
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	  p_eub <- 0
+		p_ub <- ifelse ( ub < min(v), 0, pdisc(ub, df) %>% round(dec))
+		p_leub <- p_eub + p_ub
 	} else {
 		p_eub <- ddisc(ub, df) %>% round(dec)
 		p_ub <- pdisc(ub, df) %>% round(dec)
@@ -1677,11 +1621,14 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 
   k <- factor(rep("below",length(v)), levels = c("below","equal","above"))
   if (!is.null(ub) && !is.na(ub)) {
-    if (!is.na(lb)) k[lb:ub] <- "equal"
-  	k[ub] <- "equal"
+    if (!is.na(lb)) {
+    	k[v >= lb & v <= ub] <- "equal"
+    } else if (ub %in% v) {
+    	k[ub] <- "equal"
+    }
   	k[v > ub] <- "above"
   } else if (!is.null(lb) && !is.na(lb)) {
-  	k[lb] <- "equal"
+  	if (lb %in% v) k[lb] <- "equal"
   	k[v > lb] <- "above"
   } else {
   	return(invisible())
@@ -1778,10 +1725,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 				}
 				if (lb < max(v)) {
 				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
-					# if (lb > 0)
-				  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
-				  # else
-				  	# cat(paste0("P(X >= ", lb,") = ", 1, "\n"))
+				  cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
 				}
 			}
 
@@ -1793,10 +1737,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 				}
 				if (ub < max(v)) {
 				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
-				  # if (ub > 0)
-				  	cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
-				  # else
-				  	# cat(paste0("P(X >= ", ub,") = ", 1, "\n"))
+				 	cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
 				}
 			}
 
@@ -1822,10 +1763,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 				}
 				if (vlb < max(v)) {
 				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
-				  # if (vlb > 0)
-				  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
-				  # else
-				  	# cat(paste0("P(X >= ", vlb,") = ", 1, "\n"))
+			  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
 				}
 			}
 
@@ -1837,10 +1775,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 				}
 				if (vub < max(v)) {
 				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
-				  # if (vub > 0)
-				    cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
-				  # else
-				    # cat(paste0("P(X >= ", vub,") = ", 1, "\n"))
+				  cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
 				}
 			}
 

@@ -7,11 +7,14 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/simulater.html} for an example in Radiant
 #'
 #' @param const A string listing the constants to include in the analysis (e.g., "cost = 3; size = 4")
+#' @param lnorm A string listing the log-normally distributed random variables to include in the analysis (e.g., "demand 2000 1000" where the first number is the log-mean and the second is the log-standard deviation)
 #' @param norm A string listing the normally distributed random variables to include in the analysis (e.g., "demand 2000 1000" where the first number is the mean and the second is the standard deviation)
 #' @param unif A string listing the uniformly distributed random variables to include in the analysis (e.g., "demand 0 1" where the first number is the minimum value and the second is the maximum value)
 #' @param discrete A string listing the random variables with a discrete distribution to include in the analysis (e.g., "price 5 .3 8 .7" where for each pair of numbers the first is the value and the second the probability
 #' @param binom A string listing the random variables with a binomail distribution to include in the analysis (e.g., "crash 100 .01") where the first number is the number of trials and the second is the probability of success)
 #' @param sequ A string listing the start and end for a sequence to include in the analysis (e.g., "trend 1 100 1"). The number of 'steps' is determined by the number of simulations.
+#' @param grid A string listing the start, end, and step for a set of sequences to include in the analysis (e.g., "trend 1 100 1"). The number of rows in the expanded will over ride the number of simulations
+#' @param data Name of a dataset to be used in the calculations
 #' @param form A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
 #' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
@@ -29,11 +32,14 @@
 #' @seealso \code{\link{plot.simulater}} to plot results
 #' @export
 simulater <- function(const = "",
+                      lnorm = "",
                       norm = "",
                       unif = "",
                       discrete = "",
                       binom = "",
                       sequ = "",
+                      grid = "",
+                      data = "",
                       form = "",
                       seed = "",
                       name = "",
@@ -67,15 +73,32 @@ simulater <- function(const = "",
   # name = "sim1"
   # nr = 1000
 
-  if (is_empty(nr)) {
-    mess <- c("error",paste0("Please specify the number of simulations in '# sims'"))
-    return(mess %>% set_class(c("simulater", class(.))))
-  }
-
   ## remove any non-numbers from seed, including spaces
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
   if (is.null(dat)) dat <- list()
+
+  # dat <- list(a = 1:10, b = 8)
+  # do.call(with, list(dat, parse(text = "a * b")))
+
+  # library(magrittr)
+  ## parsing grid
+  # grid <- "S 0 6 1; B 0 9 1"
+  grid %<>% sim_cleaner
+  if (grid != "") {
+    s <- grid %>% sim_splitter
+    for (i in 1:length(s)) {
+      if (is_empty(s[[i]][4])) s[[i]][4] <- 1
+      s[[i]] %>% { dat[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), as.numeric(.[4]))}
+    }
+    dat <- as.list(expand.grid(dat) %>% as_data_frame)
+    nr <- length(dat[[1]])
+  }
+
+  if (is_empty(nr)) {
+    mess <- c("error",paste0("Please specify the number of simulations in '# sims'"))
+    return(mess %>% set_class(c("simulater", class(.))))
+  }
 
   ## parsing constant
   # const <- "non_labor_cost 3995;\n;\n;cost 11\n   \n \n\n\n\n\n     \n    \n   "
@@ -94,12 +117,42 @@ simulater <- function(const = "",
       s[[i]] %>% { dat[[.[1]]] <<- runif(nr, as.numeric(.[2]) , as.numeric(.[3]))}
   }
 
+  ## parsing log normal
+  lnorm %<>% sim_cleaner
+  if (lnorm != "") {
+    s <- lnorm %>% sim_splitter
+    for (i in 1:length(s)) {
+      sdev <- as.numeric(s[[i]][3])
+      if (!sdev > 1) {
+        mess <- c("error",paste0("All log-normal variables should have a standard deviation larger than 1.\nPlease review the input carefully"))
+        return(mess %>% set_class(c("simulater", class(.))))
+      }
+      m <- as.numeric(s[[i]][2])
+      if (!m > 1) {
+        mess <- c("error",paste0("All log-normal variables should have a mean larger than 1.\nPlease review the input carefully"))
+        return(mess %>% set_class(c("simulater", class(.))))
+      }
+      s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, log(m), log(sdev))}
+      # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, m, sdev)}
+      # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, as.numeric(.[2]), as.numeric(.[3]))}
+    }
+
+      # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, log(as.numeric(.[2])) , log(as.numeric(.[3])))}
+  }
+
   ## parsing normal
   norm %<>% sim_cleaner
   if (norm != "") {
     s <- norm %>% sim_splitter
-    for (i in 1:length(s))
-      s[[i]] %>% { dat[[.[1]]] <<- rnorm(nr, as.numeric(.[2]) , as.numeric(.[3]))}
+    for (i in 1:length(s)) {
+      sdev <- as.numeric(s[[i]][3])
+      if (!sdev > 0) {
+        mess <- c("error",paste0("All normal variables should have a standard deviation larger than 0.\nPlease review the input carefully"))
+        return(mess %>% set_class(c("simulater", class(.))))
+      }
+      s[[i]] %>% { dat[[.[1]]] <<- rnorm(nr, as.numeric(.[2]) , sdev)}
+      # s[[i]] %>% { dat[[.[1]]] <<- rnorm(nr, as.numeric(.[2]) , as.numeric(.[3]))}
+    }
   }
 
   ## parsing binomial
@@ -118,6 +171,13 @@ simulater <- function(const = "",
       s[[i]] %>% { dat[[.[1]]] <<- seq(as.numeric(.[2]) , as.numeric(.[3]), length.out = as.numeric(nr))}
   }
 
+  ## adding data to dat list
+  if (data != "" && data != "none") {
+    sdat <- getdata(data)
+    for (i in colnames(sdat))
+      dat[[i]] <- sdat[[i]]
+  }
+
   ## parsing discrete
   # discrete = "price 6 .30 8 .70"
   discrete %<>% sim_cleaner
@@ -130,13 +190,33 @@ simulater <- function(const = "",
         mess <- c("error",paste0("Input for a discrete variable contains an error. Please review the input carefully"))
         return(mess %>% set_class(c("simulater", class(.))))
       } else if (sum(dpar[,2]) != 1) {
-        mess <- c("error",paste0("Probabilities for discrete variable do not sum to 1"))
+        mess <- c("error",paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(dpar[,2]),3),")"))
         return(mess %>% set_class(c("simulater", class(.))))
       }
 
       dat[[s[[i]][1]]] <- sample(dpar[,1], nr, replace = TRUE, prob = dpar[,2])
     }
   }
+
+  # f <- seq(0,1,0.01)
+  # fobj <- "f %*% GOOG + (1-f) %*% MSFT"
+  # do.call(with, list(stocks, parse(text = fobj)))
+
+  # f %*% GOOG
+  # class(f)
+  # f
+  # class(GOOG)
+  # f %*% GOOG
+  # library(dplyr)
+  # expand.grid(f = f,GOOG = GOOG) %>% group_by(f) %>% summarize(sd(GOOG))
+  # expand.grid(f = f, attach(stocks))
+
+
+  #  <- function(x, fobj, stocks) do.call(with, list(stocks, parse(text = fobj)))
+  # ?by
+
+  # sapply(f, )
+
 
   ## parsing formula
   # form <- "profit = (price - cost)*nr_meals - labor_cost - non_labor_cost\n ; \n margin = price - cost ;;;   ; \n  \n  "
@@ -177,7 +257,17 @@ simulater <- function(const = "",
     }
   }
 
-  ret <- list(dat = dat %>% as.data.frame, sim_call = as.list(match.call())[-1]) %>%
+  # print(names(dat))
+
+  ## removing data to dat list
+  if (data != "" && data != "none") {
+    for (i in colnames(sdat)) dat[[i]] <- NULL
+  }
+
+  # print("----")
+  # print(names(dat))
+
+  ret <- list(dat = as.data.frame(dat) %>% na.omit, sim_call = as.list(match.call())[-1]) %>%
     set_class(c("simulater", class(.)))
 
   name %<>% gsub(" ","",.)
@@ -230,19 +320,28 @@ summary.simulater <- function(object, dec = 4, ...) {
   }
 
   cat("Simulation\n")
-  cat("Simulations:", object$sim_call$nr, "\n")
+  # cat("Simulations:", object$sim_call$nr, "\n")
+  cat("Simulations:", nrow(object$dat), "\n")
   cat("Random seed:", object$sim_call$seed, "\n")
   cat("Sim data   :", object$sim_call$name, "\n")
-  if (!is_empty(object$sim_call$const))
-    cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$binom))
     cat("Binomial   :", gsub(";", "; ", object$sim_call$binom) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$const))
+    cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$discrete))
     cat("Discrete   :", gsub(";", "; ", object$sim_call$discrete) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$lnorm))
+    cat("Log normal :", gsub(";", "; ", object$sim_call$lnorm) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$norm))
     cat("Normal     :", gsub(";", "; ", object$sim_call$norm) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$unif))
     cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$sequ))
+    cat("Sequence   :", gsub(";", "; ", object$sim_call$sequ) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$grid))
+    cat("Grid search:", gsub(";", "; ", object$sim_call$grid) %>% gsub("\\n","",.), "\n")
+  if (!is_empty(object$sim_call$data))
+    cat("Data       :", gsub(";", "; ", object$sim_call$data) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$form))
     cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
   cat("\n")
@@ -357,17 +456,40 @@ repeater <- function(nr = 12,
   ## keep those list elements that, e.g., q is in
   nr_sim <- nrow(sim$dat)
   sc <- sim$sim_call
+
+  if (!is_empty(sc$data)) vars <- c(sc$data, vars)
+
   sc$name <- sc$seed <- "" ## cleaning up the sim call
   sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
   sc[1:which(names(sc) == "form")] <- ""
   sc[names(sc_keep)] <- sc_keep
   sc$dat <- sim$dat %>% as.list
 
+
+  ## testing
+  ## testing
+  ## testing
+  ## testing
+  # sc$data <- "stocks"
+  ## testing
+  ## testing
+  ## testing
+  ## testing
+
+  # print(sc_keep)
+  # print(sc)
+
+  # mess <- c("error","test")
+  # return(mess %>% set_class(c("repeater", class(.))))
+
+
+
+
   rep_sim <- function(run_nr) {
     bind_cols(
       data_frame(run = rep(run_nr, nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)$dat
-    )
+    ) %>% na.omit
   }
 
   rep_grid_sim <- function(gval) {
@@ -380,20 +502,40 @@ repeater <- function(nr = 12,
       sub(paste0("^", gvars[i], " [.0-9]+"), paste0(gvars[i], " ", gval[gvars[i]]), .)
     }
 
+    # print(sc_grid)
+    # print(sc)
+
     sc[names(sc_grid)] <- sc_grid
+
+    # print(sc)
+
+    # print(do.call(simulater, sc))
+    # return()
 
     bind_cols(
       data_frame(run = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)$dat
-    )
+    ) %>% na.omit
+
+    # mtcars
+
   }
+
 
   if (length(grid_list) == 0) {
     ret <- bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
   } else {
     grid <- expand.grid(grid_list)
+
+   # print(apply(grid, 1, rep_grid_sim))
+
+  # mess <- c("error","test")
+  # return(mess %>% set_class(c("repeater", class(.))))
+
     ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
+
+
 
   name %<>% gsub(" ","",.)
   if (name != "") {
@@ -683,7 +825,6 @@ sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1)
 #' @export
 find_max <- function(var, val = "") {
   if (is_empty(val)) stop("Error in find_max (2 inputs required)\nSpecify the variable to evaluate at the maxium of the first input")
-  # vars <- pryr::named_dots(...) %>% names
   val[which.max(var)]
 }
 
@@ -698,4 +839,19 @@ find_max <- function(var, val = "") {
 find_min <- function(var, val = "") {
   if (is_empty(val)) stop("Error in find_min (2 inputs required)\nSpecify the variable to evaluate at the minimum of the first input")
   val[which.min(var)]
+}
+
+#' Standard deviation of weighted sum of variables
+#'
+#' @param ... A matched number of weights and stocks
+#'
+#' @return A vector of standard deviation estimates
+#'
+#' @export
+sdw <- function(...) {
+  dl <- list(...)
+  nr <- length(dl)/2
+  w <- data.frame(dl[1:nr])
+  d <- data.frame(dl[(nr+1):length(dl)])
+  apply(w, 1, function(w) sd(rowSums(sweep(d, 2, w, "*"))))
 }

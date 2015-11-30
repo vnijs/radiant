@@ -814,7 +814,8 @@ copy_all <- function(.from) {
 #' @export
 state_init <- function(inputvar, init = "") {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  if (is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
+  # if (is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
+  if (is_empty(r_state[[inputvar]])) init else r_state[[inputvar]]
 }
 
 # state_init <- function(inputvar, init = "", pf = parent.frame()) {
@@ -848,7 +849,8 @@ state_init <- function(inputvar, init = "") {
 #' @export
 state_single <- function(inputvar, vals, init = character(0)) {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  r_state %>% { if (is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
+  # r_state %>% { if (is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
+  r_state %>% { if (is_empty(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
 }
 
 #' Set initial values for shiny input from a list of values
@@ -881,7 +883,8 @@ state_single <- function(inputvar, vals, init = character(0)) {
 state_multiple <- function(inputvar, vals, init = character(0)) {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   r_state %>%
-    { if (is.null(.[[inputvar]]))
+    # { if (is.null(.[[inputvar]]))
+    { if (is_empty(.[[inputvar]]))
         ## "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
         vals[vals %in% init]
       else

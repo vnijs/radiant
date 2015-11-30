@@ -58,12 +58,13 @@ saveStateOnRefresh <- function(session = session) {
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
           is.null(input$uploadState)) {
         saveSession(session)
-        if (r_local) sshh( rm(r_env, envir = .GlobalEnv) )
+        # if (r_local) sshh( rm(r_env, envir = .GlobalEnv) )
       } else {
         if (is.null(input$uploadState)) {
-          if (exists("r_sessions"))
-            try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE)
-            try(r_ssuid <- NULL, silent = TRUE)
+          if (exists("r_sessions")) {
+            sshhr(try(r_sessions[[r_ssuid]] <- NULL, silent = TRUE))
+            sshhr(try(rm(r_ssuid), silent = TRUE))
+          }
         }
       }
     })
