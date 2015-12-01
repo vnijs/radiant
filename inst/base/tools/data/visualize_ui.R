@@ -212,11 +212,11 @@ output$ui_Visualize <- renderUI({
 })
 
 viz_plot_width <- reactive({
-  if (is.null(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
+  if (is_empty(input$viz_plot_width)) r_data$plot_width else input$viz_plot_width
 })
 
 viz_plot_height <- reactive({
-  if (is.null(input$viz_plot_height)) {
+  if (is_empty(input$viz_plot_height)) {
     r_data$plot_height
   } else {
     lx <- if (not_available(input$viz_xvar)) 1 else length(input$viz_xvar)
@@ -259,8 +259,8 @@ output$visualize <- renderPlot({
 
   if (not_available(input$viz_xvar)) return()
   if (input$viz_type %in% c("scatter","line", "box", "bar") && not_available(input$viz_yvar)) return()
-  if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars()))
-    return()
+  if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars())) return()
+  if (!is_empty(input$viz_color, "none") && not_available(input$viz_color)) return()
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
