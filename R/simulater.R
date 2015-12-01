@@ -253,8 +253,6 @@ simulater <- function(const = "",
     }
   }
 
-  # print(names(dat))
-
   ## removing data to dat list
   if (data != "" && data != "none") {
     for (i in colnames(sdat)) dat[[i]] <- NULL
@@ -265,6 +263,11 @@ simulater <- function(const = "",
 
   ret <- list(dat = as.data.frame(dat) %>% na.omit, sim_call = as.list(match.call())[-1]) %>%
     set_class(c("simulater", class(.)))
+
+  if (nrow(ret$dat) == 0) {
+    mess <- c("error",paste0("The simulated data set has 0 rows"))
+    return(mess %>% set_class(c("simulater", class(.))))
+  }
 
   name %<>% gsub(" ","",.)
   if (name != "") {
