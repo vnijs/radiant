@@ -123,21 +123,18 @@ simulater <- function(const = "",
     s <- lnorm %>% sim_splitter
     for (i in 1:length(s)) {
       sdev <- as.numeric(s[[i]][3])
-      if (!sdev > 1) {
-        mess <- c("error",paste0("All log-normal variables should have a standard deviation larger than 1.\nPlease review the input carefully"))
+      if (!sdev > 0) {
+        mess <- c("error",paste0("All log-normal variables should have a standard deviation larger than 0.\nPlease review the input carefully"))
         return(mess %>% set_class(c("simulater", class(.))))
       }
-      m <- as.numeric(s[[i]][2])
-      if (!m > 1) {
-        mess <- c("error",paste0("All log-normal variables should have a mean larger than 1.\nPlease review the input carefully"))
-        return(mess %>% set_class(c("simulater", class(.))))
-      }
-      s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, log(m), log(sdev))}
+      # m <- as.numeric(s[[i]][2])
+      # if (!m > 1) {
+      #   mess <- c("error",paste0("All log-normal variables should have a mean larger than 1.\nPlease review the input carefully"))
+      #   return(mess %>% set_class(c("simulater", class(.))))
+      # }
+      s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, as.numeric(.[2]), sdev)}
       # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, m, sdev)}
-      # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, as.numeric(.[2]), as.numeric(.[3]))}
     }
-
-      # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, log(as.numeric(.[2])) , log(as.numeric(.[3])))}
   }
 
   ## parsing normal
@@ -151,7 +148,6 @@ simulater <- function(const = "",
         return(mess %>% set_class(c("simulater", class(.))))
       }
       s[[i]] %>% { dat[[.[1]]] <<- rnorm(nr, as.numeric(.[2]) , sdev)}
-      # s[[i]] %>% { dat[[.[1]]] <<- rnorm(nr, as.numeric(.[2]) , as.numeric(.[3]))}
     }
   }
 
