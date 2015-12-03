@@ -27,10 +27,12 @@ stop_radiant <- function() {
           cat(rmd_report, file = "clipboard")
           stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
         } else if (os_type == "Darwin") {
-          cat(rmd_report, file = pipe("pbcopy"))
+          out <- pipe("pbcopy")
+          cat(rmd_report, file = out)
+          close(out)
           stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
         } else if (os_type == "Linux") {
-          # cat(input$rmd_report, file = pipe("pbcopy"))
+          # cat(rmd_report, file = pipe("pbcopy"))
         }
       }
       ## removing r_env and r_sessions

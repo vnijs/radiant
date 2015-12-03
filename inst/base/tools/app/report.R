@@ -256,13 +256,17 @@ update_report_fun <- function(cmd) {
     if (os_type == 'Windows') {
       cat(cmd, file = "clipboard")
     } else if (os_type == "Darwin") {
-      cat(cmd, file = pipe("pbcopy"))
+      out <- pipe("pbcopy")
+      cat(cmd, file = out)
+      close(out)
     } else if (os_type == "Linux") {
       cat("Clipboard not supported on linux")
     }
     ## nothing is added to report
     cmd <- ""
   }
+
+
 
   if (cmd != "") {
 
