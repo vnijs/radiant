@@ -219,7 +219,16 @@ simulater <- function(const = "",
   # form = "demand = demand -50*price;profit = demand*(price-var_cost) - fixed_cost"
   # form = "demand = demand - .1*lag(demand, 0);profit = demand*(price-var_cost) - fixed_cost"
   # form = "demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
-  # form = "#demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
+  # form = "#demand = demand - .1*lag(demand, default=0);\n# profit = demand*(price-var_cost) - fixed_cost"
+  # form %>% gsub("\\s{2,}"," ",.) %>%
+  # gsub("^\\s*#\\s*.*\n","",.) %>%
+  # gsub("\\s*[\n;]+\\s*",";",.) %>%
+  # gsub("[;]{2,}",";",.) %>%
+  # gsub(";$","",.) %>%
+  # gsub("^;","",.)
+
+  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+
   # library(magrittr)
   # form %>% gsub(";\\s*\\#.*$","",.)
   # form %>% gsub("^\\s*#.*[\n;]","",.)
@@ -342,7 +351,8 @@ summary.simulater <- function(object, dec = 4, ...) {
   if (!is_empty(object$sim_call$data))
     cat("Data       :", gsub(";", "; ", object$sim_call$data) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$form))
-    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
+    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
+    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("\n","\n\t",.), "\n"))
   cat("\n")
 
   sim_summary(object$dat, dec = ifelse(is.na(dec), 4, dec))
