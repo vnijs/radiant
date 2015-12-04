@@ -1480,7 +1480,7 @@ prob_disc <- function(v, p,
 	for (i in p) {
 		res <- try(eval(parse(text = i)), silent = TRUE)
 	  if (is(res, 'try-error')) {
-			mess_probs <- mess_values <- paste0("Invalid inputs: \"", attr(res,"condition")$message,"\". Update the inputs")
+	    mess_probs <- mess_values <- paste0("Invalid inputs:\n\n", attr(res,"condition")$message)
       return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
 	  }
 	  cp <- c(cp, res)
@@ -1488,7 +1488,7 @@ prob_disc <- function(v, p,
 	p <- cp %>% set_names(NULL)
 
 	if (any(is(p, 'try-error'))) {
-		mess_probs <- mess_values <- paste0("Invalid inputs: \"", attr(p,"condition")$message,"\". Update the inputs")
+	  mess_probs <- mess_values <- paste0("Invalid inputs:\n\n", attr(res,"condition")$message)
     return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
 	}
 
