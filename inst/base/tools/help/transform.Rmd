@@ -44,14 +44,15 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 
 When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Log` from the `Apply function` drop-down. A new variable is created with the extension specified in the 'Variable name extension` text input (e.g,. `_log`). Make sure to press `return` after changing the extension. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
-1. Log: create a log-transformed version of the selected variable (i.e., log(x))
-2. Square: multiply a variable by itself (i.e., x^2)
+1. Log: create a natural log-transformed version of the selected variable (i.e., log(x) or ln(x))
+2. Square: multiply a variable by itself (i.e., x^2 or square(x))
 3. Square-root: take the square-root of a variable (i.e., x^.5)
-4. Center: create a new variable with a mean of zero (i.e., x - mean(x))
-5. Standardize: create a new variable with a mean of zero and standard deviation of one (i.e., (x - mean(x)/sd(x)))
-6. Invert: 1/x
-7. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
-8. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
+4. Absolute: Absolute value of a variable (i.e., abs(x))
+5. Center: create a new variable with a mean of zero (i.e., x - mean(x))
+6. Standardize: create a new variable with a mean of zero and standard deviation of one (i.e., (x - mean(x))/sd(x))
+7. Invert: 1/x
+8. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
+9. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
 
 
 ### Create

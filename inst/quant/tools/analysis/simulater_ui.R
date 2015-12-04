@@ -172,7 +172,7 @@ output$ui_rep_sum_vars <- renderUI({
 })
 
 output$ui_rep_byvar <- renderUI({
-  vars <- c("Simulation" = "sim", "Repeat" = "run")
+  vars <- c("Simulation" = "sim", "Repeat" = "rep")
   selectizeInput("rep_byvar", label = "Group by:", choices = vars,
     selected = state_single("rep_byvar", vars), multiple = FALSE,
     options = list(placeholder = 'Select group-by variable')
@@ -463,7 +463,7 @@ output$ui_simulater <- renderUI({
         with(tags, table(
           td(textInput("rep_seed", "Set random seed:",
                        value = state_init('rep_seed'))),
-          td(numericInput("rep_nr", "# runs:", min = 1, max = 10^6,
+          td(numericInput("rep_nr", "# reps:", min = 1, max = 10^6,
                           value = state_init('rep_nr', 12)))
           )
         ),

@@ -33,7 +33,7 @@ simulater(const = "", lnorm = "", norm = "", unif = "", discrete = "",
 
 \item{name}{To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.}
 
-\item{nr}{Number of simulation runs}
+\item{nr}{Number of simulations}
 
 \item{dat}{Data list from previous simulation. Used by repeater function}
 }

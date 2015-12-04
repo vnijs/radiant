@@ -120,6 +120,13 @@ visualize <- function(dataset, xvar,
     }
   }
 
+  if (xor("log_x" %in% axes, "log_y" %in% axes)) {
+    if (any(xvar %in% yvar))
+      return("When applying 'Log X' an X-variable cannot also be selected as a Y-variable")
+    if (any(yvar %in% xvar))
+      return("When applying 'Log Y' a Y-variable cannot also be selected as an X-variable")
+  }
+
   log_trans <- function(x) ifelse(x > 0, log(x), NA)
 
   if ("log_x" %in% axes) {
