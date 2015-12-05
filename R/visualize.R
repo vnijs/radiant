@@ -6,6 +6,7 @@
 #' @param xvar One or more variables to display along the X-axis of the plot
 #' @param yvar Variable to display along the Y-axis of the plot (default = "none")
 #' @param comby Combine yvars in plot (TRUE or FALSE, FALSE is the default)
+#' @param combx Combine xvars in plot (TRUE or FALSE, FALSE is the default)
 #' @param type Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')
 #' @param facet_row Create vertically arranged subplots for each level of the selected factor variable
 #' @param facet_col Create horizontally arranged subplots for each level of the selected factor variable
@@ -37,6 +38,7 @@
 visualize <- function(dataset, xvar,
                       yvar = "",
                       comby = FALSE,
+                      combx = FALSE,
                       type = "hist",
                       facet_row = ".",
                       facet_col = ".",
@@ -132,7 +134,7 @@ visualize <- function(dataset, xvar,
     dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
-  ## combining yvariables if needed
+  ## combining Y-variables if needed
   if (comby && length(yvar) > 1) {
     if (any(xvar %in% yvar)) return("X-variables cannot be part of Y-variables when combining Y-variables")
     if (!is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
@@ -142,6 +144,15 @@ visualize <- function(dataset, xvar,
     yvar <- "values"
     byvar <- if (is.null(byvar)) "yvar" else c("yvar", byvar)
     color <- fill <- "yvar"
+  }
+
+  ## combining X-variables if needed
+  if (combx && length(xvar) > 1) {
+    if (!is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
+    dat <- gather_(dat, "xvar", "values", gather_cols = xvar)
+    xvar <- "values"
+    byvar <- if (is.null(byvar)) "xvar" else c("xvar", byvar)
+    color <- fill <- "xvar"
   }
 
   plot_list <- list()

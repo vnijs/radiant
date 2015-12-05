@@ -4,10 +4,11 @@
 \alias{visualize}
 \title{Visualize data using ggplot2 \url{http://docs.ggplot2.org/current/}}
 \usage{
-visualize(dataset, xvar, yvar = "", comby = FALSE, type = "hist",
-  facet_row = ".", facet_col = ".", color = "none", fill = "none",
-  bins = 10, smooth = 1, sbar = "mean", check = "", axes = "",
-  alpha = 0.5, data_filter = "", shiny = FALSE, custom = FALSE)
+visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
+  type = "hist", facet_row = ".", facet_col = ".", color = "none",
+  fill = "none", bins = 10, smooth = 1, sbar = "mean", check = "",
+  axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
+  custom = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -17,6 +18,8 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, type = "hist",
 \item{yvar}{Variable to display along the Y-axis of the plot (default = "none")}
 
 \item{comby}{Combine yvars in plot (TRUE or FALSE, FALSE is the default)}
+
+\item{combx}{Combine xvars in plot (TRUE or FALSE, FALSE is the default)}
 
 \item{type}{Type of plot to create. One of Histogram ('hist'), Density ('density'), Scatter ('scatter'), Line ('line'), Bar ('bar'), or Box-plot ('box')}
 

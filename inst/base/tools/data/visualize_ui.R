@@ -59,9 +59,36 @@ output$ui_viz_yvar <- renderUI({
 })
 
 output$ui_viz_comby <- renderUI({
-  if (length(input$viz_yvar) < 2) return()
+  if (length(input$viz_yvar) < 2) {
+    # updateCheckboxInput(session, "viz_comby", value = FALSE)
+    return()
+  }
   checkboxInput("viz_comby", "Combine Y-variables in one plot", state_init("viz_comby", FALSE))
 })
+
+output$ui_viz_combx <- renderUI({
+  # if (length(input$viz_xvar) < 2 || length(input$viz_yvar) > 0 ||
+  # if (length(input$viz_xvar) < 2 || (!input$viz_type %in% c("hist", "density"))) {
+  if (length(input$viz_xvar) < 2) {
+    # updateCheckboxInput(session, "viz_combx", value = FALSE)
+    return()
+  }
+  # else if (!input$viz_type %in% c("hist", "density")) {
+    # return()
+  # }
+  checkboxInput("viz_combx", "Combine X-variables in one plot", state_init("viz_combx", FALSE))
+})
+
+observeEvent(input$viz_type, {
+  isolate({
+    if (input$viz_type %in% c("hist", "density")) {
+      updateCheckboxInput(session, "viz_comby", value = FALSE)
+    } else {
+      updateCheckboxInput(session, "viz_combx", value = FALSE)
+    }
+  })
+})
+
 
 ## X - variable
 output$ui_viz_xvar <- renderUI({
@@ -167,6 +194,10 @@ output$ui_Visualize <- renderUI({
         uiOutput("ui_viz_comby")
       ),
       uiOutput("ui_viz_xvar"),
+      conditionalPanel(condition = "input.viz_type == 'hist' | input.viz_type == 'density'",
+        # uiOutput("ui_viz_yvar"),
+        uiOutput("ui_viz_combx")
+      ),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
       conditionalPanel(condition = "input.viz_type == 'bar' |
@@ -219,7 +250,7 @@ viz_plot_height <- reactive({
   if (is_empty(input$viz_plot_height)) {
     r_data$plot_height
   } else {
-    lx <- if (not_available(input$viz_xvar)) 1 else length(input$viz_xvar)
+    lx <- ifelse (not_available(input$viz_xvar) || (!is.null(input$viz_combx) && input$viz_combx), 1, length(input$viz_xvar))
     ly <- ifelse (not_available(input$viz_yvar) || input$viz_type %in% c("hist","density") ||
                   (!is.null(input$viz_comby) && input$viz_comby), 1, length(input$viz_yvar))
     nr <- lx * ly
