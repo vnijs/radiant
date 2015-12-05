@@ -18,7 +18,7 @@
 #' @param form A string with the formula to evaluate (e.g., "profit = demand * (price - cost)")
 #' @param seed To repeat a simulation with the same randomly generated values enter a number into Random seed input box.
 #' @param name To save the simulated data for further analysis specify a name in the Sim name input box. You can then investigate the simulated data by choosing the specified name from the Datasets dropdown in any of the other Data tabs.
-#' @param nr Number of simulation runs
+#' @param nr Number of simulations
 #' @param dat Data list from previous simulation. Used by repeater function
 #'
 #' @return A data.frame with the created variables
@@ -219,7 +219,16 @@ simulater <- function(const = "",
   # form = "demand = demand -50*price;profit = demand*(price-var_cost) - fixed_cost"
   # form = "demand = demand - .1*lag(demand, 0);profit = demand*(price-var_cost) - fixed_cost"
   # form = "demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
-  # form = "#demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
+  # form = "#demand = demand - .1*lag(demand, default=0);\n# profit = demand*(price-var_cost) - fixed_cost"
+  # form %>% gsub("\\s{2,}"," ",.) %>%
+  # gsub("^\\s*#\\s*.*\n","",.) %>%
+  # gsub("\\s*[\n;]+\\s*",";",.) %>%
+  # gsub("[;]{2,}",";",.) %>%
+  # gsub(";$","",.) %>%
+  # gsub("^;","",.)
+
+  # sim_splitter <- function(x, symbol = " ") x %>% strsplit(., ";") %>% extract2(1) %>% strsplit(.,symbol)
+
   # library(magrittr)
   # form %>% gsub(";\\s*\\#.*$","",.)
   # form %>% gsub("^\\s*#.*[\n;]","",.)
@@ -342,7 +351,8 @@ summary.simulater <- function(object, dec = 4, ...) {
   if (!is_empty(object$sim_call$data))
     cat("Data       :", gsub(";", "; ", object$sim_call$data) %>% gsub("\\n","",.), "\n")
   if (!is_empty(object$sim_call$form))
-    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
+    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
+    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("\n","\n\t",.), "\n"))
   cat("\n")
 
   sim_summary(object$dat, dec = ifelse(is.na(dec), 4, dec))
@@ -416,7 +426,7 @@ repeater <- function(nr = 12,
 
   if (is_empty(nr)) {
     if (is_empty(grid)) {
-      mess <- c("error",paste0("Please specify the number of repetitions in '# runs'"))
+      mess <- c("error",paste0("Please specify the number of repetitions in '# reps'"))
       return(mess %>% set_class(c("repeater", class(.))))
     } else {
       nr = 1
@@ -481,12 +491,9 @@ repeater <- function(nr = 12,
   # mess <- c("error","test")
   # return(mess %>% set_class(c("repeater", class(.))))
 
-
-
-
-  rep_sim <- function(run_nr) {
+  rep_sim <- function(rep_nr) {
     bind_cols(
-      data_frame(run = rep(run_nr, nr_sim), sim = 1:nr_sim),
+      data_frame(rep = rep(rep_nr, nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)$dat
     ) %>% na.omit
   }
@@ -512,7 +519,7 @@ repeater <- function(nr = 12,
     # return()
 
     bind_cols(
-      data_frame(run = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
+      data_frame(rep = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)$dat
     ) %>% na.omit
 
@@ -588,13 +595,16 @@ summary.repeater <- function(object,
   }
 
   sim <- max(object$sim)
-  runs <- length(unique(object$run))
+  reps <- length(unique(object$rep))
+
+  ## legacy for when 'rep' was called 'run'
+  if (byvar == "run") byvar <- "rep"
 
   ## show results
   cat("Repeated simulation\n")
   cat("Simulations :", sim, "\n")
-  cat("Runs        :", runs, "\n")
-  cat("Group by    :", ifelse (byvar == "run", "Repeat", "Simulation"), "\n")
+  cat("Repetitions :", reps, "\n")
+  cat("Group by    :", ifelse (byvar == "rep", "Repeat", "Simulation"), "\n")
   cfun <- sub("_rm$","",fun)
   cat("Function    :", cfun, "\n")
   # cat("Random  seed:", object$sim_call$seed, "\n")
@@ -766,7 +776,7 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 4) {
     isRnd <- isNum & !isConst
     if (sum(isRnd) > 0) {
       cn <- names(dc)[isRnd]
-      cat("Random variables:\n")
+      cat("Variables:\n")
       select(dat, which(isNum & !isConst)) %>%
         tidyr::gather_("variable", "values", cn) %>%
         group_by_("variable") %>%

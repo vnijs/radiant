@@ -453,6 +453,17 @@ sdp_rm <- function(x) sqrt(varp_rm(x))
 #' @export
 sum_rm <- function(x) sum(x, na.rm = TRUE)
 
+#' Natural log
+#' @param x Input variable
+#' @param na.rm Remove missing values (default is TRUE)
+#' @return Natural log of vector
+#' @examples
+#' ln(runif(10,1,2))
+#'
+#' @export
+ln <- function(x, na.rm = TRUE)
+  if (na.rm) log(na.omit(x)) else log(x)
+
 #' Does a vector have non-zero variability?
 #' @param x Input variable
 #' @return Logical. TRUE is there is variability
