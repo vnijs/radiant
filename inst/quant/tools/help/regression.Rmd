@@ -251,7 +251,7 @@ $$
   \end{aligned}
 $$
 
-For the semi-log model 100 $\times\:c$ is the percentage change in sales when the product is on display.
+For the semi-log model 100 $\times\:(exp(c)-1)$ is the percentage change in sales when the product is on display.
 
 #### Coefficient interpretation for a log-log model
 

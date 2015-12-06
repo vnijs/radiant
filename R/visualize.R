@@ -54,6 +54,7 @@ visualize <- function(dataset, xvar,
                       shiny = FALSE,
                       custom = FALSE) {
 
+
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
@@ -100,6 +101,9 @@ visualize <- function(dataset, xvar,
   dat <- getdata(dataset, vars, filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
+  ## get class
+  dc <- getclass(dat)
+
   ## if : is used to specify a range of variables
   if (length(vars) < ncol(dat)) {
     fl <- strsplit(xvar,":") %>% unlist
@@ -108,7 +112,8 @@ visualize <- function(dataset, xvar,
   }
 
   ## convertising factor variables if needed
-  isChar <- sapply(dat, class) == "character"
+  # isChar <- sapply(dat, class) == "character"
+  isChar <- dc == "character"
   if (sum(isChar) > 0) {
     if (type == "density") {
       dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_numeric))
@@ -120,6 +125,8 @@ visualize <- function(dataset, xvar,
       if (max(nrlev) > 50)
         return("Character variable(s) were not converted to factors.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
     }
+    ## in case something was changed, if not, this won't run
+    dc <- getclass(dat)
   }
 
   if (xor("log_x" %in% axes, "log_y" %in% axes)) {
@@ -132,12 +139,14 @@ visualize <- function(dataset, xvar,
   log_trans <- function(x) ifelse(x > 0, log(x), NA)
 
   if ("log_x" %in% axes) {
-    to_log <- (getclass(select_(dat, .dots = xvar)) %in% c("integer","numeric")) %>% xvar[.]
+    # to_log <- (getclass(select_(dat, .dots = xvar)) %in% c("integer","numeric")) %>% xvar[.]
+    to_log <- (dc[xvar] %in% c("integer","numeric")) %>% xvar[.]
     dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
   if ("log_y" %in% axes) {
-    to_log <- (getclass(select_(dat, .dots = yvar)) %in% c("integer","numeric")) %>% yvar[.]
+    # to_log <- (getclass(select_(dat, .dots = yvar)) %in% c("integer","numeric")) %>% yvar[.]
+    to_log <- (dc[yvar] %in% c("integer","numeric")) %>% xvar[.]
     dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
@@ -151,15 +160,20 @@ visualize <- function(dataset, xvar,
     yvar <- "values"
     byvar <- if (is.null(byvar)) "yvar" else c("yvar", byvar)
     color <- fill <- "yvar"
+
+    dc <- getclass(dat)
   }
 
   ## combining X-variables if needed
   if (combx && length(xvar) > 1) {
     if (!is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
+    if (any(!dc %in% c("numeric","integer"))) return("Cannot combine plots for non-numeric variables")
     dat <- gather_(dat, "xvar", "values", gather_cols = xvar)
     xvar <- "values"
     byvar <- if (is.null(byvar)) "xvar" else c("xvar", byvar)
     color <- fill <- "xvar"
+
+    dc <- getclass(dat)
   }
 
   plot_list <- list()
@@ -167,7 +181,8 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
 
       ## can't create a histogram for a logical
-      if ("logical" %in% class(dat[[i]])) dat[[i]] <- as_factor(dat[[i]])
+      # if ("logical" %in% class(dat[[i]])) dat[[i]] <- as_factor(dat[[i]])
+      if (dc[i] == "logical") dat[[i]] <- as_factor(dat[[i]])
 
       hist_par <- list(alpha = alpha, position = "dodge")
       plot_list[[i]] <- ggplot(dat, aes_string(x=i))
@@ -175,10 +190,8 @@ visualize <- function(dataset, xvar,
         hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
-      if (!"factor" %in% class(dat[[i]])) {
-        # if ("log_x" %in% axes)
-        #   hist_par[["binwidth"]] <- select_(dat,i) %>% filter(. > 0) %>% mutate_each(funs(log)) %>% range %>% {diff(.)/bins}
-        # else
+      # if (!"factor" %in% class(dat[[i]])) {
+      if (!dc[i] == "factor") {
         hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
       } else {
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
@@ -209,14 +222,16 @@ visualize <- function(dataset, xvar,
     }
 
     for (i in xvar) {
-      if ("log_x" %in% axes && "factor" %in% class(dat[[i]])) axes <- sub("log_x","",axes)
+      # if ("log_x" %in% axes && "factor" %in% class(dat[[i]])) axes <- sub("log_x","",axes)
+      if ("log_x" %in% axes && dc[i] == "factor") axes <- sub("log_x","",axes)
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + gs
 
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
-        if ("factor" %in% class(dat[[i]])) {
+        # if ("factor" %in% class(dat[[i]])) {
+        if (dc[i] == "factor") {
 
           ## make range comparable to bar plot
           ymax <- max(dat[[j]]) %>% {if (. < 0) 0 else .}

@@ -383,9 +383,7 @@ viewdata <- function(dataset,
   ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
-
-  if (nrow(dat) > 100000)  filt <- 'none'
-  else filt <- list(position = "top", clear = FALSE, plain = FALSE)
+  fbox <- if (nrow(dat) > 100000) 'none' else list(position = "top", clear = FALSE, plain = FALSE)
 
   shinyApp(
     ui = fluidPage(title = title,
@@ -398,9 +396,7 @@ viewdata <- function(dataset,
     server = function(input, output, session) {
       widget <- DT::datatable(dat, selection = "none",
         rownames = FALSE, style = "bootstrap",
-        filter = filt,
-        # filter = alist(position = "top", clear = FALSE, plain = FALSE),
-        escape = FALSE,
+        filter = fbox, escape = FALSE,
         # extensions = 'KeyTable'# ,
         options = list(
           search = list(regex = TRUE),

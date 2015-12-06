@@ -64,16 +64,11 @@ output$dataviewer <- DT::renderDataTable({
   ## seems needed due to partial name matching on dataviewer_search
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
-
-  if (nrow(dat) > 100000)  filt <- 'none'
-  else filt <- list(position = "top")
-  # else filt <- list(position = "top", clear = FALSE, plain = TRUE)
-  DT::datatable(dat, filter = filt, selection = "none",
+  fbox <- if (nrow(dat) > 100000) "none" else list(position = "top")
+  DT::datatable(dat, filter = fbox, selection = "none",
     rownames = FALSE, style = "bootstrap", escape = FALSE,
     options = list(
-
       stateSave = TRUE,   ## maintains state but does not show column filter settings
-
       searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
       search = list(search = search, regex = TRUE),
       order = {if (is.null(r_state$dataviewer_state$order)) list()
