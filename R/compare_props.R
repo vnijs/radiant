@@ -181,15 +181,15 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 
 		## apparantely you can get negative number here
 		res$ci_low[res$ci_low < 0] <- 0
-
+		res$df[res_sim] <- "*1*"
 	  res <- rename_(res, .dots = setNames(c("ci_low","ci_high"), ci_perc))
 	} else {
 	  res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
 	}
 
 	res$` ` <- sig_stars(res$p.value)
-	res$p.value <- round(res$p.value,dec)
-	res$p.value[ res$p.value < .001 ] <- "< .001"
+	res$p.value[res$p.value >= .001] %<>% round(dec)
+	res$p.value[res$p.value < .001] <- "< .001"
 	res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
 	print(res, row.names = FALSE, right = FALSE)
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")

@@ -45,15 +45,21 @@ output$ui_tr_reorg_levs <- renderUI({
                    plugins = list('remove_button', 'drag_drop')))
 })
 
+# output$ui_tr_log <- renderUI({
+#   tagList(
+#     "<label>Transform command log:</label><br>" %>% HTML,
+#      shinyAce::aceEditor("tr_log", mode = "r",
+#       height="135px",
+#       value = state_init("tr_log",""))
+#   )
+# })
+
 output$ui_tr_log <- renderUI({
   tagList(
     "<label>Transform command log:</label><br>" %>% HTML,
-     shinyAce::aceEditor("tr_log", mode = "r",
-      height="135px",
-      value = state_init("tr_log",""))
+    tags$textarea(state_init("tr_log",""), id = "tr_log", type = "text", rows = 5, class = "form-control")
   )
 })
-
 
 ext_options <- list("none" = "", "log" = "_log", "exp" = "_exp",
                     "square" = "_sq", "sqrt" = "_sqrt", "center" = "_ct",
@@ -748,7 +754,9 @@ observeEvent(input$tr_store, {
 	  }
 
     ## update the command log
-    shinyAce::updateAceEditor(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
+    # shinyAce::updateAceEditor(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
+    # updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
+    updateTextInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd,ncmd)))
 
 		## reset input values once the changes have been applied
 		updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
@@ -773,7 +781,8 @@ observeEvent(input$tr_change_type, {
 observeEvent(input$transform_report, {
   isolate({
     cmd <- paste0("```{r}\n", input$tr_log,"\n```\n")
-    shinyAce::updateAceEditor(session, "tr_log", value = "")
+    # shinyAce::updateAceEditor(session, "tr_log", value = "")
+    updateTextInput(session, "tr_log", value = "")
     update_report_fun(cmd)
   })
 })

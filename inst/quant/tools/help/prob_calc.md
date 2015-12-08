@@ -12,7 +12,7 @@ The description of the problem suggests we should select `Binomial` from the `Di
 
 ## Demand for headphones
 
-A manufacturer wants to determine the appropriate inventory level for headphones required to achieve a 95% <a href="https://en.wikipedia.org/wiki/Service_level" target="_blank">service level</a>. Demand for the headphones obeys a normal distribution with a mean of 5000 and a standard deviation of 800.
+A manufacturer wants to determine the appropriate inventory level for headphones required to achieve a 95% <a href="https://en.wikipedia.org/wiki/Service_level" target="_blank">service level</a>. Demand for the headphones obeys a normal distribution with a mean of 3000 and a standard deviation of 800.
 
 First select `Normal` from the `Distribution` dropdown. To find the required number of headphones to hold in inventory choose `Normal` from the `Distribution` dropdown and then select `Probability` as the `Input type`. Finally, enter `.95` as the `Upper bound`. In the output below we see the number of units to stock is 4316.
 

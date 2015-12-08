@@ -57,13 +57,11 @@ Because the `comparison value` **is** contained in the confidence interval (i.e.
 
 #### number of successes
 
-Because the number of successes is **larger** than the _critical_ value (85) we **cannot** reject the null hypothesis and suggest that management should enter the UK market.
-
-Because the number of successes (i.e., the number of "yes" responses) **is** larger than the critical value (85) we **cannot** reject the null hypothesis and **do not suggest** that management should commit resources to increase brand awareness.
-
-We can obtain the critical value by using the probability calculator in the _Base_ menu. For a binomial-distribution with $n = 1000$ and $p = 0.1$ the critical value is 83. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.<sup>2</sup>
+We can obtain the critical value by using the probability calculator in the _Base_ menu. For a binomial-distribution with $n = 1000$ and $p = 0.1$ the critical value is 85. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.<sup>2</sup>
 
 ![prob_calc](figures_quant/single_prop_prob_calc_p.png)
+
+Because the number of successes (i.e., the number of "yes" responses) **is** larger than the critical value (93 vs 85) we **cannot** reject the null hypothesis and **do not suggest** that management should commit resources to increase brand awareness.
 
 <!--
 In addition to the numerical output provided in the _Summary_ tab we can visualize the data in the _Plot_ tab. The settings in the side-panel are the same as before. The black lines in the histogram show the sample mean (solid) and the confidence interval around the sample mean (dashed). The red line shows the comparison value (i.e., unit sales under the null-hypothesis). Because the red line does **not** fall within the confidence interval (1897 to Inf.) we reject the null-hypothesis in favor of the alternative.

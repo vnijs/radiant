@@ -263,17 +263,21 @@ simulater <- function(const = "",
   }
 
   ## removing data to dat list
-  if (data != "" && data != "none") {
+  # if (data != "" && data != "none") {
+  if (!data %in% c("", "none")) {
     for (i in colnames(sdat)) dat[[i]] <- NULL
   }
 
-  # print("----")
-  # print(names(dat))
+  dat <- as.data.frame(dat) %>% na.omit
+  # attr(dat, "sim_call") <- as.list(match.call())[-1] %>% {.["nr"] <- nr; .}
+  attr(dat, "sim_call") <- as.list(match.call())[-1]
 
-  ret <- list(dat = as.data.frame(dat) %>% na.omit, sim_call = as.list(match.call())[-1]) %>%
-    set_class(c("simulater", class(.)))
+  # ret <- list(dat = as.data.frame(dat) %>% na.omit, sim_call = as.list(match.call())[-1]) %>%
+  # ret <- list(dat = dat, sim_call = as.list(match.call())[-1]) %>%
+  #   set_class(c("simulater", class(.)))
 
-  if (nrow(ret$dat) == 0) {
+  # if (nrow(ret$dat) == 0) {
+  if (nrow(dat) == 0) {
     mess <- c("error",paste0("The simulated data set has 0 rows"))
     return(mess %>% set_class(c("simulater", class(.))))
   }
@@ -285,23 +289,27 @@ simulater <- function(const = "",
     } else if (exists("r_data")) {
       env <- pryr::where("r_data")
     } else {
-      return(ret)
+      # return(ret)
+      return(dat %>% set_class(c("simulater", class(.))))
     }
 
     mess <- paste0("\n### Simulated data\n\nFormula:\n\n",
                    gsub("*","\\*",form, fixed = TRUE) %>% gsub(";","\n\n", .), "\n\nDate: ",
                    lubridate::now())
-    env$r_data[[name]] <- ret$dat
+    # env$r_data[[name]] <- ret$dat
+    env$r_data[[name]] <- dat
     env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
     env$r_data[[paste0(name,"_descr")]] <- mess
 
-    sim_list <- paste0(name,"_list")
-    env$r_data[[sim_list]] <- ret
+    # sim_list <- paste0(name,"_list")
+    # env$r_data[[sim_list]] <- ret
 
-    return(sim_list %>% set_class(c("simulater", class(.))))
+    # return(sim_list %>% set_class(c("simulater", class(.))))
+    return(name %>% set_class(c("simulater", class(.))))
   }
 
-  ret
+  # ret
+  dat %>% set_class(c("simulater", class(.)))
 }
 
 #' Summary method for the simulater function
@@ -324,38 +332,40 @@ summary.simulater <- function(object, dec = 4, ...) {
 
   if (is.character(object)) {
     if (object[1] == "error") return(cat(object[2]))
+    # else object <- getdata(gsub("_list","",object))
     else object <- getdata(object)
   }
 
+  sc <- attr(object, "sim_call")
+  clean <- function(x) paste0(gsub(";", "; ", x) %>% gsub("\\n","",.), "\n")
+
   cat("Simulation\n")
-  # cat("Simulations:", object$sim_call$nr, "\n")
-  cat("Simulations:", nrow(object$dat), "\n")
-  cat("Random seed:", object$sim_call$seed, "\n")
-  cat("Sim data   :", object$sim_call$name, "\n")
-  if (!is_empty(object$sim_call$binom))
-    cat("Binomial   :", gsub(";", "; ", object$sim_call$binom) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$const))
-    cat("Constant   :", gsub(";", "; ", object$sim_call$const) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$discrete))
-    cat("Discrete   :", gsub(";", "; ", object$sim_call$discrete) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$lnorm))
-    cat("Log normal :", gsub(";", "; ", object$sim_call$lnorm) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$norm))
-    cat("Normal     :", gsub(";", "; ", object$sim_call$norm) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$unif))
-    cat("Uniform    :", gsub(";", "; ", object$sim_call$unif) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$sequ))
-    cat("Sequence   :", gsub(";", "; ", object$sim_call$sequ) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$grid))
-    cat("Grid search:", gsub(";", "; ", object$sim_call$grid) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$data))
-    cat("Data       :", gsub(";", "; ", object$sim_call$data) %>% gsub("\\n","",.), "\n")
-  if (!is_empty(object$sim_call$form))
-    # cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
-    cat(paste0("Formulas   :\n\t", object$sim_call$form %>% gsub("\n","\n\t",.), "\n"))
+  cat("Simulations:", nrow(object), "\n")
+  cat("Random seed:", sc$seed, "\n")
+  cat("Sim data   :", sc$name, "\n")
+  if (!is_empty(sc$binom))
+    cat("Binomial   :", clean(sc$binom))
+  if (!is_empty(sc$const))
+    cat("Constant   :", clean(sc$const))
+  if (!is_empty(sc$discrete))
+    cat("Discrete   :", clean(sc$discrete))
+  if (!is_empty(sc$lnorm))
+    cat("Log normal :", clean(sc$lnorm))
+  if (!is_empty(sc$norm))
+    cat("Normal     :", clean(sc$norm))
+  if (!is_empty(sc$unif))
+    cat("Uniform    :", clean(sc$unif))
+  if (!is_empty(sc$sequ))
+    cat("Sequence   :", clean(sc$sequ))
+  if (!is_empty(sc$grid))
+    cat("Grid search:", clean(sc$grid))
+  if (!is_empty(sc$data))
+    cat("Data       :", clean(sc$data))
+  if (!is_empty(sc$form))
+    cat(paste0("Formulas   :\n\t", sc$form %>% gsub("\n","\n\t",.), "\n"))
   cat("\n")
 
-  sim_summary(object$dat, dec = ifelse(is.na(dec), 4, dec))
+  sim_summary(object, dec = ifelse(is.na(dec), 4, dec))
 }
 
 #' Plot method for the simulater function
@@ -380,10 +390,12 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
 
   if (is.character(x)) {
     if (x[1] == "error") return(invisible())
-    object <- getdata(x)$dat
+    # object <- getdata(x)$dat
+    object <- getdata(x)
     if (nrow(object) == 0) return(invisible())
   } else {
-    object <- x$dat
+    # object <- x$dat
+    object <- x
   }
   rm(x)
 
@@ -424,6 +436,13 @@ repeater <- function(nr = 12,
                      name = "",
                      sim = "") {
 
+
+  # nr <- NULL
+  # vars <- ""
+  # grid <- "price 5 8 0.1"
+  # sim <- "simdat"
+  # seed <- ""
+
   if (is_empty(nr)) {
     if (is_empty(grid)) {
       mess <- c("error",paste0("Please specify the number of repetitions in '# reps'"))
@@ -433,7 +452,12 @@ repeater <- function(nr = 12,
     }
   }
 
-  if (is.character(sim)) sim <- getdata(sim)
+  if (is.character(sim)) {
+    ## legacy line, pre 0.4.1
+    sim <- gsub("_list$","",sim)
+    dat <- getdata(sim)
+  }
+
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
   if (identical(vars, "") && identical(grid, "")) {
@@ -441,10 +465,6 @@ repeater <- function(nr = 12,
     return(mess %>% set_class(c("repeater", class(.))))
   }
 
-  # grid <- "q 100 200 1; a 1 5 1"
-  # grid <- "q 100 200 1"
-  # library(magrittr)
-  # vars <- c("a","b")
   if (identical(vars, "")) vars <- character(0)
 
   grid_list <- list()
@@ -463,8 +483,8 @@ repeater <- function(nr = 12,
 
   ## from http://stackoverflow.com/a/7664655/1974918
   ## keep those list elements that, e.g., q is in
-  nr_sim <- nrow(sim$dat)
-  sc <- sim$sim_call
+  nr_sim <- nrow(dat)
+  sc <- attr(dat, "sim_call")
 
   if (!is_empty(sc$data)) vars <- c(sc$data, vars)
 
@@ -472,76 +492,51 @@ repeater <- function(nr = 12,
   sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
   sc[1:which(names(sc) == "form")] <- ""
   sc[names(sc_keep)] <- sc_keep
-  sc$dat <- sim$dat %>% as.list
-
-
-  ## testing
-  ## testing
-  ## testing
-  ## testing
-  # sc$data <- "stocks"
-  ## testing
-  ## testing
-  ## testing
-  ## testing
-
-  # print(sc_keep)
-  # print(sc)
-
-  # mess <- c("error","test")
-  # return(mess %>% set_class(c("repeater", class(.))))
+  # sc$dat <- as.list(dat)
+  sc$dat <- dat
 
   rep_sim <- function(rep_nr) {
     bind_cols(
       data_frame(rep = rep(rep_nr, nr_sim), sim = 1:nr_sim),
-      do.call(simulater, sc)$dat
+      do.call(simulater, sc)
     ) %>% na.omit
   }
 
   rep_grid_sim <- function(gval) {
     gvars <- names(gval)
+    # print(gvars)
+    # print(gval)
 
     ## removing form ...
-    sc_grid <- grep(paste(gvars, collapse = "|"), sc_keep, value=TRUE) %>% {.[which(names(.) != "form")]}
+    sc_grid <- grep(paste(gvars, collapse = "|"), sc_keep, value=TRUE) %>%
+      {.[which(names(.) != "form")]} %>%
+      gsub("[ ]{2,}"," ",.)
+
     for (i in 1:length(gvars)) {
       sc_grid %<>% sub(paste0("[;\n]", gvars[i], " [.0-9]+"), paste0("\n", gvars[i], " ", gval[gvars[i]]), .) %>%
       sub(paste0("^", gvars[i], " [.0-9]+"), paste0(gvars[i], " ", gval[gvars[i]]), .)
     }
 
     # print(sc_grid)
-    # print(sc)
-
     sc[names(sc_grid)] <- sc_grid
-
     # print(sc)
-
     # print(do.call(simulater, sc))
     # return()
 
     bind_cols(
       data_frame(rep = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
-      do.call(simulater, sc)$dat
+      do.call(simulater, sc)
     ) %>% na.omit
-
-    # mtcars
-
   }
-
 
   if (length(grid_list) == 0) {
     ret <- bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
   } else {
     grid <- expand.grid(grid_list)
-
-   # print(apply(grid, 1, rep_grid_sim))
-
-  # mess <- c("error","test")
-  # return(mess %>% set_class(c("repeater", class(.))))
-
+    # mess <- c("error","test")
+    # return(mess %>% set_class(c("repeater", class(.))))
     ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
-
-
 
   name %<>% gsub(" ","",.)
   if (name != "") {
@@ -651,6 +646,7 @@ summary.repeater <- function(object,
     } else if (exists("r_data")) {
       env <- pryr::where("r_data")
     } else {
+      sim_summary(object, fun = cfun, dec = ifelse (is.na(dec), 4, dec))
       return(object)
     }
 
@@ -808,11 +804,14 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 4) {
 #' @return Cleaned string
 #'
 #' @export
+# sim_cleaner <- function(x) x %>% gsub("\\s+"," ",.) %>%
 sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
   gsub("[;]{2,}",";",.) %>%
   gsub(";$","",.) %>%
   gsub("^;","",.)
+
+# sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
 
 #' Split input command string
 #'

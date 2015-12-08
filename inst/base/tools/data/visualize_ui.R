@@ -290,8 +290,10 @@ output$visualize <- renderPlot({
   ## waiting for comby and/or combx to be updated
   if (input$viz_type %in% c("hist", "density")) {
     if (isTRUE(input$viz_comby)) return()
+    if (length(input$viz_xvar) > 1 && is.null(input$viz_combx)) return()
   } else {
     if (isTRUE(input$viz_combx)) return()
+    if (length(input$viz_yvar) > 1 && is.null(input$viz_comby)) return()
   }
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)

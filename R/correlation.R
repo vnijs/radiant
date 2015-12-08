@@ -71,11 +71,13 @@ summary.correlation_ <- function(object,
 	dec <- object$dec
 
 	cr <- format(round(cmat$r, dec))
+	cr[is.na(cmat$r)] <- "-"
   cr[abs(cmat$r) < cutoff] <- ""
 	ltmat <- lower.tri(cr)
   cr[!ltmat] <- ""
 
 	cp <- format(round(cmat$p, dec))
+	cp[is.na(cmat$p)] <- "-"
   cp[abs(cmat$r) < cutoff] <- ""
   cp[!ltmat] <- ""
 

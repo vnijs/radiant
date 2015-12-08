@@ -118,15 +118,11 @@ getdata <- function(dataset,
                     rows = NULL,
                     na.rm = TRUE) {
 
-
-  # print(search())
-  # print(parent.frame())
-
   # filt %<>% gsub("\\s","", .) %>% gsub("\"","\'",.)
   filt %<>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   { if (!is_string(dataset)) {
       dataset
-    } else if (exists("r_env")) {
+    } else if (exists("r_env") && !is.null(r_env$r_data[[dataset]])) {
       r_env$r_data[[dataset]]
     } else if (exists("r_data") && !is.null(r_data[[dataset]])) {
       if (exists("r_local")) { if (r_local) message("Dataset ", dataset, " loaded from r_data list\n") }

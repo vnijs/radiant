@@ -187,7 +187,7 @@ summary.regression <- function(object,
 
   if ("vif" %in% sum_check) {
     if (anyNA(object$model$coeff)) {
-      cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
+      cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nMulticollinearity diagnostics were not calculated.\n")
     } else {
       if (length(object$indep_var) > 1) {
         cat("Variance Inflation Factors\n")
@@ -309,7 +309,7 @@ plot.regression <- function(x,
     return(cat("Please select a regression plot from the drop-down menu"))
 
   # no plots if aliased coefficients present
-  if (anyNA(object$model$coeff)) plots <- return("")
+  if (anyNA(object$model$coeff)) plots <- return("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nRegression plots will not be shown")
 
   # object_size(object$model, model)
   model <- ggplot2::fortify(object$model)

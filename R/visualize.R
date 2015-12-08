@@ -139,14 +139,12 @@ visualize <- function(dataset, xvar,
   log_trans <- function(x) ifelse(x > 0, log(x), NA)
 
   if ("log_x" %in% axes) {
-    # to_log <- (getclass(select_(dat, .dots = xvar)) %in% c("integer","numeric")) %>% xvar[.]
     to_log <- (dc[xvar] %in% c("integer","numeric")) %>% xvar[.]
     dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
   if ("log_y" %in% axes) {
-    # to_log <- (getclass(select_(dat, .dots = yvar)) %in% c("integer","numeric")) %>% yvar[.]
-    to_log <- (dc[yvar] %in% c("integer","numeric")) %>% xvar[.]
+    to_log <- (dc[yvar] %in% c("integer","numeric")) %>% yvar[.]
     dat[, to_log] <- select_(dat, .dots = to_log) %>% mutate_each(funs(log_trans))
   }
 
@@ -191,7 +189,7 @@ visualize <- function(dataset, xvar,
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
       # if (!"factor" %in% class(dat[[i]])) {
-      if (!dc[i] == "factor") {
+      if (!dc[i] %in% c("factor","logical")) {
         hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
       } else {
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
@@ -238,7 +236,6 @@ visualize <- function(dataset, xvar,
           ymin <- min(dat[[j]]) %>% {if (. > 0) 0 else .}
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
 
-
           if ("mean" %in% sbar) {
             plot_list[[itt]] <- plot_list[[itt]] +
               geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
@@ -269,10 +266,8 @@ visualize <- function(dataset, xvar,
           if (is.factor(dat[[i]])) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(funs(mean))
-            # plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color)) + geom_point() + geom_line(aes(group = 1))
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_point() + geom_line()
           } else {
-            # plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color)) + geom_line()
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, color = color, group = color)) + geom_line()
           }
         }
@@ -287,8 +282,6 @@ visualize <- function(dataset, xvar,
       dat[,i] %<>% as_factor
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
       for (j in yvar) {
-        # if ("log_y" %in% axes && i == j) axes <- sub("log_y","",axes)
-
         tbv <- if (is.null(byvar)) i else c(i, byvar)
         tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
 
@@ -310,7 +303,6 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       dat[,i] %<>% as_factor
       for (j in yvar) {
-        # if ("log_y" %in% axes && i == j) axes <- sub("log_y","",axes)
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) +
                           geom_boxplot(alpha = alpha) +
                           theme(legend.position = "none")
@@ -366,16 +358,6 @@ visualize <- function(dataset, xvar,
   if ("flip" %in% axes) {
     for (i in 1:length(plot_list)) plot_list[[i]] <- plot_list[[i]] + coord_flip()
   }
-
-  # if ("log_y" %in% axes) {
-  #   for (i in 1:length(plot_list))
-  #     plot_list[[i]] <- plot_list[[i]] + scale_y_continuous(trans = "log")
-  # }
-
-  # if ("log_x" %in% axes) {
-  #   for (i in 1:length(plot_list))
-  #     plot_list[[i]] <- plot_list[[i]] + scale_x_continuous(trans = "log")
-  # }
 
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)

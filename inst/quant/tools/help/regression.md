@@ -223,7 +223,7 @@ $$
   ln S_t = a + b P_t + c D_t + \epsilon_t
 $$
 
-where $ln S_t$ is the (natural) log of sales at time $t$. For a continuous variable such as price we can again determine the effect of a \$1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to $P$. For the left-hand side of the equation we can use the chain-rule to get
+where $ln S_t$ is the (natural) log of sales at time $t$. For a continuous variable such as price we can again determine the effect of a small change (e.g., \$1 for a \$100 dollar product), while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to $P$. For the left-hand side of the equation we can use the chain-rule to get
 
 $$
   \frac {\partial ln S_t}{\partial P_t} = \frac{1}{S_t} \frac{\partial S_t}{\partial P_t}
@@ -241,7 +241,9 @@ $$
   \frac {1}{S_t} \frac{\partial S_t}{\partial P_t} = b \; \text{or} \; \frac {\Delta S_t}{S_t} \approx b
 $$
 
-So a \$1 change in price leads to a $b\%$ change in sales. Because a dummy variable such as $D$ is not continuous we cannot use differentiation and will again compare sales levels when $D = 1$ to sales levels when $D = 0$ to get $\frac {\Delta S_t}{S_t}$. To get $S_t$ rather than $ln S_t$ on the left hand side we take the exponent of both sides. This gives $S_t = e^{a + b P_t + c D_t}$. The percentage change in $S_t$ when $D_t$ changes from 0 to 1 is then given by:
+So a \$1 change in price leads to a $100 \times b\%$ change in sales. Note that this approximation is only appropriate for small changes in the explanatory variable and may be affected by the scaling used (e.g., price in cents, dollars, or 1,000s of dollars). The approach outlined below for dummy variables is more general and can also be applied to continuous variables.
+
+Because a dummy variable such as $D$ is not continuous we cannot use differentiation and will again compare sales levels when $D = 1$ to sales levels when $D = 0$ to get $\frac {\Delta S_t}{S_t}$. To get $S_t$ rather than $ln S_t$ on the left hand side we take the exponent of both sides. This gives $S_t = e^{a + b P_t + c D_t}$. The percentage change in $S_t$ when $D_t$ changes from 0 to 1 is then given by:
 
 $$
   \begin{aligned}
@@ -251,7 +253,7 @@ $$
   \end{aligned}
 $$
 
-For the semi-log model 100 $\times\:(exp(c)-1)$ is the percentage change in sales when the product is on display.
+For the semi-log model $100 \times\:(exp(c)-1)$ is the percentage change in sales when the product is on display. Similarly, for a \$10 increase in price we would expect a $100 \times\:(exp(b \times 10)-1)$ increase in sales, keeping other variables constant.
 
 #### Coefficient interpretation for a log-log model
 

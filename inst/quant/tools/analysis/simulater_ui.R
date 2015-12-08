@@ -31,7 +31,8 @@ rep_inputs <- reactive({
   for (i in names(rep_args))
     rep_args[[i]] <- input[[paste0("rep_",i)]]
 
-  rep_args[["sim"]] <- paste0(input$sim_name,"_list")
+  # rep_args[["sim"]] <- paste0(input$sim_name,"_list")
+  rep_args[["sim"]] <- input$sim_name
 
   rep_args
 
@@ -538,7 +539,8 @@ sim_plot_height <- function() {
   sim <- .simulater()
   if (is.character(sim)) {
     if (sim[1] == "error") return(200)
-    sim <- getdata(sim)$dat
+    # sim <- getdata(sim)$dat
+    sim <- getdata(sim)
     if (dim(sim)[1] == 0) {
       200
     } else {
