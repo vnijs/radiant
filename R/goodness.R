@@ -190,6 +190,8 @@ plot.goodness <- function(x,
 
 	object <- x; rm(x)
 
+	return(invisible())
+
 	gather_table <- function(tab) {
 		tab %>%
 			data.frame(., check.names = FALSE) %>%

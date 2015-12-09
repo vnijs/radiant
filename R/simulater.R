@@ -490,7 +490,12 @@ repeater <- function(nr = 12,
 
   sc$name <- sc$seed <- "" ## cleaning up the sim call
   sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
-  sc[1:which(names(sc) == "form")] <- ""
+
+  # min(which(names(sc) == "seed"), which(names(sc) == "form"))
+
+  # sc[1:which(names(sc) == "form")] <- ""
+  ## needed in case there is no 'form' in simulate
+  sc[1:(which(names(sc) == "seed")-1)] <- ""
   sc[names(sc_keep)] <- sc_keep
   # sc$dat <- as.list(dat)
   sc$dat <- dat
@@ -863,3 +868,30 @@ sdw <- function(...) {
   d <- data.frame(dl[(nr+1):length(dl)])
   apply(w, 1, function(w) sd(rowSums(sweep(d, 2, w, "*"))))
 }
+
+# result <- simulater(discrete = "profit -100000 1500000 .9 .1;", seed = "1234", name = "simdat")
+# result <- repeater(nr = "10", vars = "profit", name = "simdat_repeat", sim = "result")
+
+# tdat <- getdata("result")
+# str(tdat)
+
+  # nr_sim <- nrow(dat)
+  # sc <- attr(tdat, "sim_call")
+  # sc
+
+  # # if (!is_empty(sc$data)) vars <- c(sc$data, vars)
+
+  # sc$name <- sc$seed <- "" ## cleaning up the sim call
+  # vars <- "profits"
+
+  # sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
+  # sc_keep
+  # names(sc)
+  # min(which(names(sc) == "seed"), which(names(sc) == "form"))
+
+  # sc[1:which(names(sc) == "form")] <- ""
+
+# summary(result, sum_vars = "profit", byvar = "rep", form = "profit_high = profit > 75000000", name = "simdat_repeat")
+
+
+

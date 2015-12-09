@@ -1497,8 +1497,10 @@ prob_disc <- function(v, p,
     return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
 	}
 
+	## make sure values and probabilities are ordered correctly
   df <- data.frame(v = v, p = p) %>% arrange(v)
   p <- df$p
+  v <- df$v
 
 	if (sum(p) < .99 || sum(p) > 1.01) {
 		mess_probs <- mess_values <- paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(p),3),")")
