@@ -434,11 +434,6 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
 	}
 }
 
-
-
-
-
-
 #' Probability calculator for the F-distribution
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
@@ -1788,3 +1783,438 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 		}
 	}
 }
+
+#' Probability calculator for the exponential distribution
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param rate Rate
+#' @param lb Lower bound (default is -Inf)
+#' @param ub Upper bound (default is Inf)
+#' @param plb Lower probability bound
+#' @param pub Upper probability bound
+#' @param dec Number of decimals to show
+#'
+#' @export
+prob_expo <- function(rate,
+                      lb = NA,
+                      ub = NA,
+                      plb = NA,
+                      pub = NA,
+                      dec = 3) {
+
+	p_ub <- pexp(ub, rate)
+	p_lb <- pexp(lb, rate)
+	p_int <- max(p_ub - p_lb, 0)
+
+	p_ub %<>% round(dec)
+	p_lb %<>% round(dec)
+	p_int %<>% round(dec)
+
+	if (!is.na(pub)) {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	}
+
+	if (!is.na(plb)) {
+		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
+	}
+
+	v_ub <- qexp(pub, rate) %>% round(dec)
+	v_lb <- qexp(plb, rate) %>% round(dec)
+
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  if (!is.na(plb) && !is.na(pub)) {
+		if (plb > pub) {
+			plb <- pub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  environment() %>% as.list %>% set_class(c("prob_expo",class(.)))
+}
+
+#' Plot method for the probability calculator (Exponential distribution)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{prob_expo}}
+#' @param type Probabilities or values
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
+
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
+
+	object <- x; rm(x)
+	if (type == "values") {
+		lb <- object$lb
+		ub <- object$ub
+	} else {
+		lb <- object$v_lb
+		ub <- object$v_ub
+	}
+
+	rate <- object$rate
+
+	limits <- c(qexp(0.001, rate = rate) %>% floor,
+	            qexp(1 - 0.001, rate = rate) %>% ceiling)
+
+  dat <- data.frame(
+    x = limits,
+    Probability = dexp(limits, rate = rate),
+    rate = rate
+  )
+
+  dexp_limit <- function(x) {
+    y <- dexp(x, rate = rate)
+    y[x < lb | x > ub] <- NA
+    y
+  }
+
+  dexp_lb <- function(x) {
+  	if (is.na(lb)) return(0)
+    y <- dexp(x, rate = rate)
+    y[x > lb] <- NA
+    y
+  }
+
+  dexp_ub <- function(x) {
+  	if (is.na(ub)) return(0)
+    y <- dexp(x, rate = rate)
+    y[x < ub] <- NA
+    y
+  }
+
+  vlines <- c(ub,lb) %>% na.omit
+  if (length(vlines) == 0) vlines <- c(-Inf, Inf)
+
+	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+	## and R Graphics Cookbook
+	# plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
+	plt <- ggplot(dat, aes_string(x="x")) +
+	  stat_function(fun=dexp, args = list(rate = rate)) +
+	  stat_function(fun=dexp_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
+	  stat_function(fun=dexp_lb, geom="area", fill="red", alpha=0.2, n = 501) +
+	  stat_function(fun=dexp_ub, geom="area", fill="red", alpha=0.2, n = 501) +
+	  geom_vline(xintercept = vlines, color = 'black', linetype = 'dashed', size = .5) +
+	  xlab("") + ylab("")
+
+   if (shiny) plt else print(plt)
+}
+
+
+#' Summary method for the probability calculator function (Exponential distribution)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{prob_expo}}
+#' @param type Probabilities or values
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+summary.prob_expo <- function(object, type = "values",  ...) {
+
+	rate <- object$rate
+	dec <- object$dec
+
+	ub <- object$ub
+	lb <- object$lb
+	p_ub <- object$p_ub
+	p_lb <- object$p_lb
+	p_int <- object$p_int
+
+	pub <- object$pub
+	plb <- object$plb
+
+	v_ub <- object$v_ub
+	v_lb <- object$v_lb
+
+  cat("Probability calculator\n")
+  cat("Distribution: Exponential\n")
+	cat("Rate        :", rate, "\n")
+	cat("Mean        :", 1/rate, "\n")
+	cat("Variance    :", rate^-2, "\n")
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
+
+	if (type == "values") {
+		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
+		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
+
+		if (!is.na(ub) || !is.na(lb)) {
+		  cat("\n")
+
+			if (!is.na(lb)) {
+				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
+				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+			}
+
+			if (!is.na(ub)) {
+				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
+				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+			}
+
+			if (!is.na(lb) && !is.na(ub)) {
+				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+		  }
+		}
+
+	} else {
+		pub <- if (is.na(pub)) 2 else pub
+		plb <- if (is.na(plb)) -1 else plb
+
+		cat("Lower bound :", if (plb < 0) "0" else plb, "\n")
+		cat("Upper bound :", if (pub > 1) "1" else pub, "\n")
+
+		if (pub <= 1 || plb >= 0) {
+		  cat("\n")
+
+			if (plb >= 0) {
+				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
+				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			}
+
+			if (pub <= 1) {
+				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
+				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			}
+
+		  if (pub <= 1 && plb >= 0) {
+				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
+				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+			}
+		}
+	}
+}
+
+
+#' Probability calculator for the poisson distribution
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param lambda Rate
+#' @param lb Lower bound (default is -Inf)
+#' @param ub Upper bound (default is Inf)
+#' @param plb Lower probability bound
+#' @param pub Upper probability bound
+#' @param dec Number of decimals to show
+#'
+#' @export
+prob_pois <- function(lambda,
+                      lb = NA,
+                      ub = NA,
+                      plb = NA,
+                      pub = NA,
+                      dec = 3) {
+
+	p_ub <- ppois(ub, lambda)
+	p_lb <- ppois(lb, lambda)
+	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
+
+	p_ub %<>% round(dec)
+	p_lb %<>% round(dec)
+
+	if (!is.na(pub)) {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	}
+
+	if (!is.na(plb)) {
+		if (plb > 1) plb <- 1
+		if (plb < 0) plb <- 0
+	}
+
+	v_ub <- qpois(pub, lambda) %>% round(dec)
+	v_lb <- qpois(plb, lambda) %>% round(dec)
+
+	if (!is.na(lb) && !is.na(ub)) {
+		if (lb > ub) {
+			lb <- ub <- NA
+			mess_values <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  if (!is.na(plb) && !is.na(pub)) {
+		if (plb > pub) {
+			plb <- pub <- NA
+			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
+		}
+  }
+
+  environment() %>% as.list %>% set_class(c("prob_pois",class(.)))
+}
+
+
+#' Plot method for the probability calculator function (Poisson distribution)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{prob_pois}}
+#' @param type Probabilities or values
+#' @param shiny Did the function call originate inside a shiny app
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
+
+	mess <- paste0("mess_",type)
+	if (!is.null(x[[mess]])) return(invisible())
+
+	object <- x; rm(x)
+	if (type == "values") {
+		lb <- object$lb
+		ub <- object$ub
+	} else {
+		lb <- object$vlb
+		ub <- object$vub
+	}
+
+	lambda <- object$lambda
+	limits <- (qpois(0.001, lambda) %>% floor):(qpois(1 - 0.001, lambda) %>% ceiling)
+	# limits <- c(qpois(0.001, lambda) %>% floor,qpois(1 - 0.001, lambda) %>% ceiling)
+	n <- max(limits)
+
+  k <- factor(rep("below",n+1), levels = c("below","equal","above"))
+  if (!is.null(ub) && !is.na(ub)) {
+  	k[ub+1] <- "equal"
+    if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
+  	k[0:n > ub] <- "above"
+  } else if (!is.null(lb) && !is.na(lb)) {
+  	k[lb+1] <- "equal"
+  	k[0:n > lb] <- "above"
+  } else {
+  	return(invisible())
+  }
+
+  dat <- data.frame(
+    x = limits %>% as_factor,
+    Probability = dpois(limits, lambda),
+    k = k
+  ) %>% filter(., .$Probability > 0.00001)
+
+  if (nrow(dat) < 40) {
+  	breaks <- dat$x
+  } else {
+  	x <- as_integer(dat$x)
+  	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
+  }
+
+  cols <- c(below = "red", equal = "blue", above = "black")
+
+	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+	## and R Graphics Cookbook
+	plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
+	  geom_bar(stat="identity", alpha = .3) +
+	  xlab("") + scale_fill_manual(values = cols) +
+	  theme(legend.position="none") +
+	  scale_x_discrete(breaks = breaks)
+
+   if (shiny) plt else print(plt)
+}
+
+#' Summary method for the probability calculator function (Poisson distribution)
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{prob_pois}}
+#' @param type Probabilities or values
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+summary.prob_pois <- function(object, type = "values",  ...) {
+
+	lambda <- object$lambda
+	dec <- object$dec
+
+	ub <- object$ub
+	lb <- object$lb
+	p_ub <- object$p_ub
+	p_lb <- object$p_lb
+	p_int <- object$p_int
+
+	pub <- object$pub
+	plb <- object$plb
+
+	v_ub <- object$v_ub
+	v_lb <- object$v_lb
+
+  cat("Probability calculator\n")
+  cat("Distribution: Exponential\n")
+	cat("Lambda      :", lambda, "\n")
+	cat("Mean        :", lambda, "\n")
+	cat("Variance    :", lambda, "\n")
+
+	mess <- object[[paste0("mess_",type)]]
+	if (!is.null(mess)) return(mess)
+
+	if (type == "values") {
+		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
+		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
+
+		if (!is.na(ub) || !is.na(lb)) {
+		  cat("\n")
+
+			if (!is.na(lb)) {
+				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
+				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+			}
+
+			if (!is.na(ub)) {
+				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
+				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+			}
+
+			if (!is.na(lb) && !is.na(ub)) {
+				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+		  }
+		}
+
+	} else {
+		pub <- if (is.na(pub)) 2 else pub
+		plb <- if (is.na(plb)) -1 else plb
+
+		cat("Lower bound :", if (plb < 0) "0" else plb, "\n")
+		cat("Upper bound :", if (pub > 1) "1" else pub, "\n")
+
+		if (pub <= 1 || plb >= 0) {
+		  cat("\n")
+
+			if (plb >= 0) {
+				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
+				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			}
+
+			if (pub <= 1) {
+				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
+				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			}
+
+		  if (pub <= 1 && plb >= 0) {
+				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
+				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+

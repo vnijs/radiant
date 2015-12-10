@@ -1,8 +1,55 @@
-pc_dist <- c("Normal" = "norm", "Binomial" = "binom", "Uniform" = "unif",
-             "t" = "tdist", "F" = "fdist", "Chi-squared" = "chisq", "Discrete" = "disc") %>%
-            sort
+# library(magrittr)
+pc_dist <- c("Binomial" = "binom", "Chi-squared" = "chisq", "Discrete" = "disc",
+             "Exponential" = "expo", "F" = "fdist", "Normal" = "norm",
+             "Poisson" = "pois", "t" = "tdist", "Uniform" = "unif")
 
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
+
+output$ui_pc_pois <- renderUI({
+  numericInput("pcp_lambda", label = "Lambda:", value = state_init("pcp_lambda", 1), min = 1)
+})
+
+output$ui_pc_input_pois   <- renderUI({
+
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcp_lb", label = "Lower bound:",
+                              value = state_init("pcp_lb", NA))),
+        div(class="col-xs-6",numericInput("pcp_ub", label = "Upper bound:",
+                             value = state_init("pcp_ub", NA)))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pcp_plb", label = "Lower bound:",
+                              value = state_init("pcp_plb", NA), step = .005)),
+        div(class="col-xs-6",numericInput("pcp_pub", label = "Upper bound:",
+                             value = state_init("pcp_pub", 0.95), step = .005))
+    )
+  }
+})
+
+output$ui_pc_expo <- renderUI({
+  numericInput("pce_rate", label = "Rate:", value = state_init("pce_rate", 1), min = 0)
+})
+
+output$ui_pc_input_expo   <- renderUI({
+
+  if (input$pc_type == "values") {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pce_lb", label = "Lower bound:",
+                              value = state_init("pce_lb", NA))),
+        div(class="col-xs-6",numericInput("pce_ub", label = "Upper bound:",
+                             value = state_init("pce_ub", NA)))
+    )
+  } else {
+    div(class="row",
+        div(class="col-xs-6", numericInput("pce_plb", label = "Lower bound:",
+                              value = state_init("pce_plb", NA), step = .005)),
+        div(class="col-xs-6",numericInput("pce_pub", label = "Upper bound:",
+                             value = state_init("pce_pub", 0.95), step = .005))
+    )
+  }
+})
 
 output$ui_pc_disc <- renderUI({
   tagList(
@@ -234,6 +281,12 @@ output$ui_prob_calc <- renderUI({
       ),
       conditionalPanel("input.pc_dist == 'disc'",
         uiOutput("ui_pc_disc")
+      ),
+      conditionalPanel("input.pc_dist == 'expo'",
+        uiOutput("ui_pc_expo")
+      ),
+      conditionalPanel("input.pc_dist == 'pois'",
+        uiOutput("ui_pc_pois")
       )
     ),
     wellPanel(
@@ -260,6 +313,12 @@ output$ui_prob_calc <- renderUI({
       ),
       conditionalPanel("input.pc_dist == 'disc'",
         uiOutput("ui_pc_input_disc")
+      ),
+      conditionalPanel("input.pc_dist == 'expo'",
+        uiOutput("ui_pc_input_expo")
+      ),
+      conditionalPanel("input.pc_dist == 'pois'",
+        uiOutput("ui_pc_input_pois")
       ),
       numericInput("pc_dec", label = "Decimals:",
                    value = state_init("pc_dec", 3), min = 0)
@@ -289,6 +348,10 @@ pc_args <- reactive({
     as.list(formals(prob_chisq))
   } else if (pc_dist == "disc") {
     as.list(formals(prob_disc))
+  } else if (pc_dist == "expo") {
+    as.list(formals(prob_expo))
+  } else if (pc_dist == "pois") {
+    as.list(formals(prob_pois))
   }
 })
 
@@ -310,6 +373,10 @@ pc_inputs <- reactive({
     pre <- "pcc_"
   } else if (pc_dist == "disc") {
     pre <- "pcd_"
+  } else if (pc_dist == "expo") {
+    pre <- "pce_"
+  } else if (pc_dist == "pois") {
+    pre <- "pcp_"
   }
 
   # loop needed because reactive values don't allow single bracket indexing
@@ -374,6 +441,12 @@ pc_available <- reactive({
     } else if (input$pc_dist == "disc") {
       if (is_empty(input$pcd_v) || is_empty(input$pcd_p))
         a <- "Please provide a set of values and probabilities. Separate numbers using spaces"
+    } else if (input$pc_dist == "expo") {
+      if (is_not(input$pce_rate) || input$pce_rate <= 0)
+        a <- "Please provide a value for the rate (> 0)"
+    } else if (input$pc_dist == "pois") {
+      if (is_not(input$pcp_lambda) || input$pcp_lambda <= 0)
+        a <- "Please provide a value for lambda (> 0)"
     } else {
       a <- ""
     }
