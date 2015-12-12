@@ -1,7 +1,8 @@
 # library(magrittr)
 pc_dist <- c("Binomial" = "binom", "Chi-squared" = "chisq", "Discrete" = "disc",
              "Exponential" = "expo", "F" = "fdist", "Normal" = "norm",
-             "Poisson" = "pois", "t" = "tdist", "Uniform" = "unif")
+             "t" = "tdist", "Uniform" = "unif")
+             # "Poisson" = "pois", "t" = "tdist", "Uniform" = "unif")
 
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
 

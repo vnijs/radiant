@@ -2020,6 +2020,46 @@ prob_pois <- function(lambda,
                       pub = NA,
                       dec = 3) {
 
+	# ub <- 1; lambda <- 1
+	# dpois(0, lambda)
+	# ppois(1, lambda)
+
+	# if (is.na(lb) || lb < 0) {
+	# 	p_elb <- p_lb <- lb <- NA
+	# } else {
+	# 	if (lb > n) lb <- n
+	# 	p_elb <- dpois(lb, lambda) %>% round(dec)
+	# 	p_lelb <- ppois(lb, lambda) %>% round(dec)
+	# 	if (lb > 0)
+	#     p_lb <- sum(dbinom(0:max((lb-1),0), n, p)) %>% round(dec)
+	#   else
+	#   	p_lb <- 0
+	# }
+
+	# if (is.na(ub) || ub < 0) {
+	# 	p_eub <- p_ub <- ub <- NA
+	# } else {
+	# 	if (ub > n) ub <- n
+	# 	p_eub <- dbinom(ub, n, p) %>% round(dec)
+	# 	p_leub <- pbinom(ub, n, p) %>% round(dec)
+	# 	if (ub > 0)
+	# 	  p_ub <- sum(dbinom(0:max((ub-1),0), n, p)) %>% round(dec)
+	# 	else
+	# 		p_ub <- 0
+	# }
+
+	# if (!is.na(ub) && !is.na(lb)) {
+	#   p_int <- sum(dbinom(lb:ub, n, p)) %>% max(0) %>% round(dec)
+	# } else {
+	# 	p_int <- NA
+	# }
+
+
+
+
+
+
+
 	p_ub <- ppois(ub, lambda)
 	p_lb <- ppois(lb, lambda)
 	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -2152,7 +2192,7 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 	v_lb <- object$v_lb
 
   cat("Probability calculator\n")
-  cat("Distribution: Exponential\n")
+  cat("Distribution: Poisson\n")
 	cat("Lambda      :", lambda, "\n")
 	cat("Mean        :", lambda, "\n")
 	cat("Variance    :", lambda, "\n")
