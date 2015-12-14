@@ -1448,6 +1448,7 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+
 #'
 #' @export
 prob_disc <- function(v, p,
@@ -1596,8 +1597,14 @@ prob_disc <- function(v, p,
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
+#' @examples
+#' result <- prob_disc(v = "5 6 7 8 9 10 11 ", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' plot(result, type = "probs")
+#'
 #' @export
 plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
+
+	# object <- result
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -1610,6 +1617,8 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 		lb <- object$vlb
 		ub <- object$vub
 	}
+	# lb
+	# ub
 
 	v <- object$v
 	p <- object$p
@@ -1617,15 +1626,17 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- v
 
   k <- factor(rep("below",length(v)), levels = c("below","equal","above"))
-  if (!is.null(ub) && !is.na(ub)) {
+  # if (!is.null(ub) && !is.na(ub)) {
+  if (!is_empty(ub)) {
     if (!is.na(lb)) {
     	k[v >= lb & v <= ub] <- "equal"
     } else if (ub %in% v) {
-    	k[ub] <- "equal"
+    	k[v == ub] <- "equal"
     }
   	k[v > ub] <- "above"
-  } else if (!is.null(lb) && !is.na(lb)) {
-  	if (lb %in% v) k[lb] <- "equal"
+  # } else if (!is.null(lb) && !is.na(lb)) {
+  } else if (!is_empty(lb)) {
+  	if (lb %in% v) k[v == lb] <- "equal"
   	k[v > lb] <- "above"
   } else {
   	return(invisible())
@@ -1665,6 +1676,10 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 #' @param type Probabilities or values
 #' @param ... further arguments passed to or from other methods
 #'
+#' @examples
+#' result <- prob_disc(v = "5 6 7 8 9 10 11 ", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' summary(result, type = "probs")
+#'
 #' @export
 summary.prob_disc <- function(object, type = "values",  ...) {
 
@@ -1701,8 +1716,8 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 
   cat("Probability calculator\n")
   cat("Distribution : Discrete\n")
-  cat("Values       :", paste0(v, collapse=", "), "\n")
-  cat("Probabilities:", paste0(p %>% round(dec), collapse=", "), "\n")
+  cat("Values       :", paste0(v, collapse=" "), "\n")
+  cat("Probabilities:", paste0(p %>% round(dec), collapse=" "), "\n")
   m <- sum(v*p); std <- sum(p * (v - m)^2) %>% sqrt
 	cat("Mean         :", m %>% round(dec), "\n")
 	cat("St. dev      :", std %>% round(dec), "\n")

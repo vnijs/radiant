@@ -140,7 +140,7 @@ summary.glm_reg <- function(object,
   cat("\nData         :", object$dataset)
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("\nFilter       :", gsub("\\n","", object$data_filter))
-  cat("\nResponse variable   :", object$dep_var)
+  cat("\nResponse variable    :", object$dep_var)
   cat("\nLevel                :", object$lev, "in", object$dep_var)
   cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "))
   if ("standardize" %in% object$check)

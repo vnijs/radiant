@@ -21,4 +21,8 @@ Plot method for the probability calculator function (discrete)
 \details{
 See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 }
+\examples{
+result <- prob_disc(v = "5 6 7 8 9 10 11 ", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+plot(result, type = "probs")
+}
 

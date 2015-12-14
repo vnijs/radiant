@@ -1,7 +1,3 @@
-### Make another tab where you can run multiple sims (e.g., grid-search) and
-### aggregate the results
-### This would also be useful for Conjoint I think
-
 #' Simulate data for decision analysis
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/simulater.html} for an example in Radiant
@@ -243,11 +239,41 @@ simulater <- function(const = "",
   # gsub(";#.*$","",form)
   # gsub(";#.*[;$]","",form)
 
+  # form_eval <- function(form) {
+  #   form %<>% sim_cleaner
+  #   s <- form %>% gsub("\\s+","",.) %>% sim_splitter("=")
+  #   for (i in 1:length(s)) {
+  #     # i <- 1
+  #     if (grepl("^\\s*#", s[[i]][1], perl = TRUE)) next
+  #     obj  <- s[[i]][1]
+  #     fobj <- s[[i]][-1]
+  #     if (length(fobj) > 1) fobj <- paste0(fobj, collapse = "=")
+  #     out <- try(do.call(with, list(dat, parse(text = fobj))), silent = TRUE)
+  #     if (!is(out, 'try-error')) {
+  #       dat[[obj]] <<- out
+  #     } else {
+  #       return(c("error",paste0("Formula was not successfully evaluated:\n\n", strsplit(form,";") %>% unlist %>% paste0(collapse="\n"),"\n\nMessage: ", attr(out,"condition")$message)) %>%
+  #         set_class(c("simulater", class(.))))
+  #     }
+  #   }
+  # }
+
+  # form = "demand = demand - .1*lag(demand, default=0);# profit = demand*(price-var_cost) - fixed_cost"
+  # dat <- list()
+  # mess <- form_eval(form)
+  # mess <- NULL
+  # mess[1] == "error"
+
+  # if (!is_empty(gsub("\\s+","",form))) {
+  #   mess <- form_eval(form)
+  # }
+
   form %<>% sim_cleaner
   if (form != "") {
     s <- form %>% gsub("\\s+","",.) %>% sim_splitter("=")
     for (i in 1:length(s)) {
-      if (grepl("^#",s[[i]][1])) next
+      if (grepl("^\\s*#", s[[i]][1], perl = TRUE)) next
+      # if (grepl("^#",s[[i]][1])) next
       obj <- s[[i]][1]
       fobj <- s[[i]][-1]
       if (length(fobj) > 1) fobj <- paste0(fobj, collapse = "=")
@@ -362,7 +388,7 @@ summary.simulater <- function(object, dec = 4, ...) {
   if (!is_empty(sc$data))
     cat("Data       :", clean(sc$data))
   if (!is_empty(sc$form))
-    cat(paste0("Formulas   :\n\t", sc$form %>% gsub("\n","\n\t",.), "\n"))
+    cat(paste0("Formulas   :\n\t", sc$form %>% gsub(";","\n",.) %>% gsub("\n","\n\t",.), "\n"))
   cat("\n")
 
   sim_summary(object, dec = ifelse(is.na(dec), 4, dec))
@@ -390,11 +416,9 @@ plot.simulater <- function(x, shiny = FALSE, ...) {
 
   if (is.character(x)) {
     if (x[1] == "error") return(invisible())
-    # object <- getdata(x)$dat
     object <- getdata(x)
     if (nrow(object) == 0) return(invisible())
   } else {
-    # object <- x$dat
     object <- x
   }
   rm(x)
@@ -435,13 +459,6 @@ repeater <- function(nr = 12,
                      seed = "",
                      name = "",
                      sim = "") {
-
-
-  # nr <- NULL
-  # vars <- ""
-  # grid <- "price 5 8 0.1"
-  # sim <- "simdat"
-  # seed <- ""
 
   if (is_empty(nr)) {
     if (is_empty(grid)) {
@@ -491,13 +508,10 @@ repeater <- function(nr = 12,
   sc$name <- sc$seed <- "" ## cleaning up the sim call
   sc_keep <- grep(paste(vars, collapse = "|"), sc, value=TRUE)
 
-  # min(which(names(sc) == "seed"), which(names(sc) == "form"))
-
-  # sc[1:which(names(sc) == "form")] <- ""
   ## needed in case there is no 'form' in simulate
+  # sc[1:which(names(sc) == "form")] <- ""
   sc[1:(which(names(sc) == "seed")-1)] <- ""
   sc[names(sc_keep)] <- sc_keep
-  # sc$dat <- as.list(dat)
   sc$dat <- dat
 
   rep_sim <- function(rep_nr) {
@@ -809,14 +823,11 @@ sim_summary <- function(dat, dc = getclass(dat), fun = "", dec = 4) {
 #' @return Cleaned string
 #'
 #' @export
-# sim_cleaner <- function(x) x %>% gsub("\\s+"," ",.) %>%
 sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
   gsub("[ ]*[\n;]+[ ]*",";",.) %>%
   gsub("[;]{2,}",";",.) %>%
   gsub(";$","",.) %>%
   gsub("^;","",.)
-
-# sim_cleaner <- function(x) x %>% gsub("[ ]{2,}"," ",.) %>%
 
 #' Split input command string
 #'
