@@ -2035,65 +2035,82 @@ prob_pois <- function(lambda,
                       pub = NA,
                       dec = 3) {
 
-	# ub <- 1; lambda <- 1
-	# dpois(0, lambda)
-	# ppois(1, lambda)
+	if (!is.integer(lambda))
+	  mess_values <- "\nLambda must be a postivie integer value"
 
-	# if (is.na(lb) || lb < 0) {
-	# 	p_elb <- p_lb <- lb <- NA
-	# } else {
-	# 	if (lb > n) lb <- n
-	# 	p_elb <- dpois(lb, lambda) %>% round(dec)
-	# 	p_lelb <- ppois(lb, lambda) %>% round(dec)
-	# 	if (lb > 0)
-	#     p_lb <- sum(dbinom(0:max((lb-1),0), n, p)) %>% round(dec)
-	#   else
-	#   	p_lb <- 0
-	# }
+	# lambda <- as_integer(lambda)
 
-	# if (is.na(ub) || ub < 0) {
-	# 	p_eub <- p_ub <- ub <- NA
-	# } else {
-	# 	if (ub > n) ub <- n
-	# 	p_eub <- dbinom(ub, n, p) %>% round(dec)
-	# 	p_leub <- pbinom(ub, n, p) %>% round(dec)
-	# 	if (ub > 0)
-	# 	  p_ub <- sum(dbinom(0:max((ub-1),0), n, p)) %>% round(dec)
-	# 	else
-	# 		p_ub <- 0
-	# }
+	# lb <- 2
+	# dec <- 3
+	# lambda <- 3
+	# library(magrittr)
 
-	# if (!is.na(ub) && !is.na(lb)) {
-	#   p_int <- sum(dbinom(lb:ub, n, p)) %>% max(0) %>% round(dec)
-	# } else {
-	# 	p_int <- NA
-	# }
-
-
-
-
-
-
-
-	p_ub <- ppois(ub, lambda)
-	p_lb <- ppois(lb, lambda)
-	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
-
-	p_ub %<>% round(dec)
-	p_lb %<>% round(dec)
-
-	if (!is.na(pub)) {
-		if (pub > 1) pub <- 1
-		if (pub < 0) pub <- 0
+	if (is.na(lb) || lb < 0) {
+		p_elb <- p_lb <- lb <- NA
+	} else {
+		# if (lb > n) lb <- n
+		p_elb <- dpois(lb, lambda) %>% round(dec)
+		p_lelb <- ppois(lb, lambda) %>% round(dec)
+		if (lb > 0)
+	    p_lb <- (ppois(lb, lambda) - dpois(lb, lambda)) %>% round(dec)
+	  else
+	  	p_lb <- 0
 	}
 
-	if (!is.na(plb)) {
+	if (is.na(ub) || ub < 0) {
+		p_eub <- p_ub <- ub <- NA
+	} else {
+		# if (ub > n) ub <- n
+		p_eub <- dpois(ub, lambda) %>% round(dec)
+		p_leub <- ppois(ub, lambda) %>% round(dec)
+		if (ub > 0)
+	    p_ub <- (ppois(ub, lambda) - dpois(ub, lambda)) %>% round(dec)
+		else
+			p_ub <- 0
+	}
+
+	if (!is.na(ub) && !is.na(lb)) {
+	  p_int <- sum(dpois(lb:ub, lambda)) %>% max(0) %>% round(dec)
+	} else {
+		p_int <- NA
+	}
+
+	# if (is.na(plb) || plb < 0) {
+	if (is.na(plb)) {
+		vlb <- NA
+	} else {
 		if (plb > 1) plb <- 1
 		if (plb < 0) plb <- 0
+	  vlb <- qpois(plb, lambda)
+
+		vp_elb <- dpois(vlb, lambda) %>% round(dec)
+		vp_lelb <- ppois(vlb, lambda) %>% round(dec)
+		if (vlb > 0)
+	    vp_lb <- (ppois(vlb, lambda) - dpois(vlb, lambda)) %>% round(dec)
+	  else
+	  	vp_lb <- 0
 	}
 
-	v_ub <- qpois(pub, lambda) %>% round(dec)
-	v_lb <- qpois(plb, lambda) %>% round(dec)
+	if (is.na(pub)) {
+		vub <- NA
+	} else {
+		if (pub > 1) pub <- 1
+		if (pub < 0) pub <- 0
+	  vub <- qpois(pub, lambda)
+
+		vp_eub <- dpois(vub, lambda) %>% round(dec)
+		vp_leub <- ppois(vub, lambda) %>% round(dec)
+		if (vub > 0)
+	    vp_ub <- (ppois(vub, lambda) - dpois(vub, lambda)) %>% round(dec)
+		else
+			vp_ub <- 0
+	}
+
+	if (!is.na(pub) && !is.na(plb)) {
+	  vp_int <- sum(dpois(vlb:vub, lambda)) %>% max(0) %>% round(dec)
+	} else {
+		vp_int <- NA
+	}
 
 	if (!is.na(lb) && !is.na(ub)) {
 		if (lb > ub) {
@@ -2102,9 +2119,9 @@ prob_pois <- function(lambda,
 		}
   }
 
-  if (!is.na(plb) && !is.na(pub)) {
-		if (plb > pub) {
-			plb <- pub <- NA
+  if (!is.na(vlb) && !is.na(vub)) {
+		if (vlb > vub) {
+			plb <- pub <- vlb <- vub <- NA
 			mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
 		}
   }
@@ -2138,9 +2155,18 @@ plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
 	}
 
 	lambda <- object$lambda
-	limits <- (qpois(0.001, lambda) %>% floor):(qpois(1 - 0.001, lambda) %>% ceiling)
-	# limits <- c(qpois(0.001, lambda) %>% floor,qpois(1 - 0.001, lambda) %>% ceiling)
+	limits <- 0:(qpois(1 - 0.00001, lambda) %>% ceiling)
 	n <- max(limits)
+
+	if (!is.na(lb) && lb > n) {
+		limits <- 0:lb
+		n <- lb
+	}
+
+	if (!is.na(ub) && ub > n) {
+		limits <- 0:ub
+		n <- ub
+	}
 
   k <- factor(rep("below",n+1), levels = c("below","equal","above"))
   if (!is.null(ub) && !is.na(ub)) {
@@ -2191,6 +2217,7 @@ plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
 #' @export
 summary.prob_pois <- function(object, type = "values",  ...) {
 
+	# suppressMessages(attach(object))
 	lambda <- object$lambda
 	dec <- object$dec
 
@@ -2198,13 +2225,24 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 	lb <- object$lb
 	p_ub <- object$p_ub
 	p_lb <- object$p_lb
+	p_eub <- object$p_eub
+	p_elb <- object$p_elb
+	p_leub <- object$p_leub
+	p_lelb <- object$p_lelb
 	p_int <- object$p_int
 
 	pub <- object$pub
 	plb <- object$plb
+	vub <- object$vub
+	vlb <- object$vlb
 
-	v_ub <- object$v_ub
-	v_lb <- object$v_lb
+	vp_ub <- object$vp_ub
+	vp_lb <- object$vp_lb
+	vp_eub <- object$vp_eub
+	vp_elb <- object$vp_elb
+	vp_leub <- object$vp_leub
+	vp_lelb <- object$vp_lelb
+	vp_int <- object$vp_int
 
   cat("Probability calculator\n")
   cat("Distribution: Poisson\n")
@@ -2216,60 +2254,78 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
-		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
+		cat("Lower bound :", {if (is.na(lb)) "" else lb}, "\n")
+		cat("Upper bound :", {if (is.na(ub)) "" else ub}, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
 		  cat("\n")
 
 			if (!is.na(lb)) {
-				cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-				cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+				cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
+				if (lb > 0) {
+					cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
+				  cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+				}
+				# if (lb < n) {
+				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+			  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
+				# }
 			}
 
 			if (!is.na(ub)) {
-				cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-				cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+				cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
+				if (ub > 0) {
+					cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
+				  cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+				}
+				# if (ub < n) {
+				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+				  cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
+				# }
 			}
 
 			if (!is.na(lb) && !is.na(ub)) {
-				cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-				cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+				cat(paste0("P(", lb, " <= X <= ", ub,")     = ", p_int, "\n"))
+				cat(paste0("1 - P(", lb, " <= X <= ", ub,") = ", round(1 - p_int, dec), "\n"))
 		  }
 		}
 
 	} else {
-		pub <- if (is.na(pub)) 2 else pub
-		plb <- if (is.na(plb)) -1 else plb
 
-		cat("Lower bound :", if (plb < 0) "0" else plb, "\n")
-		cat("Upper bound :", if (pub > 1) "1" else pub, "\n")
+		cat("Lower bound :", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
+		cat("Upper bound :", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
-		if (pub <= 1 || plb >= 0) {
+		if (!is.na(pub) || !is.na(plb)) {
 		  cat("\n")
 
-			if (plb >= 0) {
-				cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-				cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+			if (!is.na(plb)) {
+				cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
+				if (vlb > 0) {
+					cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
+				  cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+				}
+				# if (vlb < n) {
+				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+			  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
+				# }
 			}
 
-			if (pub <= 1) {
-				cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-				cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+			if (!is.na(pub)) {
+				cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
+				if (vub > 0) {
+					cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
+				  cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+				}
+				# if (vub < n) {
+				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+		      cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
+				# }
 			}
 
-		  if (pub <= 1 && plb >= 0) {
-				cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-				cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
-			}
+			if (!is.na(plb) && !is.na(pub)) {
+				cat(paste0("P(", vlb, " <= X <= ", vub,")     = ", vp_int, "\n"))
+				cat(paste0("1 - P(", vlb, " <= X <= ", vub,") = ", round(1 - vp_int, dec), "\n"))
+		  }
 		}
 	}
 }
-
-
-
-
-
-
-
-
