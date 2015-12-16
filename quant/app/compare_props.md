@@ -72,11 +72,5 @@ The p.value for the test of differences in the survival proportion for 1st versu
 
 The 95% confidence interval is **0.112** to **0.277**. If repeated samples were taken and the 95% confidence interval computed for each one, the true **difference in population proportions** would fall inside the confidence interval in 95% of the samples
 
-<!--
-```{r}
-library(explainr)
-res <- prop.test(matrix(c(179, 115, 103,146), nrow = 2), alternative = "two.sided", conf.level = .95, correct = FALSE)
-```
--->
 <sup>1</sup> The **significance level**, often denoted by $\alpha$, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)
 
