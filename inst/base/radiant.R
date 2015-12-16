@@ -120,6 +120,15 @@ groupable_vars <- reactive({
     varnames()[.]
 })
 
+groupable_vars_nonum <- reactive({
+  .getdata() %>%
+    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || is.integer(.))) %>%
+                        # ((n_distinct(., na_rm = TRUE)/n()) < .30 && !is.numeric(.)))) %>%
+    {which(. == TRUE)} %>%
+    varnames()[.]
+})
+
+
 ## used in compare proportions
 two_level_vars <- reactive({
   .getdata() %>%

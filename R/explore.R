@@ -295,6 +295,16 @@ n_missing <- function(x) sum(is.na(x))
 #' @export
 p05 <- function(x, na.rm = TRUE) quantile(x,.05, na.rm = na.rm)
 
+#' 10th percentile
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return 10th percentile
+#' @examples
+#' p10(rnorm(100))
+#'
+#' @export
+p10 <- function(x, na.rm = TRUE) quantile(x,.1, na.rm = na.rm)
+
 #' 25th percentile
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -314,6 +324,16 @@ p25 <- function(x, na.rm = TRUE) quantile(x,.25, na.rm = na.rm)
 #'
 #' @export
 p75 <- function(x, na.rm = TRUE) quantile(x,.75, na.rm = na.rm)
+
+#' 90th percentile
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return 90th percentile
+#' @examples
+#' p90(rnorm(100))
+#'
+#' @export
+p90 <- function(x, na.rm = TRUE) quantile(x,.90, na.rm = na.rm)
 
 #' 95th percentile
 #' @param x Input variable

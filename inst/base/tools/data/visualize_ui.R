@@ -66,7 +66,9 @@ output$ui_viz_xvar <- renderUI({
   if (not_available(vars)) return()
   if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
-  if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
+  # if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
+  if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars_nonum()
+
 
   ## keep the same x-variable 'active' if possible
   isolate({
@@ -110,8 +112,27 @@ observeEvent(input$viz_xvar, {
   # })
 })
 
+observeEvent(input$viz_combx, {
+  isolate({
+    if (input$viz_combx) {
+      updateCheckboxInput(session, "viz_color", value = "none")
+      updateCheckboxInput(session, "viz_fill", value = "none")
+    }
+  })
+})
+
+observeEvent(input$viz_comby, {
+  isolate({
+    if (input$viz_comby) {
+      updateCheckboxInput(session, "viz_color", value = "none")
+      updateCheckboxInput(session, "viz_fill", value = "none")
+    }
+  })
+})
+
 output$ui_viz_facet_row <- renderUI({
-  vars <- c("None" = ".", groupable_vars())
+  # vars <- c("None" = ".", groupable_vars())
+  vars <- c("None" = ".", groupable_vars_nonum())
 
   ## keep the same facet_row variable 'active' if possible
   isolate({
@@ -124,7 +145,8 @@ output$ui_viz_facet_row <- renderUI({
 })
 
 output$ui_viz_facet_col <- renderUI({
-  vars <- c("None" = ".", groupable_vars())
+  # vars <- c("None" = ".", groupable_vars())
+  vars <- c("None" = ".", groupable_vars_nonum())
 
   ## keep the same facet_col variable 'active' if possible
   isolate({
@@ -199,12 +221,16 @@ output$ui_Visualize <- renderUI({
       conditionalPanel(condition = "input.viz_type == 'bar' |
                                     input.viz_type == 'hist' |
                                     input.viz_type == 'density'",
-        uiOutput("ui_viz_fill")
+        conditionalPanel("input.viz_combx != true & input.viz_comby != true",
+          uiOutput("ui_viz_fill")
+        )
       ),
       conditionalPanel(condition = "input.viz_type == 'scatter' |
                                     input.viz_type == 'line' |
                                     input.viz_type == 'box'",
-        uiOutput("ui_viz_color"),
+        conditionalPanel("input.viz_combx != true & input.viz_comby != true",
+          uiOutput("ui_viz_color")
+        ),
         uiOutput("ui_viz_check")
       ),
       uiOutput("ui_viz_axes"),
@@ -291,9 +317,17 @@ output$visualize <- renderPlot({
   if (input$viz_type %in% c("hist", "density")) {
     if (isTRUE(input$viz_comby)) return()
     if (length(input$viz_xvar) > 1 && is.null(input$viz_combx)) return()
+    if (isTRUE(input$viz_combx)) {
+      if (!is_empty(input$viz_color,"none")) return()
+      if (!is_empty(input$viz_fill,"none")) return()
+    }
   } else {
     if (isTRUE(input$viz_combx)) return()
     if (length(input$viz_yvar) > 1 && is.null(input$viz_comby)) return()
+    if (isTRUE(input$viz_comby)) {
+      if (!is_empty(input$viz_color,"none")) return()
+      if (!is_empty(input$viz_fill,"none")) return()
+    }
   }
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)

@@ -55,6 +55,7 @@ visualize <- function(dataset, xvar,
                       custom = FALSE) {
 
 
+
   ## inspired by Joe Cheng's ggplot2 browser app http://www.youtube.com/watch?feature=player_embedded&v=o2B5yJeEl1A#!
   vars <- xvar
 
@@ -153,6 +154,7 @@ visualize <- function(dataset, xvar,
     if (any(xvar %in% yvar)) return("X-variables cannot be part of Y-variables when combining Y-variables")
     if (!is_empty(color, "none")) return("Cannot use Color when combining Y-variables")
     if (!is_empty(fill, "none")) return("Cannot use Fill when combining Y-variables")
+    if (facet_row %in% yvar || facet_col %in% yvar) return("Facet row or column variables cannot be part of\nY-variables when combining Y-variables")
 
     dat <- gather_(dat, "yvar", "values", gather_cols = yvar)
     yvar <- "values"
@@ -165,7 +167,9 @@ visualize <- function(dataset, xvar,
   ## combining X-variables if needed
   if (combx && length(xvar) > 1) {
     if (!is_empty(fill, "none")) return("Cannot use Fill when combining X-variables")
-    if (any(!dc %in% c("numeric","integer"))) return("Cannot combine plots for non-numeric variables")
+    if (facet_row %in% xvar || facet_col %in% xvar) return("Facet row or column variables cannot be part of\nX-variables when combining Y-variables")
+    if (any(!getclass(select_(dat, .dots = xvar)) %in% c("numeric","integer"))) return("Cannot combine plots for non-numeric variables")
+
     dat <- gather_(dat, "xvar", "values", gather_cols = xvar)
     xvar <- "values"
     byvar <- if (is.null(byvar)) "xvar" else c("xvar", byvar)
@@ -174,7 +178,7 @@ visualize <- function(dataset, xvar,
     dc <- getclass(dat)
   }
 
-  plot_list <- list()
+  plot_list <-  list()
   if (type == "hist") {
     for (i in xvar) {
 
