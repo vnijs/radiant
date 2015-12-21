@@ -51,6 +51,7 @@ observeEvent(input$dataviewer_state, {
 
 output$dataviewer <- DT::renderDataTable({
 
+  # if (input$nav_radiant != "Data" || input$tabs_data != "View") return()
   if (not_available(input$view_vars)) return()
 
   dat <- select_(.getdata(), .dots = input$view_vars)
@@ -64,22 +65,36 @@ output$dataviewer <- DT::renderDataTable({
   ## seems needed due to partial name matching on dataviewer_search
   search <- r_state$dataviewer_state$search$search
   if (is.null(search)) search <- ""
-  fbox <- if (nrow(dat) > 100000) "none" else list(position = "top")
-  DT::datatable(dat, filter = fbox, selection = "none",
-    rownames = FALSE, style = "bootstrap", escape = FALSE,
-    options = list(
-      stateSave = TRUE,   ## maintains state but does not show column filter settings
-      searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
-      search = list(search = search, regex = TRUE),
-      order = {if (is.null(r_state$dataviewer_state$order)) list()
-               else r_state$dataviewer_state$order},
-      autoWidth = TRUE,
-      columnDefs = list(list(className = 'dt-center', targets = "_all")),
-      processing = FALSE,
-      pageLength = 10,
-      lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
-    ),
-    callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+
+  if (nrow(dat) > 5000000) {
+    fbox <- "none"
+  } else {
+    fbox <- list(position = "top")
+    dc <- getclass(dat)
+    if ("factor" %in% dc) {
+      toChar <- sapply(select(dat, which(dc == "factor")), function(x) length(levels(x))) > 100
+      if (any(toChar))
+        dat <- mutate_each_(dat, funs(as.character), vars = names(toChar)[toChar])
+    }
+  }
+
+  withProgress(message = 'Generating view table', value = 0,
+    DT::datatable(dat, filter = fbox, selection = "none",
+      rownames = FALSE, style = "bootstrap", escape = FALSE,
+      options = list(
+        stateSave = TRUE,   ## maintains state but does not show column filter settings
+        searchCols = lapply(r_state$dataviewer_search_columns, function(x) list(search = x)),
+        search = list(search = search, regex = TRUE),
+        order = {if (is.null(r_state$dataviewer_state$order)) list()
+                 else r_state$dataviewer_state$order},
+        autoWidth = TRUE,
+        columnDefs = list(list(className = 'dt-center', targets = "_all")),
+        processing = FALSE,
+        pageLength = 10,
+        lengthMenu = list(c(10, 25, 50, -1), c('10','25','50','All'))
+      ),
+      callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
+    )
   )
 })
 
@@ -89,7 +104,6 @@ observeEvent(input$view_store, {
     view_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
     updateTextInput(session, "data_filter", value = "")
     updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-
   })
 })
 
@@ -98,7 +112,6 @@ view_store <- function(dataset,
                        view_dat = dataset,
                        data_filter = "",
                        rows = NULL) {
-
 
   mess <-
     if (data_filter != "" && !is.null(rows))

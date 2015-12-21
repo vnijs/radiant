@@ -81,11 +81,13 @@ output$ui_Pivotr <- renderUI({
       uiOutput("ui_pvt_format"),
       with(tags, table(
         tr(
-          td(checkboxInput("pvt_tab", "Show table", value = state_init("pvt_tab", TRUE))),
-          td(checkboxInput("pvt_plot", "Show plot", value = state_init("pvt_plot", FALSE)))
+          td(checkboxInput("pvt_tab", "Show table  ", value = state_init("pvt_tab", TRUE))),
+          td(HTML("&nbsp;&nbsp;")),
+          td(checkboxInput("pvt_plot", "Show plot  ", value = state_init("pvt_plot", FALSE)))
         ),
         tr(
           td(checkboxInput("pvt_perc", "Percentage", value = state_init("pvt_perc", FALSE))),
+          td(HTML("&nbsp;&nbsp;")),
           td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
                checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
       )))
@@ -184,8 +186,10 @@ output$pivotr <- DT::renderDataTable({
   searchCols <- lapply(r_state$pivotr_search_columns, function(x) list(search = x))
   order <- r_state$pivotr_state$order
 
-  make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
-          search = search, searchCols = searchCols, order = order)
+  withProgress(message = 'Generating pivot table', value = 0,
+    make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
+            search = search, searchCols = searchCols, order = order)
+  )
 
 })
 

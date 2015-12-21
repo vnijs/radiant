@@ -4,7 +4,7 @@
 \alias{ci_perc}
 \title{Values at confidence levels}
 \usage{
-ci_perc(dat, alt, cl)
+ci_perc(dat, alt = "two.sided", cl = 0.95)
 }
 \arguments{
 \item{dat}{Data}

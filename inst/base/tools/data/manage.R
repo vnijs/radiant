@@ -9,15 +9,6 @@ descr_out <- function(descr, ret_type = 'html') {
   descr
 }
 
-#### test
-# library(markdown)
-# is_empty("## header example")
-# is_empty(NULL)
-# descr_out(NULL)
-# descr_out("## header example", 'html')
-# descr_out("## header example", 'md')
-#### end test
-
 upload_error_handler <- function(objname, ret) {
   ## create an empty data.frame and return error message as description
   r_data[[paste0(objname,"_descr")]] <- ret
@@ -86,7 +77,7 @@ loadUserData <- function(fname, uFile, ext,
     ## objname will hold the name of the object(s) inside the R datafile
     robjname <- try(load(uFile), silent = TRUE)
     if (is(robjname, 'try-error')) {
-      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rda format.")
     } else if (length(robjname) > 1) {
       if (sum(robjname %in% c("r_state", "r_data")) == 2) {
         upload_error_handler(objname,"### To restore state from a state-file select 'state' from the 'Load data of type' drowdown before uploading the file")
@@ -95,14 +86,28 @@ loadUserData <- function(fname, uFile, ext,
         upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
-      r_data[[objname]] <- as.data.frame(get(robjname))
+      # r_data[[objname]] <- as.data.frame(get(robjname)) %>% {gsub("^\\s+|\\s+$", "", names(.))}
+      r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
       r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
     }
+  } else if (ext == 'rds') {
+    ## objname will hold the name of the object(s) inside the R datafile
+    robj <- try(readRDS(uFile), silent = TRUE)
+    if (is(robj, 'try-error')) {
+      upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds.")
+    } else {
+      r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+      r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+    }
+  } else if (ext == 'csv') {
+    r_data[[objname]] <- loadcsv(uFile, header = header, sep = sep, saf = man_str_as_factor) %>%
+      {if (is.character(.)) upload_error_handler(objname, mess) else .} %>%
+      {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
+
+  } else {
+    ret <- paste0("### The selected filetype is not currently supported (",fext,").")
+    upload_error_handler(objname,ret)
   }
 
-  if (ext == 'csv') {
-    r_data[[objname]] <- loadcsv(uFile, header = header, sep = sep, saf = man_str_as_factor) %>%
-      {if (is.character(.)) upload_error_handler(objname, mess) else .}
-  }
   r_data[['datasetlist']] <<- c(objname, r_data[['datasetlist']]) %>% unique
 }

@@ -26,7 +26,7 @@
 explore <- function(dataset,
                     vars = "",
                     byvar = "",
-                    fun = "mean_rm",
+                    fun = c("mean_rm", "sd_rm"),
                     tabfilt = "",
                     tabsort = "",
                     data_filter = "",
@@ -248,10 +248,24 @@ make_expl <- function(expl,
     )
   ))
 
+  if (nrow(tab) > 5000000) {
+    fbox <- "none"
+  } else {
+    fbox <- list(position = "top")
+    dc <- getclass(tab)
+    if ("factor" %in% dc) {
+      toChar <- sapply(select(tab, which(dc == "factor")), function(x) length(levels(x))) > 100
+      if (any(toChar))
+        tab <- mutate_each_(tab, funs(as.character), vars = names(toChar)[toChar])
+    }
+  }
+
   dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
     DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
-      filter = list(position = "top"),
+      # filter = list(position = "top"),
+      # filter = if (nrow(.) > 100) "none" else list(position = "top"),
+      filter = fbox,
       style = ifelse (expl$shiny, "bootstrap", "default"),
       options = list(
         # search = list(regex = TRUE),

@@ -4,7 +4,7 @@
 \alias{ci_label}
 \title{Labels for confidence intervals}
 \usage{
-ci_label(alt, cl)
+ci_label(alt = "two.sided", cl = 0.95)
 }
 \arguments{
 \item{alt}{Type of hypothesis ("two.sided","less","greater")}

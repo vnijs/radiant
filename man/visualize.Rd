@@ -6,7 +6,7 @@
 \usage{
 visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
   type = "hist", facet_row = ".", facet_col = ".", color = "none",
-  fill = "none", bins = 10, smooth = 1, sbar = "mean", check = "",
+  fill = "none", bins = 10, smooth = 1, fun = "mean", check = "",
   axes = "", alpha = 0.5, data_filter = "", shiny = FALSE,
   custom = FALSE)
 }
@@ -35,7 +35,7 @@ visualize(dataset, xvar, yvar = "", comby = FALSE, combx = FALSE,
 
 \item{smooth}{Adjust the flexibility of the loess line for scatter plots}
 
-\item{sbar}{Plot an error bar in a scatter plot where the xvar is a factor. Options are "mean" and/or "median". Default is "mean"}
+\item{fun}{Set the summary measure for line and bar plots when the X-variable is a factor (default is "mean"). Also used to plot an error bar in a scatter plot when the X-variable is a factor. Options are "mean" and/or "median"}
 
 \item{check}{Add a regression line ("line"), a loess line ("loess"), or jitter ("jitter") to a scatter plot}
 
@@ -62,6 +62,7 @@ See \url{http://vnijs.github.io/radiant/base/visualize.html} for an example in R
 visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 visualize("diamonds", "price:x", type = "hist")
 visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
+visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"), type = "bar", fun = "median")
 visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   ggtitle("A scatterplot") + xlab("price in $")
 visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) \%>\%

@@ -10,7 +10,7 @@ output$ui_fileUpload <- renderUI({
               accept = c('text/csv','text/comma-separated-values',
                          'text/tab-separated-values',
                          'text/plain','.csv','.tsv'))
-  } else if (input$dataType == "rda") {
+  } else if (input$dataType %in% c("rda","rds")) {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c(".rda",".rds",".rdata"))
   } else if (input$dataType == "url_rda") {
@@ -60,7 +60,8 @@ output$ui_Manage <- renderUI({
   tagList(
     wellPanel(
       selectInput("dataType", label = "Load data of type:",
-                   c("rda" = "rda", "rda (url)" = "url_rda", "csv" = "csv", "csv (url)" = "url_csv",
+                   c("rda" = "rda", "rds" = "rds", "csv" = "csv",
+                     "rda (url)" = "url_rda", "csv (url)" = "url_csv",
                      "clipboard" = "clipboard","examples" = "examples", "state" = "state"),
                      selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
@@ -89,8 +90,9 @@ output$ui_Manage <- renderUI({
     ),
     wellPanel(
       selectInput("saveAs", label = "Save data:",
-                   c("rda" = "rda", "csv" = "csv", "clipboard" = "clipboard",
-                     "state" = "state"), selected = "rda"),
+                   c("rda" = "rda", "rds" = "rds", "csv" = "csv",
+                     "clipboard" = "clipboard", "state" = "state"),
+                   selected = "rda"),
       conditionalPanel(condition = "input.saveAs == 'clipboard'",
         uiOutput("ui_clipboard_save")
       ),
@@ -194,6 +196,15 @@ output$downloadData <- downloadHandler(
       } else {
         assign(robj, .getdata())
         save(list = robj, file = file)
+      }
+    } else if (ext == 'rds') {
+      if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
+        # save data description
+        dat <- .getdata()
+        attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
+        saveRDS(dat, file = file)
+      } else {
+        saveRDS(.getdata(), file = file)
       }
     } else if (ext == 'csv') {
       write.csv(.getdata(), file, row.names = FALSE)

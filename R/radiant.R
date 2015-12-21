@@ -165,13 +165,6 @@ factorizer <- function(dat, safx = 20) {
       select(which(. == TRUE)) %>% names
   if (length(toFct) == 0) return(dat)
 
-
-  ## workaround for https://github.com/hadley/dplyr/issues/1238
-  # for (i in toFct)
-  #   dat[[i]] %<>% ifelse (is.na(.), "[Empty]", .) %>% ifelse (. == "", "[Empty]", .) %>% as.factor
-
-  # return(dat)
-
   ## not using due to https://github.com/hadley/dplyr/issues/1238
   ## Seems fixed in dev version of dplyr
   # rmiss <- . %>% ifelse (is.na(.), "[Empty]", .) %>% ifelse (. == "", "[Empty]", .)
@@ -179,38 +172,74 @@ factorizer <- function(dat, safx = 20) {
   mutate_each_(dat, funs(as.factor), vars = toFct)
 }
 
-#' Load an rda file and add it to the radiant data list (r_data)
+#' Load an rda or rds file and add it to the radiant data list (r_data) if available
 #'
-#' @param fn File name string
-#' @param ext File extension ("rda" is the default)
+#' @param fn File name and path as a string. Extension must be either rda or rds
+#' @param objname Name to use for the data.frame. Defaults to the file name
+#'
+#' @return Data.frame in r_data or in the calling enviroment
+#'
+#' @export
+loadr <- function(fn, objname = "") {
+
+  filename <- basename(fn)
+  ext <- tolower(tools::file_ext(filename))
+  if (!ext %in% c("rda","rds")) {
+    message("File must have extension rda or rds")
+    return()
+  }
+
+  ## objname is used as the name of the data.frame
+  if (objname == "")
+    objname <- sub(paste0(".",ext,"$"),"", filename)
+
+  if (ext == "rds") {
+    loadfun <- readRDS
+  } else {
+    loadfun <- function(fn) load(fn) %>% get
+  }
+
+  if (exists("r_env") || exists("r_data")) {
+    if (exists("r_env")) {
+      env <- r_env
+    } else if (exists("r_data")) {
+      env <- pryr::where("r_data")
+    }
+
+    env$r_data[[objname]] <- loadfun(fn)
+    env$r_data[[paste0(objname,"_descr")]] <- attr(env$r_data[[objname]], "description")
+    env$r_data[['datasetlist']] <- c(objname, env$r_data[['datasetlist']]) %>% unique
+
+  } else {
+    assign(objname, loadfun(fn), envir = parent.frame())
+  }
+}
+
+#' Save data.frame as an rda or rds file from Radiant
+#'
+#' @param objname Name of the data.frame
+#' @param file File name and path as a string. Extension must be either rda or rds
 #'
 #' @return Data.frame in r_data
 #'
 #' @export
-loadrda <- function(fn, ext = "rda") {
+saver <- function(objname, file) {
 
-  # filename <- basename(fn)
-  # ## objname is used as the name of the data.frame
-  # objname <- sub(paste0(".",ext,"$"),"", filename)
+  filename <- basename(file)
+  ext <- tolower(tools::file_ext(filename))
+  if (!ext %in% c("rda","rds")) {
+    message("File must have extension rda or rds")
+    return()
+  }
 
-  # ## if ext isn't in the filename nothing was replaced and so ...
-  # if (objname == filename) {
-  #   fext <- tools::file_ext(filename) %>% tolower
-  #   message(paste0("### The filename extension (",fext,") does not match the one expected (",ext,"). Please specify the file extension used for the r-data file"))
-  #   return()
-  # }
+  dat <- getdata(objname)
 
-  # ## objname will hold the name of the object(s) inside the R datafile
-  # robjname <- try(load(fn), silent = TRUE)
-  # if (is(robjname, 'try-error')) {
-  #   message("### There was an error loading the data. Please make sure the data are in r-data format and the correct file extension has been specified.")
-  # } else {
-  #   if (exists("r_data") && length(robjname == 1)) {
-  #     r_data[[objname]] <<- as.data.frame(get(robjname))
-  #     r_data[[paste0(objname,"_descr")]] <<- attr(r_data[[objname]], "description")
-  #     r_data[['datasetlist']] <<- c(objname, r_data[['datasetlist']]) %>% unique
-  #   }
-  # }
+  if (ext == "rds") {
+    saveRDS(dat, file = file)
+  } else {
+    assign(objname, dat)
+    save(list = objname, file = file)
+  }
 }
 
 #' Load a csv file with read.csv and read_csv
@@ -379,7 +408,18 @@ viewdata <- function(dataset,
   ## based on http://rstudio.github.io/DT/server.html
   dat <- getdata(dataset, vars, filt = filt, rows = rows, na.rm = FALSE)
   title <- if (is_string(dataset)) paste0("DT:", dataset) else "DT"
-  fbox <- if (nrow(dat) > 100000) 'none' else list(position = "top", clear = FALSE, plain = FALSE)
+
+  if (nrow(dat) > 5000000) {
+    fbox <- "none"
+  } else {
+    fbox <- list(position = "top")
+    dc <- getclass(dat)
+    if ("factor" %in% dc) {
+      toChar <- sapply(select(dat, which(dc == "factor")), function(x) length(levels(x))) > 100
+      if (any(toChar))
+        dat <- mutate_each_(dat, funs(as.character), vars = names(toChar)[toChar])
+    }
+  }
 
   shinyApp(
     ui = fluidPage(title = title,
@@ -912,7 +952,7 @@ print.gtable <- function(x, ...) {
 #' ci_label("greater",.9)
 #'
 #' @export
-ci_label <- function(alt, cl) {
+ci_label <- function(alt = "two.sided", cl = .95) {
   if (alt == "less") {
     c("0%", paste0(100*cl,"%"))
   } else if (alt == "greater") {
@@ -939,7 +979,7 @@ ci_label <- function(alt, cl) {
 #' ci_perc(0:100, "two.sided",.80)
 #'
 #' @export
-ci_perc <- function(dat, alt, cl) {
+ci_perc <- function(dat, alt = "two.sided", cl = .95) {
   probs <- if (alt == 'two.sided') {
     ((1-cl)/2) %>% c(., 1 - .)
   } else if (alt == 'less') {

@@ -71,27 +71,43 @@ glm_reg <- function(dataset, dep_var, indep_var,
   }
 
   glm_coeff <- tidy(model)
-  glm_coeff$` ` <- sig_stars(glm_coeff$p.value)
-  glm_coeff[,c(2:5)] %<>% round(dec)
+  glm_coeff$` ` <- sig_stars(glm_coeff$p.value) %>% format(justify = "left")
+  # glm_coeff[,c(2:5)] %<>% round(dec)
 
-  ## print -0 when needed
-  cz <- glm_coeff[[2]] == 0
-  if (length(cz) > 0 && sum(cz) > 0) {
-    tz <- glm_coeff[[4]] < 0
-    glm_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
-    glm_coeff[[2]][tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
-  }
+  # ## print -0 when needed
+  # if (!"standardize" %in% check) {
+  #   cz <- glm_coeff[[2]] == 0
+  #   if (length(cz) > 0 && sum(cz) > 0) {
+  #     tz <- glm_coeff[[4]] < 0
+  #     # glm_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
+  #     # glm_coeff[[2]][tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
 
-  glm_coeff$p.value[glm_coeff$p.value < .001] <- "< .001"
+  #     ## added to 0.000 isn't rounded to 0
+  #     glm_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
+  #     ## print -0 when needed
+  #     glm_coeff[[2]][cz & tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
+  #   }
+  # }
+
+  # glm_coeff$p.value[glm_coeff$p.value < .001] <- "< .001"
+
   colnames(glm_coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
+  # isFct <- sapply(select(dat,-1), is.factor)
+  # if (sum(isFct) > 0) {
+  #   for (i in names(select(dat,-1)[isFct]))
+  #     glm_coeff$`  ` %<>% sub(i, paste0(i," > "), .)
+
+  #   rm(i, isFct)
+  # }
 
   isFct <- sapply(select(dat,-1), is.factor)
   if (sum(isFct) > 0) {
-    for (i in names(select(dat,-1)[isFct]))
-      glm_coeff$`  ` %<>% sub(i, paste0(i," > "), .)
+    for (i in names(isFct[isFct]))
+      glm_coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
 
     rm(i, isFct)
   }
+  glm_coeff$`  ` %<>% format(justify = "left")
 
   ## dat not needed elsewhere
   rm(dat)
@@ -135,22 +151,31 @@ summary.glm_reg <- function(object,
 
   dec <- object$dec
 
-  cat("Generalized linear model (glm)")
+  if ("stepwise" %in% object$check) cat("-----------------------------------------------\n")
+  cat("Generalized linear model (GLM)")
   cat("\nLink function:", object$link)
   cat("\nData         :", object$dataset)
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("\nFilter       :", gsub("\\n","", object$data_filter))
   cat("\nResponse variable    :", object$dep_var)
   cat("\nLevel                :", object$lev, "in", object$dep_var)
-  cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "))
+  cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "),"\n")
+
+  expl_var <- if (length(object$indep_var) == 1) object$indep_var else "x"
+  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$dep_var, " is zero\n"))
+  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$dep_var, " is not zero\n"))
   if ("standardize" %in% object$check)
-    cat("\nStandardized coefficients shown")
-  cat("\n\n")
-  print(object$glm_coeff, row.names=FALSE)
+    cat("**Standardized coefficients shown**\n")
+  cat("\n")
+
+  glm_coeff <- object$glm_coeff
+  p.small <- glm_coeff$p.value < .001
+  glm_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+  glm_coeff$p.value[p.small] <- "< .001"
+  print(glm_coeff, row.names=FALSE)
+  cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
   glm_fit <- glance(object$model)
-
-  cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
   ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
   glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(dec)
@@ -162,7 +187,7 @@ summary.glm_reg <- function(object,
   cat("\nPseudo R-squared:", glm_fit$r2)
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
   cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(dec), " df(",
-         with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
+               with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
   cat("Nr obs: ", glm_fit$df.null + 1, "\n\n")
 
   if ("vif" %in% sum_check) {
@@ -171,7 +196,7 @@ summary.glm_reg <- function(object,
     } else {
       if (length(object$indep_var) > 1) {
         cat("Variance Inflation Factors\n")
-        vif (object$model) %>%
+        vif(object$model) %>%
           { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(dec) %>%
@@ -188,21 +213,20 @@ summary.glm_reg <- function(object,
     if (object$model$coeff %>% is.na %>% any) {
       cat("There is perfect multicollineary in the set of explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
-      cl_split <- function(x) 100*(1-x)/2
-      cl_split(conf_lev) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
-      (100 - cl_split(conf_lev)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
+      ci_perc <- ci_label(cl = conf_lev)
 
-      confint.default(object$model, level = conf_lev) %>%
+      ci_tab <-
+        confint.default(object$model, level = conf_lev) %>%
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
-        cbind(select(object$glm_coeff,2),.) %>%
-        set_rownames(object$glm_coeff$`  `) -> ci_tab
+        cbind(select(object$glm_coeff,2),.)
 
       if ("confint" %in% sum_check) {
-        ci_tab %>% round(dec) %T>%
-        # set_rownames(object$glm_coeff$`  `) %T>%
+        ci_tab %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
-        set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
+        mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+        set_colnames(c("coefficient", ci_perc[1], ci_perc[2], "+/-")) %>%
+        set_rownames(object$glm_coeff$`  `) %>%
         print
         cat("\n")
       }
@@ -210,19 +234,15 @@ summary.glm_reg <- function(object,
   }
 
   if ("odds" %in% sum_check) {
-    if (object$model$coeff %>% is.na %>% any) {
+    if (any(is.na(object$model$coeff))) {
       cat("There is perfect multicollinearity in the set of selected explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
       if (object$link == "logit") {
-        exp(ci_tab[-1,]) %>% round(dec) %>%
-          set_colnames(c("odds ratio", cl_low, cl_high)) %>% print
-          # .[-1, ] %>% print
-
-        # odds_tab <- exp(ci_tab) %>% round(3)
-        # odds_tab$`+/-` <- (odds_tab$High - odds_tab$Low)
-          # odds_tab %>%
-          # set_colnames(c("odds ratio", cl_low, cl_high, "+/-")) %>%
-          # .[-1, ] %>% print
+        exp(ci_tab[-1,]) %>%
+          mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+          set_colnames(c("odds ratio", ci_perc[1], ci_perc[2])) %>%
+          set_rownames(object$glm_coeff$`  `[-1]) %>%
+          print
         cat("\n")
       } else if (object$link == "probit") {
         cat("Odds ratios are not calculated for Probit models\n\n")

@@ -2,7 +2,8 @@
 ## Explore datasets
 #######################################
 
-default_funs <- c("length", "n_missing", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
+# default_funs <- c("length", "n_missing", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
+default_funs <- c("length", "n_distinct", "mean_rm", "sd_rm", "min_rm", "max_rm")
 expl_args <- as.list(formals(explore))
 
 ## list of function inputs selected by user
@@ -153,8 +154,11 @@ output$explorer <- DT::renderDataTable({
   })
 
   top <- ifelse (input$expl_top == "", "fun", input$expl_top)
-  make_expl(expl, top = top, search = search,
+
+  withProgress(message = 'Generating explore table', value = 0,
+    make_expl(expl, top = top, search = search,
             searchCols = searchCols, order = order)
+  )
 })
 
 output$dl_explore_tab <- downloadHandler(
@@ -188,8 +192,12 @@ observeEvent(input$expl_store, {
     env <- if (exists("r_env")) r_env else pryr::where("r_data")
     env$r_data[[name]] <- tab
     cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
-    env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
 
+    # r_state$expl_byvar <<- r_state$expl_vars <<- NULL
+    # updateSelectizeInput(session, "expl_byvar", selected = "")
+    # updateSelectInput(session, "expl_vars", selected = "")
+
+    env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
     updateSelectInput(session, "dataset", selected = name)
   })
 })

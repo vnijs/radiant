@@ -122,7 +122,8 @@ groupable_vars <- reactive({
 
 groupable_vars_nonum <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || is.integer(.))) %>%
+    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || is.integer(.) ||
+                   is.character(.))) %>%
                         # ((n_distinct(., na_rm = TRUE)/n()) < .30 && !is.numeric(.)))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]

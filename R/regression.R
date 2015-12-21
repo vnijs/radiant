@@ -54,31 +54,16 @@ regression <- function(dataset, dep_var, indep_var,
   }
 
   reg_coeff <- tidy(model)
-  reg_coeff$` ` <- sig_stars(reg_coeff$p.value)
-  reg_coeff[,c(2:5)] %<>% round(dec)
-
-  ## print -0 when needed
-  if (!"standardize" %in% check) {
-    cz <- reg_coeff[[2]] == 0
-    if (length(cz) > 0 && sum(cz) > 0) {
-      tz <- reg_coeff[[4]] < 0
-      ## added to 0.000 isn't rounded to 0
-      reg_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
-      ## print -0 when needed
-      reg_coeff[[2]][cz & tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
-    }
-  }
-
-  reg_coeff$p.value[reg_coeff$p.value < .001] <- "< .001"
+  reg_coeff$` ` <- sig_stars(reg_coeff$p.value) %>% format(justify = "left")
   colnames(reg_coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
-
   isFct <- sapply(select(dat,-1), is.factor)
   if (sum(isFct) > 0) {
-    for (i in names(select(dat,-1)[isFct]))
-      reg_coeff$`  ` %<>% sub(i, paste0(i," > "), .)
+    for (i in names(isFct[isFct]))
+      reg_coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
 
     rm(i, isFct)
   }
+  reg_coeff$`  ` %<>% format(justify = "left")
 
   ## dat is not needed elsewhere and is already in "model" anyway
   rm(dat)
@@ -122,9 +107,8 @@ summary.regression <- function(object,
 
   dec <- object$dec
 
-  if ("stepwise" %in% object$check) cat("\n-----------------------------------------------\n\n")
+  if ("stepwise" %in% object$check) cat("-----------------------------------------------\n")
 
-  # cat("Time",now(),"\n")
   cat("Linear regression (OLS)\n")
   cat("Data     :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
@@ -135,15 +119,21 @@ summary.regression <- function(object,
   cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$dep_var, " is zero\n"))
   cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$dep_var, " is not zero\n"))
   if ("standardize" %in% object$check)
-    cat("Standardized coefficients shown\n")
+    cat("**Standardized coefficients shown**\n")
 
+  reg_coeff <- object$reg_coeff
+  # object$reg_coeff$p.value <- "NaN"
   cat("\n")
   if (all(object$reg_coeff$p.value == "NaN")) {
-    print(object$reg_coeff[,1:2], row.names=FALSE)
+    reg_coeff[,2] %<>% {sprintf(paste0("%.",dec,"f"),.)}
+    print(reg_coeff[,1:2], row.names=FALSE)
     cat("\nInsufficient variation in explanatory variable(s) to report additional statistics")
     return()
   } else {
-    print(object$reg_coeff, row.names=FALSE)
+    p.small <- reg_coeff$p.value < .001
+    reg_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+    reg_coeff$p.value[p.small] <- "< .001"
+    print(reg_coeff, row.names=FALSE)
   }
 
   if (nrow(object$model$model) <= (length(object$indep_var) + 1))
@@ -165,7 +155,8 @@ summary.regression <- function(object,
 
   if ("rmse" %in% sum_check) {
     mean(object$model$residuals^2, na.rm=TRUE) %>% sqrt %>% round(dec) %>%
-    cat("Prediction error (RMSE): ", ., "\n\n")
+    cat("Prediction error (RMSE): ", ., "\n")
+    cat("Residual st.dev   (RSD): ", reg_fit$sigma, "\n\n")
   }
 
   if ("sumsquares" %in% sum_check) {
@@ -195,10 +186,10 @@ summary.regression <- function(object,
     } else {
       if (length(object$indep_var) > 1) {
         cat("Variance Inflation Factors\n")
-        vif (object$model) %>%
+        vif(object$model) %>%
           { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
-          round(2) %>%
+          round(dec) %>%
           .[order(.$VIF, decreasing=T),] %>%
           { if (nrow(.) < 8) t(.) else . } %>%
           print
@@ -215,18 +206,15 @@ summary.regression <- function(object,
       cat("Confidence intervals were not calculated.\n")
     } else {
 
-      cl_split <- function(x) 100*(1-x)/2
-      cl_split(conf_lev) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
-      (100 - cl_split(conf_lev)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
-
+      ci_perc <- ci_label(cl = conf_lev)
       confint(object$model, level = conf_lev) %>%
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
         { .$`+/-` <- (.$High - .$Low)/2; . } %>%
-        round(dec) %>%
-        cbind(object$reg_coeff[[2]],.) %>%
+        mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+        cbind(reg_coeff[[2]],.) %>%
         set_rownames(object$reg_coeff$`  `) %>%
-        set_colnames(c("coefficient", cl_low, cl_high, "+/-")) %>%
+        set_colnames(c("coefficient", ci_perc[1], ci_perc[2], "+/-")) %T>%
         print
       cat("\n")
     }
@@ -397,15 +385,11 @@ plot.regression <- function(x,
 
   if ("coef" %in% plots) {
     if (!anyNA(object$model$coeff)) {
-      cl_split <- function(x) 100*(1-x)/2
-      cl_split(conf_lev) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
-      (100 - cl_split(conf_lev)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
-
       confint(object$model, level = conf_lev) %>%
         data.frame %>%
         set_colnames(c("Low","High")) %>%
         cbind(select(object$reg_coeff,2),.) %>%
-        round(dec) %>%
+        # round(dec) %>%
         set_rownames(object$reg_coeff$`  `) %>%
         { if (!intercept) .[-1,] else . } %>%
         mutate(variable = rownames(.)) %>%
@@ -537,11 +521,9 @@ predict.regression <- function(object,
   pred_val <- try(predict(object$model, pred, interval = 'prediction', level = conf_lev), silent = TRUE)
   if (!is(pred_val, 'try-error')) {
     pred_val %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
-    cl_split <- function(x) 100*(1-x)/2
-    cl_split(conf_lev) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_low
-    (100 - cl_split(conf_lev)) %>% round(1) %>% as.character %>% paste0(.,"%") -> cl_high
-    colnames(pred_val) <- c("Prediction",cl_low,cl_high,"+/-")
+    ci_perc <- ci_label(cl = conf_lev)
 
+    colnames(pred_val) <- c("Prediction",ci_perc[1],ci_perc[2],"+/-")
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     if (prn) {

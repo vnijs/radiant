@@ -13,7 +13,8 @@ help_menu <-
   )
 
 
-source(file.path(r_path,"quant/quant_ui.R"), encoding = "UTF-8", local = TRUE)
+# source(file.path(r_path,"quant/quant_ui.R"), encoding = "UTF-8", local = TRUE)
+source(file.path(r_path,"quant/quant_ui.R"), encoding = r_encoding, local = TRUE)
 
 marketing_ui <- tagList(
   navbarMenu("Maps",

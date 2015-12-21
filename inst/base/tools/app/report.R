@@ -263,12 +263,9 @@ update_report_fun <- function(cmd) {
       cat("Clipboard not supported on linux")
     }
     ## nothing is added to report
-    cmd <- ""
-  }
-
-
-
-  if (cmd != "") {
+    # cmd <- ""
+    updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  } else {
 
     # if (is_empty(input$rmd_report)) {
       if (is_empty(r_state$rmd_report)) {
@@ -278,8 +275,11 @@ update_report_fun <- function(cmd) {
         r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
         # cmd <- paste0(r_state$rmd_report,"\n",cmd)
       }
-      shinyAce::updateAceEditor(session, "rmd_report",
-                                value = r_state$rmd_report)
+
+      withProgress(message = 'Updating report', value = 0,
+        shinyAce::updateAceEditor(session, "rmd_report",
+                                  value = r_state$rmd_report)
+      )
       #                           value = cmd)
     # } else {
       # shinyAce::updateAceEditor(session, "rmd_report",
@@ -289,5 +289,5 @@ update_report_fun <- function(cmd) {
   }
 
   ## move to the report panel so see the commands created
-  updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  # updateTabsetPanel(session, "nav_radiant", selected = "Report")
 }

@@ -130,6 +130,14 @@ observeEvent(input$viz_comby, {
   })
 })
 
+# observeEvent(!is_empty(input$viz_check) && "loess" %in% input$viz_check, {
+observeEvent(input$viz_check, {
+  isolate({
+    if (!"loess" %in% input$viz_check && input$viz_smooth != 1)
+      updateSliderInput(session, "viz_smooth", value = 1)
+  })
+})
+
 output$ui_viz_facet_row <- renderUI({
   # vars <- c("None" = ".", groupable_vars())
   vars <- c("None" = ".", groupable_vars_nonum())
@@ -349,7 +357,8 @@ observeEvent(input$visualize_report, {
     ## this seems to work (mostly) as intended - compare to observeEvent above
     vi <- viz_inputs()
     if (input$viz_type != "hist") vi$bins <- viz_args$bins
-    if (!input$viz_type %in% c("density","scatter")) vi$smooth <- viz_args$smooth
+    if (!input$viz_type %in% c("density","scatter") ||
+        !"loess" %in% input$viz_check) vi$smooth <- viz_args$smooth
     update_report(inp_main = clean_args(vi, viz_args),
                   fun_name = "visualize", outputs = character(0),
                   pre_cmd = "", figs = TRUE,
