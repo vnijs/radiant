@@ -240,6 +240,7 @@ img {
 </div>
 
 
+<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 3.2.3</code></pre>
 <p>Radiant’s goal is to provide access to the power of R for business analytics. Although Radiant’s web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Update</code> button on the <code>R &gt; Report</code> page to render the report to HTML. See <a href="/radiant/base/report.html">Report</a> page for details. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.</p>
 <p>You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.</p>
 <p>If you close Radiant using <code>Quit &gt; Quit</code> after launching it from R(studio) you can can paste the commands below into the command console to get the same output as in the browser interface.</p>
@@ -400,16 +401,16 @@ Explanatory variables: carat, clarity
 Null hyp.: the effect of x on price is zero
 Alt. hyp.: the effect of x on price is not zero
 
-                coefficient std.error t.value p.value    
-    (Intercept)   -6780.993   204.952 -33.086  &lt; .001 ***
-          carat    8438.030    51.101 165.125  &lt; .001 ***
-  clarity &gt; SI2    2790.760   201.395  13.857  &lt; .001 ***
-  clarity &gt; SI1    3608.531   200.508  17.997  &lt; .001 ***
-  clarity &gt; VS2    4249.906   201.607  21.080  &lt; .001 ***
-  clarity &gt; VS1    4461.956   204.592  21.809  &lt; .001 ***
- clarity &gt; VVS2    5109.476   210.207  24.307  &lt; .001 ***
- clarity &gt; VVS1    5027.669   214.251  23.466  &lt; .001 ***
-   clarity &gt; IF    5265.170   233.658  22.534  &lt; .001 ***
+              coefficient std.error t.value p.value    
+ (Intercept)    -6780.993   204.952 -33.086  &lt; .001 ***
+ carat           8438.030    51.101 165.125  &lt; .001 ***
+ clarity|SI2     2790.760   201.395  13.857  &lt; .001 ***
+ clarity|SI1     3608.531   200.508  17.997  &lt; .001 ***
+ clarity|VS2     4249.906   201.607  21.080  &lt; .001 ***
+ clarity|VS1     4461.956   204.592  21.809  &lt; .001 ***
+ clarity|VVS2    5109.476   210.207  24.307  &lt; .001 ***
+ clarity|VVS1    5027.669   214.251  23.466  &lt; .001 ***
+ clarity|IF      5265.170   233.658  22.534  &lt; .001 ***
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -417,16 +418,16 @@ R-squared: 0.904,  Adjusted R-squared: 0.904
 F-statistic: 3530.024 df(8,2991), p.value &lt; .001
 Nr obs: 3000
 
-               coefficient      2.5%     97.5%     +/-
-(Intercept)      -6780.993 -7182.855 -6379.131 401.862
-carat             8438.030  8337.834  8538.227 100.196
-clarity &gt; SI2     2790.760  2395.873  3185.646 394.886
-clarity &gt; SI1     3608.531  3215.384  4001.679 393.148
-clarity &gt; VS2     4249.906  3854.604  4645.208 395.302
-clarity &gt; VS1     4461.956  4060.801  4863.111 401.155
-clarity &gt; VVS2    5109.476  4697.311  5521.640 412.165
-clarity &gt; VVS1    5027.669  4607.574  5447.764 420.095
-clarity &gt; IF      5265.170  4807.024  5723.317 458.147</code></pre>
+             coefficient      2.5%     97.5%     +/-
+(Intercept)    -6780.993 -7182.855 -6379.131 401.862
+carat           8438.030  8337.834  8538.227 100.196
+clarity|SI2     2790.760  2395.873  3185.646 394.886
+clarity|SI1     3608.531  3215.384  4001.679 393.148
+clarity|VS2     4249.906  3854.604  4645.208 395.302
+clarity|VS1     4461.956  4060.801  4863.111 401.155
+clarity|VVS2    5109.476  4697.311  5521.640 412.165
+clarity|VVS1    5027.669  4607.574  5447.764 420.095
+clarity|IF      5265.170  4807.024  5723.317 458.147</code></pre>
 <pre class="r"><code>predict(result, pred_cmd = &quot;carat = 1:10&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
 Data     : diamonds 

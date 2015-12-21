@@ -323,7 +323,7 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <li><p>If you have a date in a format not available through the <code>Type</code> menu you can use the <code>parse_date_time</code> function. For a date formated as “2-1-14” you would specify the command below (note that this format will also be parsed correctly by the <code>mdy</code> function in the <code>Type</code> menu)</p>
 <p>date = parse_date_time(x, “%m%d%y”)</p></li>
 <li><p>Determine the time difference between two dates/times in seconds</p>
-<p>time_diff = as_duration(time2 - time2)</p></li>
+<p>time_diff = as_duration(time2 - time1)</p></li>
 <li><p>Extract the month from a date variable</p>
 <p>month = month(date)</p></li>
 <li><p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>quarter</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call. For example, to extract the weekday from a date variable and use a label rather than a number</p>

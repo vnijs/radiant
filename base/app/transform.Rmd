@@ -30,10 +30,10 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 7. As date (ymd): convert a variable to a date if the dates are ordered as year-month-day
 8. As date/time (mdy_hms): convert a variable to a date if the dates are ordered as month-day-year-hour-minute-second
 9. As date/time (mdy_hm): convert a variable to a date if the dates are ordered as month-day-year-hour-minute
-10. As date/time (dmy_hms): See mdy\_hms
-11. As date/time (dmy_hm): See mdy\_hm
-12. As date/time (ymd_hms): See mdy\_hms
-13. As date/time (ymd_hm): See mdy\_hm
+10. As date/time (dmy\_hms): See mdy\_hms
+11. As date/time (dmy\_hm): See mdy\_hm
+12. As date/time (ymd\_hms): See mdy\_hms
+13. As date/time (ymd\_hm): See mdy\_hm
 
 <!--
 14. As time (hms): convert variable to class `period` if the time is organized as hour-minute-second
@@ -105,7 +105,7 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 12. Determine the time difference between two dates/times in seconds
 
-	time\_diff = as\_duration(time2 - time2)
+	time\_diff = as\_duration(time2 - time1)
 
 13. Extract the month from a date variable
 
