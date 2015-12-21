@@ -759,29 +759,30 @@ copy_from <- function(.from, ...) {
 #' @param .from The package to pull the function from
 #'
 #' @examples
-#'
+#' \donttest{
 #' copy_imported(radiant)
-#'
+#' }
 #' @export
 copy_imported <- function(.from) {
 
-  from <- as.character(substitute(.from))
+  ## not yet working as intended
+  # from <- as.character(substitute(.from))
 
-  import_list <- getNamespaceImports(from)
-  parent  <- parent.frame()
-  import_names <- names(import_list)
+  # import_list <- getNamespaceImports(from)
+  # parent  <- parent.frame()
+  # import_names <- names(import_list)
 
-  for (i in unique(import_names)) {
-    if (i %in% c("base","shiny","magrittr")) next
+  # for (i in unique(import_names)) {
+  #   if (i %in% c("base","shiny","magrittr")) next
 
-    symbols <- unlist(import_list[which(i == import_names)])
+  #   symbols <- unlist(import_list[which(i == import_names)])
 
-    for (j in symbols) {
-      # do.call(import::from, list(i = as.symbol(i), j = as.symbol(j)))
-      fn <- get(j, envir = asNamespace(i), inherits = TRUE)
-      assign(j, eval.parent(call("function", formals(fn), body(fn))), parent)
-    }
-  }
+  #   for (j in symbols) {
+  #     # do.call(import::from, list(i = as.symbol(i), j = as.symbol(j)))
+  #     fn <- get(j, envir = asNamespace(i), inherits = TRUE)
+  #     assign(j, eval.parent(call("function", formals(fn), body(fn))), parent)
+  #   }
+  # }
 
   invisible(NULL)
 }

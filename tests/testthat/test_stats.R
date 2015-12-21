@@ -1,6 +1,6 @@
 # library(png)
-# library(radiant)
-# library(testthat)
+library(radiant)
+library(testthat)
 
 trim_trailing <- function(x) sub("\\s+$", "", x)
 trim_leading <- function(x) sub("^\\s+", "", x)
@@ -103,7 +103,7 @@ test_that("regression", {
   result <- regression("diamonds", "price", c("carat", "clarity"))
   res1 <- capture.output(summary(result))[10] %>% trim
   # cat(paste0(res1, "\n"))
-  res2 <- "carat    8438.030    51.101 165.125  < .001 ***"
+  res2 <- "carat           8438.030    51.101 165.125  < .001 ***"
   expect_equal(res1,res2)
 
   res1 <- capture.output(summary(result)) %>% trim
