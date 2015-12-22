@@ -1,6 +1,6 @@
 Package: radiant
 Title: Business Analytics using R and Shiny
-Version: 0.4.05
+Version: 0.4.6
 Date: 2015-11-21
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description:
@@ -8,36 +8,36 @@ Description:
 Depends:
 		R (>= 3.2.0),
 		magrittr (>= 1.5),
-		ggplot2 (>= 1.0.0),
-		lubridate (>= 1.3.3),
+		ggplot2 (>= 2.0.0),
+		lubridate (>= 1.5.0),
 		tidyr (>= 0.3.1),
 		dplyr (>= 0.4.3)
 Imports:
 		DiagrammeR(>= 0.7),
-		car (>= 2.0.22),
+		car (>= 2.1),
     MASS (>= 7.3),
 		gridExtra (>= 2.0.0),
 		AlgDesign (>= 1.1.7.3),
-		psych (>= 1.4.8.11),
+		psych (>= 1.5.8),
 		GPArotation (>= 2014.11.1),
 		wordcloud (>= 2.5),
-		markdown (>= 0.7.4),
-		knitr (>= 1.8),
+		markdown (>= 0.7.7),
+		knitr (>= 1.10.5),
 		ggdendro (>= 0.1.17),
-		broom (>= 0.3.7),
-		pryr (>= 0.1),
+		broom (>= 0.4.0),
+		pryr (>= 0.1.2),
 	  shiny (>= 0.12.2),
 		shinyAce (>= 0.2.1),
 		DT (>= 0.1.39),
 		MathJaxR (>= 0.11),
-		readr (>= 0.1.1),
-		data.tree(>= 0.2.1),
+		readr (>= 0.2.2),
+		data.tree(>= 0.2.4),
 		yaml(>= 2.1.13),
-		scales(>= 0.2.5),
-		curl(>= 0.9.1),
+		scales(>= 0.3.0),
+		curl(>= 0.9.4),
 		stringr (>= 1.0)
 Suggests:
-		rmarkdown (>= 0.4.2),
+		rmarkdown (>= 0.7),
 		devtools (>= 1.8.0),
 		testthat (>= 0.10.0),
 		covr (>= 1.2.0)

@@ -387,6 +387,7 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7)
+
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
@@ -403,6 +404,7 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
 
   if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
   if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = percent)
+  if (nvar != "n") plot_list[[1]] <- plot_list[[1]] + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
 
   sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
     { if (shiny) . else print(.) }

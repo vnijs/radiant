@@ -110,6 +110,7 @@ summary.full_factor <- function(object,
 
 	## show only the loadings > cutoff
   with(object, clean_loadings(floadings, cutoff, fsort, 2)) %>% print
+  cat("\n")
 
   ## fit measures
 	colSums(object$floadings^2) %>%

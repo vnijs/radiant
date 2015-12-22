@@ -77,7 +77,9 @@ output$hier_clus <- renderUI({
 		# one output with components stacked
 		hc_output_panels <- tagList(
 	     tabPanel("Summary", verbatimTextOutput("summary_hier_clus")),
-	     tabPanel("Plot", plotOutput("plot_hier_clus", height = "100%"))
+	     tabPanel("Plot",
+                plot_downloader("hier_clus", height = hc_plot_height()),
+                plotOutput("plot_hier_clus", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Cluster",
@@ -92,10 +94,8 @@ output$hier_clus <- renderUI({
 })
 
 .summary_hier_clus <- reactive({
-  if (not_available(input$hc_vars)) {
-    cat("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
-		return(invisible())
-  }
+  if (not_available(input$hc_vars))
+    return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
 
   summary(.hier_clus())
 })

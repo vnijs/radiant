@@ -319,7 +319,6 @@ plot.regression <- function(x,
     for (i in vars) {
       plot_list[[paste0("hist",i)]] <-
         visualize(select_(model, .dots = i), xvar = i, bins = 10, custom = TRUE)
-        # ggplot(model[,vars], aes_string(x = i)) + geom_histogram(alpha = 0.5)
     }
 
   if ("dashboard" %in% plots) {
@@ -359,7 +358,7 @@ plot.regression <- function(x,
 
   if ("scatter" %in% plots) {
     for (i in indep_var) {
-      if ('factor' %in% class(model[,i])) {
+      if ("factor" %in% class(model[,i])) {
         plot_list[[paste0("scatter",i)]] <-
           visualize(select_(model, .dots = c(i,dep_var)), xvar = i, yvar = dep_var, type = "scatter", check = flines, alpha = .2, custom = TRUE)
       } else {
@@ -371,7 +370,7 @@ plot.regression <- function(x,
 
   if ("resid_pred" %in% plots) {
     for (i in indep_var) {
-      if ('factor' %in% class(model[,i])) {
+      if ("factor" %in% class(model[,i])) {
         plot_list[[i]] <-
           visualize(select_(model, .dots = c(i,".resid")), xvar = i, yvar = ".resid", type = "scatter", check = flines, alpha = .2, custom = TRUE) +
           ylab("residuals")
@@ -606,31 +605,30 @@ plot.reg_predict <- function(x,
   cn[which(cn == "Prediction") + 2] <- "ymax"
   colnames(object) <- cn
 
-  # if (facet_row != ".") {
-  #   byvar <- facet_row
-  # }
-  # if (facet_col != ".") {
-  #   byvar <- if (is.null(byvar)) facet_col else c(byvar, facet_col)
-  # }
-  # if (fill != "none") {
-  #   vars %<>% c(., fill)
-  #   if (type == "bar")
-  #     byvar <- if (is.null(byvar)) fill else c(byvar, fill)
+  # if (color == "none") {
+  #   p <- ggplot(object, aes_string(x=xvar, y="Prediction")) +
+  #          geom_line()
+  #          # geom_line(aes(group=1))
+  # } else {
+  #   p <- ggplot(object, aes_string(x = xvar, y = "Prediction", color = color, group = color)) +
+  #          geom_line()
+  #               # geom_line(aes_string(group=color))
   # }
 
-  # tbv <- if (is.null(byvar)) i else c(i, byvar)
-  # tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(funs(mean))
-  # print(getclass(object))
+  byvar <- NULL
+  if (color != "none") byvar <- color
+  if (facet_row != ".")
+    byvar <- if (is.null(byvar)) facet_row else unique(c(byvar, facet_row))
 
+  if (facet_col != ".")
+    byvar <- if (is.null(byvar)) facet_col else unique(c(byvar, facet_col))
 
-  if (color == "none") {
-    p <- ggplot(object, aes_string(x=xvar, y="Prediction")) +
-           geom_line()
-           # geom_line(aes(group=1))
+  tbv <- if (is.null(byvar)) xvar else c(xvar, byvar)
+  tmp <- object %>% group_by_(.dots = tbv) %>% select_(.dots = c("Prediction","ymin","ymax")) %>% summarise_each(funs(mean))
+  if (color == 'none') {
+    p <- ggplot(tmp, aes_string(x=xvar, y="Prediction")) + geom_line(aes(group = 1))
   } else {
-    p <- ggplot(object, aes_string(x = xvar, y = "Prediction", color = color, group = color)) +
-           geom_line()
-                # geom_line(aes_string(group=color))
+    p <- sshhr( ggplot(tmp, aes_string(x=xvar, y="Prediction", color = color, group = color)) + geom_line() )
   }
 
   facets <- paste(facet_row, "~", facet_col)

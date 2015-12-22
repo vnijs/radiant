@@ -229,8 +229,15 @@ plot.compare_means <- function(x,
 	dat <- object$dat
 	v1 <- colnames(dat)[1]
 	v2 <- colnames(dat)[-1]
-	var1 <- object$var1
-	var2 <- object$var2
+
+	## cname is equal to " " when the xvar is numeric
+	if (object$cname == " ") {
+		var1 <- v1
+		var2 <- v2
+	} else {
+		var1 <- object$var1
+		var2 <- object$var2
+	}
 
 	## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 	plot_list <- list()
@@ -244,35 +251,39 @@ plot.compare_means <- function(x,
 		 		geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
 		 		geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), colour = "blue") +
 		 		theme(legend.position = "none") +
-		 		xlab(var1) + ylab(var2)
+		 		xlab(var1) + ylab(paste0(var2, " (mean)"))
 	}
 
 	## graphs on full data
 	if ("box" %in% plots) {
 		plot_list[[which("box" == plots)]] <-
-			ggplot(dat, aes_string(x = v1, y = v2, fill = v1)) +
-				geom_boxplot(alpha = .7) + theme(legend.position = "none") +
-	 		  xlab(var1) + ylab(var2)
+		  visualize(dat, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
+			theme(legend.position = "none") + xlab(var1) + ylab(var2)
+			# ggplot(dat, aes_string(x = v1, y = v2, fill = v1)) +
+				# geom_boxplot(alpha = .7) + theme(legend.position = "none") +
 	}
 
 	if ("density" %in% plots) {
 		plot_list[[which("density" == plots)]] <-
-			ggplot(dat, aes_string(x = v2, fill = v1)) + geom_density(alpha = .7) +
-	 		  xlab(var1) + ylab(var2) +
-	 		  guides(fill = guide_legend(title = var1))
-
+		  visualize(dat, xvar = v2, type = "density", fill = v1, custom = TRUE) +
+			# ggplot(dat, aes_string(x = v2, fill = v1)) + geom_density(alpha = .7) +
+	 		  # xlab(var1) + ylab(var2) +
+	 		  # xlab(var2) +
+	 		  # guides(fill = guide_legend(title = var1))
+	 		  xlab(var2) + guides(fill = guide_legend(title = var1))
 	}
 
 	if ("scatter" %in% plots) {
-
-    ymax <- max(dat[[v2]]) %>% {if (. < 0) 0 else .}
-    ymin <- min(dat[[v2]]) %>% {if (. > 0) 0 else .}
+    # ymax <- max(dat[[v2]]) %>% {if (. < 0) 0 else .}
+    # ymin <- min(dat[[v2]]) %>% {if (. > 0) 0 else .}
 		plot_list[[which("scatter" == plots)]] <-
-      ggplot(dat, aes_string(x=v1, y=v2)) +
-        geom_jitter(alpha = .3, position = position_jitter(width = 0.4, height = 0.1)) +
-        geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..)) +
-        ylim(ymin,ymax) +
-	 		  xlab(var1) + ylab(var2)
+		  visualize(dat, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = .3, custom = TRUE) +
+	 		xlab(var1) + ylab(paste0(var2, " (mean)"))
+      # ggplot(dat, aes_string(x=v1, y=v2)) +
+      #   geom_jitter(alpha = .3, position = position_jitter(width = 0.4, height = 0.1)) +
+      #   geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..)) +
+      #   ylim(ymin,ymax) +
+	 		  # xlab(var1) + ylab(var2)
   }
 
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%

@@ -88,7 +88,9 @@ output$full_factor <- renderUI({
 	  ff_output_panels <- tabsetPanel(
 	    id = "tabs_full_factor",
 	    tabPanel("Summary", verbatimTextOutput("summary_full_factor")),
-	    tabPanel("Plot", plotOutput("plot_full_factor", height = "100%"))
+	    tabPanel("Plot",
+               plot_downloader("full_factor", height = ff_plot_height()),
+               plotOutput("plot_full_factor", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Factor",
@@ -103,7 +105,8 @@ output$full_factor <- renderUI({
 
 .summary_full_factor <- reactive({
   if (not_available(input$ff_vars))
-		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
+		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
+
 
 	if (length(input$ff_vars) < 2) return("Please select two or more variables")
 	if (is.null(input$ff_nr_fact)) return("Number of factors should be > 1.")
@@ -113,7 +116,7 @@ output$full_factor <- renderUI({
 
 .plot_full_factor <- reactive({
   if (not_available(input$ff_vars))
-		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
+    return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
 
 	if (length(input$ff_vars) < 2) return("Please select two or more variables")
 	if (is.null(input$ff_nr_fact)) return("Number of factors should be > 1.")

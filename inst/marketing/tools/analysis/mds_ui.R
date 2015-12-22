@@ -105,7 +105,9 @@ output$mds <- renderUI({
 	  mds_output_panels <- tabsetPanel(
 	    id = "tabs_mds",
 	    tabPanel("Summary", verbatimTextOutput("summary_mds")),
-	    tabPanel("Plot", plotOutput("plot_mds", height = "100%"))
+	    tabPanel("Plot",
+               plot_downloader("mds", height = mds_plot_height()),
+               plotOutput("plot_mds", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Maps",
@@ -116,22 +118,16 @@ output$mds <- renderUI({
 
 .mds <- reactive({
   if (not_available(input$mds_id2) || not_available(input$mds_dis))
-    return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
+    return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset\n\n" %>% suggest_data("city"))
 
 	do.call(mds, mds_inputs())
 })
 
 .summary_mds <- reactive({
-	# if (not_available(input$mds_id2) || not_available(input$mds_dis))
-	# 	return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
-
   .mds() %>% { if (is.character(.)) . else summary(., dec = 1) }
 })
 
 .plot_mds <- reactive({
-	# if (not_available(input$mds_id2) || not_available(input$mds_dis))
-	# 	return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset")
-
   .mds() %>%
   	{ if (is.character(.)) .
   	  else capture_plot( do.call(plot, c(list(x = .), mds_plot_inputs())) ) }

@@ -193,18 +193,22 @@ visualize <- function(dataset, xvar,
 
       hist_par <- list(alpha = alpha, position = "dodge")
       plot_list[[i]] <- ggplot(dat, aes_string(x=i))
-      if ("density" %in% axes) {
+      if ("density" %in% axes && !"factor" %in% dc[i]) {
         hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
       # if (!"factor" %in% class(dat[[i]])) {
-      if (!dc[i] %in% c("factor","logical")) {
-        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
-      } else {
+      # if (!dc[i] %in% c("factor","logical")) {
+      if ("factor" %in% dc[i]) {
+        plot_fun <- get("geom_bar")
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)
+      } else {
+        plot_fun <- get("geom_histogram")
+        hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
       }
 
-      plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
+      # plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
+      plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
     }
   } else if (type == "density") {
@@ -246,15 +250,25 @@ visualize <- function(dataset, xvar,
           plot_list[[itt]] <- plot_list[[itt]] + ylim(ymin,ymax)
 
           if ("mean" %in% fun) {
+            meanf <- function(y) {
+              y <- mean(y)
+              data.frame(ymin = y, ymax = y, y = y)
+            }
             plot_list[[itt]] <- plot_list[[itt]] +
               ylab(paste(plot_list[[itt]]$labels$y, "(mean)")) +
-              geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
+              # geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
+              stat_summary(fun.data=meanf, geom="crossbar", color = "blue")
           }
 
           if ("median" %in% fun) {
+            medianf <- function(y) {
+              y <- median(y)
+              data.frame(ymin = y, ymax = y, y = y)
+            }
             plot_list[[itt]] <- plot_list[[itt]] +
               ylab(paste(plot_list[[itt]]$labels$y, "(median)")) +
-              geom_errorbar(stat = "hline", yintercept = "median", width = .8, size = 1, color = "red", aes(ymax = ..y.., ymin = ..y..))
+              # geom_errorbar(stat = "hline", yintercept = "median", width = .8, size = 1, color = "red", aes(ymax = ..y.., ymin = ..y..))
+              stat_summary(fun.data=medianf, geom="crossbar", color = "red")
           }
         }
 

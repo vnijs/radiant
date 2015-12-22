@@ -124,8 +124,6 @@ summary.correlation_ <- function(object,
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation_}} to summarize results
 #'
-#' @importFrom scales alpha
-#'
 #' @export
 plot.correlation_ <- function(x, ...) {
 

@@ -62,7 +62,6 @@ output$ui_conjoint <- renderUI({
 	)
 })
 
-
 ca_plot <- reactive({
 	nrVars <- length(input$ca_indep_var)
 	plot_height <- plot_width <- 500
@@ -94,7 +93,9 @@ output$conjoint <- renderUI({
 	    id = "tabs_conjoint",
 	    tabPanel("Summary", verbatimTextOutput("summary_conjoint")),
 	    # tabPanel("Predict", verbatimTextOutput("predict_conjoint")),
-	    tabPanel("Plot", plotOutput("plot_conjoint", width = "100%", height = "100%"))
+	    tabPanel("Plot",
+               plot_downloader("conjoint", height = ca_plot_height()),
+	             plotOutput("plot_conjoint", width = "100%", height = "100%"))
 	    # tabPanel("Plot", plotOutput("plot_conjoint"))
 	  )
 
@@ -110,10 +111,10 @@ output$conjoint <- renderUI({
 
 .summary_conjoint <- reactive({
 	if (not_available(input$ca_dep_var))
-		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset")
+		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset\n\n" %>% suggest_data("carpet"))
 
 	if (not_available(input$ca_indep_var))
-		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset ")
+		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset\n\n" %>% suggest_data("carpet"))
 
   summary(.conjoint(), mc_diag = input$ca_mc_diag)
 })
@@ -125,10 +126,10 @@ output$conjoint <- renderUI({
 
 .plot_conjoint <- reactive({
 	if (not_available(input$ca_dep_var))
-		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset")
+		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset\n\n" %>% suggest_data("carpet"))
 
 	if (not_available(input$ca_indep_var))
-		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset ")
+		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset\n\n" %>% suggest_data("carpet"))
 
   plot(.conjoint(), plots = input$ca_plots,
        							scale_plot = input$ca_scale_plot,

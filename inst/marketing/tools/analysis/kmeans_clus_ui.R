@@ -76,7 +76,9 @@ output$kmeans_clus <- renderUI({
 	  km_output_panels <- tabsetPanel(
 	    id = "tabs_kmeans_clus",
 	    tabPanel("Summary", verbatimTextOutput("summary_kmeans_clus")),
-	    tabPanel("Plot", plotOutput("plot_kmeans_clus", height = "100%"))
+	    tabPanel("Plot",
+	             plot_downloader("kmeans_clus", height = km_plot_height()),
+	             plotOutput("plot_kmeans_clus", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Cluster",
@@ -91,14 +93,14 @@ output$kmeans_clus <- renderUI({
 
 .summary_kmeans_clus <- reactive({
   if (not_available(input$km_vars))
-		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
+    return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
 
   summary(.kmeans_clus())
 })
 
 .plot_kmeans_clus <- reactive({
   if (not_available(input$km_vars))
-		return("Please select one or more variables of type numeric or integer.\nIf none are available please choose another dataset.")
+    return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
 
   plot(.kmeans_clus(), shiny = TRUE)
 })

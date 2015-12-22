@@ -114,7 +114,9 @@ output$pmap <- renderUI({
 	  pm_output_panels <- tabsetPanel(
 	    id = "tabs_pmap",
 	    tabPanel("Summary", verbatimTextOutput("summary_pmap")),
-	    tabPanel("Plot", plotOutput("plot_pmap", height = "100%"))
+	    tabPanel("Plot",
+               plot_downloader("pmap", height = pm_plot_height()),
+	             plotOutput("plot_pmap", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Maps",
@@ -129,11 +131,11 @@ output$pmap <- renderUI({
 
 .summary_pmap <- reactive({
 	if (not_available(input$pm_brand) || not_available(input$pm_attr))
-		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.")
+		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailer"))
 
 	brand <- .getdata()[,input$pm_brand]
 	if (length(unique(brand)) < length(brand))
-		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailer"))
 
 	if (length(input$pm_attr) < 2) return("Please select two or more attribute variables")
 
@@ -143,11 +145,11 @@ output$pmap <- renderUI({
 .plot_pmap <- reactive({
 
 	if (not_available(input$pm_brand) || not_available(input$pm_attr))
-		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.")
+		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailer"))
 
 	brand <- .getdata()[,input$pm_brand]
 	if (length(unique(brand)) < length(brand))
-		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.")
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailer"))
 
 	if (length(input$pm_attr) < 2) return("Please select two or more attribute variables")
 

@@ -332,8 +332,14 @@ plot.glm_reg <- function(x,
   nrCol <- 2
   plot_list <- list()
 
-  if ("hist" %in% plots)
-    for (i in vars) plot_list[[i]] <- ggplot(model, aes_string(x = i)) + geom_histogram()
+  ## use orginal data rather than the logical used for estimation
+  model[[dep_var]] <- object$glm_dv
+
+  if ("hist" %in% plots) {
+    for (i in vars)
+      plot_list[[i]] <- visualize(select_(model, .dots = i), xvar = i, bins = 10, custom = TRUE)
+      # plot_list[[i]] <- ggplot(model, aes_string(x = i)) + geom_histogram()
+  }
 
   if ("coef" %in% plots) {
     nrCol <- 1
@@ -352,29 +358,42 @@ plot.glm_reg <- function(x,
 
   if (plots == "scatter") {
     for (i in indep_var) {
-      if ('factor' %in% class(model[,i])) {
+      if ("factor" %in% class(model[,i])) {
         plot_list[[i]] <- ggplot(model, aes_string(x=i, fill=dep_var)) +
-                        geom_bar(position = "fill", alpha=.7) +
+                        geom_bar(position = "fill", alpha=.5) +
                         labs(list(y = ""))
       } else {
-        plot_list[[i]] <- ggplot(model, aes_string(x=dep_var, y=i, fill=dep_var)) +
-                        geom_boxplot(alpha = .7) + theme(legend.position = "none")
+        plot_list[[i]] <-
+          visualize(select_(model, .dots = c(i,dep_var)), xvar = dep_var, yvar = i, check = "jitter", type = "scatter", custom = TRUE)
       }
     }
     nrCol <- 1
   }
 
   if (plots == "dashboard") {
-    plot_list[[1]] <- ggplot(model, aes_string(x=".fitted", y=".actual")) + geom_point(alpha = .25) +
-           stat_smooth(method="glm", family="binomial", se=TRUE) +
-           geom_jitter(position = position_jitter(height = .05)) +
-           labs(list(title = "Actual vs Fitted values", x = "Fitted values", y = "Actual"))
 
-    plot_list[[2]] <- ggplot(model, aes_string(x=".fitted", y=".resid")) + geom_point(alpha = .25) +
-           geom_hline(yintercept = 0) + geom_smooth(size = .75, linetype = "dotdash", se = TRUE) +
-           labs(list(title = "Residuals vs Fitted values", x = "Fitted", y = "Residuals"))
+    plot_list[[1]] <-
+      visualize(model, xvar = ".fitted", yvar = ".actual", type = "scatter", check = "jitter", custom = TRUE) +
+      stat_smooth(method="glm", method.args = list(family = "binomial"), se=TRUE) +
+      labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual"))
 
-    plot_list[[3]] <- ggplot(model, aes_string(x = ".resid")) + geom_histogram(binwidth = .5) +
+    # plot_list[[1]] <- ggplot(model, aes_string(x=".fitted", y=".actual")) + geom_point(alpha = .25) +
+    #        stat_smooth(method="glm", method.args = list(family = "binomial"), se=TRUE) +
+    #        geom_jitter(position = position_jitter(height = .05)) +
+    #        labs(list(title = "Actual vs Fitted values", x = "Fitted values", y = "Actual"))
+
+    # plot_list[[2]] <- ggplot(model, aes_string(x=".fitted", y=".resid")) + geom_point(alpha = .25) +
+    #        geom_hline(yintercept = 0) + geom_smooth(size = .75, linetype = "dotdash", se = TRUE) +
+    #        labs(list(title = "Residuals vs Fitted values", x = "Fitted", y = "Residuals"))
+
+    plot_list[[2]] <-
+      visualize(model, xvar = ".fitted", yvar = ".resid", type = "scatter", custom = TRUE) +
+      labs(list(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals")) +
+      geom_hline(yintercept = 0)
+      # + geom_smooth(size = .75, linetype = "dotdash", se = TRUE)
+
+    plot_list[[3]] <-
+      visualize(model, xvar = ".resid", custom = TRUE) +
       labs(list(title = "Histogram of residuals", x = "Residuals"))
 
     plot_list[[4]] <- ggplot(model, aes_string(x=".resid")) + geom_density(alpha=.3, fill = "green") +
@@ -578,14 +597,20 @@ plot.glm_predict <- function(x,
   object$ymin <- object$Prediction - qnorm(.5 + conf_lev/2)*object$std.error
   object$ymax <- object$Prediction + qnorm(.5 + conf_lev/2)*object$std.error
 
+  byvar <- NULL
+  if (color != "none") byvar <- color
+  if (facet_row != ".")
+    byvar <- if (is.null(byvar)) facet_row else unique(c(byvar, facet_row))
+
+  if (facet_col != ".")
+    byvar <- if (is.null(byvar)) facet_col else unique(c(byvar, facet_col))
+
+  tbv <- if (is.null(byvar)) xvar else c(xvar, byvar)
+  tmp <- object %>% group_by_(.dots = tbv) %>% select_(.dots = c("Prediction","ymin","ymax")) %>% summarise_each(funs(mean))
   if (color == 'none') {
-    p <- ggplot(object, aes_string(x = xvar, y = "Prediction")) + geom_line()
-           # geom_line(aes(group=1))
+    p <- ggplot(tmp, aes_string(x=xvar, y="Prediction")) + geom_line(aes(group = 1))
   } else {
-    # p <- ggplot(object, aes_string(x = xvar, y = "Prediction", color = color)) +
-    p <- ggplot(object, aes_string(x = xvar, y = "Prediction", color = color, group = color)) +
-                geom_line()
-                # geom_line(aes_string(group=color))
+    p <- ggplot(tmp, aes_string(x=xvar, y="Prediction", color = color, group = color)) + geom_line()
   }
 
   facets <- paste(facet_row, '~', facet_col)

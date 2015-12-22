@@ -54,7 +54,9 @@ output$pre_factor <- renderUI({
 	# one output with components stacked
 	pf_output_panels <- tagList(
      tabPanel("Summary", verbatimTextOutput("summary_pre_factor")),
-     tabPanel("Plot", plotOutput("plot_pre_factor", height = "100%"))
+     tabPanel("Plot",
+              plot_downloader("pre_factor", height = pf_plot_height()),
+              plotOutput("plot_pre_factor", height = "100%"))
   )
 
 	stat_tab_panel(menu = "Factor",
@@ -69,7 +71,8 @@ output$pre_factor <- renderUI({
 
 .summary_pre_factor <- reactive({
 	if (not_available(input$pf_vars))
-		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.")
+		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
+
 	if (length(input$pf_vars) < 2) return("Please select two or more numeric variables")
 
   summary(.pre_factor())

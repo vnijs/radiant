@@ -92,21 +92,24 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 
   dnorm_limit <- function(x) {
     y <- dnorm(x, mean = mean, sd = stdev)
-    y[x < lb | x > ub] <- NA
+    # y[x < lb | x > ub] <- NA
+    y[x < lb | x > ub] <- 0
     y
   }
 
   dnorm_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dnorm(x, mean = mean, sd = stdev)
-    y[x > lb] <- NA
+    # y[x > lb] <- NA
+    y[x > lb] <- 0
     y
   }
 
   dnorm_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dnorm(x, mean = mean, sd = stdev)
-    y[x < ub] <- NA
+    # y[x < ub] <- NA
+    y[x < ub] <- 0
     y
   }
 
@@ -312,21 +315,24 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- c(-3, 3)
   dt_limit <- function(x) {
     y <- dt(x, df = df)
-    y[x < lb | x > ub] <- NA
+    # y[x < lb | x > ub] <- NA
+    y[x < lb | x > ub] <- 0
     y
   }
 
   dt_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dt(x, df = df)
-    y[x > lb] <- NA
+    # y[x > lb] <- NA
+    y[x > lb] <- 0
     y
   }
 
   dt_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dt(x, df = df)
-    y[x < ub] <- NA
+    # y[x < ub] <- NA
+    y[x < ub] <- 0
     y
   }
 
@@ -530,10 +536,6 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
 	df1 <- object$df1
 	df2 <- object$df2
 
-
-	# df1 <- 1
-	# df2 <- 2
-
 	limits <- c(qf(0.01, df1 = df1, df2 = df2) %>% floor,
 	            qf(1 - 0.01, df1 = df1, df2 = df2) %>% ceiling)
 
@@ -548,24 +550,26 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
 
   df_limit <- function(x) {
     y <- df(x, df1 = df1, df2 = df2)
-    y[x < lb | x > ub] <- NA
+    # y[x < lb | x > ub] <- NA
+    y[x < lb | x > ub] <- 0
     y
   }
 
   df_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- df(x, df1 = df1, df2 = df2)
-    y[x > lb] <- NA
+    # y[x > lb] <- NA
+    y[x > lb] <- 0
     y
   }
 
   df_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- df(x, df1 = df1, df2 = df2)
-    y[x < ub] <- NA
+    # y[x < ub] <- NA
+    y[x < ub] <- 0
     y
   }
-
 
   vlines <- c(ub,lb) %>% na.omit
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
@@ -769,21 +773,24 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
 
   dchisq_limit <- function(x) {
     y <- dchisq(x, df = df)
-    y[x < lb | x > ub] <- NA
+    # y[x < lb | x > ub] <- NA
+    y[x < lb | x > ub] <- 0
     y
   }
 
   dchisq_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dchisq(x, df = df)
-    y[x > lb] <- NA
+    # y[x > lb] <- NA
+    y[x > lb] <- 0
     y
   }
 
   dchisq_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dchisq(x, df = df)
-    y[x < ub] <- NA
+    # y[x < ub] <- NA
+    y[x < ub] <- 0
     y
   }
 
@@ -892,8 +899,6 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
 	}
 }
 
-
-
 #' Probability calculator for the uniform distribution
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
@@ -987,21 +992,24 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- c(min, max)
   dunif_limit <- function(x) {
     y <- dunif(x, min = min, max = max)
-    y[x < lb | x > ub] <- NA
+    # y[x < lb | x > ub] <- NA
+    y[x < lb | x > ub] <- 0
     y
   }
 
   dunif_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dunif(x, min = min, max = max)
-    y[x > lb] <- NA
+    # y[x > lb] <- NA
+    y[x > lb] <- 0
     y
   }
 
   dunif_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dunif(x, min = min, max = max)
-    y[x < ub] <- NA
+    # y[x < ub] <- NA
+    y[x < ub] <- 0
     y
   }
 
@@ -1893,21 +1901,24 @@ plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
 
   dexp_limit <- function(x) {
     y <- dexp(x, rate = rate)
-    y[x < lb | x > ub] <- NA
+    # y[x < lb | x > ub] <- NA
+    y[x < lb | x > ub] <- 0
     y
   }
 
   dexp_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dexp(x, rate = rate)
-    y[x > lb] <- NA
+    # y[x > lb] <- NA
+    y[x > lb] <- 0
     y
   }
 
   dexp_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dexp(x, rate = rate)
-    y[x < ub] <- NA
+    # y[x < ub] <- NA
+    y[x < ub] <- 0
     y
   }
 
