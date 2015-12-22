@@ -1,4 +1,5 @@
 # run this separately on mac and windows
+# install.packages("devtools")
 library(devtools)
 document(roclets = c('rd', 'collate', 'namespace'))
 # build('../shinyAce', binary = TRUE)
