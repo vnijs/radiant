@@ -46,7 +46,11 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version for Windows of Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:
+<!-- 
+An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html).
+--> 
+
+To install the latest version for Windows of Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:
 
 ```r
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = 'binary')
@@ -58,9 +62,13 @@ Once all packages are installed use the command below to launch the app (use eit
 radiant::radiant("analytics")
 ```
 
+See the [installing radiant](http://vnijs.github.io/radiant/install.html) page for more details.
+
+<!--
 See also the `Installing Radiant` video:
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
+-->
 
 You can create a launcher on your Desktop to start Radiant by typing `radiant::launcher("analytics")` in the R(studio) console and pressing return. Again, enter either "base", "quant", "marketing" or "analytics" depending on the app you want to use. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release.
 
@@ -96,7 +104,7 @@ To run your own server instance copy/fork the repo from github and [deploy to sh
 
 ## Saving and loading state
 
-To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on `Save state` (see also the `Data > Manage` tab). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file [`RadiantState.rda`](https://vnijs.github.io/radiant/examples/RadiantState.rda) through the Data > Manage tab. Go to `Data > View`, `Data > Visualize` to see some of the settings. There is also a report in `R > Report` that was created using the Radiant interface. The html file <a href="https://vnijs.github.io/radiant/examples/RadiantState.html" target="_blank">`RadiantState.html`</a> contains the output.
+To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on `Save state` (see also the `Data > Manage` tab). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file [`radiant-state.rda`](https://vnijs.github.io/radiant/examples/radiant-state.rda) through the Data > Manage tab. Go to `Data > View`, `Data > Visualize` to see some of the settings. There is also a report in `R > Report` that was created using the Radiant interface. The html file <a href="https://vnijs.github.io/radiant/examples/radiant-state.html" target="_blank">`radiant-state.html`</a> contains the output.
 
 A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use `Reset` in the <i title='Power off' class='fa fa-power-off'></i> menu in the navigation bar to return to a clean/new state.
 
