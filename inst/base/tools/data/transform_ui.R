@@ -100,7 +100,11 @@ output$ui_tr_typename <- renderUI({
 
 output$ui_tr_dataset <- renderUI({
   tr_dataset <- input$dataset
-  if (input$tr_change_type == "show_dup") tr_dataset <- paste0(tr_dataset, "_dup")
+  if (input$tr_change_type == "show_dup") {
+    tr_dataset <- paste0(tr_dataset, "_dup")
+  } else if (input$tr_change_type == "holdout") {
+    tr_dataset <- paste0(tr_dataset, "_holdout")
+  }
   tags$table(
     tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
     tags$td(actionButton("tr_store", "Store"), style="padding-top:30px;")
@@ -128,12 +132,13 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Create" = "create", "Recode" = "recode",
                     "Rename" = "rename", "Replace" = "replace",
                     "Clipboard" = "clip", "Normalize" = "normalize",
-                    "Training sample" = "training",
                     "Reorder/remove levels" = "reorg_levs",
                     "Reorder/remove variables" = "reorg_vars",
                     "Remove missing values" = "remove_na",
                     "Remove duplicates" = "remove_dup",
-                    "Show duplicates" = "show_dup")
+                    "Show duplicates" = "show_dup",
+                    "Training variable" = "training",
+                    "Holdout sample" = "holdout")
 
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
@@ -345,6 +350,7 @@ output$ui_Transform <- renderUI({
 }
 
 .training <- function(dataset,
+                      vars = "",
                       n = .7,
                       nr = 100,
                       name = "training",
@@ -354,12 +360,26 @@ output$ui_Transform <- renderUI({
   if (is_empty(name)) name <- "training"
   if (!store && !is.character(dataset)) {
     n <- n %>% {ifelse (. < 0 || is.na(.) || . > nr, .7, .)}
-    data.frame(make_train(n, nr)) %>% setNames(name)
+    if (is_empty(vars)) {
+      data.frame(make_train(n, nr)) %>% setNames(name)
+    } else {
+      dat <- dataset %>% group_by_(.dots = vars)
+      nr <- length(attr(dat, "indices"))
+    }
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## created variable to select training sample\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", name, " = make_train(", n, ", n()))\n")
   }
 }
+
+## Make a training variable that selects randomly by ID
+# http://rpackages.ianhowson.com/cran/dplyr/man/group_indices.html
+## Make a training variable that selects randomly within ID
+# http://rpackages.ianhowson.com/cran/dplyr/man/sample.html
+## search for stratified sampling and cluster sampling
+## link to sampling menu?
+
+
 
 .reorg_levs <- function(dataset, fct, levs,
                         name = fct,
@@ -381,7 +401,8 @@ output$ui_Transform <- renderUI({
                         store = TRUE) {
 
   if (!store || !is.character(dataset)) {
-    getdata(dataset, vars, na.rm = FALSE)
+    # getdata(dataset, vars, na.rm = FALSE)
+    getdata(dataset, vars, filt = "", na.rm = FALSE)
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## reorder/remove variables\nr_data[[\"",store_dat,"\"]] <- select(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),")\n")
@@ -465,13 +486,34 @@ output$ui_Transform <- renderUI({
   }
 }
 
+.holdout <- function(dataset,
+                     vars = "",
+                     filt = "",
+                     store_dat = "",
+                     store = TRUE) {
+
+  if (!store || !is.character(dataset)) {
+    if (is_empty(filt))
+      return(paste0("No filter found (n = ", nrow(dataset),")"))
+
+    getdata(dataset, vars = vars, filt = filt, na.rm = FALSE)
+
+  } else {
+    filt <- gsub("\"","'",filt)
+    if (all(vars == ""))
+      paste0("## create holdout sample\nr_data[[\"",store_dat,"\"]] <- getdata(\"",dataset,"\", filt = \"", filt, "\", na.rm = FALSE)\n")
+    else
+      paste0("## create holdout sample\nr_data[[\"",store_dat,"\"]] <- getdata(\"",dataset,"\", filt = \"", filt, "\", na.rm = FALSE) %>% select(", paste0(vars, collapse = ", "),")\n")
+  }
+}
+
 inp_vars <- function(inp, rval = "")
 	if (is_empty(input[[inp]])) rval else input[[inp]]
 
 transform_main <- reactive({
 
-  if (input$show_filter)
-    updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
+  # if (input$show_filter)
+  #   updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
 
 	if (is.null(input$tr_change_type)) return()
   if (not_available(input$tr_vars)) {
@@ -503,11 +545,8 @@ transform_main <- reactive({
   # if (!is_empty(selcom) && input$show_filter == TRUE)
   	# return("A filter is active. Either uncheck the filter checkbox, remove the filter statement,\nor store the filtered data through the Data > View tab")
 
-  if (input$show_filter)
-    updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-
-  ## get the active dataset
-	dat <- .getdata()
+  ## get the active dataset, filter not applied when called from transform tab
+  dat <- .getdata()
 
   ## what data to pass on ...
 	if (input$tr_change_type == "none")
@@ -527,7 +566,7 @@ transform_main <- reactive({
 
   ## create training variable
   if (input$tr_change_type == 'training')
-    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training,  store = FALSE))
+    return(.training(dat, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, store = FALSE))
 
   if (input$tr_change_type == 'create') {
     if (input$tr_create == "") {
@@ -552,6 +591,12 @@ transform_main <- reactive({
     }
   }
 
+  ## filter data for holdout
+  if (input$tr_change_type == "holdout") {
+    if (!input$show_filter) return("No filter active. Click the 'Filter' checkbox and enter a filter")
+    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, store = FALSE))
+  }
+
   ## only use the functions below if variables have been selected
   if (!is_empty(input$tr_vars)) {
     if (not_available(input$tr_vars)) return()
@@ -567,6 +612,7 @@ transform_main <- reactive({
     ## show duplicates
     if (input$tr_change_type == "show_dup")
       return(.show_dup(dat, inp_vars("tr_vars"), store = FALSE))
+
 
     if (input$tr_change_type == 'normalize') {
       if (is_empty(input$tr_normalizer, "none")) {
@@ -651,12 +697,12 @@ output$transform_data <- reactive({
   }
 })
 
-tr_summary <- reactive({
+# tr_summary <- reactive({
   # dat <- .getdata()
   # if (nrow(dat) == 0) return(**invisible())
   # paste0(capture.output(getsummary(dat)), collapse = "\n")
   # paste0(capture.output(getsummary(.getdata())), collapse = "\n")
-})
+# })
 
 tr_snippet <- reactive({
   # .getdata() %>% {if (nrow(.) == 0) invisible() else show_data_snippet(.) } %>% return(.)
@@ -670,11 +716,11 @@ output$transform_summary <- renderPrint({
     if (is.null(dat)) return(invisible())
     if (is.character(dat)) {
       cat("**", dat,"**\n\n")
-      cat(tr_summary())
+      # cat(tr_summary())
     } else {
       if (min(dim(dat)) == 0) {
         cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
-        cat(tr_summary())
+        # cat(tr_summary())
       } else {
         if (input$tr_change_type == "none")
           cat("** Select a transformation type **\n\n")
@@ -703,7 +749,7 @@ observeEvent(input$tr_store, {
 			r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
 
       ## adding command to ensure new data is in the datasetlist
-      ncmd <- paste0("\n## register the new dataset\nr_data[[\"datasetlist\"]] <- c(\"", dataset, "\", r_data[[\"datasetlist\"]]) %>% unique")
+      ncmd <- paste0("\n## register the new dataset\nr_data[[\"datasetlist\"]] <- c(\"", dataset, "\", r_data[[\"datasetlist\"]]) %>% unique\n")
       if (!is_empty(r_data[[paste0(input$dataset,"_descr")]]))
         ncmd %<>% paste0("\nr_data[[\"",paste0(dataset,"_descr"),"\"]] <- r_data[[\"", paste0(input$dataset,"_descr"),"\"]]")
 		}
@@ -716,6 +762,9 @@ observeEvent(input$tr_store, {
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'show_dup') {
       cmd <- .show_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+      r_data[[dataset]] <- dat
+    } else if (input$tr_change_type == 'holdout') {
+      cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, input$tr_dataset)
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'reorg_vars') {
       cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
@@ -755,8 +804,8 @@ observeEvent(input$tr_store, {
 
     ## update the command log
     # shinyAce::updateAceEditor(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
-    # updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
-    updateTextInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd,ncmd)))
+    updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
+    # updateTextInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd,ncmd)))
 
 		## reset input values once the changes have been applied
 		updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")

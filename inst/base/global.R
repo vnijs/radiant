@@ -27,7 +27,7 @@ if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local 
 ## others are set in options: r_env, r_local, r_path
 
 ## print options
-options("width"  = 200)
+options("width"  = 250)
 options("scipen" = 100)
 
 ## pkgs used

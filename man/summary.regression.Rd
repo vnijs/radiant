@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}
 
-\item{sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
+\item{sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error and the standard deviation of the residuals. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
 
 \item{conf_lev}{Confidence level used to estimate confidence intervals (.95 is the default)}
 

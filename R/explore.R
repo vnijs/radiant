@@ -162,9 +162,9 @@ summary.explore <- function(object, top = "fun", ...) {
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
   if (object$byvar[1] != "")
-    cat("Grouped by: ", object$byvar, "\n")
-  cat("Functions : ", names(object$pfun), "\n")
-  cat("Top       : ", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
+    cat("Grouped by:", object$byvar, "\n")
+  cat("Functions :", names(object$pfun), "\n")
+  cat("Top       :", c("fun" = "Function", "var" = "Variables", "byvar" = "Group by")[top], "\n")
   cat("\n")
 
   tab <- object %>% flip(top) %>% as.data.frame
@@ -260,7 +260,8 @@ make_expl <- function(expl,
     }
   }
 
-  dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
+  # dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
+  dt_tab <- tab %>% dfround(dec) %>%
     DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
       # filter = list(position = "top"),

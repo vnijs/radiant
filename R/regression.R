@@ -76,7 +76,7 @@ regression <- function(dataset, dep_var, indep_var,
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{regression}}
-#' @param sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
+#' @param sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error and the standard deviation of the residuals. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
 #' @param conf_lev Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param test_var Variables to evaluate in model comparison (i.e., a competing models F-test)
 #' @param ... further arguments passed to or from other methods
@@ -131,7 +131,8 @@ summary.regression <- function(object,
     return()
   } else {
     p.small <- reg_coeff$p.value < .001
-    reg_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+    # reg_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+    reg_coeff[,2:5] %<>% dfprint(dec)
     reg_coeff$p.value[p.small] <- "< .001"
     print(reg_coeff, row.names=FALSE)
   }
@@ -147,8 +148,7 @@ summary.regression <- function(object,
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
   cat("F-statistic:", reg_fit$statistic, paste0("df(", reg_fit$df - df_int, ",", reg_fit$df.residual, "), p.value"), reg_fit$p.value)
-  cat(paste0("\nNr obs: ", reg_fit$df + reg_fit$df.residual))
-  cat("\n\n")
+  cat("\nNr obs:", reg_fit$df + reg_fit$df.residual, "\n\n")
 
   if (anyNA(object$model$coeff))
     cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\n")
@@ -176,6 +176,7 @@ summary.regression <- function(object,
     ss_tab$SS <- c(ss_reg,ss_err,ss_tot)
     cat("Sum of squares:\n")
     format(ss_tab, scientific = FALSE) %>% print
+    # dfprint(ss_tab, dec) %>% print(row.names = FALSE)
     cat("\n")
   }
 
@@ -443,6 +444,7 @@ predict.regression <- function(object,
                                pred_vars = "",
                                pred_data = "",
                                pred_cmd = "",
+                               pred_filt = "",
                                conf_lev = 0.95,
                                prn = TRUE,
                                ...) {
@@ -454,7 +456,7 @@ predict.regression <- function(object,
   if ("standardize" %in% object$check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (pred_count == 3) {
-    return(cat("Please select variables, data, or specify a command to generate predictions. For example,\ncarat = seq(.5, 1.5, .1) would produce predictions for values of\ncarat starting at .5, increasing to 1.5 in increments of .1. Make\nsure to press return after you finish entering the command.\nIf no results are shown the command was likely invalid. Alternatively,\nspecify a dataset to generate predictions. You could create this in\nExcel and use the paste feature in Data > Manage to bring it into\nRadiant"))
+    return(cat("Please select variables, data, or specify a command to generate predictions.\nFor example, carat = seq(.5, 1.5, .1) would produce predictions for values\n of carat starting at .5, increasing to 1.5 in increments of .1. Make sure\nto press return after you finish entering the command.\n\nAlternatively, specify a dataset to generate predictions. You could create\nthis in a spread sheet and use the paste feature in Data > Manage to bring\nit into Radiant"))
   }
 
   if (pred_count < 2) {
@@ -503,7 +505,7 @@ predict.regression <- function(object,
     }
   } else {
     ## generate predictions for all observations in the dataset
-    pred <- getdata(pred_data, filt = "", na.rm = FALSE)
+    pred <- getdata(pred_data, filt = pred_filt, na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -527,9 +529,11 @@ predict.regression <- function(object,
 
     if (prn) {
       cat("Linear regression (OLS)\n")
-      cat("Data     :", object$dataset, "\n")
+      cat("Data       :", object$dataset, "\n")
       if (object$data_filter %>% gsub("\\s","",.) != "")
-        cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+        cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
+      if (pred_filt %>% gsub("\\s","",.) != "")
+        cat("Pred filter:", gsub("\\n","", pred_filt), "\n")
       cat("Response variable    :", object$dep_var, "\n")
       cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n\n")
 
@@ -628,13 +632,18 @@ plot.reg_predict <- function(x,
   if (color == 'none') {
     p <- ggplot(tmp, aes_string(x=xvar, y="Prediction")) + geom_line(aes(group = 1))
   } else {
-    p <- sshhr( ggplot(tmp, aes_string(x=xvar, y="Prediction", color = color, group = color)) + geom_line() )
+    # p <- sshhr( ggplot(tmp, aes_string(x=xvar, y="Prediction", color = color, group = color)) + geom_line() )
+    p <- ggplot(tmp, aes_string(x=xvar, y="Prediction", color = color, group = color)) + geom_line()
   }
 
-  facets <- paste(facet_row, "~", facet_col)
-  if (facets != ". ~ .") p <- p + facet_grid(facets)
+  if (facet_row != "." || facet_col != ".") {
+    facets <- if (facet_row == ".")  paste("~", facet_col)
+              else paste(facet_row, '~', facet_col)
+    facet_fun <- if (facet_row == ".") facet_wrap else facet_grid
+    p <- p + facet_fun(as.formula(facets))
+  }
 
-  if (length(unique(object[[xvar]])) < 10)
+  if (is.factor(tmp[[xvar]]) || length(unique(tmp[[xvar]])) < 10)
     p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
   else
     p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
@@ -659,7 +668,8 @@ plot.reg_predict <- function(x,
 #' @export
 store_reg <- function(object, data = object$dataset,
                       type = "residuals", name = paste0(type, "_reg")) {
-  if (!is.null(object$data_filter) && object$data_filter != "")
+  # if (!is.null(object$data_filter) && object$data_filter != "")
+  if (!is_empty(object$data_filter))
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
 
   ## fix empty name input

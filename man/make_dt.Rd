@@ -4,7 +4,7 @@
 \alias{make_dt}
 \title{Make a pivot tabel in DT}
 \usage{
-make_dt(pvt, format = "none", perc = FALSE, search = "",
+make_dt(pvt, format = "none", perc = FALSE, dec = 3, search = "",
   searchCols = NULL, order = NULL)
 }
 \arguments{

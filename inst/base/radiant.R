@@ -92,7 +92,8 @@ saveStateOnRefresh <- function(session = session) {
       isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
       isolate(r_data$filter_error <- "")
-      return(seldat)
+      if (!(input$nav_radiant == "Data" && input$tabs_data == "Transform"))
+        return(droplevels(seldat))
     }
   }
 

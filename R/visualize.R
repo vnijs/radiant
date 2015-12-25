@@ -124,7 +124,7 @@ visualize <- function(dataset, xvar,
     } else {
       dat[,isChar] <- select(dat, which(isChar)) %>% mutate_each(funs(as_factor))
       nrlev <- sapply(dat, function(x) if (is.factor(x)) length(levels(x)) else 0)
-      if (max(nrlev) > 50)
+      if (max(nrlev) > 100)
         return("Character variable(s) were not converted to factors.\nTo use these variable in a plot convert them to factors\n(or numeric variables) in the Data > Transform tab")
     }
     ## in case something was changed, if not, this won't run
@@ -188,8 +188,10 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
 
       ## can't create a histogram for a logical
-      # if ("logical" %in% class(dat[[i]])) dat[[i]] <- as_factor(dat[[i]])
-      if (dc[i] == "logical") dat[[i]] <- as_factor(dat[[i]])
+      if (dc[i] == "logical") {
+        dat[[i]] <- as_factor(dat[[i]])
+        dc[i] <- "factor"
+      }
 
       hist_par <- list(alpha = alpha, position = "dodge")
       plot_list[[i]] <- ggplot(dat, aes_string(x=i))
@@ -197,8 +199,6 @@ visualize <- function(dataset, xvar,
         hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
       }
-      # if (!"factor" %in% class(dat[[i]])) {
-      # if (!dc[i] %in% c("factor","logical")) {
       if ("factor" %in% dc[i]) {
         plot_fun <- get("geom_bar")
         if ("log_x" %in% axes) axes <- sub("log_x","",axes)

@@ -185,6 +185,30 @@ output$ui_reg_color <- renderUI({
                  multiple = FALSE)
 })
 
+## show error message from filter dialog
+# output$ui_reg_pred_filt_err <- renderUI({
+#   if (is_empty(r_data$reg_pred_filt_err)) return()
+#   helpText(r_data$reg_pred_filt_err)
+# })
+
+# observeEvent(input$reg_pred_filt, {
+#   selcom <- input$reg_pred_filt %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
+#   if (is_empty(selcom) || input$show_filter == FALSE) {
+#     isolate(r_data$reg_pred_filt_err <- "")
+#   } else if (grepl("([^=!<>])=([^=])",selcom)) {
+#     isolate(r_data$reg_pred_filt_err <- "Invalid filter: never use = in a filter but == (e.g., year == 2014). Update or remove the expression")
+#   } else {
+#     seldat <- try(filter_(r_data[[input$dataset]], selcom), silent = TRUE)
+#     if (is(seldat, 'try-error')) {
+#       isolate(r_data$reg_pred_filt_err <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
+#     } else {
+#       isolate(r_data$reg_pred_filt_err <- "")
+#       # return(seldat)
+#     }
+#   }
+# })
+
+## data ui and tabs
 output$ui_regression <- renderUI({
   tagList(
     conditionalPanel(condition = "input.tabs_regression == 'Predict'",
@@ -198,6 +222,8 @@ output$ui_regression <- renderUI({
           selectizeInput(inputId = "reg_pred_data", label = "Predict for profiles:",
                       choices = c("None" = "",r_data$datasetlist),
                       selected = state_single("reg_pred_data", c("None" = "",r_data$datasetlist)), multiple = FALSE)
+          # returnTextAreaInput("reg_pred_filt", label = "Prediction filter:", value = state_init("reg_pred_filt")),
+          # uiOutput("ui_reg_pred_filt_err")
         ),
         conditionalPanel(condition = "input.reg_predict == 'cmd'",
           returnTextAreaInput("reg_pred_cmd", "Prediction command:",
@@ -213,8 +239,8 @@ output$ui_regression <- renderUI({
           )
         ),
         ## only show if full data is used for prediction
-        conditionalPanel("input.reg_predict == 'data' &
-                          input.reg_pred_data == input.dataset",
+        conditionalPanel("input.reg_predict == 'data'",
+                          # input.reg_pred_data == input.dataset",
           tags$table(
             tags$td(textInput("reg_store_pred_name", "Store predictions:", "predict_reg")),
             tags$td(actionButton("reg_store_pred", "Store"), style="padding-top:30px;")
@@ -401,13 +427,16 @@ observeEvent(input$regression_report, {
       figs <- TRUE
     }
     xcmd <- ""
-    if (!is.null(r_data$reg_pred)) {
+    # if (!is.null(r_data$reg_pred) && input$reg_predict != "none") {
+    if (!is.null(r_data$reg_pred) && !is_empty(input$reg_predict, "none")) {
       inp_out[[2 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
       outputs <- c(outputs, "result <- predict")
+      dataset <- if (input$reg_predict == "data") input$reg_pred_data else input$dataset
       xcmd <-
-        paste0("# store_reg(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+        paste0("# store_reg(result, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
         paste0("# write.csv(result, file = '~/reg_predictions.csv', row.names = FALSE)")
-      if (!is_empty(input$reg_xvar)) {
+      # if (!is_empty(input$reg_xvar)) {
+      if (input$reg_pred_plot) {
         inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
         outputs <- c(outputs, "plot")
         figs <- TRUE
@@ -437,9 +466,13 @@ observeEvent(input$reg_store_pred, {
   isolate({
     pred <- r_data$reg_pred
     if (is.null(pred)) return()
-    if (nrow(pred) != nrow(getdata(input$dataset)))
+    # if (nrow(pred) != nrow(getdata(input$dataset)))
+    # print(nrow(pred))
+    # print(nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
+    if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
       return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    store_reg(pred, data = input$dataset, type = "prediction", name = input$reg_store_pred_name)
+    # store_reg(pred, data = input$dataset, type = "prediction", name = input$reg_store_pred_name)
+    store_reg(pred, data = input$reg_pred_data, type = "prediction", name = input$reg_store_pred_name)
   })
 })
 

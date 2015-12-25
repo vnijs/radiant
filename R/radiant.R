@@ -88,7 +88,7 @@ filterdata <- function(dat, filt = "") {
     if (is(seldat, 'try-error')) {
       message(paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
-      return(seldat)
+      return(droplevels(seldat))
     }
   }
   dat
@@ -989,4 +989,41 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
     cl
   }
   quantile(dat, probs = probs)
+}
+
+#' Print a data.frame with a specified number of decimal places
+#'
+#' @param tbl Data.frame
+#' @param dec Number of decimal places
+#'
+#' @return Data.frame for printing
+#'
+#' @examples
+#' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
+#'   dfprint(dec = 3)
+#' @export
+dfprint <- function(tbl, dec = 3) {
+  tbl %>%
+  mutate_each(
+    funs(if (is.double(.)) sprintf(paste0("%.", dec ,"f"), .) else .)
+  )
+}
+         # if (is.integer(.)) sprintf("%.0f",.))
+
+#' Round double in a data.frame to a specified number of decimal places
+#'
+#' @param tbl Data.frame
+#' @param dec Number of decimal places
+#'
+#' @return Data.frame for viewing
+#'
+#' @examples
+#' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
+#'   dfround(dec = 3)
+#' @export
+dfround <- function(tbl, dec = 3) {
+  tbl %>%
+  mutate_each(
+    funs(if (is.double(.)) round(., dec) else .)
+  )
 }

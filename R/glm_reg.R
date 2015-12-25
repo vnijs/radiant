@@ -72,39 +72,12 @@ glm_reg <- function(dataset, dep_var, indep_var,
 
   glm_coeff <- tidy(model)
   glm_coeff$` ` <- sig_stars(glm_coeff$p.value) %>% format(justify = "left")
-  # glm_coeff[,c(2:5)] %<>% round(dec)
-
-  # ## print -0 when needed
-  # if (!"standardize" %in% check) {
-  #   cz <- glm_coeff[[2]] == 0
-  #   if (length(cz) > 0 && sum(cz) > 0) {
-  #     tz <- glm_coeff[[4]] < 0
-  #     # glm_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
-  #     # glm_coeff[[2]][tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
-
-  #     ## added to 0.000 isn't rounded to 0
-  #     glm_coeff[[2]][cz] <- paste0("0.",paste0(rep(0,dec),collapse = ""))
-  #     ## print -0 when needed
-  #     glm_coeff[[2]][cz & tz] <- paste0("-0.",paste0(rep(0,dec),collapse = ""))
-  #   }
-  # }
-
-  # glm_coeff$p.value[glm_coeff$p.value < .001] <- "< .001"
-
   colnames(glm_coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
-  # isFct <- sapply(select(dat,-1), is.factor)
-  # if (sum(isFct) > 0) {
-  #   for (i in names(select(dat,-1)[isFct]))
-  #     glm_coeff$`  ` %<>% sub(i, paste0(i," > "), .)
-
-  #   rm(i, isFct)
-  # }
 
   isFct <- sapply(select(dat,-1), is.factor)
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
       glm_coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
-
     rm(i, isFct)
   }
   glm_coeff$`  ` %<>% format(justify = "left")
@@ -170,7 +143,8 @@ summary.glm_reg <- function(object,
 
   glm_coeff <- object$glm_coeff
   p.small <- glm_coeff$p.value < .001
-  glm_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+  # glm_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+  glm_coeff[,2:5] %<>% dfprint(dec)
   glm_coeff$p.value[p.small] <- "< .001"
   print(glm_coeff, row.names=FALSE)
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
@@ -188,7 +162,7 @@ summary.glm_reg <- function(object,
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
   cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(dec), " df(",
                with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
-  cat("Nr obs: ", glm_fit$df.null + 1, "\n\n")
+  cat("Nr obs:", glm_fit$df.null + 1, "\n\n")
 
   if ("vif" %in% sum_check) {
     if (anyNA(object$model$coeff)) {
@@ -201,7 +175,8 @@ summary.glm_reg <- function(object,
           data.frame("VIF" = ., "Rsq" = 1 - 1/.) %>%
           round(dec) %>%
           .[order(.$VIF, decreasing=T),] %>%
-          { if (nrow(.) < 8) t(.) else . } %>% print
+          { if (nrow(.) < 8) t(.) else . } %>%
+          print
       } else {
         cat("Insufficient number of explanatory variables selected to calculate\nmulticollinearity diagnostics")
       }
@@ -224,7 +199,8 @@ summary.glm_reg <- function(object,
       if ("confint" %in% sum_check) {
         ci_tab %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
-        mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+        # mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+        dfprint(dec) %>%
         set_colnames(c("coefficient", ci_perc[1], ci_perc[2], "+/-")) %>%
         set_rownames(object$glm_coeff$`  `) %>%
         print
@@ -239,7 +215,8 @@ summary.glm_reg <- function(object,
     } else {
       if (object$link == "logit") {
         exp(ci_tab[-1,]) %>%
-          mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+          # mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
+          dfprint(dec) %>%
           set_colnames(c("odds ratio", ci_perc[1], ci_perc[2])) %>%
           set_rownames(object$glm_coeff$`  `[-1]) %>%
           print
@@ -517,12 +494,12 @@ predict.glm_reg <- function(object,
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     if (prn) {
-      cat("Generalized linear model (glm)")
+      cat("Generalized linear model (GLM)")
       cat("\nLink function:", object$link)
       cat("\nData         :", object$dataset)
       if (object$data_filter %>% gsub("\\s","",.) != "")
         cat("\nFilter       :", gsub("\\n","", object$data_filter))
-      cat("\nResponse variable   :", object$dep_var)
+      cat("\nResponse variable    :", object$dep_var)
       cat("\nLevel                :", object$lev, "in", object$dep_var)
       cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "),"\n\n")
 
@@ -533,8 +510,8 @@ predict.glm_reg <- function(object,
       }
 
       isNum <- c("Prediction", "std.error")
-      pred %>% {.[, isNum] <- round(.[, isNum],dec); .} %>%
-        print(row.names = FALSE)
+      # pred %>% {.[, isNum] <- round(.[, isNum],dec); .} %>%
+      pred %>% dfprint(dec) %>% print(row.names = FALSE)
     }
 
     return(pred %>% set_class(c("glm_predict",class(.))))
@@ -613,10 +590,14 @@ plot.glm_predict <- function(x,
     p <- ggplot(tmp, aes_string(x=xvar, y="Prediction", color = color, group = color)) + geom_line()
   }
 
-  facets <- paste(facet_row, '~', facet_col)
-  if (facets != '. ~ .') p <- p + facet_grid(facets)
+  if (facet_row != "." || facet_col != ".") {
+    facets <- if (facet_row == ".")  paste("~", facet_col)
+              else paste(facet_row, '~', facet_col)
+    facet_fun <- if (facet_row == ".") facet_wrap else facet_grid
+    p <- p + facet_fun(as.formula(facets))
+  }
 
-  if (length(unique(object[[xvar]])) < 10)
+  if (is.factor(tmp[[xvar]]) || length(unique(tmp[[xvar]])) < 10)
     p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
   else
     p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
@@ -644,7 +625,8 @@ store_glm <- function(object,
                       type = "residuals",
                       name = paste0(type, "_glm")) {
 
-  if (!is.null(object$data_filter) && object$data_filter != "")
+  # if (!is.null(object$data_filter) && object$data_filter != "")
+  if (!is_empty(object$data_filter))
     return(message("Please deactivate data filters before trying to store predictions or residuals"))
 
   ## fix empty name input

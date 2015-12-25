@@ -231,6 +231,7 @@ summary.pivotr <- function(object,
 make_dt <- function(pvt,
                     format = "none",
                     perc = FALSE,
+                    dec = 3,
                     search = "",
                     searchCols = NULL,
                     order = NULL) {
@@ -298,7 +299,10 @@ make_dt <- function(pvt,
     }
   }
 
-  dt_tab <- tab %>%
+  # print(tab)
+  # print(getclass(tab))
+  # dt_tab <- tab %>%
+  dt_tab <- tab %>% dfround(dec) %>%
   DT::datatable(container = sketch, selection = "none",
     rownames = FALSE,
     # filter = list(position = "top"),
@@ -337,7 +341,7 @@ make_dt <- function(pvt,
   }
 
   ## show percentage
-  if (perc) dt_tab %<>% DT::formatPercentage(cn, 2)
+  if (perc) dt_tab %<>% DT::formatPercentage(cn, dec-2)
 
   dt_tab
 

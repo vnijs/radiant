@@ -217,8 +217,8 @@ output$ui_glm_reg <- renderUI({
           )
         ),
         ## only show if full data is used for prediction
-        conditionalPanel("input.glm_predict == 'data' &
-                          input.glm_pred_data == input.dataset",
+        conditionalPanel("input.glm_predict == 'data'",
+                          # input.glm_pred_data == input.dataset",
           tags$table(
             tags$td(textInput("glm_store_pred_name", "Store predictions:", "predict_glm")),
             tags$td(actionButton("glm_store_pred", "Store"), style="padding-top:30px;")
@@ -384,9 +384,6 @@ glm_available <- reactive({
     {do.call(plot, c(list(x = .glm_reg()), .))}
 })
 
-
-    # store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)
-
 observeEvent(input$glm_reg_report, {
   isolate({
     ## find a way to have the predict call **not** to use 'result'
@@ -401,11 +398,12 @@ observeEvent(input$glm_reg_report, {
       figs <- TRUE
     }
     xcmd <- ""
-    if (!is.null(r_data$glm_pred)) {
+    if (!is.null(r_data$glm_pred) && !is_empty(input$glm_predict, "none")) {
       inp_out[[2 + figs]] <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
       outputs <- c(outputs,"result <- predict")
+      dataset <- if (input$glm_predict == "data") input$glm_pred_data else input$dataset
       xcmd <-
-        paste0("# store_glm(result, data = '", input$dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
+        paste0("# store_glm(result, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
         paste0("# write.csv(result, file = '~/glm_predictions.csv', row.names = FALSE)")
       if (!is_empty(input$glm_xvar)) {
         inp_out[[3 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
@@ -439,9 +437,11 @@ observeEvent(input$glm_store_pred, {
   isolate({
     pred <- r_data$glm_pred
     if (is.null(pred)) return()
-    if (nrow(pred) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
+    # if (nrow(pred) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
+    if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
       return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)
+    store_glm(pred, data = input$glm_pred_data, type = "prediction", name = input$glm_store_pred_name)
+    # store_glm(pred, data = input$dataset, type = "prediction", name = input$glm_store_pred_name)
   })
 })
 
