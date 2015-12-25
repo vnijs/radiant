@@ -332,8 +332,11 @@ plot_downloader <- function(plot_name, width = plot_width(),
         # if (fext(file) == "pdf") pdf(file=file, width = psize(width), height = psize(height))
 
         ## needed to get the image quality at the same level as shiny
-        pr <- session$clientData$pixelratio
-        if (is.null(pr) || pr < 1) pr <- 1
+        # pr <- session$clientData$pixelratio
+        # if (is.null(pr) || pr < 1) pr <- 1
+
+        ## download graphs in higher resolution than shown in GUI (504 dpi)
+        pr <- 7
         png(file=file, width = width*pr, height = height*pr, res=72*pr)
           print(get(paste0(pre, plot_name))())
         dev.off()
