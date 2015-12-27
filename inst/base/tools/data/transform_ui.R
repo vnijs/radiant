@@ -63,8 +63,8 @@ output$ui_tr_log <- renderUI({
 
 ext_options <- list("none" = "", "log" = "_log", "exp" = "_exp",
                     "square" = "_sq", "sqrt" = "_sqrt", "center" = "_ct",
-                    "standardize" = "_st", "inverse" = "_inv",
-                    "median_split" = "_mds", "decile_split" = "_ds")
+                    "standardize" = "_st", "inverse" = "_inv")
+                    # "median_split" = "_mds", "decile_split" = "_ds")
 
 output$ui_tr_ext <- renderUI({
   trfun <- input$tr_transfunction
@@ -83,6 +83,17 @@ output$ui_tr_rcname <- renderUI({
   if (is_empty(input$tr_vars)) return()
   rcname <- paste0(input$tr_vars, "_rc")
   returnTextInput("tr_rcname", "Recoded variable name:", rcname)
+})
+
+output$ui_tr_bin_order <- renderUI({
+  vars <- varnames()
+  selectInput("tr_bin_order", "Order by:", c("None" = "none", vars),
+              selected = "none", width = "120px")
+})
+
+output$ui_tr_ext_bin <- renderUI({
+  if (is_empty(input$tr_vars)) return()
+  returnTextInput("tr_ext_bin", "Variable name extension:", "_dec")
 })
 
 output$ui_tr_roname <- renderUI({
@@ -113,8 +124,8 @@ output$ui_tr_dataset <- renderUI({
 
 trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp",
                       "Square" = "square", "Square-root" = "sqrt",
-                      "Center" = "center", "Standardize" = "standardize", "Inverse" = "inverse",
-                      "Median split" = "median_split", "Deciles" = "decile_split")
+                      "Center" = "center", "Standardize" = "standardize", "Inverse" = "inverse")
+                      # "Median split" = "median_split", "Deciles" = "decile_split")
 
 type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As numeric" = "as_numeric", "As integer" = "as_integer",
@@ -130,6 +141,7 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
 
 trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Create" = "create", "Recode" = "recode",
+                    "Bin" = "bin", "Add group statistic" = "groupstat",
                     "Rename" = "rename", "Replace" = "replace",
                     "Clipboard" = "clip", "Normalize" = "normalize",
                     "Reorder/remove levels" = "reorg_levs",
@@ -156,6 +168,15 @@ output$ui_Transform <- renderUI({
     ),
     conditionalPanel(condition = "input.tr_change_type == 'create'",
 	    returnTextAreaInput("tr_create", "Create (e.g., x = y - z):", "")
+    ),
+    conditionalPanel(condition = "input.tr_change_type == 'bin'",
+      # tags$table(
+        # tags$td(numericInput("tr_bin_n", label = "Nr bins:", min = 2, value = 10, width = "100px")),
+        # tags$td(uiOutput("ui_tr_bin_order"), style = "padding-top: 15px;")
+        # tags$td(checkboxInput("tr_bin_rev", "Reverse:", value = FALSE))
+      # )
+      numericInput("tr_bin_n", label = "Nr bins:", min = 2, value = 10),
+      uiOutput("ui_tr_ext_bin")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'training'",
       tags$table(
@@ -253,18 +274,72 @@ output$ui_Transform <- renderUI({
 }
 
 .create <- function(dataset, cmd,
+                    byvar = "",
+                    store_dat = "",
+                    store = TRUE) {
+
+
+                       # byvar = ""
+  ## test section
+  # cmd <- "x = mean(mpg); y = mean(cyl)"
+  # cmd <- "x = mpg == mpg"
+  # byvar <- "cyl"
+  # dataset <- mtcars
+
+  mtcars %>% group_by_(.dots = c("mpg","cyl")) %>% summarize(new = mean(mpg))
+  mtcars %>% group_by_(.dots = "mpg") %>% summarize(new = mean(mpg))
+
+
+  ####
+  #### COULD YOU USE THIS TO SPEED UP SIMULATER?
+  ####
+
+  if (!store || !is.character(dataset)) {
+    if (gsub("\\s","",cmd) == "") return(dataset)
+
+    cmd <- cmd %>% gsub("\"","\'",.) %>% gsub(" ","",.)
+    vars <-
+      strsplit(cmd, ";")[[1]] %>% strsplit(., "=") %>%
+      sapply("[", 1) %>% gsub(" ","",.)
+    dots <- strsplit(cmd, ";")[[1]] %>% gsub(" ","",.)
+    for (i in seq_along(dots))
+      dots[[i]] <- sub(paste0(vars[[i]],"="),"",dots[[i]])
+
+    if (is_empty(byvar)) {
+      ## using within and do.call because it provides better err messages
+      nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
+      # nvar <- try(mutate_(dataset, .dots = setNames(dots, vars)), silent = TRUE)
+    } else {
+      nvar <- try(group_by_(dataset, .dots = byvar) %>% mutate_(.dots = setNames(dots, vars)), silent = TRUE)
+    }
+    if (is(nvar, 'try-error')) {
+      paste0(" **\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
+    } else {
+      select_(nvar, .dots = vars) %>% ungroup
+    }
+  } else {
+    if (store_dat == "") store_dat <- dataset
+    if (is_empty(byvar))
+      paste0("## create new variable(s)\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", gsub(";",",",cmd), ")\n")
+    else
+      paste0("## create new variable(s)\nr_data[[\"",store_dat,"\"]] <- group_by(r_data[[\"",dataset,"\"]], ", paste0(byvar, collapse = ", "), ") %>% mutate(", gsub(";",",",cmd), ") %>% ungroup\n")
+  }
+}
+
+.create_old <- function(dataset, cmd,
+                    byvar = "",
                     store_dat = "",
                     store = TRUE) {
 
   cmd <- cmd %>% gsub("\"","\'",.)
-
   if (!store || !is.character(dataset)) {
     if (gsub("\\s","",cmd) == "") return(dataset)
     nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
     if (is(nvar, 'try-error')) {
       paste0(" **\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
     } else {
-      nvars <- strsplit(cmd, ";")[[1]] %>% strsplit(., "=") %>% sapply("[", 1)
+      # nvars <- strsplit(cmd, ";")[[1]] %>% strsplit(., "=") %>% sapply("[", 1)
+      nvars <- strsplit(cmd, ";")[[1]] %>% strsplit(., "=") %>% sapply("[", 1) %>% gsub(" ","",.)
       select_(nvar, .dots = nvars)
     }
   } else {
@@ -346,6 +421,69 @@ output$ui_Transform <- renderUI({
   } else {
     if (store_dat == "") store_dat <- dataset
     paste0("## normalize variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(normalize(.,",nzvar,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+  }
+}
+
+.bin <- function(dataset,
+                 vars = "",
+                 bins = 10,
+                 ext = "_dec",
+                 store_dat = "",
+                 store = TRUE) {
+
+                 # bin_order = "none",
+
+  if (!store && !is.character(dataset)) {
+    if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
+    # if (length(bin_order) == 0) return("Please specify the (integer) number of bins to use")
+
+    # dataset <- mtcars
+    # vars <- "mpg"
+    # bins <- 10
+    # ext <- "_dec"
+    # bin_order <- "vs"
+    # dataset <- mtcars
+    # dataset %>% group_by_(vars) %>% summarize_each(funs(ifelse(is.factor(.), sum(. == levels(.)[1]), mean(.))))
+    # cnts[10,"vs"] <- 10
+    # cnts <- dat %>% group_by_(paste0(vars,ext)) %>% summarize_each(funs(n()))
+    # x <- select(dat, mpg_dec)
+    # x[[10]] <- 10
+    # y <- select_(dataset, bin_order)
+
+    # check_order <- function(x, y) {
+    #   cnts <-
+    #     data.frame(x = x, y = y) %>%
+    #     group_by_("x") %>%
+    #     summarize_each(funs(ifelse(is.factor(.), sum(. == levels(.)[1]), mean(.))))
+
+    #   if (head(cnts[["y"]],1) < tail(cnts[["y"]],1)) {
+    #     as.integer(max(x) + 1 - x)
+    #   } else {
+    #     x
+    #   }
+    # }
+
+    # dat <-
+      select_(dataset, .dots = vars) %>%
+      mutate_each(funs(ntile(.,bins))) %>%
+      set_colnames(paste0(vars, ext))
+
+    # if (bin_order != "none") {
+    #   y <- dataset[[bin_order]]
+    #   dat <- dat %>% mutate_each(funs(check_order(.,y)))
+    # }
+
+    # dat
+
+  } else {
+    if (store_dat == "") store_dat <- dataset
+    paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(ntile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+
+    # if (bin_order != "none") {
+      # paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(ntile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    # } else {
+      # paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(ntile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    # }
   }
 }
 
@@ -443,7 +581,7 @@ output$ui_Transform <- renderUI({
       dat <- distinct_(dataset, .dots = vars)
 
     if (nrow(dat) == nrow(dataset))
-      paste0("No duplicates found (n = ", nrow(dat),")")
+      paste0("No duplicates found (n_distinct = ", nrow(dat),")")
     else
       dat
   } else {
@@ -475,7 +613,8 @@ output$ui_Transform <- renderUI({
     }
 
     if (nrow(dat) == 0)
-      "No duplicates found"
+      # "No duplicates found"
+      paste0("No duplicates found (n_distinct = ", nrow(dataset),")")
     else
       dat
   } else {
@@ -529,6 +668,8 @@ transform_main <- reactive({
       return("Select one or more variables to replace")
     } else if (input$tr_change_type == 'recode') {
       return("Select a variable to recode")
+    } else if (input$tr_change_type == "bin") {
+      return("Select one or more variables to bin")
     } else if (input$tr_change_type == 'reorg_levs') {
       return("Select a variable of type factor to change the ordering and/or number of levels")
     } else if (input$tr_change_type == 'normalize') {
@@ -572,9 +713,11 @@ transform_main <- reactive({
     if (input$tr_create == "") {
       return("Specify an equation to create a new variable and press 'return'. **\n** See the help file for examples")
     } else {
-      return(.create(dat, input$tr_create, store = FALSE))
+      return(.create(dat, input$tr_create, byvar = inp_vars("tr_vars"), store = FALSE))
     }
   }
+
+
 
   if (input$tr_change_type == 'clip') {
     if (input$tr_paste == "") {
@@ -601,9 +744,14 @@ transform_main <- reactive({
   if (!is_empty(input$tr_vars)) {
     if (not_available(input$tr_vars)) return()
 
-    ## remove missing variables
+    ## remove missing values
     if (input$tr_change_type == "remove_na")
       return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
+
+    ## bin variables
+    if (input$tr_change_type == "bin")
+      return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, ext = input$tr_ext_bin, store = FALSE))
+             # bin_order = input$tr_bin_order, store = FALSE))
 
     ## remove duplicates
     if (input$tr_change_type == "remove_dup")
@@ -781,6 +929,10 @@ observeEvent(input$tr_store, {
     } else if (input$tr_change_type == 'normalize') {
       cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, ext = input$tr_ext_nz, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
+    } else if (input$tr_change_type == 'bin') {
+      # cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, ext = input$tr_ext_bin, bin_order = "", input$tr_dataset)
+      cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, ext = input$tr_ext_bin, input$tr_dataset)
+      r_data[[dataset]][,colnames(dat)] <- dat
     } else if (input$tr_change_type == 'reorg_levs') {
       cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
@@ -791,7 +943,7 @@ observeEvent(input$tr_store, {
       cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, input$tr_dataset)
       r_data[[dataset]] %<>% rename_(.dots = setNames(input$tr_vars, colnames(dat)))
     } else if (input$tr_change_type == 'create') {
-      cmd <- .create(input$dataset, input$tr_create, input$tr_dataset)
+      cmd <- .create(input$dataset, cmd = input$tr_create, byvar = input$tr_vars, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
 		} else if (input$tr_change_type == 'replace') {
       cmd <- .replace(input$dataset, input$tr_vars, input$tr_replace, input$tr_dataset)

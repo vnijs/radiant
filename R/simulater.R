@@ -72,7 +72,14 @@ simulater <- function(const = "",
   ## remove any non-numbers from seed, including spaces
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
-  if (is.null(dat)) dat <- list()
+  if (is.null(dat)) {
+    dat <- list()
+  }
+  # else {
+  #   dat <- as.list(dat)
+  # }
+  # dat <- mtcars
+  # as.list(dat)
 
   # dat <- list(a = 1:10, b = 8)
   # do.call(with, list(dat, parse(text = "a * b")))
@@ -288,21 +295,32 @@ simulater <- function(const = "",
     }
   }
 
+
+  # ind <- runif(100,1,100)
+  # ind
+  # (1:100)[ind]
+
+  # with(price[region == "California"][sample(1:1000,100)]
+
+
   ## removing data to dat list
   # if (data != "" && data != "none") {
   if (!data %in% c("", "none")) {
-    for (i in colnames(sdat)) dat[[i]] <- NULL
+    # for (i in colnames(sdat)) dat[[i]] <- NULL
+    dat[colnames(sdat)] <- NULL
   }
 
+  # dat <- as.list(mtcars)
+  # dat[c("mpg","cyl")] <- list(NULL)
+  # dat[c("mpg","cyl")] <- NULL
+
+
+  ## convert list to a data.frame
   dat <- as.data.frame(dat) %>% na.omit
+
   # attr(dat, "sim_call") <- as.list(match.call())[-1] %>% {.["nr"] <- nr; .}
   attr(dat, "sim_call") <- as.list(match.call())[-1]
 
-  # ret <- list(dat = as.data.frame(dat) %>% na.omit, sim_call = as.list(match.call())[-1]) %>%
-  # ret <- list(dat = dat, sim_call = as.list(match.call())[-1]) %>%
-  #   set_class(c("simulater", class(.)))
-
-  # if (nrow(ret$dat) == 0) {
   if (nrow(dat) == 0) {
     mess <- c("error",paste0("The simulated data set has 0 rows"))
     return(mess %>% set_class(c("simulater", class(.))))
@@ -315,26 +333,18 @@ simulater <- function(const = "",
     } else if (exists("r_data")) {
       env <- pryr::where("r_data")
     } else {
-      # return(ret)
       return(dat %>% set_class(c("simulater", class(.))))
     }
 
     mess <- paste0("\n### Simulated data\n\nFormula:\n\n",
                    gsub("*","\\*",form, fixed = TRUE) %>% gsub(";","\n\n", .), "\n\nDate: ",
                    lubridate::now())
-    # env$r_data[[name]] <- ret$dat
     env$r_data[[name]] <- dat
     env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
     env$r_data[[paste0(name,"_descr")]] <- mess
-
-    # sim_list <- paste0(name,"_list")
-    # env$r_data[[sim_list]] <- ret
-
-    # return(sim_list %>% set_class(c("simulater", class(.))))
     return(name %>% set_class(c("simulater", class(.))))
   }
 
-  # ret
   dat %>% set_class(c("simulater", class(.)))
 }
 
@@ -512,7 +522,7 @@ repeater <- function(nr = 12,
   # sc[1:which(names(sc) == "form")] <- ""
   sc[1:(which(names(sc) == "seed")-1)] <- ""
   sc[names(sc_keep)] <- sc_keep
-  sc$dat <- dat
+  sc$dat <- as.list(dat)
 
   rep_sim <- function(rep_nr) {
     bind_cols(
@@ -568,7 +578,10 @@ repeater <- function(nr = 12,
     }
 
     mess <- paste0("\n### Repeated simulation data\n\nFormula:\n\n",
-                   gsub("*","\\*",sc$form, fixed = TRUE) %>% gsub(";","\n\n", .), "\n\nDate: ",
+                   gsub("*","\\*",sc$form, fixed = TRUE) %>%
+                   gsub("\n","\n\n",.) %>%
+                   gsub(";","\n\n", .),
+                   "\n\nDate: ",
                    lubridate::now())
 
     env$r_data[[name]] <- ret
@@ -903,6 +916,8 @@ sdw <- function(...) {
   # sc[1:which(names(sc) == "form")] <- ""
 
 # summary(result, sum_vars = "profit", byvar = "rep", form = "profit_high = profit > 75000000", name = "simdat_repeat")
+
+
 
 
 

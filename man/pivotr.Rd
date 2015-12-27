@@ -4,7 +4,7 @@
 \alias{pivotr}
 \title{Create a pivot table using dplyr}
 \usage{
-pivotr(dataset, cvars = "", nvar = "None", fun = "mean",
+pivotr(dataset, cvars = "", nvar = "None", fun = "mean_rm",
   normalize = "None", tabfilt = "", tabsort = "", data_filter = "",
   shiny = FALSE)
 }

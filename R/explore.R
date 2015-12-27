@@ -26,14 +26,21 @@
 explore <- function(dataset,
                     vars = "",
                     byvar = "",
-                    fun = c("mean_rm", "sd_rm"),
+                    fun = "mean_rm",
                     tabfilt = "",
                     tabsort = "",
                     data_filter = "",
                     shiny = FALSE) {
 
+  # vars <- "mpg"
+  # byvar <- "mpg"
+  # dataset <- "mtcars"
+  # data_filter <-  ""
+  # fun <- c("length","mean")
+  # library(radiant)
+
   tvars <- vars
-  if (!is_empty(byvar)) tvars %<>% c(byvar)
+  if (!is_empty(byvar)) tvars %<>% c(byvar) %>% unique
 
   dat <- getdata(dataset, tvars, filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
@@ -41,8 +48,18 @@ explore <- function(dataset,
   ## in case : was used
   vars <- colnames(head(dat) %>% select_(.dots = vars))
 
+  ## converting factors for interger (1st level)
+  ## see also R/visualize.R
+  dc <- getclass(dat)
+  isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars,byvar)
+  if (sum(isFctNum)) {
+    dat[,isFctNum] <- select(dat, which(isFctNum)) %>% mutate_each(funs(as.integer(. == levels(.)[1])))
+    dc[isFctNum] <- "integer"
+  }
+
   ## summaries only for numeric variables
-  isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
+  # isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
+  isNum <- dc %>% {which("numeric" == . | "integer" == .)}
 
   ## avoid using .._rm as function name
   pfun <- make_funs(fun)
@@ -55,16 +72,36 @@ explore <- function(dataset,
   } else {
 
     ## needed to deal with empty/missing values
-    for (bv in byvar) {
-      if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
+    # for (bv in byvar) {
+    #   if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
 
-      levs <- levels(dat[[bv]])
+    #   levs <- levels(dat[[bv]])
+    #   if ("" %in% levs) {
+    #     levs[levs == ""] <- "[EMPTY]"
+    #     dat[[bv]] <- factor(dat[[bv]], levels = levs)
+    #     dat[[bv]][is.na(dat[[bv]])] <- "[EMPTY]"
+    #   }
+    # }
+
+    # if (identical(vars, byvar)) {
+    #   dat <- bind_cols(dat,dat) %>% set_colnames(c("byvar",vars))
+    #   byvar <- "byvar"
+    # }
+
+    ## needed to deal with empty/missing values
+    ## function and mutate_each should replace previous block
+    empty_level <- function(x) {
+      if (!is.factor(x)) x %<>% as.factor
+      levs <- levels(x)
       if ("" %in% levs) {
         levs[levs == ""] <- "[EMPTY]"
-        dat[[bv]] <- factor(dat[[bv]], levels = levs)
-        dat[[bv]][is.na(dat[[bv]])] <- "[EMPTY]"
+        x <- factor(x, levels = levs)
+        x[is.na(x)] <- "[EMPTY]"
       }
+      x
     }
+
+    dat[,byvar] <- select_(dat, .dots = byvar) %>% mutate_each(funs(empty_level(.)))
 
     ## avoiding issues with n_missing and n_distinct in dplyr
     ## have to reverse this later
@@ -86,12 +123,29 @@ explore <- function(dataset,
 
     ## for median issue in dplyr < .5
     ## https://github.com/hadley/dplyr/issues/893
+    # getclass(dat)
+
     tab <-
       dat %>% group_by_(.dots = byvar) %>%
       summarise_each(pfun)
 
+    # library(dplyr)
+    # mtcars %>% select(mpg) %>% group_by(mpg) %>% summarize(nr = n(), perc = n()/nrow(.))
+    # dat %>% select(mpg) %>% group_by(mpg) %>% summarize(nr = n(), perc = n()/nrow(.))
+    # dat %>% group_by(mpg) %>% summarize(n())
+    # dat %>% bind_cols(dat) %>% group_by(mpg) %>%
+
+    # dd <- bind_cols(dat, dat)
+    # colnames(dd) <- c(".byvar","mpg")
+
+    #   dd %>% group_by_(.dots = byvar) %>%
+    #   summarise_each(pfun)
+    #   warnings()
+
     ## avoiding issues with n_missing and n_distinct
     names(pfun) %<>% sub("n.","n_",.)
+    # length(fun)
+    # length(vars)
 
     if (length(vars) > 1 && length(fun) > 1) {
       ## useful answer and comments: http://stackoverflow.com/a/27880388/1974918
@@ -111,12 +165,11 @@ explore <- function(dataset,
     }
   }
 
-  ## filtering the table if desired
-  if (tabfilt != "") {
+  ## filtering the table if desired from R > Report
+  if (tabfilt != "")
     tab <- filterdata(tab, tabfilt)
-  }
 
-  ## sorting the table if desired
+  ## sorting the table if desired from R > Report
   if (tabsort != "") {
     ## only one variable for now
     tabsort <- tabsort[1]
@@ -143,6 +196,7 @@ explore <- function(dataset,
 #'
 #' @param object Return value from \code{\link{explore}}
 #' @param top The variable (type) to display at the top of the table
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -156,7 +210,7 @@ explore <- function(dataset,
 #' @seealso \code{\link{explore}} to generate summaries
 #'
 #' @export
-summary.explore <- function(object, top = "fun", ...) {
+summary.explore <- function(object, top = "fun", dec = 3, ...) {
 
   cat("Data      :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
@@ -168,11 +222,11 @@ summary.explore <- function(object, top = "fun", ...) {
   cat("\n")
 
   tab <- object %>% flip(top) %>% as.data.frame
-  cn_all <- colnames(tab)
-  cn_num <- cn_all[sapply(tab, is.numeric)]
-  tab[,cn_num] %<>% round(3)
+  # cn_all <- colnames(tab)
+  # cn_num <- cn_all[sapply(tab, is.numeric)]
+  # tab[,cn_num] %<>% round(dec)
 
-  print(tab, row.names = FALSE)
+  print(dfprint(tab, dec), row.names = FALSE)
 
   invisible()
 }

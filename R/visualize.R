@@ -28,7 +28,8 @@
 #' visualize("diamonds", "carat", "price", type = "scatter", check = "loess")
 #' visualize("diamonds", "price:x", type = "hist")
 #' visualize("diamonds", "carat:x", yvar = "price", type = "scatter")
-#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"), type = "bar", fun = "median")
+#' visualize(dataset = "diamonds", yvar = "price", xvar = c("cut","clarity"), type = "bar",
+#'   fun = "median")
 #' visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
 #'   ggtitle("A scatterplot") + xlab("price in $")
 #' visualize(dataset = "diamonds", xvar = "price:carat", custom = TRUE) %>%
@@ -129,6 +130,15 @@ visualize <- function(dataset, xvar,
     }
     ## in case something was changed, if not, this won't run
     dc <- getclass(dat)
+  }
+
+  ## 1 of first level of factor, else 0
+  if (type == "bar") {
+    isFctY <- "factor" == dc & names(dc) %in% yvar
+    if (sum(isFctY)) {
+      dat[,isFctY] <- select(dat, which(isFctY)) %>% mutate_each(funs(as.integer(. == levels(.)[1])))
+      dc[isFctY] <- "integer"
+    }
   }
 
   if (xor("log_x" %in% axes, "log_y" %in% axes)) {
@@ -235,6 +245,8 @@ visualize <- function(dataset, xvar,
     for (i in xvar) {
       # if ("log_x" %in% axes && "factor" %in% class(dat[[i]])) axes <- sub("log_x","",axes)
       if ("log_x" %in% axes && dc[i] == "factor") axes <- sub("log_x","",axes)
+      # if ("log_y" %in% axes && dc[i] == "factor") axes <- sub("log_y","",axes)
+
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + gs
 
@@ -397,7 +409,6 @@ visualize <- function(dataset, xvar,
 
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
-
 
  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list), 2)))) ) %>%
    { if (shiny) . else print(.) }

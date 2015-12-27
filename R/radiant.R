@@ -1010,6 +1010,28 @@ dfprint <- function(tbl, dec = 3) {
 }
          # if (is.integer(.)) sprintf("%.0f",.))
 
+#' Print a number with a specified number of decimal places, thousand sep, and a symbol
+#'
+#' @param x Number or vector
+#' @param dec Number of decimal places
+#' @param sym Symbol to use
+#' @param perc Display number as a percentage
+#'
+#' @return Character (vector) in the desired format
+#'
+#' @examples
+#' nrprint(2000, "$")
+#' nrprint(2000, dec = 4)
+#' nrprint(.05, perc = TRUE)
+#'
+#' @export
+nrprint <- function(x, sym = "", dec = 2, perc = FALSE) {
+  if (perc)
+    paste0(sym, formatC(100 * x[[1]], digits = dec, big.mark = ",", format = "f"), "%")
+  else
+    paste0(sym, formatC(x[[1]], digits = dec, big.mark = ",", format = "f"))
+}
+
 #' Round double in a data.frame to a specified number of decimal places
 #'
 #' @param tbl Data.frame

@@ -42,9 +42,12 @@ output$ui_viz_yvar <- renderUI({
   vars <- varying_vars()
   if (not_available(vars)) return()
   vars <- vars["date" != .getclass()[vars]]
-  if (input$viz_type %in% c("line","bar","scatter")) {
-    vars <- vars["factor" != .getclass()[vars]]
+  if (input$viz_type %in% c("line","bar","scatter","box")) {
     vars <- vars["character" != .getclass()[vars]]
+  }
+  if (input$viz_type %in% c("line","scatter","box")) {
+    ## allow factors in yvars for bar plots
+    vars <- vars["factor" != .getclass()[vars]]
   }
 
   isolate({

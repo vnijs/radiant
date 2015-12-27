@@ -14,6 +14,8 @@ make_dt(pvt, format = "none", perc = FALSE, dec = 3, search = "",
 
 \item{perc}{Display numbers as percentages (TRUE or FALSE)}
 
+\item{dec}{Number of decimals to show}
+
 \item{search}{Global search. Used to save and restore state}
 
 \item{searchCols}{Column search and filter. Used to save and restore state}

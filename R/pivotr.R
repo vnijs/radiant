@@ -21,7 +21,7 @@
 pivotr <- function(dataset,
                    cvars = "",
                    nvar = "None",
-                   fun = "mean",
+                   fun = "mean_rm",
                    normalize = "None",
                    tabfilt = "",
                    tabsort = "",
@@ -51,6 +51,19 @@ pivotr <- function(dataset,
       dat[[cv]][is.na(dat[[cv]])] <- "[EMPTY]"
     }
   }
+
+  # empty_level <- function(x) {
+  #   if (!is.factor(x)) x %<>% as.factor
+  #   levs <- levels(x)
+  #   if ("" %in% levs) {
+  #     levs[levs == ""] <- "[EMPTY]"
+  #     x <- factor(x, levels = levs)
+  #     x[is.na(x)] <- "[EMPTY]"
+  #   }
+  #   x
+  # }
+
+  # dat[,cv] <- select_(dat, .dots = cv) %>% mutate_each(funs(empty_level(.)))
 
   sel <- function(x, nvar) if (nvar == "n") x else select_(x, .dots = nvar)
   sfun <- function(x, nvar, cvars = "", fun = fun) {
@@ -119,12 +132,12 @@ pivotr <- function(dataset,
 
   isNum <- -which(names(tab) %in% cvars)
   if (normalize == "total") {
-    tab[,isNum] %<>% {. / total[[1]]} %>% round(3)
+    tab[,isNum] %<>% {. / total[[1]]} #%>% round(dec)
   } else if (normalize == "row") {
     if (!is.null(tab[["Total"]]))
-      tab[,isNum] %<>% {. / select(., Total)[[1]]} %>% round(3)
-  } else if (normalize == "column") {
-    tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")]) %>% round(3)
+      tab[,isNum] %<>% {. / select(., Total)[[1]]} #%>% round(dec)
+  } else if (length(cvars) > 1 && normalize == "column") {
+    tab[,isNum] %<>% apply(2, function(.) . / .[which(tab[,1] == "Total")]) # %>% round(dec)
     ## mutate_each has issues for spaces in variable names
     # tab[,isNum] %<>% mutate_each_(funs(h = . / .[which(tab[,1] == "Total")]), vars = colnames(.)) %>% round(3)
   }
@@ -160,6 +173,7 @@ pivotr <- function(dataset,
 #' @details See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{pivotr}}
+#' @param dec Number of decimals to show
 #' @param chi2 If TRUE calculate the chi-square statistic for the (pivot) table
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
@@ -173,6 +187,7 @@ pivotr <- function(dataset,
 #'
 #' @export
 summary.pivotr <- function(object,
+                           dec = 3,
                            chi2 = FALSE,
                            shiny = FALSE,
                            ...) {
@@ -189,7 +204,7 @@ summary.pivotr <- function(object,
       cat("Function   :", object$fun, "\n")
     }
     cat("\n")
-    print(object$tab, row.names = FALSE)
+    print(dfprint(object$tab, dec), row.names = FALSE)
     cat("\n")
   }
 
@@ -214,6 +229,7 @@ summary.pivotr <- function(object,
 #' @param pvt Return value from \code{\link{pivotr}}
 #' @param format Show Color bar ("color_bar"),  Heat map ("heat"), or None ("none")
 #' @param perc Display numbers as percentages (TRUE or FALSE)
+#' @param dec Number of decimals to show
 #' @param search Global search. Used to save and restore state
 #' @param searchCols Column search and filter. Used to save and restore state
 #' @param order Column sorting. Used to save and restore state
@@ -251,9 +267,9 @@ make_dt <- function(pvt,
 
   tot <- tail(tab,1)[-(1:length(cvars))]
   if (perc)
-    tot <- sprintf("%.2f%%", tot*100)
+    tot <- sprintf(paste("%.",dec,"f%%"), tot*100)
   else
-    tot <- round(tot, 3)
+    tot <- round(tot, dec)
 
   if (length(cvars) == 1 && cvar == cvars) {
     sketch = shiny::withTags(table(
@@ -299,18 +315,13 @@ make_dt <- function(pvt,
     }
   }
 
-  # print(tab)
-  # print(getclass(tab))
-  # dt_tab <- tab %>%
   dt_tab <- tab %>% dfround(dec) %>%
-  DT::datatable(container = sketch, selection = "none",
-    rownames = FALSE,
-    # filter = list(position = "top"),
+  DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
     # filter = list(position = "top", clear = FALSE, plain = TRUE),
     style = ifelse (pvt$shiny, "bootstrap", "default"),
     options = list(
-      # search = list(regex = TRUE),
+      # language.thousands = ",",
       stateSave = TRUE,
       search = list(search = search, regex = TRUE),
       searchCols = searchCols,
@@ -341,7 +352,7 @@ make_dt <- function(pvt,
   }
 
   ## show percentage
-  if (perc) dt_tab %<>% DT::formatPercentage(cn, dec-2)
+  if (perc) dt_tab %<>% DT::formatPercentage(cn, dec)
 
   dt_tab
 
@@ -358,6 +369,7 @@ make_dt <- function(pvt,
 #' @param perc Use percentage on the y-axis
 #' @param flip Flip the axes in a plot (FALSE or TRUE)
 #' @param shiny Did the function call originate inside a shiny app
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -371,7 +383,13 @@ make_dt <- function(pvt,
 #' @importFrom scales percent
 #'
 #' @export
-plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = FALSE, ...) {
+plot.pivotr <- function(x,
+                        type = "dodge",
+                        perc = FALSE,
+                        flip = FALSE,
+                        shiny = FALSE,
+                        custom = FALSE,
+                        ...) {
 
   object <- x; rm(x)
   cvars <- object$cvars
@@ -408,7 +426,15 @@ plot.pivotr <- function(x, type = "dodge", perc = FALSE, flip = FALSE, shiny = F
 
   if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
   if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = percent)
-  if (nvar != "n") plot_list[[1]] <- plot_list[[1]] + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
+  if (nvar == "n") {
+    if (!is_empty(object$normalize, "None"))
+      plot_list[[1]] <- plot_list[[1]] + ylab(ifelse (perc, "Percentage", "Proportion"))
+  } else {
+    plot_list[[1]] <- plot_list[[1]] + ylab(paste0(nvar, " (",names(make_funs(object$fun)),")"))
+  }
+
+ if (custom)
+   if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
   sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
     { if (shiny) . else print(.) }

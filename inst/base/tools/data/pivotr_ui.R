@@ -79,6 +79,8 @@ output$ui_Pivotr <- renderUI({
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
       uiOutput("ui_pvt_normalize"),
       uiOutput("ui_pvt_format"),
+      numericInput("pvt_dec", label = "Decimals:",
+                   value = state_init("pvt_dec", 3), min = 0),
       with(tags, table(
         tr(
           td(checkboxInput("pvt_tab", "Show table  ", value = state_init("pvt_tab", TRUE))),
@@ -126,6 +128,17 @@ pvt_inputs <- reactive({
     pvt_args[[i]] <- input[[paste0("pvt_",i)]]
 
   pvt_args
+})
+
+pvt_sum_args <- as.list(if (exists("summary.pivotr")) formals(summary.pivotr)
+                        else formals(radiant:::summary.pivotr))
+
+## list of function inputs selected by user
+pvt_sum_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(pvt_sum_args))
+    pvt_sum_args[[i]] <- input[[paste0("pvt_",i)]]
+  pvt_sum_args
 })
 
 pvt_plot_args <- as.list(if (exists("plot.pivotr")) formals(plot.pivotr)
@@ -188,7 +201,7 @@ output$pivotr <- DT::renderDataTable({
 
   withProgress(message = 'Generating pivot table', value = 0,
     make_dt(pvt, format = input$pvt_format, perc = input$pvt_perc,
-            search = search, searchCols = searchCols, order = order)
+            dec = input$pvt_dec, search = search, searchCols = searchCols, order = order)
   )
 
 })
@@ -279,11 +292,9 @@ output$plot_pivot <- renderPlot({
 observeEvent(input$pivotr_report, {
   isolate({
 
-    # print("====")
-    # print(input$pivotr_search_columns)
-    # print(sc %>% {set_names(.,colnames(pvt$tab))})
+    inp_out <- list("","")
+    inp_out[[1]] <- clean_args(pvt_sum_inputs(), pvt_sum_args[-1])
 
-    inp_out <- list(list(chi2 = input$pvt_chi2),"")
     if (input$pvt_plot == TRUE) {
       inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
       outputs <- c("summary","plot")

@@ -17,12 +17,23 @@ expl_inputs <- reactive({
   expl_args
 })
 
+expl_sum_args <- as.list(if (exists("summary.explore")) formals(summary.explore)
+                         else formals(radiant:::summary.explore))
+
+## list of function inputs selected by user
+expl_sum_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(expl_sum_args))
+    expl_sum_args[[i]] <- input[[paste0("expl_",i)]]
+  expl_sum_args
+})
+
 ## UI-elements for explore
 output$ui_expl_vars <- renderUI({
-  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  # isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  isNum <- .getclass() %in% c("integer","numeric","factor")
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
-
 
   selectInput("expl_vars", label = "Select variable(s):", choices = vars,
     selected = state_multiple("expl_vars",vars), multiple = TRUE,
@@ -86,6 +97,8 @@ output$ui_Explore <- renderUI({
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
       uiOutput("ui_expl_top"),
+      numericInput("expl_dec", label = "Decimals:",
+                   value = state_init("expl_dec", 3), min = 0),
       with(tags, table(
         tr(
           td(textInput("expl_dat", "Store filtered data as:", "explore_dat")),
@@ -156,8 +169,8 @@ output$explorer <- DT::renderDataTable({
   top <- ifelse (input$expl_top == "", "fun", input$expl_top)
 
   withProgress(message = 'Generating explore table', value = 0,
-    make_expl(expl, top = top, search = search,
-            searchCols = searchCols, order = order)
+    make_expl(expl, top = top, dec = input$expl_dec, search = search,
+              searchCols = searchCols, order = order)
   )
 })
 
@@ -214,9 +227,24 @@ observeEvent(input$explore_report, {
     ## add command to store data and/or download it
     # xcmd <-
     #     paste0("# store_reg(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+    #     paste0("# write.csv(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+
+    # if (input$expl_top != "fun")
+    #   inp_out <- list(list(top = input$expl_top))
+    # else
+    #   inp_out <- list("")
+
+    inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
+
+    # print(expl_args)
+    # print(sapply(expl_args, class))
+    # ll <- c(clean_args(expl_inputs(), expl_args))
+    # print(ll)
+    # print(sapply(ll, class))
+
     update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),
                   fun_name = "explore",
-                  inp_out = list(list(top = input$expl_top)),
+                  inp_out = inp_out,
                   outputs = c("summary"),
                   figs = FALSE)
   })

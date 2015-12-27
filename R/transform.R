@@ -33,6 +33,8 @@ decile_split <- function(x) {
   cut(x, df$breaks, rownames(df)[-1], include.lowest = TRUE)
 }
 
+# ntile(mtcars$vs, 10) %>% unique %>% length
+
 #' Calculate square of a variable
 #' @param x Input variable
 #' @return x^2
@@ -298,16 +300,25 @@ mutate_each <- function(tbl, funs, ..., ext = "") {
     if (is.null(vars)) vars <- colnames(tbl)
 
     new <- paste0(vars, ext)
-    # tbl[,new] <- tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
-    tbl[,new] <- tbl %>% mutate_each_(funs, vars = vars) %>% select_(.dots = vars) %>%
+    tbl[,new] <-
+      tbl %>% mutate_each_(funs, vars = vars) %>% select_(.dots = vars) %>%
       set_colnames(new)
-
     tbl
-
-    # tbl %>% select_(.dots = vars) %>% mutate_each_(funs, vars = vars) %>%
-    #   set_colnames(paste0(vars, ext)) %>% bind_cols(tbl, .)
   }
 }
+
+#' Wrapper for dplyr::ntile
+#'
+#' @details Wrapper for dplyr::ntile to ensure result is an integer
+#'
+#' @param x Numeric variable
+#' @param n number of bins to create
+#'
+#' @examples
+#' ntile(1:10,5)
+#'
+#' @export
+ntile <- function(x, n) as.integer(dplyr::ntile(x, n))
 
 #' Show all rows with duplicated values (not just the first or last)
 #'

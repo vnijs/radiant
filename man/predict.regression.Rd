@@ -5,7 +5,7 @@
 \title{Predict method for the regression function}
 \usage{
 \method{predict}{regression}(object, pred_vars = "", pred_data = "",
-  pred_cmd = "", pred_filt = "", conf_lev = 0.95, prn = TRUE, ...)
+  pred_cmd = "", conf_lev = 0.95, prn = TRUE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}

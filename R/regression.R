@@ -444,10 +444,11 @@ predict.regression <- function(object,
                                pred_vars = "",
                                pred_data = "",
                                pred_cmd = "",
-                               pred_filt = "",
                                conf_lev = 0.95,
                                prn = TRUE,
                                ...) {
+
+                               # pred_filt = "",
 
   if (is.character(object)) return(object)
 
@@ -505,7 +506,8 @@ predict.regression <- function(object,
     }
   } else {
     ## generate predictions for all observations in the dataset
-    pred <- getdata(pred_data, filt = pred_filt, na.rm = FALSE)
+    # pred <- getdata(pred_data, filt = pred_filt, na.rm = FALSE)
+    pred <- getdata(pred_data, na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -532,8 +534,8 @@ predict.regression <- function(object,
       cat("Data       :", object$dataset, "\n")
       if (object$data_filter %>% gsub("\\s","",.) != "")
         cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
-      if (pred_filt %>% gsub("\\s","",.) != "")
-        cat("Pred filter:", gsub("\\n","", pred_filt), "\n")
+      # if (pred_filt %>% gsub("\\s","",.) != "")
+      #   cat("Pred filter:", gsub("\\n","", pred_filt), "\n")
       cat("Response variable    :", object$dep_var, "\n")
       cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n\n")
 

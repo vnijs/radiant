@@ -4,12 +4,14 @@
 \alias{summary.explore}
 \title{Summary method for the explore function}
 \usage{
-\method{summary}{explore}(object, top = "fun", ...)
+\method{summary}{explore}(object, top = "fun", dec = 3, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{explore}}}
 
 \item{top}{The variable (type) to display at the top of the table}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods}
 }

@@ -16,6 +16,17 @@ cor_inputs <- reactive({
   cor_args
 })
 
+cor_sum_args <- as.list(if (exists("summary.correlation_")) formals(summary.correlation_)
+                        else formals(radiant:::summary.correlation_))
+
+## list of function inputs selected by user
+cor_sum_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(cor_sum_args))
+    cor_sum_args[[i]] <- input[[paste0("cor_",i)]]
+  cor_sum_args
+})
+
 output$ui_cor_vars <- renderUI({
 	isChar <- "character" == .getclass()
 	vars <- varnames()[!isChar]
@@ -94,7 +105,8 @@ cor_available <- reactive({
 
 .summary_correlation <- reactive({
   if (cor_available() != "available") return(cor_available())
-	summary(.correlation(), cutoff = input$cor_cutoff, covar = input$cor_covar)
+	# summary(.correlation(), cutoff = input$cor_cutoff, covar = input$cor_covar)
+  do.call(summary, c(list(object = .correlation()), cor_sum_inputs()))
 })
 
 .plot_correlation <- reactive({
@@ -104,7 +116,9 @@ cor_available <- reactive({
 
 observeEvent(input$correlation_report, {
   isolate({
-    inp_out <- list(cutoff = input$cor_cutoff, covar = input$cor_covar) %>% list(.,"")
+    # inp_out <- list(cutoff = input$cor_cutoff, covar = input$cor_covar) %>% list(.,"")
+    inp_out <- list("","")
+    inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
     update_report(inp_main = clean_args(cor_inputs(), cor_args),
                   fun_name = "correlation",
                   inp_out = inp_out,

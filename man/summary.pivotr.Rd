@@ -4,10 +4,13 @@
 \alias{summary.pivotr}
 \title{Summary method for pivotr}
 \usage{
-\method{summary}{pivotr}(object, chi2 = FALSE, shiny = FALSE, ...)
+\method{summary}{pivotr}(object, dec = 3, chi2 = FALSE, shiny = FALSE,
+  ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}
+
+\item{dec}{Number of decimals to show}
 
 \item{chi2}{If TRUE calculate the chi-square statistic for the (pivot) table}
 
