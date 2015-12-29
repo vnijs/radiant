@@ -59,28 +59,28 @@ glm_reg <- function(dataset, dep_var, indep_var,
     if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
-  formula <- paste(dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
+  form <- paste(dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
 
   if ("stepwise" %in% check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
     model <- glm(paste(dep_var, "~ 1") %>% as.formula,
                  family = binomial(link = link), data = dat) %>%
-             step(k = 2, scope = list(upper = formula), direction = 'both')
+             step(k = 2, scope = list(upper = form), direction = 'both')
   } else {
-    model <- glm(formula, family = binomial(link = link), data = dat)
+    model <- glm(form, family = binomial(link = link), data = dat)
   }
 
-  glm_coeff <- tidy(model)
-  glm_coeff$` ` <- sig_stars(glm_coeff$p.value) %>% format(justify = "left")
-  colnames(glm_coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
+  coeff <- tidy(model)
+  coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
+  colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
 
   isFct <- sapply(select(dat,-1), is.factor)
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
-      glm_coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
+      coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
     rm(i, isFct)
   }
-  glm_coeff$`  ` %<>% format(justify = "left")
+  coeff$`  ` %<>% format(justify = "left")
 
   ## dat not needed elsewhere
   rm(dat)
@@ -141,12 +141,12 @@ summary.glm_reg <- function(object,
     cat("**Standardized coefficients shown**\n")
   cat("\n")
 
-  glm_coeff <- object$glm_coeff
-  p.small <- glm_coeff$p.value < .001
-  # glm_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
-  glm_coeff[,2:5] %<>% dfprint(dec)
-  glm_coeff$p.value[p.small] <- "< .001"
-  print(glm_coeff, row.names=FALSE)
+  coeff <- object$coeff
+  p.small <- coeff$p.value < .001
+  # coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+  coeff[,2:5] %<>% dfprint(dec)
+  coeff$p.value[p.small] <- "< .001"
+  print(coeff, row.names=FALSE)
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
   glm_fit <- glance(object$model)
@@ -194,7 +194,7 @@ summary.glm_reg <- function(object,
         confint.default(object$model, level = conf_lev) %>%
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
-        cbind(select(object$glm_coeff,2),.)
+        cbind(select(object$coeff,2),.)
 
       if ("confint" %in% sum_check) {
         ci_tab %T>%
@@ -202,7 +202,7 @@ summary.glm_reg <- function(object,
         # mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
         dfprint(dec) %>%
         set_colnames(c("coefficient", ci_perc[1], ci_perc[2], "+/-")) %>%
-        set_rownames(object$glm_coeff$`  `) %>%
+        set_rownames(object$coeff$`  `) %>%
         print
         cat("\n")
       }
@@ -218,7 +218,7 @@ summary.glm_reg <- function(object,
           # mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
           dfprint(dec) %>%
           set_colnames(c("odds ratio", ci_perc[1], ci_perc[2])) %>%
-          set_rownames(object$glm_coeff$`  `[-1]) %>%
+          set_rownames(object$coeff$`  `[-1]) %>%
           print
         cat("\n")
       } else if (object$link == "probit") {
@@ -231,8 +231,8 @@ summary.glm_reg <- function(object,
     if ("stepwise" %in% object$check) {
       cat("Model comparisons are not conducted when Stepwise has been selected.\n")
     } else {
-      # sub_formula <- ". ~ 1"
-      sub_formula <- paste(object$dep_var, "~ 1")
+      # sub_form <- ". ~ 1"
+      sub_form <- paste(object$dep_var, "~ 1")
 
       vars <- object$indep_var
       if (object$int_var != "" && length(vars) > 1) {
@@ -242,10 +242,10 @@ summary.glm_reg <- function(object,
       }
 
       not_selected <- setdiff(vars, test_var)
-      if (length(not_selected) > 0) sub_formula <- paste(object$dep_var, "~", paste(not_selected, collapse = " + "))
+      if (length(not_selected) > 0) sub_form <- paste(object$dep_var, "~", paste(not_selected, collapse = " + "))
       ## update with glm_sub NOT working when called from radiant - strange
-      # glm_sub <- update(object$model, sub_formula, data = object$model$model)
-      glm_sub <- glm(sub_formula, family = binomial(link = object$link), data = object$model$model)
+      # glm_sub <- update(object$model, sub_form, data = object$model$model)
+      glm_sub <- glm(sub_form, family = binomial(link = object$link), data = object$model$model)
       glm_sub_fit <- glance(glm_sub)
       glm_sub <- anova(glm_sub, object$model, test='Chi')
 
@@ -323,8 +323,8 @@ plot.glm_reg <- function(x,
     plot_list[["coef"]] <- confint.default(object$model, level = conf_lev) %>%
           data.frame %>%
           set_colnames(c("Low","High")) %>%
-          cbind(select(object$glm_coeff,2),.) %>%
-          set_rownames(object$glm_coeff$`  `) %>%
+          cbind(select(object$coeff,2),.) %>%
+          set_rownames(object$coeff$`  `) %>%
           { if (!intercept) .[-1,] else . } %>%
           mutate(variable = rownames(.)) %>%
           ggplot() +

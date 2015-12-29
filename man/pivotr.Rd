@@ -17,7 +17,7 @@ pivotr(dataset, cvars = "", nvar = "None", fun = "mean_rm",
 
 \item{fun}{Function to apply to numerical variable}
 
-\item{normalize}{Normalize the table by "row" total,"colum" totals, or overall "total"}
+\item{normalize}{Normalize the table by "row" total,"column" totals, or overall "total"}
 
 \item{tabfilt}{Expression used to filter the table. This should be a string (e.g., "Total > 10000")}
 
@@ -37,5 +37,6 @@ Create a pivot-table. See \url{http://vnijs.github.io/radiant/base/pivotr.html} 
 result <- pivotr("diamonds", cvars = "cut")$tab
 result <- pivotr("diamonds", cvars = c("cut","clarity","color"))$tab
 result <- pivotr("diamonds", cvars = "cut:clarity", nvar = "price")$tab
+result <- pivotr("diamonds", cvars = "cut", normalize = "total")$tab
 }
 

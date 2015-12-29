@@ -4,7 +4,7 @@
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars Variables to include in the analysis
-#' @param type Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
+#' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
@@ -23,7 +23,7 @@
 #'
 #' @export
 correlation <- function(dataset, vars,
-                        type = "pearson",
+                        method = "pearson",
                         dec = 2,
                         data_filter = "") {
 
@@ -31,6 +31,8 @@ correlation <- function(dataset, vars,
 	## system.time but results (using diamonds and mtcars) are identical
 	dat <- getdata(dataset, vars, filt = data_filter) %>%
 		mutate_each(funs(as.numeric))
+
+		method
 
 	if (!is_string(dataset)) dataset <- "-----"
 
@@ -57,9 +59,9 @@ correlation <- function(dataset, vars,
 #'
 #' @export
 summary.correlation_ <- function(object,
-                                cutoff = 0,
-                                covar = FALSE,
-                                ...) {
+                                 cutoff = 0,
+                                 covar = FALSE,
+                                 ...) {
 
 	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
@@ -67,7 +69,7 @@ summary.correlation_ <- function(object,
 	# library(psych)
 	# cutoff <- 0
 
-	cmat <- sshhr( corr.test(object$dat, method = object$type) )
+	cmat <- sshhr( corr.test(object$dat, method = object$method) )
 	dec <- object$dec
 
 	cr <- format(round(cmat$r, dec))
@@ -83,6 +85,9 @@ summary.correlation_ <- function(object,
 
   cat("Correlation\n")
 	cat("Data     :", object$dataset, "\n")
+	cat("Method   :", object$method, "\n")
+	if (cutoff > 0)
+	  cat("Cutoff   :", cutoff, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
 	cat("Variables:", paste0(object$vars, collapse = ", "), "\n")

@@ -521,8 +521,12 @@ is_string <- function(x)
 iterms <- function(vars, nway, sep = ":") {
   if (!nway %in% c(2,3)) return(character(0))
   it <- c()
-  for (i in 2:nway)
+  for (i in 2:nway) {
     it %<>% {c(., combn(vars, i) %>% apply(2, paste, collapse = sep))}
+    ## lm doesn't evaluate a:a
+    # if (i == 2) it <- c(it, paste(vars, vars, sep = "*"))
+    # if (i == 3) it <- c(it, paste(vars, vars, vars, sep = "*"))
+  }
   it
 }
 
@@ -995,6 +999,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #'
 #' @param tbl Data.frame
 #' @param dec Number of decimal places
+#' @param perc Display numbers as percentages (TRUE or FALSE)
 #'
 #' @return Data.frame for printing
 #'
@@ -1002,13 +1007,20 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
 #'   dfprint(dec = 3)
 #' @export
-dfprint <- function(tbl, dec = 3) {
+dfprint <- function(tbl, dec = 3, perc = FALSE) {
+  if (perc) {
+    tbl %<>% mutate_each(
+      funs(if (is.numeric(.)) . * 100L else .)
+    )
+  }
+
+  frm <- if (perc) "f%%" else "f"
   tbl %>%
   mutate_each(
-    funs(if (is.double(.)) sprintf(paste0("%.", dec ,"f"), .) else .)
+    funs(if (is.double(.)) sprintf(paste0("%.", dec ,frm), .) else .)
   )
+
 }
-         # if (is.integer(.)) sprintf("%.0f",.))
 
 #' Print a number with a specified number of decimal places, thousand sep, and a symbol
 #'
@@ -1023,13 +1035,17 @@ dfprint <- function(tbl, dec = 3) {
 #' nrprint(2000, "$")
 #' nrprint(2000, dec = 4)
 #' nrprint(.05, perc = TRUE)
+#' nrprint(c(.1, .99), perc = TRUE)
+#' nrprint(data.frame(a = c(.1, .99)), perc = TRUE)
+#' nrprint(data.frame(a = 1000), sym = "$", dec = 0)
 #'
 #' @export
 nrprint <- function(x, sym = "", dec = 2, perc = FALSE) {
+  if ("data.frame" %in% class(x)) x <- x[[1]]
   if (perc)
-    paste0(sym, formatC(100 * x[[1]], digits = dec, big.mark = ",", format = "f"), "%")
+    paste0(sym, formatC(100 * x, digits = dec, big.mark = ",", format = "f"), "%")
   else
-    paste0(sym, formatC(x[[1]], digits = dec, big.mark = ",", format = "f"))
+    paste0(sym, formatC(x, digits = dec, big.mark = ",", format = "f"))
 }
 
 #' Round double in a data.frame to a specified number of decimal places

@@ -212,6 +212,7 @@ explore <- function(dataset,
 #' @export
 summary.explore <- function(object, top = "fun", dec = 3, ...) {
 
+  cat("Explore\n")
   cat("Data      :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
@@ -314,16 +315,13 @@ make_expl <- function(expl,
     }
   }
 
-  # dt_tab <- tab %>% {.[,cn_num] <- round(.[,cn_num], dec); .} %>%
   dt_tab <- tab %>% dfround(dec) %>%
     DT::datatable(container = sketch, selection = "none",
       rownames = FALSE,
-      # filter = list(position = "top"),
       # filter = if (nrow(.) > 100) "none" else list(position = "top"),
       filter = fbox,
       style = ifelse (expl$shiny, "bootstrap", "default"),
       options = list(
-        # search = list(regex = TRUE),
         stateSave = TRUE,
         search = list(search = search, regex = TRUE),
         searchCols = searchCols,

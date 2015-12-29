@@ -4,11 +4,13 @@
 \alias{summary.pivotr}
 \title{Summary method for pivotr}
 \usage{
-\method{summary}{pivotr}(object, dec = 3, chi2 = FALSE, shiny = FALSE,
-  ...)
+\method{summary}{pivotr}(object, perc = FALSE, dec = 3, chi2 = FALSE,
+  shiny = FALSE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{pivotr}}}
+
+\item{perc}{Display numbers as percentages (TRUE or FALSE)}
 
 \item{dec}{Number of decimals to show}
 
@@ -26,7 +28,8 @@ See \url{http://vnijs.github.io/radiant/base/pivotr.html} for an example in Radi
 }
 \examples{
 pivotr("diamonds", cvars = "cut") \%>\% summary
-pivotr("diamonds", cvars = "cut") \%>\% summary
+pivotr("diamonds", cvars = "cut", tabsort = "-n") \%>\% summary
+pivotr("diamonds", cvars = "cut", tabfilt = "n > 700") \%>\% summary
 pivotr("diamonds", cvars = "cut:clarity", nvar = "price") \%>\% summary
 }
 \seealso{

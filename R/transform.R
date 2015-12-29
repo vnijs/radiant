@@ -320,6 +320,73 @@ mutate_each <- function(tbl, funs, ..., ext = "") {
 #' @export
 ntile <- function(x, n) as.integer(dplyr::ntile(x, n))
 
+#' Create a quintile (or decile) index
+#'
+#' @details Same as stata
+#'
+#' @param x Numeric variable
+#' @param n number of bins to create
+#' @param rev Reverse the order of the xtiles
+#'
+#' @examples
+#' xtile(1:10,5)
+#' xtile(1:10,5, rev = TRUE)
+#'
+#' @export
+xtile <- function(x, n, rev = FALSE) {
+  stopifnot(is.numeric(n), is.numeric(x), n > 1, length(x) > n)
+  df <-
+    data.frame(breaks = quantile(x, prob = seq(0, 1, length = n+1), type = 2)) %>%
+    set_rownames(0:n) %>%
+    unique
+
+  # cut(x, breaks = df$breaks, right = TRUE) %>% table
+
+  #   ?quantile
+
+  #   ?findInterval
+
+    # findInterval(x, c(-Inf, quantile(x, probs=c(0.25, .5, .75)), Inf))
+    # n
+    # findInterval(x, c(-Inf, quantile(x, probs = seq(0, 1, length = n-1), Inf))) %>% table
+    # findInterval(x, c(-Inf, quantile(x, probs = c(.2, .4, .6, .8), Inf))) %>% table
+    # findInterval(x, c(-Inf, quantile(x, probs = c(.2, .4, .6, .8, .99), type = 2), Inf),
+    #              rightmost.closed = FALSE, all.inside = TRUE) %>% table
+
+    # findInterval(x, c(-Inf, quantile(x, probs = seq(0, 1, length = n), type = 7), Inf),
+    #              rightmost.closed = FALSE,
+    #              all.inside = FALSE)  %>% table
+
+    # seq(0,1,length = 6)
+
+
+
+    # ?findInterval
+
+
+
+    # # unique(fromLast = TRUE)
+    # unique
+    # df
+    # rownames(df)
+
+  if (nrow(df) < 2) stop(paste("Insufficient variation in x to construct",n,"breaks"))
+  # cut(x, breaks = df$breaks, labels = rownames(df)[-1], include.lowest = TRUE, right = FALSE)
+  # cut(x, breaks = df$breaks, labels = rownames(df)[-1], include.lowest = TRUE)  %>% table
+  # cut(x, breaks = df$breaks, right = FALSE)
+
+  cut(x, breaks = df$breaks, labels = rownames(df)[-1], include.lowest = TRUE) %>%
+  as_integer %>%
+  { if (rev) as.integer((max(.)+1) - .) else .}
+}
+
+
+# table(xtile(x, 5))
+# x <- bbb$purch
+# max(x)
+# x <- bbb$last
+# n <- 5
+
 #' Show all rows with duplicated values (not just the first or last)
 #'
 #' @details If an entire row is duplicated use "duplicated" to show only one of the duplicated rows. When using a subset of variables to establish uniqueness it may be of interest to show all rows that have (some) duplicate elements

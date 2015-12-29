@@ -43,27 +43,27 @@ regression <- function(dataset, dep_var, indep_var,
     if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
-  formula <- paste(dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
+  form <- paste(dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
 
   if ("stepwise" %in% check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
     model <- lm(paste(dep_var, "~ 1") %>% as.formula, data = dat) %>%
-      step(., k = 2, scope = list(upper = formula), direction = 'both')
+      step(., k = 2, scope = list(upper = form), direction = 'both')
   } else {
-    model <- lm(formula, data = dat)
+    model <- lm(form, data = dat)
   }
 
-  reg_coeff <- tidy(model)
-  reg_coeff$` ` <- sig_stars(reg_coeff$p.value) %>% format(justify = "left")
-  colnames(reg_coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
+  coeff <- tidy(model)
+  coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
+  colnames(coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
   isFct <- sapply(select(dat,-1), is.factor)
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
-      reg_coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
+      coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
 
     rm(i, isFct)
   }
-  reg_coeff$`  ` %<>% format(justify = "left")
+  coeff$`  ` %<>% format(justify = "left")
 
   ## dat is not needed elsewhere and is already in "model" anyway
   rm(dat)
@@ -121,20 +121,20 @@ summary.regression <- function(object,
   if ("standardize" %in% object$check)
     cat("**Standardized coefficients shown**\n")
 
-  reg_coeff <- object$reg_coeff
-  # object$reg_coeff$p.value <- "NaN"
+  coeff <- object$coeff
+  # object$coeff$p.value <- "NaN"
   cat("\n")
-  if (all(object$reg_coeff$p.value == "NaN")) {
-    reg_coeff[,2] %<>% {sprintf(paste0("%.",dec,"f"),.)}
-    print(reg_coeff[,1:2], row.names=FALSE)
+  if (all(object$coeff$p.value == "NaN")) {
+    coeff[,2] %<>% {sprintf(paste0("%.",dec,"f"),.)}
+    print(coeff[,1:2], row.names=FALSE)
     cat("\nInsufficient variation in explanatory variable(s) to report additional statistics")
     return()
   } else {
-    p.small <- reg_coeff$p.value < .001
-    # reg_coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
-    reg_coeff[,2:5] %<>% dfprint(dec)
-    reg_coeff$p.value[p.small] <- "< .001"
-    print(reg_coeff, row.names=FALSE)
+    p.small <- coeff$p.value < .001
+    # coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
+    coeff[,2:5] %<>% dfprint(dec)
+    coeff$p.value[p.small] <- "< .001"
+    print(coeff, row.names=FALSE)
   }
 
   if (nrow(object$model$model) <= (length(object$indep_var) + 1))
@@ -213,8 +213,8 @@ summary.regression <- function(object,
         set_colnames(c("Low","High")) %>%
         { .$`+/-` <- (.$High - .$Low)/2; . } %>%
         mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
-        cbind(reg_coeff[[2]],.) %>%
-        set_rownames(object$reg_coeff$`  `) %>%
+        cbind(coeff[[2]],.) %>%
+        set_rownames(object$coeff$`  `) %>%
         set_colnames(c("coefficient", ci_perc[1], ci_perc[2], "+/-")) %T>%
         print
       cat("\n")
@@ -225,7 +225,7 @@ summary.regression <- function(object,
     if ("stepwise" %in% object$check) {
       cat("Model comparisons are not conducted when Stepwise has been selected.\n")
     } else {
-      sub_formula <- ". ~ 1"
+      sub_form <- ". ~ 1"
 
       vars <- object$indep_var
       if (object$int_var != "" && length(vars) > 1) {
@@ -235,8 +235,8 @@ summary.regression <- function(object,
       }
 
       not_selected <- setdiff(vars,test_var)
-      if (length(not_selected) > 0) sub_formula <- paste(". ~", paste(not_selected, collapse = " + "))
-      sub_mod <- update(object$model, sub_formula, data = object$model$model) %>%
+      if (length(not_selected) > 0) sub_form <- paste(". ~", paste(not_selected, collapse = " + "))
+      sub_mod <- update(object$model, sub_form, data = object$model$model) %>%
                    anova(object$model, test='F')
 
       if (sub_mod[,"Pr(>F)"][2] %>% is.na) return(cat(""))
@@ -388,9 +388,8 @@ plot.regression <- function(x,
       confint(object$model, level = conf_lev) %>%
         data.frame %>%
         set_colnames(c("Low","High")) %>%
-        cbind(select(object$reg_coeff,2),.) %>%
-        # round(dec) %>%
-        set_rownames(object$reg_coeff$`  `) %>%
+        cbind(select(object$coeff,2),.) %>%
+        set_rownames(object$coeff$`  `) %>%
         { if (!intercept) .[-1,] else . } %>%
         mutate(variable = rownames(.)) %>%
           ggplot() +

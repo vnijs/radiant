@@ -233,7 +233,7 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
   if (xcmd != "") cmd <- paste0(cmd, "\n", xcmd)
 
   if (figs)
-    cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,"}\n",cmd,"\n```\n")
+    cmd <- paste0("\n```{r fig.width=",fig.width,", fig.height=",fig.height,", dpi = 72}\n",cmd,"\n```\n")
   else
     cmd <- paste0("\n```{r}\n",cmd,"\n```\n")
 

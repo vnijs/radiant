@@ -25,5 +25,8 @@ Print a number with a specified number of decimal places, thousand sep, and a sy
 nrprint(2000, "$")
 nrprint(2000, dec = 4)
 nrprint(.05, perc = TRUE)
+nrprint(c(.1, .99), perc = TRUE)
+nrprint(data.frame(a = c(.1, .99)), perc = TRUE)
+nrprint(data.frame(a = 1000), sym = "$", dec = 0)
 }
 

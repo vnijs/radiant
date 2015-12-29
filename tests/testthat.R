@@ -6,7 +6,8 @@ library(testthat)
 test_check("radiant")
 
 # if (interactive() && !exists("coverage_test")) devtools::run_examples()
-# if (interactive()) devtools::run_examples(start = "regression")
+# if (interactive())
+# devtools::run_examples(start = "regression")
 
 # setwd("~/gh/radiant")
 # devtools::run_examples()
