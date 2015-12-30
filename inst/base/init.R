@@ -180,6 +180,9 @@ if (exists("r_state") && exists("r_data")) {
   r_state <- list()
 }
 
+## identify the shiny environment
+r_env <- environment()
+
 if (r_local) {
   ## reference to radiant environment that can be accessed by exported functions
   ## does *not* make a copy of the data - nice
@@ -200,7 +203,7 @@ if (r_local) {
   # else
   #   r_env <- environment()
 
-    r_env <- environment()
+    # r_env <- environment()
 
   ## adding any data.frame from the global environment to r_data should not affect
   ## memory usage ... at least until the entry in r_data is changed
