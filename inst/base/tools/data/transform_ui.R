@@ -64,7 +64,6 @@ output$ui_tr_log <- renderUI({
 ext_options <- list("none" = "", "log" = "_log", "exp" = "_exp",
                     "square" = "_sq", "sqrt" = "_sqrt", "center" = "_ct",
                     "standardize" = "_st", "inverse" = "_inv")
-                    # "median_split" = "_mds", "decile_split" = "_ds")
 
 output$ui_tr_ext <- renderUI({
   trfun <- input$tr_transfunction
@@ -83,12 +82,6 @@ output$ui_tr_rcname <- renderUI({
   if (is_empty(input$tr_vars)) return()
   rcname <- paste0(input$tr_vars, "_rc")
   returnTextInput("tr_rcname", "Recoded variable name:", rcname)
-})
-
-output$ui_tr_bin_order <- renderUI({
-  vars <- varnames()
-  selectInput("tr_bin_order", "Order by:", c("None" = "none", vars),
-              selected = "none", width = "120px")
 })
 
 output$ui_tr_ext_bin <- renderUI({
@@ -125,7 +118,6 @@ output$ui_tr_dataset <- renderUI({
 trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp",
                       "Square" = "square", "Square-root" = "sqrt",
                       "Center" = "center", "Standardize" = "standardize", "Inverse" = "inverse")
-                      # "Median split" = "median_split", "Deciles" = "decile_split")
 
 type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As numeric" = "as_numeric", "As integer" = "as_integer",
@@ -176,6 +168,7 @@ output$ui_Transform <- renderUI({
         # tags$td(checkboxInput("tr_bin_rev", "Reverse:", value = FALSE))
       # )
       numericInput("tr_bin_n", label = "Nr bins:", min = 2, value = 10),
+      checkboxInput("tr_bin_rev", "Reverse order", value = FALSE),
       uiOutput("ui_tr_ext_bin")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'training'",
@@ -279,16 +272,15 @@ output$ui_Transform <- renderUI({
                     store = TRUE) {
 
 
-                       # byvar = ""
   ## test section
   # cmd <- "x = mean(mpg); y = mean(cyl)"
   # cmd <- "x = mpg == mpg"
+  # cmd <- "x = ntile(mpg,2)"
+  # cmd <- "x = xtile(mpg,2)"
   # byvar <- "cyl"
   # dataset <- mtcars
-
-  mtcars %>% group_by_(.dots = c("mpg","cyl")) %>% summarize(new = mean(mpg))
-  mtcars %>% group_by_(.dots = "mpg") %>% summarize(new = mean(mpg))
-
+  # mtcars %>% group_by_(.dots = c("mpg","cyl")) %>% summarize(new = mean(mpg))
+  # mtcars %>% group_by_(.dots = "mpg") %>% summarize(new = mean(mpg))
 
   ####
   #### COULD YOU USE THIS TO SPEED UP SIMULATER?
@@ -310,6 +302,7 @@ output$ui_Transform <- renderUI({
       nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
       # nvar <- try(mutate_(dataset, .dots = setNames(dots, vars)), silent = TRUE)
     } else {
+      dots <- sub("^","~",dots) %>% lapply(as.formula, env = r_env)
       nvar <- try(group_by_(dataset, .dots = byvar) %>% mutate_(.dots = setNames(dots, vars)), silent = TRUE)
     }
     if (is(nvar, 'try-error')) {
@@ -323,28 +316,6 @@ output$ui_Transform <- renderUI({
       paste0("## create new variable(s)\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", gsub(";",",",cmd), ")\n")
     else
       paste0("## create new variable(s)\nr_data[[\"",store_dat,"\"]] <- group_by(r_data[[\"",dataset,"\"]], ", paste0(byvar, collapse = ", "), ") %>% mutate(", gsub(";",",",cmd), ") %>% ungroup\n")
-  }
-}
-
-.create_old <- function(dataset, cmd,
-                    byvar = "",
-                    store_dat = "",
-                    store = TRUE) {
-
-  cmd <- cmd %>% gsub("\"","\'",.)
-  if (!store || !is.character(dataset)) {
-    if (gsub("\\s","",cmd) == "") return(dataset)
-    nvar <- try(do.call(within, list(dataset, parse(text = cmd))), silent = TRUE)
-    if (is(nvar, 'try-error')) {
-      paste0(" **\nThe create command was not valid. The command entered was:\n\n", cmd, "\n\nThe error message was:\n\n", attr(nvar,"condition")$message, "\n\nPlease try again. Examples are shown in the help file\n**")
-    } else {
-      # nvars <- strsplit(cmd, ";")[[1]] %>% strsplit(., "=") %>% sapply("[", 1)
-      nvars <- strsplit(cmd, ";")[[1]] %>% strsplit(., "=") %>% sapply("[", 1) %>% gsub(" ","",.)
-      select_(nvar, .dots = nvars)
-    }
-  } else {
-    if (store_dat == "") store_dat <- dataset
-    paste0("## create new variable(s)\nr_data[[\"",store_dat,"\"]] <- mutate(r_data[[\"",dataset,"\"]], ", gsub(";",",",cmd), ")\n")
   }
 }
 
@@ -424,66 +395,26 @@ output$ui_Transform <- renderUI({
   }
 }
 
+
 .bin <- function(dataset,
                  vars = "",
                  bins = 10,
+                 rev = FALSE,
                  ext = "_dec",
                  store_dat = "",
                  store = TRUE) {
 
-                 # bin_order = "none",
-
   if (!store && !is.character(dataset)) {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
-    # if (length(bin_order) == 0) return("Please specify the (integer) number of bins to use")
-
-    # dataset <- mtcars
-    # vars <- "mpg"
-    # bins <- 10
-    # ext <- "_dec"
-    # bin_order <- "vs"
-    # dataset <- mtcars
-    # dataset %>% group_by_(vars) %>% summarize_each(funs(ifelse(is.factor(.), sum(. == levels(.)[1]), mean(.))))
-    # cnts[10,"vs"] <- 10
-    # cnts <- dat %>% group_by_(paste0(vars,ext)) %>% summarize_each(funs(n()))
-    # x <- select(dat, mpg_dec)
-    # x[[10]] <- 10
-    # y <- select_(dataset, bin_order)
-
-    # check_order <- function(x, y) {
-    #   cnts <-
-    #     data.frame(x = x, y = y) %>%
-    #     group_by_("x") %>%
-    #     summarize_each(funs(ifelse(is.factor(.), sum(. == levels(.)[1]), mean(.))))
-
-    #   if (head(cnts[["y"]],1) < tail(cnts[["y"]],1)) {
-    #     as.integer(max(x) + 1 - x)
-    #   } else {
-    #     x
-    #   }
-    # }
-
-    # dat <-
-      select_(dataset, .dots = vars) %>%
-      mutate_each(funs(ntile(.,bins))) %>%
-      set_colnames(paste0(vars, ext))
-
-    # if (bin_order != "none") {
-    #   y <- dataset[[bin_order]]
-    #   dat <- dat %>% mutate_each(funs(check_order(.,y)))
-    # }
-
-    # dat
-
+    select_(dataset, .dots = vars) %>%
+    mutate_each(funs(xtile(.,bins, rev = rev))) %>%
+    set_colnames(paste0(vars, ext))
   } else {
     if (store_dat == "") store_dat <- dataset
-    paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(ntile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
-
-    # if (bin_order != "none") {
-      # paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(ntile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
-    # } else {
-      # paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(ntile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
-    # }
+    if (rev)
+      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,", rev = TRUE)), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    else
+      paste0("## bin variables\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(xtile(.,",bins,")), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
 
@@ -516,8 +447,6 @@ output$ui_Transform <- renderUI({
 # http://rpackages.ianhowson.com/cran/dplyr/man/sample.html
 ## search for stratified sampling and cluster sampling
 ## link to sampling menu?
-
-
 
 .reorg_levs <- function(dataset, fct, levs,
                         name = fct,
@@ -717,8 +646,6 @@ transform_main <- reactive({
     }
   }
 
-
-
   if (input$tr_change_type == 'clip') {
     if (input$tr_paste == "") {
       return("Copy-and-paste data with a header row from a spreadsheet")
@@ -750,7 +677,7 @@ transform_main <- reactive({
 
     ## bin variables
     if (input$tr_change_type == "bin")
-      return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, ext = input$tr_ext_bin, store = FALSE))
+      return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, store = FALSE))
              # bin_order = input$tr_bin_order, store = FALSE))
 
     ## remove duplicates
@@ -930,8 +857,7 @@ observeEvent(input$tr_store, {
       cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, ext = input$tr_ext_nz, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
     } else if (input$tr_change_type == 'bin') {
-      # cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, ext = input$tr_ext_bin, bin_order = "", input$tr_dataset)
-      cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, ext = input$tr_ext_bin, input$tr_dataset)
+      cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, input$tr_dataset)
       r_data[[dataset]][,colnames(dat)] <- dat
     } else if (input$tr_change_type == 'reorg_levs') {
       cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)

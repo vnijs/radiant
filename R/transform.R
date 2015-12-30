@@ -12,29 +12,6 @@ center <- function(x)
 standardize <- function(x)
 	if (is.numeric(x)) { center(x) / sd_rm(x) } else x
 
-#' Median split
-#' @param x Input variable
-#' @return Factor variable deciles
-
-#' @export
-median_split <- function(x) {
-  cut(x, breaks = quantile(x,c(0,.5,1)),
-      include.lowest = TRUE,
-      labels = c("Below", "Above"))
-}
-
-#' Create deciles
-#' @param x Input variable
-#' @return Factor variable
-#' @export
-decile_split <- function(x) {
-  ## avoid non-unique breaks
-  df <- data.frame(breaks = quantile(x, seq(0,1,.1))) %>% set_rownames(0:10) %>% unique
-  cut(x, df$breaks, rownames(df)[-1], include.lowest = TRUE)
-}
-
-# ntile(mtcars$vs, 10) %>% unique %>% length
-
 #' Calculate square of a variable
 #' @param x Input variable
 #' @return x^2
@@ -307,19 +284,6 @@ mutate_each <- function(tbl, funs, ..., ext = "") {
   }
 }
 
-#' Wrapper for dplyr::ntile
-#'
-#' @details Wrapper for dplyr::ntile to ensure result is an integer
-#'
-#' @param x Numeric variable
-#' @param n number of bins to create
-#'
-#' @examples
-#' ntile(1:10,5)
-#'
-#' @export
-ntile <- function(x, n) as.integer(dplyr::ntile(x, n))
-
 #' Create a quintile (or decile) index
 #'
 #' @details Same as stata
@@ -335,57 +299,11 @@ ntile <- function(x, n) as.integer(dplyr::ntile(x, n))
 #' @export
 xtile <- function(x, n, rev = FALSE) {
   stopifnot(is.numeric(n), is.numeric(x), n > 1, length(x) > n)
-  df <-
-    data.frame(breaks = quantile(x, prob = seq(0, 1, length = n+1), type = 2)) %>%
-    set_rownames(0:n) %>%
-    unique
-
-  # cut(x, breaks = df$breaks, right = TRUE) %>% table
-
-  #   ?quantile
-
-  #   ?findInterval
-
-    # findInterval(x, c(-Inf, quantile(x, probs=c(0.25, .5, .75)), Inf))
-    # n
-    # findInterval(x, c(-Inf, quantile(x, probs = seq(0, 1, length = n-1), Inf))) %>% table
-    # findInterval(x, c(-Inf, quantile(x, probs = c(.2, .4, .6, .8), Inf))) %>% table
-    # findInterval(x, c(-Inf, quantile(x, probs = c(.2, .4, .6, .8, .99), type = 2), Inf),
-    #              rightmost.closed = FALSE, all.inside = TRUE) %>% table
-
-    # findInterval(x, c(-Inf, quantile(x, probs = seq(0, 1, length = n), type = 7), Inf),
-    #              rightmost.closed = FALSE,
-    #              all.inside = FALSE)  %>% table
-
-    # seq(0,1,length = 6)
-
-
-
-    # ?findInterval
-
-
-
-    # # unique(fromLast = TRUE)
-    # unique
-    # df
-    # rownames(df)
-
-  if (nrow(df) < 2) stop(paste("Insufficient variation in x to construct",n,"breaks"))
-  # cut(x, breaks = df$breaks, labels = rownames(df)[-1], include.lowest = TRUE, right = FALSE)
-  # cut(x, breaks = df$breaks, labels = rownames(df)[-1], include.lowest = TRUE)  %>% table
-  # cut(x, breaks = df$breaks, right = FALSE)
-
-  cut(x, breaks = df$breaks, labels = rownames(df)[-1], include.lowest = TRUE) %>%
-  as_integer %>%
+  breaks <- quantile(x, prob = seq(0, 1, length = n+1), type = 2)
+  if (length(breaks) < 2) stop(paste("Insufficient variation in x to construct",n,"breaks"))
+  .bincode(x, breaks, include.lowest = TRUE) %>%
   { if (rev) as.integer((max(.)+1) - .) else .}
 }
-
-
-# table(xtile(x, 5))
-# x <- bbb$purch
-# max(x)
-# x <- bbb$last
-# n <- 5
 
 #' Show all rows with duplicated values (not just the first or last)
 #'

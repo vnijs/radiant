@@ -4,14 +4,14 @@
 \alias{xtile}
 \title{Create a quintile (or decile) index}
 \usage{
-xtile(x, n)
+xtile(x, n, rev = FALSE)
 }
 \arguments{
 \item{x}{Numeric variable}
 
 \item{n}{number of bins to create}
 
-\item{ties}{How to break ties ("first","last","random")}
+\item{rev}{Reverse the order of the xtiles}
 }
 \description{
 Create a quintile (or decile) index
@@ -21,5 +21,6 @@ Same as stata
 }
 \examples{
 xtile(1:10,5)
+xtile(1:10,5, rev = TRUE)
 }
 
