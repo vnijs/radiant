@@ -15,7 +15,7 @@ This is an example of the type of report you can write in Radiant.
 
 You can even include math if you want:
 
-$$y_t = \\\\alpha + \\\\beta x_t + \\\\epsilon_t.$$
+$$y_t = \\alpha + \\beta x_t + \\epsilon_t.$$
 
 To show the output press the `Update` button.
 
@@ -70,8 +70,12 @@ output$ui_vim <- renderUI({
     if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
 })
 
+esc_slash <- function(x) gsub("([^\\])\\\\([^\\])","\\1\\\\\\\\\\2",x)
+
 output$report <- renderUI({
-  init <- isolate(if (is_empty(input$rmd_report)) rmd_example else input$rmd_report)
+  # init <- isolate(if (is_empty(input$rmd_report)) rmd_example else gsub("\\\\","\\\\\\\\",input$rmd_report))
+  # init <- isolate(if (is_empty(input$rmd_report)) rmd_example else gsub("\\\\","\\\\",input$rmd_report))
+  init <- isolate(if (is_empty(input$rmd_report)) rmd_example else esc_slash(input$rmd_report))
   tagList(
     with(tags,
       table(
@@ -95,7 +99,9 @@ output$report <- renderUI({
               height = "auto",
               selectionId = "rmd_selection",
               # value = state_init("rmd_report",rmd_example),
-              value = state_init("rmd_report", init),
+              # value = state_init("rmd_report", init) %>% gsub("([^\\])\\\\([^\\])","\\1\\\\\\\\\\2",.),
+              value = state_init("rmd_report", init) %>% esc_slash,
+              # value = state_init("rmd_report", init) %>% gsub("\\\\","\\\\\\",.),
               hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     htmlOutput("rmd_knitted")
   )
@@ -245,7 +251,8 @@ observeEvent(input$rmd_report, {
     # path <- file.path(normalizePath("~"),"r_sessions")
     # if (file.exists(path))
     #   cat(r_state$rmd_report, file = file.path(path,"rmd_report.Rmd"), append = TRUE)
-    r_state$rmd_report <<- input$rmd_report
+    # r_state$rmd_report <<- gsub("\\\\","\\\\\\\\",input$rmd_report)
+    r_state$rmd_report <<- esc_slash(input$rmd_report)
   }
 })
 
@@ -272,13 +279,15 @@ update_report_fun <- function(cmd) {
         r_state$rmd_report <<- paste0("## Your report title\n", cmd)
         # cmd <- paste0("## Your report title\n", cmd)
       } else {
-        r_state$rmd_report <<- paste0(r_state$rmd_report,"\n",cmd)
+        # r_state$rmd_report <<- paste0(gsub("\\\\","\\\\\\\\",r_state$rmd_report),"\n",cmd)
+        r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
         # cmd <- paste0(r_state$rmd_report,"\n",cmd)
       }
 
       withProgress(message = 'Updating report', value = 0,
         shinyAce::updateAceEditor(session, "rmd_report",
-                                  value = r_state$rmd_report)
+                                  value = esc_slash(r_state$rmd_report))
+                                  # value = gsub("\\\\","\\\\\\\\",r_state$rmd_report))
       )
       #                           value = cmd)
     # } else {

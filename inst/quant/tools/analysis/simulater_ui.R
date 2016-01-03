@@ -183,7 +183,7 @@ output$ui_rep_byvar <- renderUI({
 output$ui_rep_fun <- renderUI({
   choices <-
     list("sum" = "sum_rm", "mean" = "mean_rm", "median" = "median_rm",
-         "min" = "min_rm", "max" = "max_rm", "none" = "none")
+         "min" = "min_rm", "max" = "max_rm", "last" = "last", "none" = "none")
     # sel <- if (is_empty(input$rep_fun)) state_single("rep_fun", choices, "sum_rm")
            # else input$rep_fun
 
@@ -264,12 +264,35 @@ observeEvent(input$rep_grid_add, {
   })
 })
 
+# observeEvent(input$sim_grid_add, {
 observeEvent(input$sim_grid_add, {
   isolate({
     var_updater(input$sim_grid_add, "sim_grid",
                 c(input$sim_grid_name, input$sim_grid_min, input$sim_grid_max, input$sim_grid_step))
 
-    updateNumericInput(session = session, "sim_nr", value = NA)
+    # updateNumericInput(session = session, "sim_nr", value = NA)
+  })
+})
+
+observeEvent(input$sim_grid, {
+  isolate({
+    if (!is_empty(input$sim_grid)) {
+      updateNumericInput(session = session, "sim_nr", value = NA)
+    } else {
+      val <- ifelse(is_empty(r_state$sim_nr), 12, r_state$sim_nr)
+      updateNumericInput(session = session, "sim_nr", value = val)
+    }
+  })
+})
+
+observeEvent(input$rep_grid, {
+  isolate({
+    if (!is_empty(input$rep_grid)) {
+      updateNumericInput(session = session, "rep_nr", value = NA)
+    } else {
+      val <- ifelse(is_empty(r_state$rep_nr), 12, r_state$rep_nr)
+      updateNumericInput(session = session, "rep_nr", value = val)
+    }
   })
 })
 
@@ -501,7 +524,11 @@ output$simulater <- renderUI({
         HTML("<label>Simulation formulas:</label>"),
         textinput_maker("form","Formula", rows = "5"),
         HTML("<label>Simulation summary:</label>"),
-        verbatimTextOutput("summary_simulate"),
+        verbatimTextOutput("summary_simulate")
+        # HTML("<label>Simulation plots:</label>"),
+        # plotOutput("plot_simulate", height = "100%")
+      ),
+      tabPanel("Plot (simulate)",
         HTML("<label>Simulation plots:</label>"),
         plotOutput("plot_simulate", height = "100%")
       ),
@@ -509,7 +536,11 @@ output$simulater <- renderUI({
         HTML("<label>Repeated simulation formulas:</label>"),
         textinput_maker("form","Rformula", rows = "3", pre = "rep_"),
         HTML("<label>Repeated simulation summary:</label>"),
-        verbatimTextOutput("summary_repeat"),
+        verbatimTextOutput("summary_repeat")
+        # HTML("<label>Repeated simulation plots:</label>"),
+        # plotOutput("plot_repeat", height = "100%")
+      ),
+      tabPanel("Plot (repeat)",
         HTML("<label>Repeated simulation plots:</label>"),
         plotOutput("plot_repeat", height = "100%")
       )

@@ -144,20 +144,15 @@ pivotr <- function(dataset,
   }
 
   ## filtering the table if desired
-  if (tabfilt != "") tab <- filterdata(tab, tabfilt)
+  if (tabfilt != "")
+    tab <- filterdata(tab, tabfilt) %>% droplevels
 
   ## sorting the table if desired
-  if (tabsort != "") {
-    ## only one variable for now
-    tabsort <- tabsort[1]
-    tot <- tab[nrow(tab),]
-    tab <- tab[-nrow(tab),]
-    if (substring(tabsort,1) == "-") {
-      tab %<>% arrange(., desc(.[[substring(tabsort,2)]]))
-    } else {
-      tab %<>% arrange_(tabsort)
-    }
-    tab %<>% bind_rows(tot)
+  if (!identical(tabsort, "")) {
+
+    if (grepl(",", tabsort))
+      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
+    tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
 
     # for (i in cvars)
     #   tab[[i]] %<>% factor(., levels = unique(.))

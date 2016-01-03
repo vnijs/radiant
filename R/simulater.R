@@ -74,7 +74,13 @@ simulater <- function(const = "",
 
   if (is.null(dat)) {
     dat <- list()
+  } else {
+    ## needed because number may be NA and missing if grid used in Simulate
+    nr <- attr(dat,"sim_call")$nr
   }
+
+  # print(nr)
+
   # else {
   #   dat <- as.list(dat)
   # }
@@ -318,8 +324,12 @@ simulater <- function(const = "",
   ## convert list to a data.frame
   dat <- as.data.frame(dat) %>% na.omit
 
-  # attr(dat, "sim_call") <- as.list(match.call())[-1] %>% {.["nr"] <- nr; .}
-  attr(dat, "sim_call") <- as.list(match.call())[-1]
+  # if (grid != "") {
+  #   attr(dat, "sim_call") <- as.list(match.call())[-1] %>% {.[["nr"]] <- nr; .}
+  # } else {
+  #   attr(dat, "sim_call") <- as.list(match.call())[-1]
+  # }
+  attr(dat, "sim_call") <- as.list(match.call())[-1] %>% {.[["nr"]] <- nr; .}
 
   if (nrow(dat) == 0) {
     mess <- c("error",paste0("The simulated data set has 0 rows"))
@@ -470,6 +480,9 @@ repeater <- function(nr = 12,
                      name = "",
                      sim = "") {
 
+  # print(nr)
+  # print(grid)
+
   if (is_empty(nr)) {
     if (is_empty(grid)) {
       mess <- c("error",paste0("Please specify the number of repetitions in '# reps'"))
@@ -484,6 +497,7 @@ repeater <- function(nr = 12,
     sim <- gsub("_list$","",sim)
     dat <- getdata(sim)
   }
+
 
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
@@ -523,6 +537,11 @@ repeater <- function(nr = 12,
   sc[1:(which(names(sc) == "seed")-1)] <- ""
   sc[names(sc_keep)] <- sc_keep
   sc$dat <- as.list(dat)
+
+
+  # print(sc)
+  # return()
+
 
   rep_sim <- function(rep_nr) {
     bind_cols(
@@ -566,6 +585,8 @@ repeater <- function(nr = 12,
     # return(mess %>% set_class(c("repeater", class(.))))
     ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
+
+  # return()
 
   name %<>% gsub(" ","",.)
   if (name != "") {

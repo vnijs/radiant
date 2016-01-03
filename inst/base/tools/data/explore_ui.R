@@ -80,7 +80,7 @@ output$ui_expl_top  <- renderUI({
   if (is_empty(input$expl_vars)) return()
   top_var = c("Function" = "fun", "Variables" = "var", "Group by" = "byvar")
   if (is_empty(input$expl_byvar)) top_var <- top_var[1:2]
-  selectizeInput("expl_top", label = "Column variable:",
+  selectizeInput("expl_top", label = "Column header:",
                  choices = top_var,
                  selected = state_single("expl_top", top_var, top_var[1]),
                  multiple = FALSE)

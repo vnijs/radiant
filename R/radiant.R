@@ -132,8 +132,8 @@ getdata <- function(dataset,
       # message("Dataset ", dataset, " loaded from ", environmentName(d_env), " environment\n")
       d_env[[dataset]]
     } else {
-      message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call") %>%
-        stop %>% return
+      # stop(message("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
+      stop(paste("Dataset ", dataset, " is not available. Please load the dataset and use the name in the function call"))
     }
   } %>% { if ("grouped_df" %in% class(.)) ungroup(.) else . } %>%     # ungroup data if needed
         # { if (filt == "") . else filter_(., filt) } %>%     # apply data_filter

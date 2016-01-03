@@ -302,7 +302,7 @@ xtile <- function(x, n, rev = FALSE) {
   breaks <- quantile(x, prob = seq(0, 1, length = n+1), type = 2)
   if (length(breaks) < 2) stop(paste("Insufficient variation in x to construct",n,"breaks"))
   .bincode(x, breaks, include.lowest = TRUE) %>%
-  { if (rev) as.integer((max(.)+1) - .) else .}
+  { if (rev) as.integer((n+1) - .) else .}
 }
 
 #' Show all rows with duplicated values (not just the first or last)

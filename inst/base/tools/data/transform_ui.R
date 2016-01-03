@@ -132,10 +132,10 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      # "As time (hm)" = "as_hm", "As time (hms)" = "as_hms")
 
 trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
-                    "Create" = "create", "Recode" = "recode",
-                    "Bin" = "bin", "Add group statistic" = "groupstat",
+                    "Create" = "create", "Bin" = "bin", "Clipboard" = "clip",
+                    "Normalize" = "normalize",
+                    "Recode" = "recode",
                     "Rename" = "rename", "Replace" = "replace",
-                    "Clipboard" = "clip", "Normalize" = "normalize",
                     "Reorder/remove levels" = "reorg_levs",
                     "Reorder/remove variables" = "reorg_vars",
                     "Remove missing values" = "remove_na",
@@ -162,11 +162,6 @@ output$ui_Transform <- renderUI({
 	    returnTextAreaInput("tr_create", "Create (e.g., x = y - z):", "")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'bin'",
-      # tags$table(
-        # tags$td(numericInput("tr_bin_n", label = "Nr bins:", min = 2, value = 10, width = "100px")),
-        # tags$td(uiOutput("ui_tr_bin_order"), style = "padding-top: 15px;")
-        # tags$td(checkboxInput("tr_bin_rev", "Reverse:", value = FALSE))
-      # )
       numericInput("tr_bin_n", label = "Nr bins:", min = 2, value = 10),
       checkboxInput("tr_bin_rev", "Reverse order", value = FALSE),
       uiOutput("ui_tr_ext_bin")
@@ -176,6 +171,9 @@ output$ui_Transform <- renderUI({
         tags$td(numericInput("tr_training_n", label = "Size:", min = 0, value = .7)),
         tags$td(textInput("tr_training", "Variable name:", "training"))
       )
+    ),
+    conditionalPanel(condition = "input.tr_change_type == 'holdout'",
+      checkboxInput("tr_holdout_rev", "Reverse filter", value = TRUE)
     ),
     conditionalPanel(condition = "input.tr_change_type == 'clip'",
     	HTML("<label>Paste from spreadsheet:</label>"),
@@ -270,6 +268,26 @@ output$ui_Transform <- renderUI({
                     byvar = "",
                     store_dat = "",
                     store = TRUE) {
+
+
+  # library(radiant)
+  # bbb <- mutate(bbb, rec_q = xtile(last,5))
+  # bbb <- group_by(bbb, rec_q) %>% mutate(freq_q = xtile(purch, 5, rev = TRUE)) %>% ungroup
+  # bbb <- group_by(bbb, rec_q, freq_q) %>% mutate(mon_q = xtile(total_,5, rev = TRUE)) %>% ungroup
+
+  # a <- filter(bbb, rec_q == 1, freq_q == 1) %>% {xtile(.$total_,5, rev = TRUE)}
+  # b <- filter(bbb, rec_q == 1, freq_q == 1) %>% .$mon_q
+  # table(a,b)
+
+  # a <- xtile(bbb$purch, 5)
+  # b <- xtile(bbb$purch, 5)
+  # b <- group_by(bbb, rec_q) %>% mutate(b = xtile(purch,5)) %>% ungroup %>% .[['b']]
+
+  # table(a,b)
+
+
+
+
 
 
   ## test section
@@ -557,8 +575,11 @@ output$ui_Transform <- renderUI({
 .holdout <- function(dataset,
                      vars = "",
                      filt = "",
+                     rev = "",
                      store_dat = "",
                      store = TRUE) {
+
+  if (rev) filt <- paste0("!(",filt,")")
 
   if (!store || !is.character(dataset)) {
     if (is_empty(filt))
@@ -574,6 +595,9 @@ output$ui_Transform <- renderUI({
       paste0("## create holdout sample\nr_data[[\"",store_dat,"\"]] <- getdata(\"",dataset,"\", filt = \"", filt, "\", na.rm = FALSE) %>% select(", paste0(vars, collapse = ", "),")\n")
   }
 }
+
+# .sort ......
+# arrange_(mtcars, .dots = c("desc(cyl)","mpg"))
 
 inp_vars <- function(inp, rval = "")
 	if (is_empty(input[[inp]])) rval else input[[inp]]
@@ -664,7 +688,7 @@ transform_main <- reactive({
   ## filter data for holdout
   if (input$tr_change_type == "holdout") {
     if (!input$show_filter) return("No filter active. Click the 'Filter' checkbox and enter a filter")
-    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, store = FALSE))
+    return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rev = input$tr_holdout_rev, store = FALSE))
   }
 
   ## only use the functions below if variables have been selected
@@ -839,7 +863,7 @@ observeEvent(input$tr_store, {
       cmd <- .show_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'holdout') {
-      cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, input$tr_dataset)
+      cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, input$tr_dataset)
       r_data[[dataset]] <- dat
     } else if (input$tr_change_type == 'reorg_vars') {
       cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)

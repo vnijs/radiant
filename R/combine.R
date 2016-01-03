@@ -31,19 +31,29 @@ combinedata <- function(dataset, cmb_dataset,
   if (name == "")
     name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
+  dat1 <- getdata(dataset, na.rm = FALSE)
+  dat2 <- getdata(cmb_dataset, na.rm = FALSE)
+
+  descr1 <- attr(dat1, "description")
+  descr2 <- attr(dat2, "description")
+
   if (is_join) {
-    dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE), by = by)
+    # dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE), by = by)
+    dat <- get(type)(dat1, dat2, by = by)
     madd <- paste0("\n\nBy: ", paste0(by, collapse = ", "))
   } else {
-    dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE))
+    # dat <- get(type)(getdata(dataset, na.rm = FALSE), getdata(cmb_dataset, na.rm = FALSE))
+    dat <- get(type)(dat1, dat2)
     madd <- ""
   }
 
   if (is.character(dat)) return(dat)
+  rm(dat1, dat2)
 
-  mess <- paste0("\n### Combined\n\nDatasets: ", dataset, " and ",
-                        cmb_dataset, " (", type, ")", madd, "\n\nOn: ",
-                        lubridate::now())
+  mess <-
+    paste0("## Combined\n\nDatasets: ", dataset, " and ", cmb_dataset,
+           " (", type, ")", madd, "\n\nOn: ", lubridate::now(), "\n\n",
+           descr1, "\n\n", descr2)
 
   if (exists("r_env")) {
     env <- r_env
@@ -53,8 +63,10 @@ combinedata <- function(dataset, cmb_dataset,
     return(dat)
   }
 
+  ## why?
+  # mess <- env$r_data[[paste0(name,"_descr")]] <- mess
+
   env$r_data[[name]] <- dat
-  # env$r_data[[name]] %>% head %>% print
   env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
   env$r_data[[paste0(name,"_descr")]] <- mess
   cat("\nCombined data added as", name, "\n")

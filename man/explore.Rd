@@ -4,8 +4,8 @@
 \alias{explore}
 \title{Explore data}
 \usage{
-explore(dataset, vars = "", byvar = "", fun = "mean_rm", tabfilt = "",
-  tabsort = "", data_filter = "", shiny = FALSE)
+explore(dataset, vars = "", byvar = "", fun = c("mean_rm", "sd_rm"),
+  tabfilt = "", tabsort = "", data_filter = "", shiny = FALSE)
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}

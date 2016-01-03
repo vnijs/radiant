@@ -26,7 +26,7 @@
 explore <- function(dataset,
                     vars = "",
                     byvar = "",
-                    fun = "mean_rm",
+                    fun = c("mean_rm","sd_rm"),
                     tabfilt = "",
                     tabsort = "",
                     data_filter = "",
@@ -167,21 +167,17 @@ explore <- function(dataset,
 
   ## filtering the table if desired from R > Report
   if (tabfilt != "")
-    tab <- filterdata(tab, tabfilt)
+    tab <- filterdata(tab, tabfilt) %>% droplevels
 
   ## sorting the table if desired from R > Report
-  if (tabsort != "") {
-    ## only one variable for now
-    tabsort <- tabsort[1]
-    if (substring(tabsort,1) == "-") {
-      tab %<>% arrange(., desc(.[[substring(tabsort,2)]]))
-    } else {
-      tab %<>% arrange_(tabsort)
-    }
+  if (!identical(tabsort, "")) {
+    if (grepl(",", tabsort))
+      tabsort <- strsplit(tabsort,",")[[1]] %>% gsub(" ", "", .)
+    tab[-nrow(tab),] %<>% arrange_(.dots = tabsort)
 
-    isFct <- tab %>% getclass %>% {.[. == "factor"]} %>% names
-    for (i in isFct)
-      tab[[i]] %<>% factor(., levels = unique(.))
+    # isFct <- tab %>% getclass %>% {.[. == "factor"]} %>% names
+    # for (i in isFct)
+    #   tab[[i]] %<>% factor(., levels = unique(.))
   }
 
   ## dat no longer needed
@@ -430,7 +426,15 @@ serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / sqrt(length(na.omit(x))
 #' cv(runif (100))
 #'
 #' @export
-cv <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
+cv <- function(x, na.rm = TRUE) {
+  m <- mean(x, na.rm = na.rm)
+  if (m == 0) {
+    message("Mean should be greater than 0")
+    NA
+  } else {
+    sd(x, na.rm = na.rm) / m
+  }
+}
 
 #' Mean with na.rm = TRUE
 #' @param x Input variable
