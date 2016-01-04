@@ -4,10 +4,12 @@
 \alias{sd_rm}
 \title{Standard deviation with na.rm = TRUE}
 \usage{
-sd_rm(x)
+sd_rm(x, na.rm = TRUE)
 }
 \arguments{
 \item{x}{Input variable}
+
+\item{na.rm}{Remove NAs (TRUE or FALSE)}
 }
 \value{
 Standard deviation
