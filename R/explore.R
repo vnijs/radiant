@@ -408,16 +408,6 @@ p90 <- function(x, na.rm = TRUE) quantile(x,.90, na.rm = na.rm)
 #' @export
 p95 <- function(x, na.rm = TRUE) quantile(x,.95, na.rm = na.rm)
 
-#' Standard error
-#' @param x Input variable
-#' @param na.rm If TRUE missing values are removed before calculation
-#' @return Standard error
-#' @examples
-#' serr(rnorm(100))
-#'
-#' @export
-serr <- function(x, na.rm = TRUE) sd(x, na.rm = na.rm) / sqrt(length(na.omit(x)))
-
 #' Coefficient of variation
 #' @param x Input variable
 #' @param na.rm If TRUE missing values are removed before calculation
@@ -497,12 +487,27 @@ max_rm <- function(x) max(x, na.rm = TRUE)
 
 #' Standard deviation with na.rm = TRUE
 #' @param x Input variable
+#' @param na.rm Remove NAs (TRUE or FALSE)
 #' @return Standard deviation
 #' @examples
 #' sd_rm(rnorm(100))
 #'
 #' @export
-sd_rm <- function(x) sd(x, na.rm = TRUE)
+sd_rm <- function(x, na.rm = TRUE) {
+  # ret <- sd(x, na.rm = na.rm)
+  # if (ret == "NaN") NA else ret
+  sd(x, na.rm = na.rm)
+}
+
+#' Standard error
+#' @param x Input variable
+#' @param na.rm If TRUE missing values are removed before calculation
+#' @return Standard error
+#' @examples
+#' serr(rnorm(100))
+#'
+#' @export
+serr <- function(x, na.rm = TRUE) sd_rm(x, na.rm) / sqrt(length(na.omit(x)))
 
 #' Variance with na.rm = TRUE
 #' @param x Input variable

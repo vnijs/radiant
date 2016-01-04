@@ -3,12 +3,12 @@
 \name{var_check}
 \alias{var_check}
 \title{Check if main effects for all interaction effects are included in the model
-If ':' is used to select a range _indep_var_ is updated}
+If ':' is used to select a range _evar_ is updated}
 \usage{
-var_check(iv, cn, intv = "")
+var_check(ev, cn, intv = "")
 }
 \arguments{
-\item{iv}{List of explanatory variables provided to _regression_ or _glm_}
+\item{ev}{List of explanatory variables provided to _regression_ or _glm_}
 
 \item{cn}{Column names for all explanatory variables in _dat_}
 
@@ -19,7 +19,7 @@ var_check(iv, cn, intv = "")
 }
 \description{
 Check if main effects for all interaction effects are included in the model
-If ':' is used to select a range _indep_var_ is updated
+If ':' is used to select a range _evar_ is updated
 }
 \details{
 See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant

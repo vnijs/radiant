@@ -86,30 +86,30 @@ reg_pred_plot_inputs <- reactive({
 output$ui_reg_dep_var <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
-  selectInput(inputId = "reg_dep_var", label = "Response variable:", choices = vars,
-    selected = state_single("reg_dep_var",vars), multiple = FALSE)
+  selectInput(inputId = "reg_rvar", label = "Response variable:", choices = vars,
+    selected = state_single("reg_rvar",vars), multiple = FALSE)
 })
 
 output$ui_reg_indep_var <- renderUI({
   notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if (not_available(input$reg_dep_var)) vars <- character(0)
-  if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_dep_var)]
+  if (not_available(input$reg_rvar)) vars <- character(0)
+  if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_rvar)]
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
   isolate({
-    init <- input$reg_indep_var %>%
+    init <- input$reg_evar %>%
       {if (!is_empty(.) && . %in% vars) . else character(0)}
   })
 
-  selectInput(inputId = "reg_indep_var", label = "Explanatory variables:", choices = vars,
-    selected = state_multiple("reg_indep_var", vars, init),
+  selectInput(inputId = "reg_evar", label = "Explanatory variables:", choices = vars,
+    selected = state_multiple("reg_evar", vars, init),
     multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
 output$ui_reg_pred_var <- renderUI({
-  vars <- input$reg_indep_var
+  vars <- input$reg_evar
   selectInput("reg_pred_var", label = "Predict for variables:",
     choices = vars, selected = state_multiple("reg_pred_var", vars),
     multiple = TRUE, size = min(4, length(vars)), selectize = FALSE)
@@ -117,7 +117,7 @@ output$ui_reg_pred_var <- renderUI({
 
 # adding interaction terms as needed
 output$ui_reg_test_var <- renderUI({
-  vars <- input$reg_indep_var
+  vars <- input$reg_evar
   if (!is.null(input$reg_int_var)) vars <- c(vars, input$reg_int_var)
 
   selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
@@ -128,9 +128,9 @@ output$ui_reg_test_var <- renderUI({
 })
 
 output$ui_reg_show_interactions <- renderUI({
-  if (length(input$reg_indep_var) == 2)
+  if (length(input$reg_evar) == 2)
     choices <- reg_show_interactions[1:2]
-  else if (length(input$reg_indep_var) > 2)
+  else if (length(input$reg_evar) > 2)
     choices <- reg_show_interactions
   else
     choices <- reg_show_interactions[1]
@@ -144,7 +144,7 @@ output$ui_reg_int_var <- renderUI({
   if (is_empty(input$reg_show_interactions)) {
     choices <- character(0)
   } else {
-    vars <- input$reg_indep_var
+    vars <- input$reg_evar
     if (not_available(vars) || length(vars) < 2) return()
     # vector of possible interaction terms to sel from glm_reg
     choices <- iterms(vars, input$reg_show_interactions)       # create list of interactions to show user
@@ -156,14 +156,14 @@ output$ui_reg_int_var <- renderUI({
 
 # X - variable
 output$ui_reg_xvar <- renderUI({
-  vars <- input$reg_indep_var
+  vars <- input$reg_evar
   selectizeInput(inputId = "reg_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("reg_xvar",vars),
     multiple = FALSE)
 })
 
 output$ui_reg_facet_row <- renderUI({
-  vars <- input$reg_indep_var
+  vars <- input$reg_evar
   vars <- c("None" = ".", vars)
   selectizeInput("reg_facet_row", "Facet row", vars,
                  selected = state_single("reg_facet_row", vars, "."),
@@ -171,7 +171,7 @@ output$ui_reg_facet_row <- renderUI({
 })
 
 output$ui_reg_facet_col <- renderUI({
-  vars <- input$reg_indep_var
+  vars <- input$reg_evar
   vars <- c("None" = ".", vars)
   selectizeInput("reg_facet_col", "Facet column", vars,
                  selected = state_single("reg_facet_col", vars, "."),
@@ -179,7 +179,7 @@ output$ui_reg_facet_col <- renderUI({
 })
 
 output$ui_reg_color <- renderUI({
-  vars <- c("None" = "none", input$reg_indep_var)
+  vars <- c("None" = "none", input$reg_evar)
   sel <- state_single("reg_color", vars, "none")
   selectizeInput("reg_color", "Color", vars, selected = sel,
                  multiple = FALSE)
@@ -267,7 +267,7 @@ output$ui_regression <- renderUI({
       uiOutput("ui_reg_dep_var"),
       uiOutput("ui_reg_indep_var"),
 
-      conditionalPanel(condition = "input.reg_indep_var != null",
+      conditionalPanel(condition = "input.reg_evar != null",
 
         uiOutput("ui_reg_show_interactions"),
         conditionalPanel(condition = "input.reg_show_interactions != ''",
@@ -313,7 +313,7 @@ reg_plot <- reactive({
   # specifying plot heights
   plot_height <- 500
   plot_width <- 650
-  nrVars <- length(input$reg_indep_var) + 1
+  nrVars <- length(input$reg_evar) + 1
 
   if (input$reg_plots == "hist") plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
   if (input$reg_plots == "dashboard") plot_height <- 1.5 * plot_height
@@ -369,10 +369,10 @@ output$regression <- renderUI({
 
 reg_available <- reactive({
 
-  if (not_available(input$reg_dep_var))
+  if (not_available(input$reg_rvar))
     return("This analysis requires a response variable of type integer\nor numeric and one or more explanatory variables.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("diamonds"))
 
-  if (not_available(input$reg_indep_var))
+  if (not_available(input$reg_evar))
     return("Please select one or more explanatory variables.\n\n" %>% suggest_data("diamonds"))
 
   "available"
@@ -384,7 +384,7 @@ reg_available <- reactive({
 
 .summary_regression <- reactive({
   if (reg_available() != "available") return(reg_available())
-  if (input$reg_dep_var %in% input$reg_indep_var) return()
+  if (input$reg_rvar %in% input$reg_evar) return()
   do.call(summary, c(list(object = .regression()), reg_sum_inputs()))
 })
 
@@ -398,7 +398,7 @@ reg_available <- reactive({
 .predict_plot_regression <- reactive({
   if (!input$reg_pred_plot) return(" ")
   if (reg_available() != "available") return(reg_available())
-  if (not_available(input$reg_xvar) || !input$reg_xvar %in% input$reg_indep_var) return(" ")
+  if (not_available(input$reg_xvar) || !input$reg_xvar %in% input$reg_evar) return(" ")
   if (is_empty(input$reg_predict) || is.null(r_data$reg_pred))
     return(invisible())
   do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))

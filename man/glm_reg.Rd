@@ -4,15 +4,15 @@
 \alias{glm_reg}
 \title{Generalized linear models (GLM)}
 \usage{
-glm_reg(dataset, dep_var, indep_var, lev = "", link = "logit",
-  int_var = "", check = "", dec = 3, data_filter = "")
+glm_reg(dataset, rvar, evar, lev = "", link = "logit", int_var = "",
+  check = "", dec = 3, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{dep_var}{The response variable in the logit (probit) model}
+\item{rvar}{The response variable in the logit (probit) model}
 
-\item{indep_var}{Explanatory variables in the model}
+\item{evar}{Explanatory variables in the model}
 
 \item{lev}{The level in the response variable defined as _success_}
 

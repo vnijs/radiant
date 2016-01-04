@@ -3,8 +3,8 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param dep_var The response variable in the regression
-#' @param indep_var Explanatory variables in the regression
+#' @param rvar The response variable in the regression
+#' @param evar Explanatory variables in the regression
 #' @param int_var Interaction terms to include in the model
 #' @param check "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
 #' @param dec Number of decimals to show
@@ -21,13 +21,13 @@
 #' @seealso \code{\link{predict.regression}} to generate predictions
 #'
 #' @export
-regression <- function(dataset, dep_var, indep_var,
+regression <- function(dataset, rvar, evar,
                        int_var = "",
                        check = "",
                        dec = 3,
                        data_filter = "") {
 
-  dat <- getdata(dataset, c(dep_var, indep_var), filt = data_filter)
+  dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
@@ -35,19 +35,19 @@ regression <- function(dataset, dep_var, indep_var,
            set_class(c("regression",class(.))))
 
   vars <- ""
-  var_check(indep_var, colnames(dat)[-1], int_var) %>%
-    { vars <<- .$vars; indep_var <<- .$iv; int_var <<- .$intv }
+  var_check(evar, colnames(dat)[-1], int_var) %>%
+    { vars <<- .$vars; evar <<- .$ev; int_var <<- .$intv }
 
   if ("standardize" %in% check) {
     isNum <- sapply(dat, is.numeric)
     if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
-  form <- paste(dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
+  form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
 
   if ("stepwise" %in% check) {
-    # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-    model <- lm(paste(dep_var, "~ 1") %>% as.formula, data = dat) %>%
+    ## use k = 2 for AIC, use k = log(nrow(dat)) for BIC
+    model <- lm(paste(rvar, "~ 1") %>% as.formula, data = dat) %>%
       step(., k = 2, scope = list(upper = form), direction = 'both')
   } else {
     model <- lm(form, data = dat)
@@ -113,11 +113,11 @@ summary.regression <- function(object,
   cat("Data     :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-  cat("Response variable    :", object$dep_var, "\n")
-  cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n")
-  expl_var <- if (length(object$indep_var) == 1) object$indep_var else "x"
-  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$dep_var, " is zero\n"))
-  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$dep_var, " is not zero\n"))
+  cat("Response variable    :", object$rvar, "\n")
+  cat("Explanatory variables:", paste0(object$evar, collapse=", "), "\n")
+  expl_var <- if (length(object$evar) == 1) object$evar else "x"
+  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$rvar, " is zero\n"))
+  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$rvar, " is not zero\n"))
   if ("standardize" %in% object$check)
     cat("**Standardized coefficients shown**\n")
 
@@ -137,7 +137,7 @@ summary.regression <- function(object,
     print(coeff, row.names=FALSE)
   }
 
-  if (nrow(object$model$model) <= (length(object$indep_var) + 1))
+  if (nrow(object$model$model) <= (length(object$evar) + 1))
     return("\nInsufficient observations to estimate model")
 
   ## adjusting df for included intercept term
@@ -185,7 +185,7 @@ summary.regression <- function(object,
       # cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nMulticollinearity diagnostics were not calculated.\n")
       cat("Multicollinearity diagnostics were not calculated.")
     } else {
-      if (length(object$indep_var) > 1) {
+      if (length(object$evar) > 1) {
         cat("Variance Inflation Factors\n")
         vif(object$model) %>%
           { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
@@ -227,7 +227,7 @@ summary.regression <- function(object,
     } else {
       sub_form <- ". ~ 1"
 
-      vars <- object$indep_var
+      vars <- object$evar
       if (object$int_var != "" && length(vars) > 1) {
         ## updating test_var if needed
         test_var <- test_specs(test_var, object$int_var)
@@ -308,9 +308,9 @@ plot.regression <- function(x,
   # object_size(object$model, model)
   model <- ggplot2::fortify(object$model)
 
-  dep_var <- object$dep_var
-  indep_var <- object$indep_var
-  vars <- c(dep_var, indep_var)
+  rvar <- object$rvar
+  evar <- object$evar
+  vars <- c(rvar, evar)
 
   flines <- sub("loess","",lines) %>% sub("line","",.)
   nlines <- sub("jitter","",lines)
@@ -325,7 +325,7 @@ plot.regression <- function(x,
   if ("dashboard" %in% plots) {
 
     plot_list[[1]] <-
-      visualize(model, xvar = ".fitted", yvar = dep_var, type = "scatter", custom = TRUE) +
+      visualize(model, xvar = ".fitted", yvar = rvar, type = "scatter", custom = TRUE) +
       labs(list(title = "Actual vs Fitted values", x = "Fitted", y = "Actual"))
 
     plot_list[[2]] <-
@@ -358,19 +358,19 @@ plot.regression <- function(x,
   }
 
   if ("scatter" %in% plots) {
-    for (i in indep_var) {
+    for (i in evar) {
       if ("factor" %in% class(model[,i])) {
         plot_list[[paste0("scatter",i)]] <-
-          visualize(select_(model, .dots = c(i,dep_var)), xvar = i, yvar = dep_var, type = "scatter", check = flines, alpha = .2, custom = TRUE)
+          visualize(select_(model, .dots = c(i,rvar)), xvar = i, yvar = rvar, type = "scatter", check = flines, alpha = .2, custom = TRUE)
       } else {
         plot_list[[paste0("scatter",i)]] <-
-          visualize(select_(model, .dots = c(i,dep_var)), xvar = i, yvar = dep_var, type = "scatter", check = nlines, custom = TRUE)
+          visualize(select_(model, .dots = c(i,rvar)), xvar = i, yvar = rvar, type = "scatter", check = nlines, custom = TRUE)
       }
     }
   }
 
   if ("resid_pred" %in% plots) {
-    for (i in indep_var) {
+    for (i in evar) {
       if ("factor" %in% class(model[,i])) {
         plot_list[[i]] <-
           visualize(select_(model, .dots = c(i,".resid")), xvar = i, yvar = ".resid", type = "scatter", check = flines, alpha = .2, custom = TRUE) +
@@ -405,7 +405,7 @@ plot.regression <- function(x,
 
   if ("leverage" %in% plots)
     return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1,
-           layout = c(ceiling(length(indep_var)/2),2)))
+           layout = c(ceiling(length(evar)/2),2)))
 
   if (exists("plot_list")) {
     sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 2))) ) %>%
@@ -467,7 +467,7 @@ predict.regression <- function(object,
   }
 
   pred_type <- "cmd"
-  vars <- object$indep_var
+  vars <- object$evar
   if (pred_cmd != "") {
     pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
@@ -535,8 +535,8 @@ predict.regression <- function(object,
         cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
       # if (pred_filt %>% gsub("\\s","",.) != "")
       #   cat("Pred filter:", gsub("\\n","", pred_filt), "\n")
-      cat("Response variable    :", object$dep_var, "\n")
-      cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n\n")
+      cat("Response variable    :", object$rvar, "\n")
+      cat("Explanatory variables:", paste0(object$evar, collapse=", "), "\n\n")
 
       if (pred_type == "cmd") {
         cat("Predicted values for:\n")
@@ -694,10 +694,10 @@ store_reg <- function(object, data = object$dataset,
 }
 
 #' Check if main effects for all interaction effects are included in the model
-#' If ':' is used to select a range _indep_var_ is updated
+#' If ':' is used to select a range _evar_ is updated
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
-#' @param iv List of explanatory variables provided to _regression_ or _glm_
+#' @param ev List of explanatory variables provided to _regression_ or _glm_
 #' @param cn Column names for all explanatory variables in _dat_
 #' @param intv Interaction terms specified
 #'
@@ -708,11 +708,11 @@ store_reg <- function(object, data = object$dataset,
 #' var_check(c("a", "b"), c("a", "b"), "a:c")
 #'
 #' @export
-var_check <- function(iv, cn, intv = "") {
+var_check <- function(ev, cn, intv = "") {
 
-  ## if : is used to select a range of variables indep_var is updated
-  vars <- iv
-  if (length(vars) < length(cn)) vars <- iv <- cn
+  ## if : is used to select a range of variables evar is updated
+  vars <- ev
+  if (length(vars) < length(cn)) vars <- ev <- cn
 
   if (intv != "" && length(vars) > 1) {
     if ({intv %>% strsplit(":") %>% unlist} %in% vars %>% all) {
@@ -723,7 +723,7 @@ var_check <- function(iv, cn, intv = "") {
     }
   }
 
-  list(vars = vars, iv = iv, intv = intv)
+  list(vars = vars, ev = ev, intv = intv)
 }
 
 #' Add interaction terms to list of test variables if needed

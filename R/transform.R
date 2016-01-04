@@ -22,14 +22,20 @@ square <- function(x) x^2
 #' @param x Input variable
 #' @return 1/x
 #' @export
-inverse <- function(x) 1/x
+inverse <- function(x) {
+  stopifnot(y != 0)
+  1/x
+}
 
 #' Normalize a variable x by a variable y
 #' @param x Input variable
 #' @param y Normalizing variable
 #' @return x/y
 #' @export
-normalize <- function(x,y) x/y
+normalize <- function(x,y) {
+  stopifnot(y != 0)
+  x/y
+}
 
 #' Convert input in month-day-year format to date
 #' @details Use as.character if x is a factor
@@ -361,12 +367,13 @@ getsummary <- function(dat, dc = getclass(dat)) {
       group_by_("variable") %>%
       summarise_each(funs(n = length, n_missing = n_missing, n_distinct = n_distinct,
                      mean = mean_rm, median = median_rm, min = min_rm, max = max_rm,
-                     `25%` = p25, `75%` = p75, sd = sd_rm, se = serr, cv = sd/mean)) %>%
+                     `25%` = p25, `75%` = p75, sd = sd_rm, se = serr)) %>%
       data.frame(check.names = FALSE) %>%
       { .[,-1] %<>% round(.,3); colnames(.)[1] <- ""; . } %>%
       print(row.names = FALSE)
     cat("\n")
   }
+
   if (sum(isFct) > 0) {
     cat("Summarize factors:\n")
     select(dat, which(isFct)) %>% summary(maxsum = 20) %>% print

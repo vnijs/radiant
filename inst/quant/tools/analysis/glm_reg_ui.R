@@ -78,14 +78,14 @@ glm_pred_plot_inputs <- reactive({
 
 output$ui_glm_dep_var <- renderUI({
  	vars <- two_level_vars()
-  selectInput(inputId = "glm_dep_var", label = "Response variable:", choices = vars,
-  	selected = state_single("glm_dep_var",vars), multiple = FALSE)
+  selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
+  	selected = state_single("glm_rvar",vars), multiple = FALSE)
 })
 
 output$ui_glm_lev <- renderUI({
   levs <- c()
-  if (!not_available(input$glm_dep_var))
-    levs <- .getdata()[,input$glm_dep_var] %>% as.factor %>% levels
+  if (!not_available(input$glm_rvar))
+    levs <- .getdata()[,input$glm_rvar] %>% as.factor %>% levels
   selectInput(inputId = "glm_lev", label = "Choose level:",
               choices = levs,
               selected = state_single("glm_lev",levs), multiple = FALSE)
@@ -94,30 +94,30 @@ output$ui_glm_lev <- renderUI({
 output$ui_glm_indep_var <- renderUI({
 	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if (not_available(input$glm_dep_var)) vars <- character(0)
-  if (length(vars) > 0 ) vars <- vars[-which(vars == input$glm_dep_var)]
+  if (not_available(input$glm_rvar)) vars <- character(0)
+  if (length(vars) > 0 ) vars <- vars[-which(vars == input$glm_rvar)]
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
   isolate({
-    init <- input$glm_indep_var %>%
+    init <- input$glm_evar %>%
     {if (!is_empty(.) && . %in% vars) . else character(0)}
   })
 
-  selectInput(inputId = "glm_indep_var", label = "Explanatory variables:", choices = vars,
-  	selected = state_multiple("glm_indep_var", vars, init),
+  selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
+  	selected = state_multiple("glm_evar", vars, init),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
 output$ui_glm_pred_var <- renderUI({
-  vars <- input$glm_indep_var
+  vars <- input$glm_evar
   selectInput("glm_pred_var", label = "Predict for variables:",
     choices = vars, selected = state_multiple("glm_pred_var", vars),
     multiple = TRUE, size = min(4, length(vars)), selectize = FALSE)
 })
 
 output$ui_glm_test_var <- renderUI({
- 	vars <- input$glm_indep_var
+ 	vars <- input$glm_evar
 	if (!is.null(input$glm_int_var)) vars <- c(vars,input$glm_int_var)
 
   selectizeInput(inputId = "glm_test_var", label = "Variables to test:",
@@ -128,9 +128,9 @@ output$ui_glm_test_var <- renderUI({
 })
 
 output$ui_glm_show_interactions <- renderUI({
-  if (length(input$glm_indep_var) == 2)
+  if (length(input$glm_evar) == 2)
     choices <- glm_show_interactions[1:2]
-  else if (length(input$glm_indep_var) > 2)
+  else if (length(input$glm_evar) > 2)
     choices <- glm_show_interactions
   else
     choices <- glm_show_interactions[1]
@@ -144,7 +144,7 @@ output$ui_glm_int_var <- renderUI({
   if (is_empty(input$glm_show_interactions)) {
     choices <- character(0)
   } else {
-    vars <- input$glm_indep_var
+    vars <- input$glm_evar
     if (not_available(vars) || length(vars) < 2) return()
     # vector of possible interaction terms to sel from glm_reg
     choices <- iterms(vars, input$glm_show_interactions)
@@ -156,14 +156,14 @@ output$ui_glm_int_var <- renderUI({
 
 ## X - variable
 output$ui_glm_xvar <- renderUI({
-  vars <- input$glm_indep_var
+  vars <- input$glm_evar
   selectizeInput(inputId = "glm_xvar", label = "X-variable:", choices = vars,
     selected = state_multiple("glm_xvar",vars),
     multiple = FALSE)
 })
 
 output$ui_glm_facet_row <- renderUI({
-  vars <- input$glm_indep_var
+  vars <- input$glm_evar
   vars <- c("None" = ".", vars)
   selectizeInput("glm_facet_row", "Facet row", vars,
                  selected = state_single("glm_facet_row", vars, "."),
@@ -171,7 +171,7 @@ output$ui_glm_facet_row <- renderUI({
 })
 
 output$ui_glm_facet_col <- renderUI({
-  vars <- input$glm_indep_var
+  vars <- input$glm_evar
   vars <- c("None" = ".", vars)
   selectizeInput("glm_facet_col", "Facet column", vars,
                  selected = state_single("glm_facet_col", vars, "."),
@@ -179,7 +179,7 @@ output$ui_glm_facet_col <- renderUI({
 })
 
 output$ui_glm_color <- renderUI({
-  vars <- c("None" = "none", input$glm_indep_var)
+  vars <- c("None" = "none", input$glm_evar)
   sel <- state_single("glm_color", vars, "none")
   selectizeInput("glm_color", "Color", vars, selected = sel,
                  multiple = FALSE)
@@ -241,7 +241,7 @@ output$ui_glm_reg <- renderUI({
       uiOutput("ui_glm_lev"),
 	    uiOutput("ui_glm_indep_var"),
 
-      conditionalPanel(condition = "input.glm_indep_var != null",
+      conditionalPanel(condition = "input.glm_evar != null",
 
   			uiOutput("ui_glm_show_interactions"),
   		  conditionalPanel(condition = "input.glm_show_interactions != ''",
@@ -287,7 +287,7 @@ glm_plot <- reactive({
 
   plot_height <- 500
   plot_width <- 650
-  nrVars <- length(input$glm_indep_var) + 1
+  nrVars <- length(input$glm_evar) + 1
 
   if (input$glm_plots == 'hist') plot_height <- (plot_height / 2) * ceiling(nrVars / 2)
   if (input$glm_plots == 'dashboard') plot_height <- 1.5 * plot_height
@@ -342,10 +342,10 @@ output$glm_reg <- renderUI({
 })
 
 glm_available <- reactive({
-  if (not_available(input$glm_dep_var))
+  if (not_available(input$glm_rvar))
     return("This analysis requires a response variable with two levels and one\nor more explanatory variables. If these variables are not available\nplease select another dataset.\n\n" %>% suggest_data("titanic"))
 
-  if (not_available(input$glm_indep_var))
+  if (not_available(input$glm_evar))
     return("Please select one or more explanatory variables.\n\n" %>% suggest_data("titanic"))
 
   "available"
@@ -370,7 +370,7 @@ glm_available <- reactive({
 .predict_plot_glm_reg <- reactive({
   if (!input$glm_pred_plot) return(" ")
   if (glm_available() != "available") return(glm_available())
-  if (not_available(input$glm_xvar) || !input$glm_xvar %in% input$glm_indep_var) return(" ")
+  if (not_available(input$glm_xvar) || !input$glm_xvar %in% input$glm_evar) return(" ")
   if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
   do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
 })

@@ -60,10 +60,10 @@ output$ui_Manage <- renderUI({
   tagList(
     wellPanel(
       selectInput("dataType", label = "Load data of type:",
-                   c("rda" = "rda", "rds" = "rds", "csv" = "csv",
-                     "rda (url)" = "url_rda", "csv (url)" = "url_csv",
-                     "clipboard" = "clipboard","examples" = "examples", "state" = "state"),
-                     selected = "rda"),
+        c("rda" = "rda", "rds" = "rds", "state" = "state", "csv" = "csv",
+          "clipboard" = "clipboard","examples" = "examples",
+          "rda (url)" = "url_rda", "csv (url)" = "url_csv"),
+        selected = "rda"),
       conditionalPanel(condition = "input.dataType != 'clipboard' &&
                                     input.dataType != 'examples'",
         conditionalPanel("input.dataType == 'csv' | input.dataType == 'url_csv'",

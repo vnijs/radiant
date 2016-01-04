@@ -3,8 +3,8 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param dep_var The response variable in the logit (probit) model
-#' @param indep_var Explanatory variables in the model
+#' @param rvar The response variable in the logit (probit) model
+#' @param evar Explanatory variables in the model
 #' @param lev The level in the response variable defined as _success_
 #' @param link Link function for _glm_ ('logit' or 'probit'). 'logit' is the default
 #' @param int_var Interaction term to include in the model (not implement)
@@ -24,7 +24,7 @@
 #' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
 #' @export
-glm_reg <- function(dataset, dep_var, indep_var,
+glm_reg <- function(dataset, rvar, evar,
                     lev = "",
                     link = "logit",
                     int_var = "",
@@ -32,14 +32,14 @@ glm_reg <- function(dataset, dep_var, indep_var,
                     dec = 3,
                     data_filter = "") {
 
-  dat <- getdata(dataset, c(dep_var, indep_var), filt = data_filter)
+  dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
     return("One or more selected variables show no variation. Please select other variables." %>%
            set_class(c("glm_reg",class(.))))
 
-  glm_dv <- dat[[dep_var]]
+  glm_dv <- dat[[rvar]]
   if (lev == "") {
     if (is.factor(glm_dv))
       lev <- levels(glm_dv)[1]
@@ -48,22 +48,22 @@ glm_reg <- function(dataset, dep_var, indep_var,
   }
 
   ## transformation to TRUE/FALSE depending on the selected level (lev)
-  dat[[dep_var]] <- dat[[dep_var]] == lev
+  dat[[rvar]] <- dat[[rvar]] == lev
 
   vars <- ""
-  var_check(indep_var, colnames(dat)[-1], int_var) %>%
-    { vars <<- .$vars; indep_var <<- .$iv; int_var <<- .$intv }
+  var_check(evar, colnames(dat)[-1], int_var) %>%
+    { vars <<- .$vars; evar <<- .$ev; int_var <<- .$intv }
 
   if ("standardize" %in% check) {
     isNum <- sapply(dat, is.numeric)
     if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
-  form <- paste(dep_var, "~", paste(vars, collapse = " + ")) %>% as.formula
+  form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
 
   if ("stepwise" %in% check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-    model <- glm(paste(dep_var, "~ 1") %>% as.formula,
+    model <- glm(paste(rvar, "~ 1") %>% as.formula,
                  family = binomial(link = link), data = dat) %>%
              step(k = 2, scope = list(upper = form), direction = 'both')
   } else {
@@ -130,13 +130,13 @@ summary.glm_reg <- function(object,
   cat("\nData         :", object$dataset)
   if (object$data_filter %>% gsub("\\s","",.) != "")
     cat("\nFilter       :", gsub("\\n","", object$data_filter))
-  cat("\nResponse variable    :", object$dep_var)
-  cat("\nLevel                :", object$lev, "in", object$dep_var)
-  cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "),"\n")
+  cat("\nResponse variable    :", object$rvar)
+  cat("\nLevel                :", object$lev, "in", object$rvar)
+  cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n")
 
-  expl_var <- if (length(object$indep_var) == 1) object$indep_var else "x"
-  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$dep_var, " is zero\n"))
-  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$dep_var, " is not zero\n"))
+  expl_var <- if (length(object$evar) == 1) object$evar else "x"
+  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$rvar, " is zero\n"))
+  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$rvar, " is not zero\n"))
   if ("standardize" %in% object$check)
     cat("**Standardized coefficients shown**\n")
   cat("\n")
@@ -168,7 +168,7 @@ summary.glm_reg <- function(object,
     if (anyNA(object$model$coeff)) {
       cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
     } else {
-      if (length(object$indep_var) > 1) {
+      if (length(object$evar) > 1) {
         cat("Variance Inflation Factors\n")
         vif(object$model) %>%
           { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% ## needed when factors are included
@@ -232,9 +232,9 @@ summary.glm_reg <- function(object,
       cat("Model comparisons are not conducted when Stepwise has been selected.\n")
     } else {
       # sub_form <- ". ~ 1"
-      sub_form <- paste(object$dep_var, "~ 1")
+      sub_form <- paste(object$rvar, "~ 1")
 
-      vars <- object$indep_var
+      vars <- object$evar
       if (object$int_var != "" && length(vars) > 1) {
         ## updating test_var if needed
         test_var <- test_specs(test_var, object$int_var)
@@ -242,7 +242,7 @@ summary.glm_reg <- function(object,
       }
 
       not_selected <- setdiff(vars, test_var)
-      if (length(not_selected) > 0) sub_form <- paste(object$dep_var, "~", paste(not_selected, collapse = " + "))
+      if (length(not_selected) > 0) sub_form <- paste(object$rvar, "~", paste(not_selected, collapse = " + "))
       ## update with glm_sub NOT working when called from radiant - strange
       # glm_sub <- update(object$model, sub_form, data = object$model$model)
       glm_sub <- glm(sub_form, family = binomial(link = object$link), data = object$model$model)
@@ -303,14 +303,14 @@ plot.glm_reg <- function(x,
   model$.actual <- as.numeric(object$glm_dv)
   model$.actual <- model$.actual - max(model$.actual) + 1   # adjustment in case max > 1
 
-  dep_var <- object$dep_var
-  indep_var <- object$indep_var
-  vars <- c(object$dep_var, object$indep_var)
+  rvar <- object$rvar
+  evar <- object$evar
+  vars <- c(object$rvar, object$evar)
   nrCol <- 2
   plot_list <- list()
 
   ## use orginal data rather than the logical used for estimation
-  model[[dep_var]] <- object$glm_dv
+  model[[rvar]] <- object$glm_dv
 
   if ("hist" %in% plots) {
     for (i in vars)
@@ -334,14 +334,14 @@ plot.glm_reg <- function(x,
   }
 
   if (plots == "scatter") {
-    for (i in indep_var) {
+    for (i in evar) {
       if ("factor" %in% class(model[,i])) {
-        plot_list[[i]] <- ggplot(model, aes_string(x=i, fill=dep_var)) +
+        plot_list[[i]] <- ggplot(model, aes_string(x=i, fill=rvar)) +
                         geom_bar(position = "fill", alpha=.5) +
                         labs(list(y = ""))
       } else {
         plot_list[[i]] <-
-          visualize(select_(model, .dots = c(i,dep_var)), xvar = dep_var, yvar = i, check = "jitter", type = "scatter", custom = TRUE)
+          visualize(select_(model, .dots = c(i,rvar)), xvar = rvar, yvar = i, check = "jitter", type = "scatter", custom = TRUE)
       }
     }
     nrCol <- 1
@@ -435,7 +435,7 @@ predict.glm_reg <- function(object,
   }
 
   pred_type <- "cmd"
-  vars <- object$indep_var
+  vars <- object$evar
   if (pred_cmd != "") {
     pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
@@ -499,9 +499,9 @@ predict.glm_reg <- function(object,
       cat("\nData         :", object$dataset)
       if (object$data_filter %>% gsub("\\s","",.) != "")
         cat("\nFilter       :", gsub("\\n","", object$data_filter))
-      cat("\nResponse variable    :", object$dep_var)
-      cat("\nLevel                :", object$lev, "in", object$dep_var)
-      cat("\nExplanatory variables:", paste0(object$indep_var, collapse=", "),"\n\n")
+      cat("\nResponse variable    :", object$rvar)
+      cat("\nLevel                :", object$lev, "in", object$rvar)
+      cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n\n")
 
       if (pred_type == "cmd") {
         cat("Predicted values for:\n")

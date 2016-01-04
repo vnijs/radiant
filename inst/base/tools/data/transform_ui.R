@@ -61,7 +61,7 @@ output$ui_tr_log <- renderUI({
   )
 })
 
-ext_options <- list("none" = "", "log" = "_log", "exp" = "_exp",
+ext_options <- list("none" = "", "log" = "_ln", "exp" = "_exp",
                     "square" = "_sq", "sqrt" = "_sqrt", "center" = "_ct",
                     "standardize" = "_st", "inverse" = "_inv")
 
@@ -115,7 +115,7 @@ output$ui_tr_dataset <- renderUI({
   )
 })
 
-trans_options <- list("None" = "none", "Log" = "log", "Exp" = "exp",
+trans_options <- list("None" = "none", "Ln (natural log)" = "log", "Exp" = "exp",
                       "Square" = "square", "Square-root" = "sqrt",
                       "Center" = "center", "Standardize" = "standardize", "Inverse" = "inverse")
 
@@ -263,6 +263,12 @@ output$ui_Transform <- renderUI({
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
   }
 }
+
+## ensure no variables are selected 'by accident' when creating a new variable
+observeEvent(input$tr_change_type, {
+  if (input$tr_change_type == "create")
+    updateSelectInput(session = session, inputId = "tr_vars", selected = character(0))
+})
 
 .create <- function(dataset, cmd,
                     byvar = "",
@@ -821,10 +827,13 @@ output$transform_summary <- renderPrint({
         cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
         # cat(tr_summary())
       } else {
-        if (input$tr_change_type == "none")
+        if (input$tr_change_type == "none") {
           cat("** Select a transformation type **\n\n")
-        else
+        } else {
           cat("** Press the 'Store' button to add your changes to the data **\n\n")
+          if (!is_empty(input$tr_vars) && input$tr_change_type == "create")
+            cat("** Results are grouped by", paste(input$tr_vars, collapse = " ,"), "**\n\n")
+        }
 
         cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))
       }
