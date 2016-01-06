@@ -283,10 +283,18 @@ img {
 </div>
 <div id="customizing-plots-in-r-report" class="section level3">
 <h3>Customizing plots in R &gt; Report</h3>
-<p>To customize a plot first generate the visualize command by clicking the report (book) icon on the bottom left of your screen. The example below illustrates how to customize a command in the <code>R &gt; Report</code> tab. Notice that <code>custom</code> is set to <code>TRUE</code>.</p>
+<p>To customize a plot first generate the <code>visualize</code> command by clicking the report icon on the bottom left of your screen. The example below illustrates how to customize a command in the <code>R &gt; Report</code> tab. Notice that <code>custom</code> is set to <code>TRUE</code>.</p>
 <pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, yvar = &quot;price&quot;, xvar = &quot;carat&quot;, type = &quot;scatter&quot;, custom = TRUE) +
   ggtitle(&quot;A scatterplot&quot;) + xlab(&quot;price in $&quot;)</code></pre>
-<p>See the ggplot2 documentation page for available options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.</p>
+<p><strong>Some common commands:</strong></p>
+<ul>
+<li>Add a title: <code>+ ggtitle(&quot;my title&quot;)</code></li>
+<li>Change label: <code>+ xlab(&quot;my X-axis label&quot;)</code> or <code>+ ylab(&quot;my X-axis label&quot;)</code></li>
+<li>Remove legend: <code>+ theme(legend.position = &quot;none&quot;)</code></li>
+<li>Rotate tick labels: <code>+ theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></li>
+<li>Set plot limits: <code>+ ylim(15, 20)</code> or <code>xlim(&quot;VS1&quot;,&quot;VS2&quot;)</code></li>
+</ul>
+<p>See the ggplot2 documentation page for additional options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.</p>
 </div>
 
 

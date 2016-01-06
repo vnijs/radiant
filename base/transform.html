@@ -251,12 +251,12 @@ img {
 ## transform variable
 r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price, carat)
 </pre>
-<p>This is an important feature if you need to recreate your results at some point in the future or you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate all results.</p>
+<p>This is an important feature if you need to recreate your results or you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate all results.</p>
 <p>To add commands contained in the command log window to a report in <em>R &gt; Report</em> click the <i title='Report results' class='fa fa-edit'></i> icon.</p>
 </div>
 <div id="filter" class="section level3">
 <h3>Filter</h3>
-<p>Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the <code>Filter</code> check-box. Alternatively, navigate to the Data &gt; View tab and click the <code>Store</code> button to store the filtered data and select the newly create dataset. Then return to the Transform tab to make the desired variable changes.</p>
+<p>If a filter has been specified it will be ignored for (most) functions available in <em>Data &gt; Transform</em>. To create a new dataset based on a filter navigate to the <em>Data &gt; View</em> tab and click the <code>Store</code> button. Alternatively, create new dataset based on a Filter select <code>Holdout sample</code> from the <code>Transformation type</code> dropdown.</p>
 </div>
 <div id="type" class="section level3">
 <h3>Type</h3>
@@ -285,7 +285,7 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <h3>Transform</h3>
 <p>When you select <code>Transform</code> from the <code>Transformation type</code> drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose <code>Log</code> from the <code>Apply function</code> drop-down. A new variable is created with the extension specified in the ’Variable name extension<code>text input (e.g,.</code>_log<code>). Make sure to press</code>return<code>after changing the extension. Click the</code>Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.</p>
 <ol style="list-style-type: decimal">
-<li>Log: create a natural log-transformed version of the selected variable (i.e., log(x) or ln(x))</li>
+<li>Ln: create a natural log-transformed version of the selected variable (i.e., log(x) or ln(x))</li>
 <li>Square: multiply a variable by itself (i.e., x^2 or square(x))</li>
 <li>Square-root: take the square-root of a variable (i.e., x^.5)</li>
 <li>Absolute: Absolute value of a variable (i.e., abs(x))</li>
@@ -298,8 +298,11 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 </div>
 <div id="create" class="section level3">
 <h3>Create</h3>
-<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge of R-syntax. A new variable can be any function of other variables in the (active) dataset. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. To the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you have typed the command press <code>return</code> to create the new variable and press <code>Store</code> to add it to the dataset.</p>
+<p>Choose <code>Create</code> from the <code>Transformation type</code> drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge of R-syntax. A new variable can be any function of other variables in the (active) dataset. Some examples are given below. In each example the name to the left of the <code>=</code> sign is the name of the new variable. To the right of the <code>=</code> sign you can include other variable names and basic R-functions. After you type the command press <code>return</code> to create the new variable. If the result is as expected press <code>Store</code> to add it to the dataset.</p>
+<p><strong>Note:</strong> If one or more variables is selected from the list in <code>Select variables</code> they will be used to group the data before creating the new variable (see example 1. below). If this is not the intended result make sure that no variables are selected when creating the new variable</p>
 <ol style="list-style-type: decimal">
+<li><p>Create a new variable p that is equal to the mean of price. To calculate the mean of price per group (e.g., per level of clarity) simply select clarity from the <code>Select variables</code> list</p>
+<p>z = mean(x)</p></li>
 <li><p>Create a new variable z that is the difference between variables x and y</p>
 <p>z = x - y</p></li>
 <li><p>Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the <code>Transform</code> drop-down as <code>Center</code>):</p>
@@ -328,10 +331,26 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <p>month = month(date)</p></li>
 <li><p>Other attributes that can be extracted from a date or date-time variable are <code>minute</code>, <code>hour</code>, <code>day</code>, <code>week</code>, <code>quarter</code>, <code>year</code>, <code>wday</code> (for weekday). For <code>wday</code> and <code>month</code> it can be convenient to add <code>label = TRUE</code> to the call. For example, to extract the weekday from a date variable and use a label rather than a number</p>
 <p>weekday = wday(date, label = TRUE)</p></li>
-<li><p>Calculating the distance between two locations using lat-long information</p>
+<li><p>Calculate the distance between two locations using lat-long information</p>
 <p>trip_distance = as_distance(lat1, long1, lat2, long2)</p></li>
+<li><p>Calculate quintiles for a variable <code>recency</code> by using the <code>xtile</code> command as shown below. To create deciles replace “5” by “10”.</p>
+<p>rec_iq = xtile(recency, 5)</p></li>
 </ol>
-<p>Note: For examples 6, 7, and 14 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
+<p>Note: For examples 7, 8, and 15 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
+</div>
+<div id="bin" class="section level2">
+<h2>Bin</h2>
+<p>The <code>Bin</code> option is a convenience function for the <code>xtile</code> command mentioned above when you want to create multiple quitile/decile/… variables. To calculate quintiles enter “5” as the <code>Nr bins</code>. The <code>reverse</code> option replaces 1 by 5, 2 by 4, …, 5 by 1. Choose an appropriate variable name extension for the new variables.</p>
+<div id="clipboard" class="section level3">
+<h3>Clipboard</h3>
+<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don’t have the original data in a spreadsheet already use the clipboard feature in <em>Data &gt; Manage</em> so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the <em>Data &gt; View</em> tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> drop-down and paste the new data into the <code>Paste from spreadsheet</code> box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click <code>Store</code>.</p>
+<blockquote>
+<p><strong>Note:</strong> Using the clipboard feature for data transformation is discouraged because it is not reproducible.</p>
+</blockquote>
+</div>
+<div id="normalize" class="section level3">
+<h3>Normalize</h3>
+<p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. You will see summary statistics for the new variable (e.g., <code>price_carat</code>) in the main panel. Store changes by clicking the <code>Store</code> button.</p>
 </div>
 <div id="recode" class="section level3">
 <h3>Recode</h3>
@@ -360,24 +379,13 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <h3>Replace</h3>
 <p>Choose <code>Replace</code> from the <code>Transformation type</code> drop-down if you want to replace existing variables in the data with new ones created using, for example, Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press <code>Store</code> to alter the data.</p>
 </div>
-<div id="clipboard" class="section level3">
-<h3>Clipboard</h3>
-<p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don’t have the original data in a spreadsheet already use the clipboard feature in <em>Data &gt; Manage</em> so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the <em>Data &gt; View</em> tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> drop-down and paste the new data into the <code>Paste from spreadsheet</code> box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click <code>Store</code>.</p>
-<blockquote>
-<p><strong>Note:</strong> Using the clipboard feature for data transformation is discouraged because it is not reproducible.</p>
-</blockquote>
-</div>
-<div id="normalize" class="section level3">
-<h3>Normalize</h3>
-<p>Choose <code>Normalize</code> from the <code>Transformation type</code> drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select <code>carat</code> as the normalizing variable and <code>price</code> in the <code>Select variable(s)</code> box. You will see summary statistics for the new variable (e.g., <code>price_carat</code>) in the main panel. Store changes by clicking the <code>Store</code> button.</p>
+<div id="reorder-or-remove-levels" class="section level3">
+<h3>Reorder or remove levels</h3>
+<p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the <span class="math">\(\times\)</span> to remove them. Press <code>Store</code> to commit the changes. To temporarily exclude levels from the data use the <code>Filter</code> box (see the help file linked in the <code>Data &gt; View</code> tab).</p>
 </div>
 <div id="reorder-or-remove-columns" class="section level3">
 <h3>Reorder or remove columns</h3>
 <p>Choose <code>Reorder/Remove columns</code> from the <code>Transformation type</code> drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the <span class="math">\(\times\)</span> next to the label. Press <code>Store</code> to commit the changes.</p>
-</div>
-<div id="reorder-or-remove-levels" class="section level3">
-<h3>Reorder or remove levels</h3>
-<p>If a (single) variable of type <code>factor</code> is selected in <code>Select variable(s)</code>, choose <code>Reorder/Remove levels</code> from the <code>Transformation type</code> drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the <span class="math">\(\times\)</span> to remove them. Press <code>Store</code> to commit the changes. To temporarily exclude levels from the data use the <code>Filter</code> box (see the help file linked in the <code>Data &gt; View</code> tab).</p>
 </div>
 <div id="remove-missing-values" class="section level3">
 <h3>Remove missing values</h3>
@@ -390,6 +398,15 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <div id="show-duplicates" class="section level3">
 <h3>Show duplicates</h3>
 <p>If there are duplicates in the data use <code>Show duplicates</code> to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the <em>View</em> tab make sure to <code>Store</code> them in a different dataset (i.e., make sure <strong>not</strong> to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are <strong>exactly</strong> the same so showing 2 or 3 isn’t helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with <strong>all</strong> rows that are deemed similar.</p>
+</div>
+</div>
+<div id="training-variable" class="section level2">
+<h2>Training variable</h2>
+<p>To create a variable that can be used to randomly filter a dataset for analysis (or training) and holdout, select <code>Training variable</code> from the <code>Transformation type</code> dropdown. Specify either the number of observations to use for training (i.e., <code>Size</code> &gt; 1) or a proportion of observations to select (i.e., <code>Size</code> &gt; 1). The new variable will have a value “1” for training and “0” holdout.</p>
+</div>
+<div id="holdout-sample" class="section level2">
+<h2>Holdout sample</h2>
+<p>To create a holdout sample based on (the reverse of) a filter select <code>Holdout sample</code> from the <code>Transformation type</code> dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where <code>data &lt; &quot;2015-1-1&quot;</code> then the holdout sample will be based on the filter <code>data &gt;= &quot;2015-1-1&quot;</code> if the <code>Reverse filter</code> box is checked.</p>
 </div>
 
 
