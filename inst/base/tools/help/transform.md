@@ -9,13 +9,13 @@ All transformations applied in the _Data > Transform_ tab can be _logged_. If, f
 r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log", price, carat)
 </pre>
 
-This is an important feature if you need to recreate your results at some point in the future or you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate all results.
+This is an important feature if you need to recreate your results or you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to generate all results.
 
 To add commands contained in the command log window to a report in _R > Report_ click the <i title='Report results' class='fa fa-edit'></i> icon.
 
 ### Filter
 
-Filter functionality must be turned off when transforming variables. If a filter is active the transform functions will show a warning message. Either remove the filter statement or un-check the `Filter` check-box. Alternatively, navigate to the Data > View tab and click the `Store` button to store the filtered data and select the newly create dataset. Then return to the Transform tab to make the desired variable changes.
+If a filter has been specified it will be ignored for (most) functions available in _Data > Transform_. To create a new dataset based on a filter navigate to the _Data > View_ tab and click the `Store` button. Alternatively, create new dataset based on a Filter select `Holdout sample` from the `Transformation type` dropdown.
 
 ### Type
 
@@ -44,7 +44,7 @@ When you select `Type` from the `Transformation type` drop-down another drop-dow
 
 When you select `Transform` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to apply common transformations to one or more variables in the data. For example, to take the (natural) log of a variable select the variable(s) you want to transform and choose `Log` from the `Apply function` drop-down. A new variable is created with the extension specified in the 'Variable name extension` text input (e.g,. `_log`). Make sure to press `return` after changing the extension. Click the `Store` button to add the variable(s) to the data set. A description of the transformation functions included in Radiant is provided below.
 
-1. Log: create a natural log-transformed version of the selected variable (i.e., log(x) or ln(x))
+1. Ln: create a natural log-transformed version of the selected variable (i.e., log(x) or ln(x))
 2. Square: multiply a variable by itself (i.e., x^2 or square(x))
 3. Square-root: take the square-root of a variable (i.e., x^.5)
 4. Absolute: Absolute value of a variable (i.e., abs(x))
@@ -54,72 +54,96 @@ When you select `Transform` from the `Transformation type` drop-down another dro
 8. Median split: create a new factor with two levels (Above and Below) that splits the variable values at the median
 9. Deciles: create a new factor with 10 levels (deciles) that splits the variable values at the 10th, 20th, ..., 90th percentiles.
 
-
 ### Create
 
-Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge of R-syntax. A new variable can be any function of other variables in the (active) dataset. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. To the right of the `=` sign you can include other variable names and basic R-functions. After you have typed the command press `return` to create the new variable and press `Store` to add it to the dataset.
+Choose `Create` from the `Transformation type` drop-down. This is the most flexible command to create new or transformed variables. However, it also requires some basic knowledge of R-syntax. A new variable can be any function of other variables in the (active) dataset. Some examples are given below. In each example the name to the left of the `=` sign is the name of the new variable. To the right of the `=` sign you can include other variable names and basic R-functions. After you type the command press `return` to create the new variable. If the result is as expected press `Store` to add it to the dataset.
 
-1. Create a new variable z that is the difference between variables x and y
+**Note:** If one or more variables is selected from the list in `Select variables` they will be used to group the data before creating the new variable (see example 1. below). If this is not the intended result make sure that no variables are selected when creating the new variable
+
+1. Create a new variable p that is equal to the mean of price. To calculate the mean of price per group (e.g., per level of clarity) simply select clarity from the `Select variables` list
+
+	z = mean(x)
+
+2. Create a new variable z that is the difference between variables x and y
 
 	z = x - y
 
-2. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the `Transform` drop-down as `Center`):
+3. Create a new variable z that is a transformation of variable x but with mean equal to zero (note that this transformation is also available in the `Transform` drop-down as `Center`):
 
 	z = x - mean(x)
 
-3. Create a new `logical` variable z that takes on the value TRUE when x > y and FALSE otherwise
+4. Create a new `logical` variable z that takes on the value TRUE when x > y and FALSE otherwise
 
 	z = x > y
 
-4. Create a new `logical` z that takes on the value TRUE when x is equal to y and FALSE otherwise
+5. Create a new `logical` z that takes on the value TRUE when x is equal to y and FALSE otherwise
 
 	z = x == y
 
-5. Create a variable z that is equal to x lagged by 3 periods
+6. Create a variable z that is equal to x lagged by 3 periods
 
 	z = lag(x,3)
 
-6. Create a categorical variable with two levels
+7. Create a categorical variable with two levels
 
 	z = ifelse(x < y, 'smaller', 'bigger')
 
-7. Create a categorical variable with three levels. An alternative approach would be to use the `Recode` function described below
+8. Create a categorical variable with three levels. An alternative approach would be to use the `Recode` function described below
 
 	z = ifelse(x < 60, '< 60', ifelse(x > 65, '> 65', '60-65'))
 
-8. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press `return` and `Store` to add the new `sales_rc` variable. Note that if we had entered `sales` on the left-hand side of the `=` sign the original variable would have been overwritten
+9. Convert an outlier to a missing value. For example, if we want to remove the maximum value from a variable called `sales` that is equal to 400 we could use an `ifelse` statement and enter the command below in the `Create` box. Press `return` and `Store` to add the new `sales_rc` variable. Note that if we had entered `sales` on the left-hand side of the `=` sign the original variable would have been overwritten
 
 	sales_rc = ifelse(sales > 400, NA, sales)
 
-9. Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add the new `sales_rc` variable
+10. Similarly, if a respondent with ID 3 provided information in the wrong scale on a survey (e.g., income in \$1s rather than in \$1000s) we could use an `ifelse` statement and enter the command below in the `Create` box. As before, press `return` and `Store` to add the new `sales_rc` variable
 
 	income_rc = ifelse(ID == 3, income/1000, income)
 
-10. If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use `Create` and enter:
+11. If multiple respondents made the same scaling mistake (e.g., those with ID 1, 3, and 15) we again use `Create` and enter:
 
 	income_rc = ifelse(ID %in% c(1, 3, 15), income/1000, income)
 
-11. If you have a date in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
+12. If you have a date in a format not available through the `Type` menu you can use the `parse_date_time` function. For a date formated as "2-1-14" you would specify the command below (note that this format will also be parsed correctly by the `mdy` function in the `Type` menu)
 
 	date = parse\_date\_time(x, "%m%d%y")
 
-12. Determine the time difference between two dates/times in seconds
+13. Determine the time difference between two dates/times in seconds
 
 	time\_diff = as\_duration(time2 - time1)
 
-13. Extract the month from a date variable
+14. Extract the month from a date variable
 
 	month = month(date)
 
-14. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
+15. Other attributes that can be extracted from a date or date-time variable are `minute`, `hour`, `day`, `week`, `quarter`, `year`, `wday` (for weekday). For `wday` and `month` it can be convenient to add `label = TRUE` to the call. For example, to extract the weekday from a date variable and use a label rather than a number
 
 	weekday = wday(date, label = TRUE)
 
-15. Calculating the distance between two locations using lat-long information
+16. Calculate the distance between two locations using lat-long information
 
 	trip\_distance = as_distance(lat1, long1, lat2, long2)
 
-Note: For examples 6, 7, and 14 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
+17. Calculate quintiles for a variable `recency` by using the `xtile` command as shown below. To create deciles replace "5" by "10".
+
+	rec\_iq = xtile(recency, 5)
+
+Note: For examples 7, 8, and 15 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
+
+## Bin
+
+The `Bin` option is a convenience function for the `xtile` command mentioned above when you want to create multiple quitile/decile/... variables. To calculate quintiles enter "5" as the `Nr bins`. The `reverse` option replaces 1 by 5, 2 by 4, ..., 5 by 1. Choose an appropriate variable name extension for the new variables.
+
+### Clipboard
+
+It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don't have the original data in a spreadsheet already use the clipboard feature in _Data > Manage_ so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the _Data > View_ tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` drop-down and paste the new data into the `Paste from spreadsheet` box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click `Store`.
+
+> **Note:** Using the clipboard feature for data transformation is discouraged because it is not reproducible.
+
+### Normalize
+
+Choose `Normalize` from the `Transformation type` drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. You will see summary statistics for the new variable (e.g., `price_carat`) in the main panel. Store changes by clicking the `Store` button.
+
 
 ### Recode
 
@@ -159,23 +183,13 @@ Choose `Rename` from the `Transformation type` drop-down, select one or more var
 
 Choose `Replace` from the `Transformation type` drop-down if you want to replace existing variables in the data with new ones created using, for example, Create, Transform, Clipboard, etc.. Select one or more variables to overwrite and the same number of replacement variables. Press `Store` to alter the data.
 
-### Clipboard
+### Reorder or remove levels
 
-It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don't have the original data in a spreadsheet already use the clipboard feature in _Data > Manage_ so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the _Data > View_ tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select `Clipboard` from the `Transformation type` drop-down and paste the new data into the `Paste from spreadsheet` box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click `Store`.
-
-> **Note:** Using the clipboard feature for data transformation is discouraged because it is not reproducible.
-
-### Normalize
-
-Choose `Normalize` from the `Transformation type` drop-down to standardize one or more variables. For example, in the diamonds data we may want to express price of a diamond per-carat. Select `carat` as the normalizing variable and `price` in the `Select variable(s)` box. You will see summary statistics for the new variable (e.g., `price_carat`) in the main panel. Store changes by clicking the `Store` button.
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter` box (see the help file linked in the `Data > View` tab).
 
 ### Reorder or remove columns
 
 Choose `Reorder/Remove columns` from the `Transformation type` drop-down. Drag-and-drop variables to reorder them in the data. To remove a variable click the $\times$ next to the label. Press `Store` to commit the changes.
-
-### Reorder or remove levels
-
-If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter` box (see the help file linked in the `Data > View` tab).
 
 ### Remove missing values
 
@@ -188,3 +202,11 @@ It is common to have one or more variables in a dataset that **should** have onl
 ### Show duplicates
 
 If there are duplicates in the data use `Show duplicates` to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the _View_ tab make sure to `Store` them in a different dataset (i.e., make sure **not** to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are **exactly** the same so showing 2 or 3 isn't helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with **all** rows that are deemed similar.
+
+## Training variable
+
+To create a variable that can be used to randomly filter a dataset for analysis (or training) and holdout, select `Training variable` from the `Transformation type` dropdown. Specify either the number of observations to use for training (i.e., `Size` > 1) or a proportion of observations to select (i.e., `Size` > 1). The new variable will have a value "1" for training and "0" holdout.
+
+## Holdout sample
+
+To create a holdout sample based on (the reverse of) a filter select `Holdout sample` from the `Transformation type` dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where `data < "2015-1-1"` then the holdout sample will be based on the filter `data >= "2015-1-1"` if the `Reverse filter` box is checked.

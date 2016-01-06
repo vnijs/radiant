@@ -47,12 +47,19 @@ To make plots bigger or smaller adjust the values in the height and width boxes 
 
 ### Customizing plots in R > Report
 
-To customize a plot first generate the visualize command by clicking the report (book) icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
+To customize a plot first generate the `visualize` command by clicking the report icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
 
 ```r
 visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   ggtitle("A scatterplot") + xlab("price in $")
 ```
 
-See the ggplot2 documentation page for available options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.
+**Some common commands:**
 
+* Add a title: `+ ggtitle("my title")`
+* Change label: `+ xlab("my X-axis label")` or `+ ylab("my X-axis label")`
+* Remove legend: `+ theme(legend.position = "none")`
+* Rotate tick labels: `+ theme(axis.text.x = element_text(angle = 90, hjust = 1))`
+* Set plot limits: `+ ylim(15, 20)` or `xlim("VS1","VS2")`
+
+See the ggplot2 documentation page for additional options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.
