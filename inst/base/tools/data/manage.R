@@ -56,12 +56,19 @@ loadUserData <- function(fname, uFile, ext,
                          dec = ".") {
 
   filename <- basename(fname)
+
+  fext <- tools::file_ext(filename) %>% tolower
+
+  ## switch extension if needed
+  if (fext == "rds" && ext == "rda") ext <- "rds"
+  if (fext == "rda" && ext == "rds") ext <- "rda"
+
   ## objname is used as the name of the data.frame
   objname <- sub(paste0(".",ext,"$"),"", filename)
 
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
-    fext <- tools::file_ext(filename) %>% tolower
+    # fext <- tools::file_ext(filename) %>% tolower
 
     if (fext %in% c("xls","xlsx")) {
       ret <- "### Radiant does not load xls files directly. Please save the data as a csv file and try again."
@@ -105,6 +112,7 @@ loadUserData <- function(fname, uFile, ext,
       {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
 
   } else {
+
     ret <- paste0("### The selected filetype is not currently supported (",fext,").")
     upload_error_handler(objname,ret)
   }
