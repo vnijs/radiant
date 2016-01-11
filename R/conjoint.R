@@ -3,43 +3,44 @@
 #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param dep_var The response variable (e.g., profile ratings)
-#' @param indep_var Explanatory variables in the regression
-#' @param reverse Reverse the values of the response variable (`dep_var`)
+#' @param rvar The response variable (e.g., profile ratings)
+#' @param evar Explanatory variables in the regression
+#' @param reverse Reverse the values of the response variable (`rvar`)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list with all variables defined in the function as an object of class conjoint
 #'
 #' @examples
-#' result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
-#' result <- mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape")
+#' result <- conjoint("mp3", rvar = "Rating", evar = "Memory:Shape")
+#' result <- mp3 %>% conjoint(rvar = "Rating", evar = "Memory:Shape")
 #'
 #' @seealso \code{\link{summary.conjoint}} to summarize results
 #' @seealso \code{\link{plot.conjoint}} to plot results
 #'
 #' @export
-conjoint <- function(dataset, dep_var, indep_var,
+conjoint <- function(dataset, rvar, evar,
                      reverse = FALSE,
                      data_filter = "") {
 
-	dat  <- getdata(dataset, c(dep_var, indep_var))
+	dat  <- getdata(dataset, c(rvar, evar))
 	if (!is_string(dataset)) dataset <- "-----"
 
 	# in case : was used to select a range of variables
-  var_check(indep_var, colnames(dat)[-1]) %>%
-    { indep_var <<- .$iv }
+  var_check(evar, colnames(dat)[-1]) %>%
+    { evar <<- .$ev }
 
-	formula <- paste(dep_var, "~", paste(indep_var, collapse = " + "))
+	formula <- paste(rvar, "~", paste(evar, collapse = " + "))
+	print(formula)
 
 	if (reverse) {
-		ca_dep <- dat[,dep_var]
-		dat[,dep_var] <- abs(ca_dep - max(ca_dep)) + 1
+		ca_dep <- dat[,rvar]
+		dat[,rvar] <- abs(ca_dep - max(ca_dep)) + 1
 	}
 
 	lm_mod <- lm(formula, data = dat)
 	model <- lm_mod %>% tidy
 
-	the_table <- the_table(model, dat, indep_var)
+	the_table <- the_table(model, dat, evar)
 
 	environment() %>% as.list %>% set_class(c("conjoint",class(.)))
 }
@@ -53,9 +54,9 @@ conjoint <- function(dataset, dep_var, indep_var,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+#' result <- conjoint("mp3", rvar = "Rating", evar = "Memory:Shape")
 #' summary(result, mc_diag = TRUE)
-#' mp3 %>% conjoint(dep_var = "Rating", indep_var = "Memory:Shape") %>% summary(., mc_diag = TRUE)
+#' mp3 %>% conjoint(rvar = "Rating", evar = "Memory:Shape") %>% summary(., mc_diag = TRUE)
 #'
 #' @seealso \code{\link{conjoint}} to generate results
 #' @seealso \code{\link{plot.conjoint}} to plot results
@@ -71,8 +72,8 @@ summary.conjoint <- function(object,
   cat("Data     :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-  cat("Response variable   :", object$dep_var, "\n")
-  cat("Explanatory variables:", paste0(object$indep_var, collapse=", "), "\n\n")
+  cat("Response variable   :", object$rvar, "\n")
+  cat("Explanatory variables:", paste0(object$evar, collapse=", "), "\n\n")
 
 	object$the_table %>%
 	{ cat("Conjoint part-worths:\n")
@@ -82,7 +83,7 @@ summary.conjoint <- function(object,
 	}
 
 	cat("\nConjoint regression results:\n")
-  for (i in object$indep_var) object$model$term %<>% gsub(i, paste0(i," > "), .)
+  for (i in object$evar) object$model$term %<>% gsub(i, paste0(i," > "), .)
 	object$model$estimate %>% data.frame %>% round(3) %>%
 	  set_colnames("coefficient") %>%
 	  set_rownames(object$model$term) %>% print(.)
@@ -90,7 +91,7 @@ summary.conjoint <- function(object,
 
 	if (mc_diag) {
 
-    if (length(object$indep_var) > 1) {
+    if (length(object$evar) > 1) {
       cat("Multicollinearity diagnostics:\n")
       vif(object$lm_mod) %>%
         { if (!dim(.) %>% is.null) .[,"GVIF"] else . } %>% # needed when factors are included
@@ -115,7 +116,7 @@ summary.conjoint <- function(object,
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+#' result <- conjoint(dataset = "mp3", rvar = "Rating", evar = "Memory:Shape")
 #' plot(result, scale_plot = TRUE)
 #' plot(result, plots = "iw")
 #'
@@ -138,7 +139,7 @@ plot.conjoint <- function(x,
 	if ("pw" %in% plots) {
 		PW.df <- the_table[["PW"]]
 
-		for (var in object$indep_var) {
+		for (var in object$evar) {
 			PW.var <- PW.df[PW.df[,"Attributes"] == var,]
 
 			# setting the levels in the same order as in the_table. Without this
@@ -174,21 +175,21 @@ plot.conjoint <- function(x,
 #'
 #' @param model Tidied model results (broom) output from \code{\link{conjoint}} passed on by summary.conjoint
 #' @param dat Conjoint data
-#' @param indep_var Explanatory variables used in the conjoint regression
+#' @param evar Explanatory variables used in the conjoint regression
 #'
 #' @examples
-#' result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
-#' the_table(result$model, result$dat, result$indep_var)
+#' result <- conjoint(dataset = "mp3", rvar = "Rating", evar = "Memory:Shape")
+#' the_table(result$model, result$dat, result$evar)
 #'
 #' @seealso \code{\link{conjoint}} to generate results
 #' @seealso \code{\link{summary.conjoint}} to summarize results
 #' @seealso \code{\link{plot.conjoint}} to plot results
 #'
 #' @export
-the_table <- function(model, dat, indep_var) {
+the_table <- function(model, dat, evar) {
 	if (is.character(model)) return(list("PW" = "No attributes selected."))
 
-	attr <- select_(dat, .dots = indep_var)
+	attr <- select_(dat, .dots = evar)
 	isFct <- sapply(attr, is.factor)
 	if (sum(isFct) < ncol(attr)) return(list("PW" = "Only factors can be used.", "IW" = "Only factors can be used."))
 	levs <- lapply(attr[,isFct, drop = FALSE],levels)

@@ -238,8 +238,9 @@ output$ui_Transform <- renderUI({
     # if (ext == "")
     if (is_empty(ext)) {
       paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
-    else
+    } else {
       paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    }
   }
 }
 
@@ -263,8 +264,9 @@ output$ui_Transform <- renderUI({
     # if (ext == "")
     if (is_empty(ext)) {
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "), ")\n")
-    else
+    } else {
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    }
   }
 }
 

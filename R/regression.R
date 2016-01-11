@@ -27,6 +27,8 @@ regression <- function(dataset, rvar, evar,
                        dec = 3,
                        data_filter = "") {
 
+  # summary(lm(mpg ~ I(cyl^2) + cyl, data = mtcars))
+
   dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
