@@ -1065,3 +1065,32 @@ dfround <- function(tbl, dec = 3) {
     funs(if (is.double(.)) round(., dec) else .)
   )
 }
+
+#' Find a users dropbox directory
+#'
+#' @param folder If multiple folders are present select which one to use. The first folder listed is used by default.
+#'
+#' @return Path to users personal dropbox directory
+#'
+#' @importFrom jsonlite fromJSON
+#'
+#' @export
+find_dropbox <- function(folder = 1) {
+  if (file.exists("~/.dropbox/info.json")) {
+    fp <- normalizePath("~/.dropbox/info.json", winslash = "/")
+    dbinfo <- jsonlite::fromJSON(fp)
+    ldb <- length(dbinom)
+    if (ldb > 1)
+      message("Multiple dropbox folders found. By default the first folder is used.\nTo select, for example, the third folder use 'find_dropbox(3)'")
+    if (folder > ldb) stop(paste0("Invalid folder number. Choose a folder number between 1 and ", ldb))
+    normalizePath(jsonlite::fromJSON(fp)[[folder]]$path)
+  } else if (file.exists("~/Dropbox")) {
+    normalizePath("~/Dropbox", winslash = "/")
+  } else if (file.exists("~/../Dropbox")) {
+    normalizePath("~/../Dropbox", winslash = "/")
+  } else if (file.exists("~/../gmail/Dropbox")) {
+    normalizePath("~/../gmail/Dropbox", winslash = "/")
+  } else {
+    stop("Could not find a Drobox folder")
+  }
+}

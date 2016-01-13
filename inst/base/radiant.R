@@ -180,7 +180,12 @@ clean_args <- function(rep_args, rep_default = list()) {
   ## removing default arguments before sending to report feature
   for (i in names(rep_args)) {
     # if (is.na(rep_args[[i]])) || all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
-    if (all(is.na(rep_args[[i]]))) {rep_args[[i]] <- NULL; next}
+    if(!any(is.language()))
+    # if (all(is.na(rep_args[[i]]))) {rep_args[[i]] <- NULL; next}
+    if (!any(is.language(rep_args[[i]])) && all(is.na(rep_args[[i]]))) {
+      rep_args[[i]] <- NULL
+      next
+    }
     # if (rep_default[[i]] == Inf || rep_default[[i]] == -Inf) next
     # if (is.symbol(rep_default[[i]])) next
     if (!all(is.symbol(rep_default[[i]])) && all(is_not(rep_default[[i]]))) next
