@@ -46,12 +46,15 @@ output$ui_expl_byvar <- renderUI({
 
   if (any(vars %in% input$expl_vars)) {
     vars <- setdiff(vars, input$expl_vars)
+    names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
   }
 
   isolate({
     if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
       ## can't use unique here - removes variable type information
-      vars <- c(r_state$expl_byvar, vars) %>% .[!duplicated(.)]
+      # vars <- c(r_state$expl_byvar, vars) %>% .[!duplicated(.)]
+      vars <- unique(c(r_state$expl_byvar, vars))
+      names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
     }
 
     sel <- use_input("expl_byvar", vars, fun = "state_multiple")

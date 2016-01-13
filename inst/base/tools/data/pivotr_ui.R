@@ -15,6 +15,7 @@ output$ui_pvt_cvars <- renderUI({
   isolate({
     if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars))
       vars <- unique(c(r_state$pvt_cvars, vars))
+      names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
@@ -26,11 +27,13 @@ output$ui_pvt_cvars <- renderUI({
 })
 
 output$ui_pvt_nvar <- renderUI({
-  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  # isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  isNum <- .getclass() %in% c("integer","numeric","factor")
   vars <- c("None", varnames()[isNum])
 
   if (any(vars %in% input$pvt_cvars)) {
     vars <- setdiff(vars, input$pvt_cvars)
+    names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% {c("None",names(.))}
   }
 
   isolate({
