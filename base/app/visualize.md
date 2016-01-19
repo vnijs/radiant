@@ -59,7 +59,8 @@ visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter"
 * Add a title: `+ ggtitle("my title")`
 * Change label: `+ xlab("my X-axis label")` or `+ ylab("my X-axis label")`
 * Remove legend: `+ theme(legend.position = "none")`
+* Change legend title: `+ guides(color = guide_legend(title = "New title"))` or `+ guides(fill = guide_legend(title = "New title"))`
 * Rotate tick labels: `+ theme(axis.text.x = element_text(angle = 90, hjust = 1))`
-* Set plot limits: `+ ylim(15, 20)` or `xlim("VS1","VS2")`
+* Set plot limits: `+ ylim(15, 20)` or `+ xlim("VS1","VS2")`
 
 See the ggplot2 documentation page for additional options <a href="http://docs.ggplot2.org/" target="_blank">http://docs.ggplot2.org</a>.

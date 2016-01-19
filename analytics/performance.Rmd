@@ -1,0 +1,8 @@
+---
+title: Model > Model performance
+---
+
+***
+
+```{r child='app/performance.md'}
+```
