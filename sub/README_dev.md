@@ -1,6 +1,6 @@
 # Radiant - Business analytics using R and Shiny
 
-[![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant)
+<!-- [![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant) -->
 <!-- [![Coverage Status](https://img.shields.io/coveralls/vnijs/radiant.svg)](https://coveralls.io/r/vnijs/radiant?branch=master) -->
 
 
@@ -46,9 +46,9 @@ Radiant focuses on business data and decisions. It offers tools, examples, and d
 - Required: A modern browser (e.g., [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari). Internet Explorer (version 11 or higher) should work as well
 - Recommended: [Rstudio](http://www.rstudio.com/products/rstudio/download/)
 
-<!-- 
+<!--
 An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html).
---> 
+-->
 
 To install the latest version for Windows of Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:
 
