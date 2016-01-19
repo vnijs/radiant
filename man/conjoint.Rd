@@ -4,16 +4,16 @@
 \alias{conjoint}
 \title{Conjoint analysis}
 \usage{
-conjoint(dataset, dep_var, indep_var, reverse = FALSE, data_filter = "")
+conjoint(dataset, rvar, evar, reverse = FALSE, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{dep_var}{The response variable (e.g., profile ratings)}
+\item{rvar}{The response variable (e.g., profile ratings)}
 
-\item{indep_var}{Explanatory variables in the regression}
+\item{evar}{Explanatory variables in the regression}
 
-\item{reverse}{Reverse the values of the response variable (`dep_var`)}
+\item{reverse}{Reverse the values of the response variable (`rvar`)}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
@@ -27,8 +27,8 @@ Conjoint analysis
 See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
-result <- mp3 \%>\% conjoint(dep_var = "Rating", indep_var = "Memory:Shape")
+result <- conjoint("mp3", rvar = "Rating", evar = "Memory:Shape")
+result <- mp3 \%>\% conjoint(rvar = "Rating", evar = "Memory:Shape")
 }
 \seealso{
 \code{\link{summary.conjoint}} to summarize results

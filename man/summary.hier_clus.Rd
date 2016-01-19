@@ -22,7 +22,7 @@ result <- hier_clus("shopping", vars = c("v1:v6"))
 summary(result)
 }
 \seealso{
-\code{\link{summary.hier_clus}} to summarize results
+\code{\link{hier_clus}} to generate results
 
 \code{\link{plot.hier_clus}} to plot results
 }

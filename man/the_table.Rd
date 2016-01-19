@@ -4,14 +4,14 @@
 \alias{the_table}
 \title{Function to calculate the PW and IW table for conjoint}
 \usage{
-the_table(model, dat, indep_var)
+the_table(model, dat, evar)
 }
 \arguments{
 \item{model}{Tidied model results (broom) output from \code{\link{conjoint}} passed on by summary.conjoint}
 
 \item{dat}{Conjoint data}
 
-\item{indep_var}{Explanatory variables used in the conjoint regression}
+\item{evar}{Explanatory variables used in the conjoint regression}
 }
 \description{
 Function to calculate the PW and IW table for conjoint
@@ -20,8 +20,8 @@ Function to calculate the PW and IW table for conjoint
 See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
-the_table(result$model, result$dat, result$indep_var)
+result <- conjoint(dataset = "mp3", rvar = "Rating", evar = "Memory:Shape")
+the_table(result$model, result$dat, result$evar)
 }
 \seealso{
 \code{\link{conjoint}} to generate results

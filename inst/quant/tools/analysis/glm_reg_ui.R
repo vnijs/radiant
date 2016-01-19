@@ -76,7 +76,7 @@ glm_pred_plot_inputs <- reactive({
   glm_pred_plot_args
 })
 
-output$ui_glm_dep_var <- renderUI({
+output$ui_glm_rvar <- renderUI({
  	vars <- two_level_vars()
   selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
   	selected = state_single("glm_rvar",vars), multiple = FALSE)
@@ -84,24 +84,38 @@ output$ui_glm_dep_var <- renderUI({
 
 output$ui_glm_lev <- renderUI({
   levs <- c()
-  if (!not_available(input$glm_rvar))
-    levs <- .getdata()[,input$glm_rvar] %>% as.factor %>% levels
+  if (available(input$glm_rvar))
+    levs <- .getdata()[[input$glm_rvar]] %>% as.factor %>% levels
+
+  isolate({
+    sel <-
+      input$glm_lev %>%
+      {if (!is_empty(.) && . %in% levs) . else levs[1]}
+    # sel <- use_input("glm_lev", levs)
+  })
+
   selectInput(inputId = "glm_lev", label = "Choose level:",
               choices = levs,
-              selected = state_single("glm_lev",levs), multiple = FALSE)
+              selected = state_single("glm_lev", levs, sel))
+              # selected = sel)
 })
 
-output$ui_glm_indep_var <- renderUI({
+output$ui_glm_evar <- renderUI({
+  if (not_available(input$glm_rvar)) return()
 	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if (not_available(input$glm_rvar)) vars <- character(0)
-  if (length(vars) > 0 ) vars <- vars[-which(vars == input$glm_rvar)]
+  # if (not_available(input$glm_rvar)) return()
+  # if (not_available(input$glm_rvar)) vars <- character(0)
+  # if (length(vars) > 0 && !is_empty(input$glm_rvar) && input$glm_rvar %in% vars)
+  if (length(vars) > 0)
+    vars <- vars[-which(vars == input$glm_rvar)]
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
   isolate({
     init <- input$glm_evar %>%
     {if (!is_empty(.) && . %in% vars) . else character(0)}
+    if (length(init) > 0) r_state$glm_evar <<- init
   })
 
   selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
@@ -237,9 +251,9 @@ output$ui_glm_reg <- renderUI({
     wellPanel(
     	radioButtons(inputId = "glm_link", label = NULL, glm_link,
     		selected = state_init("glm_link","logit"), inline = TRUE),
-	    uiOutput("ui_glm_dep_var"),
+	    uiOutput("ui_glm_rvar"),
       uiOutput("ui_glm_lev"),
-	    uiOutput("ui_glm_indep_var"),
+	    uiOutput("ui_glm_evar"),
 
       conditionalPanel(condition = "input.glm_evar != null",
 
@@ -449,7 +463,9 @@ output$dl_glm_pred <- downloadHandler(
   filename = function() { "glm_predictions.csv" },
   content = function(file) {
     do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
-            list(glm_save_pred = TRUE, prn = FALSE))) %>%
+            list(prn = FALSE))) %>%
       write.csv(., file = file, row.names = FALSE)
   }
+
+            # list(glm_save_pred = TRUE, prn = FALSE))) %>%
 )

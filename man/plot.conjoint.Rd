@@ -25,7 +25,7 @@ Plot method for the conjoint function
 See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint(dataset = "mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+result <- conjoint(dataset = "mp3", rvar = "Rating", evar = "Memory:Shape")
 plot(result, scale_plot = TRUE)
 plot(result, plots = "iw")
 }

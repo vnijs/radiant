@@ -6,6 +6,7 @@
 #' @param vars Vector of variables to include in the analysis
 #' @param distance Distance
 #' @param method Method
+#' @param max_cases Maximum number of cases allowed (default is 1000)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables used in hier_clus as an object of class hier_clus
@@ -20,9 +21,14 @@
 hier_clus <- function(dataset, vars,
                       distance = "sq.euclidian",
                       method = "ward.D",
+                      max_cases = 1000,
                       data_filter = "") {
 
-	getdata(dataset, vars, filt = data_filter) %>%
+	dat <- getdata(dataset, vars, filt = data_filter)
+	if (nrow(dat) > max_cases)
+	  return(set_class("The number of cases to cluster exceed the maxium set. Change\nthe number of cases allowed using the 'Max cases' input box.", c("hier_clus","character")))
+
+	dat %>%
 	  scale %>%
 	  { if (distance == "sq.euclidian") {
 				dist(., method = "euclidean")^2
@@ -47,11 +53,13 @@ hier_clus <- function(dataset, vars,
 #' result <- hier_clus("shopping", vars = c("v1:v6"))
 #' summary(result)
 #'
-#' @seealso \code{\link{summary.hier_clus}} to summarize results
+#' @seealso \code{\link{hier_clus}} to generate results
 #' @seealso \code{\link{plot.hier_clus}} to plot results
 #'
 #' @export
 summary.hier_clus <- function(object, ...) {
+
+  if (is.character(object)) return(object)
 
 	cat("Hierarchical cluster analysis\n")
 	cat("Data        :", object$dataset, "\n")
@@ -79,8 +87,8 @@ summary.hier_clus <- function(object, ...) {
 #' plot(result, plots = "dendro", cutoff = 0)
 #' shopping %>% hier_clus(vars = c("v1:v6")) %>% plot
 #'
+#' @seealso \code{\link{hier_clus}} to generate results
 #' @seealso \code{\link{summary.hier_clus}} to summarize results
-#' @seealso \code{\link{plot.hier_clus}} to plot results
 #'
 #' @import ggdendro
 #'
@@ -92,6 +100,7 @@ plot.hier_clus <- function(x,
                            ...) {
 
 	object <- x; rm(x)
+  if (is.character(object)) return(invisible())
 
 	object$hc_out$height %<>% { . / max(.) }
 

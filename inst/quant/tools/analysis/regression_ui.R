@@ -83,14 +83,14 @@ reg_pred_plot_inputs <- reactive({
   reg_pred_plot_args
 })
 
-output$ui_reg_dep_var <- renderUI({
+output$ui_reg_rvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   selectInput(inputId = "reg_rvar", label = "Response variable:", choices = vars,
     selected = state_single("reg_rvar",vars), multiple = FALSE)
 })
 
-output$ui_reg_indep_var <- renderUI({
+output$ui_reg_evar <- renderUI({
   notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
   if (not_available(input$reg_rvar)) vars <- character(0)
@@ -101,6 +101,7 @@ output$ui_reg_indep_var <- renderUI({
   isolate({
     init <- input$reg_evar %>%
       {if (!is_empty(.) && . %in% vars) . else character(0)}
+    if (length(init) > 0) r_state$reg_evar <<- init
   })
 
   selectInput(inputId = "reg_evar", label = "Explanatory variables:", choices = vars,
@@ -264,8 +265,8 @@ output$ui_regression <- renderUI({
       )
     ),
     wellPanel(
-      uiOutput("ui_reg_dep_var"),
-      uiOutput("ui_reg_indep_var"),
+      uiOutput("ui_reg_rvar"),
+      uiOutput("ui_reg_evar"),
 
       conditionalPanel(condition = "input.reg_evar != null",
 

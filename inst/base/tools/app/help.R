@@ -225,7 +225,18 @@ output$help_marketing <- renderUI({
   )
 })
 
+help_model <- c("Model performance" = "performance.md")
+output$help_model <- reactive(append_help("help_model", file.path(r_path,"analytics/tools/help/")))
+observe( help_switch(input$help_model_all, "help_model") )
+observe( help_switch(input$help_model_none, "help_model", help_on = FALSE) )
+
 help_analytics_ui <- tagList(
+  wellPanel(
+    HTML("<label>Model menu: <i id='help_model_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_model_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
+    checkboxGroupInput("help_model", NULL, help_model,
+      selected = state_init("help_model"), inline = TRUE)
+  ),
   wellPanel(
     HTML("<label>Cluster menu: <i id='help_cluster_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
     <i id='help_cluster_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
@@ -243,6 +254,7 @@ output$help_analytics <- renderUI({
     ),
     mainPanel(
       help_quant_main,
+      htmlOutput("help_model"),
       htmlOutput("help_cluster")
     )
   )

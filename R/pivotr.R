@@ -38,7 +38,16 @@ pivotr <- function(dataset,
   if (length(vars) < ncol(dat))
     cvars <- colnames(dat) %>% {.[. != nvar]}
 
-  if (nvar == "None") nvar <- "n"
+  if (nvar == "None") {
+    nvar <- "n"
+  } else {
+    ## converting factors for interger (1st level)
+    ## see also R/visualize.R
+    if ("factor" %in% class(dat[[nvar]]))
+      dat[[nvar]] %<>% {as.integer(. == levels(.)[1])}
+    if ("logical" %in% class(dat[[nvar]]))
+      dat[[nvar]] %<>% as.integer
+  }
 
   ## convert categorical variables to factors if needed
   ## use loop or mutate_each?

@@ -17,18 +17,18 @@ ca_inputs <- reactive({
   ca_args
 })
 
-output$ui_ca_dep_var <- renderUI({
+output$ui_ca_rvar <- renderUI({
 	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
-  selectInput(inputId = "ca_dep_var", label = "Profile evaluations:", choices = vars,
-   	selected = state_single("ca_dep_var",vars), multiple = FALSE)
+  selectInput(inputId = "ca_rvar", label = "Profile evaluations:", choices = vars,
+   	selected = state_single("ca_rvar",vars), multiple = FALSE)
 })
 
-output$ui_ca_indep_var <- renderUI({
+output$ui_ca_evar <- renderUI({
 	isFct <- "factor" == .getclass()
  	vars <- varnames()[isFct]
-  selectInput(inputId = "ca_indep_var", label = "Attributes:", choices = vars,
-  	selected = state_multiple("ca_indep_var", vars), multiple = TRUE,
+  selectInput(inputId = "ca_evar", label = "Attributes:", choices = vars,
+  	selected = state_multiple("ca_evar", vars), multiple = TRUE,
   	size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -44,9 +44,9 @@ output$ui_conjoint <- renderUI({
   		)
 	  ),
   	wellPanel(
-	    uiOutput("ui_ca_dep_var"),
-	    uiOutput("ui_ca_indep_var"),
-      conditionalPanel(condition = "input.ca_indep_var != null",
+	    uiOutput("ui_ca_rvar"),
+	    uiOutput("ui_ca_evar"),
+      conditionalPanel(condition = "input.ca_evar != null",
 			  checkboxInput("ca_reverse", label = "Reverse evaluation scores",
 			  	value = state_init('ca_reverse',FALSE)),
 		    conditionalPanel(condition = "input.tabs_conjoint == 'Summary'",
@@ -63,7 +63,7 @@ output$ui_conjoint <- renderUI({
 })
 
 ca_plot <- reactive({
-	nrVars <- length(input$ca_indep_var)
+	nrVars <- length(input$ca_evar)
 	plot_height <- plot_width <- 500
 	if (input$ca_plots == 'pw') {
 		plot_height <- 325 * (1 + floor((nrVars - 1) / 2))
@@ -110,10 +110,10 @@ output$conjoint <- renderUI({
 })
 
 .summary_conjoint <- reactive({
-	if (not_available(input$ca_dep_var))
+	if (not_available(input$ca_rvar))
 		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset\n\n" %>% suggest_data("carpet"))
 
-	if (not_available(input$ca_indep_var))
+	if (not_available(input$ca_evar))
 		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset\n\n" %>% suggest_data("carpet"))
 
   summary(.conjoint(), mc_diag = input$ca_mc_diag)
@@ -125,10 +125,10 @@ output$conjoint <- renderUI({
 })
 
 .plot_conjoint <- reactive({
-	if (not_available(input$ca_dep_var))
+	if (not_available(input$ca_rvar))
 		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset\n\n" %>% suggest_data("carpet"))
 
-	if (not_available(input$ca_indep_var))
+	if (not_available(input$ca_evar))
 		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset\n\n" %>% suggest_data("carpet"))
 
   plot(.conjoint(), plots = input$ca_plots,

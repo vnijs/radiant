@@ -31,7 +31,7 @@ kmeans_clus <- function(dataset, vars,
 
 	if (hc_init) {
 		init <- hier_clus(dataset, vars, data_filter = data_filter,
-		                  distance = distance, method = method)
+		                  distance = distance, method = method, max_cases = Inf)
 
 		clus_var <- cutree(init$hc_out, k = nr_clus)
 		hc_cent <- c()

@@ -57,6 +57,12 @@ explore <- function(dataset,
     dc[isFctNum] <- "integer"
   }
 
+  isLogNum <- "logical" == dc & names(dc) %in% setdiff(vars,byvar)
+  if (sum(isLogNum)) {
+    dat[,isLogNum] <- select(dat, which(isLogNum)) %>% mutate_each(funs(as.integer))
+    dc[isLogNum] <- "integer"
+  }
+
   ## summaries only for numeric variables
   # isNum <- getclass(dat) %>% {which("numeric" == . | "integer" == .)}
   isNum <- dc %>% {which("numeric" == . | "integer" == .)}

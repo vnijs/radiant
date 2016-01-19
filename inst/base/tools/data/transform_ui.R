@@ -238,8 +238,9 @@ output$ui_Transform <- renderUI({
     # if (ext == "")
     if (is_empty(ext)) {
       paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
-    else
+    } else {
       paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    }
   }
 }
 
@@ -263,8 +264,9 @@ output$ui_Transform <- renderUI({
     # if (ext == "")
     if (is_empty(ext)) {
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "), ")\n")
-    else
+    } else {
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ext = \"", ext, "\", ", paste0(vars, collapse = ", "), ")\n")
+    }
   }
 }
 
@@ -435,7 +437,7 @@ observeEvent(input$tr_change_type, {
   if (!store && !is.character(dataset)) {
     if (is.na(bins) || !is.integer(bins)) return("Please specify the (integer) number of bins to use")
     select_(dataset, .dots = vars) %>%
-    mutate_each(funs(xtile(.,bins, rev = rev))) %>%
+    mutate_each(funs(radiant::xtile(.,bins, rev = rev))) %>%
     set_colnames(paste0(vars, ext))
   } else {
     if (store_dat == "") store_dat <- dataset

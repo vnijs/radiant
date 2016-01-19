@@ -232,7 +232,12 @@ saver <- function(objname, file) {
     return()
   }
 
-  dat <- getdata(objname)
+  if (!is.character(objname)) {
+    dat <- objname
+    objname <- deparse(substitute(objname))
+  } else {
+    dat <- getdata(objname)
+  }
 
   if (ext == "rds") {
     saveRDS(dat, file = file)
@@ -851,13 +856,8 @@ copy_all <- function(.from) {
 #' @export
 state_init <- function(inputvar, init = "") {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  # if (is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
   if (is_empty(r_state[[inputvar]])) init else r_state[[inputvar]]
 }
-
-# state_init <- function(inputvar, init = "", pf = parent.frame()) {
-# print(parent.frame())
-# r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
 
 #' Set initial value for shiny input from a list of values
 #'
@@ -886,7 +886,6 @@ state_init <- function(inputvar, init = "") {
 #' @export
 state_single <- function(inputvar, vals, init = character(0)) {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  # r_state %>% { if (is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
   r_state %>% { if (is_empty(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
 }
 
@@ -920,7 +919,6 @@ state_single <- function(inputvar, vals, init = character(0)) {
 state_multiple <- function(inputvar, vals, init = character(0)) {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   r_state %>%
-    # { if (is.null(.[[inputvar]]))
     { if (is_empty(.[[inputvar]]))
         ## "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
         vals[vals %in% init]
@@ -1006,6 +1004,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @examples
 #' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
 #'   dfprint(dec = 3)
+#'
 #' @export
 dfprint <- function(tbl, dec = 3, perc = FALSE) {
   if (perc) {
@@ -1064,4 +1063,33 @@ dfround <- function(tbl, dec = 3) {
   mutate_each(
     funs(if (is.double(.)) round(., dec) else .)
   )
+}
+
+#' Find a users dropbox directory
+#'
+#' @param folder If multiple folders are present select which one to use. The first folder listed is used by default.
+#'
+#' @return Path to users personal dropbox directory
+#'
+#' @importFrom jsonlite fromJSON
+#'
+#' @export
+find_dropbox <- function(folder = 1) {
+  if (file.exists("~/.dropbox/info.json")) {
+    fp <- normalizePath("~/.dropbox/info.json", winslash = "/")
+    dbinfo <- jsonlite::fromJSON(fp)
+    ldb <- length(dbinom)
+    if (ldb > 1)
+      message("Multiple dropbox folders found. By default the first folder is used.\nTo select, for example, the third folder use 'find_dropbox(3)'")
+    if (folder > ldb) stop(paste0("Invalid folder number. Choose a folder number between 1 and ", ldb))
+    normalizePath(jsonlite::fromJSON(fp)[[folder]]$path)
+  } else if (file.exists("~/Dropbox")) {
+    normalizePath("~/Dropbox", winslash = "/")
+  } else if (file.exists("~/../Dropbox")) {
+    normalizePath("~/../Dropbox", winslash = "/")
+  } else if (file.exists("~/../gmail/Dropbox")) {
+    normalizePath("~/../gmail/Dropbox", winslash = "/")
+  } else {
+    stop("Could not find a Drobox folder")
+  }
 }

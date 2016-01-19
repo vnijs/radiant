@@ -27,6 +27,8 @@ regression <- function(dataset, rvar, evar,
                        dec = 3,
                        data_filter = "") {
 
+  # summary(lm(mpg ~ I(cyl^2) + cyl, data = mtcars))
+
   dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
@@ -546,16 +548,6 @@ predict.regression <- function(object,
 
       pred %>% print(., row.names = FALSE)
     }
-
-    # pushing predictions into the clipboard
-    # os_type <- Sys.info()["sysname"]
-    # if (os_type == 'Windows') {
-    #   write.table(pred, "clipboard", sep="\t", row.names=FALSE)
-    # } else if (os_type == "Darwin") {
-    #   write.table(pred, file = pipe("pbcopy"), row.names = FALSE, sep = '\t')
-    # }
-    # if (os_type != "Linux")
-    #   cat("\nPredictions were pushed to the clipboard. You can paste them in Excel or\nuse Manage > Data to paste the predictions as a new dataset.\n\n")
 
     return(pred %>% set_class(c("reg_predict",class(.))))
 

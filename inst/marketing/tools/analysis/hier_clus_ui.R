@@ -31,7 +31,6 @@ output$ui_hc_vars <- renderUI({
 	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
-
 output$ui_hier_clus <- renderUI({
   tagList(
   	wellPanel(
@@ -46,8 +45,15 @@ output$ui_hier_clus <- renderUI({
                multiple = TRUE,
                options = list(placeholder = 'Select plot(s)',
                               plugins = list('remove_button', 'drag_drop'))),
-	    numericInput("hc_cutoff", "Plot cutoff:", min = 0, max = 1,
-	    	value = state_init('hc_cutoff',0.05), step = .02)
+
+      with(tags, table(
+        tr(
+          td(numericInput("hc_cutoff", "Plot cutoff:", min = 0, max = 1,
+             value = state_init('hc_cutoff',0.05), step = .02, width = "110px")),
+          td(numericInput("hc_max_cases", "Max cases:", min = 1,
+             value = state_init('hc_max_cases',5000), step = 10, width = "110px"))
+        )
+      ))
   	),
   	help_and_report(modal_title = "Hierarchical cluster analysis",
   	                fun_name = "hier_clus",

@@ -20,9 +20,9 @@ Summary method for the conjoint function
 See \url{http://vnijs.github.io/radiant/marketing/conjoint.html} for an example in Radiant
 }
 \examples{
-result <- conjoint("mp3", dep_var = "Rating", indep_var = "Memory:Shape")
+result <- conjoint("mp3", rvar = "Rating", evar = "Memory:Shape")
 summary(result, mc_diag = TRUE)
-mp3 \%>\% conjoint(dep_var = "Rating", indep_var = "Memory:Shape") \%>\% summary(., mc_diag = TRUE)
+mp3 \%>\% conjoint(rvar = "Rating", evar = "Memory:Shape") \%>\% summary(., mc_diag = TRUE)
 }
 \seealso{
 \code{\link{conjoint}} to generate results

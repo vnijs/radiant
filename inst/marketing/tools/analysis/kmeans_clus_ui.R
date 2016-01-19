@@ -18,8 +18,15 @@ output$ui_km_vars <- renderUI({
 
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
+
+  isolate({
+    init <- input$km_vars %>%
+      {if (!is_empty(.) && . %in% vars) . else input$hc_vars}
+    if (length(init) > 0) r_state$km_vars <<- init
+  })
+
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars,
-	  selected = state_multiple("km_vars", vars, input$hc_vars),
+	  selected = state_multiple("km_vars", vars, init),
 	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 
@@ -28,7 +35,7 @@ output$ui_kmeans_clus <- renderUI({
   	wellPanel(
 	    uiOutput("ui_km_vars"),
 		  checkboxInput(inputId = "km_hc_init", label = "Initial centers from HC",
-      	value = state_init('km_hc_init',TRUE)),
+      	value = state_init('km_hc_init',FALSE)),
 	  	conditionalPanel(condition = "input.km_hc_init == true",
 	  		wellPanel(
 		  		selectInput("km_distance", label = "Distance measure:", choices = hc_distance,
