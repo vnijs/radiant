@@ -45,6 +45,8 @@ pivotr <- function(dataset,
     ## see also R/visualize.R
     if ("factor" %in% class(dat[[nvar]]))
       dat[[nvar]] %<>% {as.integer(. == levels(.)[1])}
+    if ("logical" %in% class(dat[[nvar]]))
+      dat[[nvar]] %<>% as.integer
   }
 
   ## convert categorical variables to factors if needed

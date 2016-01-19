@@ -27,15 +27,6 @@ output$ui_viz_type <- renderUI({
     multiple = FALSE)
 })
 
-## use the value in the input list if available
-use_input <- function(var, vars, init = character(0), fun = "state_single") {
-  ivar <- input[[var]]
-  if (available(ivar) && all(ivar %in% vars))
-     ivar
-  else
-    get(fun)(var, vars, init)
-}
-
 ## Y - variable
 output$ui_viz_yvar <- renderUI({
   if (is_empty(input$viz_type)) return()
@@ -218,14 +209,15 @@ output$ui_Visualize <- renderUI({
       conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
         # conditionalPanel("(typeof input.viz_yvar !== 'undefined') &&
-        conditionalPanel("input.viz_yvar != null && input.viz_yvar.length > 1",
+        conditionalPanel("input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
           uiOutput("ui_viz_comby")
         )
       ),
       uiOutput("ui_viz_xvar"),
       conditionalPanel("input.viz_type == 'hist' | input.viz_type == 'density'",
         # conditionalPanel("(typeof input.viz_xvar !== 'undefined') &&
-        conditionalPanel("input.viz_xvar != null && input.viz_xvar.length > 1",
+        # conditionalPanel("input.viz_xvar != null && input.viz_xvar.length > 1",
+        conditionalPanel("input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
                           # (input.viz_xvar !== null) && input.viz_xvar.length > 1",
           uiOutput("ui_viz_combx")
         )

@@ -125,7 +125,7 @@ saveStateOnRefresh <- function(session = session) {
 
 groupable_vars <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || is.integer(.) ||
+    summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
                         ((n_distinct(., na_rm = TRUE)/n()) < .30))) %>%
                         # ((n_distinct(., na_rm = TRUE)/n()) < .30 && !is.numeric(.)))) %>%
     {which(. == TRUE)} %>%
@@ -134,7 +134,7 @@ groupable_vars <- reactive({
 
 groupable_vars_nonum <- reactive({
   .getdata() %>%
-    summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || is.integer(.) ||
+    summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
                    is.character(.))) %>%
                         # ((n_distinct(., na_rm = TRUE)/n()) < .30 && !is.numeric(.)))) %>%
     {which(. == TRUE)} %>%
@@ -474,4 +474,22 @@ cf <- function(...) {
   cat(paste0("\n--- called from: ", environmentName(parent.frame()), " (", lubridate::now(), ")\n"), file = "~/r_cat.txt", append = TRUE)
   out <- paste0(capture.output(...), collapse = "\n")
   cat("--\n", out, "\n--", sep = "\n", file = "~/r_cat.txt", append = TRUE)
+}
+
+## use the value in the input list if available and update r_state
+use_input <- function(var, vars, init = character(0), fun = "state_single") {
+  ivar <- input[[var]]
+  # print(ivar)
+  # print(vars)
+  if (available(ivar) && all(ivar %in% vars)) {
+    # print("--------")
+    # print(r_state[[var]])
+    if (length(ivar) > 0) r_state[[var]] <<- ivar
+    # print(r_state[[var]])
+    # print("--------")
+    ivar
+  } else {
+    if (length(ivar) > 0 && ivar %in% c("None","none",".","")) r_state[[var]] <<- ivar
+    get(fun)(var, vars, init)
+  }
 }

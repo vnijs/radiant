@@ -31,7 +31,7 @@ expl_sum_inputs <- reactive({
 ## UI-elements for explore
 output$ui_expl_vars <- renderUI({
   # isNum <- "numeric" == .getclass() | "integer" == .getclass()
-  isNum <- .getclass() %in% c("integer","numeric","factor")
+  isNum <- .getclass() %in% c("integer","numeric","factor","logical")
   vars <- varnames()[isNum]
   if (not_available(vars)) return()
 
@@ -46,19 +46,19 @@ output$ui_expl_byvar <- renderUI({
 
   if (any(vars %in% input$expl_vars)) {
     vars <- setdiff(vars, input$expl_vars)
-    names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
+    names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
   }
 
   isolate({
-    if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
-      ## can't use unique here - removes variable type information
-      # vars <- c(r_state$expl_byvar, vars) %>% .[!duplicated(.)]
+    if (not_available(input$expl_byvar) && available(r_state$expl_byvar) &&
+        all(r_state$expl_byvar %in% vars)) {
       vars <- unique(c(r_state$expl_byvar, vars))
-      names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
+      names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
     }
 
     sel <- use_input("expl_byvar", vars, fun = "state_multiple")
   })
+
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = sel, multiple = TRUE,

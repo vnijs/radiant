@@ -133,6 +133,7 @@ visualize <- function(dataset, xvar,
   }
 
   ## 1 of first level of factor, else 0
+  # if (type %in% c("bar","scatter")) {
   if (type == "bar") {
     isFctY <- "factor" == dc & names(dc) %in% yvar
     if (sum(isFctY)) {

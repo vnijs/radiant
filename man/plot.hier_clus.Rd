@@ -31,8 +31,8 @@ plot(result, plots = "dendro", cutoff = 0)
 shopping \%>\% hier_clus(vars = c("v1:v6")) \%>\% plot
 }
 \seealso{
-\code{\link{summary.hier_clus}} to summarize results
+\code{\link{hier_clus}} to generate results
 
-\code{\link{plot.hier_clus}} to plot results
+\code{\link{summary.hier_clus}} to summarize results
 }
 

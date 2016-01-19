@@ -232,7 +232,12 @@ saver <- function(objname, file) {
     return()
   }
 
-  dat <- getdata(objname)
+  if (!is.character(objname)) {
+    dat <- objname
+    objname <- deparse(substitute(objname))
+  } else {
+    dat <- getdata(objname)
+  }
 
   if (ext == "rds") {
     saveRDS(dat, file = file)
@@ -851,13 +856,8 @@ copy_all <- function(.from) {
 #' @export
 state_init <- function(inputvar, init = "") {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  # if (is.null(r_state[[inputvar]])) init else r_state[[inputvar]]
   if (is_empty(r_state[[inputvar]])) init else r_state[[inputvar]]
 }
-
-# state_init <- function(inputvar, init = "", pf = parent.frame()) {
-# print(parent.frame())
-# r_state %>% { if (is.null(.[[inputvar]])) init else .[[inputvar]] }
 
 #' Set initial value for shiny input from a list of values
 #'
@@ -886,7 +886,6 @@ state_init <- function(inputvar, init = "") {
 #' @export
 state_single <- function(inputvar, vals, init = character(0)) {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
-  # r_state %>% { if (is.null(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
   r_state %>% { if (is_empty(.[[inputvar]])) init else vals[vals == .[[inputvar]]] }
 }
 
@@ -920,7 +919,6 @@ state_single <- function(inputvar, vals, init = character(0)) {
 state_multiple <- function(inputvar, vals, init = character(0)) {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   r_state %>%
-    # { if (is.null(.[[inputvar]]))
     { if (is_empty(.[[inputvar]]))
         ## "a" %in% character(0) --> FALSE, letters[FALSE] --> character(0)
         vals[vals %in% init]
@@ -1006,6 +1004,7 @@ ci_perc <- function(dat, alt = "two.sided", cl = .95) {
 #' @examples
 #' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3)) %>%
 #'   dfprint(dec = 3)
+#'
 #' @export
 dfprint <- function(tbl, dec = 3, perc = FALSE) {
   if (perc) {

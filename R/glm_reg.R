@@ -39,12 +39,12 @@ glm_reg <- function(dataset, rvar, evar,
     return("One or more selected variables show no variation. Please select other variables." %>%
            set_class(c("glm_reg",class(.))))
 
-  glm_dv <- dat[[rvar]]
+  rv <- dat[[rvar]]
   if (lev == "") {
-    if (is.factor(glm_dv))
-      lev <- levels(glm_dv)[1]
+    if (is.factor(rv))
+      lev <- levels(rv)[1]
     else
-      lev <- glm_dv %>% as.character %>% as.factor %>% levels %>% .[1]
+      lev <- rv %>% as.character %>% as.factor %>% levels %>% .[1]
   }
 
   ## transformation to TRUE/FALSE depending on the selected level (lev)
@@ -300,7 +300,7 @@ plot.glm_reg <- function(x,
 
   model <- ggplot2::fortify(object$model)
   model$.fitted <- predict(object$model, type = 'response')
-  model$.actual <- as.numeric(object$glm_dv)
+  model$.actual <- as.numeric(object$rv)
   model$.actual <- model$.actual - max(model$.actual) + 1   # adjustment in case max > 1
 
   rvar <- object$rvar
@@ -310,7 +310,7 @@ plot.glm_reg <- function(x,
   plot_list <- list()
 
   ## use orginal data rather than the logical used for estimation
-  model[[rvar]] <- object$glm_dv
+  model[[rvar]] <- object$rv
 
   if ("hist" %in% plots) {
     for (i in vars)
@@ -422,7 +422,7 @@ predict.glm_reg <- function(object,
   if ("standardize" %in% object$check) {
     return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (pred_count == 3) {
-    return(cat("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in Excel and use the\npaste feature in Data > Manage to bring it into Radiant"))
+    return(cat("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in a spreadsheet and use the\nclipboard feature in Data > Manage to bring it into Radiant"))
   }
 
   dec <- object$dec

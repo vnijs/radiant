@@ -13,13 +13,21 @@ output$ui_pvt_cvars <- renderUI({
   if (not_available(vars)) return()
 
   isolate({
-    if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars))
+    # if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars))
+    if (not_available(input$pvt_cvars) && available(r_state$pvt_cvars) &&
+        all(r_state$pvt_cvars %in% vars)) {
       vars <- unique(c(r_state$pvt_cvars, vars))
-      names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
+      # names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
+      names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+    }
+
+    ## keep the same n-variable 'active' if possible
+    sel <- use_input("pvt_cvars", vars, "", fun = "state_multiple")
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    selected = state_multiple("pvt_cvars",vars, ""),
+    # selected = state_multiple("pvt_cvars",vars, ""),
+    selected = sel,
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
@@ -28,7 +36,7 @@ output$ui_pvt_cvars <- renderUI({
 
 output$ui_pvt_nvar <- renderUI({
   # isNum <- "numeric" == .getclass() | "integer" == .getclass()
-  isNum <- .getclass() %in% c("integer","numeric","factor")
+  isNum <- .getclass() %in% c("integer","numeric","factor","logical")
   vars <- c("None", varnames()[isNum])
 
   if (any(vars %in% input$pvt_cvars)) {
@@ -38,7 +46,7 @@ output$ui_pvt_nvar <- renderUI({
 
   isolate({
     ## keep the same n-variable 'active' if possible
-    sel <- use_input("pvt_nvar", vars)
+    sel <- use_input("pvt_nvar", vars, "None")
   })
 
   selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,

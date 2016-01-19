@@ -5,7 +5,7 @@
 \title{Hierarchical cluster analysis}
 \usage{
 hier_clus(dataset, vars, distance = "sq.euclidian", method = "ward.D",
-  data_filter = "")
+  max_cases = 1000, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -15,6 +15,8 @@ hier_clus(dataset, vars, distance = "sq.euclidian", method = "ward.D",
 \item{distance}{Distance}
 
 \item{method}{Method}
+
+\item{max_cases}{Maximum number of cases allowed (default is 1000)}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
