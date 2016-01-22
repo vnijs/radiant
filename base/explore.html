@@ -248,9 +248,20 @@ img {
 <p>The created summary table can be stored in Radiant by clicking the <code>Store</code> button. This can be useful if you want to create plots using the summarized data. To download the table to <em>csv</em> format click the download icon on the top-right.</p>
 <p>You can select options from <code>Column variable</code> dropdown to switch between different column headers. Select either the <code>functions</code> (e.g., mean, median, etc), the variables (e.g., price, carat, etc), or the levels of the (first) <code>Group by</code> variable (e.g., Fair-Ideal).</p>
 <p><img src="figures/explore.png" alt="explore table" /></p>
+<div id="functions" class="section level2">
+<h2>Functions</h2>
+<ul>
+<li><code>n</code> determines the number of observations, or rows, in the data or in a group if a <code>group_by</code> variable has been selected (<code>n</code> uses the <code>length</code> function in R)</li>
+<li><code>n_distinct</code> determines the number of distinct values in a variable</li>
+<li><code>n_missing</code> determines the number of missing values in a variable</li>
+<li><code>cv</code> is the coefficient of variation (i.e., mean(x) / sd(x))</li>
+<li><code>sd</code> and <code>var</code> calculate the sample standard deviation and variance</li>
+<li><code>sdp</code> and <code>varp</code> calculate the population standard deviation and variance</li>
+</ul>
 <div id="filter" class="section level3">
 <h3>Filter</h3>
 <p>Use the <code>Filter</code> box to select (or omit) specific sets of rows from the data. See the helpfile for Data &gt; View for details.</p>
+</div>
 </div>
 
 
