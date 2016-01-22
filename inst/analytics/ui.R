@@ -41,9 +41,9 @@ analytics_ui <- tagList(
     tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
-  # navbarMenu("Model",
-  #   tabPanel("Model performance", uiOutput("performance"))
-  # ),
+  navbarMenu("Model",
+    tabPanel("Model performance", uiOutput("performance"))
+  ),
 
   navbarMenu("Decide",
     tabPanel("Decision tree", uiOutput("dtree")),

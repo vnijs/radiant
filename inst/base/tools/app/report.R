@@ -17,7 +17,7 @@ You can even include math if you want:
 
 $$y_t = \\alpha + \\beta x_t + \\epsilon_t.$$
 
-To show the output press the `Update` button.
+To show the output press the `Knit report` button.
 
 ### Documenting analysis results in Radiant
 
@@ -69,7 +69,7 @@ output$ui_vim <- renderUI({
     if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
 })
 
-esc_slash <- function(x) gsub("([^\\])\\\\([^\\])","\\1\\\\\\\\\\2",x)
+esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
 
 output$report <- renderUI({
   # init <- isolate(if (is_empty(input$rmd_report)) rmd_example else gsub("\\\\","\\\\\\\\",input$rmd_report))

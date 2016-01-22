@@ -10,6 +10,16 @@ You can select options from `Column variable` dropdown to switch between differe
 
 ![explore table](figures/explore.png)
 
+## Functions
+
+* `n` determines the number of observations, or rows, in the data or in a group if a `group_by` variable has been selected (`n` uses the `length` function in R)
+* `n_distinct` determines the number of distinct values in a variable
+* `n_missing` determines the number of missing values in a variable
+* `cv` is the coefficient of variation (i.e., mean(x) / sd(x))
+* `sd` and `var` calculate the sample standard deviation and variance
+* `sdp` and `varp` calculate the population standard deviation and variance
+
+
 ### Filter
 
 Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for Data > View for details.

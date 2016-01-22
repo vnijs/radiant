@@ -184,9 +184,9 @@ summary.glm_reg <- function(object,
     cat("\n")
   }
 
-  if (c("confint","odds") %in% sum_check %>% any) {
-    if (object$model$coeff %>% is.na %>% any) {
-      cat("There is perfect multicollineary in the set of explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
+  if (any(c("confint","odds") %in% sum_check)) {
+    if (any(is.na(object$model$coeff))) {
+      cat("There is perfect multicollineary in the set of explanatory variables.\nOne or more variables were dropped from the estimation.\n")
     } else {
       ci_perc <- ci_label(cl = conf_lev)
 
@@ -211,11 +211,10 @@ summary.glm_reg <- function(object,
 
   if ("odds" %in% sum_check) {
     if (any(is.na(object$model$coeff))) {
-      cat("There is perfect multicollinearity in the set of selected explanatory variables.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
+      cat("Odds ratios were not calculated\n")
     } else {
       if (object$link == "logit") {
         exp(ci_tab[-1,]) %>%
-          # mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
           dfprint(dec) %>%
           set_colnames(c("odds ratio", ci_perc[1], ci_perc[2])) %>%
           set_rownames(object$coeff$`  `[-1]) %>%

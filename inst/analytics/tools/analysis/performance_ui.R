@@ -18,10 +18,10 @@ perf_inputs <- reactive({
 # Evaluate model performance
 ###############################################################
 output$ui_perf_rvar <- renderUI({
-
   vars <- two_level_vars()
+  isolate(sel <- use_input("perf_rvar", vars))
   selectInput(inputId = "perf_rvar", label = "Response variable:", choices = vars,
-    selected = state_single("perf_rvar",vars), multiple = FALSE)
+    selected = state_single("perf_rvar", vars), multiple = FALSE)
 })
 
 output$ui_perf_lev <- renderUI({
@@ -30,9 +30,7 @@ output$ui_perf_lev <- renderUI({
     levs <- .getdata()[[input$perf_rvar]] %>% as.factor %>% levels
 
   isolate({
-    sel <-
-      input$perf_lev %>%
-      {if (!is_empty(.) && . %in% levs) . else levs[1]}
+    sel <- input$perf_lev %>% {if (!is_empty(.) && . %in% levs) . else levs[1]}
   })
 
   selectInput(inputId = "perf_lev", label = "Choose level:",
@@ -43,20 +41,7 @@ output$ui_perf_lev <- renderUI({
 output$ui_perf_pred <- renderUI({
   isNum <- .getclass() %in% c("integer","numeric")
   vars <- varnames()[isNum]
-  # if (length(vars) > 0 && !is_empty(input$perf_rvar) && input$perf_rvar %in% vars)
-  # if (length(vars) > 0)
-    # vars <- vars[-which(vars == input$perf_rvar)]
-
-  # isolate({
-  #   init <- input$perf_pred %>%
-  #   {if (!is_empty(.) && . %in% vars) . else character(0)}
-  #   if (length(init) > 0) r_state$perf_pred <<- init
-  # })
-
-  isolate({
-    sel <- use_input("perf_pred", vars, fun = "state_multiple")
-    # selected = state_multiple("perf_pred", vars, sel),
-  })
+  isolate(sel <- use_input("perf_pred", vars, fun = "state_multiple"))
 
   selectInput(inputId = "perf_pred", label = "Predictor:", choices = vars,
     selected = sel,
@@ -64,13 +49,8 @@ output$ui_perf_pred <- renderUI({
 })
 
 output$ui_perf_train <- renderUI({
-
   vars <- c("None", two_level_vars())
-
-  isolate({
-    sel <- use_input("perf_train", vars, "None")
-  })
-
+  isolate(sel <- use_input("perf_train", vars, "None"))
   selectInput(inputId = "perf_train", label = "Training variable:", choices = vars,
     selected = sel, multiple = FALSE)
 })
@@ -88,13 +68,13 @@ output$ui_performance <- renderUI({
         selected = state_init("perf_method", "xtile"),
         inline = TRUE),
       numericInput("perf_qnt", label = "# quantiles:",
-                   value = state_init("perf_qnt", 10), min = 2)
-      # , uiOutput("ui_perf_train"),
-      # conditionalPanel("input.perf_train != 'None'",
-      #   checkboxGroupInput("perf_tplots", "Show plots for:", perf_train,
-      #     selected = state_init("perf_tplots", ""),
-      #     inline = TRUE)
-      # )
+                   value = state_init("perf_qnt", 10), min = 2),
+      uiOutput("ui_perf_train"),
+      conditionalPanel("input.perf_train != 'None'",
+        checkboxGroupInput("perf_tplots", "Show plots for:", perf_train,
+          selected = state_init("perf_tplots", ""),
+          inline = TRUE)
+      )
   	),
   	help_and_report(modal_title = "Model performance",
   	                fun_name = "performance",

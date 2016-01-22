@@ -234,7 +234,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
 
   n <- 0
   # {if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat} %>%
-  {if (is.character(dat) && length(dat) == 1) getdata(dat) else dat} %>%
+  {if (is.character(dat) && length(dat) == 1) getdata(dat, na.rm = FALSE) else dat} %>%
     { n <<- nrow(.); . } %>%
     slice(1:min(nshow,n)) %>%
     mutate_each(funs(d2c)) %>%

@@ -838,7 +838,7 @@ output$transform_summary <- renderPrint({
         } else {
           cat("** Press the 'Store' button to add your changes to the data **\n\n")
           if (!is_empty(input$tr_vars) && input$tr_change_type == "create")
-            cat("** Results are grouped by", paste(input$tr_vars, collapse = " ,"), "**\n\n")
+            cat("** Results are grouped by", paste(input$tr_vars, collapse = ", "), "**\n\n")
         }
 
         cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))

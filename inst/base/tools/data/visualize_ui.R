@@ -75,10 +75,14 @@ output$ui_viz_xvar <- renderUI({
 })
 
 output$ui_viz_comby <- renderUI({
+  # if (!is_empty(input$viz_yvar)) return()
+  if (length(input$viz_yvar) < 2) return()
+
   checkboxInput("viz_comby", "Combine Y-variables in one plot", state_init("viz_comby", FALSE))
 })
 
 output$ui_viz_combx <- renderUI({
+  if (length(input$viz_xvar) < 2) return()
   checkboxInput("viz_combx", "Combine X-variables in one plot", state_init("viz_combx", FALSE))
 })
 
@@ -209,18 +213,18 @@ output$ui_Visualize <- renderUI({
       conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
         # conditionalPanel("(typeof input.viz_yvar !== 'undefined') &&
-        conditionalPanel("input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
+        # conditionalPanel("input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
           uiOutput("ui_viz_comby")
-        )
+        # )
       ),
       uiOutput("ui_viz_xvar"),
       conditionalPanel("input.viz_type == 'hist' | input.viz_type == 'density'",
         # conditionalPanel("(typeof input.viz_xvar !== 'undefined') &&
         # conditionalPanel("input.viz_xvar != null && input.viz_xvar.length > 1",
-        conditionalPanel("input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
+        # conditionalPanel("input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
                           # (input.viz_xvar !== null) && input.viz_xvar.length > 1",
           uiOutput("ui_viz_combx")
-        )
+        # )
       ),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
