@@ -4,12 +4,12 @@
 \alias{test_specs}
 \title{Add interaction terms to list of test variables if needed}
 \usage{
-test_specs(test_var, int_var)
+test_specs(test_var, int)
 }
 \arguments{
 \item{test_var}{List of variables to use for testing for regression or glm_reg}
 
-\item{int_var}{Interaction terms specified}
+\item{int}{Interaction terms specified}
 }
 \value{
 A vector of variables names to test

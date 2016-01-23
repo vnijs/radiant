@@ -32,7 +32,7 @@ See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in
 result <- regression("diamonds", "price", c("carat","clarity"))
 predict(result, pred_cmd = "carat = 1:10")
 predict(result, pred_cmd = "clarity = levels(clarity)")
-result <- regression("diamonds", "price", c("carat","clarity"), int_var = c("carat:clarity"))
+result <- regression("diamonds", "price", c("carat","clarity"), int = c("carat:clarity"))
 dpred <<- getdata("diamonds") \%>\% slice(1:10)
 predict(result, pred_data = "dpred")
 rm(dpred, envir = .GlobalEnv)

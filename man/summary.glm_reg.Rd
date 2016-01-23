@@ -27,7 +27,7 @@ See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Ra
 \examples{
 result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
 summary(result, test_var = "pclass")
-res <- glm_reg("titanic", "survived", c("pclass","sex"), int_var="pclass:sex", lev="Yes")
+res <- glm_reg("titanic", "survived", c("pclass","sex"), int="pclass:sex", lev="Yes")
 summary(res, sum_check = c("vif","confint","odds"))
 titanic \%>\% glm_reg("survived", c("pclass","sex","age"), lev = "Yes") \%>\% summary("vif")
 }

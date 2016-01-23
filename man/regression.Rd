@@ -4,7 +4,7 @@
 \alias{regression}
 \title{Linear regression using OLS}
 \usage{
-regression(dataset, rvar, evar, int_var = "", check = "", dec = 3,
+regression(dataset, rvar, evar, int = "", check = "", dec = 3,
   data_filter = "")
 }
 \arguments{
@@ -14,7 +14,7 @@ regression(dataset, rvar, evar, int_var = "", check = "", dec = 3,
 
 \item{evar}{Explanatory variables in the regression}
 
-\item{int_var}{Interaction terms to include in the model}
+\item{int}{Interaction terms to include in the model}
 
 \item{check}{"standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation}
 

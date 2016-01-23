@@ -4,7 +4,7 @@
 \alias{glm_reg}
 \title{Generalized linear models (GLM)}
 \usage{
-glm_reg(dataset, rvar, evar, lev = "", link = "logit", int_var = "",
+glm_reg(dataset, rvar, evar, lev = "", link = "logit", int = "",
   check = "", dec = 3, data_filter = "")
 }
 \arguments{
@@ -18,7 +18,7 @@ glm_reg(dataset, rvar, evar, lev = "", link = "logit", int_var = "",
 
 \item{link}{Link function for _glm_ ('logit' or 'probit'). 'logit' is the default}
 
-\item{int_var}{Interaction term to include in the model (not implement)}
+\item{int}{Interaction term to include in the model}
 
 \item{check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
 
