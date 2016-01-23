@@ -211,8 +211,6 @@ summary.compare_props <- function(object, show = FALSE, ...) {
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
-#' @importFrom scales percent
-#'
 #' @export
 plot.compare_props <- function(x,
                                plots = "bar",
@@ -237,7 +235,7 @@ plot.compare_props <- function(x,
 		 		geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
 		 		geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
 		 		theme(legend.position = "none") +
-		 		scale_y_continuous(labels = percent) +
+		 		scale_y_continuous(labels = scales::percent) +
 		 		ylab(paste0("Proportion of \"", lev_name, "\" in ", v2))
 
 	}
@@ -251,7 +249,7 @@ plot.compare_props <- function(x,
 				mutate(perc = count/ sum(count)) %>%
 				ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
 					geom_bar(stat = "identity", position = "dodge") +
-			 		scale_y_continuous(labels = percent) +
+			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab(paste0("Proportions per level of ", v1))
 	}
 

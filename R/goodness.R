@@ -180,8 +180,6 @@ summary.goodness <- function(object,
 #' @seealso \code{\link{goodness}} to calculate results
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #'
-#' @importFrom scales percent
-#'
 #' @export
 plot.goodness <- function(x,
                           check = "",
@@ -214,7 +212,7 @@ plot.goodness <- function(x,
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
 				  	 x = object$var2, y = "", fill = object$var1)) +
-		    scale_y_continuous(labels = percent)
+		    scale_y_continuous(labels = scales::percent)
 	}
 
 	if ("expected" %in% check) {
@@ -228,7 +226,7 @@ plot.goodness <- function(x,
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
 		         x = object$var2, y = "", fill = object$var1)) +
-		    scale_y_continuous(labels = percent)
+		    scale_y_continuous(labels = scales::percent)
 	}
 
 	if ("chi_sq" %in% check) {
@@ -262,7 +260,7 @@ plot.goodness <- function(x,
 	# 		  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 	# 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 	# 		 		labs(fill = object$var1) +
-	# 		 		scale_y_continuous(labels = percent) +
+	# 		 		scale_y_continuous(labels = scales::percent) +
 	# 		 		ylab("Percentage") + xlab(object$var2) +
 	# 		    ggtitle("Row percentages")
 	# }
@@ -275,7 +273,7 @@ plot.goodness <- function(x,
 	# 		  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 	# 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 	# 		 		labs(fill = object$var1) +
-	# 		 		scale_y_continuous(labels = percent) +
+	# 		 		scale_y_continuous(labels = scales::percent) +
 	# 		 		ylab("Percentage") + xlab(object$var2) +
 	# 		    ggtitle("Column percentages")
 	# }
@@ -287,7 +285,7 @@ plot.goodness <- function(x,
 	# 		  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 	# 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 	# 		 		labs(fill = object$var1) +
-	# 		 		scale_y_continuous(labels = percent) +
+	# 		 		scale_y_continuous(labels = scales::percent) +
 	# 		 		ylab("Percentage") + xlab(object$var2) +
 	# 		    ggtitle("Table percentages")
 	# }

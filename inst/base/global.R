@@ -35,7 +35,8 @@ r_pkgs <- c("DiagrammeR", "car", "gridExtra", "GPArotation", "psych", "wordcloud
             "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
             "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
             "htmlwidgets", "readr", "rmarkdown", "shinyAce", "data.tree",
-            "yaml", "scales")
+            "yaml")
+# "scales")
 # options(r_pkgs = r_pkgs); rm(r_pkgs)
 
 ## list of function arguments

@@ -378,8 +378,6 @@ make_dt <- function(pvt,
 #' @seealso \code{\link{pivotr}} to generate summaries
 #' @seealso \code{\link{summary.pivotr}} to show summaries
 #'
-#' @importFrom scales percent
-#'
 #' @export
 plot.pivotr <- function(x,
                         type = "dodge",
@@ -423,7 +421,7 @@ plot.pivotr <- function(x,
   }
 
   if (flip) plot_list[[1]] <- plot_list[[1]] + coord_flip()
-  if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = percent)
+  if (perc) plot_list[[1]] <- plot_list[[1]] + scale_y_continuous(labels = scales::percent)
   if (nvar == "n") {
     if (!is_empty(object$normalize, "None"))
       plot_list[[1]] <- plot_list[[1]] + ylab(ifelse (perc, "Percentage", "Proportion"))

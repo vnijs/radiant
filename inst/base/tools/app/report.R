@@ -52,22 +52,22 @@ output$ui_manual <- renderUI({
     if (r_data$manual) "Manual paste (on)" else "Manual paste (off)")
 })
 
-observeEvent(input$vim_keys, {
-  isolate({
+# observeEvent(input$vim_keys, {
+#   isolate({
 
-    # if (!is_empty(input$rmd_report))
-    # r_state$rmd_report <<- input$rmd_report
+#     # if (!is_empty(input$rmd_report))
+#     # r_state$rmd_report <<- input$rmd_report
 
-    r_data$vim_keys %<>% {. == FALSE}
-  })
-})
+#     r_data$vim_keys %<>% {. == FALSE}
+#   })
+# })
 
-output$ui_vim <- renderUI({
-  ## initialize vim_keys to false
-  if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
-  actionButton("vim_keys",
-    if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
-})
+# output$ui_vim <- renderUI({
+#   ## initialize vim_keys to false
+#   if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
+#   actionButton("vim_keys",
+#     if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
+# })
 
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
 
@@ -83,7 +83,7 @@ output$report <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Knit report")),
             td(uiOutput("ui_manual")),
-            td(uiOutput("ui_vim")),
+            # td(uiOutput("ui_vim")),
             td(downloadButton("saveHTML", "Save HTML")),
             td(downloadButton("saveRmd", "Save Rmd")),
             td(HTML("<div class='form-group shiny-input-container'>
@@ -97,10 +97,7 @@ output$report <- renderUI({
               wordWrap = TRUE,
               height = "auto",
               selectionId = "rmd_selection",
-              # value = state_init("rmd_report",rmd_example),
-              # value = state_init("rmd_report", init) %>% gsub("([^\\])\\\\([^\\])","\\1\\\\\\\\\\2",.),
               value = state_init("rmd_report", init) %>% esc_slash,
-              # value = state_init("rmd_report", init) %>% gsub("\\\\","\\\\\\",.),
               hotkeys = list(runKeyRmd = list(win = "CTRL-ENTER", mac = "CMD-ENTER"))),
     htmlOutput("rmd_knitted")
   )

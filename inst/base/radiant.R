@@ -206,7 +206,7 @@ clean_args <- function(rep_args, rep_default = list()) {
     if (!all(is.symbol(rep_default[[i]])) && all(is_not(rep_default[[i]]))) next
     # print(rep_default[[i]])
     # if (rep_default[[i]] == NA) next
-    if (length(rep_args[[i]]) == length(rep_default[[i]])) &&
+    if (length(rep_args[[i]]) == length(rep_default[[i]]) &&
         all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
   }
 

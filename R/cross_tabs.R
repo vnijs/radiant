@@ -193,8 +193,6 @@ summary.cross_tabs <- function(object,
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #'
-#' @importFrom scales percent
-#'
 #' @export
 plot.cross_tabs <- function(x,
                             check = "",
@@ -225,7 +223,7 @@ plot.cross_tabs <- function(x,
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
 				  	 x = object$var2, y = "", fill = object$var1)) +
-		    scale_y_continuous(labels = percent)
+		    scale_y_continuous(labels = scales::percent)
 	}
 
 	if ("expected" %in% check) {
@@ -239,7 +237,7 @@ plot.cross_tabs <- function(x,
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
 		         x = object$var2, y = "", fill = object$var1)) +
-		    scale_y_continuous(labels = percent)
+		    scale_y_continuous(labels = scales::percent)
 	}
 
 	if ("chi_sq" %in% check) {
@@ -275,7 +273,7 @@ plot.cross_tabs <- function(x,
 	# 	    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 	# 	    labs(list(title = paste("Deviation % for ",object$var2," versus ",object$var1, sep = ""),
 	# 	         x = object$var1, y = "")) +
-	# 	    scale_y_continuous(labels = percent, limits = ylim)
+	# 	    scale_y_continuous(labels = scales::percent, limits = ylim)
  #  }
 
 	if ("row_perc" %in% check) {
@@ -286,7 +284,7 @@ plot.cross_tabs <- function(x,
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 			 		labs(fill = object$var1) +
-			 		scale_y_continuous(labels = percent) +
+			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
 			    ggtitle("Row percentages")
 	}
@@ -299,7 +297,7 @@ plot.cross_tabs <- function(x,
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 			 		labs(fill = object$var1) +
-			 		scale_y_continuous(labels = percent) +
+			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
 			    ggtitle("Column percentages")
 	}
@@ -311,7 +309,7 @@ plot.cross_tabs <- function(x,
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
 			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 			 		labs(fill = object$var1) +
-			 		scale_y_continuous(labels = percent) +
+			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
 			    ggtitle("Table percentages")
 	}
