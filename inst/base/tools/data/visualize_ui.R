@@ -65,19 +65,18 @@ output$ui_viz_xvar <- renderUI({
 
 
   ## keep the same x-variable 'active' if possible
-  isolate({
-    sel <- use_input("viz_xvar", vars, fun = "state_multiple")
-  })
+  # isolate({
+  #   sel <- isolate(use_input("viz_xvar", vars, fun = "state_multiple")
+  # })
 
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
-    selected = sel,
+    selected = isolate(use_input("viz_xvar", vars, fun = "state_multiple")),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
 output$ui_viz_comby <- renderUI({
   # if (!is_empty(input$viz_yvar)) return()
   if (length(input$viz_yvar) < 2) return()
-
   checkboxInput("viz_comby", "Combine Y-variables in one plot", state_init("viz_comby", FALSE))
 })
 
@@ -141,12 +140,14 @@ output$ui_viz_facet_row <- renderUI({
   vars <- c("None" = ".", groupable_vars_nonum())
 
   ## keep the same facet_row variable 'active' if possible
-  isolate({
-    sel <- use_input("viz_facet_row", vars, init = ".")
-  })
+  # isolate({
+    # sel <- use_input("viz_facet_row", vars, init = ".")
+  # })
 
   selectizeInput("viz_facet_row", "Facet row", vars,
-    selected = sel, multiple = FALSE)
+    # selected = sel,
+    selected = isolate(use_input("viz_facet_row", vars, init = ".")),
+    multiple = FALSE)
     # selected = state_single("viz_facet_row", vars, "."), multiple = FALSE)
 })
 

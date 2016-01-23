@@ -7,7 +7,7 @@
 #' @param evar Explanatory variables in the model
 #' @param lev The level in the response variable defined as _success_
 #' @param link Link function for _glm_ ('logit' or 'probit'). 'logit' is the default
-#' @param int_var Interaction term to include in the model (not implement)
+#' @param int Interaction term to include in the model
 #' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -27,10 +27,15 @@
 glm_reg <- function(dataset, rvar, evar,
                     lev = "",
                     link = "logit",
-                    int_var = "",
+                    int = "",
                     check = "",
                     dec = 3,
                     data_filter = "") {
+
+  if (rvar %in% evar)
+    return("Response variable contained in the set of explanatory variables.\nPlease update model specification." %>%
+           set_class(c("glm_reg",class(.))))
+
 
   dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
@@ -51,8 +56,8 @@ glm_reg <- function(dataset, rvar, evar,
   dat[[rvar]] <- dat[[rvar]] == lev
 
   vars <- ""
-  var_check(evar, colnames(dat)[-1], int_var) %>%
-    { vars <<- .$vars; evar <<- .$ev; int_var <<- .$intv }
+  var_check(evar, colnames(dat)[-1], int) %>%
+    { vars <<- .$vars; evar <<- .$ev; int <<- .$intv }
 
   if ("standardize" %in% check) {
     isNum <- sapply(dat, is.numeric)
@@ -74,7 +79,7 @@ glm_reg <- function(dataset, rvar, evar,
   coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
 
-  isFct <- sapply(select(dat,-1), is.factor)
+  isFct <- sapply(select(dat,-1), function(x) is.factor(x) || is.logical(x))
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
       coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
@@ -82,8 +87,7 @@ glm_reg <- function(dataset, rvar, evar,
   }
   coeff$`  ` %<>% format(justify = "left")
 
-  ## dat not needed elsewhere
-  rm(dat)
+  rm(dat) ## dat not needed elsewhere
 
   environment() %>% as.list %>% set_class(c("glm_reg",class(.)))
 }
@@ -101,7 +105,7 @@ glm_reg <- function(dataset, rvar, evar,
 #' @examples
 #' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
 #' summary(result, test_var = "pclass")
-#' res <- glm_reg("titanic", "survived", c("pclass","sex"), int_var="pclass:sex", lev="Yes")
+#' res <- glm_reg("titanic", "survived", c("pclass","sex"), int="pclass:sex", lev="Yes")
 #' summary(res, sum_check = c("vif","confint","odds"))
 #' titanic %>% glm_reg("survived", c("pclass","sex","age"), lev = "Yes") %>% summary("vif")
 #'
@@ -234,10 +238,10 @@ summary.glm_reg <- function(object,
       sub_form <- paste(object$rvar, "~ 1")
 
       vars <- object$evar
-      if (object$int_var != "" && length(vars) > 1) {
+      if (object$int != "" && length(vars) > 1) {
         ## updating test_var if needed
-        test_var <- test_specs(test_var, object$int_var)
-        vars <- c(vars,object$int_var)
+        test_var <- test_specs(test_var, object$int)
+        vars <- c(vars,object$int)
       }
 
       not_selected <- setdiff(vars, test_var)

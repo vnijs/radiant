@@ -91,21 +91,32 @@ output$ui_reg_rvar <- renderUI({
 })
 
 output$ui_reg_evar <- renderUI({
+  # notChar <- "character" != .getclass()
+  # vars <- varnames()[notChar]
+  # if (not_available(input$reg_rvar)) vars <- character(0)
+  # if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_rvar)]
+
+  if (not_available(input$reg_rvar)) return()
   notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if (not_available(input$reg_rvar)) vars <- character(0)
-  if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_rvar)]
+  # if (not_available(input$glm_rvar)) return()
+  # if (not_available(input$glm_rvar)) vars <- character(0)
+  # if (length(vars) > 0 && !is_empty(input$glm_rvar) && input$glm_rvar %in% vars)
+  if (length(vars) > 0)
+    vars <- vars[-which(vars == input$reg_rvar)]
+
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
-  isolate({
-    init <- input$reg_evar %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-    if (length(init) > 0) r_state$reg_evar <<- init
-  })
+  # isolate({
+  #   init <- input$reg_evar %>%
+  #     {if (!is_empty(.) && all(. %in% vars)) . else character(0)}
+  #   if (length(init) > 0) r_state$reg_evar <<- init
+  # })
 
   selectInput(inputId = "reg_evar", label = "Explanatory variables:", choices = vars,
-    selected = state_multiple("reg_evar", vars, init),
+    # selected = state_multiple("reg_evar", vars, init),
+    selected = isolate(use_input("reg_evar", vars, fun = "state_multiple")),
     multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -119,7 +130,7 @@ output$ui_reg_pred_var <- renderUI({
 # adding interaction terms as needed
 output$ui_reg_test_var <- renderUI({
   vars <- input$reg_evar
-  if (!is.null(input$reg_int_var)) vars <- c(vars, input$reg_int_var)
+  if (!is.null(input$reg_int)) vars <- c(vars, input$reg_int)
 
   selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
     choices = vars, selected = state_multiple("reg_test_var", vars, ""),
@@ -129,30 +140,33 @@ output$ui_reg_test_var <- renderUI({
 })
 
 output$ui_reg_show_interactions <- renderUI({
-  if (length(input$reg_evar) == 2)
-    choices <- reg_show_interactions[1:2]
-  else if (length(input$reg_evar) > 2)
-    choices <- reg_show_interactions
-  else
-    choices <- reg_show_interactions[1]
-
+  choices <- reg_show_interactions[1:max(min(3,length(input$reg_evar)),1)]
   radioButtons(inputId = "reg_show_interactions", label = "Interactions:",
-               choices = choices,
-               selected = state_init("reg_show_interactions"), inline = TRUE)
+    choices = choices,
+    selected = isolate(use_input_nonvar("reg_show_interactions", choices)),
+    inline = TRUE)
  })
 
-output$ui_reg_int_var <- renderUI({
-  if (is_empty(input$reg_show_interactions)) {
+output$ui_reg_int <- renderUI({
+  if (isolate("reg_show_interactions" %in% names(input)) &&
+      is_empty(input$reg_show_interactions)) {
     choices <- character(0)
+  } else if (is_empty(input$reg_show_interactions)) {
+    return()
   } else {
     vars <- input$reg_evar
     if (not_available(vars) || length(vars) < 2) return()
-    # vector of possible interaction terms to sel from glm_reg
-    choices <- iterms(vars, input$reg_show_interactions)       # create list of interactions to show user
+    ## list of interaction terms to show
+    choices <- iterms(vars, input$reg_show_interactions)
   }
-  selectInput("reg_int_var", label = NULL, choices = choices,
-    selected = state_multiple("reg_int_var", choices),
+
+  selectInput("reg_int", label = NULL, choices = choices,
+    selected = isolate(use_input_nonvar("reg_int", choices)),
     multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
+})
+
+observeEvent(input$reg_show_interactions == "", {
+  updateSelectInput(session = session, inputId = "reg_int", selected = NULL)
 })
 
 # X - variable
@@ -272,7 +286,7 @@ output$ui_regression <- renderUI({
 
         uiOutput("ui_reg_show_interactions"),
         conditionalPanel(condition = "input.reg_show_interactions != ''",
-          uiOutput("ui_reg_int_var")
+          uiOutput("ui_reg_int")
         ),
         conditionalPanel(condition = "input.tabs_regression == 'Summary'",
           uiOutput("ui_reg_test_var"),

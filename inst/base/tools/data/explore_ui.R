@@ -49,16 +49,28 @@ output$ui_expl_byvar <- renderUI({
     names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
   }
 
+  # isolate({
+  #   if (not_available(input$expl_byvar) && available(r_state$expl_byvar) &&
+  #       all(r_state$expl_byvar %in% vars)) {
+  #     vars <- unique(c(r_state$expl_byvar, vars))
+  #     names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+  #   }
+
+  #   sel <- use_input("expl_byvar", vars, fun = "state_multiple")
+  # })
+
   isolate({
-    if (not_available(input$expl_byvar) && available(r_state$expl_byvar) &&
-        all(r_state$expl_byvar %in% vars)) {
-      vars <- unique(c(r_state$expl_byvar, vars))
-      names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+    ## if nothing is selected expl_byvar is also null
+    if ("expl_byvar" %in% names(input) && is.null(input$expl_byvar)) {
+      r_state$expl_byvar <<- NULL
+    } else {
+      if (available(r_state$expl_byvar) && all(r_state$expl_byvar %in% vars)) {
+        vars <- unique(c(r_state$expl_byvar, vars))
+        names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+      }
     }
-
-    sel <- use_input("expl_byvar", vars, fun = "state_multiple")
+    sel <- use_input("expl_byvar", vars, "", fun = "state_multiple")
   })
-
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
     selected = sel, multiple = TRUE,

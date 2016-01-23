@@ -25,17 +25,15 @@ output$ui_perf_rvar <- renderUI({
 })
 
 output$ui_perf_lev <- renderUI({
-  levs <- c()
+  if (is_empty(input$perf_rvar)) return()
   if (available(input$perf_rvar))
     levs <- .getdata()[[input$perf_rvar]] %>% as.factor %>% levels
-
-  isolate({
-    sel <- input$perf_lev %>% {if (!is_empty(.) && . %in% levs) . else levs[1]}
-  })
+  else
+    levs <- c()
 
   selectInput(inputId = "perf_lev", label = "Choose level:",
               choices = levs,
-              selected = state_single("perf_lev", levs, sel))
+              selected = isolate(use_input_nonvar("perf_lev", levs)))
 })
 
 output$ui_perf_pred <- renderUI({

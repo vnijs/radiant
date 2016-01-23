@@ -10,15 +10,19 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
-  if (not_available(vars)) return()
-
+  if (not_available(vars)) return("")
   isolate({
-    # if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars))
-    if (not_available(input$pvt_cvars) && available(r_state$pvt_cvars) &&
-        all(r_state$pvt_cvars %in% vars)) {
-      vars <- unique(c(r_state$pvt_cvars, vars))
-      # names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% names
-      names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+
+    # print("-- in fun and input --")
+    # print("pvt_cvars" %in% names(input))
+    ## if nothing is selected expl_byvar is also null
+    if ("pvt_cvars" %in% names(input) && is.null(input$pvt_cvars)) {
+      r_state$pvt_cvars <<- NULL
+    } else {
+      if (available(r_state$pvt_cvars) && all(r_state$pvt_cvars %in% vars)) {
+        vars <- unique(c(r_state$pvt_cvars, vars))
+        names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+      }
     }
 
     ## keep the same n-variable 'active' if possible
@@ -26,13 +30,21 @@ output$ui_pvt_cvars <- renderUI({
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    # selected = state_multiple("pvt_cvars",vars, ""),
     selected = sel,
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
+
+# observe({
+#   print("-- in input --")
+#   print("pvt_cvars" %in% names(input))
+#   print("-- input ---")
+#   print(input$pvt_cvars)
+#   print("-- state ---")
+#   print(r_state$pvt_cvars)
+# })
 
 output$ui_pvt_nvar <- renderUI({
   # isNum <- "numeric" == .getclass() | "integer" == .getclass()
@@ -63,7 +75,8 @@ output$ui_pvt_fun <- renderUI({
 })
 
 output$ui_pvt_normalize  <- renderUI({
-  if (!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1) pvt_normalize <- pvt_normalize[-(2:3)]
+  if (!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1)
+    pvt_normalize <- pvt_normalize[-(2:3)]
 
   isolate({
     sel <- if (is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize

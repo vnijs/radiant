@@ -5,7 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param rvar The response variable in the regression
 #' @param evar Explanatory variables in the regression
-#' @param int_var Interaction terms to include in the model
+#' @param int Interaction terms to include in the model
 #' @param check "standardize" to see standardized coefficient estimates. "stepwise" to apply step-wise selection of variables in estimation
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -22,12 +22,15 @@
 #'
 #' @export
 regression <- function(dataset, rvar, evar,
-                       int_var = "",
+                       int = "",
                        check = "",
                        dec = 3,
                        data_filter = "") {
 
-  # summary(lm(mpg ~ I(cyl^2) + cyl, data = mtcars))
+  if (rvar %in% evar)
+    return("Response variable contained in the set of explanatory variables.\nPlease update model specification." %>%
+           set_class(c("regression",class(.))))
+
 
   dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
@@ -37,8 +40,8 @@ regression <- function(dataset, rvar, evar,
            set_class(c("regression",class(.))))
 
   vars <- ""
-  var_check(evar, colnames(dat)[-1], int_var) %>%
-    { vars <<- .$vars; evar <<- .$ev; int_var <<- .$intv }
+  var_check(evar, colnames(dat)[-1], int) %>%
+    { vars <<- .$vars; evar <<- .$ev; int <<- .$intv }
 
   if ("standardize" %in% check) {
     isNum <- sapply(dat, is.numeric)
@@ -58,7 +61,7 @@ regression <- function(dataset, rvar, evar,
   coeff <- tidy(model)
   coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   colnames(coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
-  isFct <- sapply(select(dat,-1), is.factor)
+  isFct <- sapply(select(dat,-1), function(x) is.factor(x) || is.logical(x))
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
       coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
@@ -67,8 +70,7 @@ regression <- function(dataset, rvar, evar,
   }
   coeff$`  ` %<>% format(justify = "left")
 
-  ## dat is not needed elsewhere and is already in "model" anyway
-  rm(dat)
+  rm(dat) ## dat is not needed elsewhere and is already in "model" anyway
 
   environment() %>% as.list %>% set_class(c("regression",class(.)))
 }
@@ -230,10 +232,10 @@ summary.regression <- function(object,
       sub_form <- ". ~ 1"
 
       vars <- object$evar
-      if (object$int_var != "" && length(vars) > 1) {
+      if (object$int != "" && length(vars) > 1) {
         ## updating test_var if needed
-        test_var <- test_specs(test_var, object$int_var)
-        vars <- c(vars,object$int_var)
+        test_var <- test_specs(test_var, object$int)
+        vars <- c(vars,object$int)
       }
 
       not_selected <- setdiff(vars,test_var)
@@ -431,7 +433,7 @@ plot.regression <- function(x,
 #' result <- regression("diamonds", "price", c("carat","clarity"))
 #' predict(result, pred_cmd = "carat = 1:10")
 #' predict(result, pred_cmd = "clarity = levels(clarity)")
-#' result <- regression("diamonds", "price", c("carat","clarity"), int_var = c("carat:clarity"))
+#' result <- regression("diamonds", "price", c("carat","clarity"), int = c("carat:clarity"))
 #' dpred <<- getdata("diamonds") %>% slice(1:10)
 #' predict(result, pred_data = "dpred")
 #' rm(dpred, envir = .GlobalEnv)
@@ -572,7 +574,7 @@ predict.regression <- function(object,
 #' result <- regression("diamonds", "price", c("carat","clarity"))
 #' pred <- predict(result, pred_cmd = "carat = 1:10")
 #' plot(pred, xvar = "carat")
-#' result <- regression("diamonds", "price", c("carat","clarity"), int_var = "carat:clarity")
+#' result <- regression("diamonds", "price", c("carat","clarity"), int = "carat:clarity")
 #' dpred <<- getdata("diamonds") %>% slice(1:100)
 #' pred <- predict(result, pred_data = "dpred")
 #' plot(pred, xvar = "carat", color = "clarity")
@@ -723,7 +725,7 @@ var_check <- function(ev, cn, intv = "") {
 #' @details See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 #'
 #' @param test_var List of variables to use for testing for regression or glm_reg
-#' @param int_var Interaction terms specified
+#' @param int Interaction terms specified
 #'
 #' @return A vector of variables names to test
 #'
@@ -731,11 +733,11 @@ var_check <- function(ev, cn, intv = "") {
 #' test_specs("a", c("a:b", "b:c"))
 #'
 #' @export
-test_specs <- function(test_var, int_var) {
+test_specs <- function(test_var, int) {
 
-  if ({int_var %>% strsplit(":") %>% unlist} %in% test_var %>% any) {
+  if ({int %>% strsplit(":") %>% unlist} %in% test_var %>% any) {
     cat("Interaction terms contain variables specified for testing.\nRelevant interaction terms are included in the requested test.\n\n")
-    for (i in test_var) test_var <- c(test_var, int_var[grep(i, int_var)])
+    for (i in test_var) test_var <- c(test_var, int[grep(i, int)])
     test_var <- unique(test_var)
   }
   test_var

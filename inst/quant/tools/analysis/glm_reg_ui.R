@@ -79,27 +79,23 @@ glm_pred_plot_inputs <- reactive({
 output$ui_glm_rvar <- renderUI({
  	vars <- two_level_vars()
 
-  isolate(sel <- use_input("glm_rvar", vars))
+  # isolate(sel <- use_input("glm_rvar", vars))
 
   selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
   	selected = state_single("glm_rvar",vars), multiple = FALSE)
 })
 
 output$ui_glm_lev <- renderUI({
-  levs <- c()
+  if (is_empty(input$glm_rvar)) return()
   if (available(input$glm_rvar))
     levs <- .getdata()[[input$glm_rvar]] %>% as.factor %>% levels
-
-  isolate({
-    sel <-
-      input$glm_lev %>%
-      {if (!is_empty(.) && . %in% levs) . else levs[1]}
-    # sel <- use_input("glm_lev", levs)
-  })
+  else
+    levs <- c()
 
   selectInput(inputId = "glm_lev", label = "Choose level:",
               choices = levs,
-              selected = state_single("glm_lev", levs, sel))
+              # selected = state_single("glm_lev", levs, sel))
+              selected = isolate(use_input_nonvar("glm_lev", levs)))
               # selected = sel)
 })
 
@@ -113,16 +109,23 @@ output$ui_glm_evar <- renderUI({
   if (length(vars) > 0)
     vars <- vars[-which(vars == input$glm_rvar)]
 
+  # isolate({
+    # print(vars)
+    # print(input$glm_rvar)
+    # print(input$glm_evar)
+  # })
+
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
-  isolate({
-    init <- input$glm_evar %>%
-    {if (!is_empty(.) && . %in% vars) . else character(0)}
-    if (length(init) > 0) r_state$glm_evar <<- init
-  })
+  # isolate({
+  #   init <- input$glm_evar %>%
+  #   {if (!is_empty(.) && all(. %in% vars)) . else character(0)}
+  #   if (length(init) > 0) r_state$glm_evar <<- init
+  # })
 
   selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
-  	selected = state_multiple("glm_evar", vars, init),
+  	# selected = state_multiple("glm_evar", vars, init),
+    selected = isolate(use_input("glm_evar", vars, fun = "state_multiple")),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -135,7 +138,7 @@ output$ui_glm_pred_var <- renderUI({
 
 output$ui_glm_test_var <- renderUI({
  	vars <- input$glm_evar
-	if (!is.null(input$glm_int_var)) vars <- c(vars,input$glm_int_var)
+	if (!is.null(input$glm_int)) vars <- c(vars,input$glm_int)
 
   selectizeInput(inputId = "glm_test_var", label = "Variables to test:",
     choices = vars, selected = state_multiple("glm_test_var", vars),
@@ -145,29 +148,28 @@ output$ui_glm_test_var <- renderUI({
 })
 
 output$ui_glm_show_interactions <- renderUI({
-  if (length(input$glm_evar) == 2)
-    choices <- glm_show_interactions[1:2]
-  else if (length(input$glm_evar) > 2)
-    choices <- glm_show_interactions
-  else
-    choices <- glm_show_interactions[1]
-
+  choices <- glm_show_interactions[1:max(min(3,length(input$glm_evar)),1)]
   radioButtons(inputId = "glm_show_interactions", label = "Interactions:",
-               choices = choices,
-               selected = state_init("glm_show_interactions"), inline = TRUE)
- })
+    choices = choices,
+    selected = isolate(use_input_nonvar("glm_show_interactions", choices)),
+    inline = TRUE)
+})
 
-output$ui_glm_int_var <- renderUI({
-  if (is_empty(input$glm_show_interactions)) {
+output$ui_glm_int <- renderUI({
+  if (isolate("glm_show_interactions" %in% names(input)) &&
+      is_empty(input$glm_show_interactions)) {
     choices <- character(0)
+  } else if (is_empty(input$glm_show_interactions)) {
+    return()
   } else {
     vars <- input$glm_evar
     if (not_available(vars) || length(vars) < 2) return()
-    # vector of possible interaction terms to sel from glm_reg
+    ## list of interaction terms to list
     choices <- iterms(vars, input$glm_show_interactions)
   }
-	selectInput("glm_int_var", label = NULL, choices = choices,
-  	selected = state_multiple("glm_int_var", choices),
+
+	selectInput("glm_int", label = NULL, choices = choices,
+    selected = isolate(use_input_nonvar("glm_int", choices)),
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
@@ -262,7 +264,7 @@ output$ui_glm_reg <- renderUI({
 
   			uiOutput("ui_glm_show_interactions"),
   		  conditionalPanel(condition = "input.glm_show_interactions != ''",
-  				uiOutput("ui_glm_int_var")
+  				uiOutput("ui_glm_int")
   			),
         conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
   		    uiOutput("ui_glm_test_var"),
@@ -369,6 +371,9 @@ glm_available <- reactive({
 })
 
 .glm_reg <- reactive({
+  # if(input$glm_rvar %in% input$glm_evar) return("Updating inputs")
+  # if(input$glm_rvar %in% input$glm_evar) return(invisible())
+  # req(!input$glm_rvar %in% input$glm_evar)
 	do.call(glm_reg, glm_inputs())
 })
 

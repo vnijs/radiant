@@ -37,7 +37,8 @@ output$ui_tr_reorg_levs <- renderUI({
   fctCol <- input$tr_vars[1]
 	isFct <- "factor" == .getclass()[fctCol]
   if (!isFct) return()
-	levs <- .getdata()[[fctCol]] %>% levels
+	# levs <- .getdata()[[fctCol]] %>% levels
+  levs <- .getdata_transform()[[fctCol]] %>% levels
 
   selectizeInput("tr_reorg_levs", "Reorder/remove levels:", choices  = levs,
     selected = levs, multiple = TRUE,
@@ -652,7 +653,8 @@ transform_main <- reactive({
   	# return("A filter is active. Either uncheck the filter checkbox, remove the filter statement,\nor store the filtered data through the Data > View tab")
 
   ## get the active dataset, filter not applied when called from transform tab
-  dat <- .getdata()
+  # dat <- .getdata()
+  dat <- .getdata_transform()
 
   ## what data to pass on ...
 	if (input$tr_change_type == "none")
@@ -817,7 +819,8 @@ output$transform_data <- reactive({
 
 tr_snippet <- reactive({
   # .getdata() %>% {if (nrow(.) == 0) invisible() else show_data_snippet(.) } %>% return(.)
-  show_data_snippet(.getdata())
+  # show_data_snippet(.getdata())
+  show_data_snippet(.getdata_transform())
 })
 
 output$transform_summary <- renderPrint({
@@ -858,7 +861,8 @@ observeEvent(input$tr_store, {
 		dataset <- input$tr_dataset
     ncmd <- ""
 		if (is.null(r_data[[dataset]])) {
-			r_data[[dataset]] <- .getdata()
+			# r_data[[dataset]] <- .getdata()
+      r_data[[dataset]] <- .getdata_transform()
 			r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
 			r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
 

@@ -183,6 +183,14 @@ if (exists("r_state") && exists("r_data")) {
 ## identify the shiny environment
 r_env <- environment()
 
+## turning of vim_keys on load unless it is set in options
+vk <- options("vim_keys")[[1]]
+if(!is.null(vk) && vk) {
+  r_data$vim_keys <- TRUE
+} else {
+  r_data$vim_keys <- FALSE
+}
+
 if (r_local) {
   ## reference to radiant environment that can be accessed by exported functions
   ## does *not* make a copy of the data - nice

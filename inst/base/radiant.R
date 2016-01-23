@@ -80,7 +80,6 @@ saveStateOnRefresh <- function(session = session) {
 
   if (is.null(input$dataset)) return()
 
-
   # selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
   selcom <- input$data_filter %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   if (is_empty(selcom) || input$show_filter == FALSE) {
@@ -93,13 +92,13 @@ saveStateOnRefresh <- function(session = session) {
       isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
       isolate(r_data$filter_error <- "")
-      if (!(input$nav_radiant == "Data" && input$tabs_data == "Transform")) {
+      # if (!(input$nav_radiant == "Data" && input$tabs_data == "Transform")) {
         if ("grouped_df" %in% class(seldat)) {
           return(droplevels(ungroup(seldat)))
         } else {
           return(droplevels(seldat))
         }
-      }
+      # }
     }
   }
 
@@ -109,6 +108,22 @@ saveStateOnRefresh <- function(session = session) {
     return(r_data[[input$dataset]])
   }
 })
+
+
+.getdata_transform <- reactive({
+  if (is.null(input$dataset)) return()
+  if ("grouped_df" %in% class(r_data[[input$dataset]])) {
+    ungroup(r_data[[input$dataset]])
+  } else {
+    r_data[[input$dataset]]
+  }
+})
+
+# .getclass_transform <- reactive({
+#   # head(r_data[[input$dataset]]) %>% getclass
+#   getclass(.getdata_transform())
+# })
+
 
 .getclass <- reactive({
   # head(r_data[[input$dataset]]) %>% getclass
@@ -479,17 +494,62 @@ cf <- function(...) {
 ## use the value in the input list if available and update r_state
 use_input <- function(var, vars, init = character(0), fun = "state_single") {
   ivar <- input[[var]]
+  # print("*******")
+  # print(var)
   # print(ivar)
+  # print(var %in% names(input))
   # print(vars)
-  if (available(ivar) && all(ivar %in% vars)) {
+  # print(all(ivar %in% vars))
+
+  if (var %in% names(input) && is.null(ivar)) {
+    r_state[[var]] <<- NULL
+    ivar
+  } else if (available(ivar) && all(ivar %in% vars)) {
     # print("--------")
     # print(r_state[[var]])
     if (length(ivar) > 0) r_state[[var]] <<- ivar
     # print(r_state[[var]])
     # print("--------")
     ivar
+  } else if (available(ivar) && any(ivar %in% vars)) {
+     ivar[ivar %in% vars]
   } else {
-    if (length(ivar) > 0 && ivar %in% c("None","none",".","")) r_state[[var]] <<- ivar
-    get(fun)(var, vars, init)
+    # if (length(ivar) > 0 && ivar %in% c("None","none",".",""))
+      # r_state[[var]] <<- ivar
+
+    if (length(ivar) > 0)
+      if (all(ivar %in% c("None","none",".",""))) r_state[[var]] <<- ivar
+      # ivar <- ivar %in% vars
+      # if (length(ivar) > 0) r_state[[var]] <<- ivar
+
+    # print("//////")
+    # print(vars[vars %in% r_state[[var]]])
+
+    if (fun == "state_init")
+      sel <- get(fun)(var, init)
+    else
+      sel <- get(fun)(var, vars, init)
+
+    # print(sel)
+    sel
+  }
+}
+
+use_input_nonvar <- function(var, choices, init = "", fun = "state_init") {
+  ivar <- input[[var]]
+  # print("----")
+  # print(var)
+  # print(ivar)
+  # print(var %in% names(input))
+  if (var %in% names(input) && is.null(ivar)) {
+    r_state[[var]] <<- NULL
+    ivar
+  } else if (!is_empty(ivar) && all(ivar %in% choices)) {
+    if (length(ivar) > 0) r_state[[var]] <<- ivar
+    ivar
+  } else {
+    if (length(ivar) > 0 && all(ivar %in% c("None","none",".","")))
+      r_state[[var]] <<- ivar
+    get(fun)(var, init)
   }
 }
