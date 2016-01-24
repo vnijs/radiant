@@ -86,27 +86,25 @@ output$ui_viz_combx <- renderUI({
 })
 
 observeEvent(input$viz_type, {
-  # isolate({
     if (input$viz_type %in% c("hist", "density")) {
       updateCheckboxInput(session, "viz_comby", value = FALSE)
     } else {
       updateCheckboxInput(session, "viz_combx", value = FALSE)
     }
-  # })
+    # updateCheckboxGroupInput(session, "viz_check", selected = "")
+    # r_state$viz_check <<- ""
+    # updateCheckboxGroupInput(session, "viz_line", selected = "")
+    # r_state$viz_line <<- ""
 })
 
 observeEvent(input$viz_yvar, {
-  # isolate({
     if (length(input$viz_yvar) < 2)
       updateCheckboxInput(session, "viz_comby", value = FALSE)
-  # })
 })
 
 observeEvent(input$viz_xvar, {
-  # isolate({
     if (length(input$viz_xvar) < 2)
       updateCheckboxInput(session, "viz_combx", value = FALSE)
-  # })
 })
 
 observeEvent(input$viz_combx, {
@@ -193,6 +191,7 @@ output$ui_viz_axes <- renderUI({
   if (input$viz_type %in% c("bar","box")) ind <- c(1, 3)
   if (!is_empty(input$viz_facet_row, ".") || !is_empty(input$viz_facet_col, "."))  ind <- c(ind, 4)
   if (input$viz_type == "bar" && input$viz_facet_row == "." && input$viz_facet_col == ".") ind <- c(ind, 6)
+
   checkboxGroupInput("viz_axes", NULL, viz_axes[ind],
     selected = state_init("viz_axes", ""),
     inline = TRUE)
@@ -200,10 +199,23 @@ output$ui_viz_axes <- renderUI({
 
 output$ui_viz_check <- renderUI({
   if (is_empty(input$viz_type)) return()
-  ind <- 1:3
-  if (input$viz_type == "box") ind <- 3
+  if (input$viz_type == "scatter") {
+    ind <- 1:3
+  } else if (input$viz_type == "box") {
+    ind <- 3
+  } else {
+    ind <- c()
+  }
+
+  if (!input$viz_type %in% c("scatter", "box"))
+    r_state$viz_check <<- gsub("jitter","",r_state$viz_check)
+  if (input$viz_type != "scatter") {
+    r_state$viz_check <<- gsub("line","",r_state$viz_check)
+    r_state$viz_check <<- gsub("loess","",r_state$viz_check)
+  }
+
   checkboxGroupInput("viz_check", NULL, viz_check[ind],
-    selected = state_init("viz_check"),
+    selected = state_init("viz_check", ""),
     inline = TRUE)
 })
 
@@ -362,6 +374,10 @@ observeEvent(input$visualize_report, {
     if (input$viz_type != "hist") vi$bins <- viz_args$bins
     if (!input$viz_type %in% c("density","scatter") ||
         !"loess" %in% input$viz_check) vi$smooth <- viz_args$smooth
+
+    if (!input$viz_type %in% c("scatter", "box") &&
+        "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
+
     inp_main <- clean_args(vi, viz_args)
     inp_main[["custom"]] <- FALSE
     # update_report(inp_main = clean_args(vi, viz_args),

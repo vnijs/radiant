@@ -45,7 +45,7 @@ regression <- function(dataset, rvar, evar,
 
   if ("standardize" %in% check) {
     isNum <- sapply(dat, is.numeric)
-    if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+    if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
   }
 
   form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula

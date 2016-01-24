@@ -36,13 +36,13 @@ glm_reg <- function(dataset, rvar, evar,
     return("Response variable contained in the set of explanatory variables.\nPlease update model specification." %>%
            set_class(c("glm_reg",class(.))))
 
-
   dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
     return("One or more selected variables show no variation. Please select other variables." %>%
            set_class(c("glm_reg",class(.))))
+
 
   rv <- dat[[rvar]]
   if (lev == "") {
@@ -60,8 +60,9 @@ glm_reg <- function(dataset, rvar, evar,
     { vars <<- .$vars; evar <<- .$ev; int <<- .$intv }
 
   if ("standardize" %in% check) {
+    ## express evars in std. deviations
     isNum <- sapply(dat, is.numeric)
-    if (sum(isNum > 0)) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+    if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(. / sd(., na.rm = TRUE)))
   }
 
   form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
@@ -78,6 +79,15 @@ glm_reg <- function(dataset, rvar, evar,
   coeff <- tidy(model)
   coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
+
+  # if ("standardize" %in% check) {
+  #   isNum <- sapply(dat, is.numeric)
+  #   if (sum(isNum) > 0) {
+  #     std <- sapply(dat[,isNum], sd_rm)
+  #     coeff$coefficient[which(coeff[[1]] %in% names(std))] %<>% {. * std}
+  #     coeff$std.error[which(coeff[[1]] %in% names(std))] %<>% {. * std}
+  #   }
+  # }
 
   isFct <- sapply(select(dat,-1), function(x) is.factor(x) || is.logical(x))
   if (sum(isFct) > 0) {
@@ -200,10 +210,11 @@ summary.glm_reg <- function(object,
         set_colnames(c("Low","High")) %>%
         cbind(select(object$coeff,2),.)
 
+        ?confint.default
+
       if ("confint" %in% sum_check) {
         ci_tab %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
-        # mutate_each(funs(sprintf(paste0("%.",dec,"f"),.))) %>%
         dfprint(dec) %>%
         set_colnames(c("coefficient", ci_perc[1], ci_perc[2], "+/-")) %>%
         set_rownames(object$coeff$`  `) %>%
@@ -218,9 +229,10 @@ summary.glm_reg <- function(object,
       cat("Odds ratios were not calculated\n")
     } else {
       if (object$link == "logit") {
+        orlab <- if ("standardize" %in% object$check) "std odds ratio" else "odds ratio"
         exp(ci_tab[-1,]) %>%
           dfprint(dec) %>%
-          set_colnames(c("odds ratio", ci_perc[1], ci_perc[2])) %>%
+          set_colnames(c(orlab, ci_perc[1], ci_perc[2])) %>%
           set_rownames(object$coeff$`  `[-1]) %>%
           print
         cat("\n")

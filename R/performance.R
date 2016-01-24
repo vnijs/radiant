@@ -165,7 +165,7 @@ summary.performance <- function(object, prn = TRUE, ...) {
 	  cat("Level     :", object$lev, "in", object$rvar, "\n")
 		cat("Method    :", gsub("radiant::","",object$method), "\n")
 		cat("Bins      :", object$qnt, "\n")
-		cat("AUC       :", paste0(object$pred, "(", round(object$auc,3), ")", collapse=", "), "\n\n")
+		cat("AUC       :", paste0(object$pred, " (", round(object$auc,3), ")", collapse=", "), "\n\n")
 
 		print(dfprint(as.data.frame(object$dat), 3), row.names = FALSE)
 	} else {
@@ -197,6 +197,7 @@ plot.performance <- function(x,
                              shiny = FALSE,
                              ...) {
 
+  # if (is(x, 'try-error')) return(invisible())
 	object <- x; rm(x)
   if (is.character(object) || is.null(object$dat) || any(is.na(object$dat$cum_lift)) ||
       is.null(plots)) return(invisible())
