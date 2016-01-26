@@ -395,46 +395,38 @@ plot.ann <- function(x,
 #   sshhr( p )
 # }
 
-# #' Store residuals or predicted values generated in the ann function
-# #'
-# #' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
-# #'
-# #' @param object Return value from \code{\link{ann}} or \code{\link{predict.ann}}
-# #' @param data Dataset name
-# #' @param type Residuals ("residuals") or predictions ("predictions"). For predictions the dataset name must be provided
-# #' @param name Variable name assigned to the residuals or predicted values
-# #'
-# #' @examples
-# #' \donttest{
-# #' result <- ann("titanic", "survived", "pclass", lev = "Yes")
-# #' store_glm(result)
-# #' }
-# #' @export
-# store_glm <- function(object,
-#                       data = object$dataset,
-#                       type = "residuals",
-#                       name = paste0(type, "_glm")) {
+#' Store predicted values generated in the ann function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
+#'
+#' @param pred Return value from \code{\link{predict.ann}}
+#' @param data Dataset name
+#' @param name Variable name assigned to the predicted values
+#'
+#' @export
+store_ann <- function(pred, data,
+                      name = "predict_ann") {
 
-#   # if (!is.null(object$data_filter) && object$data_filter != "")
-#   if (!is_empty(object$data_filter))
-#     return(message("Please deactivate data filters before trying to store predictions or residuals"))
+  # if (!is.null(object$data_filter) && object$data_filter != "")
+  # if (!is_empty(object$data_filter))
+  #   return(message("Please deactivate data filters before trying to store predictions or residuals"))
 
-#   ## fix empty name input
-#   if (gsub("\\s","",name) == "") name <- paste0(type, "_glm")
+  ## fix empty name input
+  if (gsub("\\s","",name) == "") name <- paste0(type, "_ann")
 
-#   if (type == "residuals") {
-#     store <- object$model$residuals
-#   } else {
-#     ## gsub needed because trailing/leading spaces may be added to the variable name
-#     name <- unlist(strsplit(name, ",")) %>% gsub("\\s","",.)
-#     if (length(name) > 1) {
-#       name <- name[1:min(2, length(name))]
-#       ind <- which(colnames(object) == "Prediction") %>% {.:(. + length(name[-1]))}
-#       store <- object[,ind]
-#     } else {
-#       store <- object$Prediction
-#     }
-#   }
+  # if (type == "residuals") {
+  #   store <- object$model$residuals
+  # } else {
+    ## gsub needed because trailing/leading spaces may be added to the variable name
+    # name <- unlist(strsplit(name, ",")) %>% gsub("\\s","",.)
+    # if (length(name) > 1) {
+    #   name <- name[1:min(2, length(name))]
+    #   ind <- which(colnames(object) == "Prediction") %>% {.:(. + length(name[-1]))}
+    #   store <- object[,ind]
+    # } else {
+      # store <- object$Prediction
+    # }
+  # }
 
-#   changedata(data, vars = store, var_names = name)
-# }
+  changedata(data, vars = pred, var_names = name)
+}

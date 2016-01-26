@@ -263,6 +263,7 @@ output$ann <- renderUI({
 		ann_output_panels <- tabsetPanel(
 	    id = "tabs_ann",
 	    tabPanel("Summary",
+               downloadLink("dl_ann_pred", "", class = "fa fa-download alignright"), br(),
                verbatimTextOutput("summary_ann"),
                plotOutput("plot_ann_net", width = "100%", height = "100%")),
 	    tabPanel("Plot", plot_downloader("ann", height = ann_plot_height()),
@@ -301,15 +302,6 @@ ann_available <- reactive({
   ann_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
     {do.call(plot, c(list(x = .ann()), .))}
 })
-
-# .plot_ann_net <- reactive({
-#   if (ann_available() != "available") return(ann_available())
-#   # if (is_empty(input$ann_plots))
-#     # return("Please select a regression plot from the drop-down menu")
-
-#   ann_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
-#     {do.call(plot, c(list(x = .ann()), .))}
-# })
 
 .plot_ann_net <- reactive({
   if (ann_available() != "available") return(ann_available())
@@ -359,21 +351,24 @@ observeEvent(input$ann_reg_report, {
 
 observeEvent(input$ann_pred, {
   isolate({
-    pred <- r_data$ann_pred
-    if (is.null(pred)) return()
-    if (nrow(pred) != nrow(getdata(input$ann_pred_data, filt = "", na.rm = FALSE)))
-      return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    store_glm(pred, data = input$ann_pred_data, type = "prediction", name = input$ann_store_pred_name)
+    if (ann_available() != "available") return(ann_available())
+    if (is_empty(input$ann_pred_data,"None")) return("No data selected for prediction")
+    pred <- predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE))
+    # if (nrow(pred) != nrow(getdata(input$ann_pred_data, filt = "", na.rm = FALSE)))
+      # return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+    store_ann(pred[,1], data = input$ann_pred_data, name = input$ann_pred_name)
   })
 })
 
-# output$dl_ann_pred <- downloadHandler(
-#   filename = function() { "ann_predictions.csv" },
-#   content = function(file) {
-#     do.call(predict, c(list(object = .ann_reg()), ann_pred_inputs(),
-#             list(prn = FALSE))) %>%
-#       write.csv(., file = file, row.names = FALSE)
-#   }
-
-#             # list(ann_save_pred = TRUE, prn = FALSE))) %>%
-# )
+output$dl_ann_pred <- downloadHandler(
+  filename = function() { "ann_predictions.csv" },
+  content = function(file) {
+    if (ann_available() != "available") {
+      write.csv(ann_available(), file = file, row.names = FALSE)
+    } else {
+      predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE)) %>%
+        set_colnames(c("predict_ann")) %>%
+        write.csv(file = file, row.names = FALSE)
+    }
+  }
+)

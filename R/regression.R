@@ -664,8 +664,8 @@ plot.reg_predict <- function(x,
 store_reg <- function(object, data = object$dataset,
                       type = "residuals", name = paste0(type, "_reg")) {
   # if (!is.null(object$data_filter) && object$data_filter != "")
-  if (!is_empty(object$data_filter))
-    return(message("Please deactivate data filters before trying to store predictions or residuals"))
+  # if (!is_empty(object$data_filter))
+  #   return(message("Please deactivate data filters before trying to store predictions or residuals"))
 
   ## fix empty name input
   if (gsub("\\s","",name) == "") name <- paste0(type, "_reg")

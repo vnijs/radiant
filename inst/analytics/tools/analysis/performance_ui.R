@@ -1,6 +1,6 @@
-perf_method <- list("xtile" = "xtile", "ntile" = "ntile")
+# perf_method <- list("xtile" = "xtile", "ntile" = "ntile")
 perf_plots <- list("Lift" = "lift", "Gains" = "gains")
-perf_train <- list("Training" = "train", "Validation" = "valid")
+perf_train <- list("All" = "All", "Training" = "Training", "Validation" = "Validation", "Both" = "Both")
 
 # list of function arguments
 perf_args <- as.list(formals(performance))
@@ -47,10 +47,21 @@ output$ui_perf_pred <- renderUI({
 })
 
 output$ui_perf_train <- renderUI({
-  vars <- c("None", two_level_vars())
-  isolate(sel <- use_input("perf_train", vars, "None"))
-  selectInput(inputId = "perf_train", label = "Training variable:", choices = vars,
-    selected = sel, multiple = FALSE)
+  # if (is_empty(perf_inputs()$data_filter)) return()
+  # if (is.null(input$show_filter) || input$show_filter == "FALSE") return()
+  if (is.null(input$show_filter) || input$show_filter == "FALSE") {
+    perf_train <- perf_train[1]
+    r_state$perf_train <<- perf_train
+  }
+
+  # vars <- c("None", two_level_vars())
+  # isolate(sel <- use_input("perf_train", vars, "None"))
+  # selectInput(inputId = "perf_train", label = "Training variable:", choices = vars,
+  #   selected = sel, multiple = FALSE)
+  radioButtons("perf_train", label = "Show plots for:", perf_train,
+    # selected = isolate(state_init("perf_train", "valid")),
+    selected = state_init("perf_train", "All"),
+    inline = TRUE)
 })
 
 output$ui_performance <- renderUI({
@@ -62,17 +73,17 @@ output$ui_performance <- renderUI({
       checkboxGroupInput("perf_plots", "Plots:", perf_plots,
         selected = state_init("perf_plots", ""),
         inline = TRUE),
-      radioButtons("perf_method", label = "Method:", perf_method,
-        selected = state_init("perf_method", "xtile"),
-        inline = TRUE),
+      # radioButtons("perf_method", label = "Method:", perf_method,
+      #   selected = state_init("perf_method", "xtile"),
+      #   inline = TRUE),
       numericInput("perf_qnt", label = "# quantiles:",
                    value = state_init("perf_qnt", 10), min = 2),
-      uiOutput("ui_perf_train"),
-      conditionalPanel("input.perf_train != 'None'",
-        checkboxGroupInput("perf_tplots", "Show plots for:", perf_train,
-          selected = state_init("perf_tplots", ""),
-          inline = TRUE)
-      )
+      uiOutput("ui_perf_train")
+      # conditionalPanel("input.perf_train != 'None'",
+      #   checkboxGroupInput("perf_tplots", "Show plots for:", perf_train,
+      #     selected = state_init("perf_tplots", ""),
+      #     inline = TRUE)
+      # )
   	),
   	help_and_report(modal_title = "Model performance",
   	                fun_name = "performance",

@@ -8,6 +8,7 @@
 #' @param lev The level in the response variable defined as _success_
 #' @param qnt Number of bins to create
 #' @param method Use either ntile or xtile to split the data (default is xtile)
+#' @param train Use data from training ("train"), validation ("valid"), or both ("both") to evaluate model performance
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of results
@@ -23,6 +24,7 @@ performance <- function(dataset, pred, rvar,
                         lev = "",
                         qnt = 10,
                         method = "xtile",
+                        train = "",
                         data_filter = "") {
 
 	# dataset <- "bbb"
@@ -37,9 +39,33 @@ performance <- function(dataset, pred, rvar,
 
 	if (is_empty(qnt)) qnt <- 10
 
+	if (train == "All") {
+		data_filter <- ""
+	} else if (train == "Validation") {
+		data_filter <- paste0("!(",data_filter,")")
+	}
+	# else if (train == "Both") {
+ #    return("Option not yet implemented" %>% set_class(c("ann",class(.))))
+	# }
+
 	vars <- c(pred, rvar)
-	dat <- getdata(dataset, vars, filt = data_filter)
+	if (train == "Both") {
+
+    return("Option not yet implemented" %>% set_class(c("ann",class(.))))
+    ## maybe put data in a list and cycle through?
+		# data_filter <- paste0("!(",data_filter,")")
+		# dat1 <- getdata(dataset, vars, filt = data_filter) %>%
+		#   rename_(.dots = setNames(paste0(pred,"_vatrain"), pred))
+		# data_filter <- paste0("!(",data_filter,")")
+		# dat2 <-
+		#   getdata(dataset, vars, filt = data_filter) %>%
+		#   rename_(.dots = setNames(paste0(pred,"_train"), pred))
+	} else {
+		dat <- getdata(dataset, vars, filt = data_filter)
+	}
+
 	if (!is_string(dataset)) dataset <- "-----"
+
 
   ## converting factors for interger (1st level)
   ## see also R/visualize.R
@@ -157,15 +183,16 @@ summary.performance <- function(object, prn = TRUE, ...) {
 
 	if (prn) {
 		cat("Model performance\n")
-		cat("Data      :", object$dataset, "\n")
+		cat("Data       :", object$dataset, "\n")
 		if (object$data_filter %>% gsub("\\s","",.) != "")
-			cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
-		cat("Perdictors:", paste0(object$pred, collapse=", "), "\n")
-		cat("Response  :", object$rvar, "\n")
-	  cat("Level     :", object$lev, "in", object$rvar, "\n")
-		cat("Method    :", gsub("radiant::","",object$method), "\n")
-		cat("Bins      :", object$qnt, "\n")
-		cat("AUC       :", paste0(object$pred, " (", round(object$auc,3), ")", collapse=", "), "\n\n")
+			cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
+		cat("Results for:", object$train, "\n")
+		cat("Perdictors :", paste0(object$pred, collapse=", "), "\n")
+		cat("Response   :", object$rvar, "\n")
+	  cat("Level      :", object$lev, "in", object$rvar, "\n")
+		# cat("Method    :", gsub("radiant::","",object$method), "\n")
+		cat("Bins       :", object$qnt, "\n")
+		cat("AUC        :", paste0(object$pred, " (", round(object$auc,3), ")", collapse=", "), "\n\n")
 
 		print(dfprint(as.data.frame(object$dat), 3), row.names = FALSE)
 	} else {
