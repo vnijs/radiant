@@ -42,6 +42,7 @@ analytics_ui <- tagList(
   ),
 
   navbarMenu("Model",
+    tabPanel("Neural Network (ANN)", uiOutput("ann")),
     tabPanel("Model performance", uiOutput("performance"))
   ),
 

@@ -78,11 +78,9 @@ glm_pred_plot_inputs <- reactive({
 
 output$ui_glm_rvar <- renderUI({
  	vars <- two_level_vars()
-
-  # isolate(sel <- use_input("glm_rvar", vars))
-
   selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
-  	selected = state_single("glm_rvar",vars), multiple = FALSE)
+  	selected = isolate(use_input("glm_rvar",vars)), multiple = FALSE)
+    # selected = state_single("glm_rvar",vars), multiple = FALSE)
 })
 
 output$ui_glm_lev <- renderUI({

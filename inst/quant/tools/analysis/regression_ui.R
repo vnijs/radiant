@@ -87,7 +87,7 @@ output$ui_reg_rvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   selectInput(inputId = "reg_rvar", label = "Response variable:", choices = vars,
-    selected = state_single("reg_rvar",vars), multiple = FALSE)
+    selected = isolate(use_input("reg_rvar",vars)), multiple = FALSE)
 })
 
 output$ui_reg_evar <- renderUI({

@@ -149,8 +149,8 @@ summary.glm_reg <- function(object,
   cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n")
 
   expl_var <- if (length(object$evar) == 1) object$evar else "x"
-  cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$rvar, " is zero\n"))
-  cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$rvar, " is not zero\n"))
+  cat(paste0("Null hyp.: there is no effect of ", expl_var, " on ", object$rvar, "\n"))
+  cat(paste0("Alt. hyp.: there is an effect of ", expl_var, " on ", object$rvar, "\n"))
   if ("standardize" %in% object$check)
     cat("**Standardized coefficients shown**\n")
   cat("\n")

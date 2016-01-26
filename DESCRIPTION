@@ -36,7 +36,9 @@ Imports:
     yaml(>= 2.1.13),
     scales(>= 0.3.0),
     curl(>= 0.9.4),
-    stringr (>= 1.0)
+    stringr (>= 1.0),
+    nnet,
+    NeuralNetTools (>= 1.4.0)
 Suggests:
     rmarkdown (>= 0.7),
     devtools (>= 1.8.0),
