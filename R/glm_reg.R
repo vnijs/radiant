@@ -612,10 +612,10 @@ plot.glm_predict <- function(x,
     p <- p + facet_fun(as.formula(facets))
   }
 
-  if (is.factor(tmp[[xvar]]) || length(unique(tmp[[xvar]])) < 10)
-    p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
-  else
-    p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
+  # if (is.factor(tmp[[xvar]]) || length(unique(tmp[[xvar]])) < 10)
+  #   p <- p + geom_pointrange(aes_string(ymin = "ymin", ymax = "ymax"), size=.3)
+  # else
+  #   p <- p + geom_smooth(aes_string(ymin = "ymin", ymax = "ymax"), stat="identity")
 
   sshhr( p )
 }
