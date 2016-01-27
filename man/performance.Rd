@@ -5,7 +5,7 @@
 \title{Model performance}
 \usage{
 performance(dataset, pred, rvar, lev = "", qnt = 10, method = "xtile",
-  data_filter = "")
+  train = "", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -19,6 +19,8 @@ performance(dataset, pred, rvar, lev = "", qnt = 10, method = "xtile",
 \item{qnt}{Number of bins to create}
 
 \item{method}{Use either ntile or xtile to split the data (default is xtile)}
+
+\item{train}{Use data from training ("train"), validation ("valid"), or both ("both") to evaluate model performance}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
