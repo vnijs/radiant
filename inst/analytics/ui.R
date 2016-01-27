@@ -41,10 +41,10 @@ analytics_ui <- tagList(
     tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
-  navbarMenu("Model",
-    tabPanel("Neural Network (ANN)", uiOutput("ann")),
-    tabPanel("Model performance", uiOutput("performance"))
-  ),
+  # navbarMenu("Model",
+  #   tabPanel("Neural Network (ANN)", uiOutput("ann")),
+  #   tabPanel("Model performance", uiOutput("performance"))
+  # ),
 
   navbarMenu("Decide",
     tabPanel("Decision tree", uiOutput("dtree")),
