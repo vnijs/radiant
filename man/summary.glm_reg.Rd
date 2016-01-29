@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{glm_reg}}}
 
-\item{sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
+\item{sum_check}{Optional output. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates.}
 
 \item{conf_lev}{Confidence level to use for coefficient and odds confidence intervals (.95 is the default)}
 

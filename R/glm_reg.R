@@ -6,9 +6,9 @@
 #' @param rvar The response variable in the logit (probit) model
 #' @param evar Explanatory variables in the model
 #' @param lev The level in the response variable defined as _success_
-#' @param link Link function for _glm_ ('logit' or 'probit'). 'logit' is the default
+#' @param link Link function for glm ('logit' or 'probit'). 'logit' is the default
 #' @param int Interaction term to include in the model
-#' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
+#' @param check Optional estimation parameters. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
@@ -107,7 +107,7 @@ glm_reg <- function(dataset, rvar, evar,
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{glm_reg}}
-#' @param sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
+#' @param sum_check Optional output. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates.
 #' @param conf_lev Confidence level to use for coefficient and odds confidence intervals (.95 is the default)
 #' @param test_var Variables to evaluate in model comparison (i.e., a competing models Chi-squared test)
 #' @param ... further arguments passed to or from other methods
@@ -525,7 +525,6 @@ predict.glm_reg <- function(object,
       }
 
       isNum <- c("Prediction", "std.error")
-      # pred %>% {.[, isNum] <- round(.[, isNum],dec); .} %>%
       pred %>% dfprint(dec) %>% print(row.names = FALSE)
     }
 

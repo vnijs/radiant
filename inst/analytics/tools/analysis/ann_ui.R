@@ -52,13 +52,14 @@ output$ui_ann <- renderUI({
         tags$td(numericInput("ann_size", label = "Size:", min = 1, max = 20,
           value = state_init("ann_size",1), width = "115px")),
         tags$td(numericInput("ann_decay", label = "Decay:", min = 0, max = 1,
-          value = state_init("ann_decay",.5), width = "115px"))
+          value = state_init("ann_decay",.05), width = "115px"))
       )
     ),
     wellPanel(
       selectizeInput(inputId = "ann_pred_data", label = "Predict for data:",
          choices = c("None",r_data$datasetlist),
-         selected = state_init("ann_pred_data", input$dataset), multiple = FALSE),
+         selected = input$dataset, multiple = FALSE),
+         # selected = state_init("ann_pred_data", input$dataset), multiple = FALSE),
       tags$table(
         tags$td(textInput("ann_pred_name", "Store predictions:", "predict_ann")),
         tags$td(actionButton("ann_pred", "Store"), style="padding-top:30px;")
@@ -156,8 +157,9 @@ observeEvent(input$ann_report, {
     outputs <- c("summary","plot")
     inp_out <- list("","")
     xcmd <- "NeuralNetTools::plotnet(result$model)\n"
-    xcmd <- paste0(xcmd, "pred <- predict(result$model, getdata('", input$ann_pred_data,"', filt = '', na.rm = FALSE))\n")
-    xcmd <-  paste0(xcmd, "store_ann(pred[,1], data = '", input$ann_pred_data, "', name = '", input$ann_pred_name,"')\n")
+    # xcmd <- paste0(xcmd, "pred <- predict(result$model, getdata('", input$ann_pred_data,"', filt = '', na.rm = FALSE))\n")
+    xcmd <- paste0(xcmd, "pred <- predict(result,", input$ann_pred_data,")\n")
+    xcmd <-  paste0(xcmd, "store_ann(pred, data = '", input$ann_pred_data, "', name = '", input$ann_pred_name,"')\n")
     xcmd <-  paste0(xcmd, "# write.csv(pred, file = '~/ann_predictions.csv', row.names = FALSE)")
     update_report(inp_main = clean_args(ann_inputs(), ann_args),
                   fun_name = "ann",
@@ -174,8 +176,10 @@ observeEvent(input$ann_pred, {
   isolate({
     if (ann_available() != "available") return(ann_available())
     if (is_empty(input$ann_pred_data,"None")) return("No data selected for prediction")
-    pred <- predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE))
-    store_ann(pred[,1], data = input$ann_pred_data, name = input$ann_pred_name)
+    # pred <- predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE))
+    pred <- predict(.ann(), input$ann_pred_data)
+    # store_ann(pred[,1], data = input$ann_pred_data, name = input$ann_pred_name)
+    store_ann(pred, data = input$ann_pred_data, name = input$ann_pred_name)
   })
 })
 
@@ -185,9 +189,11 @@ output$dl_ann_pred <- downloadHandler(
     if (ann_available() != "available") {
       write.csv(ann_available(), file = file, row.names = FALSE)
     } else {
-      predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE)) %>%
-        set_colnames(c("predict_ann")) %>%
+      data.frame(pred_ann = predict(.ann(), input$ann_pred_data)) %>%
         write.csv(file = file, row.names = FALSE)
+      # predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE)) %>%
+        # set_colnames(c("predict_ann")) %>%
+        # write.csv(file = file, row.names = FALSE)
     }
   }
 )

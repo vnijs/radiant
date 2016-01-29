@@ -184,12 +184,21 @@ output$saveRmd <- downloadHandler(
       r_data <- reactiveValuesToList(r_data)
       save(r_data, file = fnames[2])
 
-      zip(fname, fnames[1:2])
+      # fnames <- normalizePath(paste0("./",fnames))
+      # print(fnames)
 
+      zip(fname, fnames[1:2])
+      # utils::tar(normalizePath(paste0("./",fname)), fnames, compression = "gzip")
+      # utils::tar(fname, files = "./*.rda", compression = "gzip")
+      # ?utils::tar
+      # ret <- try(zip(fname, fnames[1:2]), silent = TRUE)
       setwd(cdir)
+      # if (is(ret, 'try-error'))
+      #   stop("No zip program available in path. Try installing Rtools from\nCRAN (https://cran.r-project.org/bin/windows/Rtools/)")
     })
   },
   contentType = "application/zip"
+  # contentType = "application/tar.gz"
 )
 
 observe({

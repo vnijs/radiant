@@ -4,7 +4,7 @@
 \alias{ann}
 \title{Artificial Neural Networks}
 \usage{
-ann(dataset, rvar, evar, lev = "", size = 1, decay = 0.5, check = "",
+ann(dataset, rvar, evar, lev = "", size = 1, decay = 0.05, check = "",
   dec = 3, data_filter = "")
 }
 \arguments{

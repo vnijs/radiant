@@ -27,7 +27,7 @@
 ann <- function(dataset, rvar, evar,
                 lev = "",
                 size = 1,
-                decay = .5,
+                decay = .05,
                 check = "",
                 dec = 3,
                 data_filter = "") {
@@ -75,15 +75,14 @@ ann <- function(dataset, rvar, evar,
   ## stability issues ...
   # http://stats.stackexchange.com/questions/23235/how-do-i-improve-my-neural-network-stability
   ## can't use without updating the predict function to use standardized data also
-  # scale_num <- function(x) {
-  #   if (is.numeric(x)) {
-  #     (x-mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
-  #     # scale(x)
-  #    } else {
-  #     x
-  #   }
-  # }
-  # dat[,-1] <- select(dat, -1) %>% mutate_each(funs(scale_num)) %>% as.data.frame
+  scale_df <- function(x) if (is.numeric(x)) scale(x) else x
+
+  # dat[,-1] <- select(dat, -1) %>% mutate_each(funs(scale_df))
+  dat <- mutate_each_(dat, funs(scale_df), vars = colnames(dat)[-1])
+
+  # dat <-
+  #   getdata(dataset, filt = "", na.rm = FALSE) %>%
+  #   mutate_each_(funs(scale_df), vars = colnames(.)[-1])
 
   vars <- evar
   if (length(vars) < (ncol(dat)-1)) vars <- colnames(dat)[-1]
@@ -93,7 +92,7 @@ ann <- function(dataset, rvar, evar,
 
   form <- paste(rvar, "~ . ")
   nninput <- list(formula = as.formula(form),
-              rang = .01, size = size, decay = decay, maxit = 10000,
+              rang = .1, size = size, decay = decay, maxit = 10000,
               entropy = TRUE, trace = FALSE, data = dat)
 
   ## need do.call so Garson plot will work
@@ -138,6 +137,8 @@ summary.ann <- function(object, ...) {
 
   print(object$model)
 
+  # print(caret::varImp(object$model))
+
   if (object$model$convergence != 0)
     cat("\n\nThe model did not converge.")
 }
@@ -174,6 +175,31 @@ plot.ann <- function(x, shiny = FALSE, ...) {
     sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = nrCol))) ) %>%
       { if (shiny) . else print(.) }
   }
+}
+
+#' Predict method for the ann function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
+#'
+#' @param x Return value from \code{\link{ann}}
+#' @param dataset Dataset to use for prediction
+#' @param ... further arguments passed to or from other methods
+#'
+#' @seealso \code{\link{ann}} to generate results
+#' @seealso \code{\link{summary.ann}} to generate results
+#' @seealso \code{\link{plot.ann}} to plot results
+#'
+#' @export
+predict.ann <- function(object, dataset, ...) {
+  scale_df <- function(x) if (is.numeric(x)) scale(x) else x
+  # dat <- getdata(dataset, filt = "", na.rm = FALSE)
+  # dat[,-1] <- select(dat, -1) %>% mutate_each(funs(scale_df))
+  # predict(object$model, dat)[,1]  ## using nnet's predict method
+
+  dat <-
+    getdata(dataset, filt = "", na.rm = FALSE) %>%
+    mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
+    {predict(object$model, .)[,1]}  ## using nnet's predict method
 }
 
 #' Store predicted values generated in the ann function

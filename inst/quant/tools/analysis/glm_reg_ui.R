@@ -252,7 +252,7 @@ output$ui_glm_reg <- renderUI({
       )
     ),
     wellPanel(
-      checkboxInput("glm_pause", "Pause estimation", state_init("glm_pause", TRUE)),
+      checkboxInput("glm_pause", "Pause estimation", state_init("glm_pause", FALSE)),
     	radioButtons(inputId = "glm_link", label = NULL, glm_link,
     		selected = state_init("glm_link","logit"), inline = TRUE),
 	    uiOutput("ui_glm_rvar"),

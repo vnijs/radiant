@@ -16,11 +16,11 @@ glm_reg(dataset, rvar, evar, lev = "", link = "logit", int = "",
 
 \item{lev}{The level in the response variable defined as _success_}
 
-\item{link}{Link function for _glm_ ('logit' or 'probit'). 'logit' is the default}
+\item{link}{Link function for glm ('logit' or 'probit'). 'logit' is the default}
 
 \item{int}{Interaction term to include in the model}
 
-\item{check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
+\item{check}{Optional estimation parameters. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
 
 \item{dec}{Number of decimals to show}
 
