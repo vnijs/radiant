@@ -22,7 +22,7 @@ See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Ra
 \seealso{
 \code{\link{ann}} to generate results
 
-\code{\link{summary.ann}} to generate results
+\code{\link{summary.ann}} to summarize results
 
 \code{\link{plot.ann}} to plot results
 }

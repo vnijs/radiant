@@ -22,8 +22,10 @@ result <- ann("titanic", "survived", "pclass", lev = "Yes")
 summary(result)
 }
 \seealso{
-\code{\link{ann}} to generate the results
+\code{\link{ann}} to generate esults
 
-\code{\link{plot.ann}} to plot the results
+\code{\link{plot.ann}} to plot results
+
+\code{\link{predict.ann}} for prediction
 }
 

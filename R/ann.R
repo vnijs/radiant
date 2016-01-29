@@ -18,8 +18,9 @@
 #' result <- ann("titanic", "survived", c("pclass","sex"), lev = "Yes")
 #' result <- ann("titanic", "survived", c("pclass","sex"))
 #'
-#' @seealso \code{\link{summary.ann}} to summarize the results
-#' @seealso \code{\link{plot.ann}} to plot the results
+#' @seealso \code{\link{summary.ann}} to summarize results
+#' @seealso \code{\link{plot.ann}} to plot results
+#' @seealso \code{\link{predict.ann}} for prediction
 #'
 #' @importFrom nnet nnet
 #'
@@ -60,7 +61,6 @@ ann <- function(dataset, rvar, evar,
     return("One or more selected variables show no variation. Please select other variables." %>%
            set_class(c("ann",class(.))))
 
-
   rv <- dat[[rvar]]
   if (lev == "") {
     if (is.factor(rv))
@@ -74,15 +74,8 @@ ann <- function(dataset, rvar, evar,
 
   ## stability issues ...
   # http://stats.stackexchange.com/questions/23235/how-do-i-improve-my-neural-network-stability
-  ## can't use without updating the predict function to use standardized data also
   scale_df <- function(x) if (is.numeric(x)) scale(x) else x
-
-  # dat[,-1] <- select(dat, -1) %>% mutate_each(funs(scale_df))
   dat <- mutate_each_(dat, funs(scale_df), vars = colnames(dat)[-1])
-
-  # dat <-
-  #   getdata(dataset, filt = "", na.rm = FALSE) %>%
-  #   mutate_each_(funs(scale_df), vars = colnames(.)[-1])
 
   vars <- evar
   if (length(vars) < (ncol(dat)-1)) vars <- colnames(dat)[-1]
@@ -114,15 +107,14 @@ ann <- function(dataset, rvar, evar,
 #' result <- ann("titanic", "survived", "pclass", lev = "Yes")
 #' summary(result)
 #'
-#' @seealso \code{\link{ann}} to generate the results
-#' @seealso \code{\link{plot.ann}} to plot the results
+#' @seealso \code{\link{ann}} to generate esults
+#' @seealso \code{\link{plot.ann}} to plot results
+#' @seealso \code{\link{predict.ann}} for prediction
 #'
 #' @export
 summary.ann <- function(object, ...) {
 
   if (is.character(object)) return(object)
-  # if (class(object$model)[1] != 'ann') return(object)
-  # dec <- object$dec
 
   cat("Artificial Neural Network (ANN)\n")
   cat("Activation function: Logistic")
@@ -136,7 +128,6 @@ summary.ann <- function(object, ...) {
   cat("\n")
 
   print(object$model)
-
   # print(caret::varImp(object$model))
 
   if (object$model$convergence != 0)
@@ -156,7 +147,8 @@ summary.ann <- function(object, ...) {
 #' plot(result, plots = c("imp","net"))
 #'
 #' @seealso \code{\link{ann}} to generate results
-#' @seealso \code{\link{plot.ann}} to plot results
+#' @seealso \code{\link{summary.ann}} to summarize results
+#' @seealso \code{\link{predict.ann}} for prediction
 #'
 #' @importFrom NeuralNetTools plotnet garson
 #'
@@ -168,8 +160,6 @@ plot.ann <- function(x, shiny = FALSE, ...) {
   plot_list <- list()
   plot_list[[1]] <- NeuralNetTools::garson(object$model) + coord_flip()
   nrCol <- 1
-
-  # if ("hist" %in% plots) {}
 
   if (length(plot_list) > 0) {
     sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = nrCol))) ) %>%
@@ -186,20 +176,16 @@ plot.ann <- function(x, shiny = FALSE, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @seealso \code{\link{ann}} to generate results
-#' @seealso \code{\link{summary.ann}} to generate results
+#' @seealso \code{\link{summary.ann}} to summarize results
 #' @seealso \code{\link{plot.ann}} to plot results
 #'
 #' @export
 predict.ann <- function(object, dataset, ...) {
   scale_df <- function(x) if (is.numeric(x)) scale(x) else x
-  # dat <- getdata(dataset, filt = "", na.rm = FALSE)
-  # dat[,-1] <- select(dat, -1) %>% mutate_each(funs(scale_df))
-  # predict(object$model, dat)[,1]  ## using nnet's predict method
 
-  dat <-
-    getdata(dataset, filt = "", na.rm = FALSE) %>%
-    mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
-    {predict(object$model, .)[,1]}  ## using nnet's predict method
+  getdata(dataset, filt = "", na.rm = FALSE) %>%
+  mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
+  {predict(object$model, .)[,1]}  ## using nnet's predict method
 }
 
 #' Store predicted values generated in the ann function

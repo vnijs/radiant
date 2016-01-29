@@ -26,6 +26,8 @@ plot(result, plots = c("imp","net"))
 \seealso{
 \code{\link{ann}} to generate results
 
-\code{\link{plot.ann}} to plot results
+\code{\link{summary.ann}} to summarize results
+
+\code{\link{predict.ann}} for prediction
 }
 

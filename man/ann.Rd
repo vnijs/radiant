@@ -40,8 +40,10 @@ result <- ann("titanic", "survived", c("pclass","sex"), lev = "Yes")
 result <- ann("titanic", "survived", c("pclass","sex"))
 }
 \seealso{
-\code{\link{summary.ann}} to summarize the results
+\code{\link{summary.ann}} to summarize results
 
-\code{\link{plot.ann}} to plot the results
+\code{\link{plot.ann}} to plot results
+
+\code{\link{predict.ann}} for prediction
 }
 
