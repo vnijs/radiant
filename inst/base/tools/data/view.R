@@ -22,6 +22,7 @@ output$ui_view_vars <- renderUI({
 output$ui_View <- renderUI({
   tagList(
     wellPanel(
+      checkboxInput("view_pause", "Pause view", state_init("view_pause", FALSE)),
       uiOutput("ui_view_vars"),
       tags$table(
         tags$td(textInput("view_dat", "Store filtered data as:", paste0(input$dataset,"_view"))),
@@ -53,6 +54,7 @@ output$dataviewer <- DT::renderDataTable({
 
   # if (input$nav_radiant != "Data" || input$tabs_data != "View") return()
   if (not_available(input$view_vars)) return()
+  req(input$view_pause == FALSE)
 
   dat <- select_(.getdata(), .dots = input$view_vars)
   ## this causes problems when r_state is NULL to latter on ??

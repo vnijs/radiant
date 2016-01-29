@@ -28,8 +28,7 @@ By clicking the `Knit report` button, the output from the analysis will be recre
 Below is some code created in Radiant that will generate regression outputfor the _diamonds_ data. These are histograms and a scatterplot / heatmap of the price of diamonds versus carats. The colors in the plot reflect the clarity of the diamond.
 
 ```{r fig.width=7, fig.height=4}
-result <- regression(dataset = 'diamonds', dep_var = 'price',
-                     indep_var = 'carat')
+result <- regression(dataset = 'diamonds', rvar = 'price', evar = 'carat')
 summary(result)
 plot(result, plots = 'hist')
 ```
@@ -38,6 +37,7 @@ plot(result, plots = 'hist')
 visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
           type = 'scatter', color = 'clarity')
 ```
+
 > **Put your own code here or delete this sample report and create your own**
 "
 
@@ -178,8 +178,8 @@ output$saveRmd <- downloadHandler(
       # fbase <- basename(filename)
       # fbase <- sub(paste0(".",tools::file_ext(fbase)),"", fbase)
 
-      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressMessages(library(radiant))\nload(\"", fnames[2], "\")\n```\n\n") %>%
-        paste0(., input$rmd_report) %>% cat(., file = fnames[1],sep="\n")
+      paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"", fnames[2], "\")\n```\n\n") %>%
+        paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>% cat(., file = fnames[1],sep="\n")
 
       r_data <- reactiveValuesToList(r_data)
       save(r_data, file = fnames[2])

@@ -50,6 +50,9 @@ compare_means <- function(dataset, var1, var2,
 		cname <- var1
   }
 
+  ## needed with new tidyr
+  dat$variable %<>% as.factor
+
 	## check there is variation in the data
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
   	return("Test could not be calculated (no variation). Please select another variable." %>%
@@ -57,12 +60,15 @@ compare_means <- function(dataset, var1, var2,
 
 	## resetting option to independent if the number of observations is unequal
   ## summary on factor gives counts
+
   if (samples == "paired") {
     if (summary(dat[["variable"]]) %>% {max(.) != min(.)})
       samples <- "independent (obs. per level unequal)"
   }
 
+
 	levs <- levels(dat[["variable"]])
+
   cmb <- combn(levs, 2) %>% t %>% as.data.frame
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1","group2")
@@ -80,6 +86,7 @@ compare_means <- function(dataset, var1, var2,
 
   for (i in 1:nrow(cmb)) {
   	sel <- cmb[i,]
+
   	x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
   	y <- filter_(dat, paste0("variable == '", sel[[2]], "'")) %>% .[["values"]]
 

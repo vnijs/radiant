@@ -11,8 +11,8 @@ descr_out <- function(descr, ret_type = 'html') {
 
 upload_error_handler <- function(objname, ret) {
   ## create an empty data.frame and return error message as description
-  r_data[[paste0(objname,"_descr")]] <- ret
-  r_data[[objname]] <- data.frame(matrix(rep("",12), nrow = 2))
+  r_data[[paste0(objname,"_descr")]] <<- ret
+  r_data[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
 }
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {

@@ -67,6 +67,7 @@ output$ui_perf_train <- renderUI({
 output$ui_performance <- renderUI({
   tagList(
   	wellPanel(
+      checkboxInput("perf_pause", "Pause evaluation", state_init("perf_pause", FALSE)),
 	    uiOutput("ui_perf_rvar"),
       uiOutput("ui_perf_lev"),
       uiOutput("ui_perf_pred"),
@@ -123,6 +124,7 @@ output$performance <- renderUI({
 })
 
 .performance <- reactive({
+  req(input$perf_pause == FALSE)
 	do.call(performance, perf_inputs())
 })
 

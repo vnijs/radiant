@@ -172,7 +172,7 @@ plot.single_prop <- function(x,
 
 			ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
 	 	 		geom_bar(aes(y = (..count..)/sum(..count..)), alpha = .7) +
-		 		scale_y_continuous(labels = percent) +
+		 		scale_y_continuous(labels = scales::percent) +
 	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$var)) +
 	 	 		ylab("") + theme(legend.position = "none")
 

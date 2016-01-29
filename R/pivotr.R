@@ -140,6 +140,9 @@ pivotr <- function(dataset,
   for (i in cvars[ind])
     tab[[i]] %<>% factor(., levels = c(levs[[i]],"Total"))
 
+  ## frequency table for chi-square test
+  tab_freq <- tab
+
   isNum <- -which(names(tab) %in% cvars)
   if (normalize == "total") {
     tab[,isNum] %<>% {. / total[[1]]} #%>% round(dec)
@@ -221,7 +224,7 @@ summary.pivotr <- function(object,
   }
 
   if (chi2) {
-    cst <- object$tab %>% filter(.[[1]] != "Total") %>%
+    cst <- object$tab_freq %>% filter(.[[1]] != "Total") %>%
       select(-which(names(.) %in% c(object$cvars, "Total")))  %>%
       mutate_each(funs(rep_na = ifelse (is.na(.),0,.))) %>%
       {sshhr(chisq.test(., correct = FALSE))}

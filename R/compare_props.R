@@ -51,13 +51,20 @@ compare_props <- function(dataset, var1, var2,
   	return("One or more selected variables show no variation. Please select other variables." %>%
   	       set_class(c("compare_props",class(.))))
 
+
+	# library(radiant)
+	# dat <- titanic
+	# var1 <- "pclass"
+	# var2 <- "survived"
+
   rn <- ""
   prop_input <-
 	  dat %>%
 	  group_by_(var1, var2) %>%
 	  summarise(n = n()) %>%
 	  spread_(var2, "n") %>%
-	  { rn <<- .[,1][[1]] %>% as.character
+	  as.data.frame %>%
+	  { rn <<- .[,1] %>% as.character
 		  select(., -1) %>%
 		  as.matrix %>%
 		  set_rownames(rn)
@@ -85,11 +92,35 @@ compare_props <- function(dataset, var1, var2,
   	ind <- c(which(cmb[i,1] == rownames(prop_input)), which(cmb[i,2] == rownames(prop_input)))
   	# ind <- which(cmb[i,] %in% rownames(prop_input))  	# pinp <- prop_input[ind,]
 
+  	# print(ind)
+
     pinp <- prop_input[ind,]
+    # print(prop_input)
+    # print(pinp)
+    # print(class(pinp))
+    # return()
+    # # print(ind)
+    # return()
+    # print(pinp %>% as.data.frame)
+    # return()
+    # print(head(pinp))
+    # print(getclass(pinp))
+    # print(class(pinp))
+    # return()
+    # smokers  <- c( 83, 90, 129, 70 )
+    # patients <- c( 86, 93, 136, 82 )
+    # prop.test(smokers, patients)
+    # pinp <- data.frame()
+
+
   	res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
 	    sshhr( prop.test(pinp, alternative = alternative, conf.level = conf_lev,
 	             correct = FALSE) ) %>%
 	    tidy %>% .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
+
+	   # ?prop.test
+	   # print(res)
+	   # return()
 
     n <- rowSums(pinp)
     p <- pinp[,1] / n

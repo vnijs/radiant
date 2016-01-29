@@ -114,7 +114,9 @@ output$ui_Pivotr <- renderUI({
         tr(
           td(checkboxInput("pvt_perc", "Percentage", value = state_init("pvt_perc", FALSE))),
           td(HTML("&nbsp;&nbsp;")),
-          td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
+          # td(checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE)))
+          # td(conditionalPanel("input.pvt_nvar == 'None' && input.pvt_normalize == 'None'",
+          td(conditionalPanel("input.pvt_nvar == 'None'",
                checkboxInput("pvt_chi2", "Chi-square", value = state_init("pvt_chi2", FALSE))))
       )))
     ),
@@ -137,7 +139,8 @@ pvt_args <- as.list(formals(pivotr))
 
 observe({
   ## only allow chi2 if frequencies are shown
-  if (is_empty(input$pvt_normalize, "None") && is_empty(input$pvt_nvar, "None")) return()
+  # if (is_empty(input$pvt_normalize, "None") && is_empty(input$pvt_nvar, "None")) return()
+  if (is_empty(input$pvt_nvar, "None")) return()
   isolate({
     if (input$pvt_chi2) updateCheckboxInput(session, "pvt_chi2", value = FALSE)
   })

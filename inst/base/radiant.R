@@ -352,19 +352,11 @@ plot_downloader <- function(plot_name, width = plot_width(),
   ## link and output name
   lnm <- paste0(po, plot_name)
 
-  # psize <- . %>% {7 * ./650} %>% round(2)
-  # fext <- . %>% tools::file_ext(.) %>% tolower
-
   ## create an output
   output[[lnm]] <- downloadHandler(
     filename = function() { paste0(plot_name, ".png") },
     content = function(file) {
         # if (fext(file) == "svg") svg(file=file, width = psize(width), height = psize(height))
-        # if (fext(file) == "pdf") pdf(file=file, width = psize(width), height = psize(height))
-
-        ## needed to get the image quality at the same level as shiny
-        # pr <- session$clientData$pixelratio
-        # if (is.null(pr) || pr < 1) pr <- 1
 
         ## download graphs in higher resolution than shown in GUI (504 dpi)
         pr <- 7

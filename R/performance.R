@@ -8,7 +8,7 @@
 #' @param lev The level in the response variable defined as _success_
 #' @param qnt Number of bins to create
 #' @param method Use either ntile or xtile to split the data (default is xtile)
-#' @param train Use data from training ("train"), validation ("valid"), or both ("both") to evaluate model performance
+#' @param train Use data from training ("Training"), validation ("Validation"), both ("Both"), or all data ("All") to evaluate model performance
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of results
@@ -27,129 +27,104 @@ performance <- function(dataset, pred, rvar,
                         train = "",
                         data_filter = "") {
 
+	# library(radiant)
 	# dataset <- "bbb"
 	# pred <- c("last","total")
 	# rvar <- "buyer"
-	# method <- "ntile"
+	# method <- "xtile"
+	# lev <- ""
 	# qnt <- 10
 	# resp_lev <- 1
 	# data_filter <- ""
-
-	# print(match.call())
+	# train <- "All"
 
 	if (is_empty(qnt)) qnt <- 10
 
-	if (train == "All") {
-		data_filter <- ""
-	} else if (train == "Validation") {
-		data_filter <- paste0("!(",data_filter,")")
-	}
-	# else if (train == "Both") {
- #    return("Option not yet implemented" %>% set_class(c("ann",class(.))))
-	# }
-
+	dat_list <- list()
 	vars <- c(pred, rvar)
 	if (train == "Both") {
-
-    return("Option not yet implemented" %>% set_class(c("ann",class(.))))
-    ## maybe put data in a list and cycle through?
-		# data_filter <- paste0("!(",data_filter,")")
-		# dat1 <- getdata(dataset, vars, filt = data_filter) %>%
-		#   rename_(.dots = setNames(paste0(pred,"_vatrain"), pred))
-		# data_filter <- paste0("!(",data_filter,")")
-		# dat2 <-
-		#   getdata(dataset, vars, filt = data_filter) %>%
-		#   rename_(.dots = setNames(paste0(pred,"_train"), pred))
+		dat_list[["Training"]] <- getdata(dataset, vars, filt = data_filter)
+		dat_list[["Validation"]] <- getdata(dataset, vars, filt = paste0("!(",data_filter,")"))
+	} else if (train == "Training") {
+		dat_list[["Training"]] <- getdata(dataset, vars, filt = data_filter)
+	} else if (train == "Validation") {
+		dat_list[["Validation"]] <- getdata(dataset, vars, filt = paste0("!(",data_filter,")"))
 	} else {
-		dat <- getdata(dataset, vars, filt = data_filter)
+		dat_list[["All"]] <- getdata(dataset, vars, filt = "")
 	}
 
 	if (!is_string(dataset)) dataset <- "-----"
 
-
-  ## converting factors for interger (1st level)
-  ## see also R/visualize.R
-  # if ("factor" %in% class(dat[[rvar]]))
-  #   dat[[rvar]] %<>% {as.integer(. == levels(.)[resp_lev])}
-
-  rv <- dat[[rvar]]
-  # if (lev == "") {
-  #   if (is.factor(rv))
-  #     lev <- levels(rv)[1]
-  #   else
-  #     lev <- rv %>% as.character %>% as.factor %>% levels %>% .[1]
-  # }
-  if (is.factor(rv))
-    levs <- levels(rv)
-  else
-    levs <- rv %>% as.character %>% as.factor %>% levels
-
-  if (lev == "") {
-  	lev <- levs[1]
-  } else {
-  	if (!lev %in% levs) return(set_class("", c("performance",class("character"))))
-  }
-
-  ## transformation to TRUE/FALSE depending on the selected level (lev)
-  dat[[rvar]] <- dat[[rvar]] == lev
-
-	# tot_resp = sum(dat[[rvar]] == 1)
-	tot_resp = sum(dat[[rvar]])
-	tot_obs = nrow(dat)
-	tot_rate = tot_resp / tot_obs
-
-  # dots <- sub("^","~",dots) %>% lapply(as.formula, env = r_env)
-  # nnames <- paste0(pred,"_",qnt)
-  # qnt_name <- paste0("quant_",qnt)
   qnt_name <- "bins"
   if (method == "xtile") method <- "radiant::xtile"
 
-  # dots <- sub("^","~",dots) %>% lapply(as.formula, env = r_env)
-  # dots <- as.formula(paste0("~",method))
-  # nvar <- try(group_by_(dataset, .dots = byvar) %>% mutate_(.dots = setNames(dots, vars)), silent = TRUE)
+  # auc_list <- rep(0, length(pred)) %>% set_names(pred)
+  auc_list <- list()
+  lg_list <- list()
 
-  ## tip for summarise_ from http://stackoverflow.com/a/27592077/1974918
-  ## put summaries in list so you can print and plot
-  auc_list <- rep(0, length(pred)) %>% set_names(pred)
+	# pext <- c(All = "", Training = "_train", Validation = "_val")
+	pext <- c(All = "", Training = " (train)", Validation = " (val)")
 
-  dat_list <- list()
-  for (i in seq_along(pred)) {
-  	pname <- pred[i]
-  	auc_list[[pname]] <- auc(dat[[pname]],dat[[rvar]], TRUE)
-  	dat_list[[pname]] <-
-		  dat %>%
-		  select_(.dots = c(pred[i],rvar)) %>%
-			# mutate_each_(funs(xtile(.,qnt)), vars = pred[i]) %>%
-			# mutate_each_(funs(get(method)(.,qnt)), vars = pred[i]) %>%
-			# mutate_each_(funs_(paste0(method,"(.,qnt)")), vars = pred[i]) %>%
-			mutate_(.dots = setNames(paste0(method,"(",pred[i],",", qnt,")"), pred[i])) %>%
-			# mutate_(.dots = setNames(as.formula(paste0("~",method,"(",pred[i],",", qnt,")")), pred[i])) %>%
-			setNames(c(qnt_name,rvar)) %>%
-	    group_by_(.dots = qnt_name) %>%
-		  summarise_(.dots = c(
-		    nr_obs = "n()",
-		    nr_resp = paste0("sum(",rvar,")")
-		    # nr_resp = paste0("sum(",rvar," == 1)")
-		  )) %>%
-		  mutate(
-		    resp_rate = nr_resp / nr_obs,
-		    gains = nr_resp / tot_resp
-		  ) %>%
-		  { if (first(.$resp_rate) < last(.$resp_rate)) mutate_each(., funs(rev))
-		  	else . } %>%
-		  # arrange(desc(resp_rate)) %>%
-		  mutate(
-		    cum_prop = cumsum(nr_obs / tot_obs),
-		    cum_resp = cumsum(nr_resp),
-		    cum_resp_rate = cum_resp / cumsum(nr_obs),
-		    cum_lift = cum_resp_rate / tot_rate,
-		    cum_gains = cum_resp / tot_resp
-		  ) %>%
-		  mutate(pred = pred[i]) %>%
-		  select(pred, everything())
+	for (i in names(dat_list)) {
+		# i <- "All"
+		dat <- dat_list[[i]]
+	  rv <- dat[[rvar]]
+	  if (is.factor(rv)) {
+	    levs <- levels(rv)
+	  } else {
+	    levs <- rv %>% as.character %>% as.factor %>% levels
+	  }
+
+	  if (lev == "") {
+	  	lev <- levs[1]
+	  } else {
+	  	if (!lev %in% levs) return(set_class("", c("performance",class("character"))))
+	  }
+
+	  ## transformation to TRUE/FALSE depending on the selected level (lev)
+	  dat[[rvar]] <- dat[[rvar]] == lev
+
+	  ## tip for summarise_ from http://stackoverflow.com/a/27592077/1974918
+	  ## put summaries in list so you can print and plot
+		# tot_resp = sum(dat[[rvar]] == 1)
+		tot_resp = sum(dat[[rvar]])
+		tot_obs = nrow(dat)
+		tot_rate = tot_resp / tot_obs
+
+	  for (j in seq_along(pred)) {
+	  	pname <- paste0(pred[j], pext[i])
+	  	auc_list[[pname]] <- auc(dat[[pred[j]]],dat[[rvar]], TRUE)[["W"]]
+	  	lg_list[[pname]] <-
+			  dat %>%
+			  select_(.dots = c(pred[j],rvar)) %>%
+				mutate_(.dots = setNames(paste0(method,"(",pred[j],",", qnt,")"), pred[j])) %>%
+				setNames(c(qnt_name,rvar)) %>%
+		    group_by_(.dots = qnt_name) %>%
+			  summarise_(.dots = c(
+			    nr_obs = "n()",
+			    nr_resp = paste0("sum(",rvar,")")
+			  )) %>%
+			  mutate(
+			    resp_rate = nr_resp / nr_obs,
+			    gains = nr_resp / tot_resp
+			  ) %>%
+			  { if (first(.$resp_rate) < last(.$resp_rate)) mutate_each(., funs(rev))
+			  	else . } %>%
+			  # arrange(desc(resp_rate)) %>%
+			  mutate(
+			    cum_prop = cumsum(nr_obs / tot_obs),
+			    cum_resp = cumsum(nr_resp),
+			    cum_resp_rate = cum_resp / cumsum(nr_obs),
+			    cum_lift = cum_resp_rate / tot_rate,
+			    cum_gains = cum_resp / tot_resp
+			  ) %>%
+			  # mutate(pred = pred[j]) %>%
+			  mutate(pred = pname) %>%
+			  select(pred, everything())
+		}
 	}
-	dat <- bind_rows(dat_list)
-	rm(dat_list)
+	dat <- bind_rows(lg_list)
+	rm(lg_list)
 
 	environment() %>% as.list %>% set_class(c("performance",class(.)))
 }
@@ -192,8 +167,8 @@ summary.performance <- function(object, prn = TRUE, ...) {
 	  cat("Level      :", object$lev, "in", object$rvar, "\n")
 		# cat("Method    :", gsub("radiant::","",object$method), "\n")
 		cat("Bins       :", object$qnt, "\n")
-		cat("AUC        :", paste0(object$pred, " (", round(object$auc,3), ")", collapse=", "), "\n\n")
-
+		auc <- unlist(object$auc_list)
+		cat("AUC        :", paste0(names(auc), " (", round(auc,3), ")", collapse=", "), "\n\n")
 		print(dfprint(as.data.frame(object$dat), 3), row.names = FALSE)
 	} else {
     return(object$dat %>% set_class(c("performance",class(.))))
@@ -259,7 +234,7 @@ plot.performance <- function(x,
 	}
 
 	for (i in names(plot_list)) {
-		if (length(object$pred) < 2)
+		if (length(object$pred) < 2 && object$train != "Both")
 			plot_list[[i]] <- plot_list[[i]] + theme(legend.position = "none")
 		else
 			plot_list[[i]] <- plot_list[[i]] + labs(colour = "Predictor")

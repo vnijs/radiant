@@ -20,7 +20,7 @@ performance(dataset, pred, rvar, lev = "", qnt = 10, method = "xtile",
 
 \item{method}{Use either ntile or xtile to split the data (default is xtile)}
 
-\item{train}{Use data from training ("train"), validation ("valid"), or both ("both") to evaluate model performance}
+\item{train}{Use data from training ("Training"), validation ("Validation"), both ("Both"), or all data ("All") to evaluate model performance}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

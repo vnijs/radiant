@@ -43,9 +43,5 @@ result <- ann("titanic", "survived", c("pclass","sex"))
 \code{\link{summary.ann}} to summarize the results
 
 \code{\link{plot.ann}} to plot the results
-
-\code{\link{predict.ann}} to generate predictions
-
-\code{\link{plot.ann_predict}} to plot prediction output
 }
 

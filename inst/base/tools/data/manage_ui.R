@@ -341,10 +341,22 @@ observe({
   inFile <- input$uploadState
   if (!is.null(inFile)) {
     isolate({
-      tmpEnv <- new.env()
+      tmpEnv <- new.env(parent = emptyenv())
       load(inFile$datapath, envir=tmpEnv)
 
-      ## remove characters the may cause problems in shinyAce
+      ## upload_error_handler doesn't show warning for some reason
+      # print(str(inFile))
+      # print(exists("r_data", envir = tmpEnv))
+      # if (!exists("r_data", envir = tmpEnv)) {
+      #   filename <- basename(inFile$name)
+      #   fext <- tools::file_ext(filename)
+      #   objname <- sub(paste0(".",fext,"$"),"", filename)
+      #   print(objname)
+      #   upload_error_handler(objname, "### The file loaded does not seem to be a statefile. Try loading it as an 'rda' file")
+      #   return()
+      # }
+
+      ## remove characters that may cause problems in shinyAce
       if (!is.null(tmpEnv$r_state$rmd_report))
         tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
 

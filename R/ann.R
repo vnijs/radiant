@@ -20,8 +20,6 @@
 #'
 #' @seealso \code{\link{summary.ann}} to summarize the results
 #' @seealso \code{\link{plot.ann}} to plot the results
-#' @seealso \code{\link{predict.ann}} to generate predictions
-#' @seealso \code{\link{plot.ann_predict}} to plot prediction output
 #'
 #' @importFrom nnet nnet
 #'
@@ -62,6 +60,7 @@ ann <- function(dataset, rvar, evar,
     return("One or more selected variables show no variation. Please select other variables." %>%
            set_class(c("ann",class(.))))
 
+
   rv <- dat[[rvar]]
   if (lev == "") {
     if (is.factor(rv))
@@ -73,6 +72,19 @@ ann <- function(dataset, rvar, evar,
   ## transformation to TRUE/FALSE depending on the selected level (lev)
   dat[[rvar]] <- dat[[rvar]] == lev
 
+  ## stability issues ...
+  # http://stats.stackexchange.com/questions/23235/how-do-i-improve-my-neural-network-stability
+  ## can't use without updating the predict function to use standardized data also
+  # scale_num <- function(x) {
+  #   if (is.numeric(x)) {
+  #     (x-mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+  #     # scale(x)
+  #    } else {
+  #     x
+  #   }
+  # }
+  # dat[,-1] <- select(dat, -1) %>% mutate_each(funs(scale_num)) %>% as.data.frame
+
   vars <- evar
   if (length(vars) < (ncol(dat)-1)) vars <- colnames(dat)[-1]
 
@@ -81,7 +93,7 @@ ann <- function(dataset, rvar, evar,
 
   form <- paste(rvar, "~ . ")
   nninput <- list(formula = as.formula(form),
-              rang = .01, size = size, decay = decay, maxit = 5000,
+              rang = .01, size = size, decay = decay, maxit = 10000,
               entropy = TRUE, trace = FALSE, data = dat)
 
   ## need do.call so Garson plot will work
@@ -97,7 +109,6 @@ ann <- function(dataset, rvar, evar,
 #' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{ann}}
-#' @param sum_check Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -106,13 +117,9 @@ ann <- function(dataset, rvar, evar,
 #'
 #' @seealso \code{\link{ann}} to generate the results
 #' @seealso \code{\link{plot.ann}} to plot the results
-#' @seealso \code{\link{predict.ann}} to generate predictions
-#' @seealso \code{\link{plot.ann_predict}} to plot prediction output
 #'
 #' @export
-summary.ann <- function(object,
-                        sum_check = "",
-                        ...) {
+summary.ann <- function(object, ...) {
 
   if (is.character(object)) return(object)
   # if (class(object$model)[1] != 'ann') return(object)
@@ -140,7 +147,6 @@ summary.ann <- function(object,
 #' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{ann}}
-#' @param plots Plots to produce for the specified ANN model. Use "" to avoid showing any plots (default). "imp" shows variable importance. "net" shows the network
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
@@ -150,20 +156,16 @@ summary.ann <- function(object,
 #'
 #' @seealso \code{\link{ann}} to generate results
 #' @seealso \code{\link{plot.ann}} to plot results
-#' @seealso \code{\link{predict.ann}} to generate predictions
 #'
 #' @importFrom NeuralNetTools plotnet garson
 #'
 #' @export
-plot.ann <- function(x,
-                     plots = "",
-                     shiny = FALSE,
-                     ...) {
+plot.ann <- function(x, shiny = FALSE, ...) {
 
   object <- x; rm(x)
   if (is.character(object)) return(object)
   plot_list <- list()
-  plot_list[[1]] <- NeuralNetTools::garson(object$model)
+  plot_list[[1]] <- NeuralNetTools::garson(object$model) + coord_flip()
   nrCol <- 1
 
   # if ("hist" %in% plots) {}
@@ -178,7 +180,7 @@ plot.ann <- function(x,
 #'
 #' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
 #'
-#' @param pred Return value from \code{\link{predict.ann}}
+#' @param pred Return value from predict.nnet
 #' @param data Dataset name
 #' @param name Variable name assigned to the predicted values
 #'

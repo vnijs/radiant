@@ -7,7 +7,7 @@
 store_ann(pred, data, name = "predict_ann")
 }
 \arguments{
-\item{pred}{Return value from \code{\link{predict.ann}}}
+\item{pred}{Return value from predict.nnet}
 
 \item{data}{Dataset name}
 

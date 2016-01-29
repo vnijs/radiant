@@ -252,6 +252,7 @@ output$ui_glm_reg <- renderUI({
       )
     ),
     wellPanel(
+      checkboxInput("glm_pause", "Pause estimation", state_init("glm_pause", TRUE)),
     	radioButtons(inputId = "glm_link", label = NULL, glm_link,
     		selected = state_init("glm_link","logit"), inline = TRUE),
 	    uiOutput("ui_glm_rvar"),
@@ -369,10 +370,11 @@ glm_available <- reactive({
 })
 
 .glm_reg <- reactive({
-  # if(input$glm_rvar %in% input$glm_evar) return("Updating inputs")
-  # if(input$glm_rvar %in% input$glm_evar) return(invisible())
   # req(!input$glm_rvar %in% input$glm_evar)
-	do.call(glm_reg, glm_inputs())
+  req(input$glm_pause == FALSE)
+  withProgress(message = 'Estimating model', value = 0,
+    do.call(glm_reg, glm_inputs())
+  )
 })
 
 .summary_glm_reg <- reactive({

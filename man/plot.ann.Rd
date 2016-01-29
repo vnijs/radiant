@@ -4,12 +4,10 @@
 \alias{plot.ann}
 \title{Plot method for the ann function}
 \usage{
-\method{plot}{ann}(x, plots = "", shiny = FALSE, ...)
+\method{plot}{ann}(x, shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{ann}}}
-
-\item{plots}{Plots to produce for the specified ANN model. Use "" to avoid showing any plots (default). "imp" shows variable importance. "net" shows the network}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 
@@ -29,7 +27,5 @@ plot(result, plots = c("imp","net"))
 \code{\link{ann}} to generate results
 
 \code{\link{plot.ann}} to plot results
-
-\code{\link{predict.ann}} to generate predictions
 }
 

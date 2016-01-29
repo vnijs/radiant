@@ -4,12 +4,10 @@
 \alias{summary.ann}
 \title{Summary method for the ann function}
 \usage{
-\method{summary}{ann}(object, sum_check = "", ...)
+\method{summary}{ann}(object, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{ann}}}
-
-\item{sum_check}{Optional output or estimation parameters. "rsme" to show the root mean squared error. "sumsquares" to show the sum of squares table. "vif" to show multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates.}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -27,9 +25,5 @@ summary(result)
 \code{\link{ann}} to generate the results
 
 \code{\link{plot.ann}} to plot the results
-
-\code{\link{predict.ann}} to generate predictions
-
-\code{\link{plot.ann_predict}} to plot prediction output
 }
 

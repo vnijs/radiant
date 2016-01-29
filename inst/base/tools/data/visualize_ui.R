@@ -222,6 +222,7 @@ output$ui_viz_check <- renderUI({
 output$ui_Visualize <- renderUI({
   tagList(
     wellPanel(
+      checkboxInput("viz_pause", "Pause plotting", state_init("viz_pause", TRUE)),
       uiOutput("ui_viz_type"),
       conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
@@ -352,6 +353,8 @@ output$visualize <- renderPlot({
       if (!is_empty(input$viz_fill,"none")) return()
     }
   }
+
+  req(input$viz_pause == FALSE)
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })

@@ -12,12 +12,6 @@ help_menu <-
     js_head
   )
 
-# source(file.path(r_path, "quant/quant_ui.R"), encoding = "UTF-8", local = TRUE)
-  # library(radiant)
-  # library(shiny)
-  # r_encoding <- "UTF-8"
-  # r_path <- "~/gh/radiant/inst"
-
 # source(file.path(r_path, "quant/quant_ui.R"), encoding = r_encoding, local = TRUE)
 analytics_ui <- tagList(
   navbarMenu("Sample",
@@ -41,10 +35,10 @@ analytics_ui <- tagList(
     tabPanel("GLM", uiOutput("glm_reg"))
   ),
 
-  # navbarMenu("Model",
-  #   tabPanel("Neural Network (ANN)", uiOutput("ann")),
-  #   tabPanel("Model performance", uiOutput("performance"))
-  # ),
+#   navbarMenu("Model",
+#     tabPanel("Neural Network (ANN)", uiOutput("ann")),
+#     tabPanel("Model performance", uiOutput("performance"))
+#   ),
 
   navbarMenu("Decide",
     tabPanel("Decision tree", uiOutput("dtree")),
