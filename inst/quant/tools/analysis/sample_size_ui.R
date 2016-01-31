@@ -80,8 +80,6 @@ output$sample_size <- renderUI({
 })
 
 observeEvent(input$sample_size_report, {
-  isolate({
-    update_report(inp_main = clean_args(ss_inputs(), ss_args),
-                   fun_name = "sample_size", outputs = "summary", figs = FALSE)
-  })
+  update_report(inp_main = clean_args(ss_inputs(), ss_args),
+                fun_name = "sample_size", outputs = "summary", figs = FALSE)
 })

@@ -86,15 +86,11 @@ output$ui_viz_combx <- renderUI({
 })
 
 observeEvent(input$viz_type, {
-    if (input$viz_type %in% c("hist", "density")) {
-      updateCheckboxInput(session, "viz_comby", value = FALSE)
-    } else {
-      updateCheckboxInput(session, "viz_combx", value = FALSE)
-    }
-    # updateCheckboxGroupInput(session, "viz_check", selected = "")
-    # r_state$viz_check <<- ""
-    # updateCheckboxGroupInput(session, "viz_line", selected = "")
-    # r_state$viz_line <<- ""
+  if (input$viz_type %in% c("hist", "density")) {
+    updateCheckboxInput(session, "viz_comby", value = FALSE)
+  } else {
+    updateCheckboxInput(session, "viz_combx", value = FALSE)
+  }
 })
 
 observeEvent(input$viz_yvar, {
@@ -108,49 +104,32 @@ observeEvent(input$viz_xvar, {
 })
 
 observeEvent(input$viz_combx, {
-  isolate({
-    if (input$viz_combx) {
-      updateCheckboxInput(session, "viz_color", value = "none")
-      updateCheckboxInput(session, "viz_fill", value = "none")
-    }
-  })
+  if (input$viz_combx) {
+    updateCheckboxInput(session, "viz_color", value = "none")
+    updateCheckboxInput(session, "viz_fill", value = "none")
+  }
 })
 
 observeEvent(input$viz_comby, {
-  isolate({
-    if (input$viz_comby) {
-      updateCheckboxInput(session, "viz_color", value = "none")
-      updateCheckboxInput(session, "viz_fill", value = "none")
-    }
-  })
+  if (input$viz_comby) {
+    updateCheckboxInput(session, "viz_color", value = "none")
+    updateCheckboxInput(session, "viz_fill", value = "none")
+  }
 })
 
-# observeEvent(!is_empty(input$viz_check) && "loess" %in% input$viz_check, {
 observeEvent(input$viz_check, {
-  isolate({
-    if (!"loess" %in% input$viz_check && input$viz_smooth != 1)
-      updateSliderInput(session, "viz_smooth", value = 1)
-  })
+  if (!"loess" %in% input$viz_check && input$viz_smooth != 1)
+    updateSliderInput(session, "viz_smooth", value = 1)
 })
 
 output$ui_viz_facet_row <- renderUI({
-  # vars <- c("None" = ".", groupable_vars())
   vars <- c("None" = ".", groupable_vars_nonum())
-
-  ## keep the same facet_row variable 'active' if possible
-  # isolate({
-    # sel <- use_input("viz_facet_row", vars, init = ".")
-  # })
-
   selectizeInput("viz_facet_row", "Facet row", vars,
-    # selected = sel,
     selected = isolate(use_input("viz_facet_row", vars, init = ".")),
     multiple = FALSE)
-    # selected = state_single("viz_facet_row", vars, "."), multiple = FALSE)
 })
 
 output$ui_viz_facet_col <- renderUI({
-  # vars <- c("None" = ".", groupable_vars())
   vars <- c("None" = ".", groupable_vars_nonum())
 
   ## keep the same facet_col variable 'active' if possible
@@ -226,19 +205,11 @@ output$ui_Visualize <- renderUI({
       uiOutput("ui_viz_type"),
       conditionalPanel(condition = "input.viz_type != 'hist' & input.viz_type != 'density'",
         uiOutput("ui_viz_yvar"),
-        # conditionalPanel("(typeof input.viz_yvar !== 'undefined') &&
-        # conditionalPanel("input.viz_yvar != undefined && input.viz_yvar != null && input.viz_yvar.length > 1",
-          uiOutput("ui_viz_comby")
-        # )
+        uiOutput("ui_viz_comby")
       ),
       uiOutput("ui_viz_xvar"),
       conditionalPanel("input.viz_type == 'hist' | input.viz_type == 'density'",
-        # conditionalPanel("(typeof input.viz_xvar !== 'undefined') &&
-        # conditionalPanel("input.viz_xvar != null && input.viz_xvar.length > 1",
-        # conditionalPanel("input.viz_xvar != undefined && input.viz_xvar != null && input.viz_xvar.length > 1",
-                          # (input.viz_xvar !== null) && input.viz_xvar.length > 1",
-          uiOutput("ui_viz_combx")
-        # )
+        uiOutput("ui_viz_combx")
       ),
       uiOutput("ui_viz_facet_row"),
       uiOutput("ui_viz_facet_col"),
@@ -335,7 +306,6 @@ output$visualize <- renderPlot({
   if (input$viz_type %in% c("scatter","line", "box", "bar") && not_available(input$viz_yvar))
     return("No Y-variable provided for a plot that requires one")
   if (input$viz_type == "box" && !all(input$viz_xvar %in% groupable_vars())) return()
-  if (!is_empty(input$viz_color, "none") && not_available(input$viz_color)) return()
 
   ## waiting for comby and/or combx to be updated
   if (input$viz_type %in% c("hist", "density")) {
@@ -359,35 +329,21 @@ output$visualize <- renderPlot({
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })
 
-## not working as intended
-# observeEvent(input$viz_type, {
-#   isolate({
-#     # if (input$viz_bins != 10 && input$viz_type != "hist") {
-#     if (input$viz_bins != 10) {
-#       updateSliderInput(session, "viz_bins", value = 10)
-#       viz_inputs()
-#     }
-#   })
-# })
-
 observeEvent(input$visualize_report, {
-  isolate({
-    ## this seems to work (mostly) as intended - compare to observeEvent above
-    vi <- viz_inputs()
-    if (input$viz_type != "hist") vi$bins <- viz_args$bins
-    if (!input$viz_type %in% c("density","scatter") ||
-        !"loess" %in% input$viz_check) vi$smooth <- viz_args$smooth
+  ## this seems to work (mostly) as intended - compare to observeEvent above
+  vi <- viz_inputs()
+  if (input$viz_type != "hist") vi$bins <- viz_args$bins
+  if (!input$viz_type %in% c("density","scatter") ||
+      !"loess" %in% input$viz_check) vi$smooth <- viz_args$smooth
 
-    if (!input$viz_type %in% c("scatter", "box") &&
-        "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
+  if (!input$viz_type %in% c("scatter", "box") &&
+      "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
 
-    inp_main <- clean_args(vi, viz_args)
-    inp_main[["custom"]] <- FALSE
-    # update_report(inp_main = clean_args(vi, viz_args),
-    update_report(inp_main = inp_main,
-                  fun_name = "visualize", outputs = character(0),
-                  pre_cmd = "", figs = TRUE,
-                  fig.width = round(7 * viz_plot_width()/600,2),
-                  fig.height = round(7 * viz_plot_height()/600,2))
-  })
+  inp_main <- clean_args(vi, viz_args)
+  inp_main[["custom"]] <- FALSE
+  update_report(inp_main = inp_main,
+                fun_name = "visualize", outputs = character(0),
+                pre_cmd = "", figs = TRUE,
+                fig.width = round(7 * viz_plot_width()/600,2),
+                fig.height = round(7 * viz_plot_height()/600,2))
 })

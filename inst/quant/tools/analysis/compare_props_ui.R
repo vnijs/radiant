@@ -180,21 +180,18 @@ cp_available <- reactive({
 })
 
 observeEvent(input$compare_props_report, {
-  isolate({
+  figs <- FALSE
+  outputs <- c("summary")
+  inp_out <- list(list(show = input$cp_show), "")
+  if (length(input$cp_plots) > 0) {
+    outputs <- c("summary","plot")
+    inp_out[[2]] <- list(plots = input$cp_plots)
+    figs <- TRUE
+  }
 
-    figs <- FALSE
-    outputs <- c("summary")
-    inp_out <- list(list(show = input$cp_show), "")
-    if (length(input$cp_plots) > 0) {
-      outputs <- c("summary","plot")
-      inp_out[[2]] <- list(plots = input$cp_plots)
-      figs <- TRUE
-    }
-
-    update_report(inp_main = clean_args(cp_inputs(), cp_args),
-                  fun_name = "compare_props",
-                  inp_out = inp_out, outputs = outputs, figs = figs,
-                  fig.width = round(7 * cp_plot_width()/650,2),
-                  fig.height = round(7 * cp_plot_height()/650,2))
-  })
+  update_report(inp_main = clean_args(cp_inputs(), cp_args),
+                fun_name = "compare_props",
+                inp_out = inp_out, outputs = outputs, figs = figs,
+                fig.width = round(7 * cp_plot_width()/650,2),
+                fig.height = round(7 * cp_plot_height()/650,2))
 })

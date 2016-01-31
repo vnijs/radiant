@@ -47,19 +47,13 @@ output$ui_perf_pred <- renderUI({
 })
 
 output$ui_perf_train <- renderUI({
-  # if (is_empty(perf_inputs()$data_filter)) return()
-  # if (is.null(input$show_filter) || input$show_filter == "FALSE") return()
-  if (is.null(input$show_filter) || input$show_filter == "FALSE") {
+  if (is.null(input$show_filter) || input$show_filter == "FALSE" ||
+      is_empty(input$data_filter)) {
     perf_train <- perf_train[1]
     r_state$perf_train <<- perf_train
   }
 
-  # vars <- c("None", two_level_vars())
-  # isolate(sel <- use_input("perf_train", vars, "None"))
-  # selectInput(inputId = "perf_train", label = "Training variable:", choices = vars,
-  #   selected = sel, multiple = FALSE)
   radioButtons("perf_train", label = "Show plots for:", perf_train,
-    # selected = isolate(state_init("perf_train", "valid")),
     selected = state_init("perf_train", "All"),
     inline = TRUE)
 })
@@ -71,20 +65,17 @@ output$ui_performance <- renderUI({
 	    uiOutput("ui_perf_rvar"),
       uiOutput("ui_perf_lev"),
       uiOutput("ui_perf_pred"),
-      checkboxGroupInput("perf_plots", "Plots:", perf_plots,
-        selected = state_init("perf_plots", ""),
-        inline = TRUE),
-      # radioButtons("perf_method", label = "Method:", perf_method,
-      #   selected = state_init("perf_method", "xtile"),
-      #   inline = TRUE),
       numericInput("perf_qnt", label = "# quantiles:",
-                   value = state_init("perf_qnt", 10), min = 2),
-      uiOutput("ui_perf_train")
-      # conditionalPanel("input.perf_train != 'None'",
-      #   checkboxGroupInput("perf_tplots", "Show plots for:", perf_train,
-      #     selected = state_init("perf_tplots", ""),
-      #     inline = TRUE)
-      # )
+        value = state_init("perf_qnt", 10), min = 2),
+      # radioButtons("perf_method", label = "Method:", perf_method,
+        #   selected = state_init("perf_method", "xtile"),
+        #   inline = TRUE),
+      conditionalPanel("input.tabs_performance == 'Plot'",
+        checkboxGroupInput("perf_plots", "Plots:", perf_plots,
+          selected = state_init("perf_plots", ""),
+          inline = TRUE),
+        uiOutput("ui_perf_train")
+      )
   	),
   	help_and_report(modal_title = "Model performance",
   	                fun_name = "performance",
@@ -101,26 +92,29 @@ perf_plot_height <- function() {
 
 # output is called from the main radiant ui.R
 output$performance <- renderUI({
+	register_print_output("summary_performance", ".summary_performance")
+	register_plot_output("plot_performance", ".plot_performance",
+                       	width_fun = "perf_plot_width",
+                       	height_fun = "perf_plot_height")
 
-		register_print_output("summary_performance", ".summary_performance")
-		register_plot_output("plot_performance", ".plot_performance",
-                         	width_fun = "perf_plot_width",
-                         	height_fun = "perf_plot_height")
-
-		# one output with components stacked
-		perf_output_panels <- tagList(
+	# one output with components stacked
+	# perf_output_panels <- tagList(
+  perf_output_panels <- tabsetPanel(
+     id = "tabs_performance",
+     tabPanel("Summary",
        downloadLink("dl_perf_tab", "", class = "fa fa-download alignright"), br(),
-	     tabPanel("Summary", verbatimTextOutput("summary_performance")),
-	     tabPanel("Plot",
-                plot_downloader("performance", height = perf_plot_height()),
-                plotOutput("plot_performance", height = "100%"))
-	  )
+       verbatimTextOutput("summary_performance")
+     ),
+     tabPanel("Plot",
+       plot_downloader("performance", height = perf_plot_height()),
+       plotOutput("plot_performance", height = "100%")
+    )
+  )
 
-		stat_tab_panel(menu = "Model",
-		              tool = "Model performance",
-		              tool_ui = "ui_performance",
-		             	output_panels = perf_output_panels)
-
+	stat_tab_panel(menu = "Model",
+	              tool = "Model performance",
+	              tool_ui = "ui_performance",
+	             	output_panels = perf_output_panels)
 })
 
 .performance <- reactive({
@@ -145,24 +139,22 @@ output$performance <- renderUI({
 })
 
 observeEvent(input$performance_report, {
-  isolate({
-    if (length(input$perf_plots) > 0) {
-      inp_out <- list(plots = input$perf_plots) %>% list("",.)
-      outputs <- c("summary","plot")
-      figs <- TRUE
-    } else {
-      outputs <- c("summary")
-      inp_out <- list("","")
-      figs <- FALSE
-    }
-    update_report(inp_main = clean_args(perf_inputs(), perf_args),
-                  fun_name = "performance",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
-                  fig.width = round(7 * perf_plot_width()/650,2),
-                  fig.height = round(7 * perf_plot_height()/650,2))
-  })
+  if (length(input$perf_plots) > 0) {
+    inp_out <- list(plots = input$perf_plots) %>% list("",.)
+    outputs <- c("summary","plot")
+    figs <- TRUE
+  } else {
+    outputs <- c("summary")
+    inp_out <- list("","")
+    figs <- FALSE
+  }
+  update_report(inp_main = clean_args(perf_inputs(), perf_args),
+                fun_name = "performance",
+                inp_out = inp_out,
+                outputs = outputs,
+                figs = figs,
+                fig.width = round(7 * perf_plot_width()/650,2),
+                fig.height = round(7 * perf_plot_height()/650,2))
 })
 
 output$dl_perf_tab <- downloadHandler(

@@ -32,11 +32,9 @@ stop_radiant <- function() {
           close(out)
           stop_message %<>% paste0(., "Report content was copied to the clipboard.\n")
         } else if (os_type == "Linux") {
-          # cat(rmd_report, file = pipe("pbcopy"))
         }
       }
       ## removing r_env and r_sessions
-      # if (exists("r_env")) rm(r_env, envir = .GlobalEnv)
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
       cat(stop_message)

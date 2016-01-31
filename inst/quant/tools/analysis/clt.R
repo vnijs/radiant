@@ -124,13 +124,6 @@ output$clt <- renderUI({
 	clt(input$clt_dist, input$clt_n, input$clt_m, input$clt_stat)
 })
 
-#  observeEvent(input$cltReport, {
-#   isolate({
-# 		inp <- list(input$clt_dist, input$clt_n, input$clt_m, input$clt_stat)
-# 		updateReport(inp,"clt")
-#   })
-# })
-
 clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
 
   n <- clt_n; m <- clt_m; dist <- clt_dist

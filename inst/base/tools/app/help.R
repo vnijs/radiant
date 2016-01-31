@@ -225,7 +225,7 @@ output$help_marketing <- renderUI({
   )
 })
 
-help_model <- c("Model performance" = "performance.md")
+help_model <- c("Neural Network (ANN)" = "ann.md", "Model performance" = "performance.md")
 output$help_model <- reactive(append_help("help_model", file.path(r_path,"analytics/tools/help/")))
 observe( help_switch(input$help_model_all, "help_model") )
 observe( help_switch(input$help_model_none, "help_model", help_on = FALSE) )

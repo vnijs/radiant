@@ -37,7 +37,6 @@ output$ui_tr_reorg_levs <- renderUI({
   fctCol <- input$tr_vars[1]
 	isFct <- "factor" == .getclass()[fctCol]
   if (!isFct) return()
-	# levs <- .getdata()[[fctCol]] %>% levels
   levs <- .getdata_transform()[[fctCol]] %>% levels
 
   selectizeInput("tr_reorg_levs", "Reorder/remove levels:", choices  = levs,
@@ -45,15 +44,6 @@ output$ui_tr_reorg_levs <- renderUI({
     options = list(placeholder = 'Select level(s)',
                    plugins = list('remove_button', 'drag_drop')))
 })
-
-# output$ui_tr_log <- renderUI({
-#   tagList(
-#     "<label>Transform command log:</label><br>" %>% HTML,
-#      shinyAce::aceEditor("tr_log", mode = "r",
-#       height="135px",
-#       value = state_init("tr_log",""))
-#   )
-# })
 
 output$ui_tr_log <- renderUI({
   tagList(
@@ -92,9 +82,6 @@ output$ui_tr_ext_bin <- renderUI({
 
 output$ui_tr_roname <- renderUI({
   if (is_empty(input$tr_vars)) return()
-  # roname <- paste0(input$tr_vars, "_ro")
-  # roname <- paste0(input$tr_vars)
-  # returnTextInput("tr_roname", "Reordered variable name:", roname)
   returnTextInput("tr_roname", "Variable name:", input$tr_vars[1])
 })
 
@@ -130,7 +117,6 @@ type_options <- list("None" = "none", "As factor" = "as_factor",
                      "As date/time (dmy_hm)" = "as_dmy_hm",
                      "As date/time (ymd_hms)" = "as_ymd_hms",
                      "As date/time (ymd_hm)" = "as_ymd_hm")
-                     # "As time (hm)" = "as_hm", "As time (hms)" = "as_hms")
 
 trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Create" = "create", "Bin" = "bin", "Clipboard" = "clip",
@@ -227,16 +213,13 @@ output$ui_Transform <- renderUI({
 
   if (!store || !is.character(dataset)) {
     fun <- get(fun)
-    # if (ext == "") {
     if (is_empty(ext)) {
       mutate_each_(dataset, funs(fun), vars)
     } else {
       mutate_each_(dataset, funs(fun), vars) %>% set_colnames(paste0(vars, ext))
     }
-    # return(mutate_each_(dataset, funs(fun), vars))
   } else {
     if (store_dat == "") store_dat <- dataset
-    # if (ext == "")
     if (is_empty(ext)) {
       paste0("## change variable type\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "),")\n")
     } else {
@@ -253,7 +236,6 @@ output$ui_Transform <- renderUI({
 
   if (!store && !is.character(dataset)) {
     fun <- get(fun)
-    # if (ext == "") {
     if (is_empty(ext)) {
       mutate_each_(dataset, funs(fun), vars)
     } else {
@@ -262,7 +244,6 @@ output$ui_Transform <- renderUI({
   } else {
 
     if (store_dat == "") store_dat <- dataset
-    # if (ext == "")
     if (is_empty(ext)) {
       paste0("## transform variable\nr_data[[\"",store_dat,"\"]] <- mutate_each(r_data[[\"",dataset,"\"]], funs(", fun, "), ", paste0(vars, collapse = ", "), ")\n")
     } else {
@@ -281,41 +262,6 @@ observeEvent(input$tr_change_type, {
                     byvar = "",
                     store_dat = "",
                     store = TRUE) {
-
-
-  # library(radiant)
-  # bbb <- mutate(bbb, rec_q = xtile(last,5))
-  # bbb <- group_by(bbb, rec_q) %>% mutate(freq_q = xtile(purch, 5, rev = TRUE)) %>% ungroup
-  # bbb <- group_by(bbb, rec_q, freq_q) %>% mutate(mon_q = xtile(total_,5, rev = TRUE)) %>% ungroup
-
-  # a <- filter(bbb, rec_q == 1, freq_q == 1) %>% {xtile(.$total_,5, rev = TRUE)}
-  # b <- filter(bbb, rec_q == 1, freq_q == 1) %>% .$mon_q
-  # table(a,b)
-
-  # a <- xtile(bbb$purch, 5)
-  # b <- xtile(bbb$purch, 5)
-  # b <- group_by(bbb, rec_q) %>% mutate(b = xtile(purch,5)) %>% ungroup %>% .[['b']]
-
-  # table(a,b)
-
-
-
-
-
-
-  ## test section
-  # cmd <- "x = mean(mpg); y = mean(cyl)"
-  # cmd <- "x = mpg == mpg"
-  # cmd <- "x = ntile(mpg,2)"
-  # cmd <- "x = xtile(mpg,2)"
-  # byvar <- "cyl"
-  # dataset <- mtcars
-  # mtcars %>% group_by_(.dots = c("mpg","cyl")) %>% summarize(new = mean(mpg))
-  # mtcars %>% group_by_(.dots = "mpg") %>% summarize(new = mean(mpg))
-
-  ####
-  #### COULD YOU USE THIS TO SPEED UP SIMULATER?
-  ####
 
   if (!store || !is.character(dataset)) {
     if (gsub("\\s","",cmd) == "") return(dataset)
@@ -355,8 +301,6 @@ observeEvent(input$tr_change_type, {
                     store_dat = "",
                     store = TRUE) {
 
-  # cmd <- cmd %>% gsub("\\s","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
-  # cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.) %>% gsub(",",";", .)
   cmd <- cmd %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   if (is_empty(rcname)) rcname <- paste0(var, "_rc")
 
@@ -439,7 +383,6 @@ observeEvent(input$tr_change_type, {
     xt <- function(x, bins, rev) radiant::xtile(x, bins, rev = rev)
     select_(dataset, .dots = vars) %>%
     # mutate_each(funs(radiant::xtile(.,bins, rev = rev))) %>%
-    # mutate_each(funs(ntile(.,bins))) %>%
     mutate_each(funs(xt(., bins, rev = rev))) %>%
     set_colnames(paste0(vars, ext))
   } else {
@@ -501,7 +444,6 @@ observeEvent(input$tr_change_type, {
                         store = TRUE) {
 
   if (!store || !is.character(dataset)) {
-    # getdata(dataset, vars, na.rm = FALSE)
     getdata(dataset, vars, filt = "", na.rm = FALSE)
   } else {
     if (store_dat == "") store_dat <- dataset
@@ -524,7 +466,6 @@ observeEvent(input$tr_change_type, {
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    # if (all(vars == "")) vars <- "."
     if (all(vars == "") || length(unique(vars)) == nr_col) vars <- .
     paste0("## remove missing values\nr_data[[\"",store_dat,"\"]] <- r_data[[\"",dataset,"\"]] %>% filter(complete.cases(", vars, "))\n")
   }
@@ -575,7 +516,7 @@ observeEvent(input$tr_change_type, {
     }
 
     if (nrow(dat) == 0)
-      # "No duplicates found"
+      ## "No duplicates found"
       paste0("No duplicates found (n_distinct = ", nrow(dataset),")")
     else
       dat
@@ -619,9 +560,6 @@ inp_vars <- function(inp, rval = "")
 
 transform_main <- reactive({
 
-  # if (input$show_filter)
-  #   updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-
 	if (is.null(input$tr_change_type)) return()
   if (not_available(input$tr_vars)) {
     if (input$tr_change_type == "none") {
@@ -649,13 +587,7 @@ transform_main <- reactive({
     }
   }
 
-	## don't transform when a filter is active
-  # selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
-  # if (!is_empty(selcom) && input$show_filter == TRUE)
-  	# return("A filter is active. Either uncheck the filter checkbox, remove the filter statement,\nor store the filtered data through the Data > View tab")
-
   ## get the active dataset, filter not applied when called from transform tab
-  # dat <- .getdata()
   dat <- .getdata_transform()
 
   ## what data to pass on ...
@@ -665,14 +597,6 @@ transform_main <- reactive({
   ## reorganize variables
 	if (input$tr_change_type == "reorg_vars")
  	  return(.reorg_vars(dat, inp_vars("tr_reorg_vars"), store = FALSE))
-
-  ## remove missing variables
-	# if (input$tr_change_type == "remove_na")
-	# 	return(.remove_na(dat, inp_vars("tr_vars"), store = FALSE))
-
- #  ## remove duplicates
- #  if (input$tr_change_type == "remove_dup")
- #    return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
 
   ## create training variable
   if (input$tr_change_type == 'training')
@@ -769,7 +693,6 @@ transform_main <- reactive({
         return(.transform(dat, input$tr_transfunction, inp_vars("tr_vars"), input$tr_ext, store = FALSE))
     }
 
-    # if (input$tr_change_type == 'reorg_levs' && !is.null(input$tr_reorg_levs)) {
     if (input$tr_change_type == 'reorg_levs') {
         fct <- input$tr_vars[1]
         if (is.factor(dat[[fct]])) {
@@ -812,149 +735,126 @@ output$transform_data <- reactive({
   }
 })
 
-# tr_summary <- reactive({
-  # dat <- .getdata()
-  # if (nrow(dat) == 0) return(**invisible())
-  # paste0(capture.output(getsummary(dat)), collapse = "\n")
-  # paste0(capture.output(getsummary(.getdata())), collapse = "\n")
-# })
-
 tr_snippet <- reactive({
-  # .getdata() %>% {if (nrow(.) == 0) invisible() else show_data_snippet(.) } %>% return(.)
-  # show_data_snippet(.getdata())
   show_data_snippet(.getdata_transform())
 })
 
 output$transform_summary <- renderPrint({
  	dat <- transform_main()
   ## with isolate on the summary wouldn't update when the dataset was changed
-  # isolate({
-    if (is.null(dat)) return(invisible())
-    if (is.character(dat)) {
-      cat("**", dat,"**\n\n")
-      # cat(tr_summary())
+  if (is.null(dat)) return(invisible())
+  if (is.character(dat)) {
+    cat("**", dat,"**\n\n")
+  } else {
+    if (min(dim(dat)) == 0) {
+      cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
     } else {
-      if (min(dim(dat)) == 0) {
-        cat("** The selected operation resulted in an empty data frame and cannot be executed **\n\n")
-        # cat(tr_summary())
+      if (input$tr_change_type == "none") {
+        cat("** Select a transformation type **\n\n")
       } else {
-        if (input$tr_change_type == "none") {
-          cat("** Select a transformation type **\n\n")
-        } else {
-          cat("** Press the 'Store' button to add your changes to the data **\n\n")
-          if (!is_empty(input$tr_vars) && input$tr_change_type == "create")
-            cat("** Results are grouped by", paste(input$tr_vars, collapse = ", "), "**\n\n")
-        }
-
-        cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))
+        cat("** Press the 'Store' button to add your changes to the data **\n\n")
+        if (!is_empty(input$tr_vars) && input$tr_change_type == "create")
+          cat("** Results are grouped by", paste(input$tr_vars, collapse = ", "), "**\n\n")
       }
+
+      cat(paste0(capture.output(getsummary(dat)), collapse = "\n"))
     }
-  # })
+  }
 })
 
 observeEvent(input$tr_store, {
-	isolate({
-		dat <- transform_main()
-		if (is.null(dat)) return()
-		if (is.character(dat)) return()
-    if (min(dim(dat)) == 0) return()
+	dat <- transform_main()
+	if (is.null(dat)) return()
+	if (is.character(dat)) return()
+  if (min(dim(dat)) == 0) return()
 
-		## saving to a new dataset if specified
-		dataset <- input$tr_dataset
-    ncmd <- ""
-		if (is.null(r_data[[dataset]])) {
-			# r_data[[dataset]] <- .getdata()
-      r_data[[dataset]] <- .getdata_transform()
-			r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
-			r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
+	## saving to a new dataset if specified
+	dataset <- input$tr_dataset
+  ncmd <- ""
+	if (is.null(r_data[[dataset]])) {
+    r_data[[dataset]] <- .getdata_transform()
+		r_data[[paste0(dataset,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
+		r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
 
-      ## adding command to ensure new data is in the datasetlist
-      ncmd <- paste0("\n## register the new dataset\nr_data[[\"datasetlist\"]] <- c(\"", dataset, "\", r_data[[\"datasetlist\"]]) %>% unique\n")
-      if (!is_empty(r_data[[paste0(input$dataset,"_descr")]]))
-        ncmd %<>% paste0("\nr_data[[\"",paste0(dataset,"_descr"),"\"]] <- r_data[[\"", paste0(input$dataset,"_descr"),"\"]]")
-		}
+    ## adding command to ensure new data is in the datasetlist
+    ncmd <- paste0("\n## register the new dataset\nr_data[[\"datasetlist\"]] <- c(\"", dataset, "\", r_data[[\"datasetlist\"]]) %>% unique\n")
+    if (!is_empty(r_data[[paste0(input$dataset,"_descr")]]))
+      ncmd %<>% paste0("\nr_data[[\"",paste0(dataset,"_descr"),"\"]] <- r_data[[\"", paste0(input$dataset,"_descr"),"\"]]")
+	}
 
-    if (input$tr_change_type == 'remove_na') {
-      cmd <- .remove_na(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
-      r_data[[dataset]] <- dat
-    } else if (input$tr_change_type == 'remove_dup') {
-      cmd <- .remove_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
-      r_data[[dataset]] <- dat
-    } else if (input$tr_change_type == 'show_dup') {
-      cmd <- .show_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
-      r_data[[dataset]] <- dat
-    } else if (input$tr_change_type == 'holdout') {
-      cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, input$tr_dataset)
-      r_data[[dataset]] <- dat
-    } else if (input$tr_change_type == 'reorg_vars') {
-      cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
-      r_data[[dataset]] <- dat
-    } else if (input$tr_change_type == 'type') {
-      cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, ext = input$tr_typename, input$tr_dataset)
-	  	r_data[[dataset]][,colnames(dat)] <- dat
-    } else if (input$tr_change_type == 'transform') {
-      cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, ext = input$tr_ext, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-    } else if (input$tr_change_type == 'training') {
-      cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-    } else if (input$tr_change_type == 'normalize') {
-      cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, ext = input$tr_ext_nz, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-    } else if (input$tr_change_type == 'bin') {
-      cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-    } else if (input$tr_change_type == 'reorg_levs') {
-      cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-    } else if (input$tr_change_type == 'recode') {
-      cmd <- .recode(input$dataset, input$tr_vars[1], input$tr_recode, input$tr_rcname, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-		} else if (input$tr_change_type == 'rename') {
-      cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, input$tr_dataset)
-      r_data[[dataset]] %<>% rename_(.dots = setNames(input$tr_vars, colnames(dat)))
-    } else if (input$tr_change_type == 'create') {
-      cmd <- .create(input$dataset, cmd = input$tr_create, byvar = input$tr_vars, input$tr_dataset)
-      r_data[[dataset]][,colnames(dat)] <- dat
-		} else if (input$tr_change_type == 'replace') {
-      cmd <- .replace(input$dataset, input$tr_vars, input$tr_replace, input$tr_dataset)
-	  	r_data[[dataset]][,colnames(dat)] <- dat
-	  	r_data[[dataset]][, input$tr_replace] <- list(NULL)
-    } else if (input$tr_change_type == 'clip') {
-      cmd <- paste0("## using the clipboard for data transformation is not reproducible - no command generated\n")
-      r_data[[dataset]][,colnames(dat)] <- dat
-	  }
+  if (input$tr_change_type == 'remove_na') {
+    cmd <- .remove_na(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'remove_dup') {
+    cmd <- .remove_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'show_dup') {
+    cmd <- .show_dup(input$dataset, vars = input$tr_vars, input$tr_dataset, nr_col = ncol(dat))
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'holdout') {
+    cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, input$tr_dataset)
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'reorg_vars') {
+    cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'type') {
+    cmd <- .change_type(input$dataset, fun = input$tr_typefunction, vars = input$tr_vars, ext = input$tr_typename, input$tr_dataset)
+  	r_data[[dataset]][,colnames(dat)] <- dat
+  } else if (input$tr_change_type == 'transform') {
+    cmd <- .transform(input$dataset, fun = input$tr_transfunction, vars = input$tr_vars, ext = input$tr_ext, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+  } else if (input$tr_change_type == 'training') {
+    cmd <- .training(input$dataset, n = input$tr_training_n, nr = nrow(dat), name = input$tr_training, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+  } else if (input$tr_change_type == 'normalize') {
+    cmd <- .normalize(input$dataset, vars = input$tr_vars, nzvar = input$tr_normalizer, ext = input$tr_ext_nz, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+  } else if (input$tr_change_type == 'bin') {
+    cmd <- .bin(input$dataset, vars = input$tr_vars, bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+  } else if (input$tr_change_type == 'reorg_levs') {
+    cmd <- .reorg_levs(input$dataset, input$tr_vars[1], input$tr_reorg_levs, input$tr_roname, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+  } else if (input$tr_change_type == 'recode') {
+    cmd <- .recode(input$dataset, input$tr_vars[1], input$tr_recode, input$tr_rcname, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+	} else if (input$tr_change_type == 'rename') {
+    cmd <- .rename(input$dataset, input$tr_vars, input$tr_rename, input$tr_dataset)
+    r_data[[dataset]] %<>% rename_(.dots = setNames(input$tr_vars, colnames(dat)))
+  } else if (input$tr_change_type == 'create') {
+    cmd <- .create(input$dataset, cmd = input$tr_create, byvar = input$tr_vars, input$tr_dataset)
+    r_data[[dataset]][,colnames(dat)] <- dat
+	} else if (input$tr_change_type == 'replace') {
+    cmd <- .replace(input$dataset, input$tr_vars, input$tr_replace, input$tr_dataset)
+  	r_data[[dataset]][,colnames(dat)] <- dat
+  	r_data[[dataset]][, input$tr_replace] <- list(NULL)
+  } else if (input$tr_change_type == 'clip') {
+    cmd <- paste0("## using the clipboard for data transformation is not reproducible - no command generated\n")
+    r_data[[dataset]][,colnames(dat)] <- dat
+  }
 
-    ## update the command log
-    # shinyAce::updateAceEditor(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
-    updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
-    # updateTextInput(session, "tr_log", value = paste0(input$tr_log, paste0(cmd,ncmd)))
+  ## update the command log
+  updateTextInput(session, "tr_log", value = paste0(input$tr_log, "\n", paste0(cmd,ncmd)))
 
-		## reset input values once the changes have been applied
-		updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
-		updateSelectInput(session = session, inputId = "dataset", select = dataset)
-  })
+	## reset input values once the changes have been applied
+	updateSelectInput(session = session, inputId = "tr_change_type", selected = "none")
+	updateSelectInput(session = session, inputId = "dataset", select = dataset)
 })
 
 observeEvent(input$tr_change_type, {
 	## reset all values when tr_change_type is changed
-	isolate({
-		updateTextInput(session = session, inputId = "tr_create", value = "")
-	 	updateTextInput(session = session, inputId = "tr_recode", value = "")
-	 	updateTextInput(session = session, inputId = "tr_rename", value = "")
-	 	updateTextInput(session = session, inputId = "tr_paste", value = "")
-		updateSelectInput(session = session, inputId = "tr_typefunction", selected = "none")
-		updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
-	  updateSelectInput(session = session, inputId = "tr_replace", selected = "None")
-	  updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
-	})
+	updateTextInput(session = session, inputId = "tr_create", value = "")
+ 	updateTextInput(session = session, inputId = "tr_recode", value = "")
+ 	updateTextInput(session = session, inputId = "tr_rename", value = "")
+ 	updateTextInput(session = session, inputId = "tr_paste", value = "")
+	updateSelectInput(session = session, inputId = "tr_typefunction", selected = "none")
+	updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
+  updateSelectInput(session = session, inputId = "tr_replace", selected = "None")
+  updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
 })
 
 observeEvent(input$transform_report, {
-  isolate({
-    cmd <- paste0("```{r}\n", input$tr_log,"\n```\n")
-    # shinyAce::updateAceEditor(session, "tr_log", value = "")
-    updateTextInput(session, "tr_log", value = "")
-    update_report_fun(cmd)
-  })
+  cmd <- paste0("```{r}\n", input$tr_log,"\n```\n")
+  updateTextInput(session, "tr_log", value = "")
+  update_report_fun(cmd)
 })

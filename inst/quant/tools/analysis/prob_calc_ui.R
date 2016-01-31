@@ -470,23 +470,21 @@ pc_available <- reactive({
 })
 
 observeEvent(input$prob_calc_report, {
-  isolate({
-    type <- input$pc_type
-    inp <- pc_inputs()
-    if (!is.null(type) && type == "probs") {
-      inp_out <- list(type = type) %>% list(.,.)
-      inp[["ub"]] <- inp[["lb"]] <- NA
-    } else {
-      inp_out <- list("","")
-      inp[["pub"]] <- inp[["plb"]] <- NA
-    }
-    outputs <- c("summary","plot")
-    update_report(inp_main = clean_args(inp, pc_args()),
-                  fun_name = paste0("prob_",input$pc_dist),
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = TRUE,
-                  fig.width = round(7 * pc_plot_width()/650,2),
-                  fig.height = round(7 * pc_plot_height()/650,2))
-  })
+  type <- input$pc_type
+  inp <- pc_inputs()
+  if (!is.null(type) && type == "probs") {
+    inp_out <- list(type = type) %>% list(.,.)
+    inp[["ub"]] <- inp[["lb"]] <- NA
+  } else {
+    inp_out <- list("","")
+    inp[["pub"]] <- inp[["plb"]] <- NA
+  }
+  outputs <- c("summary","plot")
+  update_report(inp_main = clean_args(inp, pc_args()),
+                fun_name = paste0("prob_",input$pc_dist),
+                inp_out = inp_out,
+                outputs = outputs,
+                figs = TRUE,
+                fig.width = round(7 * pc_plot_width()/650,2),
+                fig.height = round(7 * pc_plot_height()/650,2))
 })

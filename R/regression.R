@@ -426,7 +426,7 @@ plot.regression <- function(x,
 #' @param pred_data Name of the dataset to use for prediction
 #' @param pred_cmd Command used to generate data for prediction
 #' @param conf_lev Confidence level used to estimate confidence intervals (.95 is the default)
-#' @param prn Print prediction results (default is TRUE)
+#' @param prn Number of lines of prediction results to print. Nothing is printed if prn is 0. Use -1 to print all lines (default).
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -448,7 +448,7 @@ predict.regression <- function(object,
                                pred_data = "",
                                pred_cmd = "",
                                conf_lev = 0.95,
-                               prn = TRUE,
+                               prn = -1,
                                ...) {
 
                                # pred_filt = "",
@@ -462,6 +462,8 @@ predict.regression <- function(object,
   } else if (pred_count == 3) {
     return(cat("Please select variables, data, or specify a command to generate predictions.\nFor example, carat = seq(.5, 1.5, .1) would produce predictions for values\n of carat starting at .5, increasing to 1.5 in increments of .1. Make sure\nto press return after you finish entering the command.\n\nAlternatively, specify a dataset to generate predictions. You could create\nthis in a spread sheet and use the paste feature in Data > Manage to bring\nit into Radiant"))
   }
+
+  dec <- object$dec
 
   if (pred_count < 2) {
     if (pred_cmd != "")
@@ -532,7 +534,7 @@ predict.regression <- function(object,
     colnames(pred_val) <- c("Prediction",ci_perc[1],ci_perc[2],"+/-")
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
-    if (prn) {
+    if (prn == TRUE || prn != 0) {
       cat("Linear regression (OLS)\n")
       cat("Data       :", object$dataset, "\n")
       if (object$data_filter %>% gsub("\\s","",.) != "")
@@ -548,7 +550,11 @@ predict.regression <- function(object,
         cat(paste0("Predicted values for profiles from dataset: ",object$pred_data,"\n"))
       }
 
-      pred %>% print(., row.names = FALSE)
+      if (is.logical(prn) || prn == -1) {
+        dfprint(pred, dec) %>% print(row.names = FALSE)
+      } else {
+        head(pred, prn) %>% dfprint(dec) %>% print(row.names = FALSE)
+      }
     }
 
     return(pred %>% set_class(c("reg_predict",class(.))))

@@ -38,6 +38,9 @@ performance <- function(dataset, pred, rvar,
 	# data_filter <- ""
 	# train <- "All"
 
+	## to avoid 'global not defined' warnings
+	nr_resp <- nr_obs <- cum_resp <- cum_resp_rate <- everything <- NULL
+
 	if (is_empty(qnt)) qnt <- 10
 
 	dat_list <- list()
@@ -58,15 +61,11 @@ performance <- function(dataset, pred, rvar,
   qnt_name <- "bins"
   if (method == "xtile") method <- "radiant::xtile"
 
-  # auc_list <- rep(0, length(pred)) %>% set_names(pred)
   auc_list <- list()
   lg_list <- list()
-
-	# pext <- c(All = "", Training = "_train", Validation = "_val")
 	pext <- c(All = "", Training = " (train)", Validation = " (val)")
 
 	for (i in names(dat_list)) {
-		# i <- "All"
 		dat <- dat_list[[i]]
 	  rv <- dat[[rvar]]
 	  if (is.factor(rv)) {
@@ -118,7 +117,6 @@ performance <- function(dataset, pred, rvar,
 			    cum_lift = cum_resp_rate / tot_rate,
 			    cum_gains = cum_resp / tot_resp
 			  ) %>%
-			  # mutate(pred = pred[j]) %>%
 			  mutate(pred = pname) %>%
 			  select(pred, everything())
 		}
@@ -128,13 +126,6 @@ performance <- function(dataset, pred, rvar,
 
 	environment() %>% as.list %>% set_class(c("performance",class(.)))
 }
-
-	# dataset <- "bbb"
-	# pred <- "last"
-	# rvar <- "buyer"
-	# qnt <- 10
-	# data_filter <- ""
- #  object <- performance("bbb", "last", "buyer")
 
 #' Summary method for the performance function
 #'
@@ -199,7 +190,10 @@ plot.performance <- function(x,
                              shiny = FALSE,
                              ...) {
 
-  # if (is(x, 'try-error')) return(invisible())
+
+	## to avoid 'global not defined' warnings
+	pred <- cum_prop <- cum_gains <- obs <- NULL
+
 	object <- x; rm(x)
   if (is.character(object) || is.null(object$dat) || any(is.na(object$dat$cum_lift)) ||
       is.null(plots)) return(invisible())

@@ -38,21 +38,15 @@ my_dataTablesFilter = function(data, req) {
 }
 
 observeEvent(input$dataviewer_search_columns, {
-  isolate({
-    r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
-  })
+  r_state$dataviewer_search_columns <<- input$dataviewer_search_columns
 })
 
 observeEvent(input$dataviewer_state, {
-  isolate({
-    r_state$dataviewer_state <<-
-    if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
-  })
+  r_state$dataviewer_state <<-
+  if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
 })
 
 output$dataviewer <- DT::renderDataTable({
-
-  # if (input$nav_radiant != "Data" || input$tabs_data != "View") return()
   if (not_available(input$view_vars)) return()
   req(input$view_pause == FALSE)
 
@@ -101,12 +95,10 @@ output$dataviewer <- DT::renderDataTable({
 })
 
 observeEvent(input$view_store, {
-  isolate({
-    data_filter <- if (input$show_filter) input$data_filter else ""
-    view_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
-    updateTextInput(session, "data_filter", value = "")
-    updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-  })
+  data_filter <- if (input$show_filter) input$data_filter else ""
+  view_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
+  updateTextInput(session, "data_filter", value = "")
+  updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
 })
 
 view_store <- function(dataset,

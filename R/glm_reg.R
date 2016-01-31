@@ -407,7 +407,7 @@ plot.glm_reg <- function(x,
 #' @param pred_vars Variables selected to generate predictions
 #' @param pred_data Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation
 #' @param pred_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
-#' @param prn Print prediction results (default is TRUE)
+#' @param prn Number of lines of prediction results to print. Nothing is printed if prn is 0. Use -1 to print all lines (default).
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -428,7 +428,7 @@ predict.glm_reg <- function(object,
                             pred_vars = "",
                             pred_data = "",
                             pred_cmd = "",
-                            prn = TRUE,
+                            prn = -1,
                             ...) {
 
   if (is.character(object)) return(object)
@@ -508,7 +508,7 @@ predict.glm_reg <- function(object,
     colnames(pred_val) <- c("Prediction","std.error")
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
-    if (prn) {
+    if (prn == TRUE || prn != 0) {
       cat("Generalized linear model (GLM)")
       cat("\nLink function:", object$link)
       cat("\nData         :", object$dataset)
@@ -524,8 +524,11 @@ predict.glm_reg <- function(object,
         cat(paste0("Predicted values for profiles from dataset: ",pred_data,"\n"))
       }
 
-      isNum <- c("Prediction", "std.error")
-      pred %>% dfprint(dec) %>% print(row.names = FALSE)
+      if (is.logical(prn) || prn == -1) {
+        dfprint(pred, dec) %>% print(row.names = FALSE)
+      } else {
+        head(pred, prn) %>% dfprint(dec) %>% print(row.names = FALSE)
+      }
     }
 
     return(pred %>% set_class(c("glm_predict",class(.))))

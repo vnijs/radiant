@@ -431,64 +431,54 @@ reg_available <- reactive({
 })
 
 observeEvent(input$regression_report, {
-  isolate({
-    outputs <- c("summary")
-    inp_out <- list("","")
-    inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
-    figs <- FALSE
-    if (!is_empty(input$reg_plots)) {
-      inp_out[[2]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
+  outputs <- c("summary")
+  inp_out <- list("","")
+  inp_out[[1]] <- clean_args(reg_sum_inputs(), reg_sum_args[-1])
+  figs <- FALSE
+  if (!is_empty(input$reg_plots)) {
+    inp_out[[2]] <- clean_args(reg_plot_inputs(), reg_plot_args[-1])
+    outputs <- c(outputs, "plot")
+    figs <- TRUE
+  }
+  xcmd <- ""
+  if (!is.null(r_data$reg_pred) && !is_empty(input$reg_predict, "none")) {
+    pred_args <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
+    pred_args[["prn"]] <- 10
+    inp_out[[2 + figs]] <- pred_args
+    outputs <- c(outputs, "result <- predict")
+    dataset <- if (input$reg_predict == "data") input$reg_pred_data else input$dataset
+    xcmd <-
+      paste0("# store_reg(result, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+      paste0("# write.csv(result, file = '~/reg_predictions.csv', row.names = FALSE)")
+    if (input$reg_pred_plot) {
+      inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
-    xcmd <- ""
-    # if (!is.null(r_data$reg_pred) && input$reg_predict != "none") {
-    if (!is.null(r_data$reg_pred) && !is_empty(input$reg_predict, "none")) {
-      inp_out[[2 + figs]] <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
-      outputs <- c(outputs, "result <- predict")
-      dataset <- if (input$reg_predict == "data") input$reg_pred_data else input$dataset
-      xcmd <-
-        paste0("# store_reg(result, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
-        paste0("# write.csv(result, file = '~/reg_predictions.csv', row.names = FALSE)")
-      # if (!is_empty(input$reg_xvar)) {
-      if (input$reg_pred_plot) {
-        inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
-        outputs <- c(outputs, "plot")
-        figs <- TRUE
-      }
-    }
-    update_report(inp_main = clean_args(reg_inputs(), reg_args),
-                  fun_name = "regression", inp_out = inp_out,
-                  outputs = outputs, figs = figs,
-                  fig.width = round(7 * reg_plot_width()/650,2),
-                  fig.height = round(7 * reg_plot_height()/650,2),
-                  xcmd = xcmd)
-  })
+  }
+  update_report(inp_main = clean_args(reg_inputs(), reg_args),
+                fun_name = "regression", inp_out = inp_out,
+                outputs = outputs, figs = figs,
+                fig.width = round(7 * reg_plot_width()/650,2),
+                fig.height = round(7 * reg_plot_height()/650,2),
+                xcmd = xcmd)
 })
 
 observeEvent(input$reg_store_res, {
-  isolate({
-    robj <- .regression()
-    if (!is.list(robj)) return()
-    if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE))) {
-      return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    }
-    store_reg(robj, data = input$dataset, type = "residuals", name = input$reg_store_res_name)
-  })
+  robj <- .regression()
+  if (!is.list(robj)) return()
+  if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE))) {
+    return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+  }
+  store_reg(robj, data = input$dataset, type = "residuals", name = input$reg_store_res_name)
 })
 
 observeEvent(input$reg_store_pred, {
-  isolate({
-    pred <- r_data$reg_pred
-    if (is.null(pred)) return()
-    # if (nrow(pred) != nrow(getdata(input$dataset)))
-    # print(nrow(pred))
-    # print(nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
-    if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
-      return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-    # store_reg(pred, data = input$dataset, type = "prediction", name = input$reg_store_pred_name)
-    store_reg(pred, data = input$reg_pred_data, type = "prediction", name = input$reg_store_pred_name)
-  })
+  pred <- r_data$reg_pred
+  if (is.null(pred)) return()
+  if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
+    return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+  store_reg(pred, data = input$reg_pred_data, type = "prediction", name = input$reg_store_pred_name)
 })
 
 

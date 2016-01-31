@@ -42,7 +42,7 @@ visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
 "
 
 observeEvent(input$manual_paste, {
-  isolate(r_data$manual %<>% {. == FALSE})
+  r_data$manual %<>% {. == FALSE}
 })
 
 output$ui_manual <- renderUI({
@@ -52,28 +52,9 @@ output$ui_manual <- renderUI({
     if (r_data$manual) "Manual paste (on)" else "Manual paste (off)")
 })
 
-# observeEvent(input$vim_keys, {
-#   isolate({
-
-#     # if (!is_empty(input$rmd_report))
-#     # r_state$rmd_report <<- input$rmd_report
-
-#     r_data$vim_keys %<>% {. == FALSE}
-#   })
-# })
-
-# output$ui_vim <- renderUI({
-#   ## initialize vim_keys to false
-#   if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
-#   actionButton("vim_keys",
-#     if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
-# })
-
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
 
 output$report <- renderUI({
-  # init <- isolate(if (is_empty(input$rmd_report)) rmd_example else gsub("\\\\","\\\\\\\\",input$rmd_report))
-  # init <- isolate(if (is_empty(input$rmd_report)) rmd_example else gsub("\\\\","\\\\",input$rmd_report))
   init <- isolate(if (is_empty(input$rmd_report)) rmd_example else esc_slash(input$rmd_report))
   tagList(
     with(tags,
@@ -83,7 +64,6 @@ output$report <- renderUI({
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Knit report")),
             td(uiOutput("ui_manual")),
-            # td(uiOutput("ui_vim")),
             td(downloadButton("saveHTML", "Save HTML")),
             td(downloadButton("saveRmd", "Save Rmd")),
             td(HTML("<div class='form-group shiny-input-container'>
@@ -127,7 +107,6 @@ knitIt <- function(text) {
 
 ## Knit for report in Radiant
 knitIt2 <- function(text) {
-  # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE, envir = r_env),
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
         envir = r_knitr), stylesheet = "",
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
@@ -174,31 +153,17 @@ output$saveRmd <- downloadHandler(
       fbase <- "report"
       fnames <- c("report.Rmd", "r_data.rda")
 
-      ## doesn't work - creates a temp filename
-      # fbase <- basename(filename)
-      # fbase <- sub(paste0(".",tools::file_ext(fbase)),"", fbase)
-
       paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"", fnames[2], "\")\n```\n\n") %>%
         paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>% cat(., file = fnames[1],sep="\n")
 
       r_data <- reactiveValuesToList(r_data)
       save(r_data, file = fnames[2])
 
-      # fnames <- normalizePath(paste0("./",fnames))
-      # print(fnames)
-
       zip(fname, fnames[1:2])
-      # utils::tar(normalizePath(paste0("./",fname)), fnames, compression = "gzip")
-      # utils::tar(fname, files = "./*.rda", compression = "gzip")
-      # ?utils::tar
-      # ret <- try(zip(fname, fnames[1:2]), silent = TRUE)
       setwd(cdir)
-      # if (is(ret, 'try-error'))
-      #   stop("No zip program available in path. Try installing Rtools from\nCRAN (https://cran.r-project.org/bin/windows/Rtools/)")
     })
   },
   contentType = "application/zip"
-  # contentType = "application/tar.gz"
 )
 
 observe({
@@ -208,7 +173,6 @@ observe({
     isolate({
       rmdfile <- paste0(readLines(inFile$datapath), collapse = "\n")
       shinyAce::updateAceEditor(session, "rmd_report", value = rmdfile)
-      # r_state$rmd_report <<- rmdfile
     })
   }
 })
@@ -252,13 +216,8 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
 }
 
 observeEvent(input$rmd_report, {
-  if (input$rmd_report != rmd_example) {
-    # path <- file.path(normalizePath("~"),"r_sessions")
-    # if (file.exists(path))
-    #   cat(r_state$rmd_report, file = file.path(path,"rmd_report.Rmd"), append = TRUE)
-    # r_state$rmd_report <<- gsub("\\\\","\\\\\\\\",input$rmd_report)
+  if (input$rmd_report != rmd_example)
     r_state$rmd_report <<- esc_slash(input$rmd_report)
-  }
 })
 
 update_report_fun <- function(cmd) {
@@ -275,33 +234,17 @@ update_report_fun <- function(cmd) {
       cat("Clipboard not supported on linux")
     }
     ## nothing is added to report
-    # cmd <- ""
     updateTabsetPanel(session, "nav_radiant", selected = "Report")
   } else {
+    if (is_empty(r_state$rmd_report)) {
+      r_state$rmd_report <<- paste0("## Your report title\n", cmd)
+    } else {
+      r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
+    }
 
-    # if (is_empty(input$rmd_report)) {
-      if (is_empty(r_state$rmd_report)) {
-        r_state$rmd_report <<- paste0("## Your report title\n", cmd)
-        # cmd <- paste0("## Your report title\n", cmd)
-      } else {
-        # r_state$rmd_report <<- paste0(gsub("\\\\","\\\\\\\\",r_state$rmd_report),"\n",cmd)
-        r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
-        # cmd <- paste0(r_state$rmd_report,"\n",cmd)
-      }
-
-      withProgress(message = 'Updating report', value = 0,
-        shinyAce::updateAceEditor(session, "rmd_report",
-                                  value = esc_slash(r_state$rmd_report))
-                                  # value = gsub("\\\\","\\\\\\\\",r_state$rmd_report))
-      )
-      #                           value = cmd)
-    # } else {
-      # shinyAce::updateAceEditor(session, "rmd_report",
-                                # value = paste0(input$rmd_report,"\n",cmd))
-      # r_state$rmd_report <<- paste0(input$rmd_report,"\n",cmd)
-    # }
+    withProgress(message = 'Updating report', value = 0,
+      shinyAce::updateAceEditor(session, "rmd_report",
+                                value = esc_slash(r_state$rmd_report))
+    )
   }
-
-  ## move to the report panel so see the commands created
-  # updateTabsetPanel(session, "nav_radiant", selected = "Report")
 }

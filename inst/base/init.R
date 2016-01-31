@@ -34,55 +34,17 @@ init_state <- function(r_data) {
   r_data
 }
 
-# if (!r_local) {
-if (TRUE) {
+remove_session_files <- function(st = Sys.time()) {
+  fl <- list.files(normalizePath("~/r_sessions/"), pattern = "*.rds",
+                   full.names = TRUE)
 
-  # state_email <- function(body, subject = paste0("From: ", Sys.info()['nodename'])) {
-  #   if (!require(sendmailR)) {
-  #     install.packages("sendmailR", repos = "http://cran.rstudio.com")
-  #     library(sendmailR)
-  #   }
-
-  #   from <- '<vincent.nijs@gmail.com>'
-  #   to <- '<vincent.nijs@gmail.com>'
-  #   body <- paste0(body,collapse="\n")
-  #   sendmail(from, to, subject, body,
-  #            control=list(smtpServer='ASPMX.L.GOOGLE.COM'))
-  # }
-
-  # check_age_and_size <- function() {
-
-  #   ids <- ls(r_sessions)
-  #   ages <- list()
-  #   for (i in ids) {
-  #     session_age <- difftime(Sys.time(), r_sessions[[i]]$timestamp, units = "days")
-  #     if (session_age > 1) r_sessions[[i]] <- NULL
-  #     ages[i] <- session_age %>% round(3)
-  #   }
-
-  #   session_size <- pryr::object_size(r_sessions) %>% as.numeric %>%
-  #                     {. / 1048576} %>% round(3)
-
-  #   if (length(r_sessions) > 20 || session_size > 20)
-  #     state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
-  # }
-
-  ## are there any state files dumped more than 1 minute ago?
-  # check_age_and_size()
-
-
-  remove_session_files <- function(st = Sys.time()) {
-    fl <- list.files(normalizePath("~/r_sessions/"), pattern = "*.rds",
-                     full.names = TRUE)
-
-    for (f in fl) {
-      if (difftime(st, file.mtime(f), units = "days") > 7)
-        unlink(f, force = TRUE)
-    }
+  for (f in fl) {
+    if (difftime(st, file.mtime(f), units = "days") > 7)
+      unlink(f, force = TRUE)
   }
-
-  remove_session_files()
 }
+
+remove_session_files()
 
 ## from Joe Cheng's https://github.com/jcheng5/shiny-resume/blob/master/session.R
 isolate({
@@ -185,34 +147,9 @@ r_env <- environment()
 
 ## turning of vim_keys on load unless it is set in options
 vk <- options("vim_keys")[[1]]
-if(!is.null(vk) && vk) {
-  r_data$vim_keys <- TRUE
-} else {
-  r_data$vim_keys <- FALSE
-}
+r_data$vim_keys <- ifelse (!is.null(vk) && vk, TRUE, FALSE)
 
 if (r_local) {
-  ## reference to radiant environment that can be accessed by exported functions
-  ## does *not* make a copy of the data - nice
-  ## relevant when you want to access Radiant functions outside of a Shiny app
-  # r_env <<- pryr::where("r_data")
-  # r_env <- environment()
-
-  ## doesn't work when Radiant is loaded and in the search path
-  ## i.e., it is not 'sourced' inside server.R
-  # r_env <- environment()
-  # ?shiny::getDefaultReactiveDomain
-
-  ## works but puts r_env in the global environment so 'new session' doesn't work properly
-  ## when run locally
-
-  # if ("package:radiant" %in% search())
-  #   r_env <<- environment()
-  # else
-  #   r_env <- environment()
-
-    # r_env <- environment()
-
   ## adding any data.frame from the global environment to r_data should not affect
   ## memory usage ... at least until the entry in r_data is changed
   df_list <- sapply(mget(ls(envir = .GlobalEnv), envir = .GlobalEnv), is.data.frame) %>%
@@ -238,7 +175,6 @@ if (r_local) {
 # https://gist.github.com/jcheng5/5427d6f264408abf3049
 
 ## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
-
 url_list <-
   list("Data" = list("tabs_data" = list("Manage"    = "data/",
                                         "View"      = "data/view/",
@@ -277,11 +213,19 @@ url_list <-
                                           "Predict" = "regression/glm/predict/",
                                           "Plot"    = "regression/glm/plot/")),
 
-       "Decision tree"    = list("tabs_dtree"    = list("Model" = "decide/dtree/",
-                                                        "Plot"  = "decide/dtree/plot/")),
+       "Neural Network (ANN)" = list("tabs_ann" = list("Summary" = "model/ann/",
+                                                       "Plot" = "model/ann/plot/")),
 
-       "Simulate"    = list("tabs_simulate"    = list("Model"   = "decide/simulate/",
-                                                      "Repeat"  = "decide/simulate/repeat/"))
+       "Model performance" = list("tabs_performance" = list("Summary" = "model/performance/",
+                                                            "Plot" = "model/performance/plot/")),
+
+       "Decision tree" = list("tabs_dtree" = list("Model" = "decide/dtree/",
+                                                  "Plot"  = "decide/dtree/plot/")),
+
+       "Simulate" = list("tabs_simulate" = list("Simulate" = "decide/simulate/",
+                                                "Plot (simulate)" = "decide/simulate/plot/",
+                                                "Repeat" = "decide/simulate/repeat/",
+                                                "Plot (repeat)" = "decide/simulate/repeat/plot/"))
   )
 
 ## generate url patterns for navigation
@@ -298,24 +242,6 @@ for (i in names(url_list)) {
     }
   }
 }
-
-## try http://127.0.0.1:3174/?url=decide/simulate/&SSUID=local
-# unlink("~/gh/radiant/tests/urls/urls.Rmd")
-# urls <- grep("/", url_list %>% unlist, value = TRUE)
-# for(u in urls) {
-#   cat(paste0("http://127.0.0.1:6452/?url=", u, "&SSUID=local<br>\n"),
-#       file = "~/gh/radiant/tests/urls/urls.Rmd", append = TRUE)
-# }
-# knitr::knit2html("~/gh/radiant/tests/urls/urls.Rmd", output = "~/gh/radiant/tests/urls/urls.html")
-
-## environment to results from code run through knitr
-# r_knitr <- new.env(parent = emptyenv())
-# if (is.null(isolate(r_data$r_knitr))) {
-  # isolate({
-    # r_data$r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()
-  # })
-# }
-
 
 if (!exists("r_knitr")) {
   r_knitr <- if (exists("r_env")) new.env(parent = r_env) else new.env()

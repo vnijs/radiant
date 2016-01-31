@@ -11,6 +11,11 @@ The examples below are adapted from [Cheatsheet for dplyr join functions](http:/
 <a href="https://github.com/vnijs/radiant/blob/gh-pages/examples/avengers.csv" target = "_blank">avengers.csv</a>
 
 
+
+```
+## Warning: replacing previous import by 'scales::alpha' when loading 'NeuralNetTools'
+```
+
 <table class='table table-condensed table-hover' style='width:70%;'>
 <caption>Superheroes</caption>
  <thead>

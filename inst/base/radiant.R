@@ -1,16 +1,3 @@
-# observe({
-#   ## reset r_state on dataset change ... when you are not on the
-#   ## Manage > Data tab
-#   if (is.null(r_state$dataset) || is.null(input$dataset)) return()
-#   if (input$tabs_data != "Manage" || input$nav_radiant != "Data") {
-#     if (r_state$dataset != input$dataset) {
-#       r_state <<- list()
-#       updateTextInput(session = session, inputId = "data_filter", value = "")
-#       updateCheckboxInput(session = session, inputId = "show_filter", value = FALSE)
-#     }
-#   }
-# })
-
 ################################################################################
 ## function to save app state on refresh or crash
 ################################################################################
@@ -27,7 +14,6 @@ saveSession <- function(session = session) {
 
   r_sessions[[r_ssuid]] <- list(
     r_data    = reactiveValuesToList(r_data),
-    # r_state = reactiveValuesToList(input),
     r_state = rs,
     timestamp = Sys.time()
   )
@@ -35,9 +21,6 @@ saveSession <- function(session = session) {
   ## saving session information to file
   fn <- paste0(normalizePath("~/r_sessions"),"/r_", r_ssuid, ".rds")
   saveRDS(r_sessions[[r_ssuid]], file = fn)
-
-  # if (!r_local)
-  # saveRDS(r_sessions[[r_ssuid]], file = paste0("~/r_sessions/r_", r_ssuid, ".rds"))
 }
 
 observeEvent(input$refresh_radiant, {
@@ -58,7 +41,6 @@ saveStateOnRefresh <- function(session = session) {
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
           is.null(input$uploadState)) {
         saveSession(session)
-        # if (r_local) sshh( rm(r_env, envir = .GlobalEnv) )
       } else {
         if (is.null(input$uploadState)) {
           if (exists("r_sessions")) {
@@ -80,7 +62,6 @@ saveStateOnRefresh <- function(session = session) {
 
   if (is.null(input$dataset)) return()
 
-  # selcom <- input$data_filter %>% gsub("\\s","", .) %>% gsub("\"","\'",.)
   selcom <- input$data_filter %>% gsub("\\n","", .) %>% gsub("\"","\'",.)
   if (is_empty(selcom) || input$show_filter == FALSE) {
     isolate(r_data$filter_error <- "")
@@ -92,13 +73,11 @@ saveStateOnRefresh <- function(session = session) {
       isolate(r_data$filter_error <- paste0("Invalid filter: \"", attr(seldat,"condition")$message,"\". Update or remove the expression"))
     } else {
       isolate(r_data$filter_error <- "")
-      # if (!(input$nav_radiant == "Data" && input$tabs_data == "Transform")) {
-        if ("grouped_df" %in% class(seldat)) {
-          return(droplevels(ungroup(seldat)))
-        } else {
-          return(droplevels(seldat))
-        }
-      # }
+      if ("grouped_df" %in% class(seldat)) {
+        return(droplevels(ungroup(seldat)))
+      } else {
+        return(droplevels(seldat))
+      }
     }
   }
 
@@ -119,30 +98,14 @@ saveStateOnRefresh <- function(session = session) {
   }
 })
 
-# .getclass_transform <- reactive({
-#   # head(r_data[[input$dataset]]) %>% getclass
-#   getclass(.getdata_transform())
-# })
-
-
 .getclass <- reactive({
-  # head(r_data[[input$dataset]]) %>% getclass
   getclass(.getdata())
 })
-
-## used for group_by and facet row/column
-# groupable_vars <- reactive({
-#   .getdata() %>%
-#     summarise_each(funs(is.factor(.) || lubridate::is.Date(.) || (n_distinct(., na_rm = TRUE)/n()) < .25)) %>%
-#     {which(. == TRUE)} %>%
-#     varnames()[.]
-# })
 
 groupable_vars <- reactive({
   .getdata() %>%
     summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
                         ((n_distinct(., na_rm = TRUE)/n()) < .30))) %>%
-                        # ((n_distinct(., na_rm = TRUE)/n()) < .30 && !is.numeric(.)))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
@@ -151,7 +114,6 @@ groupable_vars_nonum <- reactive({
   .getdata() %>%
     summarise_each(funs(is.factor(.) || is.logical(.) || lubridate::is.Date(.) || is.integer(.) ||
                    is.character(.))) %>%
-                        # ((n_distinct(., na_rm = TRUE)/n()) < .30 && !is.numeric(.)))) %>%
     {which(. == TRUE)} %>%
     varnames()[.]
 })
@@ -194,18 +156,11 @@ clean_args <- function(rep_args, rep_default = list()) {
 
   ## removing default arguments before sending to report feature
   for (i in names(rep_args)) {
-    # if (is.na(rep_args[[i]])) || all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
-    # if(!any(is.language()))
-    # if (all(is.na(rep_args[[i]]))) {rep_args[[i]] <- NULL; next}
     if (!any(is.language(rep_args[[i]])) && all(is.na(rep_args[[i]]))) {
       rep_args[[i]] <- NULL
       next
     }
-    # if (rep_default[[i]] == Inf || rep_default[[i]] == -Inf) next
-    # if (is.symbol(rep_default[[i]])) next
     if (!all(is.symbol(rep_default[[i]])) && all(is_not(rep_default[[i]]))) next
-    # print(rep_default[[i]])
-    # if (rep_default[[i]] == NA) next
     if (length(rep_args[[i]]) == length(rep_default[[i]]) &&
         all(rep_args[[i]] == rep_default[[i]])) rep_args[[i]] <- NULL
   }
@@ -224,10 +179,6 @@ is_not <- function(x) is.null(x) || is.na(x)
 
 ## check if a button was NOT pressed
 not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
-
-## check if a button WAS pressed
-# was_pressed <- function(x) if (is.null(x) || x == 0) FALSE else TRUE
-# was_pressed <- function(x) not_pressed == FALSE
 
 ## check for duplicate entries
 has_duplicates <- function(x)
@@ -249,7 +200,6 @@ trunc_char <- function(x) if (is.character(x)) strtrim(x,40) else x
 show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
 
   n <- 0
-  # {if (is.character(dat) && length(dat) == 1) r_data[[dat]] else dat} %>%
   {if (is.character(dat) && length(dat) == 1) getdata(dat, na.rm = FALSE) else dat} %>%
     { n <<- nrow(.); . } %>%
     slice(1:min(nshow,n)) %>%
@@ -356,7 +306,6 @@ plot_downloader <- function(plot_name, width = plot_width(),
   output[[lnm]] <- downloadHandler(
     filename = function() { paste0(plot_name, ".png") },
     content = function(file) {
-        # if (fext(file) == "svg") svg(file=file, width = psize(width), height = psize(height))
 
         ## download graphs in higher resolution than shown in GUI (504 dpi)
         pr <- 7
@@ -439,8 +388,6 @@ inclRmd <- function(path, r_env = parent.frame()) {
   paste(readLines(path, warn = FALSE), collapse = '\n') %>%
   knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE,
     envir = r_env, options = "", stylesheet = "") %>%
-    # gsub("&lt;!--/html_preserve--&gt;","",.) %>%  ## knitr adds this
-    # gsub("&lt;!--html_preserve--&gt;","",.) %>%   ## knitr adds this
     HTML %>% withMathJax
 }
 
@@ -487,53 +434,30 @@ cf <- function(...) {
 ## use the value in the input list if available and update r_state
 use_input <- function(var, vars, init = character(0), fun = "state_single") {
   ivar <- input[[var]]
-  # print("*******")
-  # print(var)
-  # print(ivar)
-  # print(var %in% names(input))
-  # print(vars)
-  # print(all(ivar %in% vars))
 
   if (var %in% names(input) && is.null(ivar)) {
     r_state[[var]] <<- NULL
     ivar
   } else if (available(ivar) && all(ivar %in% vars)) {
-    # print("--------")
-    # print(r_state[[var]])
     if (length(ivar) > 0) r_state[[var]] <<- ivar
-    # print(r_state[[var]])
-    # print("--------")
     ivar
   } else if (available(ivar) && any(ivar %in% vars)) {
      ivar[ivar %in% vars]
   } else {
-    # if (length(ivar) > 0 && ivar %in% c("None","none",".",""))
-      # r_state[[var]] <<- ivar
 
-    if (length(ivar) > 0)
-      if (all(ivar %in% c("None","none",".",""))) r_state[[var]] <<- ivar
-      # ivar <- ivar %in% vars
-      # if (length(ivar) > 0) r_state[[var]] <<- ivar
-
-    # print("//////")
-    # print(vars[vars %in% r_state[[var]]])
+    if (length(ivar) > 0 && all(ivar %in% c("None","none",".",""))) r_state[[var]] <<- ivar
 
     if (fun == "state_init")
       sel <- get(fun)(var, init)
     else
       sel <- get(fun)(var, vars, init)
 
-    # print(sel)
     sel
   }
 }
 
 use_input_nonvar <- function(var, choices, init = "", fun = "state_init") {
   ivar <- input[[var]]
-  # print("----")
-  # print(var)
-  # print(ivar)
-  # print(var %in% names(input))
   if (var %in% names(input) && is.null(ivar)) {
     r_state[[var]] <<- NULL
     ivar

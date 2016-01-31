@@ -49,16 +49,6 @@ output$ui_expl_byvar <- renderUI({
     names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
   }
 
-  # isolate({
-  #   if (not_available(input$expl_byvar) && available(r_state$expl_byvar) &&
-  #       all(r_state$expl_byvar %in% vars)) {
-  #     vars <- unique(c(r_state$expl_byvar, vars))
-  #     names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
-  #   }
-
-  #   sel <- use_input("expl_byvar", vars, fun = "state_multiple")
-  # })
-
   isolate({
     ## if nothing is selected expl_byvar is also null
     if ("expl_byvar" %in% names(input) && is.null(input$expl_byvar)) {
@@ -138,15 +128,11 @@ output$ui_Explore <- renderUI({
 })
 
 observeEvent(input$explorer_search_columns, {
-  isolate({
-    r_state$explorer_search_columns <<- input$explorer_search_columns
-  })
+  r_state$explorer_search_columns <<- input$explorer_search_columns
 })
 
 observeEvent(input$explorer_state, {
-  isolate({
-    r_state$explorer_state <<- input$explorer_state
-  })
+  r_state$explorer_state <<- input$explorer_state
 })
 
 expl_reset <- function(var, ncol) {
@@ -205,29 +191,23 @@ output$dl_explore_tab <- downloadHandler(
 )
 
 observeEvent(input$expl_store, {
-  isolate({
-    dat <- .explore()
-    if (is.null(dat)) return()
-    rows <- input$explorer_rows_all
-    name <- input$expl_dat
-    tab <- dat$tab
-    if (!is.null(rows) && !all(rows == 1:nrow(tab))) {
-      tab <- tab %>% slice(., rows)
-      for (i in c(dat$byvar,"variable"))
-        tab[[i]] %<>% factor(., levels = unique(.))
-    }
+  dat <- .explore()
+  if (is.null(dat)) return()
+  rows <- input$explorer_rows_all
+  name <- input$expl_dat
+  tab <- dat$tab
+  if (!is.null(rows) && !all(rows == 1:nrow(tab))) {
+    tab <- tab %>% slice(., rows)
+    for (i in c(dat$byvar,"variable"))
+      tab[[i]] %<>% factor(., levels = unique(.))
+  }
 
-    env <- if (exists("r_env")) r_env else pryr::where("r_data")
-    env$r_data[[name]] <- tab
-    cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
+  env <- if (exists("r_env")) r_env else pryr::where("r_data")
+  env$r_data[[name]] <- tab
+  cat(paste0("Dataset r_data$", name, " created in ", environmentName(env), " environment\n"))
 
-    # r_state$expl_byvar <<- r_state$expl_vars <<- NULL
-    # updateSelectizeInput(session, "expl_byvar", selected = "")
-    # updateSelectInput(session, "expl_vars", selected = "")
-
-    env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
-    updateSelectInput(session, "dataset", selected = name)
-  })
+  env$r_data[['datasetlist']] <- c(name, env$r_data[['datasetlist']]) %>% unique
+  updateSelectInput(session, "dataset", selected = name)
 })
 
 output$expl_summary <- renderPrint({
@@ -238,29 +218,14 @@ output$expl_summary <- renderPrint({
 })
 
 observeEvent(input$explore_report, {
-  isolate({
-    ## add command to store data and/or download it
-    # xcmd <-
-    #     paste0("# store_reg(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
-    #     paste0("# write.csv(result, data = '", input$dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
-
-    # if (input$expl_top != "fun")
-    #   inp_out <- list(list(top = input$expl_top))
-    # else
-    #   inp_out <- list("")
-
-    inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
-
-    # print(expl_args)
-    # print(sapply(expl_args, class))
-    # ll <- c(clean_args(expl_inputs(), expl_args))
-    # print(ll)
-    # print(sapply(ll, class))
-
-    update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),
-                  fun_name = "explore",
-                  inp_out = inp_out,
-                  outputs = c("summary"),
-                  figs = FALSE)
-  })
+  # if (input$expl_top != "fun")
+  #   inp_out <- list(list(top = input$expl_top))
+  # else
+  #   inp_out <- list("")
+  inp_out <- list(clean_args(expl_sum_inputs(), expl_sum_args[-1]))
+  update_report(inp_main = c(clean_args(expl_inputs(), expl_args), tabsort = "", tabfilt = ""),
+                fun_name = "explore",
+                inp_out = inp_out,
+                outputs = c("summary"),
+                figs = FALSE)
 })

@@ -1,7 +1,6 @@
 #######################################
 ## Create decision tree
 #######################################
-
 dtree_example <-
 "name: Jenny Lind
 type: decision
@@ -28,22 +27,6 @@ Sign with TV Network:
         p: 0.1
         payoff: 900000
 "
-
-observeEvent(input$dtree_vim_keys, {
-  isolate({
-     if (!is_empty(input$dtree_edit))
-       r_state$dtree_edit <<- input$dtree_edit
-
-    r_data$vim_keys %<>% {. == FALSE}
-  })
-})
-
-output$ui_dtree_vim <- renderUI({
-  ## initialize vim_keys to false
-  if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
-  actionButton("dtree_vim_keys",
-    if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
-})
 
 dtree_max_min <- c("Max" = "max", "Min" = "min")
 
@@ -77,10 +60,8 @@ output$dtree <- renderUI({
                dtree_max_min, selected = state_init("dtree_opt", "max"), inline = TRUE)),
             td(actionButton("dtree_eval", "Calculate"), style="padding-top:5px;"),
             td(uiOutput("ui_dtree_name")),
-            # td(textInput("dtree_name", NULL, paste0("dtree"), width = "100px")),
             td(actionButton("dtree_store", "Store"), style= "padding-top:5px;"),
             td(uiOutput("ui_dtree_list"), style="padding-top:14px;"),
-            td(uiOutput("ui_dtree_vim"), style="padding-top:5px;"),
             td(downloadButton("dtree_save_yaml", "Save input"), style="padding-top:5px;"),
             td(downloadButton("dtree_save", "Save output"), style="padding-top:5px;"),
             td(HTML("<div class='form-group shiny-input-container'><input id='dtree_load_yaml' name='dtree_load_yaml' type='file' accept='.yaml'/></div>"))
@@ -144,24 +125,11 @@ dtree_name <- reactive({
 })
 
 observeEvent(input$dtree_store, {
-  isolate({
+  dtree_name <- dtree_name()
 
-    # dtree_name <- input$dtree_name
-    # if (is_empty(dtree_name)) {
-    #   dtree_name <- stringr::str_match(input$dtree_edit, "^\\s*name:\\s*(.*)\\n\\s*type:")[2]
-    #   if (is.na(dtree_name)) {
-    #     dtree_name <- "dtree"
-    #   } else {
-    #     dtree_name %<>% tolower %>% gsub("[^[:alnum:] ]", "", .) %>%
-    #       gsub("\\s+","_",.) %>% gsub("^([0-9]+)",".",.)
-    #   }
-    # }
-    dtree_name <- dtree_name()
-
-    r_data[[dtree_name]] <- input$dtree_edit
-    r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
-    updateSelectInput(session = session, inputId = "dtree_list", selected = dtree_name)
-  })
+  r_data[[dtree_name]] <- input$dtree_edit
+  r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
+  updateSelectInput(session = session, inputId = "dtree_list", selected = dtree_name)
 })
 
 dtree_eval <- reactive({
@@ -226,10 +194,7 @@ observe({
   inFile <- input$dtree_load_yaml
   if (!is.null(inFile) && !is.na(inFile)) {
     isolate({
-
       yaml_file <- paste0(readLines(inFile$datapath), collapse = "\n")
-      # print(inFile$name)
-      # dtree_name <- "test.yaml"
       dtree_name <- sub(paste0(".",tools::file_ext(inFile$name)),"",inFile$name)
       r_data[[dtree_name]] <- yaml_file
       r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
@@ -243,27 +208,15 @@ observeEvent(input$dtree_list, {
 })
 
 observeEvent(input$dtree_report, {
-  isolate({
+  dtree_name <- input$dtree_list
+  if (is_empty(dtree_name)) dtree_name <- input$dtree_name
+  if (is_empty(dtree_name)) dtree_name <- dtree_name()
 
-    # dtree_name <- dtree_name()
-    # dtree_name <- stringr::str_match(input$dtree_edit, "^\\s*name:\\s*(.*)\\n\\s*type:")[2]
-    # if (is.na(dtree_name)) {
-    #   dtree_name <- "dtree"
-    # } else {
-    #   dtree_name %<>% tolower %>% gsub("[^[:alnum:] ]", "", .) %>%
-    #     gsub("\\s+","_",.) %>% gsub("^([0-9]+)",".",.)
-    # }
+  r_data[[dtree_name]] <- input$dtree_edit
+  r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
 
-    dtree_name <- input$dtree_list
-    if (is_empty(dtree_name)) dtree_name <- input$dtree_name
-    if (is_empty(dtree_name)) dtree_name <- dtree_name()
-
-    r_data[[dtree_name]] <- input$dtree_edit
-    r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
-
-    update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
-                  fun_name = "dtree",
-                  inp_out = list("",""), outputs = "summary",
-                  figs = FALSE)
-  })
+  update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
+                fun_name = "dtree",
+                inp_out = list("",""), outputs = "summary",
+                figs = FALSE)
 })

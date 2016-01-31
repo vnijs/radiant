@@ -141,46 +141,37 @@ ann_available <- reactive({
 .plot_ann <- reactive({
   if (ann_available() != "available") return(ann_available())
   plot(.ann(), shiny = TRUE)
-  # ann_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
-  #   {do.call(plot, c(list(x = .ann()), .))}
 })
 
 .plot_ann_net <- reactive({
-  if (ann_available() != "available") return(ann_available())
+  if (ann_available() != "available") return(invisible())
   .ann() %>%
     { if (is.character(.)) .
       else capture_plot( do.call(NeuralNetTools::plotnet, list(mod_in = .$model)) ) }
 })
 
 observeEvent(input$ann_report, {
-  isolate({
-    outputs <- c("summary","plot")
-    inp_out <- list("","")
-    xcmd <- "NeuralNetTools::plotnet(result$model)\n"
-    # xcmd <- paste0(xcmd, "pred <- predict(result$model, getdata('", input$ann_pred_data,"', filt = '', na.rm = FALSE))\n")
-    xcmd <- paste0(xcmd, "pred <- predict(result,", input$ann_pred_data,")\n")
-    xcmd <-  paste0(xcmd, "store_ann(pred, data = '", input$ann_pred_data, "', name = '", input$ann_pred_name,"')\n")
-    xcmd <-  paste0(xcmd, "# write.csv(pred, file = '~/ann_predictions.csv', row.names = FALSE)")
-    update_report(inp_main = clean_args(ann_inputs(), ann_args),
-                  fun_name = "ann",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = TRUE,
-                  fig.width = round(7 * ann_plot_width()/650,2),
-                  fig.height = round(7 * ann_plot_height()/650,2),
-                  xcmd = xcmd)
-  })
+  outputs <- c("summary","plot")
+  inp_out <- list("","")
+  xcmd <- "NeuralNetTools::plotnet(result$model)\n"
+  xcmd <- paste0(xcmd, "pred <- predict(result,'", input$ann_pred_data,"')\n")
+  xcmd <-  paste0(xcmd, "store_ann(pred, data = '", input$ann_pred_data, "', name = '", input$ann_pred_name,"')\n")
+  xcmd <-  paste0(xcmd, "# write.csv(pred, file = '~/ann_predictions.csv', row.names = FALSE)")
+  update_report(inp_main = clean_args(ann_inputs(), ann_args),
+                fun_name = "ann",
+                inp_out = inp_out,
+                outputs = outputs,
+                figs = TRUE,
+                fig.width = round(7 * ann_plot_width()/650,2),
+                fig.height = round(7 * ann_plot_height()/650,2),
+                xcmd = xcmd)
 })
 
 observeEvent(input$ann_pred, {
-  isolate({
-    if (ann_available() != "available") return(ann_available())
-    if (is_empty(input$ann_pred_data,"None")) return("No data selected for prediction")
-    # pred <- predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE))
-    pred <- predict(.ann(), input$ann_pred_data)
-    # store_ann(pred[,1], data = input$ann_pred_data, name = input$ann_pred_name)
-    store_ann(pred, data = input$ann_pred_data, name = input$ann_pred_name)
-  })
+  if (ann_available() != "available") return(ann_available())
+  if (is_empty(input$ann_pred_data,"None")) return("No data selected for prediction")
+  pred <- predict(.ann(), input$ann_pred_data)
+  store_ann(pred, data = input$ann_pred_data, name = input$ann_pred_name)
 })
 
 output$dl_ann_pred <- downloadHandler(
@@ -191,9 +182,6 @@ output$dl_ann_pred <- downloadHandler(
     } else {
       data.frame(pred_ann = predict(.ann(), input$ann_pred_data)) %>%
         write.csv(file = file, row.names = FALSE)
-      # predict(.ann()$model, getdata(input$ann_pred_data, filt = "", na.rm = FALSE)) %>%
-        # set_colnames(c("predict_ann")) %>%
-        # write.csv(file = file, row.names = FALSE)
     }
   }
 )

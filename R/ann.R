@@ -150,7 +150,7 @@ summary.ann <- function(object, ...) {
 #' @seealso \code{\link{summary.ann}} to summarize results
 #' @seealso \code{\link{predict.ann}} for prediction
 #'
-#' @importFrom NeuralNetTools plotnet garson
+#' @importFrom NeuralNetTools plotnet olden
 #'
 #' @export
 plot.ann <- function(x, shiny = FALSE, ...) {
@@ -158,7 +158,8 @@ plot.ann <- function(x, shiny = FALSE, ...) {
   object <- x; rm(x)
   if (is.character(object)) return(object)
   plot_list <- list()
-  plot_list[[1]] <- NeuralNetTools::garson(object$model) + coord_flip()
+  # plot_list[[1]] <- NeuralNetTools::garson(object$model) + coord_flip()
+  plot_list[[1]] <- NeuralNetTools::olden(object$model) + coord_flip()
   nrCol <- 1
 
   if (length(plot_list) > 0) {
@@ -171,7 +172,7 @@ plot.ann <- function(x, shiny = FALSE, ...) {
 #'
 #' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
 #'
-#' @param x Return value from \code{\link{ann}}
+#' @param object Return value from \code{\link{ann}}
 #' @param dataset Dataset to use for prediction
 #' @param ... further arguments passed to or from other methods
 #'
@@ -201,6 +202,6 @@ store_ann <- function(pred, data,
                       name = "predict_ann") {
 
   ## fix empty name input
-  if (gsub("\\s","",name) == "") name <- paste0(type, "_ann")
+  if (gsub("\\s","",name) == "") name <- "pred_ann"
   changedata(data, vars = pred, var_names = name)
 }

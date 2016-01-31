@@ -94,7 +94,12 @@ output$ui_sim_data <- renderUI({
 })
 
 sim_vars <- reactive({
-  if (is_empty(input$sim_name)) character(0) else colnames(getdata(input$sim_name))
+  if (is_empty(input$sim_name)) {
+    character(0)
+  } else {
+    if (is.null(r_data[[input$sim_name]])) character(0)
+    else colnames(r_data[[input$sim_name]])
+  }
 })
 
 output$ui_rep_vars <- renderUI({
@@ -211,125 +216,101 @@ var_remover <- function(variable) {
 }
 
 observeEvent(input$sim_const_add, {
-  isolate({
-    var_updater(input$sim_const_add, "sim_const", c(input$sim_const_name, input$sim_const_nr))
-  })
+  var_updater(input$sim_const_add, "sim_const", c(input$sim_const_name, input$sim_const_nr))
 })
 
 observeEvent(input$sim_sequ_add, {
-  isolate({
-    var_updater(input$sim_sequ_add, "sim_sequ", c(input$sim_sequ_name, input$sim_sequ_min, input$sim_sequ_max))
-  })
+  var_updater(input$sim_sequ_add, "sim_sequ", c(input$sim_sequ_name, input$sim_sequ_min, input$sim_sequ_max))
 })
 
 
 observeEvent(input$sim_unif_add, {
-  isolate({
-    var_updater(input$sim_unif_add, "sim_unif", c(input$sim_unif_name, input$sim_unif_min, input$sim_unif_max))
-  })
+  var_updater(input$sim_unif_add, "sim_unif", c(input$sim_unif_name, input$sim_unif_min, input$sim_unif_max))
 })
 
 observeEvent(input$sim_norm_add, {
-  isolate({
-    var_updater(input$sim_norm_add, "sim_norm", c(input$sim_norm_name, input$sim_norm_mean, input$sim_norm_sd))
-  })
+  var_updater(input$sim_norm_add, "sim_norm", c(input$sim_norm_name, input$sim_norm_mean, input$sim_norm_sd))
 })
 
 observeEvent(input$sim_lnorm_add, {
-  isolate({
-    var_updater(input$sim_lnorm_add, "sim_lnorm", c(input$sim_lnorm_name, input$sim_lnorm_mean, input$sim_lnorm_sd))
-  })
+  var_updater(input$sim_lnorm_add, "sim_lnorm", c(input$sim_lnorm_name, input$sim_lnorm_mean, input$sim_lnorm_sd))
 })
 
 
 observeEvent(input$sim_discrete_add, {
-  isolate({
-    var_updater(input$sim_discrete_add, "sim_discrete",
-                c(input$sim_discrete_name, input$sim_discrete_val, input$sim_discrete_prob))
-  })
+  var_updater(input$sim_discrete_add, "sim_discrete",
+              c(input$sim_discrete_name, input$sim_discrete_val, input$sim_discrete_prob))
 })
 
 observeEvent(input$sim_binom_add, {
-  isolate({
-    var_updater(input$sim_binom_add, "sim_binom",
-                c(input$sim_binom_name, input$sim_binom_n, input$sim_binom_p))
-  })
+  var_updater(input$sim_binom_add, "sim_binom",
+              c(input$sim_binom_name, input$sim_binom_n, input$sim_binom_p))
 })
 
 observeEvent(input$rep_grid_add, {
-  isolate({
-    var_updater(input$rep_grid_add, "rep_grid",
-                c(input$rep_grid_name, input$rep_grid_min, input$rep_grid_max, input$rep_grid_step))
-    updateNumericInput(session = session, "rep_nr", value = NA)
-  })
+  var_updater(input$rep_grid_add, "rep_grid",
+              c(input$rep_grid_name, input$rep_grid_min, input$rep_grid_max, input$rep_grid_step))
+  updateNumericInput(session = session, "rep_nr", value = NA)
 })
 
-# observeEvent(input$sim_grid_add, {
 observeEvent(input$sim_grid_add, {
-  isolate({
-    var_updater(input$sim_grid_add, "sim_grid",
-                c(input$sim_grid_name, input$sim_grid_min, input$sim_grid_max, input$sim_grid_step))
+  var_updater(input$sim_grid_add, "sim_grid",
+              c(input$sim_grid_name, input$sim_grid_min, input$sim_grid_max, input$sim_grid_step))
 
-    # updateNumericInput(session = session, "sim_nr", value = NA)
-  })
 })
 
 observeEvent(input$sim_grid, {
-  isolate({
-    if (!is_empty(input$sim_grid)) {
-      updateNumericInput(session = session, "sim_nr", value = NA)
-    } else {
-      val <- ifelse(is_empty(r_state$sim_nr), 12, r_state$sim_nr)
-      updateNumericInput(session = session, "sim_nr", value = val)
-    }
-  })
+  if (!is_empty(input$sim_grid)) {
+    updateNumericInput(session = session, "sim_nr", value = NA)
+  } else {
+    val <- ifelse(is_empty(r_state$sim_nr), 12, r_state$sim_nr)
+    updateNumericInput(session = session, "sim_nr", value = val)
+  }
 })
 
 observeEvent(input$rep_grid, {
-  isolate({
-    if (!is_empty(input$rep_grid)) {
-      updateNumericInput(session = session, "rep_nr", value = NA)
-    } else {
-      val <- ifelse(is_empty(r_state$rep_nr), 12, r_state$rep_nr)
-      updateNumericInput(session = session, "rep_nr", value = val)
-    }
-  })
+  if (!is_empty(input$rep_grid)) {
+    updateNumericInput(session = session, "rep_nr", value = NA)
+  } else {
+    val <- ifelse(is_empty(r_state$rep_nr), 12, r_state$rep_nr)
+    updateNumericInput(session = session, "rep_nr", value = val)
+  }
 })
 
 observeEvent(input$sim_const_del, {
-  isolate(var_remover("sim_const"))
+  var_remover("sim_const")
 })
 
 observeEvent(input$sim_sequ_del, {
-  isolate(var_remover("sim_sequ"))
+  var_remover("sim_sequ")
 })
 
 observeEvent(input$sim_unif_del, {
-  isolate(var_remover("sim_unif"))
+  var_remover("sim_unif")
 })
 
 observeEvent(input$sim_norm_del, {
-  isolate(var_remover("sim_norm"))
+  var_remover("sim_norm")
 })
 
 observeEvent(input$sim_lnorm_del, {
-  isolate(var_remover("sim_lnorm"))
+  var_remover("sim_lnorm")
 })
 
 observeEvent(input$sim_discrete_del, {
-  isolate(var_remover("sim_discrete"))
+  var_remover("sim_discrete")
 })
 
 observeEvent(input$sim_binom_del, {
-  isolate(var_remover("sim_binom"))
+  var_remover("sim_binom")
 })
 
 observeEvent(input$rep_grid_del, {
-  isolate(var_remover("rep_grid"))
+  var_remover("rep_grid")
 })
 
 observeEvent(input$sim_grid_del, {
-  isolate(var_remover("sim_grid"))
+  var_remover("sim_grid")
 })
 
 output$ui_simulater <- renderUI({
@@ -338,7 +319,7 @@ output$ui_simulater <- renderUI({
       wellPanel(
         uiOutput("ui_sim_types")
       ),
-        ## Using && to check that input.glm_sum_check is not null (must be &&)
+      ## Using && to check that input.glm_sum_check is not null (must be &&)
       conditionalPanel("input.sim_types && input.sim_types.indexOf('binom') >= 0",
         wellPanel(
           HTML("<label>Binomial variables: <i id='sim_binom_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
@@ -469,7 +450,6 @@ output$ui_simulater <- renderUI({
         uiOutput("ui_rep_vars"),
         HTML("<label>Grid search: <i id='rep_grid_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
               <i id='rep_grid_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
-        # # uiOutput("ui_rep_grid_vars"),
         with(tags, table(
             td(textInput("rep_grid_name", "Name:", value = state_init("rep_grid_name", ""))),
             td(numericInput("rep_grid_min", "Min:", value = state_init("rep_grid_min"))),
@@ -570,7 +550,6 @@ sim_plot_height <- function() {
   sim <- .simulater()
   if (is.character(sim)) {
     if (sim[1] == "error") return(200)
-    # sim <- getdata(sim)$dat
     sim <- getdata(sim)
     if (dim(sim)[1] == 0) {
       200
@@ -604,16 +583,8 @@ sim_plot_height <- function() {
   })
 })
 
-# rep_plot <- eventReactive(input$runRepeat, {
-#   isolate({
-#     nrPlots <- length(input$rep_fun) * length(input$rep_sum_vars) + length(strsplit(input$rep_form,"\n") %>% unlist)
-#     if (nrPlots == 0) 300 else ceiling(nrPlots/2) * 300
-#   })
-# })
-
 rep_plot_width <- function() 650
 rep_plot_height <- function() {
-  # rep_plot()
   rp <- .repeater()
   if (is.character(rp)) {
     if (rp[1] == "error") return(200)
@@ -645,28 +616,23 @@ rep_plot_height <- function() {
 report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
 
 observeEvent(input$simulater_report, {
-  isolate({
-    sim_dec <- input$sim_dec %>% {ifelse(is.na(.), 3, .)}
-    update_report(inp_main = clean_args(sim_inputs(), sim_args) %>% lapply(report_cleaner),
-                  fun_name = "simulater", inp_out = list(list(dec = sim_dec),""),
-                  outputs = c("summary","plot"), figs = TRUE,
-                  fig.width = round(7 * sim_plot_width()/650,2),
-                  fig.height = round(7 * (sim_plot_height()/650),2))
-  })
+  sim_dec <- input$sim_dec %>% {ifelse(is.na(.), 3, .)}
+  update_report(inp_main = clean_args(sim_inputs(), sim_args) %>% lapply(report_cleaner),
+                fun_name = "simulater", inp_out = list(list(dec = sim_dec),""),
+                outputs = c("summary","plot"), figs = TRUE,
+                fig.width = round(7 * sim_plot_width()/650,2),
+                fig.height = round(7 * (sim_plot_height()/650),2))
 })
 
 observeEvent(input$repeater_report, {
-  isolate({
+  outputs <- c("summary", "plot")
+  inp_out <- list("","")
+  inp_out[[1]] <- clean_args(rep_sum_inputs(), rep_sum_args[-1]) %>% lapply(report_cleaner)
+  inp_out[[2]] <- clean_args(rep_plot_inputs(), rep_plot_args[-1]) %>% lapply(report_cleaner)
 
-    outputs <- c("summary", "plot")
-    inp_out <- list("","")
-    inp_out[[1]] <- clean_args(rep_sum_inputs(), rep_sum_args[-1]) %>% lapply(report_cleaner)
-    inp_out[[2]] <- clean_args(rep_plot_inputs(), rep_plot_args[-1]) %>% lapply(report_cleaner)
-
-    update_report(inp_main = clean_args(rep_inputs(), rep_args) %>% lapply(report_cleaner),
-                  fun_name = "repeater", inp_out = inp_out,
-                  outputs = outputs, figs = TRUE,
-                  fig.width = round(7 * rep_plot_width()/650,2),
-                  fig.height = round(7 * (rep_plot_height()/650),2))
-  })
+  update_report(inp_main = clean_args(rep_inputs(), rep_args) %>% lapply(report_cleaner),
+                fun_name = "repeater", inp_out = inp_out,
+                outputs = outputs, figs = TRUE,
+                fig.width = round(7 * rep_plot_width()/650,2),
+                fig.height = round(7 * (rep_plot_height()/650),2))
 })

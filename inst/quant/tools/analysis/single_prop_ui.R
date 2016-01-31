@@ -124,19 +124,17 @@ sp_available <- reactive({
 })
 
 observeEvent(input$single_prop_report, {
-  isolate({
-    outputs <- c("summary","plot")
-    inp_out <- list(plots = input$sp_plots) %>% list("",.)
-    figs <- TRUE
-    if (length(input$sp_plots) == 0) {
-      figs <- FALSE
-      outputs <- c("summary")
-      inp_out <- list("","")
-    }
-    update_report(inp_main = clean_args(sp_inputs(), sp_args),
-                  fun_name = "single_prop", inp_out = inp_out,
-                  outputs = outputs, figs = figs,
-                  fig.width = round(7 * sp_plot_width()/650,2),
-                  fig.height = round(7 * sp_plot_height()/650,2))
-  })
+  outputs <- c("summary","plot")
+  inp_out <- list(plots = input$sp_plots) %>% list("",.)
+  figs <- TRUE
+  if (length(input$sp_plots) == 0) {
+    figs <- FALSE
+    outputs <- c("summary")
+    inp_out <- list("","")
+  }
+  update_report(inp_main = clean_args(sp_inputs(), sp_args),
+                fun_name = "single_prop", inp_out = inp_out,
+                outputs = outputs, figs = figs,
+                fig.width = round(7 * sp_plot_width()/650,2),
+                fig.height = round(7 * sp_plot_height()/650,2))
 })

@@ -198,16 +198,12 @@ pvt_plot_inputs <- reactive({
 })
 
 observeEvent(input$pivotr_search_columns, {
-  isolate({
-    r_state$pivotr_search_columns <<- input$pivotr_search_columns
-  })
+  r_state$pivotr_search_columns <<- input$pivotr_search_columns
 })
 
 observeEvent(input$pivotr_state, {
-  isolate({
-    r_state$pivotr_state <<-
-      if (is.null(input$pivotr_state)) list() else input$pivotr_state
-  })
+  r_state$pivotr_state <<-
+    if (is.null(input$pivotr_state)) list() else input$pivotr_state
 })
 
 output$pivotr <- DT::renderDataTable({
@@ -291,11 +287,9 @@ pvt_sorter <- function(pvt, rows = NULL) {
 }
 
 observeEvent(input$pivotr_rows_all, {
-  isolate({
-    dt_rows <- input$pivotr_rows_all
-    if (identical(r_data$pvt_rows, dt_rows)) return()
-    r_data$pvt_rows <- dt_rows
-  })
+  dt_rows <- input$pivotr_rows_all
+  if (identical(r_data$pvt_rows, dt_rows)) return()
+  r_data$pvt_rows <- dt_rows
 })
 
 .plot_pivot <- reactive({
@@ -317,25 +311,22 @@ output$plot_pivot <- renderPlot({
 }, width = pvt_plot_width, height = pvt_plot_height)
 
 observeEvent(input$pivotr_report, {
-  isolate({
+  inp_out <- list("","")
+  inp_out[[1]] <- clean_args(pvt_sum_inputs(), pvt_sum_args[-1])
 
-    inp_out <- list("","")
-    inp_out[[1]] <- clean_args(pvt_sum_inputs(), pvt_sum_args[-1])
-
-    if (input$pvt_plot == TRUE) {
-      inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
-      outputs <- c("summary","plot")
-      figs <- TRUE
-    } else {
-      outputs <- c("summary")
-      figs <- FALSE
-    }
-    update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
-                  fun_name = "pivotr",
-                  outputs = outputs,
-                  inp_out = inp_out,
-                  figs = figs,
-                  fig.width = round(7 * pvt_plot_width()/650,2),
-                  fig.height = round(7 * pvt_plot_height()/650,2))
-  })
+  if (input$pvt_plot == TRUE) {
+    inp_out[[2]] <- clean_args(pvt_plot_inputs(), pvt_plot_args[-1])
+    outputs <- c("summary","plot")
+    figs <- TRUE
+  } else {
+    outputs <- c("summary")
+    figs <- FALSE
+  }
+  update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
+                fun_name = "pivotr",
+                outputs = outputs,
+                inp_out = inp_out,
+                figs = figs,
+                fig.width = round(7 * pvt_plot_width()/650,2),
+                fig.height = round(7 * pvt_plot_height()/650,2))
 })

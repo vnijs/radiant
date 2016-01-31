@@ -29,26 +29,6 @@ help(package = 'radiant')
 ## this can very useful for debugging
 transform_main() %>% head"
 
-# observeEvent(input$vim_keys_code, {
-#   isolate(r_data$vim_keys %<>% {. == FALSE})
-# })
-
-# observeEvent(input$vim_keys_code, {
-#   isolate({
-#     if (!is_empty(input$rmd_code))
-#       r_state$rmd_code <<- input$rmd_code
-
-#     r_data$vim_keys %<>% {. == FALSE}
-#   })
-# })
-
-# output$ui_vim_code <- renderUI({
-#   ## initialize manual cmd paste to false
-#   if (is.null(r_data$vim_keys)) r_data$vim_keys <- FALSE
-#   actionButton("vim_keys_code",
-#     if (r_data$vim_keys) "Vim keys (on)" else "Vim keys (off)")
-# })
-
 output$rcode <- renderUI({
 
   tagList(
@@ -58,7 +38,6 @@ output$rcode <- renderUI({
                        inclMD(file.path(r_path,"base/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("rEval", "Run code")),
-            # td(uiOutput("ui_vim_code")),
             td(downloadButton('saveCode', 'Save')),
             td(HTML("<div class='form-group shiny-input-container'>
                 <input id='load_code' name='load_code' type='file' accept='.r,.R'/>
@@ -93,7 +72,6 @@ output$rmd_code_output <- renderUI({
                   else input$rmd_code_selection
 
       paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
-        # knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_data$r_knitr) %>%
         ## need r_env so changes are reflected in the shiny environment
         ## does mean user can mess things up pretty good so not a good idea on a server
         knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%

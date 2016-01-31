@@ -69,24 +69,24 @@ cor_plot_height <- function()
 # output is called from the main radiant ui.R
 output$correlation <- renderUI({
 
-		register_print_output("summary_correlation", ".summary_correlation")
-		register_plot_output("plot_correlation", ".plot_correlation",
-                         	height_fun = "cor_plot_height",
-                         	width_fun = "cor_plot_width")
+	register_print_output("summary_correlation", ".summary_correlation")
+	register_plot_output("plot_correlation", ".plot_correlation",
+                       	height_fun = "cor_plot_height",
+                       	width_fun = "cor_plot_width")
 
-		# two separate tabs
-		cor_output_panels <- tabsetPanel(
-	    id = "tabs_correlation",
-	    tabPanel("Summary", verbatimTextOutput("summary_correlation")),
-	    tabPanel("Plot",
-               plot_downloader("correlation", height = cor_plot_height()),
-	             plotOutput("plot_correlation", width = "100%", height = "100%"))
-	  )
+	# two separate tabs
+	cor_output_panels <- tabsetPanel(
+    id = "tabs_correlation",
+    tabPanel("Summary", verbatimTextOutput("summary_correlation")),
+    tabPanel("Plot",
+             plot_downloader("correlation", height = cor_plot_height()),
+             plotOutput("plot_correlation", width = "100%", height = "100%"))
+  )
 
-		stat_tab_panel(menu = "Regression",
-		              tool = "Correlation",
-		              tool_ui = "ui_correlation",
-		             	output_panels = cor_output_panels)
+	stat_tab_panel(menu = "Regression",
+	              tool = "Correlation",
+	              tool_ui = "ui_correlation",
+	             	output_panels = cor_output_panels)
 
 })
 
@@ -105,7 +105,6 @@ cor_available <- reactive({
 
 .summary_correlation <- reactive({
   if (cor_available() != "available") return(cor_available())
-	# summary(.correlation(), cutoff = input$cor_cutoff, covar = input$cor_covar)
   do.call(summary, c(list(object = .correlation()), cor_sum_inputs()))
 })
 
@@ -115,14 +114,11 @@ cor_available <- reactive({
 })
 
 observeEvent(input$correlation_report, {
-  isolate({
-    # inp_out <- list(cutoff = input$cor_cutoff, covar = input$cor_covar) %>% list(.,"")
-    inp_out <- list("","")
-    inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
-    update_report(inp_main = clean_args(cor_inputs(), cor_args),
-                  fun_name = "correlation",
-                  inp_out = inp_out,
-                  fig.width = round(7 * cor_plot_width()/650,2),
-                  fig.height = round(7 * cor_plot_height()/650,2))
-  })
+  inp_out <- list("","")
+  inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
+  update_report(inp_main = clean_args(cor_inputs(), cor_args),
+                fun_name = "correlation",
+                inp_out = inp_out,
+                fig.width = round(7 * cor_plot_width()/650,2),
+                fig.height = round(7 * cor_plot_height()/650,2))
 })

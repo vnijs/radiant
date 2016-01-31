@@ -120,22 +120,20 @@ output$hier_clus <- renderUI({
 })
 
 observeEvent(input$hier_clus_report, {
-  isolate({
-    if (length(input$hc_plots) > 0) {
-      inp_out <- list(plots = input$hc_plots) %>% list("",.)
-      outputs <- c("summary","plot")
-      figs <- TRUE
-    } else {
-      outputs <- c("summary")
-      inp_out <- list("","")
-      figs <- FALSE
-    }
-    update_report(inp_main = clean_args(hc_inputs(), hc_args),
-                  fun_name = "hier_clus",
-                  inp_out = inp_out,
-                  outputs = outputs,
-                  figs = figs,
-                  fig.width = round(7 * hc_plot_width()/650,2),
-                  fig.height = round(7 * hc_plot_height()/650,2))
-  })
+  if (length(input$hc_plots) > 0) {
+    inp_out <- list(plots = input$hc_plots) %>% list("",.)
+    outputs <- c("summary","plot")
+    figs <- TRUE
+  } else {
+    outputs <- c("summary")
+    inp_out <- list("","")
+    figs <- FALSE
+  }
+  update_report(inp_main = clean_args(hc_inputs(), hc_args),
+                fun_name = "hier_clus",
+                inp_out = inp_out,
+                outputs = outputs,
+                figs = figs,
+                fig.width = round(7 * hc_plot_width()/650,2),
+                fig.height = round(7 * hc_plot_height()/650,2))
 })

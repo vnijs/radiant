@@ -284,6 +284,7 @@ dtree <- function(yl, opt = "max") {
     ## subtract cost if specified
     if (!is.null(x$cost)) x$payoff <- x$payoff - x$cost
   }
+  yl
 
   err <- try(jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf), silent = TRUE)
   # jl$Do(calc_payoff, traversal = "post-order", filterFun = isNotLeaf)
@@ -399,6 +400,13 @@ summary.dtree <- function(object, ...) {
 #' @export
 plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, ...) {
 
+  # x <- dtree(yl)
+  # symbol <- ""
+  # symbol <- "$"
+  # dec <- 3
+  # final <- FALSE
+  # shiny <- FALSE
+
   # if (is.character(x)) return(cat(x))
   if (is.character(x)) return(paste0("graph LR\n A[Errors in the input file]\n"))
   if (x$type_none != "") return(paste0("graph LR\n A[Node does not have a type. Fix the input file]\n"))
@@ -474,15 +482,15 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
 
   paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
     style, sep = "\n") %>%
-    {if (shiny) . else DiagrammeR::DiagrammeR(.)}
+  {if (shiny) . else DiagrammeR::DiagrammeR(.)}
+  # {if (shiny) . else DiagrammeR::mermaid(.)}
 }
-
-    # "click id1 callback 'Tooltip';\n"
 
 ## some initial ideas for sensitivity analysis
 # library(yaml); library(radiant)
-# library(radiant); library(data.tree)
+# library(data.tree)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/jennylind-variables.yaml")
+# yl <- yaml::yaml.load_file("~/Desktop/test.yaml")
 # eval(parse(text = yl$variables))
 # p_medium
 # p_large
@@ -493,9 +501,11 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
 # yl$test(2)
 # yl <- yaml::yaml.load_file("~/Dropbox/teaching/MGT403-2015/data.tree/quant_job.yaml")
 # dtree(yl)
-# dtree(yl)
+# dt <- dtree(yl)
+# class(dt)
 # dtree(yl) %>% summary
-# dtree(yl) %>% plot
+# dtree(yl) %>% plot %>% DiagrammeR::mermaid(.)
+
 
 
 # dtree(yl) %>% plot(final = TRUE)

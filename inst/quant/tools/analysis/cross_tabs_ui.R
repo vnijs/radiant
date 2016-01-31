@@ -5,7 +5,6 @@ ct_check <- c("Observed" = "observed", "Expected" = "expected",
               "Row percentages" = "row_perc",
               "Column percentages" = "col_perc",
               "Table percentages" = "perc")
-              # "Deviation %" = "dev_perc")
 
 ## list of function arguments
 ct_args <- as.list(formals(cross_tabs))
@@ -53,9 +52,6 @@ output$ui_cross_tabs <- renderUI({
 	    uiOutput("ui_ct_var2"),
       checkboxGroupInput("ct_check", NULL, ct_check,
         selected = state_init("ct_check"), inline = FALSE) #,
-      # numericInput("ct_nrsim", "# replicates:",
-      #              state_init("ct_nrsim", 0),
-      #              min = 0, step = 100)
 		),
   	help_and_report(modal_title = "Cross-tabs",
   	                fun_name = "cross_tabs",
@@ -75,24 +71,23 @@ ct_plot_height <- function()
 
 ## output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
+	register_print_output("summary_cross_tabs", ".summary_cross_tabs")
+	register_plot_output("plot_cross_tabs", ".plot_cross_tabs",
+                       height_fun = "ct_plot_height",
+                       width_fun = "ct_plot_width")
 
-		register_print_output("summary_cross_tabs", ".summary_cross_tabs")
-		register_plot_output("plot_cross_tabs", ".plot_cross_tabs",
-                         height_fun = "ct_plot_height",
-                         width_fun = "ct_plot_width")
+	## two separate tabs
+	ct_output_panels <- tabsetPanel(
+    id = "tabs_cross_tabs",
+    tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
+    tabPanel("Plot", plot_downloader("cross_tabs", height = ct_plot_height()),
+             plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
+  )
 
-		## two separate tabs
-		ct_output_panels <- tabsetPanel(
-	    id = "tabs_cross_tabs",
-	    tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
-	    tabPanel("Plot", plot_downloader("cross_tabs", height = ct_plot_height()),
-	             plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
-	  )
-
-		stat_tab_panel(menu = "Base",
-		              tool = "Cross-tabs",
-		              tool_ui = "ui_cross_tabs",
-		             	output_panels = ct_output_panels)
+	stat_tab_panel(menu = "Base",
+	              tool = "Cross-tabs",
+	              tool_ui = "ui_cross_tabs",
+	             	output_panels = ct_output_panels)
 
 })
 
@@ -118,21 +113,19 @@ ct_available <- reactive({
 })
 
 observeEvent(input$cross_tabs_report, {
-  isolate({
-  	outputs <- inp_out <- character(0)
-  	figs <- FALSE
-  	if (length(input$ct_check) > 0) {
-			outputs <- c("summary","plot")
-  		inp_out <- list(check = input$ct_check) %>% list(.,.)
-  		figs <- TRUE
-  	}
+	outputs <- inp_out <- character(0)
+	figs <- FALSE
+	if (length(input$ct_check) > 0) {
+		outputs <- c("summary","plot")
+		inp_out <- list(check = input$ct_check) %>% list(.,.)
+		figs <- TRUE
+	}
 
-		update_report(inp_main = clean_args(ct_inputs(), ct_args),
-		              inp_out = inp_out,
-		             	fun_name = "cross_tabs",
-		             	outputs = outputs,
-		             	figs = figs,
-		             	fig.width = round(7 * ct_plot_width()/650,2),
-		             	fig.height = round(7 * ct_plot_height()/650,2))
-  })
+	update_report(inp_main = clean_args(ct_inputs(), ct_args),
+	              inp_out = inp_out,
+	             	fun_name = "cross_tabs",
+	             	outputs = outputs,
+	             	figs = figs,
+	             	fig.width = round(7 * ct_plot_width()/650,2),
+	             	fig.height = round(7 * ct_plot_height()/650,2))
 })

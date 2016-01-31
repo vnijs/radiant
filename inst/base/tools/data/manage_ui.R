@@ -118,12 +118,10 @@ output$ui_Manage <- renderUI({
 
 ## updating the dataset description
 observeEvent(input$updateDescr, {
-  isolate({
-    r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
-    attr(r_data[[input$dataset]],"description") <- input$man_data_descr
-    updateCheckboxInput(session = session, "man_add_descr",
-                        "Add/edit data description", FALSE)
-  })
+  r_data[[paste0(input$dataset,"_descr")]] <- input$man_data_descr
+  attr(r_data[[input$dataset]],"description") <- input$man_data_descr
+  updateCheckboxInput(session = session, "man_add_descr",
+                      "Add/edit data description", FALSE)
 })
 
 output$dataDescriptionHTML <- renderUI({
@@ -151,32 +149,28 @@ output$uiRemoveDataset <- renderUI({
 
 observeEvent(input$removeDataButton, {
   # removing datasets
-  isolate({
-    # only remove datasets if 1 or more were selected - without this line
-    # all files would be removed when the removeDataButton is pressed
-    if (is.null(input$removeDataset)) return()
-    datasets <- r_data[['datasetlist']]
-    if (length(datasets) > 1) {  # have to leave at least one dataset
-      removeDataset <- input$removeDataset
-      if (length(datasets) == length(removeDataset))
-        removeDataset <- removeDataset[-1]
+  # only remove datasets if 1 or more were selected - without this line
+  # all files would be removed when the removeDataButton is pressed
+  if (is.null(input$removeDataset)) return()
+  datasets <- r_data[['datasetlist']]
+  if (length(datasets) > 1) {  # have to leave at least one dataset
+    removeDataset <- input$removeDataset
+    if (length(datasets) == length(removeDataset))
+      removeDataset <- removeDataset[-1]
 
-      # Must use single string to index into reactivevalues so loop is necessary
-      for (rem in removeDataset) {
-        r_data[[rem]] <- NULL
-        r_data[[paste0(rem,"_descr")]] <- NULL
-      }
-      r_data[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
+    # Must use single string to index into reactivevalues so loop is necessary
+    for (rem in removeDataset) {
+      r_data[[rem]] <- NULL
+      r_data[[paste0(rem,"_descr")]] <- NULL
     }
-  })
+    r_data[['datasetlist']] <- datasets[-which(datasets %in% removeDataset)]
+  }
 })
 
 # 'saving' data to clipboard
 observeEvent(input$saveClipData, {
-  isolate({
-    saveClipboardData()
-    updateRadioButtons(session = session, inputId = "saveAs", selected = "rda")
-  })
+  saveClipboardData()
+  updateRadioButtons(session = session, inputId = "saveAs", selected = "rda")
 })
 
 output$downloadData <- downloadHandler(
@@ -188,7 +182,7 @@ output$downloadData <- downloadHandler(
 
     if (ext == 'rda') {
       if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-        # save data description
+        ## save data description
         dat <- .getdata()
         attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
         assign(robj, dat)
@@ -199,7 +193,7 @@ output$downloadData <- downloadHandler(
       }
     } else if (ext == 'rds') {
       if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-        # save data description
+        ## save data description
         dat <- .getdata()
         attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
         saveRDS(dat, file = file)
@@ -214,124 +208,111 @@ output$downloadData <- downloadHandler(
   }
 )
 
-# loading data
 observeEvent(input$uploadfile, {
-  # loading files from disk
-  isolate({
-    inFile <- input$uploadfile
-    if (is.null(inFile)) return()
-      # iterating through the files to upload
-      for (i in 1:(dim(inFile)[1]))
-        loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
-                     header = input$man_header,
-                     man_str_as_factor = input$man_str_as_factor,
-                     sep = input$man_sep, dec = input$man_dec)
+  ## loading files from disk
+  inFile <- input$uploadfile
+  if (is.null(inFile)) return()
+    # iterating through the files to upload
+    for (i in 1:(dim(inFile)[1]))
+      loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
+                   header = input$man_header,
+                   man_str_as_factor = input$man_str_as_factor,
+                   sep = input$man_sep, dec = input$man_dec)
 
-      updateSelectInput(session, "dataset", label = "Datasets:",
-                        choices = r_data$datasetlist,
-                        selected = r_data$datasetlist[1])
-  })
+    updateSelectInput(session, "dataset", label = "Datasets:",
+                      choices = r_data$datasetlist,
+                      selected = r_data$datasetlist[1])
 })
 
 observeEvent(input$url_rda_load, {
   ## loading rda file from url
   ## https://vnijs.github.io/radiant/examples/houseprices.rda
-  isolate({
-    if (input$url_rda == "") return()
-    objname <- "rda_url"
-    con <- curl::curl(input$url_rda)
-    try(open(con), silent = TRUE)
-    if (is(con, 'try-error')) {
-      upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
-    } else {
-      robjname <- load(con)
-      if (length(robjname) > 1) {
-        if (sum(robjname %in% c("r_state", "r_data")) == 2) {
-          upload_error_handler(objname,"### To restore app state from a state-file please choose the 'state' option from the dropdown.")
-        } else {
-          upload_error_handler(objname,"### More than one R object is contained in the specified data file.")
-        }
+  if (input$url_rda == "") return()
+  objname <- "rda_url"
+  con <- curl::curl(input$url_rda)
+  try(open(con), silent = TRUE)
+  if (is(con, 'try-error')) {
+    upload_error_handler(objname, "### There was an error loading the r-data file from the provided url.")
+  } else {
+    robjname <- load(con)
+    if (length(robjname) > 1) {
+      if (sum(robjname %in% c("r_state", "r_data")) == 2) {
+        upload_error_handler(objname,"### To restore app state from a state-file please choose the 'state' option from the dropdown.")
       } else {
-        r_data[[objname]] <- as.data.frame(get(robjname))
-        r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
-        r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
-        updateSelectInput(session, "dataset", label = "Datasets:",
-                          choices = r_data$datasetlist,
-                          selected = r_data$datasetlist[1])
+        upload_error_handler(objname,"### More than one R object is contained in the specified data file.")
       }
+    } else {
+      r_data[[objname]] <- as.data.frame(get(robjname))
+      r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+      r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
+      updateSelectInput(session, "dataset", label = "Datasets:",
+                        choices = r_data$datasetlist,
+                        selected = r_data$datasetlist[1])
     }
-    close(con)
-  })
+  }
+  close(con)
 })
 
 observeEvent(input$url_csv_load, {
   ## loading csv file from url
   ## https://vnijs.github.io/radiant/examples/houseprices.csv
-  isolate({
-    objname <- "csv_url"
-    if (input$url_csv == "") return()
-    con <- curl::curl(input$url_csv)
-    try(open(con), silent = TRUE)
-    if (is(con, 'try-error')) {
+  objname <- "csv_url"
+  if (input$url_csv == "") return()
+  con <- curl::curl(input$url_csv)
+  try(open(con), silent = TRUE)
+  if (is(con, 'try-error')) {
+    upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
+  } else {
+
+    dat <- try(read.table(con, header = input$man_header, comment.char = "",
+               quote = "\"", fill = TRUE, stringsAsFactors = input$man_str_as_factor,
+               sep = input$man_sep, dec = input$man_dec), silent = TRUE)
+
+    if (is(dat, 'try-error')) {
       upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
     } else {
-
-      dat <- try(read.table(con, header = input$man_header, comment.char = "",
-                 quote = "\"", fill = TRUE, stringsAsFactors = input$man_str_as_factor,
-                 sep = input$man_sep, dec = input$man_dec), silent = TRUE)
-
-      if (is(dat, 'try-error')) {
-        upload_error_handler(objname, "### There was an error loading the csv file from the provided url.")
-      } else {
-        dat <- {if (input$man_str_as_factor) factorizer(dat) else dat} %>% as.data.frame
-        r_data[[paste0(objname,"_descr")]] <- ""
-      }
-
-      r_data[[objname]] <- dat
-      r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
-
-      updateSelectInput(session, "dataset", label = "Datasets:",
-                        choices = r_data$datasetlist,
-                        selected = r_data$datasetlist[1])
+      dat <- {if (input$man_str_as_factor) factorizer(dat) else dat} %>% as.data.frame
+      r_data[[paste0(objname,"_descr")]] <- ""
     }
-    close(con)
-  })
-})
 
-## loading all examples files (linked to help files)
-observeEvent(input$loadExampleData, {
-  isolate({
-
-    # loading data bundled with Radiant
-    data_path <- file.path(r_path,"base/data/")
-    examples <- list.files(data_path)
-
-    for (ex in examples) loadUserData(ex, file.path(data_path,ex), 'rda')
-
-    # loading data available for Rady students
-    data_path <- "data/"
-    examples <- list.files(data_path)
-
-    for (ex in examples) loadUserData(ex, file.path(data_path,ex), 'rda')
-
-    # sorting files alphabetically
-    r_data[['datasetlist']] <- sort(r_data[['datasetlist']])
+    r_data[[objname]] <- dat
+    r_data[['datasetlist']] <- c(objname, r_data[['datasetlist']]) %>% unique
 
     updateSelectInput(session, "dataset", label = "Datasets:",
                       choices = r_data$datasetlist,
                       selected = r_data$datasetlist[1])
-  })
+  }
+  close(con)
+})
+
+## loading all examples files (linked to help files)
+observeEvent(input$loadExampleData, {
+  # loading data bundled with Radiant
+  data_path <- file.path(r_path,"base/data/")
+  examples <- list.files(data_path)
+
+  for (ex in examples) loadUserData(ex, file.path(data_path,ex), 'rda')
+
+  # loading data available for Rady students
+  data_path <- "data/"
+  examples <- list.files(data_path)
+
+  for (ex in examples) loadUserData(ex, file.path(data_path,ex), 'rda')
+
+  # sorting files alphabetically
+  r_data[['datasetlist']] <- sort(r_data[['datasetlist']])
+
+  updateSelectInput(session, "dataset", label = "Datasets:",
+                    choices = r_data$datasetlist,
+                    selected = r_data$datasetlist[1])
 })
 
 observeEvent(input$loadClipData, {
   ## reading data from clipboard
-  isolate({
-    loadClipboardData()
-    # updateRadioButtons(session = session, inputId = "dataType", selected = "rda")
-    updateSelectInput(session = session, inputId = "dataType", selected = "rda")
-    updateSelectInput(session, "dataset", label = "Datasets:",
-                      choices = r_data$datasetlist, selected = "copy_and_paste")
-  })
+  loadClipboardData()
+  updateSelectInput(session = session, inputId = "dataType", selected = "rda")
+  updateSelectInput(session, "dataset", label = "Datasets:",
+                    choices = r_data$datasetlist, selected = "copy_and_paste")
 })
 
 #######################################
@@ -403,20 +384,18 @@ output$saveState <- downloadHandler(
 #######################################
 observeEvent(input$renameButton, {
   if (is_empty(input$data_rename)) return()
-  isolate({
-    ## use pryr::object_size to see that the size of the list doesn't change
-    ## when you assign a list element another name
-    r_data[[input$data_rename]] <- r_data[[input$dataset]]
-    r_data[[input$dataset]] <- NULL
-    r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
-    r_data[[paste0(input$dataset,"_descr")]] <- NULL
+  ## use pryr::object_size to see that the size of the list doesn't change
+  ## when you assign a list element another name
+  r_data[[input$data_rename]] <- r_data[[input$dataset]]
+  r_data[[input$dataset]] <- NULL
+  r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
+  r_data[[paste0(input$dataset,"_descr")]] <- NULL
 
-    ind <- which(input$dataset == r_data[['datasetlist']])
-    r_data[['datasetlist']][ind] <- input$data_rename
+  ind <- which(input$dataset == r_data[['datasetlist']])
+  r_data[['datasetlist']][ind] <- input$data_rename
 
-    updateSelectInput(session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
-                      selected = input$data_rename)
-  })
+  updateSelectInput(session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
+                    selected = input$data_rename)
 })
 
 output$ui_datasets <- renderUI({

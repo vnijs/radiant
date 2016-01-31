@@ -7,11 +7,11 @@
 \method{predict}{ann}(object, dataset, ...)
 }
 \arguments{
+\item{object}{Return value from \code{\link{ann}}}
+
 \item{dataset}{Dataset to use for prediction}
 
 \item{...}{further arguments passed to or from other methods}
-
-\item{x}{Return value from \code{\link{ann}}}
 }
 \description{
 Predict method for the ann function

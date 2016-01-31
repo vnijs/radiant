@@ -73,26 +73,21 @@ output$ui_Combine <- renderUI({
 
 observeEvent(input$cmb_store, {
   ## combining datasets
-  isolate({
-    dataset <- input$dataset
-    cmb_dataset <- input$cmb_dataset
-    result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
-    if (is(result, 'try-error')) {
-      r_data[[input$cmb_name]] <- attr(result,"condition")$message
-      r_data[["datasetlist"]] %<>% setdiff(input$cmb_name)
-    }
-    updateSelectInput(session = session, inputId = "dataset", selected = dataset)
-    updateSelectInput(session = session, inputId = "cmb_dataset", selected = cmb_dataset)
-  })
+  dataset <- input$dataset
+  cmb_dataset <- input$cmb_dataset
+  result <- try(do.call(combinedata, cmb_inputs()), silent = TRUE)
+  if (is(result, 'try-error')) {
+    r_data[[input$cmb_name]] <- attr(result,"condition")$message
+    r_data[["datasetlist"]] %<>% setdiff(input$cmb_name)
+  }
+  updateSelectInput(session = session, inputId = "dataset", selected = dataset)
+  updateSelectInput(session = session, inputId = "cmb_dataset", selected = cmb_dataset)
 })
 
-observe({
-  if (not_pressed(input$combine_report)) return()
-  isolate({
-    update_report(inp_main = clean_args(cmb_inputs(), cmb_args),
-                  fun_name = "combinedata", outputs = character(0),
-                  pre_cmd = "", figs = FALSE)
-  })
+observeEvent(input$combine_report, {
+  update_report(inp_main = clean_args(cmb_inputs(), cmb_args),
+                fun_name = "combinedata", outputs = character(0),
+                pre_cmd = "", figs = FALSE)
 })
 
 output$cmb_data1 <- renderText({

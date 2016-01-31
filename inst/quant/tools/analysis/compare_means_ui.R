@@ -194,31 +194,17 @@ cm_available <- reactive({
 })
 
 observeEvent(input$compare_means_report, {
-  isolate({
-
-    figs <- FALSE
-    outputs <- c("summary")
-    inp_out <- list(list(show = input$cm_show), "")
-    if (length(input$cm_plots) > 0) {
-      outputs <- c("summary","plot")
-      inp_out[[2]] <- list(plots = input$cm_plots)
-      figs <- TRUE
-    }
-
-    # if (length(input$cm_plots) == 0) {
-    #   figs <- FALSE
-    #   outputs <- c("summary")
-    #   inp_out <- list("","")
-    # } else {
-    #   outputs <- c("summary","plot")
-    #   inp_out <- list(plots = input$cm_plots) %>% list("",.)
-    #   figs <- TRUE
-    # }
-
-    update_report(inp_main = clean_args(cm_inputs(), cm_args),
-                  fun_name = "compare_means",
-                  inp_out = inp_out, outputs = outputs, figs = figs,
-                  fig.width = round(7 * cm_plot_width()/650,2),
-                  fig.height = round(7 * cm_plot_height()/650,2))
-  })
+  figs <- FALSE
+  outputs <- c("summary")
+  inp_out <- list(list(show = input$cm_show), "")
+  if (length(input$cm_plots) > 0) {
+    outputs <- c("summary","plot")
+    inp_out[[2]] <- list(plots = input$cm_plots)
+    figs <- TRUE
+  }
+  update_report(inp_main = clean_args(cm_inputs(), cm_args),
+                fun_name = "compare_means",
+                inp_out = inp_out, outputs = outputs, figs = figs,
+                fig.width = round(7 * cm_plot_width()/650,2),
+                fig.height = round(7 * cm_plot_height()/650,2))
 })
