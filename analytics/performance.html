@@ -256,17 +256,21 @@ img {
 <h4>Predictor</h4>
 <p>Select one or more variables that can be used to <em>predict</em> the chosen level in the response variable. This could be a variable, an RFM index, or predicted values from a model (e.g., a logistic regression estimated using <em>Regression &gt; GLM</em>).</p>
 </div>
+<div id="quantiles" class="section level4">
+<h4># quantiles</h4>
+<p>The number of buckets generate.</p>
+</div>
+<div id="quantiles-1" class="section level4">
+<h4># quantiles</h4>
+<p>The number of buckets generate by <code>method</code>.</p>
+</div>
+<div id="show-results-for" class="section level4">
+<h4>Show results for</h4>
+<p>If a <code>filter</code> is active (e.g., set in the <em>Data &gt; View</em> tab) generate results for <code>All</code> data, <code>Training</code> data, <code>Validation</code> data, or <code>Both</code> training and validation data. If no filter is active calculations are applied to all data.</p>
+</div>
 <div id="plots" class="section level4">
 <h4>Plots</h4>
 <p>Generate a Lift chart, a Gains chart, or both.</p>
-</div>
-<div id="method" class="section level4">
-<h4>Method</h4>
-<p><code>xtile</code> will generate buckets of similar size, depending on the variation in the predictor variable(s). <code>ntile</code> will attempt to create buckets that are exactly equal. However, this does mean that customers with the same score on the <code>predictor</code> could be placed in different buckets.</p>
-</div>
-<div id="quantiles" class="section level4">
-<h4># quantiles</h4>
-<p>The number of buckets generate by <code>method</code>.</p>
 </div>
 
 
