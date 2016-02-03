@@ -35,6 +35,8 @@ system("git push")
 
 # devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree", "trestletech/shinyAce"))
 devtools::install_github("vnijs/radiant")
+# devtools::install_github("vnijs/MathJaxR")
+# install.packages("NeuralNetTools")
 # devtools::install_github("vnijs/radiant")
 # devtools::install_github("trestletech/shinyAce")
 # devtools::install_github("vnijs/MathJaxR")

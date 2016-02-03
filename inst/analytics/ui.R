@@ -12,7 +12,6 @@ help_menu <-
     js_head
   )
 
-# source(file.path(r_path, "quant/quant_ui.R"), encoding = r_encoding, local = TRUE)
 analytics_ui <- tagList(
   navbarMenu("Sample",
     tabPanel("Sampling", uiOutput("sampling")),

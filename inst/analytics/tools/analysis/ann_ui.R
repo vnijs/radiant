@@ -52,7 +52,7 @@ output$ui_ann <- renderUI({
         tags$td(numericInput("ann_size", label = "Size:", min = 1, max = 20,
           value = state_init("ann_size",1), width = "115px")),
         tags$td(numericInput("ann_decay", label = "Decay:", min = 0, max = 1,
-          value = state_init("ann_decay",.05), width = "115px"))
+          value = state_init("ann_decay",.5), width = "115px"))
       )
     ),
     wellPanel(
@@ -146,7 +146,7 @@ ann_available <- reactive({
 .plot_ann_net <- reactive({
   if (ann_available() != "available") return(invisible())
   .ann() %>%
-    { if (is.character(.)) .
+    { if (is.character(.)) invisible()
       else capture_plot( do.call(NeuralNetTools::plotnet, list(mod_in = .$model)) ) }
 })
 

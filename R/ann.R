@@ -7,7 +7,7 @@
 #' @param evar Explanatory variables in the model
 #' @param lev The level in the response variable defined as _success_
 #' @param size Number of units (nodes) in the hidden layer
-#' @param decay Paramter decay
+#' @param decay Paramater decay
 #' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -28,7 +28,7 @@
 ann <- function(dataset, rvar, evar,
                 lev = "",
                 size = 1,
-                decay = .05,
+                decay = .5,
                 check = "",
                 dec = 3,
                 data_filter = "") {
@@ -158,8 +158,8 @@ plot.ann <- function(x, shiny = FALSE, ...) {
   object <- x; rm(x)
   if (is.character(object)) return(object)
   plot_list <- list()
-  # plot_list[[1]] <- NeuralNetTools::garson(object$model) + coord_flip()
   plot_list[[1]] <- NeuralNetTools::olden(object$model) + coord_flip()
+  # plot_list[[2]] <- NeuralNetTools::garson(object$model) + coord_flip()
   nrCol <- 1
 
   if (length(plot_list) > 0) {

@@ -53,7 +53,7 @@ output$ui_perf_train <- renderUI({
     r_state$perf_train <<- perf_train
   }
 
-  radioButtons("perf_train", label = "Show plots for:", perf_train,
+  radioButtons("perf_train", label = "Show results for:", perf_train,
     selected = state_init("perf_train", "All"),
     inline = TRUE)
 })
@@ -70,11 +70,11 @@ output$ui_performance <- renderUI({
       # radioButtons("perf_method", label = "Method:", perf_method,
         #   selected = state_init("perf_method", "xtile"),
         #   inline = TRUE),
+      uiOutput("ui_perf_train"),
       conditionalPanel("input.tabs_performance == 'Plot'",
         checkboxGroupInput("perf_plots", "Plots:", perf_plots,
           selected = state_init("perf_plots", ""),
-          inline = TRUE),
-        uiOutput("ui_perf_train")
+          inline = TRUE)
       )
   	),
   	help_and_report(modal_title = "Model performance",

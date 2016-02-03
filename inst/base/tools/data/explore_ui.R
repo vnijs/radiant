@@ -98,6 +98,7 @@ output$ui_expl_viz <- renderUI({
 output$ui_Explore <- renderUI({
   tagList(
     wellPanel(
+      checkboxInput("expl_pause", "Pause explore", state_init("expl_pause", FALSE)),
       uiOutput("ui_expl_vars"),
       uiOutput("ui_expl_byvar"),
       uiOutput("ui_expl_fun"),
@@ -168,6 +169,8 @@ output$explorer <- DT::renderDataTable({
   })
 
   top <- ifelse (input$expl_top == "", "fun", input$expl_top)
+
+  req(input$expl_pause == FALSE)
 
   withProgress(message = 'Generating explore table', value = 0,
     make_expl(expl, top = top, dec = input$expl_dec, search = search,

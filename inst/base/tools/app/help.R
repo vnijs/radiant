@@ -15,6 +15,10 @@ output$help_text <- renderUI({
   )
 })
 
+# help_videos <- file.path(r_path,"base/tools/app/tutorials.md") %>% inclMD %>% HTML
+# help_about <- file.path(r_path,"base/tools/app/about.md") %>% inclMD %>% HTML
+# help_text <- wellPanel(HTML("Help is available on each page by clicking the <i title='Help' class='fa fa-question'></i> icon on the bottom left of your screen."))
+
 #######################################
 ## Main function of help menu
 #######################################
@@ -69,20 +73,20 @@ help_switch <- function(help_all, help_str, help_on = TRUE) {
     selected = init, inline = TRUE)
 }
 
-observe( help_switch(input$help_data_all, "help_data") )
-observe( help_switch(input$help_data_none, "help_data", help_on = FALSE) )
+observeEvent(input$help_data_all, {help_switch(input$help_data_all, "help_data")})
+observeEvent(input$help_data_none, {help_switch(input$help_data_none, "help_data", help_on = FALSE)})
 
-observe( help_switch(input$help_sample_all, "help_sample") )
-observe( help_switch(input$help_sample_none, "help_sample", help_on = FALSE) )
+observeEvent(input$help_sample_all, {help_switch(input$help_sample_all, "help_sample")})
+observeEvent(input$help_sample_none,{help_switch(input$help_sample_none, "help_sample", help_on = FALSE)})
 
-observe( help_switch(input$help_base_all, "help_base_menu") )
-observe( help_switch(input$help_base_none, "help_base_menu", help_on = FALSE) )
+observeEvent(input$help_base_all, {help_switch(input$help_base_all, "help_base_menu")})
+observeEvent(input$help_base_none, {help_switch(input$help_base_none, "help_base_menu", help_on = FALSE)})
 
-observe( help_switch(input$help_regression_all, "help_regression") )
-observe( help_switch(input$help_regression_none, "help_regression", help_on = FALSE) )
+observeEvent(input$help_regression_all, {help_switch(input$help_regression_all, "help_regression")})
+observeEvent(input$help_regression_none,{help_switch(input$help_regression_none, "help_regression", help_on = FALSE)})
 
-observe( help_switch(input$help_decide_all, "help_decide") )
-observe( help_switch(input$help_decide_none, "help_decide", help_on = FALSE) )
+observeEvent(input$help_decide_all, {help_switch(input$help_decide_all, "help_decide")})
+observeEvent(input$help_decide_none,{help_switch(input$help_decide_none, "help_decide", help_on = FALSE)})
 
 output$help_base <- renderUI({
   sidebarLayout(
@@ -140,7 +144,6 @@ if ("radiant" %in% (installed.packages()[,'Package'])) {
 
 help_quant_main <- tagList(
   HTML(paste0("<h3>Radiant (",r_version, "): Select help files to show and search</h3>")),
-  # HTML("<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"),
   htmlOutput("help_data"),
   htmlOutput("help_sample"),
   htmlOutput("help_base_menu"),
@@ -163,23 +166,23 @@ output$help_quant <- renderUI({
 
 help_maps <- c("(Dis)similarity" = "mds.md", "Attributes" = "pmap.md")
 output$help_maps <- reactive(append_help("help_maps", file.path(r_path,"marketing/tools/help/")))
-observe( help_switch(input$help_maps_all, "help_maps") )
-observe( help_switch(input$help_maps_none, "help_maps", help_on = FALSE) )
+observeEvent(input$help_maps_all, {help_switch(input$help_maps_all, "help_maps")})
+observeEvent(input$help_maps_none, {help_switch(input$help_maps_none, "help_maps", help_on = FALSE)})
 
 help_factor <- c("Pre-factor" = "pre_factor.md", "Factor" = "full_factor.md")
 output$help_factor <- reactive(append_help("help_factor", file.path(r_path,"marketing/tools/help/")))
-observe( help_switch(input$help_factor_all, "help_factor") )
-observe( help_switch(input$help_factor_none, "help_factor", help_on = FALSE) )
+observeEvent(input$help_factor_all, {help_switch(input$help_factor_all, "help_factor")})
+observeEvent(input$help_factor_all, {help_switch(input$help_factor_none, "help_factor", help_on = FALSE)})
 
 help_cluster <- c("Hierarchical" = "hier_clus.md", "Kmeans" = "kmeans_clus.md")
 output$help_cluster <- reactive(append_help("help_cluster", file.path(r_path,"marketing/tools/help/")))
-observe( help_switch(input$help_cluster_all, "help_cluster") )
-observe( help_switch(input$help_cluster_none, "help_cluster", help_on = FALSE) )
+observeEvent(input$help_cluster_all, {help_switch(input$help_cluster_all, "help_cluster")})
+observeEvent(input$help_cluster_none, {help_switch(input$help_cluster_none, "help_cluster", help_on = FALSE)})
 
 help_conjoint <- c("Conjoint" = "conjoint.md", "Conjoint profiles" = "conjoint_profiles.md")
 output$help_conjoint <- reactive(append_help("help_conjoint", file.path(r_path,"marketing/tools/help/")))
-observe( help_switch(input$help_conjoint_all, "help_conjoint") )
-observe( help_switch(input$help_conjoint_none, "help_conjoint", help_on = FALSE) )
+observeEvent(input$help_conjoint_all, {help_switch(input$help_conjoint_all, "help_conjoint")})
+observeEvent(input$help_conjoint_none, {help_switch(input$help_conjoint_none, "help_conjoint", help_on = FALSE)})
 
 help_marketing_ui <- tagList(
   wellPanel(
@@ -227,8 +230,8 @@ output$help_marketing <- renderUI({
 
 help_model <- c("Neural Network (ANN)" = "ann.md", "Model performance" = "performance.md")
 output$help_model <- reactive(append_help("help_model", file.path(r_path,"analytics/tools/help/")))
-observe( help_switch(input$help_model_all, "help_model") )
-observe( help_switch(input$help_model_none, "help_model", help_on = FALSE) )
+observeEvent(input$help_model_all, {help_switch(input$help_model_all, "help_model")})
+observeEvent(input$help_model_none, {help_switch(input$help_model_none, "help_model", help_on = FALSE)})
 
 help_analytics_ui <- tagList(
   wellPanel(

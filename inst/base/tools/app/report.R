@@ -114,17 +114,20 @@ knitIt2 <- function(text) {
 }
 
 output$rmd_knitted <- renderUI({
-  if (valsRmd$knit == 1) return()
+  # if (valsRmd$knit == 1) return()
+  req(valsRmd$knit != 1)
+  # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
 
   isolate({
     if (!r_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
     }
     if (input$rmd_report != "") {
-      withProgress(message = 'Knitting report', value = 0, {
-        ifelse (is.null(input$rmd_selection) || input$rmd_selection == "",
-               return(knitIt2(input$rmd_report)),
-               return(knitIt2(input$rmd_selection)))
+      withProgress(message = "Knitting report", value = 0, {
+        if (is_empty(input$rmd_selection))
+          knitIt2(input$rmd_report)
+        else
+          knitIt2(input$rmd_selection)
       })
     }
   })
@@ -135,9 +138,11 @@ output$saveHTML <- downloadHandler(
   content = function(file) {
     if (r_local) {
       isolate({
-        ifelse (is.null(input$rmd_selection) || input$rmd_selection == "",
-               text <- input$rmd_report, text <- input$rmd_selection)
-        knitIt(text) %>% cat(.,file=file,sep="\n")
+        withProgress(message = "Knitting report", value = 0, {
+          ifelse (is_empty(input$rmd_selection), input$rmd_report,
+                  input$rmd_selection) %>%
+            knitIt %>% cat(file=file,sep="\n")
+        })
       })
     }
   }
@@ -166,7 +171,7 @@ output$saveRmd <- downloadHandler(
   contentType = "application/zip"
 )
 
-observe({
+observeEvent(input$load_rmd, {
   ## loading rmd report from disk
   inFile <- input$load_rmd
   if (!is.null(inFile) && !is.na(inFile)) {

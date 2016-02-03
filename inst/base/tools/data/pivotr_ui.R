@@ -11,6 +11,7 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
   if (not_available(vars)) return("")
+
   isolate({
 
     # print("-- in fun and input --")
@@ -98,6 +99,7 @@ output$ui_pvt_format  <- renderUI({
 output$ui_Pivotr <- renderUI({
   tagList(
     wellPanel(
+      checkboxInput("pvt_pause", "Pause pivot", state_init("pvt_pause", FALSE)),
       uiOutput("ui_pvt_cvars"),
       uiOutput("ui_pvt_nvar"),
       conditionalPanel("input.pvt_nvar != 'None'", uiOutput("ui_pvt_fun")),
@@ -191,6 +193,8 @@ pvt_plot_inputs <- reactive({
   }
 
   if (any(input$pvt_nvar %in% input$pvt_cvars)) return()
+
+  req(input$pvt_pause == FALSE)
 
   withProgress(message = "Calculating", value = 0, {
     sshhr( do.call(pivotr, pvt_inputs()) )

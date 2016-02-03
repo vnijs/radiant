@@ -433,40 +433,43 @@ cf <- function(...) {
 
 ## use the value in the input list if available and update r_state
 use_input <- function(var, vars, init = character(0), fun = "state_single") {
-  ivar <- input[[var]]
+  isolate({
+    ivar <- input[[var]]
+    if (var %in% names(input) && is.null(ivar)) {
+      r_state[[var]] <<- NULL
+      ivar
+    } else if (available(ivar) && all(ivar %in% vars)) {
+      if (length(ivar) > 0) r_state[[var]] <<- ivar
+      ivar
+    } else if (available(ivar) && any(ivar %in% vars)) {
+       ivar[ivar %in% vars]
+    } else {
 
-  if (var %in% names(input) && is.null(ivar)) {
-    r_state[[var]] <<- NULL
-    ivar
-  } else if (available(ivar) && all(ivar %in% vars)) {
-    if (length(ivar) > 0) r_state[[var]] <<- ivar
-    ivar
-  } else if (available(ivar) && any(ivar %in% vars)) {
-     ivar[ivar %in% vars]
-  } else {
+      if (length(ivar) > 0 && all(ivar %in% c("None","none",".",""))) r_state[[var]] <<- ivar
 
-    if (length(ivar) > 0 && all(ivar %in% c("None","none",".",""))) r_state[[var]] <<- ivar
+      if (fun == "state_init")
+        sel <- get(fun)(var, init)
+      else
+        sel <- get(fun)(var, vars, init)
 
-    if (fun == "state_init")
-      sel <- get(fun)(var, init)
-    else
-      sel <- get(fun)(var, vars, init)
-
-    sel
-  }
+      sel
+    }
+  })
 }
 
 use_input_nonvar <- function(var, choices, init = "", fun = "state_init") {
-  ivar <- input[[var]]
-  if (var %in% names(input) && is.null(ivar)) {
-    r_state[[var]] <<- NULL
-    ivar
-  } else if (!is_empty(ivar) && all(ivar %in% choices)) {
-    if (length(ivar) > 0) r_state[[var]] <<- ivar
-    ivar
-  } else {
-    if (length(ivar) > 0 && all(ivar %in% c("None","none",".","")))
-      r_state[[var]] <<- ivar
-    get(fun)(var, init)
-  }
+  isolate({
+    ivar <- input[[var]]
+    if (var %in% names(input) && is.null(ivar)) {
+      r_state[[var]] <<- NULL
+      ivar
+    } else if (!is_empty(ivar) && all(ivar %in% choices)) {
+      if (length(ivar) > 0) r_state[[var]] <<- ivar
+      ivar
+    } else {
+      if (length(ivar) > 0 && all(ivar %in% c("None","none",".","")))
+        r_state[[var]] <<- ivar
+      get(fun)(var, init)
+    }
+  })
 }

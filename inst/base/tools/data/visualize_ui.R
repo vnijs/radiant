@@ -15,6 +15,7 @@ viz_inputs <- reactive({
   viz_args$shiny <- input$shiny
   for (i in r_drop(names(viz_args)))
     viz_args[[i]] <- input[[paste0("viz_",i)]]
+  # print(paste0(names(viz_args), viz_args, collapse = ", "))
   viz_args
 })
 
@@ -29,9 +30,11 @@ output$ui_viz_type <- renderUI({
 
 ## Y - variable
 output$ui_viz_yvar <- renderUI({
-  if (is_empty(input$viz_type)) return()
+  # if (is_empty(input$viz_type)) return()
+  req(input$viz_type)
   vars <- varying_vars()
-  if (not_available(vars)) return()
+  # if (not_available(vars)) return()
+  req(available(vars))
   vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type %in% c("line","bar","scatter","box")) {
     vars <- vars["character" != .getclass()[vars]]
@@ -41,47 +44,52 @@ output$ui_viz_yvar <- renderUI({
     vars <- vars["factor" != .getclass()[vars]]
   }
 
-  isolate({
-    ## keep the same y-variable 'active' if possible
-    sel <- use_input("viz_yvar", vars, fun = "state_multiple")
-  })
-
   selectInput(inputId = "viz_yvar", label = "Y-variable:",
     choices = vars,
-    selected = sel,
+    selected = use_input("viz_yvar", vars, fun = "state_multiple"),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
 ## X - variable
 output$ui_viz_xvar <- renderUI({
-  if (is_empty(input$viz_type)) return()
+  # if (is_empty(input$viz_type)) return()
+  req(input$viz_type)
   vars <- varying_vars()
   # vars <- varnames()
-  if (not_available(vars)) return()
+  # if (not_available(vars)) return()
+  req(available(vars))
   if (input$viz_type == "hist") vars <- vars["date" != .getclass()[vars]]
   if (input$viz_type == "density") vars <- vars["factor" != .getclass()[vars]]
-  # if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars()
   if (input$viz_type %in% c("box", "bar")) vars <- groupable_vars_nonum()
 
-
-  ## keep the same x-variable 'active' if possible
-  # isolate({
-  #   sel <- isolate(use_input("viz_xvar", vars, fun = "state_multiple")
-  # })
-
   selectInput(inputId = "viz_xvar", label = "X-variable:", choices = vars,
-    selected = isolate(use_input("viz_xvar", vars, fun = "state_multiple")),
+    selected = use_input("viz_xvar", vars, fun = "state_multiple"),
     multiple = TRUE, size = min(3, length(vars)), selectize = FALSE)
 })
 
 output$ui_viz_comby <- renderUI({
-  # if (!is_empty(input$viz_yvar)) return()
-  if (length(input$viz_yvar) < 2) return()
+  req(input$viz_yvar)
+  if (length(input$viz_yvar) < 2) {
+    isolate({
+      r_state[["viz_comby"]] <<- FALSE
+      updateCheckboxInput(session, "viz_comby", value = FALSE)
+    })
+    # req(input$viz_yvar > 1)
+    return()
+  }
   checkboxInput("viz_comby", "Combine Y-variables in one plot", state_init("viz_comby", FALSE))
 })
 
 output$ui_viz_combx <- renderUI({
-  if (length(input$viz_xvar) < 2) return()
+  req(input$viz_xvar)
+  if (length(input$viz_xvar) < 2) {
+    isolate({
+      r_state[["viz_combx"]] <<- FALSE
+      updateCheckboxInput(session, "viz_combx", value = FALSE)
+    })
+    # req(input$viz_xvar > 1)
+    return()
+  }
   checkboxInput("viz_combx", "Combine X-variables in one plot", state_init("viz_combx", FALSE))
 })
 
@@ -91,16 +99,6 @@ observeEvent(input$viz_type, {
   } else {
     updateCheckboxInput(session, "viz_combx", value = FALSE)
   }
-})
-
-observeEvent(input$viz_yvar, {
-    if (length(input$viz_yvar) < 2)
-      updateCheckboxInput(session, "viz_comby", value = FALSE)
-})
-
-observeEvent(input$viz_xvar, {
-    if (length(input$viz_xvar) < 2)
-      updateCheckboxInput(session, "viz_combx", value = FALSE)
 })
 
 observeEvent(input$viz_combx, {
@@ -298,9 +296,11 @@ output$visualize <- renderPlot({
 }, width = viz_plot_width, height = viz_plot_height)
 
 .visualize <- reactive({
-  if (is_empty(input$viz_type)) return()
+  # if (is_empty(input$viz_type)) return()
+  req(input$viz_type)
   ## need dependency on ..
-  input$viz_plot_height; input$viz_plot_width
+  # input$viz_plot_height; input$viz_plot_width
+  req(input$viz_plot_height && input$viz_plot_width)
 
   if (not_available(input$viz_xvar)) return()
   if (input$viz_type %in% c("scatter","line", "box", "bar") && not_available(input$viz_yvar))
@@ -323,6 +323,11 @@ output$visualize <- renderPlot({
       if (!is_empty(input$viz_fill,"none")) return()
     }
   }
+
+  ## stops flickering
+  req(!is.null(input$viz_color) || !is.null(input$viz_fill))
+  # req(!is.null(input$viz_comby) || !is.null(input$viz_combx))
+  # req(!is.null())
 
   req(input$viz_pause == FALSE)
 

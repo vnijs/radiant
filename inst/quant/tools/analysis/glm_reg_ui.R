@@ -20,6 +20,8 @@ glm_inputs <- reactive({
   glm_args$dataset <- input$dataset
   for (i in r_drop(names(glm_args)))
     glm_args[[i]] <- input[[paste0("glm_",i)]]
+
+  # cat(paste0(names(glm_args), " ", glm_args, collapse = ", "), file = stderr(), "\n")
   glm_args
 })
 
@@ -31,6 +33,8 @@ glm_sum_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_sum_args))
     glm_sum_args[[i]] <- input[[paste0("glm_",i)]]
+
+  # cat(paste0(names(glm_sum_args), " ", glm_sum_args, collapse = ", "), file = stderr(), "\n")
   glm_sum_args
 })
 
@@ -42,6 +46,8 @@ glm_plot_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_plot_args))
     glm_plot_args[[i]] <- input[[paste0("glm_",i)]]
+
+  # cat(paste0(names(glm_plot_args), " ", glm_plot_args, collapse = ", "), file = stderr(), "\n")
   glm_plot_args
 })
 
@@ -77,14 +83,16 @@ glm_pred_plot_inputs <- reactive({
 })
 
 output$ui_glm_rvar <- renderUI({
+  # req(input$dataset)
  	vars <- two_level_vars()
   selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
-  	selected = isolate(use_input("glm_rvar",vars)), multiple = FALSE)
+  	selected = use_input("glm_rvar",vars), multiple = FALSE)
     # selected = state_single("glm_rvar",vars), multiple = FALSE)
 })
 
 output$ui_glm_lev <- renderUI({
-  if (is_empty(input$glm_rvar)) return()
+  # if (is_empty(input$glm_rvar)) return()
+  req(input$glm_rvar)
   if (available(input$glm_rvar))
     levs <- .getdata()[[input$glm_rvar]] %>% as.factor %>% levels
   else
@@ -92,12 +100,13 @@ output$ui_glm_lev <- renderUI({
 
   selectInput(inputId = "glm_lev", label = "Choose level:",
               choices = levs,
+              selected = use_input_nonvar("glm_lev", levs))
               # selected = state_single("glm_lev", levs, sel))
-              selected = isolate(use_input_nonvar("glm_lev", levs)))
               # selected = sel)
 })
 
 output$ui_glm_evar <- renderUI({
+  req(input$glm_rvar)
   if (not_available(input$glm_rvar)) return()
 	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
@@ -123,7 +132,8 @@ output$ui_glm_evar <- renderUI({
 
   selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
   	# selected = state_multiple("glm_evar", vars, init),
-    selected = isolate(use_input("glm_evar", vars, fun = "state_multiple")),
+    # selected = isolate(use_input("glm_evar", vars, fun = "state_multiple")),
+    selected = use_input("glm_evar", vars, fun = "state_multiple"),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -366,11 +376,20 @@ glm_available <- reactive({
   if (not_available(input$glm_evar))
     return("Please select one or more explanatory variables.\n\n" %>% suggest_data("titanic"))
 
+  req(input$glm_pause == FALSE)
+  req(input$glm_rvar)
+  req(input$glm_evar)
+
   "available"
 })
 
 .glm_reg <- reactive({
+  # req(input$dataset)
   req(input$glm_pause == FALSE)
+  req(input$glm_rvar)
+  req(input$glm_evar)
+  req(input$glm_lev)
+
   withProgress(message = 'Estimating model', value = 0,
     do.call(glm_reg, glm_inputs())
   )
@@ -378,7 +397,24 @@ glm_available <- reactive({
 
 .summary_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
+  # req(input$glm_sum_check)
   do.call(summary, c(list(object = .glm_reg()), glm_sum_inputs()))
+})
+
+.plot_glm_reg <- reactive({
+  if (glm_available() != "available") return(glm_available())
+  if (is_empty(input$glm_plots))
+    return("Please select a regression plot from the drop-down menu")
+  # req(input$glm_plots)
+
+  # cat(paste0(names(glm_plot_inputs()), " ", glm_plot_inputs(), collapse = ", "), file = stderr(), "\n")
+
+  pinp <- glm_plot_inputs()
+  pinp$shiny <- TRUE
+  do.call(plot, c(list(x = .glm_reg()), pinp))
+
+  # glm_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
+    # {do.call(plot, c(list(x = .glm_reg()), .))}
 })
 
 .predict_glm_reg <- reactive({
@@ -394,15 +430,6 @@ glm_available <- reactive({
   if (not_available(input$glm_xvar) || !input$glm_xvar %in% input$glm_evar) return(" ")
   if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
   do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
-})
-
-.plot_glm_reg <- reactive({
-  if (glm_available() != "available") return(glm_available())
-  if (is_empty(input$glm_plots))
-    return("Please select a regression plot from the drop-down menu")
-
-  glm_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
-    {do.call(plot, c(list(x = .glm_reg()), .))}
 })
 
 observeEvent(input$glm_reg_report, {

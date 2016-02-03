@@ -234,6 +234,11 @@ plot.performance <- function(x,
 			plot_list[[i]] <- plot_list[[i]] + labs(colour = "Predictor")
 	}
 
+	dots <- list(...)
+  if ("custom" %in% names(dots) && dots$custom == TRUE) {
+    if (length(plot_list) == 1) return(plot_list[[plots]]) else return(plot_list)
+  }
+
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	 	{ if (shiny) . else print(.) }
 }

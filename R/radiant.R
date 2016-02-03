@@ -857,6 +857,39 @@ copy_all <- function(.from) {
 state_init <- function(inputvar, init = "") {
   if (!exists("r_state")) stop("Make sure to use copy_from inside shinyServer for the state_* functions")
   if (is_empty(r_state[[inputvar]])) init else r_state[[inputvar]]
+
+  ## perhaps use this for "input_init"
+  # isolate({
+  #   print("##########")
+  #   print(r_state[["viz_xvar"]])
+  #   print(input[["viz_xvar"]])
+  #   print("viz_combx")
+  #   print(r_state[["viz_combx"]])
+  #   print(input[["viz_combx"]])
+  #   print("----")
+  #   print(inputvar)
+  #   print(inputvar %in% names(input))
+
+
+  #   # cat("r_state", r_state[["viz_xvar"]], sep=' ', file=stderr(), "\n")
+  #   # cat("input", input[["viz_xvar"]], sep=' ', file=stderr(), "\n")
+  #   # cat("viz_combx", as.character(input[["viz_combx"]]), sep=' ', file=stderr(), "\n")
+  #   # ninp <- names(input)
+  #   # cat(r_state[[inputvar]])
+  #   # cat(sprintf(r_state[[inputvar]]), sep='', file=stderr())
+  #   # cat(sprintf(input[[inputvar]]), sep='', file=stderr())
+  #   if (is_empty(r_state[[inputvar]]) && !inputvar %in% names(input)) {
+  #     print("init")
+  #     init
+  #   } else if (inputvar %in% names(input)) {
+  #     print("input")
+  #     r_state[[inputvar]] <<- init
+  #     input[[inputvar]]
+  #   } else {
+  #     print("state")
+  #     r_state[[inputvar]]
+  #   }
+  # })
 }
 
 #' Set initial value for shiny input from a list of values

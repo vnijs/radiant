@@ -6,6 +6,7 @@
 ## options to set for debugging
 # options(shiny.trace = FALSE)
 # options(shiny.trace = TRUE)
+# options(shiny.reactlog = TRUE)
 # options(shiny.error = recover)
 # options(warn = 2)
 # options(warn = 0)
@@ -248,7 +249,8 @@ if (!exists("r_knitr")) {
 }
 
 ## parse the url and use updateTabsetPanel to navigate to the desired tab
-observe({
+# observe({
+observeEvent(session$clientData$url_search, {
   url_query <- parseQueryString(session$clientData$url_search)
   if ("url" %in% names(url_query)) {
     r_data$url <- url_query$url
@@ -276,8 +278,8 @@ observe({
 })
 
 ## keeping track of the main tab we are on
-observe({
-  if (is_empty(input$nav_radiant)) return()
+observeEvent(input$nav_radiant, {
+  # if (is_empty(input$nav_radiant)) return()
   if (input$nav_radiant != "Stop" && input$nav_radiant != "Refresh")
     r_data$nav_radiant <- input$nav_radiant
 })
