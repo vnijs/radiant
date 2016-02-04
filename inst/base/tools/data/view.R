@@ -43,7 +43,7 @@ observeEvent(input$dataviewer_search_columns, {
 
 observeEvent(input$dataviewer_state, {
   r_state$dataviewer_state <<-
-  if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
+    if (is.null(input$dataviewer_state)) list() else input$dataviewer_state
 })
 
 output$dataviewer <- DT::renderDataTable({
