@@ -36,7 +36,7 @@ append_help <- function(help_str, help_path, Rmd = TRUE) {
                       inclRmd(file.path(help_path,local_hd[i])),
                       sep="\n")
   }
-  mathjax_script <- ifelse (Rmd, "<script>MathJax.Hub.Typeset();</script>", "")
+  mathjax_script <- ifelse (Rmd, "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", "")
   cc <- "&copy; Vincent Nijs (2015) <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons License' style='border-width:0' src ='imgs/80x15.png' /></a></br>"
   paste(all_help,"\n",mathjax_script,"\n",cc) %>% HTML
 }

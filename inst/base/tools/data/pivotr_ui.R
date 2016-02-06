@@ -10,12 +10,10 @@ pvt_type <- c("Dodge" = "dodge","Fill" = "fill")
 ## UI-elements for pivotr
 output$ui_pvt_cvars <- renderUI({
   vars <- groupable_vars()
-  if (not_available(vars)) return("")
+  # if (not_available(vars)) return("")
+  req(available(vars))
 
   isolate({
-
-    # print("-- in fun and input --")
-    # print("pvt_cvars" %in% names(input))
     ## if nothing is selected expl_byvar is also null
     if ("pvt_cvars" %in% names(input) && is.null(input$pvt_cvars)) {
       r_state$pvt_cvars <<- NULL
@@ -27,28 +25,18 @@ output$ui_pvt_cvars <- renderUI({
     }
 
     ## keep the same n-variable 'active' if possible
-    sel <- use_input("pvt_cvars", vars, "", fun = "state_multiple")
+    # sel <- use_input("pvt_cvars", vars, "", fun = "state_multiple")
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    selected = sel,
+    selected = use_input("pvt_cvars", vars, "", fun = "state_multiple"),
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
   )
 })
 
-# observe({
-#   print("-- in input --")
-#   print("pvt_cvars" %in% names(input))
-#   print("-- input ---")
-#   print(input$pvt_cvars)
-#   print("-- state ---")
-#   print(r_state$pvt_cvars)
-# })
-
 output$ui_pvt_nvar <- renderUI({
-  # isNum <- "numeric" == .getclass() | "integer" == .getclass()
   isNum <- .getclass() %in% c("integer","numeric","factor","logical")
   vars <- c("None", varnames()[isNum])
 
@@ -57,15 +45,9 @@ output$ui_pvt_nvar <- renderUI({
     names(vars) <- varnames() %>% {.[which(. %in% vars)]} %>% {c("None",names(.))}
   }
 
-  isolate({
-    ## keep the same n-variable 'active' if possible
-    sel <- use_input("pvt_nvar", vars, "None")
-  })
-
   selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,
-    # selected = state_single("pvt_nvar",vars), multiple = FALSE,
-    selected = sel, multiple = FALSE,
-    options = list(placeholder = 'Select numeric variable'))
+    selected = use_input("pvt_nvar", vars, "None"),
+    multiple = FALSE, options = list(placeholder = 'Select numeric variable'))
 })
 
 output$ui_pvt_fun <- renderUI({
@@ -79,13 +61,9 @@ output$ui_pvt_normalize  <- renderUI({
   if (!is.null(input$pvt_cvars) && length(input$pvt_cvars) == 1)
     pvt_normalize <- pvt_normalize[-(2:3)]
 
-  isolate({
-    sel <- if (is_empty(input$pvt_normalize)) state_single("pvt_normalize", pvt_normalize, "None") else input$pvt_normalize
-  })
-
   selectizeInput("pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
-    selected = sel,
+    selected = use_input("pvt_normalize", pvt_normalize, "None"),
     multiple = FALSE)
 })
 
@@ -139,13 +117,10 @@ output$ui_Pivotr <- renderUI({
 
 pvt_args <- as.list(formals(pivotr))
 
-observe({
+observeEvent(input$pvt_nvar, {
   ## only allow chi2 if frequencies are shown
-  # if (is_empty(input$pvt_normalize, "None") && is_empty(input$pvt_nvar, "None")) return()
-  if (is_empty(input$pvt_nvar, "None")) return()
-  isolate({
-    if (input$pvt_chi2) updateCheckboxInput(session, "pvt_chi2", value = FALSE)
-  })
+  if (input$pvt_nvar != "None")
+    updateCheckboxInput(session, "pvt_chi2", value = FALSE)
 })
 
 ## list of function inputs selected by user
@@ -234,9 +209,11 @@ output$pivotr <- DT::renderDataTable({
 })
 
 output$pivotr_chi2 <- renderPrint({
-  if (!input$pvt_chi2) return(invisible())
+  req(input$pvt_chi2)
+  req(input$pvt_dec)
+  # if (!input$pvt_chi2) return(invisible())
   .pivotr() %>% {if (is.null(.)) return(invisible())
-                 else summary(., chi2 = TRUE, shiny = TRUE)}
+                 else summary(., chi2 = TRUE, dec = input$pvt_dec, shiny = TRUE)}
 })
 
 output$dl_pivot_tab <- downloadHandler(

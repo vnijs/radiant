@@ -110,11 +110,10 @@ knitIt2 <- function(text) {
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
         envir = r_knitr), stylesheet = "",
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-        "<script>MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
+        "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }
 
 output$rmd_knitted <- renderUI({
-  # if (valsRmd$knit == 1) return()
   req(valsRmd$knit != 1)
   # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
 

@@ -1,23 +1,13 @@
-# library(shiny)
-# library(magrittr)
-
 ## turn off warnings globally
 # options(warn=-1)
 
 ## encoding
-# options(r_encoding = getOption("encoding"))
-# r_encoding = getOption("encoding")
 r_encoding = "UTF-8"
 
 ## path to use for local and server use
-# r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
-#                   system.file(package = "radiant"))
-# if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
-
 r_path <- ifelse ((file.exists("../base") && file.exists("../quant")), "..",
                   system.file(package = "radiant"))
 if (r_path == "") r_path <- ".."  # if radiant is not installed revert to local inst
-
 # getOption("r_path")
 # options(r_path = r_path); rm(r_path)
 
@@ -36,8 +26,10 @@ r_pkgs <- c("DiagrammeR", "car", "gridExtra", "GPArotation", "psych", "wordcloud
             "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
             "htmlwidgets", "readr", "rmarkdown", "shinyAce", "data.tree",
             "yaml","nnet","NeuralNetTools")
-# "scales")
 # options(r_pkgs = r_pkgs); rm(r_pkgs)
+
+## needed but clunky
+sapply(r_pkgs, require, character.only = TRUE)
 
 ## list of function arguments
 r_functions <-
@@ -56,27 +48,15 @@ knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE, message = FALSE
 
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
-
   r_local <- TRUE
   options(shiny.maxRequestSize = -1) ## no limit to filesize locally
-
   ## if radiant package was not loaded load dependencies
   # if (!"package:radiant" %in% search())
     # sapply(r_pkgs, require, character.only = TRUE)
-
-  ## needed but clunky
-  # sapply(r_pkgs, require, character.only = TRUE)
-
 } else {
   r_local <- FALSE
   options(shiny.maxRequestSize = 10 * 1024^2)   ## limit upload filesize on server (5MB)
-
-  ## needed but clunky
-  # sapply(r_pkgs, require, character.only = TRUE)
 }
-
-## needed but clunky
-sapply(r_pkgs, require, character.only = TRUE)
 
 ## environment to hold session information
 r_sessions <- new.env(parent = emptyenv())
@@ -88,14 +68,21 @@ file.path(normalizePath("~"),"r_sessions") %>% {if (!file.exists(.)) dir.create(
 addResourcePath("figures", file.path(r_path,"base/tools/help/figures/"))
 addResourcePath("imgs", file.path(r_path,"base/www/imgs/"))
 addResourcePath("js", file.path(r_path,"base/www/js/"))
-# addResourcePath("rmarkdown", file.path(r_path,"base/www/rmarkdown/"))
 
-## using local mathjax if available to avoid shiny bug
+## using local mathjax if available to avoid breaking conditional panels
 ## https://github.com/rstudio/shiny/issues/692
 ## however, only use for local due to problems with mathjax rendering in IE
-if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
-  addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
-  withMathJax <- MathJaxR::withMathJaxR
+# if (r_local && "MathJaxR" %in% installed.packages()[,"Package"]) {
+#   addResourcePath("MathJax", file.path(system.file(package = "MathJaxR"), "MathJax/"))
+#   withMathJax <- MathJaxR::withMathJaxR
+# }
+
+## ensure that MathJax is only used if loaded to avoid breaking conditional panels
+## https://github.com/rstudio/shiny/issues/692
+withMathJax <- function (...) {
+  path <- "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+      ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
 }
 
 nav_ui <-
@@ -140,7 +127,6 @@ shared_ui <-
 js_head <-
   tags$head(
     tags$script(src = "js/session.js"),
-    tags$script(src = "js/jquery-ui.custom.min.js"),
     tags$script(src = "js/returnTextAreaBinding.js"),
     tags$script(src = "js/returnTextInputBinding.js"),
     # tags$script(src = "js/draggable_modal.js"),
