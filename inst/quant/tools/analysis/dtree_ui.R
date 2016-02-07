@@ -35,7 +35,7 @@ output$ui_dtree_list <- renderUI({
   if (length(dtree_list) == 0) return(invisible())
   selectInput(inputId = "dtree_list", label = NULL,
     choices = dtree_list, selected = state_init("dtree_list", dtree_list[1]),
-    multiple = FALSE, width = "100%")
+    multiple = FALSE, selectize = FALSE, width = "100%")
 })
 
 output$ui_dtree_name <- renderUI({
@@ -61,7 +61,7 @@ output$dtree <- renderUI({
             td(actionButton("dtree_eval", "Calculate"), style="padding-top:5px;"),
             td(uiOutput("ui_dtree_name")),
             td(actionButton("dtree_store", "Store"), style= "padding-top:5px;"),
-            td(uiOutput("ui_dtree_list"), style="padding-top:14px;"),
+            td(uiOutput("ui_dtree_list"), style="padding-top:0px;"),
             td(downloadButton("dtree_save_yaml", "Save input"), style="padding-top:5px;"),
             td(downloadButton("dtree_save", "Save output"), style="padding-top:5px;"),
             td(HTML("<div class='form-group shiny-input-container'><input id='dtree_load_yaml' name='dtree_load_yaml' type='file' accept='.yaml'/></div>"))

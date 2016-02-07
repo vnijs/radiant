@@ -1,6 +1,9 @@
 ################################################################
 # Create dynamic reports using Radiant and the shinyAce editor
 ################################################################
+rmd_switch <- c("Switch tab", "Don't switch tab")
+rmd_manual <- c("Manual paste", "Auto paste")
+
 rmd_example <- "## Sample report
 
 This is an example of the type of report you can write in Radiant.
@@ -41,15 +44,33 @@ visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
 > **Put your own code here or delete this sample report and create your own**
 "
 
-observeEvent(input$manual_paste, {
-  r_data$manual %<>% {. == FALSE}
+# observeEvent(input$manual_paste, {
+#   r_data$manual %<>% {. == FALSE}
+# })
+
+# output$ui_manual <- renderUI({
+#   ## initialize manual cmd paste to false
+#   if (is.null(r_data$manual)) r_data$manual <- FALSE
+#   actionButton("manual_paste",
+#     if (r_data$manual) "Manual paste (on)" else "Manual paste (off)")
+# })
+
+output$ui_rmd_manual <- renderUI({
+  ## initialize manual cmd paste to false
+  # if (is.null(r_data$manual)) r_data$manual <- FALSE
+  selectInput(inputId = "rmd_manual", label = NULL,
+    choices = rmd_manual,
+    selected = state_init("rmd_manual", "Auto paste"),
+    multiple = FALSE, selectize = FALSE,
+    width = "120px")
 })
 
-output$ui_manual <- renderUI({
-  ## initialize manual cmd paste to false
-  if (is.null(r_data$manual)) r_data$manual <- FALSE
-  actionButton("manual_paste",
-    if (r_data$manual) "Manual paste (on)" else "Manual paste (off)")
+output$ui_rmd_switch <- renderUI({
+  selectInput(inputId = "rmd_switch", label = NULL,
+    choices = rmd_switch,
+    selected = state_init("rmd_switch", "Switch tab"),
+    multiple = FALSE, selectize = FALSE,
+    width = "135px")
 })
 
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
@@ -62,10 +83,12 @@ output$report <- renderUI({
             td(help_modal('Report','report_help',
                        inclMD(file.path(r_path,"base/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
-            td(actionButton("evalRmd", "Knit report")),
-            td(uiOutput("ui_manual")),
-            td(downloadButton("saveHTML", "Save HTML")),
-            td(downloadButton("saveRmd", "Save Rmd")),
+            td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
+            # td(uiOutput("ui_manual")),
+            td(uiOutput("ui_rmd_manual")),
+            td(uiOutput("ui_rmd_switch")),
+            td(downloadButton("saveHTML", "Save HTML"), style= "padding-top:5px;"),
+            td(downloadButton("saveRmd", "Save Rmd"), style= "padding-top:5px;"),
             td(HTML("<div class='form-group shiny-input-container'>
                 <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
               </div>"))
@@ -225,30 +248,45 @@ observeEvent(input$rmd_report, {
 })
 
 update_report_fun <- function(cmd) {
+  # req(input$rmd_manual)
+  # req(input$rmd_switch)
+  isolate({
+    # if (isolate(r_data$manual)) {
+    # if (input$rmd_manual == "Manual paste") {
+    if (use_input_nonvar("rmd_manual", rmd_manual, "Auto paste") == "Manual paste") {
+      os_type <- Sys.info()["sysname"]
+      if (os_type == 'Windows') {
+        cat(cmd, file = "clipboard")
+      } else if (os_type == "Darwin") {
+        out <- pipe("pbcopy")
+        cat(cmd, file = out)
+        close(out)
+      } else if (os_type == "Linux") {
+        cat("Clipboard not supported on linux")
+      }
 
-  if (isolate(r_data$manual)) {
-    os_type <- Sys.info()["sysname"]
-    if (os_type == 'Windows') {
-      cat(cmd, file = "clipboard")
-    } else if (os_type == "Darwin") {
-      out <- pipe("pbcopy")
-      cat(cmd, file = out)
-      close(out)
-    } else if (os_type == "Linux") {
-      cat("Clipboard not supported on linux")
-    }
-    ## nothing is added to report
-    updateTabsetPanel(session, "nav_radiant", selected = "Report")
-  } else {
-    if (is_empty(r_state$rmd_report)) {
-      r_state$rmd_report <<- paste0("## Your report title\n", cmd)
+      withProgress(message = 'Putting command in clipboard', value = 0,
+        cat("")
+        # shinyAce::updateAceEditor(session, "rmd_report",
+        #                           value = esc_slash(r_state$rmd_report))
+      )
+
+      ## nothing is added to report
+      # updateTabsetPanel(session, "nav_radiant", selected = "Report")
     } else {
-      r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
+      if (is_empty(r_state$rmd_report)) {
+        r_state$rmd_report <<- paste0("## Your report title\n", cmd)
+      } else {
+        r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
+      }
+
+      withProgress(message = 'Updating report', value = 0,
+        shinyAce::updateAceEditor(session, "rmd_report",
+                                  value = esc_slash(r_state$rmd_report))
+      )
     }
 
-    withProgress(message = 'Updating report', value = 0,
-      shinyAce::updateAceEditor(session, "rmd_report",
-                                value = esc_slash(r_state$rmd_report))
-    )
-  }
+    if (use_input_nonvar("rmd_switch", rmd_switch, "Switch tab") == "Switch tab")
+      updateTabsetPanel(session, "nav_radiant", selected = "Report")
+  })
 }

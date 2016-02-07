@@ -95,7 +95,7 @@ pre {
 /* from: https://github.com/swarm-lab/editR/blob/master/inst/app/www/editR.css */
 #rmd_report, #rmd_code, #dtree_edit {
   position: absolute;
-  top: 95px;
+  top: 100px;
   bottom: 0;
   left: 0;
   right: 50%;

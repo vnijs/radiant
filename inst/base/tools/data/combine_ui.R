@@ -21,20 +21,31 @@ cmb_inputs <- reactive({
 output$ui_cmb_dataset <- renderUI({
   datasetlist <- r_data$datasetlist
   if (length(datasetlist) < 2) return()
+  # req(length(datasetlist) > 1)
   cmb_datasets <- datasetlist[-which(input$dataset == datasetlist)]
   selectInput(inputId = "cmb_dataset", label = "Combine with:",
     choices = cmb_datasets, selected = state_init("cmb_dataset"), multiple = FALSE)
 })
 
 output$ui_cmb_by <- renderUI({
-  if (is.null(input$cmb_dataset)) return()
+  # if (is.null(input$cmb_dataset)) return()
+  req(input$cmb_dataset)
   vars1 <- varnames()
   vars2 <- colnames(r_data[[input$cmb_dataset]])
   vars <- intersect(vars1, vars2)
   if (length(vars) == 0) return()
   vars <- vars1[vars1 %in% vars]  ## need variable labels from varnames()
-  selectInput("cmb_by", "Select variables:", choices  = vars,
+  selectInput("cmb_by", "Join by:", choices  = vars,
     selected = state_multiple("cmb_by",vars, vars),
+    multiple = TRUE, size = min(5,length(vars)), selectize = FALSE)
+})
+
+output$ui_cmb_add <- renderUI({
+  # if (is.null(input$cmb_dataset)) return()
+  req(input$cmb_dataset)
+  vars <- colnames(r_data[[input$cmb_dataset]])
+  selectInput("cmb_add", "Variables to add:", choices  = vars,
+    selected = state_multiple("cmb_add", vars, vars),
     multiple = TRUE, size = min(5,length(vars)), selectize = FALSE)
 })
 
@@ -57,6 +68,7 @@ output$ui_Combine <- renderUI({
         HTML("<label>Only one dataset available.</label>")
       ),
       uiOutput("ui_cmb_by"),
+      uiOutput("ui_cmb_add"),
       selectInput("cmb_type", "Combine type:", choices  = cmb_type,
                   selected = state_single("cmb_type",cmb_type,"inner_join"),
                   multiple = FALSE),
@@ -91,12 +103,12 @@ observeEvent(input$combine_report, {
 })
 
 output$cmb_data1 <- renderText({
-  if (is.null(input$cmb_dataset)) return()
+  req(input$dataset)
   show_data_snippet(title = paste("<h3>Dataset 1:",input$dataset,"</h3>"))
 })
 
 output$cmb_data2 <- renderText({
-  if (is.null(input$cmb_dataset)) return()
+  req(input$cmb_dataset)
   show_data_snippet(input$cmb_dataset, title = paste("<h3>Dataset 2:",input$cmb_dataset,"</h3>"))
 })
 
