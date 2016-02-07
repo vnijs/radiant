@@ -18,6 +18,7 @@
 #' avengers %>% combinedata(superheroes, type = "bind_cols")
 #' combinedata("avengers", "superheroes", type = "bind_cols")
 #' avengers %>% combinedata(superheroes, type = "bind_rows")
+#' avengers %>% combinedata(superheroes, add = "publisher", type = "bind_rows")
 #'
 #' @export
 combinedata <- function(dataset, cmb_dataset,
@@ -34,7 +35,11 @@ combinedata <- function(dataset, cmb_dataset,
     name <- if (is_string(dataset)) paste0("cmb_",dataset) else "cmb_data"
 
   dat1 <- getdata(dataset, na.rm = FALSE)
-  dat2 <- getdata(cmb_dataset, unique(c(by, add)), na.rm = FALSE)
+  # dat2 <- getdata(cmb_dataset, unique(c(by, add)), na.rm = FALSE)
+  if (all(add == ""))
+    dat2 <- getdata(cmb_dataset, na.rm = FALSE)
+  else
+    dat2 <- getdata(cmb_dataset, unique(c(by, add)), na.rm = FALSE)
 
   descr1 <- attr(dat1, "description")
   descr2 <- attr(dat2, "description")

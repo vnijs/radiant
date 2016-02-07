@@ -9,6 +9,7 @@ test_check("radiant")
 # if (interactive())
 # devtools::run_examples(start = "regression")
 # devtools::run_examples(start = "single_prop")
+# devtools::run_examples(start = "combinedata")
 
 # setwd("~/gh/radiant")
 # devtools::run_examples()
