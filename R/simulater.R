@@ -194,12 +194,12 @@ simulater <- function(const = "",
       if (is(dpar, 'try-error') || any(is.na(dpar))) {
         mess <- c("error",paste0("Input for a discrete variable contains an error. Please review the input carefully"))
         return(mess %>% set_class(c("simulater", class(.))))
-      } else if (sum(dpar[,2]) != 1) {
-        mess <- c("error",paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(dpar[,2]),3),")"))
+      } else if (sum(dpar[[2]]) != 1) {
+        mess <- c("error",paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(dpar[[2]]),3),")"))
         return(mess %>% set_class(c("simulater", class(.))))
       }
 
-      dat[[s[[i]][1]]] <- sample(dpar[,1], nr, replace = TRUE, prob = dpar[,2])
+      dat[[s[[i]][1]]] <- sample(dpar[[1]], nr, replace = TRUE, prob = dpar[[2]])
     }
   }
 
@@ -538,11 +538,6 @@ repeater <- function(nr = 12,
   sc[names(sc_keep)] <- sc_keep
   sc$dat <- as.list(dat)
 
-
-  # print(sc)
-  # return()
-
-
   rep_sim <- function(rep_nr) {
     bind_cols(
       data_frame(rep = rep(rep_nr, nr_sim), sim = 1:nr_sim),
@@ -552,8 +547,6 @@ repeater <- function(nr = 12,
 
   rep_grid_sim <- function(gval) {
     gvars <- names(gval)
-    # print(gvars)
-    # print(gval)
 
     ## removing form ...
     sc_grid <- grep(paste(gvars, collapse = "|"), sc_keep, value=TRUE) %>%
@@ -565,12 +558,7 @@ repeater <- function(nr = 12,
       sub(paste0("^", gvars[i], " [.0-9]+"), paste0(gvars[i], " ", gval[gvars[i]]), .)
     }
 
-    # print(sc_grid)
     sc[names(sc_grid)] <- sc_grid
-    # print(sc)
-    # print(do.call(simulater, sc))
-    # return()
-
     bind_cols(
       data_frame(rep = rep(paste(gval, collapse = "/"), nr_sim), sim = 1:nr_sim),
       do.call(simulater, sc)
@@ -581,12 +569,8 @@ repeater <- function(nr = 12,
     ret <- bind_rows(lapply(1:nr, rep_sim)) %>% set_class(c("repeater", class(.)))
   } else {
     grid <- expand.grid(grid_list)
-    # mess <- c("error","test")
-    # return(mess %>% set_class(c("repeater", class(.))))
     ret <- bind_rows(apply(grid, 1, rep_grid_sim)) %>% set_class(c("repeater", class(.)))
   }
-
-  # return()
 
   name %<>% gsub(" ","",.)
   if (name != "") {

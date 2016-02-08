@@ -52,7 +52,7 @@ output$ui_cp_levs <- renderUI({
   if (not_available(input$cp_var2))
     return()
   else
-    levs <- .getdata()[1,input$cp_var2] %>% as.factor %>% levels
+    levs <- .getdata()[[input$cp_var2]] %>% as.factor %>% levels
 
   selectInput(inputId = "cp_levs", label = "Choose level:",
               choices = levs,
@@ -62,17 +62,9 @@ output$ui_cp_levs <- renderUI({
 output$ui_cp_comb <- renderUI({
   if (not_available(input$cp_var1)) return()
 
-  levs <- .getdata()[ ,input$cp_var1] %>% as.factor %>% levels
-  alevs <- .getdata()[ ,input$cp_var1] %>% unique
-
-  # levs <- c("a","b","c")
-  # alevs <- c("b","a")
-  # levs <-
-  # alevs %in% levs
+  levs <- .getdata()[[input$cp_var1]] %>% as.factor %>% levels
+  alevs <- .getdata()[[input$cp_var1]] %>% unique
   levs <- levs[levs %in% alevs]
-  # levs
-
-
 
   if (length(levs) > 2) {
     cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")

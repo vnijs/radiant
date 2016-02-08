@@ -186,7 +186,7 @@ predict.ann <- function(object, dataset, ...) {
 
   getdata(dataset, filt = "", na.rm = FALSE) %>%
   mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
-  {predict(object$model, .)[,1]}  ## using nnet's predict method
+  {predict(object$model, .)[[1]]}  ## using nnet's predict method
 }
 
 #' Store predicted values generated in the ann function

@@ -30,11 +30,10 @@ conjoint <- function(dataset, rvar, evar,
     { evar <<- .$ev }
 
 	formula <- paste(rvar, "~", paste(evar, collapse = " + "))
-	print(formula)
 
 	if (reverse) {
-		ca_dep <- dat[,rvar]
-		dat[,rvar] <- abs(ca_dep - max(ca_dep)) + 1
+		ca_dep <- dat[[rvar]]
+		dat[[rvar]] <- abs(ca_dep - max(ca_dep)) + 1
 	}
 
 	lm_mod <- lm(formula, data = dat)
@@ -140,7 +139,7 @@ plot.conjoint <- function(x,
 		PW.df <- the_table[["PW"]]
 
 		for (var in object$evar) {
-			PW.var <- PW.df[PW.df[,"Attributes"] == var,]
+			PW.var <- PW.df[PW.df[["Attributes"]] == var,]
 
 			# setting the levels in the same order as in the_table. Without this
 			# ggplot would change the ordering of the price levels
@@ -202,10 +201,10 @@ the_table <- function(model, dat, evar) {
 
 	# Calculate PW and IW's when interactions are present
 	# http://www.slideshare.net/SunnyBose/conjoint-analysis-12090511
-	rownames(PW.df) <- paste(PW.df[,'Attributes'], PW.df[,'Levels'], sep = "")
+	rownames(PW.df) <- paste(PW.df[['Attributes']], PW.df[['Levels']], sep = "")
 
 	coeff <- model$estimate
-	BW.reg <- list("Attributes" = "Base utility", "Levels" = "", "PW" = coeff[1])
+	# BW.reg <- list("Attributes" = "Base utility", "Levels" = "", "PW" = coeff[1])
 	PW.df[model$term[-1],'PW'] <- coeff[-1]
 	PW.df
 
@@ -215,14 +214,14 @@ the_table <- function(model, dat, evar) {
 	rownames(maxPW) <- maxPW$Attributes
 
 	rangePW <- data.frame(cbind(maxPW[vars,'PW'],minPW[vars,'PW']))
-	rangePW$Range <- rangePW[,1] - rangePW[,2]
+	rangePW$Range <- rangePW[[1]] - rangePW[[2]]
 	colnames(rangePW) <- c("Max","Min","Range")
 	rownames(rangePW) <- vars
 
 	# for plot range if standardized
-	maxlim <- rangePW[,'Max'] > abs(rangePW[,'Min'])
-	maxrange <- max(rangePW[,'Range'])
-	plot_ylim <- rangePW[,c('Min','Max')]
+	maxlim <- rangePW[['Max']] > abs(rangePW[['Min']])
+	maxrange <- max(rangePW[['Range']])
+	plot_ylim <- rangePW[c('Min','Max')]
 
 	plot_ylim[maxlim,'Max'] <- plot_ylim[maxlim,'Max'] + maxrange - rangePW$Range[maxlim]
 	plot_ylim[!maxlim,'Min'] <- plot_ylim[!maxlim,'Min'] - (maxrange - rangePW$Range[!maxlim])
@@ -232,13 +231,13 @@ the_table <- function(model, dat, evar) {
 	IW$IW <- rangePW$Range / sum(rangePW$Range)
 	colnames(IW) <- c("Attributes","IW")
 
-	PW.df[,'Attributes'] <- as.character(PW.df[,'Attributes'])
-	PW.df[,'Levels'] <- as.character(PW.df[,'Levels'])
+	PW.df[['Attributes']] <- as.character(PW.df[['Attributes']])
+	PW.df[['Levels']] <- as.character(PW.df[['Levels']])
 	PW.df <- rbind(PW.df, c("Base utility","~",coeff[1]))
-	PW.df[,'PW'] <- as.numeric(PW.df[,'PW'])
+	PW.df[['PW']] <- as.numeric(PW.df[['PW']])
 
-	PW.df[,'PW'] <- round(PW.df[,'PW'],3)
-	IW[,'IW'] <- round(IW[,'IW'],3)
+	PW.df[['PW']] <- round(PW.df[['PW']],3)
+	IW[['IW']] <- round(IW[['IW']],3)
 
 	list('PW' = PW.df, 'IW' = IW, 'plot_ylim' = plot_ylim)
 }

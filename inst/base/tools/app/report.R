@@ -70,7 +70,7 @@ output$ui_rmd_switch <- renderUI({
     choices = rmd_switch,
     selected = state_init("rmd_switch", "Switch tab"),
     multiple = FALSE, selectize = FALSE,
-    width = "135px")
+    width = "140px")
 })
 
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)

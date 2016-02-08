@@ -133,7 +133,7 @@ output$pmap <- renderUI({
 	if (not_available(input$pm_brand) || not_available(input$pm_attr))
 		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailer"))
 
-	brand <- .getdata()[,input$pm_brand]
+	brand <- .getdata()[[input$pm_brand]]
 	if (length(unique(brand)) < length(brand))
 		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailer"))
 
@@ -147,7 +147,7 @@ output$pmap <- renderUI({
 	if (not_available(input$pm_brand) || not_available(input$pm_attr))
 		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailer"))
 
-	brand <- .getdata()[,input$pm_brand]
+	brand <- .getdata()[[input$pm_brand]]
 	if (length(unique(brand)) < length(brand))
 		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailer"))
 

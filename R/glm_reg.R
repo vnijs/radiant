@@ -43,13 +43,12 @@ glm_reg <- function(dataset, rvar, evar,
     return("One or more selected variables show no variation. Please select other variables." %>%
            set_class(c("glm_reg",class(.))))
 
-
   rv <- dat[[rvar]]
   if (lev == "") {
     if (is.factor(rv))
       lev <- levels(rv)[1]
     else
-      lev <- rv %>% as.character %>% as.factor %>% levels %>% .[1]
+      lev <- as.character(rv) %>% as.factor %>% levels %>% .[1]
   }
 
   ## transformation to TRUE/FALSE depending on the selected level (lev)

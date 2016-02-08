@@ -73,10 +73,11 @@ output$ui_cm_var2 <- renderUI({
 output$ui_cm_comb <- renderUI({
   if (not_available(input$cm_var1)) return()
 
-  if (.getclass()[[input$cm_var1]] == "factor")
-    levs <- .getdata()[1,input$cm_var1] %>% as.factor %>% levels
-  else
+  if (.getclass()[[input$cm_var1]] == "factor") {
+    levs <- .getdata()[[input$cm_var1]] %>% levels
+  } else {
     levs <- c(input$cm_var1, input$cm_var2)
+  }
 
   if (length(levs) > 2) {
     cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")

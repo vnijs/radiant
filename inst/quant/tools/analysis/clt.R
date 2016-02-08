@@ -151,8 +151,8 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
   }
 
   m <- dim(result)[2]
-  data1 <- data.frame(sample_1 = result[,1])
-  datam <- data.frame(sample_m = result[,m])
+  data1 <- data.frame(sample_1 = result[[1]])
+  datam <- data.frame(sample_m = result[[m]])
 
   plots <- list()
 
@@ -165,8 +165,8 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
   plots[[3]] <- visualize(sstat, xvar = clt_stat, bins = 10, custom = TRUE)
 
   plots[[4]] <- visualize(sstat, xvar = clt_stat, type = "density", custom = TRUE) +
-                  stat_function(fun = dnorm, args = list(mean = mean(sstat[,1]),
-                                sd = sd(sstat[,1])), color = "black", size = 1)
+                  stat_function(fun = dnorm, args = list(mean = mean(sstat[[1]]),
+                                sd = sd(sstat[[1]])), color = "black", size = 1)
 
   withProgress(message = 'Making plots', value = 0, {
     do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(2,length(plots)))))

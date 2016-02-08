@@ -773,7 +773,6 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
 
   dchisq_limit <- function(x) {
     y <- dchisq(x, df = df)
-    # y[x < lb | x > ub] <- NA
     y[x < lb | x > ub] <- 0
     y
   }
@@ -781,7 +780,6 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
   dchisq_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dchisq(x, df = df)
-    # y[x > lb] <- NA
     y[x > lb] <- 0
     y
   }
@@ -789,7 +787,6 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
   dchisq_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dchisq(x, df = df)
-    # y[x < ub] <- NA
     y[x < ub] <- 0
     y
   }
@@ -824,7 +821,6 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
 summary.prob_chisq <- function(object, type = "values",  ...) {
 
 	df <- object$df
-	n <- df + 1
 	dec <- object$dec
 
 	ub <- object$ub
@@ -842,14 +838,15 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
   cat("Probability calculator\n")
   cat("Distribution: Chi-squared\n")
 	cat("Df          :", df, "\n")
-	cat("Mean        :", n, "\n")
-	cat("Variance    :", 2*n, "\n")
+	cat("Mean        :", df, "\n")
+	cat("Variance    :", 2*df, "\n")
 
 	mess <- object[[paste0("mess_",type)]]
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
+		# cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
+		cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
 		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {

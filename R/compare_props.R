@@ -38,11 +38,11 @@ compare_props <- function(dataset, var1, var2,
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
 	if (!is_string(dataset)) dataset <- "-----"
 
-	lv <- levels(dat[,var2])
+	lv <- levels(dat[[var2]])
 	if (levs != "") {
 		if (levs %in% lv && lv[1] != levs) {
-			dat[,var2] %<>% as.character %>% as.factor %>% relevel(levs)
-			lv <- levels(dat[,var2])
+			dat[[var2]] %<>% as.character %>% as.factor %>% relevel(levs)
+			lv <- levels(dat[[var2]])
 		}
 	}
 
@@ -64,7 +64,7 @@ compare_props <- function(dataset, var1, var2,
 	  summarise(n = n()) %>%
 	  spread_(var2, "n") %>%
 	  as.data.frame %>%
-	  { rn <<- .[,1] %>% as.character
+	  { rn <<- .[[1]] %>% as.character
 		  select(., -1) %>%
 		  as.matrix %>%
 		  set_rownames(rn)
@@ -90,40 +90,15 @@ compare_props <- function(dataset, var1, var2,
   res[ ,c("chisq.value","p.value", "df", "ci_low", "ci_high", "sim")] <- 0
   for (i in 1:nrow(cmb)) {
   	ind <- c(which(cmb[i,1] == rownames(prop_input)), which(cmb[i,2] == rownames(prop_input)))
-  	# ind <- which(cmb[i,] %in% rownames(prop_input))  	# pinp <- prop_input[ind,]
-
-  	# print(ind)
 
     pinp <- prop_input[ind,]
-    # print(prop_input)
-    # print(pinp)
-    # print(class(pinp))
-    # return()
-    # # print(ind)
-    # return()
-    # print(pinp %>% as.data.frame)
-    # return()
-    # print(head(pinp))
-    # print(getclass(pinp))
-    # print(class(pinp))
-    # return()
-    # smokers  <- c( 83, 90, 129, 70 )
-    # patients <- c( 86, 93, 136, 82 )
-    # prop.test(smokers, patients)
-    # pinp <- data.frame()
-
-
   	res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
 	    sshhr( prop.test(pinp, alternative = alternative, conf.level = conf_lev,
 	             correct = FALSE) ) %>%
 	    tidy %>% .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
 
-	   # ?prop.test
-	   # print(res)
-	   # return()
-
     n <- rowSums(pinp)
-    p <- pinp[,1] / n
+    p <- pinp[[1]] / n
     E <- cbind(n * p, n * (1 - p))
     if (any(E < 5)) {
     	res[i, "p.value"] <- sshhr( chisq.test(pinp, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value )
@@ -141,10 +116,10 @@ compare_props <- function(dataset, var1, var2,
 	dat_summary <-
 		prop_input %>%
 			data.frame(check.names = FALSE) %>%
-			mutate(n = .[,1:2] %>% rowSums, p = .[,1] / n,
+			mutate(n = rowSums(.[,1:2]), p = .[[1]] / n,
 						 se = (p * (1 - p) / n) %>% sqrt,
 	       		 ci = ci_calc(se, conf_lev)) %>%
-			set_rownames({prop_input %>% rownames}) %>%
+			set_rownames({rownames(prop_input)}) %>%
 			add_rownames(var = var1)
 
 	dat_summary[[var1]] %<>% factor(., levels = .)
