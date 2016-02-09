@@ -268,5 +268,6 @@ auc <- function(pred, rvar, lev) {
  	x1 <- pred[rvar == lev]
   x2 <- pred[rvar != lev]
  	denom <- length(x1) * length(x2)
-	wilcox.test(x1, x2, exact = FALSE)$statistic / denom
+	wt <- wilcox.test(x1, x2, exact = FALSE)$statistic / denom
+	ifelse (wt < .5, 1 - wt, wt)
 }
