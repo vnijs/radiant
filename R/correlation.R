@@ -32,8 +32,6 @@ correlation <- function(dataset, vars,
 	dat <- getdata(dataset, vars, filt = data_filter) %>%
 		mutate_each(funs(as.numeric))
 
-		method
-
 	if (!is_string(dataset)) dataset <- "-----"
 
 	## using correlation_ to avoid print method conflict with nlme

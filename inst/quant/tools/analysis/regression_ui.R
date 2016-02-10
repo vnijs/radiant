@@ -279,6 +279,7 @@ output$ui_regression <- renderUI({
       )
     ),
     wellPanel(
+      checkboxInput("reg_pause", "Pause estimation", state_init("reg_pause", FALSE)),
       uiOutput("ui_reg_rvar"),
       uiOutput("ui_reg_evar"),
 
@@ -394,6 +395,7 @@ reg_available <- reactive({
 })
 
 .regression <- reactive({
+  req(input$reg_pause == FALSE)
   do.call(regression, reg_inputs())
 })
 

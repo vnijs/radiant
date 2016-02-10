@@ -39,6 +39,7 @@ output$ui_cor_vars <- renderUI({
 output$ui_correlation <- renderUI({
   list(
   	wellPanel(
+      checkboxInput("cor_pause", "Pause estimation", state_init("cor_pause", FALSE)),
 	    uiOutput("ui_cor_vars"),
 		  selectInput(inputId = "cor_type", label = "Method:", choices = cor_type,
   	  	selected = state_single("cor_type", cor_type, "pearson"), multiple = FALSE),
@@ -91,15 +92,16 @@ output$correlation <- renderUI({
 })
 
 cor_available <- reactive({
-
   if (not_available(input$cor_vars) || length(input$cor_vars) < 2)
     return("This analysis requires two or more variables or type numeric, integer,\nor factor. If these variable types are not available please select\nanother dataset.\n\n" %>% suggest_data("diamonds"))
 
+  req(input$cor_pause == FALSE)
   "available"
 })
 
 
 .correlation <- reactive({
+  req(input$cor_pause == FALSE)
 	do.call(correlation, cor_inputs())
 })
 
