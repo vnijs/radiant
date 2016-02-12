@@ -91,32 +91,14 @@ output$ui_reg_rvar <- renderUI({
 })
 
 output$ui_reg_evar <- renderUI({
-  # notChar <- "character" != .getclass()
-  # vars <- varnames()[notChar]
-  # if (not_available(input$reg_rvar)) vars <- character(0)
-  # if (length(vars) > 0 ) vars <- vars[-which(vars == input$reg_rvar)]
-
-  if (not_available(input$reg_rvar)) return()
+  req(available(input$reg_rvar))
   notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  # if (not_available(input$glm_rvar)) return()
-  # if (not_available(input$glm_rvar)) vars <- character(0)
-  # if (length(vars) > 0 && !is_empty(input$glm_rvar) && input$glm_rvar %in% vars)
   if (length(vars) > 0)
     vars <- vars[-which(vars == input$reg_rvar)]
 
-
-  ## if possible, keep current indep value when depvar changes
-  ## after storing residuals or predictions
-  # isolate({
-  #   init <- input$reg_evar %>%
-  #     {if (!is_empty(.) && all(. %in% vars)) . else character(0)}
-  #   if (length(init) > 0) r_state$reg_evar <<- init
-  # })
-
   selectInput(inputId = "reg_evar", label = "Explanatory variables:", choices = vars,
-    # selected = state_multiple("reg_evar", vars, init),
-    selected = isolate(use_input("reg_evar", vars, fun = "state_multiple")),
+    selected = use_input("reg_evar", vars, fun = "state_multiple"),
     multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -129,11 +111,13 @@ output$ui_reg_pred_var <- renderUI({
 
 # adding interaction terms as needed
 output$ui_reg_test_var <- renderUI({
+  req(available(input$reg_evar))
   vars <- input$reg_evar
   if (!is.null(input$reg_int)) vars <- c(vars, input$reg_int)
 
   selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
-    choices = vars, selected = state_multiple("reg_test_var", vars, ""),
+    choices = vars,
+    selected = use_input("reg_test_var", vars, fun = "state_multiple"),
     multiple = TRUE,
     options = list(placeholder = 'None', plugins = list('remove_button'))
   )
@@ -143,7 +127,7 @@ output$ui_reg_show_interactions <- renderUI({
   choices <- reg_show_interactions[1:max(min(3,length(input$reg_evar)),1)]
   radioButtons(inputId = "reg_show_interactions", label = "Interactions:",
     choices = choices,
-    selected = isolate(use_input_nonvar("reg_show_interactions", choices)),
+    selected = use_input_nonvar("reg_show_interactions", choices),
     inline = TRUE)
  })
 
@@ -161,7 +145,7 @@ output$ui_reg_int <- renderUI({
   }
 
   selectInput("reg_int", label = NULL, choices = choices,
-    selected = isolate(use_input_nonvar("reg_int", choices)),
+    selected = use_input_nonvar("reg_int", choices),
     multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
@@ -396,6 +380,12 @@ reg_available <- reactive({
 
 .regression <- reactive({
   req(input$reg_pause == FALSE)
+  req(available(input$reg_rvar), available(input$reg_evar))
+
+  ## need dependency in reg_int so I can have names(input) in isolate
+  input$reg_int
+  isolate(req("reg_int" %in% names(input)))
+
   do.call(regression, reg_inputs())
 })
 

@@ -1,7 +1,7 @@
 glm_link <- c("Logit" = "logit", "Probit" = "probit")
 glm_show_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
 # glm_predict <- c("None" = "none", "Variable" = "vars", "Data" = "data","Command" = "cmd")
-glm_predict <- c("None" = "none", "Data" = "data","Command" = "cmd")
+glm_predict <- c("None" = "none", "Data" = "data","Command" = "cmd", "Data & Command" = "datacmd")
 glm_check <- c("Standardized coefficients" = "standardize",
                "Stepwise selection" = "stepwise")
 glm_sum_check <- c("VIF" = "vif", "Confidence intervals" = "confint",
@@ -21,7 +21,7 @@ glm_inputs <- reactive({
   for (i in r_drop(names(glm_args)))
     glm_args[[i]] <- input[[paste0("glm_",i)]]
 
-  # cat(paste0(names(glm_args), " ", glm_args, collapse = ", "), file = stderr(), "\n")
+  # isolate(cat(paste0(names(glm_args), " ", glm_args, collapse = ", "), file = stderr(), "\n"))
   glm_args
 })
 
@@ -61,12 +61,16 @@ glm_pred_inputs <- reactive({
     glm_pred_args[[i]] <- input[[paste0("glm_",i)]]
 
   glm_pred_args$pred_cmd <- glm_pred_args$pred_data <- glm_pred_args$pred_vars <- ""
-  if (input$glm_predict == "cmd")
+  if (input$glm_predict == "cmd") {
     glm_pred_args$pred_cmd <- gsub("\\s", "", input$glm_pred_cmd) %>% gsub("\"","\'",.)
-  else if (input$glm_predict == "data")
+  } else if (input$glm_predict == "data") {
     glm_pred_args$pred_data <- input$glm_pred_data
-  else if (input$glm_predict == "vars")
+  } else if (input$glm_predict == "datacmd") {
+    glm_pred_args$pred_cmd <- gsub("\\s", "", input$glm_pred_cmd) %>% gsub("\"","\'",.)
+    glm_pred_args$pred_data <- input$glm_pred_data
+  } else if (input$glm_predict == "vars") {
     glm_pred_args$pred_vars <- input$glm_pred_vars
+  }
 
   glm_pred_args
 })
@@ -106,36 +110,32 @@ output$ui_glm_lev <- renderUI({
 })
 
 output$ui_glm_evar <- renderUI({
-  req(input$glm_rvar)
-  if (not_available(input$glm_rvar)) return()
+  req(available(input$glm_rvar))
 	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  # if (not_available(input$glm_rvar)) return()
-  # if (not_available(input$glm_rvar)) vars <- character(0)
-  # if (length(vars) > 0 && !is_empty(input$glm_rvar) && input$glm_rvar %in% vars)
   if (length(vars) > 0)
     vars <- vars[-which(vars == input$glm_rvar)]
 
-  # isolate({
-    # print(vars)
-    # print(input$glm_rvar)
-    # print(input$glm_evar)
-  # })
-
-  ## if possible, keep current indep value when depvar changes
-  ## after storing residuals or predictions
-  # isolate({
-  #   init <- input$glm_evar %>%
-  #   {if (!is_empty(.) && all(. %in% vars)) . else character(0)}
-  #   if (length(init) > 0) r_state$glm_evar <<- init
-  # })
-
   selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
-  	# selected = state_multiple("glm_evar", vars, init),
-    # selected = isolate(use_input("glm_evar", vars, fun = "state_multiple")),
     selected = use_input("glm_evar", vars, fun = "state_multiple"),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
+
+output$ui_glm_wts <- renderUI({
+  req(available(input$glm_rvar), available(input$glm_evar))
+  isNum <- .getclass() %in% c("numeric","integer")
+  vars <- varnames()[isNum]
+  if (length(vars) > 0 && any(vars %in% input$glm_evar)) {
+    vars <- setdiff(vars, input$glm_evar)
+    names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+  }
+  vars <- c("None", vars)
+
+  selectInput(inputId = "glm_wts", label = "Weights:", choices = vars,
+    selected = use_input("glm_wts", vars),
+    multiple = FALSE)
+})
+
 
 output$ui_glm_pred_var <- renderUI({
   vars <- input$glm_evar
@@ -145,11 +145,13 @@ output$ui_glm_pred_var <- renderUI({
 })
 
 output$ui_glm_test_var <- renderUI({
+  req(available(input$glm_evar))
  	vars <- input$glm_evar
 	if (!is.null(input$glm_int)) vars <- c(vars,input$glm_int)
 
   selectizeInput(inputId = "glm_test_var", label = "Variables to test:",
-    choices = vars, selected = state_multiple("glm_test_var", vars),
+    choices = vars,
+    selected = use_input("glm_test_var", vars, fun = "state_multiple"),
     multiple = TRUE,
     options = list(placeholder = "None", plugins = list("remove_button"))
   )
@@ -159,7 +161,7 @@ output$ui_glm_show_interactions <- renderUI({
   choices <- glm_show_interactions[1:max(min(3,length(input$glm_evar)),1)]
   radioButtons(inputId = "glm_show_interactions", label = "Interactions:",
     choices = choices,
-    selected = isolate(use_input_nonvar("glm_show_interactions", choices)),
+    selected = use_input_nonvar("glm_show_interactions", choices, init = ""),
     inline = TRUE)
 })
 
@@ -177,8 +179,12 @@ output$ui_glm_int <- renderUI({
   }
 
 	selectInput("glm_int", label = NULL, choices = choices,
-    selected = isolate(use_input_nonvar("glm_int", choices)),
+    selected = use_input_nonvar("glm_int", choices),
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
+})
+
+observeEvent(input$glm_show_interactions == "", {
+  updateSelectInput(session = session, inputId = "glm_int", selected = character(0))
 })
 
 ## X - variable
@@ -225,14 +231,15 @@ output$ui_glm_reg <- renderUI({
 
         # radioButtons(inputId = "glm_predict", label = "Prediction:", glm_predict,
         #   selected = state_init("glm_predict", ""), inline = TRUE),
-        conditionalPanel(condition = "input.glm_predict == 'cmd'",
-          returnTextAreaInput("glm_pred_cmd", "Prediction command:",
-            value = state_init("glm_pred_cmd",""))
-        ),
-        conditionalPanel(condition = "input.glm_predict == 'data'",
+        conditionalPanel("input.glm_predict == 'data' | input.glm_predict == 'datacmd'",
           selectizeInput(inputId = "glm_pred_data", label = "Predict for profiles:",
                       choices = c("None" = "",r_data$datasetlist),
                       selected = state_init("glm_pred_data"), multiple = FALSE)
+        ),
+        # conditionalPanel(condition = "input.glm_predict == 'cmd'",
+        conditionalPanel("input.glm_predict == 'cmd' | input.glm_predict == 'datacmd'",
+          returnTextAreaInput("glm_pred_cmd", "Prediction command:",
+            value = state_init("glm_pred_cmd",""))
         ),
         conditionalPanel(condition = "input.glm_predict != 'none'",
           checkboxInput("glm_pred_plot", "Plot predictions", state_init("glm_pred_plot", FALSE)),
@@ -268,7 +275,7 @@ output$ui_glm_reg <- renderUI({
 	    uiOutput("ui_glm_rvar"),
       uiOutput("ui_glm_lev"),
 	    uiOutput("ui_glm_evar"),
-
+      uiOutput("ui_glm_wts"),
       conditionalPanel(condition = "input.glm_evar != null",
 
   			uiOutput("ui_glm_show_interactions"),
@@ -376,19 +383,20 @@ glm_available <- reactive({
   if (not_available(input$glm_evar))
     return("Please select one or more explanatory variables.\n\n" %>% suggest_data("titanic"))
 
-  req(input$glm_pause == FALSE)
-  req(input$glm_rvar)
-  req(input$glm_evar)
-
   "available"
 })
 
 .glm_reg <- reactive({
-  # req(input$dataset)
   req(input$glm_pause == FALSE)
-  req(input$glm_rvar)
-  req(input$glm_evar)
-  req(input$glm_lev)
+  req(available(input$glm_rvar), available(input$glm_evar))
+  req(input$glm_lev, input$glm_wts)
+
+  ## need dependency on glm_int so I can have names(input) in isolate
+  # cat(input$glm_int, file = stderr(), "\n")
+  # print(character(0))
+  # print(input$glm_int)
+  input$glm_int
+  isolate(req("glm_int" %in% names(input)))
 
   withProgress(message = 'Estimating model', value = 0,
     do.call(glm_reg, glm_inputs())
@@ -397,7 +405,6 @@ glm_available <- reactive({
 
 .summary_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
-  # req(input$glm_sum_check)
   do.call(summary, c(list(object = .glm_reg()), glm_sum_inputs()))
 })
 
@@ -405,16 +412,10 @@ glm_available <- reactive({
   if (glm_available() != "available") return(glm_available())
   if (is_empty(input$glm_plots))
     return("Please select a regression plot from the drop-down menu")
-  # req(input$glm_plots)
-
-  # cat(paste0(names(glm_plot_inputs()), " ", glm_plot_inputs(), collapse = ", "), file = stderr(), "\n")
 
   pinp <- glm_plot_inputs()
   pinp$shiny <- TRUE
   do.call(plot, c(list(x = .glm_reg()), pinp))
-
-  # glm_plot_inputs() %>% {.$shiny <- TRUE; .} %>%
-    # {do.call(plot, c(list(x = .glm_reg()), .))}
 })
 
 .predict_glm_reg <- reactive({
@@ -474,6 +475,10 @@ observeEvent(input$glm_reg_report, {
 observeEvent(input$glm_store_res, {
   robj <- .glm_reg()
   if (!is.list(robj)) return()
+
+  # print(length(robj$model$residuals))
+  # print(nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
+
   if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
     return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
   store_glm(robj, data = input$dataset, type = "residuals", name = input$glm_store_res_name)

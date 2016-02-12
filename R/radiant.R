@@ -1090,6 +1090,7 @@ nrprint <- function(x, sym = "", dec = 2, perc = FALSE) {
 #' @examples
 #' data.frame(x = c("a","b"), y = c(1L, 2L), z = c(-0.0005, 3.1)) %>%
 #'   dfround(dec = 3)
+#'
 #' @export
 dfround <- function(tbl, dec = 3) {
   tbl %>%
@@ -1125,4 +1126,32 @@ find_dropbox <- function(folder = 1) {
   } else {
     stop("Could not find a Drobox folder")
   }
+}
+
+#' Returns the index of the (parallel) maxima of the input values (wrapper for max.col)
+#'
+#' @param ... Numeric or character vectors of the same length
+#' @param ties.method A character string specifying how ties are handled, "first" by default
+#'
+#' @return Vector of rankings
+#'
+#' @examples
+#' which.pmax(1:10, 10:1)
+#'
+which.pmax <- function(..., ties.method = c("first", "last", "random")) {
+  max.col(cbind(...), ties.method = ties.method[1])
+}
+
+#' Returns the index of the (parallel) minima of the input values (wrapper for min.col)
+#'
+#' @param ... Numeric or character vectors of the same length
+#' @param ties.method A character string specifying how ties are handled, "first" by default
+#'
+#' @return Vector of rankings
+#'
+#' @examples
+#' which.pmin(1:10, 10:1)
+#'
+which.pmin <- function(..., ties.method = c("first", "last", "random")) {
+  min.col(cbind(...), ties.method = ties.method[1])
 }

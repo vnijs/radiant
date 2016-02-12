@@ -1,6 +1,6 @@
 # library(png)
-library(radiant)
-library(testthat)
+# library(radiant)
+# library(testthat)
 
 trim_trailing <- function(x) sub("\\s+$", "", x)
 trim_leading <- function(x) sub("^\\s+", "", x)

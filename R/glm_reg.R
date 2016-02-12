@@ -8,6 +8,7 @@
 #' @param lev The level in the response variable defined as _success_
 #' @param link Link function for glm ('logit' or 'probit'). 'logit' is the default
 #' @param int Interaction term to include in the model
+#' @param wts Weights to use in estimation
 #' @param check Optional estimation parameters. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -28,6 +29,7 @@ glm_reg <- function(dataset, rvar, evar,
                     lev = "",
                     link = "logit",
                     int = "",
+                    wts = "None",
                     check = "",
                     dec = 3,
                     data_filter = "") {
@@ -36,8 +38,24 @@ glm_reg <- function(dataset, rvar, evar,
     return("Response variable contained in the set of explanatory variables.\nPlease update model specification." %>%
            set_class(c("glm_reg",class(.))))
 
-  dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
+  vars <- c(rvar, evar)
+
+  if (!is.null(wts) && wts == "None") {
+    wts <- NULL
+  } else {
+    wtsname <- wts
+    vars <- c(rvar, evar, wtsname)
+  }
+
+  # dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
+  dat <- getdata(dataset, vars, filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
+
+  if (!is.null(wts)) {
+    wts <- dat[[wtsname]]
+    dat <- select_(dat, .dots = paste0("-",wtsname))
+    # wts <- wtstmp; rm(wtstmp)
+  }
 
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
     return("One or more selected variables show no variation. Please select other variables." %>%
@@ -68,30 +86,21 @@ glm_reg <- function(dataset, rvar, evar,
 
   if ("stepwise" %in% check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-    model <- glm(paste(rvar, "~ 1") %>% as.formula,
+    model <- glm(as.formula(paste(rvar, "~ 1")), weights = wts,
                  family = binomial(link = link), data = dat) %>%
              step(k = 2, scope = list(upper = form), direction = 'both')
   } else {
-    model <- glm(form, family = binomial(link = link), data = dat)
+    model <- glm(form, weights = wts, family = binomial(link = link), data = dat)
   }
 
   coeff <- tidy(model)
   coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
 
-  # if ("standardize" %in% check) {
-  #   isNum <- sapply(dat, is.numeric)
-  #   if (sum(isNum) > 0) {
-  #     std <- sapply(dat[,isNum], sd_rm)
-  #     coeff$coefficient[which(coeff[[1]] %in% names(std))] %<>% {. * std}
-  #     coeff$std.error[which(coeff[[1]] %in% names(std))] %<>% {. * std}
-  #   }
-  # }
-
   isFct <- sapply(select(dat,-1), function(x) is.factor(x) || is.logical(x))
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
-      coeff$`  ` %<>% sub(i, paste0(i,"|"), .)
+      coeff$`  ` %<>% sub(i, paste0(i,"|"), .) %>% gsub("\\|\\|","\\|",.)
     rm(i, isFct)
   }
   coeff$`  ` %<>% format(justify = "left")
@@ -146,7 +155,8 @@ summary.glm_reg <- function(object,
   cat("\nResponse variable    :", object$rvar)
   cat("\nLevel                :", object$lev, "in", object$rvar)
   cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n")
-
+  if (length(object$wtsname) > 0)
+    cat("Weights used         :", object$wtsname, "\n")
   expl_var <- if (length(object$evar) == 1) object$evar else "x"
   cat(paste0("Null hyp.: there is no effect of ", expl_var, " on ", object$rvar, "\n"))
   cat(paste0("Alt. hyp.: there is an effect of ", expl_var, " on ", object$rvar, "\n"))
@@ -156,7 +166,6 @@ summary.glm_reg <- function(object,
 
   coeff <- object$coeff
   p.small <- coeff$p.value < .001
-  # coeff[,2:5] %<>% mutate_each(funs(sprintf(paste0("%.",dec,"f"),.)))
   coeff[,2:5] %<>% dfprint(dec)
   coeff$p.value[p.small] <- "< .001"
   print(coeff, row.names=FALSE)
@@ -209,8 +218,6 @@ summary.glm_reg <- function(object,
         set_colnames(c("Low","High")) %>%
         cbind(select(object$coeff,2),.)
 
-        ?confint.default
-
       if ("confint" %in% sum_check) {
         ci_tab %T>%
         { .$`+/-` <- (.$High - .$coefficient) } %>%
@@ -241,7 +248,7 @@ summary.glm_reg <- function(object,
     }
   }
 
-  if (!is.null(test_var) && test_var[1] != "") {
+  if (!is_empty(test_var)) {
     if ("stepwise" %in% object$check) {
       cat("Model comparisons are not conducted when Stepwise has been selected.\n")
     } else {
@@ -259,7 +266,7 @@ summary.glm_reg <- function(object,
       if (length(not_selected) > 0) sub_form <- paste(object$rvar, "~", paste(not_selected, collapse = " + "))
       ## update with glm_sub NOT working when called from radiant - strange
       # glm_sub <- update(object$model, sub_form, data = object$model$model)
-      glm_sub <- glm(sub_form, family = binomial(link = object$link), data = object$model$model)
+      glm_sub <- glm(as.formula(sub_form), weights = object$wts, family = binomial(link = object$link), data = object$model$model)
       glm_sub_fit <- glance(glm_sub)
       glm_sub <- anova(glm_sub, object$model, test='Chi')
 
@@ -441,16 +448,16 @@ predict.glm_reg <- function(object,
 
   dec <- object$dec
 
-  if (pred_count < 2) {
-    if (pred_cmd != "")
-      cat("Multiple inputs where specified for prediciton. The command will be used.\nTo use variables or a dataset remove the command.")
-    if (pred_vars != "")
-      cat("Multiple inputs where specified for prediciton. The variables selected will be used.\nTo use a command or dataset unselect variables.")
-  }
+  # if (pred_count < 2) {
+  #   if (pred_cmd != "")
+  #     cat("Multiple inputs where specified for prediciton. The command will be used.\nTo use variables or a dataset remove the command.")
+  #   if (pred_vars != "")
+  #     cat("Multiple inputs where specified for prediciton. The variables selected will be used.\nTo use a command or dataset unselect variables.")
+  # }
 
   pred_type <- "cmd"
   vars <- object$evar
-  if (pred_cmd != "") {
+  if (pred_data == "" && pred_cmd != "") {
     pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -490,6 +497,8 @@ predict.glm_reg <- function(object,
     pred <- getdata(pred_data, filt = "", na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
+
+
     if (is(pred, 'try-error')) {
       cat("Model variables: ")
       cat(vars,"\n")
@@ -497,8 +506,28 @@ predict.glm_reg <- function(object,
       cat(vars[!vars %in% pred_names])
       return()
     }
+
+    if (pred_cmd != "") {
+      pred_cmd <- pred_cmd %>% gsub("\"","\'",.) %>% gsub(" ","",.)
+      vars <-
+        strsplit(pred_cmd, ";")[[1]] %>% strsplit(., "=") %>%
+        sapply("[", 1) %>% gsub(" ","",.)
+      dots <- strsplit(pred_cmd, ";")[[1]] %>% gsub(" ","",.)
+      for (i in seq_along(dots))
+        dots[[i]] <- sub(paste0(vars[[i]],"="),"",dots[[i]])
+
+      pred <- try(mutate_(pred, .dots = setNames(dots, vars)), silent = TRUE)
+      # nvar <- try(do.call(within, list(pred, parse(text = pred_cmd))), silent = TRUE)
+      if (is(pred, 'try-error')) {
+        paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
+        return()
+      }
+      pred_type <- "datacmd"
+    } else {
+      pred_type <- "data"
+    }
+
     pred %<>% na.omit()
-    pred_type <- "data"
   }
 
   pred_val <- try(predict(object$model, pred, type = 'response', se.fit = TRUE), silent = TRUE)
@@ -518,9 +547,12 @@ predict.glm_reg <- function(object,
       cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n\n")
 
       if (pred_type == "cmd") {
-        cat("Predicted values for:\n")
-      } else {
+        cat("Predicted values for:\n\n")
+      } else if (pred_type == "datacmd") {
         cat(paste0("Predicted values for profiles from dataset: ",pred_data,"\n"))
+        cat(paste0("Customized using command: ", pred_cmd, "\n\n"))
+      } else {
+        cat(paste0("Predicted values for profiles from dataset: ",pred_data,"\n\n"))
       }
 
       if (is.logical(prn) || prn == -1) {

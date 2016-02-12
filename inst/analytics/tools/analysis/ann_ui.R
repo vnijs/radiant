@@ -14,7 +14,7 @@ ann_inputs <- reactive({
 output$ui_ann_rvar <- renderUI({
  	vars <- two_level_vars()
   selectInput(inputId = "ann_rvar", label = "Response variable:", choices = vars,
-  	selected = isolate(use_input("ann_rvar",vars)), multiple = FALSE)
+  	selected = use_input("ann_rvar",vars), multiple = FALSE)
 })
 
 output$ui_ann_lev <- renderUI({
@@ -26,7 +26,7 @@ output$ui_ann_lev <- renderUI({
 
   selectInput(inputId = "ann_lev", label = "Choose level:",
               choices = levs,
-              selected = isolate(use_input_nonvar("ann_lev", levs)))
+              selected = use_input_nonvar("ann_lev", levs))
 })
 
 output$ui_ann_evar <- renderUI({
@@ -37,7 +37,7 @@ output$ui_ann_evar <- renderUI({
     vars <- vars[-which(vars == input$ann_rvar)]
 
   selectInput(inputId = "ann_evar", label = "Explanatory variables:", choices = vars,
-    selected = isolate(use_input("ann_evar", vars, fun = "state_multiple")),
+    selected = use_input("ann_evar", vars, fun = "state_multiple"),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
