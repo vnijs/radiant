@@ -448,7 +448,7 @@ predict.regression <- function(object,
                                pred_data = "",
                                pred_cmd = "",
                                conf_lev = 0.95,
-                               prn = -1,
+                               prn = 100,
                                ...) {
 
                                # pred_filt = "",
@@ -465,16 +465,16 @@ predict.regression <- function(object,
 
   dec <- object$dec
 
-  if (pred_count < 2) {
-    if (pred_cmd != "")
-      cat("Multiple inputs where specified for prediciton. The command will be used.\nTo use variables or a dataset remove the command.")
-    if (pred_vars != "")
-      cat("Multiple inputs where specified for prediciton. The variables selected will be used.\nTo use a command or dataset unselect variables.")
-  }
+  # if (pred_count < 2) {
+  #   if (pred_cmd != "")
+  #     cat("Multiple inputs where specified for prediciton. The command will be used.\nTo use variables or a dataset remove the command.")
+  #   if (pred_vars != "")
+  #     cat("Multiple inputs where specified for prediciton. The variables selected will be used.\nTo use a command or dataset unselect variables.")
+  # }
 
   pred_type <- "cmd"
   vars <- object$evar
-  if (pred_cmd != "") {
+  if (pred_data == "" && pred_cmd != "") {
     pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -515,6 +515,7 @@ predict.regression <- function(object,
     pred <- getdata(pred_data, na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
+
     if (is(pred, 'try-error')) {
       cat("Model variables: ")
       cat(vars,"\n")
@@ -522,8 +523,27 @@ predict.regression <- function(object,
       cat(vars[!vars %in% pred_names])
       return()
     }
+
+    if (pred_cmd != "") {
+      pred_cmd <- pred_cmd %>% gsub("\"","\'",.) %>% gsub(" ","",.)
+      vars <-
+        strsplit(pred_cmd, ";")[[1]] %>% strsplit(., "=") %>%
+        sapply("[", 1) %>% gsub(" ","",.)
+      dots <- strsplit(pred_cmd, ";")[[1]] %>% gsub(" ","",.)
+      for (i in seq_along(dots))
+        dots[[i]] <- sub(paste0(vars[[i]],"="),"",dots[[i]])
+
+      pred <- try(mutate_(pred, .dots = setNames(dots, vars)), silent = TRUE)
+      if (is(pred, 'try-error')) {
+        paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
+        return()
+      }
+      pred_type <- "datacmd"
+    } else {
+      pred_type <- "data"
+    }
+
     pred %<>% na.omit()
-    pred_type <- "data"
   }
 
   pred_val <- try(predict(object$model, pred, interval = 'prediction', level = conf_lev), silent = TRUE)
@@ -546,13 +566,18 @@ predict.regression <- function(object,
 
       if (pred_type == "cmd") {
         cat("Predicted values for:\n")
+      } else if (pred_type == "datacmd") {
+        cat(paste0("Predicted values for profiles from dataset: ", pred_data,"\n"))
+        cat(paste0("Customized using command: ", pred_cmd, "\n"))
       } else {
-        cat(paste0("Predicted values for profiles from dataset: ",object$pred_data,"\n"))
+        cat(paste0("Predicted values for profiles from dataset: ", pred_data,"\n"))
       }
 
       if (is.logical(prn) || prn == -1) {
+        cat("\n")
         dfprint(pred, dec) %>% print(row.names = FALSE)
       } else {
+        cat(paste0("Number of rows shown: ", prn, "\n\n"))
         head(pred, prn) %>% dfprint(dec) %>% print(row.names = FALSE)
       }
     }

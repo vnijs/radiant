@@ -251,8 +251,7 @@ output$ui_glm_reg <- renderUI({
           )
         ),
         ## only show if full data is used for prediction
-        conditionalPanel("input.glm_predict == 'data'",
-                          # input.glm_pred_data == input.dataset",
+        conditionalPanel("input.glm_predict == 'data' | input.glm_predict == 'datacmd'",
           tags$table(
             tags$td(textInput("glm_store_pred_name", "Store predictions:", "predict_glm")),
             tags$td(actionButton("glm_store_pred", "Store"), style="padding-top:30px;")

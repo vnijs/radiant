@@ -5,7 +5,7 @@
 \title{Predict method for the glm_reg function}
 \usage{
 \method{predict}{glm_reg}(object, pred_vars = "", pred_data = "",
-  pred_cmd = "", prn = -1, ...)
+  pred_cmd = "", prn = 100, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{glm_reg}}}

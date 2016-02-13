@@ -3,7 +3,7 @@
 ################################################################
 reg_show_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
 # reg_predict <- c("None" = "none", "Variable" = "vars", "Data" = "data","Command" = "cmd")
-reg_predict <- c("None" = "none", "Data" = "data","Command" = "cmd")
+reg_predict <- c("None" = "none", "Data" = "data","Command" = "cmd", "Data & Command" = "datacmd")
 reg_check <- c("Standardized coefficients" = "standardize",
                "Stepwise selection" = "stepwise")
 reg_sum_check <- c("RMSE" = "rmse", "Sum of squares" = "sumsquares",
@@ -60,14 +60,16 @@ reg_pred_inputs <- reactive({
     reg_pred_args[[i]] <- input[[paste0("reg_",i)]]
 
   reg_pred_args$pred_cmd <- reg_pred_args$pred_data <- reg_pred_args$pred_vars <- ""
-  if (input$reg_predict == "cmd")
+  if (input$reg_predict == "cmd") {
     reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd) %>% gsub("\"","\'",.)
-  else if (input$reg_predict == "data")
+  } else if (input$reg_predict == "data") {
     reg_pred_args$pred_data <- input$reg_pred_data
-  else if (input$reg_predict == "vars")
+  } else if (input$reg_predict == "datacmd") {
+    reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd) %>% gsub("\"","\'",.)
+    reg_pred_args$pred_data <- input$reg_pred_data
+  } else if (input$reg_predict == "vars") {
     reg_pred_args$pred_vars <- input$reg_pred_vars
-
-    # reg_pred_args$pred_cmd <- gsub("\\s", "", input$reg_pred_cmd)
+  }
 
   reg_pred_args
 })
@@ -217,14 +219,14 @@ output$ui_regression <- renderUI({
         conditionalPanel(condition = "input.reg_predict == 'vars'",
           uiOutput("ui_reg_pred_var")
         ),
-        conditionalPanel("input.reg_predict == 'data'",
+        conditionalPanel("input.reg_predict == 'data' | input.reg_predict == 'datacmd'",
           selectizeInput(inputId = "reg_pred_data", label = "Predict for profiles:",
                       choices = c("None" = "",r_data$datasetlist),
                       selected = state_single("reg_pred_data", c("None" = "",r_data$datasetlist)), multiple = FALSE)
           # returnTextAreaInput("reg_pred_filt", label = "Prediction filter:", value = state_init("reg_pred_filt")),
           # uiOutput("ui_reg_pred_filt_err")
         ),
-        conditionalPanel(condition = "input.reg_predict == 'cmd'",
+        conditionalPanel("input.reg_predict == 'cmd' | input.reg_predict == 'datacmd'",
           returnTextAreaInput("reg_pred_cmd", "Prediction command:",
             value = state_init("reg_pred_cmd", ""))
         ),
@@ -238,8 +240,7 @@ output$ui_regression <- renderUI({
           )
         ),
         ## only show if full data is used for prediction
-        conditionalPanel("input.reg_predict == 'data'",
-                          # input.reg_pred_data == input.dataset",
+        conditionalPanel("input.reg_predict == 'data' | input.reg_predict == 'datacmd'",
           tags$table(
             tags$td(textInput("reg_store_pred_name", "Store predictions:", "predict_reg")),
             tags$td(actionButton("reg_store_pred", "Store"), style="padding-top:30px;")

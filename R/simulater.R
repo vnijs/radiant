@@ -136,13 +136,7 @@ simulater <- function(const = "",
         mess <- c("error",paste0("All log-normal variables should have a standard deviation larger than 0.\nPlease review the input carefully"))
         return(mess %>% set_class(c("simulater", class(.))))
       }
-      # m <- as.numeric(s[[i]][2])
-      # if (!m > 1) {
-      #   mess <- c("error",paste0("All log-normal variables should have a mean larger than 1.\nPlease review the input carefully"))
-      #   return(mess %>% set_class(c("simulater", class(.))))
-      # }
       s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, as.numeric(.[2]), sdev)}
-      # s[[i]] %>% { dat[[.[1]]] <<- rlnorm(nr, m, sdev)}
     }
   }
 
@@ -190,16 +184,17 @@ simulater <- function(const = "",
     s <- discrete %>% sim_splitter
     for (i in 1:length(s)) {
 
-      dpar <- sshhr( try(s[[i]][-1] %>% as.numeric %>% matrix(ncol = 2), silent = TRUE) )
+      dpar <- sshhr( try(as.numeric(s[[i]][-1]) %>% matrix(ncol = 2), silent = TRUE) )
+
       if (is(dpar, 'try-error') || any(is.na(dpar))) {
         mess <- c("error",paste0("Input for a discrete variable contains an error. Please review the input carefully"))
         return(mess %>% set_class(c("simulater", class(.))))
-      } else if (sum(dpar[[2]]) != 1) {
+      } else if (sum(dpar[,2]) != 1) {
         mess <- c("error",paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(dpar[[2]]),3),")"))
         return(mess %>% set_class(c("simulater", class(.))))
       }
 
-      dat[[s[[i]][1]]] <- sample(dpar[[1]], nr, replace = TRUE, prob = dpar[[2]])
+      dat[[s[[i]][1]]] <- sample(dpar[,1], nr, replace = TRUE, prob = dpar[,2])
     }
   }
 

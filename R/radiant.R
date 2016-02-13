@@ -1128,30 +1128,28 @@ find_dropbox <- function(folder = 1) {
   }
 }
 
-#' Returns the index of the (parallel) maxima of the input values (wrapper for max.col)
+#' Returns the index of the (parallel) maxima of the input values
 #'
 #' @param ... Numeric or character vectors of the same length
-#' @param ties.method A character string specifying how ties are handled, "first" by default
 #'
 #' @return Vector of rankings
 #'
 #' @examples
 #' which.pmax(1:10, 10:1)
+#' which.pmax(2, 10:1)
 #'
-which.pmax <- function(..., ties.method = c("first", "last", "random")) {
-  max.col(cbind(...), ties.method = ties.method[1])
-}
+#' @export
+which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
 
-#' Returns the index of the (parallel) minima of the input values (wrapper for min.col)
+#' Returns the index of the (parallel) minima of the input values
 #'
 #' @param ... Numeric or character vectors of the same length
-#' @param ties.method A character string specifying how ties are handled, "first" by default
 #'
 #' @return Vector of rankings
 #'
 #' @examples
 #' which.pmin(1:10, 10:1)
+#' which.pmin(2, 10:1)
 #'
-which.pmin <- function(..., ties.method = c("first", "last", "random")) {
-  min.col(cbind(...), ties.method = ties.method[1])
-}
+#' @export
+which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))

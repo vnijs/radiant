@@ -5,7 +5,7 @@
 \title{Generalized linear models (GLM)}
 \usage{
 glm_reg(dataset, rvar, evar, lev = "", link = "logit", int = "",
-  check = "", dec = 3, data_filter = "")
+  wts = "None", check = "", dec = 3, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -19,6 +19,8 @@ glm_reg(dataset, rvar, evar, lev = "", link = "logit", int = "",
 \item{link}{Link function for glm ('logit' or 'probit'). 'logit' is the default}
 
 \item{int}{Interaction term to include in the model}
+
+\item{wts}{Weights to use in estimation}
 
 \item{check}{Optional estimation parameters. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
 

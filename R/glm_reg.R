@@ -434,7 +434,7 @@ predict.glm_reg <- function(object,
                             pred_vars = "",
                             pred_data = "",
                             pred_cmd = "",
-                            prn = -1,
+                            prn = 100,
                             ...) {
 
   if (is.character(object)) return(object)
@@ -517,7 +517,6 @@ predict.glm_reg <- function(object,
         dots[[i]] <- sub(paste0(vars[[i]],"="),"",dots[[i]])
 
       pred <- try(mutate_(pred, .dots = setNames(dots, vars)), silent = TRUE)
-      # nvar <- try(do.call(within, list(pred, parse(text = pred_cmd))), silent = TRUE)
       if (is(pred, 'try-error')) {
         paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
         return()
@@ -547,17 +546,19 @@ predict.glm_reg <- function(object,
       cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n\n")
 
       if (pred_type == "cmd") {
-        cat("Predicted values for:\n\n")
+        cat("Predicted values for:\n")
       } else if (pred_type == "datacmd") {
-        cat(paste0("Predicted values for profiles from dataset: ",pred_data,"\n"))
-        cat(paste0("Customized using command: ", pred_cmd, "\n\n"))
+        cat(paste0("Predicted values for profiles from dataset: ", pred_data,"\n"))
+        cat(paste0("Customized using command: ", pred_cmd, "\n"))
       } else {
-        cat(paste0("Predicted values for profiles from dataset: ",pred_data,"\n\n"))
+        cat(paste0("Predicted values for profiles from dataset: ", pred_data,"\n"))
       }
 
       if (is.logical(prn) || prn == -1) {
+        cat("\n")
         dfprint(pred, dec) %>% print(row.names = FALSE)
       } else {
+        cat(paste0("Number of rows shown: ", prn, "\n\n"))
         head(pred, prn) %>% dfprint(dec) %>% print(row.names = FALSE)
       }
     }
