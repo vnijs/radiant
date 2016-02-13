@@ -79,11 +79,11 @@ addResourcePath("js", file.path(r_path,"base/www/js/"))
 
 ## ensure that MathJax is only used if loaded to avoid breaking conditional panels
 ## https://github.com/rstudio/shiny/issues/692
-# withMathJax <- function (...) {
-#   path <- "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-#   tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
-#       ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
-# }
+withMathJax <- function (...) {
+  path <- "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+      ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
+}
 
 nav_ui <-
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,
