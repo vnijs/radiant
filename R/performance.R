@@ -7,8 +7,10 @@
 #' @param rvar Response variable
 #' @param lev The level in the response variable defined as _success_
 #' @param qnt Number of bins to create
-#' @param method Use either ntile or xtile to split the data (default is xtile)
+#' @param margin Margin on each customer purchase
+#' @param cost Cost for each connection (e.g., email or mailing)
 #' @param train Use data from training ("Training"), validation ("Validation"), both ("Both"), or all data ("All") to evaluate model performance
+#' @param method Use either ntile or xtile to split the data (default is xtile)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of results
@@ -23,23 +25,19 @@
 performance <- function(dataset, pred, rvar,
                         lev = "",
                         qnt = 10,
-                        method = "xtile",
+                        margin = 1,
+                        cost = 1,
                         train = "",
+                        method = "xtile",
                         data_filter = "") {
 
-	# library(radiant)
-	# dataset <- "bbb"
-	# pred <- c("last","total")
-	# rvar <- "buyer"
-	# method <- "xtile"
-	# lev <- ""
-	# qnt <- 10
-	# resp_lev <- 1
-	# data_filter <- ""
-	# train <- "All"
+	## in case no inputs were provided
+	if (is.na(margin)) margin <- 0
+	if (is.na(cost)) cost <- 0
 
 	## to avoid 'global not defined' warnings
 	nr_resp <- nr_obs <- cum_resp <- cum_resp_rate <- everything <- NULL
+	profit <- ROME <- NULL
 
 	if (is_empty(qnt)) qnt <- 10
 
@@ -62,10 +60,13 @@ performance <- function(dataset, pred, rvar,
   if (method == "xtile") method <- "radiant::xtile"
 
   auc_list <- list()
-  lg_list <- list()
+  prof_list <- c()
+  pdat <- list()
 	pext <- c(All = "", Training = " (train)", Validation = " (val)")
 
 	for (i in names(dat_list)) {
+    lg_list <- list()
+    pl <- c()
 		dat <- dat_list[[i]]
 	  rv <- dat[[rvar]]
 	  if (is.factor(rv)) {
@@ -111,6 +112,8 @@ performance <- function(dataset, pred, rvar,
 			  	else . } %>%
 			  # arrange(desc(resp_rate)) %>%
 			  mutate(
+			    profit = margin * cumsum(nr_resp) - cost * cumsum(nr_obs),
+			    ROME = profit / (cost * cumsum(nr_obs)),
 			    cum_prop = cumsum(nr_obs / tot_obs),
 			    cum_resp = cumsum(nr_resp),
 			    cum_resp_rate = cum_resp / cumsum(nr_obs),
@@ -118,11 +121,17 @@ performance <- function(dataset, pred, rvar,
 			    cum_gains = cum_resp / tot_resp
 			  ) %>%
 			  mutate(pred = pname) %>%
+				mutate(ROME = ifelse (is.na(ROME), 0, ROME)) %>%
 			  select(pred, everything())
+
+	  	  pl <- c(pl, max(lg_list[[pname]]$profit))
 		}
+		prof_list <- c(prof_list, pl / max(pl))
+		pdat[[i]] <- bind_rows(lg_list) %>% mutate(profit = profit / abs(max(profit)))
 	}
-	dat <- bind_rows(lg_list)
-	rm(lg_list)
+	dat <- bind_rows(pdat) %>% mutate(profit = ifelse (is.na(profit), 0, profit))
+	names(prof_list) <- names(auc_list)
+	rm(lg_list, pdat)
 
 	environment() %>% as.list %>% set_class(c("performance",class(.)))
 }
@@ -149,17 +158,21 @@ summary.performance <- function(object, prn = TRUE, ...) {
 
 	if (prn) {
 		cat("Model performance\n")
-		cat("Data       :", object$dataset, "\n")
+		cat("Data        :", object$dataset, "\n")
 		if (object$data_filter %>% gsub("\\s","",.) != "")
-			cat("Filter     :", gsub("\\n","", object$data_filter), "\n")
-		cat("Results for:", object$train, "\n")
-		cat("Perdictors :", paste0(object$pred, collapse=", "), "\n")
-		cat("Response   :", object$rvar, "\n")
-	  cat("Level      :", object$lev, "in", object$rvar, "\n")
-		# cat("Method    :", gsub("radiant::","",object$method), "\n")
-		cat("Bins       :", object$qnt, "\n")
+			cat("Filter      :", gsub("\\n","", object$data_filter), "\n")
+		cat("Results for :", object$train, "\n")
+		cat("Perdictors  :", paste0(object$pred, collapse=", "), "\n")
+		cat("Response    :", object$rvar, "\n")
+	  cat("Level       :", object$lev, "in", object$rvar, "\n")
+		# cat("Method     :", gsub("radiant::","",object$method), "\n")
+		cat("Bins        :", object$qnt, "\n")
+		cat("Margin/Cost :", object$margin, " / ", object$cost, "\n")
+		# prof <- unlist(object$prof_list)
+		prof <- object$prof_list
+		cat("Profit index:", paste0(names(prof), " (", round(prof,3), ")", collapse=", "), "\n")
 		auc <- unlist(object$auc_list)
-		cat("AUC        :", paste0(names(auc), " (", round(auc,3), ")", collapse=", "), "\n\n")
+		cat("AUC         :", paste0(names(auc), " (", round(auc,3), ")", collapse=", "), "\n\n")
 		print(dfprint(as.data.frame(object$dat), 3), row.names = FALSE)
 	} else {
     return(object$dat %>% set_class(c("performance",class(.))))
@@ -192,7 +205,7 @@ plot.performance <- function(x,
 
 
 	## to avoid 'global not defined' warnings
-	pred <- cum_prop <- cum_gains <- obs <- NULL
+	pred <- cum_prop <- cum_gains <- obs <- profit <- NULL
 
 	object <- x; rm(x)
   if (is.character(object) || is.null(object$dat) || any(is.na(object$dat$cum_lift)) ||
@@ -226,6 +239,38 @@ plot.performance <- function(x,
 			ylab("Cumulative gains") +
 			xlab("Proportion of customers")
 	}
+
+	if ("profit" %in% plots) {
+		init <- object$dat[1,] %>% {.[1,] <- 0; .}
+		dat <-
+	    object$dat %>%
+		  select(pred, cum_prop, profit) %>%
+		  group_by(pred) %>%
+		  mutate(obs = 1:n())
+		init <- dat %>% filter(obs == 1)
+		init$profit <- init$cum_prop <- init$obs <- 0
+		dat <- bind_rows(init, dat) %>% arrange(pred, obs)
+
+		# dat <- mutate(dat, profit = ifelse (is.na(profit), 0, profit))
+
+		plot_list[["profit"]] <-
+			visualize(dat, xvar = "cum_prop", yvar = "profit", type = "line", color = "pred", custom = TRUE) +
+			geom_point() +
+			geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0), size = .1, color = "black") +
+			ylab("Profit index") +
+			xlab("Proportion of customers")
+	}
+
+	if ("rome" %in% plots) {
+		# dat <- mutate(object$dat, ROME = ifelse (is.na(ROME), 0, ROME))
+		plot_list[["rome"]] <-
+			visualize(object$dat, xvar = "cum_prop", yvar = "ROME", type = "line", color = "pred", custom = TRUE) +
+			geom_point() +
+			geom_segment(aes(x = 0, y = 1, xend = 1, yend = 1), size = .1, color = "black") +
+			ylab("Return on Marketing Expenditures (ROME)") +
+			xlab("Proportion of customers")
+	}
+
 
 	for (i in names(plot_list)) {
 		if (length(object$pred) < 2 && object$train != "Both")

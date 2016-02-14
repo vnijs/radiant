@@ -91,22 +91,16 @@ output$ui_glm_rvar <- renderUI({
  	vars <- two_level_vars()
   selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
   	selected = use_input("glm_rvar",vars), multiple = FALSE)
-    # selected = state_single("glm_rvar",vars), multiple = FALSE)
 })
 
 output$ui_glm_lev <- renderUI({
-  # if (is_empty(input$glm_rvar)) return()
   req(input$glm_rvar)
   if (available(input$glm_rvar))
     levs <- .getdata()[[input$glm_rvar]] %>% as.factor %>% levels
   else
     levs <- c()
-
   selectInput(inputId = "glm_lev", label = "Choose level:",
-              choices = levs,
-              selected = use_input_nonvar("glm_lev", levs))
-              # selected = state_single("glm_lev", levs, sel))
-              # selected = sel)
+    choices = levs, selected = use_input_nonvar("glm_lev", levs))
 })
 
 output$ui_glm_evar <- renderUI({
@@ -183,9 +177,9 @@ output$ui_glm_int <- renderUI({
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
-observeEvent(input$glm_show_interactions == "", {
-  updateSelectInput(session = session, inputId = "glm_int", selected = character(0))
-})
+# observeEvent(input$glm_show_interactions == "", {
+#   updateSelectInput(session = session, inputId = "glm_int", selected = character(0))
+# })
 
 ## X - variable
 output$ui_glm_xvar <- renderUI({
@@ -253,7 +247,7 @@ output$ui_glm_reg <- renderUI({
         ## only show if full data is used for prediction
         conditionalPanel("input.glm_predict == 'data' | input.glm_predict == 'datacmd'",
           tags$table(
-            tags$td(textInput("glm_store_pred_name", "Store predictions:", "predict_glm")),
+            tags$td(textInput("glm_store_pred_name", "Store predictions:", state_init("glm_store_pred_name","predict_glm"))),
             tags$td(actionButton("glm_store_pred", "Store"), style="padding-top:30px;")
           )
         )
@@ -302,14 +296,13 @@ output$ui_glm_reg <- renderUI({
                                       (input.show_filter == false |
                                       input.data_filter == '')",
           tags$table(
-            tags$td(textInput("glm_store_res_name", "Store residuals:", "residuals_glm")),
+            tags$td(textInput("glm_store_res_name", "Store residuals:", state_init("glm_store_res_name","residuals_glm"))),
             tags$td(actionButton("glm_store_res", "Store"), style="padding-top:30px;")
           )
         )
       )
 	  ),
-  	help_and_report(modal_title = "GLM",
-  	                fun_name = "glm_reg",
+  	help_and_report(modal_title = "GLM", fun_name = "glm_reg",
   	                help_file = inclRmd(file.path(r_path,"quant/tools/help/glm_reg.Rmd")))
 	)
 })
@@ -338,7 +331,10 @@ glm_plot_height <- function()
   glm_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
 glm_pred_plot_height <- function()
-  if (input$tabs_glm_reg == "Predict" && is.null(r_data$glm_pred)) 0 else 500
+  if (input$glm_pred_plot) 500 else 0
+
+  # if (input$tabs_glm_reg == "Predict" && input$glm_pred_plot) 0 else 500
+  # if (input$tabs_glm_reg == "Predict" && input$glm_pred_plotis.null(r_data$glm_pred)) 0 else 500
 
 # output is called from the main radiant ui.R
 output$glm_reg <- renderUI({
@@ -418,18 +414,28 @@ glm_available <- reactive({
 })
 
 .predict_glm_reg <- reactive({
-  r_data$glm_pred <- NULL
+  # isolate(r_data$glm_pred <- NULL)
   if (glm_available() != "available") return(glm_available())
-  if (is_empty(input$glm_predict)) return(invisible())
-  r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
+  # if (is_empty(input$glm_predict)) return(invisible())
+  # if (!is_empty(input$reg_predict, "none") &&
+  #     (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd))) {
+
+  req(!is_empty(input$glm_predict, "none"),
+      (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
+  # r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
+  do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
 })
 
 .predict_plot_glm_reg <- reactive({
-  if (!input$glm_pred_plot) return(" ")
+  # if (!input$glm_pred_plot) return(" ")
+  req(input$glm_pred_plot)
   if (glm_available() != "available") return(glm_available())
   if (not_available(input$glm_xvar) || !input$glm_xvar %in% input$glm_evar) return(" ")
-  if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
-  do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
+  # if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
+  req(!is_empty(input$glm_predict, "none"),
+      (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
+  # do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
+  do.call(plot, c(list(x = .predict_glm_reg()), glm_pred_plot_inputs()))
 })
 
 observeEvent(input$glm_reg_report, {
@@ -443,19 +449,21 @@ observeEvent(input$glm_reg_report, {
     figs <- TRUE
   }
   xcmd <- ""
-  if (!is.null(r_data$glm_pred) && !is_empty(input$glm_predict, "none")) {
+  if (!is_empty(input$glm_predict, "none") &&
+      (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd))) {
 
     pred_args <- clean_args(glm_pred_inputs(), glm_pred_args[-1])
     pred_args[["prn"]] <- 10
     inp_out[[2 + figs]] <- pred_args
 
-    outputs <- c(outputs,"result <- predict")
-    dataset <- if (input$glm_predict == "data") input$glm_pred_data else input$dataset
+    outputs <- c(outputs,"pred <- predict")
+    dataset <- if (input$glm_predict %in% c("data","datacmd")) input$glm_pred_data else input$dataset
     xcmd <-
-      paste0("# store_glm(result, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
-      paste0("# write.csv(result, file = '~/glm_predictions.csv', row.names = FALSE)")
+      paste0("store_glm(pred, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
+      paste0("# write.csv(pred, file = '~/glm_predictions.csv', row.names = FALSE)")
     if (!is_empty(input$glm_xvar)) {
       inp_out[[3 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
+      inp_out[[3 + figs]]$result <- "pred"
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
@@ -484,7 +492,8 @@ observeEvent(input$glm_store_res, {
 })
 
 observeEvent(input$glm_store_pred, {
-  pred <- r_data$glm_pred
+  # pred <- r_data$glm_pred
+  pred <- .predict_glm_reg()
   if (is.null(pred)) return()
   if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
     return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
@@ -494,8 +503,13 @@ observeEvent(input$glm_store_pred, {
 output$dl_glm_pred <- downloadHandler(
   filename = function() { "glm_predictions.csv" },
   content = function(file) {
-    do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
-            list(prn = FALSE))) %>%
-      write.csv(., file = file, row.names = FALSE)
+    # do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
+    #         list(prn = FALSE))) %>%
+    #   write.csv(., file = file, row.names = FALSE)
+
+    # do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
+    #         list(prn = FALSE))) %>%
+    .predict_glm_reg() %>%
+      write.csv(file = file, row.names = FALSE)
   }
 )

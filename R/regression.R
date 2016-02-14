@@ -427,6 +427,7 @@ plot.regression <- function(x,
 #' @param pred_cmd Command used to generate data for prediction
 #' @param conf_lev Confidence level used to estimate confidence intervals (.95 is the default)
 #' @param prn Number of lines of prediction results to print. Nothing is printed if prn is 0. Use -1 to print all lines (default).
+#' @param se Logical that indicates if prediction standard errors should be calculated (default = FALSE)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -449,6 +450,7 @@ predict.regression <- function(object,
                                pred_cmd = "",
                                conf_lev = 0.95,
                                prn = 100,
+                               se = TRUE,
                                ...) {
 
                                # pred_filt = "",
@@ -546,12 +548,24 @@ predict.regression <- function(object,
     pred %<>% na.omit()
   }
 
-  pred_val <- try(predict(object$model, pred, interval = 'prediction', level = conf_lev), silent = TRUE)
-  if (!is(pred_val, 'try-error')) {
-    pred_val %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
-    ci_perc <- ci_label(cl = conf_lev)
+  # pred_val <- try(predict(object$model, pred, interval = 'prediction', se.fit = se, level = conf_lev), silent = TRUE)
+  if (se)
+    pred_val <- try(predict(object$model, pred, interval = 'prediction', level = conf_lev), silent = TRUE)
+  else
+    pred_val <- try(predict(object$model, pred, se.fit = FALSE), silent = TRUE)
 
-    colnames(pred_val) <- c("Prediction",ci_perc[1],ci_perc[2],"+/-")
+
+  if (!is(pred_val, 'try-error')) {
+
+    if (se) {
+      pred_val %<>% data.frame %>% mutate(diff = .[,3] - .[,1])
+      ci_perc <- ci_label(cl = conf_lev)
+      colnames(pred_val) <- c("Prediction",ci_perc[1],ci_perc[2],"+/-")
+    } else {
+      pred_val %<>% data.frame %>% select(1)
+      colnames(pred_val) <- "Prediction"
+    }
+
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     if (prn == TRUE || prn != 0) {

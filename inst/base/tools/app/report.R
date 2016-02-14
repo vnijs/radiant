@@ -222,12 +222,17 @@ update_report <- function(inp_main = "", fun_name = "", inp_out = list("",""),
   lout <- length(outputs)
   if (lout > 0) {
     for (i in 1:lout) {
+      inp <- "result"
+      if ("result" %in% names(inp_out[[i]])) {
+        inp <- inp_out[[i]]["result"]
+        inp_out[[i]]["result"] <- NULL
+      }
       if (inp_out[i] != "" && length(inp_out[[i]]) > 0) {
         cmd <- deparse(inp_out[[i]], control = c("keepNA"), width.cutoff = 500L) %>%
-                 sub("list\\(", paste0(outputs[i], "\\(result, "), .) %>%
+                 sub("list\\(", paste0(outputs[i], "\\(", inp, ", "), .) %>%
                  paste0(cmd, "\n", .)
       } else {
-        cmd <- paste0(cmd, "\n", outputs[i], "(result)")
+        cmd <- paste0(cmd, "\n", outputs[i], "(", inp, ")")
       }
     }
   }

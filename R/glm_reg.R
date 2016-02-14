@@ -414,6 +414,7 @@ plot.glm_reg <- function(x,
 #' @param pred_data Provide the name of a dataframe to generate predictions (e.g., "titanic"). The dataset must contain all columns used in the estimation
 #' @param pred_cmd Generate predictions using a command. For example, `pclass = levels(pclass)` would produce predictions for the different levels of factor `pclass`. To add another variable use a `,` (e.g., `pclass = levels(pclass), age = seq(0,100,20)`)
 #' @param prn Number of lines of prediction results to print. Nothing is printed if prn is 0. Use -1 to print all lines (default).
+#' @param se Logical that indicates if prediction standard errors should be calculated (default = FALSE)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -435,6 +436,7 @@ predict.glm_reg <- function(object,
                             pred_data = "",
                             pred_cmd = "",
                             prn = 100,
+                            se = FALSE,
                             ...) {
 
   if (is.character(object)) return(object)
@@ -467,9 +469,14 @@ predict.glm_reg <- function(object,
 
     ## adding information to the prediction data.frame
     dat_classes <- attr(object$model$term, "dataClasses")[-1]
+
+    ## weights mess-up data manipulation below so remove from
+    wid <- which(names(dat_classes) %in% "(weights)")
+    if (length(wid) > 0) dat_classes <- dat_classes[-wid]
+
     isFct <- dat_classes == "factor"
     isNum <- dat_classes == "numeric"
-    dat <- select_(object$model$model, .dots = vars)
+    dat <- select_(as.data.frame(object$model$model), .dots = vars)
 
     ## based on http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
     max_freq <- function(x) names(which.max(table(x)))
@@ -529,10 +536,15 @@ predict.glm_reg <- function(object,
     pred %<>% na.omit()
   }
 
-  pred_val <- try(predict(object$model, pred, type = 'response', se.fit = TRUE), silent = TRUE)
+  pred_val <- try(predict(object$model, pred, type = 'response', se.fit = se), silent = TRUE)
   if (!is(pred_val, 'try-error')) {
-    pred_val %<>% data.frame %>% select(1:2)
-    colnames(pred_val) <- c("Prediction","std.error")
+    if (se) {
+      pred_val %<>% data.frame %>% select(1:2)
+      colnames(pred_val) <- c("Prediction","std.error")
+    } else {
+      pred_val %<>% data.frame %>% select(1)
+      colnames(pred_val) <- "Prediction"
+    }
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     if (prn == TRUE || prn != 0) {
@@ -620,8 +632,8 @@ plot.glm_predict <- function(x,
   object <- x; rm(x)
   if (is.character(object)) return(object)
 
-  object$ymin <- object$Prediction - qnorm(.5 + conf_lev/2)*object$std.error
-  object$ymax <- object$Prediction + qnorm(.5 + conf_lev/2)*object$std.error
+  # object$ymin <- object$Prediction - qnorm(.5 + conf_lev/2)*object$std.error
+  # object$ymax <- object$Prediction + qnorm(.5 + conf_lev/2)*object$std.error
 
   byvar <- NULL
   if (color != "none") byvar <- color
@@ -632,7 +644,8 @@ plot.glm_predict <- function(x,
     byvar <- if (is.null(byvar)) facet_col else unique(c(byvar, facet_col))
 
   tbv <- if (is.null(byvar)) xvar else c(xvar, byvar)
-  tmp <- object %>% group_by_(.dots = tbv) %>% select_(.dots = c("Prediction","ymin","ymax")) %>% summarise_each(funs(mean))
+  # tmp <- object %>% group_by_(.dots = tbv) %>% select_(.dots = c("Prediction","ymin","ymax")) %>% summarise_each(funs(mean))
+  tmp <- object %>% group_by_(.dots = tbv) %>% select_(.dots = "Prediction") %>% summarise_each(funs(mean))
   if (color == 'none') {
     p <- ggplot(tmp, aes_string(x=xvar, y="Prediction")) + geom_line(aes(group = 1))
   } else {

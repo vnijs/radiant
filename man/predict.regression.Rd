@@ -5,7 +5,7 @@
 \title{Predict method for the regression function}
 \usage{
 \method{predict}{regression}(object, pred_vars = "", pred_data = "",
-  pred_cmd = "", conf_lev = 0.95, prn = 100, ...)
+  pred_cmd = "", conf_lev = 0.95, prn = 100, se = TRUE, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{regression}}}
@@ -19,6 +19,8 @@
 \item{conf_lev}{Confidence level used to estimate confidence intervals (.95 is the default)}
 
 \item{prn}{Number of lines of prediction results to print. Nothing is printed if prn is 0. Use -1 to print all lines (default).}
+
+\item{se}{Logical that indicates if prediction standard errors should be calculated (default = FALSE)}
 
 \item{...}{further arguments passed to or from other methods}
 }

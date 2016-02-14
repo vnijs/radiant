@@ -89,7 +89,7 @@ output$ui_reg_rvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   selectInput(inputId = "reg_rvar", label = "Response variable:", choices = vars,
-    selected = isolate(use_input("reg_rvar",vars)), multiple = FALSE)
+    selected = use_input("reg_rvar",vars), multiple = FALSE)
 })
 
 output$ui_reg_evar <- renderUI({
@@ -104,12 +104,12 @@ output$ui_reg_evar <- renderUI({
     multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
-output$ui_reg_pred_var <- renderUI({
-  vars <- input$reg_evar
-  selectInput("reg_pred_var", label = "Predict for variables:",
-    choices = vars, selected = state_multiple("reg_pred_var", vars),
-    multiple = TRUE, size = min(4, length(vars)), selectize = FALSE)
-})
+# output$ui_reg_pred_var <- renderUI({
+#   vars <- input$reg_evar
+#   selectInput("reg_pred_var", label = "Predict for variables:",
+#     choices = vars, selected = state_multiple("reg_pred_var", vars),
+#     multiple = TRUE, size = min(4, length(vars)), selectize = FALSE)
+# })
 
 # adding interaction terms as needed
 output$ui_reg_test_var <- renderUI({
@@ -151,9 +151,9 @@ output$ui_reg_int <- renderUI({
     multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
-observeEvent(input$reg_show_interactions == "", {
-  updateSelectInput(session = session, inputId = "reg_int", selected = NULL)
-})
+# observeEvent(input$reg_show_interactions == "", {
+#   updateSelectInput(session = session, inputId = "reg_int", selected = NULL)
+# })
 
 # X - variable
 output$ui_reg_xvar <- renderUI({
@@ -242,7 +242,7 @@ output$ui_regression <- renderUI({
         ## only show if full data is used for prediction
         conditionalPanel("input.reg_predict == 'data' | input.reg_predict == 'datacmd'",
           tags$table(
-            tags$td(textInput("reg_store_pred_name", "Store predictions:", "predict_reg")),
+            tags$td(textInput("reg_store_pred_name", "Store predictions:", state_init("reg_store_pred_name","predict_reg"))),
             tags$td(actionButton("reg_store_pred", "Store"), style="padding-top:30px;")
           )
         )
@@ -294,14 +294,13 @@ output$ui_regression <- renderUI({
                                       (input.show_filter == false |
                                       input.data_filter == '')",
           tags$table(
-            tags$td(textInput("reg_store_res_name", "Store residuals:", "residuals_reg")),
+            tags$td(textInput("reg_store_res_name", "Store residuals:", state_init("reg_store_res_name","residuals_reg"))),
             tags$td(actionButton("reg_store_res", "Store"), style="padding-top:30px;")
           )
         )
       )
     ),
-    help_and_report(modal_title = "Linear regression (OLS)",
-                    fun_name = "regression",
+    help_and_report(modal_title = "Linear regression (OLS)", fun_name = "regression",
                     help_file = inclRmd(file.path(r_path,"quant/tools/help/regression.Rmd")))
   )
 })
@@ -333,7 +332,9 @@ reg_plot_height <- function()
   reg_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
 reg_pred_plot_height <- function()
-  if (input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
+  if (input$preg_pred_plot) 500 else 0
+
+  # if (input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
 
 # output is called from the main radiant ui.R
 output$regression <- renderUI({
@@ -397,19 +398,30 @@ reg_available <- reactive({
 })
 
 .predict_regression <- reactive({
-  r_data$reg_pred <- NULL
+  # r_data$reg_pred <- NULL
   if (reg_available() != "available") return(reg_available())
-  if (is_empty(input$reg_predict)) return(invisible())
-  r_data$reg_pred <- do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  # if (is_empty(input$reg_predict)) return(invisible())
+  # r_data$reg_pred <- do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  req(!is_empty(input$reg_predict, "none"),
+      (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
+  # r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
+  do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
 })
 
 .predict_plot_regression <- reactive({
-  if (!input$reg_pred_plot) return(" ")
+  # if (!input$reg_pred_plot) return(" ")
   if (reg_available() != "available") return(reg_available())
-  if (not_available(input$reg_xvar) || !input$reg_xvar %in% input$reg_evar) return(" ")
-  if (is_empty(input$reg_predict) || is.null(r_data$reg_pred))
-    return(invisible())
-  do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
+  # if (not_available(input$reg_xvar) || !input$reg_xvar %in% input$reg_evar) return(" ")
+  # if (is_empty(input$reg_predict) || is.null(r_data$reg_pred))
+    # return(invisible())
+  # do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
+
+  # req(!is_empty(input$reg_predict, "none"),
+      # (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
+  # do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
+  # do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
+  do.call(plot, c(list(x = .predict_regression()), reg_pred_plot_inputs()))
+
 })
 
 .plot_regression <- reactive({
@@ -434,17 +446,20 @@ observeEvent(input$regression_report, {
     figs <- TRUE
   }
   xcmd <- ""
-  if (!is.null(r_data$reg_pred) && !is_empty(input$reg_predict, "none")) {
+
+  if (!is_empty(input$reg_predict, "none") &&
+      (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd))) {
     pred_args <- clean_args(reg_pred_inputs(), reg_pred_args[-1])
     pred_args[["prn"]] <- 10
     inp_out[[2 + figs]] <- pred_args
-    outputs <- c(outputs, "result <- predict")
-    dataset <- if (input$reg_predict == "data") input$reg_pred_data else input$dataset
+    outputs <- c(outputs, "pred <- predict")
+    dataset <- if (input$reg_predict %in% c("data","datacmd")) input$reg_pred_data else input$dataset
     xcmd <-
-      paste0("# store_reg(result, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
-      paste0("# write.csv(result, file = '~/reg_predictions.csv', row.names = FALSE)")
+      paste0("store_reg(pred, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+      paste0("# write.csv(pred, file = '~/reg_predictions.csv', row.names = FALSE)")
     if (input$reg_pred_plot) {
       inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
+      inp_out[[3 + figs]]$result <- "pred"
       outputs <- c(outputs, "plot")
       figs <- TRUE
     }
@@ -467,7 +482,8 @@ observeEvent(input$reg_store_res, {
 })
 
 observeEvent(input$reg_store_pred, {
-  pred <- r_data$reg_pred
+  # pred <- r_data$reg_pred
+  pred <- .predict_glm_reg()
   if (is.null(pred)) return()
   if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
     return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
@@ -478,8 +494,10 @@ observeEvent(input$reg_store_pred, {
 output$dl_reg_pred <- downloadHandler(
   filename = function() { "reg_predictions.csv" },
   content = function(file) {
-    do.call(predict, c(list(object = .regression()), reg_pred_inputs(),
-            list(reg_save_pred = TRUE, prn = FALSE))) %>%
-      write.csv(., file = file, row.names = FALSE)
+    # do.call(predict, c(list(object = .regression()), reg_pred_inputs(),
+    #         list(reg_save_pred = TRUE, prn = FALSE))) %>%
+    #   write.csv(., file = file, row.names = FALSE)
+    .predict_regression() %>%
+      write.csv(file = file, row.names = FALSE)
   }
 )

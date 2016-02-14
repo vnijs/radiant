@@ -1,5 +1,5 @@
 # perf_method <- list("xtile" = "xtile", "ntile" = "ntile")
-perf_plots <- list("Lift" = "lift", "Gains" = "gains")
+perf_plots <- list("Lift" = "lift", "Gains" = "gains", "Profit" = "profit", "ROME" = "rome")
 perf_train <- list("All" = "All", "Training" = "Training", "Validation" = "Validation", "Both" = "Both")
 
 # list of function arguments
@@ -70,6 +70,12 @@ output$ui_performance <- renderUI({
       # radioButtons("perf_method", label = "Method:", perf_method,
         #   selected = state_init("perf_method", "xtile"),
         #   inline = TRUE),
+      tags$table(
+        tags$td(numericInput("perf_margin", label = "Margin:",
+          value = state_init("perf_margin",1), width = "115px")),
+        tags$td(numericInput("perf_cost", label = "Cost:",
+          value = state_init("perf_cost",1), width = "115px"))
+      ),
       uiOutput("ui_perf_train"),
       conditionalPanel("input.tabs_performance == 'Plot'",
         checkboxGroupInput("perf_plots", "Plots:", perf_plots,
@@ -84,7 +90,7 @@ output$ui_performance <- renderUI({
 })
 
 perf_plot_width <- function() {
-  ifelse(length(input$perf_pred) > 1, 600, 500)
+  ifelse(length(input$perf_pred) > 1, 700, 500)
 }
 perf_plot_height <- function() {
   length(input$perf_plots) * 500
@@ -134,8 +140,9 @@ output$performance <- renderUI({
       is_empty(input$perf_lev)) {
     return(" ")
   }
-  perf <- .performance()
-  perf %>% plot(plots = input$perf_plots, shiny = TRUE)
+  # perf <- .performance()
+  # perf %>% plot(plots = input$perf_plots, shiny = TRUE)
+  plot(.performance(), plots = input$perf_plots, shiny = TRUE)
 })
 
 observeEvent(input$performance_report, {
