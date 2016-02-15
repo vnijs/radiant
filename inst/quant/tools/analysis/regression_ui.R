@@ -332,7 +332,7 @@ reg_plot_height <- function()
   reg_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
 reg_pred_plot_height <- function()
-  if (input$preg_pred_plot) 500 else 0
+  if (input$reg_pred_plot) 500 else 0
 
   # if (input$tabs_regression == "Predict" && is.null(r_data$reg_pred)) 0 else 500
 
@@ -483,7 +483,7 @@ observeEvent(input$reg_store_res, {
 
 observeEvent(input$reg_store_pred, {
   # pred <- r_data$reg_pred
-  pred <- .predict_glm_reg()
+  pred <- .predict_regression()
   if (is.null(pred)) return()
   if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
     return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
