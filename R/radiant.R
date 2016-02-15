@@ -18,6 +18,30 @@ radiant <- function(app = c("analytics", "marketing", "quant", "base")) {
   runApp(system.file(app[1], package = "radiant"), launch.browser = TRUE)
 }
 
+#' Launch Radiant - Base as an Rstudio addin
+#' @export
+radiant_base <- function() radiant("base")
+
+#' Launch Radiant - Quant as an Rstudio addin
+#' @export
+radiant_quant <- function() radiant("quant")
+
+#' Launch Radiant - Marketing as an Rstudio addin
+#' @export
+radiant_marketing <- function() radiant("marketing")
+
+#' Launch Radiant - Analytics as an Rstudio addin
+#' @export
+radiant_analytics <- function() radiant("analytics")
+
+#' Update Radiant
+#' @export
+update_radiant <- function() {
+  unlink("~/r_sessions/*.rds", force = TRUE)
+  install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/",
+                   type = "binary")
+}
+
 #' Alias used to set the class for analysis function return
 #'
 #' @examples
