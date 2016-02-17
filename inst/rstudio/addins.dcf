@@ -21,6 +21,6 @@ Interactive: true
 Name: Update Radiant
 Description: Update Radiant to the latest version
 Binding: update_radiant
-Interactive: false
+Interactive: true
 
 

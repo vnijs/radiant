@@ -177,10 +177,6 @@ output$ui_glm_int <- renderUI({
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
-# observeEvent(input$glm_show_interactions == "", {
-#   updateSelectInput(session = session, inputId = "glm_int", selected = character(0))
-# })
-
 ## X - variable
 output$ui_glm_xvar <- renderUI({
   vars <- input$glm_evar
@@ -230,7 +226,6 @@ output$ui_glm_reg <- renderUI({
                       choices = c("None" = "",r_data$datasetlist),
                       selected = state_init("glm_pred_data"), multiple = FALSE)
         ),
-        # conditionalPanel(condition = "input.glm_predict == 'cmd'",
         conditionalPanel("input.glm_predict == 'cmd' | input.glm_predict == 'datacmd'",
           returnTextAreaInput("glm_pred_cmd", "Prediction command:",
             value = state_init("glm_pred_cmd",""))
@@ -333,10 +328,7 @@ glm_plot_height <- function()
 glm_pred_plot_height <- function()
   if (input$glm_pred_plot) 500 else 0
 
-  # if (input$tabs_glm_reg == "Predict" && input$glm_pred_plot) 0 else 500
-  # if (input$tabs_glm_reg == "Predict" && input$glm_pred_plotis.null(r_data$glm_pred)) 0 else 500
-
-# output is called from the main radiant ui.R
+## output is called from the main radiant ui.R
 output$glm_reg <- renderUI({
 
 		register_print_output("summary_glm_reg", ".summary_glm_reg")
@@ -347,7 +339,7 @@ output$glm_reg <- renderUI({
                           height_fun = "glm_plot_height",
                           width_fun = "glm_plot_width")
 
-		# two separate tabs
+		## two separate tabs
 		glm_output_panels <- tabsetPanel(
 	    id = "tabs_glm_reg",
 	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg")),
@@ -387,9 +379,6 @@ glm_available <- reactive({
   req(input$glm_lev, input$glm_wts)
 
   ## need dependency on glm_int so I can have names(input) in isolate
-  # cat(input$glm_int, file = stderr(), "\n")
-  # print(character(0))
-  # print(input$glm_int)
   input$glm_int
   isolate(req("glm_int" %in% names(input)))
 
@@ -414,27 +403,21 @@ glm_available <- reactive({
 })
 
 .predict_glm_reg <- reactive({
-  # isolate(r_data$glm_pred <- NULL)
   if (glm_available() != "available") return(glm_available())
-  # if (is_empty(input$glm_predict)) return(invisible())
-  # if (!is_empty(input$reg_predict, "none") &&
-  #     (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd))) {
+  isolate({
+    req(!is_empty(input$glm_predict, "none"),
+        (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
+  })
 
-  req(!is_empty(input$glm_predict, "none"),
-      (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
-  # r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
-  do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
+  withProgress(message = "Generating predictions", value = 0, {
+    do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
+  })
 })
 
 .predict_plot_glm_reg <- reactive({
-  # if (!input$glm_pred_plot) return(" ")
-  req(input$glm_pred_plot)
   if (glm_available() != "available") return(glm_available())
-  if (not_available(input$glm_xvar) || !input$glm_xvar %in% input$glm_evar) return(" ")
-  # if (is_empty(input$glm_predict) || is.null(r_data$glm_pred)) return(" ")
-  req(!is_empty(input$glm_predict, "none"),
+  req(input$glm_pred_plot, input$glm_xvar, !is_empty(input$glm_predict, "none"),
       (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
-  # do.call(plot, c(list(x = r_data$glm_pred), glm_pred_plot_inputs()))
   do.call(plot, c(list(x = .predict_glm_reg()), glm_pred_plot_inputs()))
 })
 
@@ -461,7 +444,7 @@ observeEvent(input$glm_reg_report, {
     xcmd <-
       paste0("store_glm(pred, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
       paste0("# write.csv(pred, file = '~/glm_predictions.csv', row.names = FALSE)")
-    if (!is_empty(input$glm_xvar)) {
+    if (input$glm_pred_plot && !is_empty(input$glm_xvar)) {
       inp_out[[3 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
       inp_out[[3 + figs]]$result <- "pred"
       outputs <- c(outputs, "plot")
@@ -482,17 +465,12 @@ observeEvent(input$glm_reg_report, {
 observeEvent(input$glm_store_res, {
   robj <- .glm_reg()
   if (!is.list(robj)) return()
-
-  # print(length(robj$model$residuals))
-  # print(nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
-
   if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
     return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
   store_glm(robj, data = input$dataset, type = "residuals", name = input$glm_store_res_name)
 })
 
 observeEvent(input$glm_store_pred, {
-  # pred <- r_data$glm_pred
   pred <- .predict_glm_reg()
   if (is.null(pred)) return()
   if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
@@ -503,12 +481,6 @@ observeEvent(input$glm_store_pred, {
 output$dl_glm_pred <- downloadHandler(
   filename = function() { "glm_predictions.csv" },
   content = function(file) {
-    # do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
-    #         list(prn = FALSE))) %>%
-    #   write.csv(., file = file, row.names = FALSE)
-
-    # do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs(),
-    #         list(prn = FALSE))) %>%
     .predict_glm_reg() %>%
       write.csv(file = file, row.names = FALSE)
   }

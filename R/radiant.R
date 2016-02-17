@@ -37,9 +37,9 @@ radiant_analytics <- function() radiant("analytics")
 #' Update Radiant
 #' @export
 update_radiant <- function() {
-  unlink("~/r_sessions/*.rds", force = TRUE)
   install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/",
                    type = "binary")
+  # unlink("~/r_sessions/*.rds", force = TRUE)
 }
 
 #' Alias used to set the class for analysis function return

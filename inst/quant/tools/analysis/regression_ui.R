@@ -93,7 +93,10 @@ output$ui_reg_rvar <- renderUI({
 })
 
 output$ui_reg_evar <- renderUI({
+  # req(available(input$reg_rvar), !input$reg_store_res)
   req(available(input$reg_rvar))
+  # print(isolate(input$reg_store_res))
+  # if(input$reg_store_res > 0) return()
   notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
   if (length(vars) > 0)
@@ -398,30 +401,22 @@ reg_available <- reactive({
 })
 
 .predict_regression <- reactive({
-  # r_data$reg_pred <- NULL
   if (reg_available() != "available") return(reg_available())
-  # if (is_empty(input$reg_predict)) return(invisible())
-  # r_data$reg_pred <- do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
-  req(!is_empty(input$reg_predict, "none"),
-      (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
-  # r_data$glm_pred <- do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
-  do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  # isolate({
+    req(!is_empty(input$reg_predict, "none"),
+        (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
+  # })
+
+  withProgress(message = "Generating predictions", value = 0, {
+    do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
+  })
 })
 
 .predict_plot_regression <- reactive({
-  # if (!input$reg_pred_plot) return(" ")
   if (reg_available() != "available") return(reg_available())
-  # if (not_available(input$reg_xvar) || !input$reg_xvar %in% input$reg_evar) return(" ")
-  # if (is_empty(input$reg_predict) || is.null(r_data$reg_pred))
-    # return(invisible())
-  # do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
-
-  # req(!is_empty(input$reg_predict, "none"),
-      # (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
-  # do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
-  # do.call(plot, c(list(x = r_data$reg_pred), reg_pred_plot_inputs()))
+  req(input$reg_pred_plot, input$reg_xvar, !is_empty(input$reg_predict, "none"),
+      (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
   do.call(plot, c(list(x = .predict_regression()), reg_pred_plot_inputs()))
-
 })
 
 .plot_regression <- reactive({
@@ -457,7 +452,7 @@ observeEvent(input$regression_report, {
     xcmd <-
       paste0("store_reg(pred, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
       paste0("# write.csv(pred, file = '~/reg_predictions.csv', row.names = FALSE)")
-    if (input$reg_pred_plot) {
+    if (input$reg_pred_plot && !is_empty(input$reg_xvar)) {
       inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
       inp_out[[3 + figs]]$result <- "pred"
       outputs <- c(outputs, "plot")
@@ -494,9 +489,6 @@ observeEvent(input$reg_store_pred, {
 output$dl_reg_pred <- downloadHandler(
   filename = function() { "reg_predictions.csv" },
   content = function(file) {
-    # do.call(predict, c(list(object = .regression()), reg_pred_inputs(),
-    #         list(reg_save_pred = TRUE, prn = FALSE))) %>%
-    #   write.csv(., file = file, row.names = FALSE)
     .predict_regression() %>%
       write.csv(file = file, row.names = FALSE)
   }

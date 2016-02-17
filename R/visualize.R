@@ -236,7 +236,6 @@ visualize <- function(dataset, xvar,
 
     itt <- 1
     if ("jitter" %in% check) {
-      # gs <- geom_blank() + geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
       gs <- geom_jitter(alpha = alpha, position = position_jitter(width = 0.4, height = 0.1))
       check <- sub("jitter","", check)
     } else {
@@ -244,9 +243,7 @@ visualize <- function(dataset, xvar,
     }
 
     for (i in xvar) {
-      # if ("log_x" %in% axes && "factor" %in% class(dat[[i]])) axes <- sub("log_x","",axes)
       if ("log_x" %in% axes && dc[i] == "factor") axes <- sub("log_x","",axes)
-      # if ("log_y" %in% axes && dc[i] == "factor") axes <- sub("log_y","",axes)
 
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + gs
@@ -254,7 +251,6 @@ visualize <- function(dataset, xvar,
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
 
-        # if ("factor" %in% class(dat[[i]])) {
         if (dc[i] == "factor") {
 
           ## make range comparable to bar plot
@@ -269,7 +265,6 @@ visualize <- function(dataset, xvar,
             }
             plot_list[[itt]] <- plot_list[[itt]] +
               ylab(paste(plot_list[[itt]]$labels$y, "(mean)")) +
-              # geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..))
               stat_summary(fun.data=meanf, geom="crossbar", color = "blue")
           }
 
@@ -280,7 +275,6 @@ visualize <- function(dataset, xvar,
             }
             plot_list[[itt]] <- plot_list[[itt]] +
               ylab(paste(plot_list[[itt]]$labels$y, "(median)")) +
-              # geom_errorbar(stat = "hline", yintercept = "median", width = .8, size = 1, color = "red", aes(ymax = ..y.., ymin = ..y..))
               stat_summary(fun.data=medianf, geom="crossbar", color = "red")
           }
         }
@@ -294,7 +288,6 @@ visualize <- function(dataset, xvar,
       for (j in yvar) {
         flab <- ""
         if (color == 'none') {
-          # if (is.factor(dat[[i]])) {
           if ("factor" %in% dc[i]) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(make_funs(fun))
@@ -303,7 +296,6 @@ visualize <- function(dataset, xvar,
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
           }
         } else {
-          # if (is.factor(dat[[i]])) {
           if ("factor" %in% dc[i]) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(make_funs(fun))
@@ -322,7 +314,6 @@ visualize <- function(dataset, xvar,
   } else if (type == "bar") {
     itt <- 1
     for (i in xvar) {
-      # dat[,i] %<>% as_factor
       if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
 
       if ("log_x" %in% axes) axes <- sub("log_x","",axes)
@@ -349,7 +340,6 @@ visualize <- function(dataset, xvar,
   } else if (type == "box") {
     itt <- 1
     for (i in xvar) {
-      # dat[,i] %<>% as_factor
       if (!"factor" %in% dc[i]) dat[[i]] %<>% as_factor
       for (j in yvar) {
         plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j, fill=i)) +

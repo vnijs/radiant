@@ -134,6 +134,7 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
   tagList(wellPanel(
+    checkboxInput("tr_pause", "Show summaries", state_init("tr_pause", TRUE)),
     uiOutput("ui_tr_vars"),
     selectInput("tr_change_type", "Transformation type:", trans_types, selected = "none"),
     conditionalPanel(condition = "input.tr_change_type == 'type'",
@@ -466,7 +467,7 @@ observeEvent(input$tr_change_type, {
     }
   } else {
     if (store_dat == "") store_dat <- dataset
-    if (all(vars == "") || length(unique(vars)) == nr_col) vars <- .
+    if (all(vars == "") || length(unique(vars)) == nr_col) vars <- "."
     paste0("## remove missing values\nr_data[[\"",store_dat,"\"]] <- r_data[[\"",dataset,"\"]] %>% filter(complete.cases(", vars, "))\n")
   }
 }
@@ -740,6 +741,7 @@ tr_snippet <- reactive({
 })
 
 output$transform_summary <- renderPrint({
+  req(input$tr_pause)
  	dat <- transform_main()
   ## with isolate on the summary wouldn't update when the dataset was changed
   if (is.null(dat)) return(invisible())

@@ -139,7 +139,6 @@ knitIt2 <- function(text) {
 output$rmd_knitted <- renderUI({
   req(valsRmd$knit != 1)
   # req(input$evalRmd || (input$evalRmd >= 0 && !is.null(input$runKeyRmd$randNum)))
-
   isolate({
     if (!r_local) {
       return(HTML("<h2>Rmd file is not evaluated when running Radiant on a server</h2>"))
