@@ -16,7 +16,7 @@ Add a cluster membership variable to the active dataset
 See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 }
 \examples{
-\donttest{
+\dontrun{
 result <- kmeans_clus("shopping", vars = c("v1:v6"))
 save_membership(result)
 head(shopping)

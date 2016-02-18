@@ -23,7 +23,7 @@ Store residuals or predicted values generated in the regression function
 See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
 }
 \examples{
-\donttest{
+\dontrun{
 result <- regression("diamonds", "price", c("carat","clarity"))
 store_reg(result)
 }

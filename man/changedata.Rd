@@ -19,14 +19,4 @@ None
 \description{
 Change data
 }
-\examples{
-\donttest{
-r_data <<- list()
-r_data$dat <<- data.frame(a = 1:20)
-changedata("dat",20:1, "b")
-head(r_data$dat)
-rm(r_data, envir = .GlobalEnv)
-}
-
-}
 

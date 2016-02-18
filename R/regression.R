@@ -701,7 +701,7 @@ plot.reg_predict <- function(x,
 #' @param name Variable name assigned to the residuals or predicted values
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' result <- regression("diamonds", "price", c("carat","clarity"))
 #' store_reg(result)
 #' }

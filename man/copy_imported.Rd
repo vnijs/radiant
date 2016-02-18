@@ -13,7 +13,7 @@ copy_imported(.from)
 Import all functions that a package imports for use with Shiny
 }
 \examples{
-\donttest{
+\dontrun{
 copy_imported(radiant)
 }
 }

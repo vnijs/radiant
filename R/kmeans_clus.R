@@ -167,7 +167,7 @@ plot.kmeans_clus <- function(x,
 #' @param object Return value from \code{\link{kmeans_clus}}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' result <- kmeans_clus("shopping", vars = c("v1:v6"))
 #' save_membership(result)
 #' head(shopping)

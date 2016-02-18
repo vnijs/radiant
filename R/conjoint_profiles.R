@@ -7,7 +7,7 @@
 #' @return A list with all variables defined in the function as an object of class conjoint_profiles
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'  cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
 #'         "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
 #'         "audio.visual = c('Small plain','Large plain','Large digital')",
@@ -59,7 +59,7 @@ conjoint_profiles <- function(dataset) {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
 #'        "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
 #'        "audio.visual = c('Small plain','Large plain','Large digital')",

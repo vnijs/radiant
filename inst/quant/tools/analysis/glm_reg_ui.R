@@ -404,10 +404,8 @@ glm_available <- reactive({
 
 .predict_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
-  isolate({
-    req(!is_empty(input$glm_predict, "none"),
-        (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
-  })
+  req(!is_empty(input$glm_predict, "none"),
+     (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
 
   withProgress(message = "Generating predictions", value = 0, {
     do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))

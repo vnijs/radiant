@@ -402,10 +402,8 @@ reg_available <- reactive({
 
 .predict_regression <- reactive({
   if (reg_available() != "available") return(reg_available())
-  # isolate({
-    req(!is_empty(input$reg_predict, "none"),
-        (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
-  # })
+  req(!is_empty(input$reg_predict, "none"),
+     (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
 
   withProgress(message = "Generating predictions", value = 0, {
     do.call(predict, c(list(object = .regression()), reg_pred_inputs()))

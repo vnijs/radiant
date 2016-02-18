@@ -128,13 +128,6 @@ filterdata <- function(dat, filt = "") {
 #'
 #' @return Data.frame with specified columns and rows
 #'
-#' @examples
-#' \donttest{
-#' r_data <<- list()
-#' r_data$dat <<- mtcars
-#' getdata("dat","mpg:vs", filt = "mpg > 20", rows = 1:5)
-#' rm(r_data, envir = .GlobalEnv)
-#' }
 #' @export
 getdata <- function(dataset,
                     vars = "",
@@ -370,15 +363,6 @@ loadrda_url <- function(rda_url) {
 #' @param var_names Names for the new variables to add to the data.frame
 #'
 #' @return None
-#'
-#' @examples
-#' \donttest{
-#' r_data <<- list()
-#' r_data$dat <<- data.frame(a = 1:20)
-#' changedata("dat",20:1, "b")
-#' head(r_data$dat)
-#' rm(r_data, envir = .GlobalEnv)
-#' }
 #'
 #' @export
 changedata <- function(dataset,
@@ -792,7 +776,7 @@ copy_from <- function(.from, ...) {
 #' @param .from The package to pull the function from
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' copy_imported(radiant)
 #' }
 #' @export

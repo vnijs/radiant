@@ -19,7 +19,7 @@ Create fractional factorial design for conjoint analysis
 See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
 }
 \examples{
-\donttest{
+\dontrun{
  cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
         "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
         "audio.visual = c('Small plain','Large plain','Large digital')",

@@ -677,7 +677,7 @@ plot.glm_predict <- function(x,
 #' @param name Variable name assigned to the residuals or predicted values
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
 #' store_glm(result)
 #' }

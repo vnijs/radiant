@@ -16,7 +16,7 @@ Save factor scores to active dataset
 See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 }
 \examples{
-\donttest{
+\dontrun{
 result <- full_factor("diamonds",c("price","carat","table"))
 save_factors(result)
 head(diamonds)
