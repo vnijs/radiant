@@ -384,12 +384,15 @@ reg_available <- reactive({
 })
 
 .regression <- reactive({
-  req(input$reg_pause == FALSE)
   req(available(input$reg_rvar), available(input$reg_evar))
 
   ## need dependency in reg_int so I can have names(input) in isolate
   input$reg_int
   isolate(req("reg_int" %in% names(input)))
+
+  # req(input$reg_pause == FALSE)
+  if (is.null(input$reg_pause) || input$reg_pause == TRUE)
+    abortOutput()
 
   do.call(regression, reg_inputs())
 })

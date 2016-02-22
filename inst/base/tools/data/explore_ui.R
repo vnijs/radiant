@@ -120,8 +120,11 @@ output$ui_Explore <- renderUI({
 
 .explore <- reactive({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
-
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
+
+  # req(input$expl_pause)
+  if (is.null(input$expl_pause) || input$expl_pause == TRUE)
+    abortOutput()
 
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(explore, expl_inputs()) )
@@ -170,7 +173,7 @@ output$explorer <- DT::renderDataTable({
 
   top <- ifelse (input$expl_top == "", "fun", input$expl_top)
 
-  req(input$expl_pause == FALSE)
+  # req(input$expl_pause == FALSE)
 
   withProgress(message = 'Generating explore table', value = 0,
     make_expl(expl, top = top, dec = input$expl_dec, search = search,

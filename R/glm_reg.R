@@ -86,11 +86,11 @@ glm_reg <- function(dataset, rvar, evar,
 
   if ("stepwise" %in% check) {
     # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-    model <- glm(as.formula(paste(rvar, "~ 1")), weights = wts,
+    model <- sshhr(glm(as.formula(paste(rvar, "~ 1")), weights = wts,
                  family = binomial(link = link), data = dat) %>%
-             step(k = 2, scope = list(upper = form), direction = 'both')
+             step(k = 2, scope = list(upper = form), direction = 'both'))
   } else {
-    model <- glm(form, weights = wts, family = binomial(link = link), data = dat)
+    model <- sshhr(glm(form, weights = wts, family = binomial(link = link), data = dat))
   }
 
   coeff <- tidy(model)
@@ -266,7 +266,7 @@ summary.glm_reg <- function(object,
       if (length(not_selected) > 0) sub_form <- paste(object$rvar, "~", paste(not_selected, collapse = " + "))
       ## update with glm_sub NOT working when called from radiant - strange
       # glm_sub <- update(object$model, sub_form, data = object$model$model)
-      glm_sub <- glm(as.formula(sub_form), weights = object$wts, family = binomial(link = object$link), data = object$model$model)
+      glm_sub <- sshhr(glm(as.formula(sub_form), weights = object$wts, family = binomial(link = object$link), data = object$model$model))
       glm_sub_fit <- glance(glm_sub)
       glm_sub <- anova(glm_sub, object$model, test='Chi')
 
@@ -443,9 +443,9 @@ predict.glm_reg <- function(object,
   pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
   ## used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% object$check) {
-    return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
+    return("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again" %>% set_class(c("glm_predict",class(.))))
   } else if (pred_count == 3) {
-    return(cat("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in a spreadsheet and use the\nclipboard feature in Data > Manage to bring it into Radiant"))
+    return("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in a spreadsheet and use the\nclipboard feature in Data > Manage to bring it into Radiant" %>% set_class(c("glm_predict",class(.))))
   }
 
   dec <- object$dec
@@ -463,8 +463,7 @@ predict.glm_reg <- function(object,
     pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
-      paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
-      return()
+      return(paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% set_class(c("glm_predict",class(.))))
     }
 
     ## adding information to the prediction data.frame
@@ -474,26 +473,41 @@ predict.glm_reg <- function(object,
     wid <- which(names(dat_classes) %in% "(weights)")
     if (length(wid) > 0) dat_classes <- dat_classes[-wid]
 
+    # isFct <- dat_classes == "factor" | dat_classes == "logical"
     isFct <- dat_classes == "factor"
+    isLog <- dat_classes == "logical"
     isNum <- dat_classes == "numeric"
     dat <- select_(as.data.frame(object$model$model), .dots = vars)
 
+    # print(dat_classes)
+    # print(vars)
+
+    # print(sum(isNum) + sum(isFct) + sum(isLog))
+    # print(sum(isNum) + sum(isFct))
+    # print(length(vars))
+
     ## based on http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
     max_freq <- function(x) names(which.max(table(x)))
+    max_lfreq <- function(x) ifelse(mean(x) > .5, TRUE, FALSE)
 
     plug_data <- data.frame(init___ = 1)
     if (sum(isNum) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(mean), vars[isNum]))
     if (sum(isFct) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_freq), vars[isFct]))
+    if (sum(isLog) > 0)
+      plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_lfreq), vars[isLog]))
 
     rm(dat)
 
-    if (sum(isNum) + sum(isFct) < length(vars)) {
-      cat("The model includes data-types that cannot be used for\nprediction at this point\n")
+    # if ((sum(isNum) + sum(isFct) + sum(isLog)) < length(vars)) {
+    if ((sum(isNum) + sum(isFct) + sum(isLog)) < length(vars)) {
+      return("The model includes data-types that cannot be used for\nprediction at this point\n" %>%
+        set_class(c("glm_predict",class(.))))
+
     } else {
       if (sum(names(pred) %in% names(plug_data)) < length(names(pred))) {
-        return(cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n"))
+        return("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n" %>% set_class(c("glm_predict",class(.))))
       } else {
         plug_data[names(pred)] <- list(NULL)
         pred <- data.frame(plug_data[-1],pred)
@@ -504,7 +518,6 @@ predict.glm_reg <- function(object,
     pred <- getdata(pred_data, filt = "", na.rm = FALSE)
     pred_names <- names(pred)
     pred <- try(select_(pred, .dots = vars), silent = TRUE)
-
 
     if (is(pred, 'try-error')) {
       cat("Model variables: ")
@@ -525,7 +538,7 @@ predict.glm_reg <- function(object,
 
       pred <- try(mutate_(pred, .dots = setNames(dots, vars)), silent = TRUE)
       if (is(pred, 'try-error')) {
-        paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
+        return(paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% set_class(c("glm_predict",class(.))))
         return()
       }
       pred_type <- "datacmd"
@@ -577,7 +590,7 @@ predict.glm_reg <- function(object,
 
     return(pred %>% set_class(c("glm_predict",class(.))))
   } else {
-    paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred_val,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat
+    return(paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred_val,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% set_class(c("glm_predict",class(.))))
   }
 
   return(invisible())
@@ -630,7 +643,7 @@ plot.glm_predict <- function(x,
   if (is.null(xvar) || xvar == "") return(invisible())
 
   object <- x; rm(x)
-  if (is.character(object)) return(object)
+  if (is.character(object)) return(invisible())
 
   # object$ymin <- object$Prediction - qnorm(.5 + conf_lev/2)*object$std.error
   # object$ymax <- object$Prediction + qnorm(.5 + conf_lev/2)*object$std.error

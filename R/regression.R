@@ -487,22 +487,26 @@ predict.regression <- function(object,
     # adding information to the prediction data.frame
     dat_classes <- attr(object$model$term, "dataClasses")[-1]
     isFct <- dat_classes == "factor"
+    isLog <- dat_classes == "logical"
     isNum <- dat_classes == "numeric"
     dat <- select_(object$model$model, .dots = vars)
 
     # based on http://stackoverflow.com/questions/19982938/how-to-find-the-most-frequent-values-across-several-columns-containing-factors
     max_freq <- function(x) names(which.max(table(x)))
+    max_lfreq <- function(x) ifelse(mean(x) > .5, TRUE, FALSE)
 
     plug_data <- data.frame(init___ = 1)
     if (sum(isNum) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(mean), vars[isNum]))
     if (sum(isFct) > 0)
       plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_freq), vars[isFct]))
+    if (sum(isLog) > 0)
+      plug_data %<>% bind_cols(., summarise_each_(dat, funs(max_lfreq), vars[isLog]))
 
      rm(dat)
 
-    if (sum(isNum) + sum(isFct) < length(vars)) {
-      cat("The model includes data-types that cannot be used for\nprediction at this point\n")
+    if ((sum(isNum) + sum(isFct) + sum(isLog)) < length(vars)) {
+      return(cat("The model includes data-types that cannot be used for\nprediction at this point\n"))
     } else {
       if (sum(names(pred) %in% names(plug_data)) < length(names(pred))) {
         return(cat("The expression entered contains variable names that are not in the model.\nPlease try again.\n\n"))

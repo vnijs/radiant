@@ -329,7 +329,9 @@ output$visualize <- renderPlot({
   # req(!is.null(input$viz_comby) || !is.null(input$viz_combx))
   # req(!is.null())
 
-  req(input$viz_pause == FALSE)
+  # req(input$viz_pause == FALSE)
+  if (is.null(input$viz_pause) || input$viz_pause == TRUE)
+    abortOutput()
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })

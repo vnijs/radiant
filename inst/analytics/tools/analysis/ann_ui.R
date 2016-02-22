@@ -127,7 +127,10 @@ ann_available <- reactive({
 })
 
 .ann <- reactive({
-  req(input$ann_pause == FALSE)
+  # req(input$ann_pause == FALSE)
+  if (is.null(input$ann_pause) || input$ann_pause == TRUE)
+    abortOutput()
+
   withProgress(message = 'Estimating model', value = 0,
 	  do.call(ann, ann_inputs())
   )

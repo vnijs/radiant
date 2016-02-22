@@ -124,7 +124,10 @@ output$performance <- renderUI({
 })
 
 .performance <- reactive({
-  req(input$perf_pause == FALSE)
+  # req(input$perf_pause == FALSE)
+  if (is.null(input$pref_pause) || input$pref_pause == TRUE)
+    abortOutput()
+
 	do.call(performance, perf_inputs())
 })
 

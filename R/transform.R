@@ -419,6 +419,41 @@ getsummary <- function(dat, dc = getclass(dat)) {
   }
 }
 
+#' Create data.frame from a table
+#'
+#' @param dat Data.frame
+#' @param freq Column name with frequency information
+#'
+#' @example
+#' data.frame(price = c("$200","$300"), sale = c(10, 2)) %>% table2data
+#'
+#' @export
+table2data <- function(dat, freq = tail(colnames(dat),1)) {
+  blowup <- function(i)
+    if (!is.na(dat[[freq]][i])) dat[rep(i, each = dat[[freq]][i]), ]
+
+  lapply(1:nrow(dat), blowup) %>%
+  bind_rows %>%
+  select_(paste0("-",freq)) %>%
+  mutate_each(funs(as.factor))
+}
+
+# dat <-
+#   data.frame(
+#     free_ship = c("$200","$300","$200","$300"),
+#     sale = c("yes","no","yes","no"),
+#     freq = c(3, 5,2, 4)
+#   )
+
+# table2data(dat)
+
+# dat <-
+#   data.frame(
+#     free_ship = c("$200","$300","$200","$300"),
+#     sale = c("yes","no","yes","no"),
+#     freq = c(500, 9500,580, 9420)
+#   )
+
 ## Test
 # dat <- read.table(header = TRUE, text = "date days
 # 1/1/10  1

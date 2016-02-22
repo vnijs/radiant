@@ -374,13 +374,23 @@ glm_available <- reactive({
 })
 
 .glm_reg <- reactive({
-  req(input$glm_pause == FALSE)
+
+  # isolate({
+  #   if (pressed(input$glm_store_pred) || pressed(input$glm_store_res))
+  #     abortOutput()
+  #   if (!is.null(input$a_button) && input$a_button > 0) abortOutput()
+  # })
+
   req(available(input$glm_rvar), available(input$glm_evar))
   req(input$glm_lev, input$glm_wts)
 
   ## need dependency on glm_int so I can have names(input) in isolate
   input$glm_int
   isolate(req("glm_int" %in% names(input)))
+
+  # req(input$glm_pause == FALSE)
+  if (is.null(input$glm_pause) || input$glm_pause == TRUE)
+    abortOutput()
 
   withProgress(message = 'Estimating model', value = 0,
     do.call(glm_reg, glm_inputs())

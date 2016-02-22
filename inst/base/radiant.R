@@ -180,6 +180,8 @@ is_not <- function(x) is.null(x) || is.na(x)
 ## check if a button was NOT pressed
 not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
 
+pressed <- function(x) if (!is.null(x) && x > 0) TRUE else FALSE
+
 ## check for duplicate entries
 has_duplicates <- function(x)
   if (length(unique(x)) < length(x)) TRUE else FALSE

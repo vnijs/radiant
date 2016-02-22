@@ -20,6 +20,14 @@ output$ui_tr_normalizer <- renderUI({
               selected = "none")
 })
 
+output$ui_tr_tab2dat <- renderUI({
+  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  vars <- varnames()[isNum]
+  # if (length(vars) == 0) return(NULL)
+  selectInput("tr_tab2dat", "Frequency variable:", c("None" = "none", vars),
+              selected = "none")
+})
+
 output$ui_tr_reorg_vars <- renderUI({
   ## need a dependency to reset list of variables
   if (is_empty(input$tr_change_type)) return()
@@ -96,6 +104,8 @@ output$ui_tr_dataset <- renderUI({
     tr_dataset <- paste0(tr_dataset, "_dup")
   } else if (input$tr_change_type == "holdout") {
     tr_dataset <- paste0(tr_dataset, "_holdout")
+  } else if (input$tr_change_type == "tab2dat") {
+    tr_dataset <- paste0(tr_dataset, "_dat")
   }
   tags$table(
     tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
@@ -129,7 +139,8 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Remove duplicates" = "remove_dup",
                     "Show duplicates" = "show_dup",
                     "Training variable" = "training",
-                    "Holdout sample" = "holdout")
+                    "Holdout sample" = "holdout",
+                    "Table-to-data" = "tab2dat")
 
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
@@ -145,6 +156,9 @@ output$ui_Transform <- renderUI({
     ),
     conditionalPanel(condition = "input.tr_change_type == 'normalize'",
       uiOutput("ui_tr_normalizer")
+    ),
+    conditionalPanel(condition = "input.tr_change_type == 'tab2dat'",
+      uiOutput("ui_tr_tab2dat")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'create'",
 	    returnTextAreaInput("tr_create", "Create (e.g., x = y - z):", "")
@@ -371,6 +385,25 @@ observeEvent(input$tr_change_type, {
   }
 }
 
+.tab2dat <- function(dataset, freq,
+                     vars = "",
+                     store_dat = "",
+                     store = TRUE) {
+
+      # return(.tab2dat(dat, input$tr_tab2dat, vars = inp_vars("tr_vars"), store = FALSE))
+
+  if (!store && !is.character(dataset)) {
+    if (is_empty(vars)) vars <- setdiff(colnames(dataset),freq)
+    # select_(dataset, .dots = c(setdiff(vars, freq),) %>%
+    select_(dataset, .dots = unique(c(vars, freq))) %>%
+    table2data(freq)
+  } else {
+    if (store_dat == "") store_dat <- dataset
+    if (is_empty(vars)) vars <- setdiff(colnames(dataset),freq)
+    paste0("## Create data from a table\nr_data[[\"",store_dat,"\"]] <- select(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "), ") %>% table2data('",freq,"')\n")
+  }
+}
+
 .bin <- function(dataset,
                  vars = "",
                  bins = 10,
@@ -561,7 +594,9 @@ inp_vars <- function(inp, rval = "")
 
 transform_main <- reactive({
 
-	if (is.null(input$tr_change_type)) return()
+  req(input$tr_change_type)
+	# if (is.null(input$tr_change_type)) return()
+
   if (not_available(input$tr_vars)) {
     if (input$tr_change_type == "none") {
       return("Select a transformation type and select one or more variables to transform")
@@ -608,6 +643,17 @@ transform_main <- reactive({
       return("Specify an equation to create a new variable and press 'return'. **\n** See the help file for examples")
     } else {
       return(.create(dat, input$tr_create, byvar = inp_vars("tr_vars"), store = FALSE))
+    }
+  }
+
+  if (input$tr_change_type == 'tab2dat') {
+    if (is.null(input$tr_tab2dat) || input$tr_tab2dat == "none") {
+      return("Select a frequency variable")
+    } else if (!is_empty(input$tr_vars) && all(input$tr_vars == input$tr_tab2dat)) {
+      return("Select at least one variable that is not the frequency variable")
+    } else {
+      req(available(input$tr_tab2dat))
+      return(.tab2dat(dat, input$tr_tab2dat, vars = inp_vars("tr_vars"), store = FALSE))
     }
   }
 
@@ -741,7 +787,10 @@ tr_snippet <- reactive({
 })
 
 output$transform_summary <- renderPrint({
-  req(input$tr_pause)
+  # req(input$tr_pause)
+  if (is.null(input$tr_pause) || input$tr_pause == FALSE)
+    abortOutput()
+
  	dat <- transform_main()
   ## with isolate on the summary wouldn't update when the dataset was changed
   if (is.null(dat)) return(invisible())
@@ -795,6 +844,9 @@ observeEvent(input$tr_store, {
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'holdout') {
     cmd <- .holdout(input$dataset, vars = input$tr_vars, filt = input$data_filter, rev = input$tr_holdout_rev, input$tr_dataset)
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'tab2dat') {
+    cmd <- .tab2dat(input$dataset, input$tr_tab2dat, vars = input$tr_vars, input$tr_dataset)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'reorg_vars') {
     cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)
