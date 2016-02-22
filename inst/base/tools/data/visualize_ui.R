@@ -296,8 +296,15 @@ output$visualize <- renderPlot({
 }, width = viz_plot_width, height = viz_plot_height)
 
 .visualize <- reactive({
-  # if (is_empty(input$viz_type)) return()
+
+  if (is.null(input$viz_pause) || input$viz_pause == TRUE)
+    abortOutput()
+
+  # req(input$viz_pause == FALSE, cancelOutput = TRUE)
+  # req(input$viz_pause == FALSE, cancelOutput = FALSE)
+
   req(input$viz_type)
+
   ## need dependency on ..
   # input$viz_plot_height; input$viz_plot_width
   req(input$viz_plot_height && input$viz_plot_width)
@@ -329,9 +336,9 @@ output$visualize <- renderPlot({
   # req(!is.null(input$viz_comby) || !is.null(input$viz_combx))
   # req(!is.null())
 
-  # req(input$viz_pause == FALSE)
-  if (is.null(input$viz_pause) || input$viz_pause == TRUE)
-    abortOutput()
+ # req(input$view_pause == FALSE, cancelOutput = FALSE)
+  # req(input$view_pause == FALSE, cancelOutput = TRUE)
+
 
   viz_inputs() %>% { .$shiny <- TRUE; . } %>% do.call(visualize, .)
 })

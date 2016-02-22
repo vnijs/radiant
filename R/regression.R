@@ -64,7 +64,7 @@ regression <- function(dataset, rvar, evar,
   isFct <- sapply(select(dat,-1), function(x) is.factor(x) || is.logical(x))
   if (sum(isFct) > 0) {
     for (i in names(isFct[isFct]))
-      coeff$`  ` %<>% sub(i, paste0(i,"|"), .) %>% gsub("\\|\\|","\\|",.)
+      coeff$`  ` %<>% gsub(i, paste0(i,"|"), .) %>% gsub("\\|\\|","\\|",.)
 
     rm(i, isFct)
   }

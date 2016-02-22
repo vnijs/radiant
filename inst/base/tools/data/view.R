@@ -52,6 +52,8 @@ output$dataviewer <- DT::renderDataTable({
   # req(input$view_pause == FALSE)
   if (is.null(input$view_pause) || input$view_pause == TRUE)
     abortOutput()
+  # req(input$view_pause == FALSE, cancelOutput = FALSE)
+  # req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_(.getdata(), .dots = input$view_vars)
   ## this causes problems when r_state is NULL to latter on ??

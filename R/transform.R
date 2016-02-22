@@ -445,14 +445,14 @@ table2data <- function(dat, freq = tail(colnames(dat),1)) {
 #     freq = c(3, 5,2, 4)
 #   )
 
-# table2data(dat)
-
 # dat <-
 #   data.frame(
 #     free_ship = c("$200","$300","$200","$300"),
 #     sale = c("yes","no","yes","no"),
 #     freq = c(500, 9500,580, 9420)
 #   )
+
+# table2data(dat)
 
 ## Test
 # dat <- read.table(header = TRUE, text = "date days
