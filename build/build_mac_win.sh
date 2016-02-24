@@ -40,11 +40,10 @@ rm $dirwin/radiant*
 # rm $dirmac_mav/MathJaxR*
 # rm $dirwin/MathJaxR*
 
-rm $dirsource/shiny*
-rm $dirmac/shiny*
-rm $dirmac_mav/shiny*
-rm $dirwin/shiny*
-
+# rm $dirsource/shiny*
+# rm $dirmac/shiny*
+# rm $dirmac_mav/shiny*
+# rm $dirwin/shiny*
 
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1

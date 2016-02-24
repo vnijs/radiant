@@ -495,6 +495,7 @@ observeEvent(input$glm_store_pred, {
   req(!is_empty(input$glm_pred_data))
   pred <- .predict_glm_reg()
   if (is.null(pred)) return()
+
   if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
     return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
 
