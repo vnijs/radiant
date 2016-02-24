@@ -48,15 +48,10 @@ observeEvent(input$dataviewer_state, {
 
 output$dataviewer <- DT::renderDataTable({
   if (not_available(input$view_vars)) return()
-
-  # req(input$view_pause == FALSE)
-  if (is.null(input$view_pause) || input$view_pause == TRUE)
-    abortOutput()
-  # req(input$view_pause == FALSE, cancelOutput = FALSE)
-  # req(input$view_pause == FALSE, cancelOutput = TRUE)
+  req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_(.getdata(), .dots = input$view_vars)
-  ## this causes problems when r_state is NULL to latter on ??
+  ## this causes problems when r_state is NULL?
   if (!identical(r_state$view_vars, input$view_vars)) {
     r_state$view_vars <<- input$view_vars
     r_state$dataviewer_state <<- list()

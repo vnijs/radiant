@@ -295,14 +295,21 @@ output$visualize <- renderPlot({
   }
 }, width = viz_plot_width, height = viz_plot_height)
 
+# .visualize <- reactive({
+
+#   req(input$viz_pause == FALSE, cancelOutput = TRUE)
+#   .visualize2()
+#   # if (is.null(input$viz_pause) || input$viz_pause == TRUE) {
+#   #   isolate(.visualize2())
+#   # } else {
+#   #   .visualize2()
+#   # }
+# })
+
+# .visualize2 <- reactive({
 .visualize <- reactive({
 
-  if (is.null(input$viz_pause) || input$viz_pause == TRUE)
-    abortOutput()
-
-  # req(input$viz_pause == FALSE, cancelOutput = TRUE)
-  # req(input$viz_pause == FALSE, cancelOutput = FALSE)
-
+  req(input$viz_pause == FALSE, cancelOutput = TRUE)
   req(input$viz_type)
 
   ## need dependency on ..

@@ -169,9 +169,7 @@ pvt_plot_inputs <- reactive({
 
   if (any(input$pvt_nvar %in% input$pvt_cvars)) return()
 
-  # req(input$pvt_pause == FALSE)
-  if (is.null(input$pvt_pause) || input$pvt_pause == TRUE)
-    abortOutput()
+  req(input$pvt_pause == FALSE, cancelOutput = TRUE)
 
   withProgress(message = "Calculating", value = 0, {
     sshhr( do.call(pivotr, pvt_inputs()) )

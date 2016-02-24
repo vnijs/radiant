@@ -79,7 +79,7 @@ glm_reg <- function(dataset, rvar, evar,
   if ("standardize" %in% check) {
     ## express evars in std. deviations
     isNum <- sapply(dat, is.numeric)
-    if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(. / sd(., na.rm = TRUE)))
+    if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(. / (2*sd(., na.rm = TRUE))))
   }
 
   form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
@@ -584,7 +584,8 @@ predict.glm_reg <- function(object,
         cat("\n")
         dfprint(pred, dec) %>% print(row.names = FALSE)
       } else {
-        cat(paste0("Number of rows shown: ", prn, "\n\n"))
+        if (nrow(pred) > prn)
+          cat(paste0("Number of rows shown: ", prn, "\n\n"))
         head(pred, prn) %>% dfprint(dec) %>% print(row.names = FALSE)
       }
     }

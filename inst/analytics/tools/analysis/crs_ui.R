@@ -143,9 +143,7 @@ output$crs <- renderUI({
 
 .crs <- reactive({
   req(available(input$crs_id))
-  # req(input$crs_pause == FALSE)
-  if (is.null(input$crs_pause) || input$crs_pause == TRUE)
-    abortOutput()
+  req(input$crs_pause == FALSE, cancelOutput = TRUE)
 
 	do.call(crs, crs_inputs())
 })

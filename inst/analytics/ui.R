@@ -37,6 +37,7 @@ analytics_ui <- tagList(
   navbarMenu("Model",
     tabPanel("Neural Network (ANN)", uiOutput("ann")),
     tabPanel("Collaborative Filtering", uiOutput("crs")),
+    tabPanel("Design of Experiments (DOE)", uiOutput("doe")),
     tabPanel("Model performance", uiOutput("performance"))
   ),
 

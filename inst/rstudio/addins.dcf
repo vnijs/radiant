@@ -18,9 +18,3 @@ Description: App used for Customer Analytics
 Binding: radiant_analytics
 Interactive: true
 
-Name: Update Radiant
-Description: Update Radiant to the latest version
-Binding: update_radiant
-Interactive: true
-
-

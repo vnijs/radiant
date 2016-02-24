@@ -424,7 +424,7 @@ getsummary <- function(dat, dc = getclass(dat)) {
 #' @param dat Data.frame
 #' @param freq Column name with frequency information
 #'
-#' @example
+#' @examples
 #' data.frame(price = c("$200","$300"), sale = c(10, 2)) %>% table2data
 #'
 #' @export

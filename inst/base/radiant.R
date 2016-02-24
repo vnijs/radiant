@@ -313,6 +313,7 @@ plot_downloader <- function(plot_name, width = plot_width(),
         pr <- 7
         png(file=file, width = width*pr, height = height*pr, res=72*pr)
           print(get(paste0(pre, plot_name))())
+          # print(isolate(get(paste0(pre, plot_name))()))
         dev.off()
     }
   )
@@ -434,7 +435,7 @@ cf <- function(...) {
 }
 
 ## use the value in the input list if available and update r_state
-use_input <- function(var, vars, init = character(0), fun = "state_single") {
+use_input <- function(var, vars = "", init = character(0), fun = "state_single") {
   isolate({
     ivar <- input[[var]]
     if (var %in% names(input) && is.null(ivar)) {
@@ -459,13 +460,16 @@ use_input <- function(var, vars, init = character(0), fun = "state_single") {
   })
 }
 
-use_input_nonvar <- function(var, choices, init = "", fun = "state_init") {
+use_input_nonvar <- function(var, choices = c(), init = "", fun = "state_init") {
   isolate({
     ivar <- input[[var]]
     if (var %in% names(input) && is.null(ivar)) {
       r_state[[var]] <<- NULL
       ivar
     } else if (!is_empty(ivar) && all(ivar %in% choices)) {
+      if (length(ivar) > 0) r_state[[var]] <<- ivar
+      ivar
+    } else if (!is_empty(ivar) && length(choices) == 0) {
       if (length(ivar) > 0) r_state[[var]] <<- ivar
       ivar
     } else {

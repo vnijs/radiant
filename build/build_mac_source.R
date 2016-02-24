@@ -21,3 +21,7 @@ build('../radiant', binary = TRUE)
 # devtools::install('../MathJaxR')
 # build('../MathJaxR')
 # build('../MathJaxR', binary = TRUE)
+
+install('../shiny')
+build('../shiny')
+build('../shiny', binary = TRUE)

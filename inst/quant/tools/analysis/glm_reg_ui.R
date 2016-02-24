@@ -342,7 +342,10 @@ output$glm_reg <- renderUI({
 		## two separate tabs
 		glm_output_panels <- tabsetPanel(
 	    id = "tabs_glm_reg",
-	    tabPanel("Summary", verbatimTextOutput("summary_glm_reg")),
+	    tabPanel("Summary",
+        downloadLink("dl_glm_coef", "", class = "fa fa-download alignright"), br(),
+        verbatimTextOutput("summary_glm_reg")
+      ),
       tabPanel("Predict",
         conditionalPanel("input.glm_pred_plot == true",
           plot_downloader("glm_reg", height = glm_pred_plot_height(), po = "dlp_", pre = ".predict_plot_"),
@@ -373,24 +376,34 @@ glm_available <- reactive({
   "available"
 })
 
+# .glm_reg <- reactive({
+#   # if (is.null(input$glm_pause) || input$glm_pause == TRUE) {
+#   if (pressed(input$glm_store_pred) || pressed(input$glm_store_res)) {
+#     isolate(.glm_reg2())
+#     # cancelOutput()
+#   } else {
+#     .glm_reg2()
+#   }
+# })
+
 .glm_reg <- reactive({
 
   # isolate({
   #   if (pressed(input$glm_store_pred) || pressed(input$glm_store_res))
-  #     abortOutput()
-  #   if (!is.null(input$a_button) && input$a_button > 0) abortOutput()
+  #     cancelOutput()
+  #   if (!is.null(input$a_button) && input$a_button > 0) cancelOutput()
   # })
 
+  req(input$glm_pause == FALSE, cancelOutput = TRUE)
+
   req(available(input$glm_rvar), available(input$glm_evar))
-  req(input$glm_lev, input$glm_wts)
+  # req(input$glm_lev, input$glm_wts)
+  req(input$glm_lev)
+  req(input$glm_wts == "None" || available(input$glm_wts))
 
   ## need dependency on glm_int so I can have names(input) in isolate
   input$glm_int
   isolate(req("glm_int" %in% names(input)))
-
-  # req(input$glm_pause == FALSE)
-  if (is.null(input$glm_pause) || input$glm_pause == TRUE)
-    abortOutput()
 
   withProgress(message = 'Estimating model', value = 0,
     do.call(glm_reg, glm_inputs())
@@ -479,12 +492,39 @@ observeEvent(input$glm_store_res, {
 })
 
 observeEvent(input$glm_store_pred, {
+  req(!is_empty(input$glm_pred_data))
   pred <- .predict_glm_reg()
   if (is.null(pred)) return()
   if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
     return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-  store_glm(pred, data = input$glm_pred_data, type = "prediction", name = input$glm_store_pred_name)
+
+  withProgress(message = 'Storing predictions', value = 0,
+    store_glm(pred, data = input$glm_pred_data, type = "prediction", name = input$glm_store_pred_name)
+  )
 })
+
+output$dl_glm_coef <- downloadHandler(
+  filename = function() { "glm_coefficients.csv" },
+  content = function(file) {
+    if ("standardize" %in% input$glm_check) {
+      ret <- .glm_reg()
+      if (!is.null(ret)) {
+        sqrt_n <- sqrt(nrow(ret[["model"]]$model))
+        ret <- ret[["coeff"]]
+        ret <- ret[-1,-(c(3,4,6))]
+        # ret <- ret[-1,-(c(4,6))]
+        ret$coefficient <- exp(ret$coefficient)
+        ## can't get std.dev because coefficients are standardized
+        # ret$std.error <- ret$std.error * sqrt_n
+        colnames(ret)[2] <- "OR2"
+        ret$importance <- pmax(ret$OR2, 1/ret$OR2)
+        write.csv(ret, file = file, row.names = FALSE)
+      }
+    } else {
+      write.csv("Standardized coefficients not selected", file = file, row.names = FALSE)
+    }
+  }
+)
 
 output$dl_glm_pred <- downloadHandler(
   filename = function() { "glm_predictions.csv" },

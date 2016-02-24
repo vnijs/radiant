@@ -122,9 +122,9 @@ output$ui_Explore <- renderUI({
   if (not_available(input$expl_vars) || is.null(input$expl_top)) return()
   if (available(input$expl_byvar) && any(input$expl_byvar %in% input$expl_vars)) return()
 
-  # req(input$expl_pause)
-  if (is.null(input$expl_pause) || input$expl_pause == TRUE)
-    abortOutput()
+  req(input$expl_pause == FALSE, cancelOutput = TRUE)
+  # if (is.null(input$expl_pause) || input$expl_pause == TRUE)
+    # cancelOutput()
 
   withProgress(message = 'Calculating', value = 0, {
     sshhr( do.call(explore, expl_inputs()) )

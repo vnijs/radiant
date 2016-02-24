@@ -31,7 +31,7 @@ pivotr <- function(dataset,
 
 
   vars <- if (nvar == "None") cvars else c(cvars, nvar)
-  dat <- getdata(dataset, vars, filt = data_filter)
+  dat <- getdata(dataset, vars, filt = data_filter, na.rm = FALSE)
   if (!is_string(dataset)) dataset <- "-----"
 
   ## in case : was used vor cvars

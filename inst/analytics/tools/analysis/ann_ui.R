@@ -45,6 +45,7 @@ output$ui_ann <- renderUI({
   tagList(
     wellPanel(
       checkboxInput("ann_pause", "Pause estimation", state_init("ann_pause", FALSE)),
+      # actionButton("ann_run", "Estimate model"),
 	    uiOutput("ui_ann_rvar"),
       uiOutput("ui_ann_lev"),
 	    uiOutput("ui_ann_evar"),
@@ -127,9 +128,9 @@ ann_available <- reactive({
 })
 
 .ann <- reactive({
-  # req(input$ann_pause == FALSE)
-  if (is.null(input$ann_pause) || input$ann_pause == TRUE)
-    abortOutput()
+# .ann <- eventReactive(input$ann_run | input$ann_pause == TRUE, {
+# .ann <- eventReactive(input$ann_run, {
+  req(input$ann_pause == FALSE, cancelOutput = TRUE)
 
   withProgress(message = 'Estimating model', value = 0,
 	  do.call(ann, ann_inputs())
@@ -173,8 +174,10 @@ observeEvent(input$ann_report, {
 observeEvent(input$ann_pred, {
   if (ann_available() != "available") return(ann_available())
   if (is_empty(input$ann_pred_data,"None")) return("No data selected for prediction")
-  pred <- predict(.ann(), input$ann_pred_data)
-  store_ann(pred, data = input$ann_pred_data, name = input$ann_pred_name)
+  withProgress(message = 'Storing predictions', value = 0,
+    predict(.ann(), input$ann_pred_data) %>%
+    store_ann(data = input$ann_pred_data, name = input$ann_pred_name)
+  )
 })
 
 output$dl_ann_pred <- downloadHandler(

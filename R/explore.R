@@ -42,7 +42,7 @@ explore <- function(dataset,
   tvars <- vars
   if (!is_empty(byvar)) tvars %<>% c(byvar) %>% unique
 
-  dat <- getdata(dataset, tvars, filt = data_filter)
+  dat <- getdata(dataset, tvars, filt = data_filter, na.rm = FALSE)
   if (!is_string(dataset)) dataset <- "-----"
 
   ## in case : was used

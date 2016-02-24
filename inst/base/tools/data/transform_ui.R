@@ -145,7 +145,7 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
   tagList(wellPanel(
-    checkboxInput("tr_pause", "Show summaries", state_init("tr_pause", TRUE)),
+    checkboxInput("tr_hide", "Hide summaries", state_init("tr_hide", FALSE)),
     uiOutput("ui_tr_vars"),
     selectInput("tr_change_type", "Transformation type:", trans_types, selected = "none"),
     conditionalPanel(condition = "input.tr_change_type == 'type'",
@@ -390,11 +390,8 @@ observeEvent(input$tr_change_type, {
                      store_dat = "",
                      store = TRUE) {
 
-      # return(.tab2dat(dat, input$tr_tab2dat, vars = inp_vars("tr_vars"), store = FALSE))
-
   if (!store && !is.character(dataset)) {
     if (is_empty(vars)) vars <- setdiff(colnames(dataset),freq)
-    # select_(dataset, .dots = c(setdiff(vars, freq),) %>%
     select_(dataset, .dots = unique(c(vars, freq))) %>%
     table2data(freq)
   } else {
@@ -787,9 +784,7 @@ tr_snippet <- reactive({
 })
 
 output$transform_summary <- renderPrint({
-  # req(input$tr_pause)
-  if (is.null(input$tr_pause) || input$tr_pause == FALSE)
-    abortOutput()
+  req(input$tr_hide == FALSE)
 
  	dat <- transform_main()
   ## with isolate on the summary wouldn't update when the dataset was changed

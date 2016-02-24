@@ -595,7 +595,8 @@ predict.regression <- function(object,
         cat("\n")
         dfprint(pred, dec) %>% print(row.names = FALSE)
       } else {
-        cat(paste0("Number of rows shown: ", prn, "\n\n"))
+        if (nrow(pred) > prn)
+          cat(paste0("Number of rows shown: ", prn, "\n\n"))
         head(pred, prn) %>% dfprint(dec) %>% print(row.names = FALSE)
       }
     }

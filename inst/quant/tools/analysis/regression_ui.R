@@ -390,9 +390,7 @@ reg_available <- reactive({
   input$reg_int
   isolate(req("reg_int" %in% names(input)))
 
-  # req(input$reg_pause == FALSE)
-  if (is.null(input$reg_pause) || input$reg_pause == TRUE)
-    abortOutput()
+  req(input$reg_pause == FALSE, cancelOutput = TRUE)
 
   do.call(regression, reg_inputs())
 })
