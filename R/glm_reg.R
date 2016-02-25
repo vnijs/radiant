@@ -181,7 +181,7 @@ summary.glm_reg <- function(object,
   cat(paste0("Null hyp.: there is no effect of ", expl_var, " on ", object$rvar, "\n"))
   cat(paste0("Alt. hyp.: there is an effect of ", expl_var, " on ", object$rvar, "\n"))
   if ("standardize" %in% object$check)
-    cat("**Standardized odds-rations and coefficients shown**\n")
+    cat("**Standardized odds-ratios and coefficients shown**\n")
   cat("\n")
 
   coeff <- object$coeff
