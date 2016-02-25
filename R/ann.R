@@ -8,6 +8,7 @@
 #' @param lev The level in the response variable defined as _success_
 #' @param size Number of units (nodes) in the hidden layer
 #' @param decay Paramater decay
+#' @param wts Weights to use in estimation
 #' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -29,6 +30,7 @@ ann <- function(dataset, rvar, evar,
                 lev = "",
                 size = 1,
                 decay = .5,
+                wts = "None",
                 check = "",
                 dec = 3,
                 data_filter = "") {
@@ -54,8 +56,23 @@ ann <- function(dataset, rvar, evar,
     return("Decay should be larger than or equal to 0." %>%
            set_class(c("ann",class(.))))
 
-  dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
+
+  if (!is.null(wts) && wts == "None") {
+    wts <- NULL
+    vars <- c(rvar, evar)
+  } else {
+    wtsname <- wts
+    vars <- c(rvar, evar, wtsname)
+  }
+
+  # dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
+  dat <- getdata(dataset, vars, filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
+
+  if (!is.null(wts)) {
+    wts <- dat[[wtsname]]
+    dat <- select_(dat, .dots = paste0("-",wtsname))
+  }
 
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
     return("One or more selected variables show no variation. Please select other variables." %>%
@@ -85,7 +102,7 @@ ann <- function(dataset, rvar, evar,
 
   form <- paste(rvar, "~ . ")
   nninput <- list(formula = as.formula(form),
-              rang = .1, size = size, decay = decay, maxit = 10000,
+              rang = .1, size = size, decay = decay, weights = wts, maxit = 10000,
               entropy = TRUE, trace = FALSE, data = dat)
 
   ## need do.call so Garson plot will work
@@ -124,6 +141,8 @@ summary.ann <- function(object, ...) {
   cat("\nResponse variable    :", object$rvar)
   cat("\nLevel                :", object$lev, "in", object$rvar)
   cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n")
+  if (length(object$wtsname) > 0)
+    cat("Weights used         :", object$wtsname, "\n")
   cat("Nr obs               :", length(object$rv), "\n\n")
   cat("\n")
 

@@ -215,6 +215,9 @@ output$ui_reg_color <- renderUI({
 ## data ui and tabs
 output$ui_regression <- renderUI({
   tagList(
+    wellPanel(
+      actionButton("reg_run", "Estimate", width = "100%")
+    ),
     conditionalPanel(condition = "input.tabs_regression == 'Predict'",
       wellPanel(
         selectInput("reg_predict", label = "Prediction input:", reg_predict,
@@ -266,8 +269,9 @@ output$ui_regression <- renderUI({
         )
       )
     ),
+
     wellPanel(
-      checkboxInput("reg_pause", "Pause estimation", state_init("reg_pause", FALSE)),
+      # checkboxInput("reg_pause", "Pause estimation", state_init("reg_pause", FALSE)),
       uiOutput("ui_reg_rvar"),
       uiOutput("ui_reg_evar"),
 
@@ -383,14 +387,14 @@ reg_available <- reactive({
   "available"
 })
 
-.regression <- reactive({
+.regression <- eventReactive(input$reg_run, {
   req(available(input$reg_rvar), available(input$reg_evar))
 
   ## need dependency in reg_int so I can have names(input) in isolate
   input$reg_int
   isolate(req("reg_int" %in% names(input)))
 
-  req(input$reg_pause == FALSE, cancelOutput = TRUE)
+  # req(input$reg_pause == FALSE, cancelOutput = TRUE)
 
   do.call(regression, reg_inputs())
 })

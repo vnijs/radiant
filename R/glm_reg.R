@@ -24,6 +24,8 @@
 #' @seealso \code{\link{predict.glm_reg}} to generate predictions
 #' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
+#' @importFrom sandwich vcovHC
+#'
 #' @export
 glm_reg <- function(dataset, rvar, evar,
                     lev = "",
@@ -93,7 +95,10 @@ glm_reg <- function(dataset, rvar, evar,
     model <- sshhr(glm(form, weights = wts, family = binomial(link = link), data = dat))
   }
 
+
+
   coeff <- tidy(model)
+
   coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
 
@@ -105,6 +110,20 @@ glm_reg <- function(dataset, rvar, evar,
     rm(i, isFct)
   }
   coeff$`  ` %<>% format(justify = "left")
+
+
+  if (!is_empty(wts, "None")) {
+    # cov.m1 <- sqrt(diag(sandwich::vcovHC(model, type="HC0"))
+    # coeff$std.error <- sqrt(diag(cov.m1))
+    coeff$std.error <- sqrt(diag(sandwich::vcovHC(model, type="HC0")))
+    coeff$z.value <- coef(model) / coeff$std.error
+    coeff$p.value <- 2 * pnorm(abs(coef(model)/coeff$std.error), lower.tail=FALSE)
+    coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
+  }
+
+  colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
+  coeff$OR <- exp(coeff$coefficient)
+  coeff <- coeff[,c("  ","OR", "coefficient","std.error","z.value","p.value"," ")]
 
   rm(dat) ## dat not needed elsewhere
 
@@ -162,13 +181,14 @@ summary.glm_reg <- function(object,
   cat(paste0("Null hyp.: there is no effect of ", expl_var, " on ", object$rvar, "\n"))
   cat(paste0("Alt. hyp.: there is an effect of ", expl_var, " on ", object$rvar, "\n"))
   if ("standardize" %in% object$check)
-    cat("**Standardized coefficients shown**\n")
+    cat("**Standardized odds-rations and coefficients shown**\n")
   cat("\n")
 
   coeff <- object$coeff
   p.small <- coeff$p.value < .001
-  coeff[,2:5] %<>% dfprint(dec)
+  coeff[,2:6] %<>% dfprint(dec)
   coeff$p.value[p.small] <- "< .001"
+  # coeff$OR[1] <- ""
   print(coeff, row.names=FALSE)
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
@@ -213,11 +233,20 @@ summary.glm_reg <- function(object,
     } else {
       ci_perc <- ci_label(cl = conf_lev)
 
+      # cnfint <- ifelse (is_empty(object$wts, "None"), confint.default, radiant::confint_robust)
+      if (is_empty(object$wts, "None"))
+        cnfint <- confint.default
+      else
+        cnfint <- radiant::confint_robust
+
       ci_tab <-
-        confint.default(object$model, level = conf_lev) %>%
+        # confint.default(object$model, level = conf_lev) %>%
+        cnfint(object$model, level = conf_lev) %>%
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
-        cbind(select(object$coeff,2),.)
+        cbind(select(object$coeff,3),.)
+        # cbind(object$coeff[["coefficient"]],.)
+        # cbind(object$coeff$coefficient,.)
 
       if ("confint" %in% sum_check) {
         ci_tab %T>%
@@ -342,10 +371,17 @@ plot.glm_reg <- function(x,
 
   if ("coef" %in% plots) {
     nrCol <- 1
-    plot_list[["coef"]] <- confint.default(object$model, level = conf_lev) %>%
+    # cnfint <- ifelse (is_empty(object$wts, "None"), confint.default, radiant::confint_robust)
+    if (is_empty(object$wts, "None"))
+      cnfint <- confint.default
+    else
+      cnfint <- radiant::confint_robust
+    # plot_list[["coef"]] <- confint.default(object$model, level = conf_lev) %>%
+    plot_list[["coef"]] <- cnfint(object$model, level = conf_lev) %>%
           data.frame %>%
           set_colnames(c("Low","High")) %>%
-          cbind(select(object$coeff,2),.) %>%
+          cbind(select(object$coeff,3),.) %>%
+          # cbind(object$coeff[["coefficient"]],.) %>%
           set_rownames(object$coeff$`  `) %>%
           { if (!intercept) .[-1,] else . } %>%
           mutate(variable = rownames(.)) %>%
@@ -724,4 +760,34 @@ store_glm <- function(object,
   }
 
   changedata(data, vars = store, var_names = name)
+}
+
+#' Confidence interval for robust estimators
+#'
+#' @details Wrapper for confint.default with robust standard errors. See \url{http://stackoverflow.com/a/3820125/1974918}
+#'
+#' @param object A fitted model object
+#' @param parm A specification of which parameters are to be given confidence intervals, either a vector of numbers or a vector of names. If missing, all parameters are considered
+#' @param level The confidence level required
+#' @param ... Additional argument(s) for methods
+#'
+#' @importFrom sandwich vcovHC
+#'
+#' @export
+confint_robust <- function (object, parm, level = 0.95, ...) {
+    cf <- coef(object)
+    pnames <- names(cf)
+    if (missing(parm))
+        parm <- pnames
+    else if (is.numeric(parm))
+        parm <- pnames[parm]
+    a <- (1 - level)/2
+    a <- c(a, 1 - a)
+    pct <- stats:::format.perc(a, 3)
+    fac <- qnorm(a)
+    ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm,
+        pct))
+    ses <- sqrt(diag(sandwich::vcovHC(object)))[parm]
+    ci[] <- cf[parm] + ses %o% fac
+    ci
 }

@@ -17,11 +17,6 @@ system("git add --all .")
 system("git commit -m 'Update [ci skip]'")
 system("git push")
 
-
-GET SHINY ACE BACK UP
-MAKE SURE DEPS FOR GITHUB SHINY ARE AVAILABLE
-
-
 # options(repos = "http://cran.rstudio.com")
 # install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
 # install.packages("jsonlite"); install.packages("RcppEigen")

@@ -41,14 +41,33 @@ output$ui_ann_evar <- renderUI({
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
+output$ui_ann_wts <- renderUI({
+  # req(available(input$ann_rvar), available(input$ann_evar))
+  isNum <- .getclass() %in% c("numeric","integer")
+  vars <- varnames()[isNum]
+  if (length(vars) > 0 && any(vars %in% input$ann_evar)) {
+    vars <- setdiff(vars, input$ann_evar)
+    names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
+  }
+  vars <- c("None", vars)
+
+  selectInput(inputId = "ann_wts", label = "Weights:", choices = vars,
+    selected = use_input("ann_wts", vars),
+    multiple = FALSE)
+})
+
+
 output$ui_ann <- renderUI({
   tagList(
     wellPanel(
-      checkboxInput("ann_pause", "Pause estimation", state_init("ann_pause", FALSE)),
-      # actionButton("ann_run", "Estimate model"),
+      actionButton("ann_run", "Estimate", width = "100%")
+    ),
+    wellPanel(
+      # checkboxInput("ann_pause", "Pause estimation", state_init("ann_pause", FALSE)),
 	    uiOutput("ui_ann_rvar"),
       uiOutput("ui_ann_lev"),
 	    uiOutput("ui_ann_evar"),
+      uiOutput("ui_ann_wts"),
       tags$table(
         tags$td(numericInput("ann_size", label = "Size:", min = 1, max = 20,
           value = state_init("ann_size",1), width = "115px")),
@@ -127,10 +146,13 @@ ann_available <- reactive({
   "available"
 })
 
-.ann <- reactive({
+# .ann <- reactive({
 # .ann <- eventReactive(input$ann_run | input$ann_pause == TRUE, {
-# .ann <- eventReactive(input$ann_run, {
-  req(input$ann_pause == FALSE, cancelOutput = TRUE)
+.ann <- eventReactive(input$ann_run, {
+
+  # req(input$ann_pause == FALSE, cancelOutput = TRUE)
+
+  # req(input$ann_wts == "None" || available(input$ann_wts))
 
   withProgress(message = 'Estimating model', value = 0,
 	  do.call(ann, ann_inputs())

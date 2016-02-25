@@ -14,9 +14,9 @@ build('../radiant', binary = TRUE)
 #build('../data.tree')
 #build('../data.tree', binary = TRUE)
 
-install('../shinyAce')
-build('../shinyAce')
-build('../shinyAce', binary = TRUE)
+# install('../shinyAce')
+# build('../shinyAce')
+# build('../shinyAce', binary = TRUE)
 
 # devtools::install('../MathJaxR')
 # build('../MathJaxR')

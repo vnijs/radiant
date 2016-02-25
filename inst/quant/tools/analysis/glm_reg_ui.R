@@ -210,6 +210,11 @@ output$ui_glm_color <- renderUI({
 
 output$ui_glm_reg <- renderUI({
   tagList(
+    # conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
+      wellPanel(
+        actionButton("glm_run", "Estimate", width = "100%")
+      ),
+    # ),
     conditionalPanel(condition = "input.tabs_glm_reg == 'Predict'",
       wellPanel(
 
@@ -257,7 +262,7 @@ output$ui_glm_reg <- renderUI({
       )
     ),
     wellPanel(
-      checkboxInput("glm_pause", "Pause estimation", state_init("glm_pause", FALSE)),
+      # checkboxInput("glm_pause", "Pause estimation", state_init("glm_pause", FALSE)),
     	radioButtons(inputId = "glm_link", label = NULL, glm_link,
     		selected = state_init("glm_link","logit"), inline = TRUE),
 	    uiOutput("ui_glm_rvar"),
@@ -275,7 +280,7 @@ output$ui_glm_reg <- renderUI({
           checkboxGroupInput("glm_check", NULL, glm_check,
             selected = state_init("glm_check"), inline = TRUE),
           checkboxGroupInput("glm_sum_check", NULL, glm_sum_check,
-            selected = state_init("glm_sum_check", "odds"), inline = TRUE)
+            selected = state_init("glm_sum_check", ""), inline = TRUE)
   			),
         ## Using && to check that input.glm_sum_check is not null (must be &&)
   	    conditionalPanel(condition = "(input.glm_sum_check && (input.glm_sum_check.indexOf('odds') >= 0 |
@@ -386,7 +391,7 @@ glm_available <- reactive({
 #   }
 # })
 
-.glm_reg <- reactive({
+.glm_reg <- eventReactive(input$glm_run, {
 
   # isolate({
   #   if (pressed(input$glm_store_pred) || pressed(input$glm_store_res))
@@ -394,7 +399,7 @@ glm_available <- reactive({
   #   if (!is.null(input$a_button) && input$a_button > 0) cancelOutput()
   # })
 
-  req(input$glm_pause == FALSE, cancelOutput = TRUE)
+  # req(input$glm_pause == FALSE, cancelOutput = TRUE)
 
   req(available(input$glm_rvar), available(input$glm_evar))
   # req(input$glm_lev, input$glm_wts)
@@ -412,6 +417,10 @@ glm_available <- reactive({
 
 .summary_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
+  # ret <- .glm_reg()
+  # print(str(ret))
+  # if (is.null(ret)) return("** Press the Estimate button to generate results **")
+  # do.call(summary, c(list(object = ret), glm_sum_inputs()))
   do.call(summary, c(list(object = .glm_reg()), glm_sum_inputs()))
 })
 
@@ -507,22 +516,25 @@ observeEvent(input$glm_store_pred, {
 output$dl_glm_coef <- downloadHandler(
   filename = function() { "glm_coefficients.csv" },
   content = function(file) {
-    if ("standardize" %in% input$glm_check) {
-      ret <- .glm_reg()
-      if (!is.null(ret)) {
-        sqrt_n <- sqrt(nrow(ret[["model"]]$model))
-        ret <- ret[["coeff"]]
-        ret <- ret[-1,-(c(3,4,6))]
+    ret <- .glm_reg()
+    if (!is.null(ret)) {
+      ret <- ret[["coeff"]][-1,]
+      if ("standardize" %in% input$glm_check) {
+        # sqrt_n <- sqrt(nrow(ret[["model"]]$model))
+        # ret <- ret[-1,-(c(3,4,6))]
         # ret <- ret[-1,-(c(4,6))]
-        ret$coefficient <- exp(ret$coefficient)
+        # ret$coefficient <- exp(ret$coefficient)
         ## can't get std.dev because coefficients are standardized
         # ret$std.error <- ret$std.error * sqrt_n
-        colnames(ret)[2] <- "OR2"
-        ret$importance <- pmax(ret$OR2, 1/ret$OR2)
+        # colnames(ret)[2] <- "OR2"
+        ret$importance <- pmax(ret$OR, 1/ret$OR)
         write.csv(ret, file = file, row.names = FALSE)
+      } else {
+        write.csv("Standardized coefficients were not selected", file = file, row.names = FALSE)
+        write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE)
       }
     } else {
-      write.csv("Standardized coefficients not selected", file = file, row.names = FALSE)
+      write.csv("No output available", file = file, row.names = FALSE)
     }
   }
 )

@@ -4,8 +4,8 @@
 \alias{ann}
 \title{Artificial Neural Networks}
 \usage{
-ann(dataset, rvar, evar, lev = "", size = 1, decay = 0.5, check = "",
-  dec = 3, data_filter = "")
+ann(dataset, rvar, evar, lev = "", size = 1, decay = 0.5, wts = "None",
+  check = "", dec = 3, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -19,6 +19,8 @@ ann(dataset, rvar, evar, lev = "", size = 1, decay = 0.5, check = "",
 \item{size}{Number of units (nodes) in the hidden layer}
 
 \item{decay}{Paramater decay}
+
+\item{wts}{Weights to use in estimation}
 
 \item{check}{Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables}
 
