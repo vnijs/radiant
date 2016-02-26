@@ -6,4 +6,4 @@ r_github_packages:
   - trestletech/shinyAce
   - jimhester/covr
   - rstudio/DT
-  - vnijs/MathJaxR
+  - rstudio/shiny
