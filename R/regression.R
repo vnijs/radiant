@@ -152,7 +152,7 @@ summary.regression <- function(object,
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n")
   cat("R-squared:", paste0(reg_fit$r.squared, ", "), "Adjusted R-squared:", reg_fit$adj.r.squared, "\n")
   cat("F-statistic:", reg_fit$statistic, paste0("df(", reg_fit$df - df_int, ",", reg_fit$df.residual, "), p.value"), reg_fit$p.value)
-  cat("\nNr obs:", reg_fit$df + reg_fit$df.residual, "\n\n")
+  cat("\nNr obs:", nrprint(reg_fit$df + reg_fit$df.residual, dec = 0), "\n\n")
 
   if (anyNA(object$model$coeff))
     cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\n")
@@ -460,7 +460,7 @@ predict.regression <- function(object,
   # used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
   if ("standardize" %in% object$check) {
-    return(cat("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again"))
+    return(cat("Standardized coefficients cannot be used for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (pred_count == 3) {
     return(cat("Please select variables, data, or specify a command to generate predictions.\nFor example, carat = seq(.5, 1.5, .1) would produce predictions for values\n of carat starting at .5, increasing to 1.5 in increments of .1. Make sure\nto press return after you finish entering the command.\n\nAlternatively, specify a dataset to generate predictions. You could create\nthis in a spread sheet and use the paste feature in Data > Manage to bring\nit into Radiant"))
   }
@@ -477,7 +477,7 @@ predict.regression <- function(object,
   pred_type <- "cmd"
   vars <- object$evar
   if (pred_data == "" && pred_cmd != "") {
-    pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
+    pred_cmd %<>% gsub("\"","\'",.) %>% gsub(";\\s*$","",.) %>% gsub(";",",",.)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
       paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% cat

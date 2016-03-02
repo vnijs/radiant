@@ -47,7 +47,7 @@ observeEvent(input$dataviewer_state, {
 })
 
 output$dataviewer <- DT::renderDataTable({
-  if (not_available(input$view_vars)) return()
+  if (not_available(input$view_vars)) return(data.frame())
   req(input$view_pause == FALSE, cancelOutput = TRUE)
 
   dat <- select_(.getdata(), .dots = input$view_vars)

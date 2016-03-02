@@ -29,7 +29,8 @@ output$ui_pvt_cvars <- renderUI({
   })
 
   selectizeInput("pvt_cvars", label = "Categorical variables:", choices = vars,
-    selected = use_input("pvt_cvars", vars, "", fun = "state_multiple"),
+    # selected = state_multipl("pvt_cvars", vars, "", fun = "state_multiple"),
+    selected = state_multiple("pvt_cvars", vars),
     multiple = TRUE,
     options = list(placeholder = 'Select categorical variables',
                    plugins = list('remove_button', 'drag_drop'))
@@ -46,7 +47,8 @@ output$ui_pvt_nvar <- renderUI({
   }
 
   selectizeInput("pvt_nvar", label = "Numeric variable:", choices = vars,
-    selected = use_input("pvt_nvar", vars, "None"),
+    # selected = use_input("pvt_nvar", vars, "None"),
+    selected = state_single("pvt_nvar", vars, "None"),
     multiple = FALSE, options = list(placeholder = 'Select numeric variable'))
 })
 
@@ -63,7 +65,8 @@ output$ui_pvt_normalize  <- renderUI({
 
   selectizeInput("pvt_normalize", label = "Normalize by:",
     choices = pvt_normalize,
-    selected = use_input("pvt_normalize", pvt_normalize, "None"),
+    # selected = use_input("pvt_normalize", pvt_normalize, "None"),
+    selected = state_single("pvt_normalize", pvt_normalize, "None"),
     multiple = FALSE)
 })
 
@@ -187,7 +190,7 @@ observeEvent(input$pivotr_state, {
 
 output$pivotr <- DT::renderDataTable({
   pvt <- .pivotr()
-  if (is.null(pvt)) return()
+  if (is.null(pvt)) return(data.frame())
   pvt$shiny <- TRUE
 
   if (!identical(r_state$pvt_cvars, input$pvt_cvars)) {

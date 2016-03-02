@@ -14,7 +14,7 @@ ann_inputs <- reactive({
 output$ui_ann_rvar <- renderUI({
  	vars <- two_level_vars()
   selectInput(inputId = "ann_rvar", label = "Response variable:", choices = vars,
-  	selected = use_input("ann_rvar",vars), multiple = FALSE)
+  	selected = state_single("ann_rvar",vars), multiple = FALSE)
 })
 
 output$ui_ann_lev <- renderUI({
@@ -26,7 +26,8 @@ output$ui_ann_lev <- renderUI({
 
   selectInput(inputId = "ann_lev", label = "Choose level:",
               choices = levs,
-              selected = use_input_nonvar("ann_lev", levs))
+              selected = state_init("ann_lev"))
+              # selected = use_input_nonvar("ann_lev", levs))
 })
 
 output$ui_ann_evar <- renderUI({
@@ -37,7 +38,8 @@ output$ui_ann_evar <- renderUI({
     vars <- vars[-which(vars == input$ann_rvar)]
 
   selectInput(inputId = "ann_evar", label = "Explanatory variables:", choices = vars,
-    selected = use_input("ann_evar", vars, fun = "state_multiple"),
+    # selected = use_input("ann_evar", vars, fun = "state_multiple"),
+    selected = state_multiple("ann_evar", vars),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -52,12 +54,14 @@ output$ui_ann_wts <- renderUI({
   vars <- c("None", vars)
 
   selectInput(inputId = "ann_wts", label = "Weights:", choices = vars,
-    selected = use_input("ann_wts", vars),
+    # selected = use_input("ann_wts", vars),
+    selected = state_single("ann_wts", vars),
     multiple = FALSE)
 })
 
 
 output$ui_ann <- renderUI({
+  # req(input$dataset)
   tagList(
     wellPanel(
       actionButton("ann_run", "Estimate", width = "100%")
@@ -72,7 +76,7 @@ output$ui_ann <- renderUI({
         tags$td(numericInput("ann_size", label = "Size:", min = 1, max = 20,
           value = state_init("ann_size",1), width = "115px")),
         tags$td(numericInput("ann_decay", label = "Decay:", min = 0, max = 1,
-          value = state_init("ann_decay",.5), width = "115px"))
+          step = .1, value = state_init("ann_decay",.5), width = "115px"))
       )
     ),
     wellPanel(
@@ -161,6 +165,7 @@ ann_available <- reactive({
 
 .summary_ann <- reactive({
   if (ann_available() != "available") return(ann_available())
+  if (not_pressed(input$ann_run)) return("** Press the Estimate button to estimate the model **")
   summary(.ann())
 })
 

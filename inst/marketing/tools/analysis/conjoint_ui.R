@@ -33,6 +33,7 @@ output$ui_ca_evar <- renderUI({
 })
 
 output$ui_conjoint <- renderUI({
+  req(input$dataset)
   tagList(
 	  conditionalPanel(condition = "input.tabs_conjoint == 'Plot'",
   		wellPanel(

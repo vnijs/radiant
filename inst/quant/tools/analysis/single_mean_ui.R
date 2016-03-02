@@ -27,12 +27,14 @@ output$ui_sm_var <- renderUI({
 })
 
 output$ui_single_mean <- renderUI({
+  req(input$dataset)
   tagList(
     conditionalPanel(condition = "input.tabs_single_mean == 'Plot'",
       wellPanel(
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
           choices = sm_plots,
-          selected = state_single("sm_plots", sm_plots, "hist"),
+          # selected = state_single("sm_plots", sm_plots, "hist"),
+          selected = state_init("sm_plots", "hist"),
           multiple = TRUE,
           options = list(plugins = list('remove_button', 'drag_drop')))
       )
@@ -41,7 +43,8 @@ output$ui_single_mean <- renderUI({
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
-        selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
+        # selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
+        selected = state_init("sm_alternative", sm_args$alternative),
   	  	multiple = FALSE),
     	sliderInput('sm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
     		value = state_init('sm_conf_lev',sm_args$conf_lev), step = 0.01),

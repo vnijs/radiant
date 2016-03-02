@@ -62,7 +62,8 @@ output$ui_pm_plots <- renderUI({
 })
 
 output$ui_pmap <- renderUI({
-  list(
+  req(input$dataset)
+  tagList(
   	wellPanel(
 	  	uiOutput("ui_pm_brand"),
 	  	uiOutput("ui_pm_attr"),
@@ -156,23 +157,17 @@ output$pmap <- renderUI({
   capture_plot( do.call(plot, c(list(x = .pmap()), pm_plot_inputs())) )
 })
 
-observe({
- if (not_pressed(input$pmap_report)) return()
-  isolate({
-    outputs <- c("summary","plot")
-    inp_out <- list("","")
-    inp_out[[2]] <- clean_args(pm_plot_inputs(), pm_plot_args[-1])
-    update_report(inp_main = clean_args(pm_inputs(), pm_args),
-                   fun_name = "pmap", inp_out = inp_out,
-                   fig.width = round(7 * pm_plot_width()/650,2),
-                   fig.height = round(7 * pm_plot_height()/650,2),
-                   xcmd = paste0("# save_factors(result)"))
-  })
+observeEvent(input$pmap_report, {
+  outputs <- c("summary","plot")
+  inp_out <- list("","")
+  inp_out[[2]] <- clean_args(pm_plot_inputs(), pm_plot_args[-1])
+  update_report(inp_main = clean_args(pm_inputs(), pm_args),
+                fun_name = "pmap", inp_out = inp_out,
+                fig.width = round(7 * pm_plot_width()/650,2),
+                fig.height = round(7 * pm_plot_height()/650,2),
+                xcmd = paste0("# save_factors(result)"))
 })
 
-observe({
-	if (not_pressed(input$pm_save_scores)) return()
-	isolate({
-		.pmap() %>% { if (!is.character(.)) save_factors(.) }
-	})
+observeEvent(input$pm_save_scores,{
+  .pmap() %>% { if (!is.character(.)) save_factors(.) }
 })

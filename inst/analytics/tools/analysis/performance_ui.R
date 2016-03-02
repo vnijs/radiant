@@ -19,7 +19,7 @@ perf_inputs <- reactive({
 ###############################################################
 output$ui_perf_rvar <- renderUI({
   vars <- two_level_vars()
-  isolate(sel <- use_input("perf_rvar", vars))
+  # isolate(sel <- use_input("perf_rvar", vars))
   selectInput(inputId = "perf_rvar", label = "Response variable:", choices = vars,
     selected = state_single("perf_rvar", vars), multiple = FALSE)
 })
@@ -30,19 +30,22 @@ output$ui_perf_lev <- renderUI({
     levs <- .getdata()[[input$perf_rvar]] %>% as.factor %>% levels
   else
     levs <- c()
+  # levs[1]
 
   selectInput(inputId = "perf_lev", label = "Choose level:",
               choices = levs,
-              selected = isolate(use_input_nonvar("perf_lev", levs)))
+              selected = state_init("perf_lev"))
+              # selected = isolate(use_input_nonvar("perf_lev", levs)))
 })
 
 output$ui_perf_pred <- renderUI({
   isNum <- .getclass() %in% c("integer","numeric")
   vars <- varnames()[isNum]
-  isolate(sel <- use_input("perf_pred", vars, fun = "state_multiple"))
+  # isolate(sel <- use_input("perf_pred", vars, fun = "state_multiple"))
+  # isolate(sel <- state_single("perf_pred", vars)
 
   selectInput(inputId = "perf_pred", label = "Predictor:", choices = vars,
-    selected = sel,
+    selected = state_single("perf_pred", vars),
     multiple = TRUE, size = min(4, length(vars)), selectize = FALSE)
 })
 
@@ -59,6 +62,7 @@ output$ui_perf_train <- renderUI({
 })
 
 output$ui_performance <- renderUI({
+  req(input$dataset)
   tagList(
   	wellPanel(
       checkboxInput("perf_pause", "Pause evaluation", state_init("perf_pause", FALSE)),
@@ -90,7 +94,8 @@ output$ui_performance <- renderUI({
 })
 
 perf_plot_width <- function() {
-  ifelse(length(input$perf_pred) > 1, 700, 500)
+  ifelse(length(input$perf_pred) > 1 ||
+         (!is.null(input$perf_train) && input$perf_train == "Both"), 700, 500)
 }
 perf_plot_height <- function() {
   length(input$perf_plots) * 500
@@ -141,6 +146,7 @@ output$performance <- renderUI({
       is_empty(input$perf_lev)) {
     return(" ")
   }
+  req(input$perf_train)
   # perf <- .performance()
   # perf %>% plot(plots = input$perf_plots, shiny = TRUE)
   plot(.performance(), plots = input$perf_plots, shiny = TRUE)

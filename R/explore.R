@@ -48,7 +48,7 @@ explore <- function(dataset,
   ## in case : was used
   vars <- colnames(head(dat) %>% select_(.dots = vars))
 
-  ## converting factors for interger (1st level)
+  ## converting factors for integer (1st level)
   ## see also R/visualize.R
   dc <- getclass(dat)
   isFctNum <- "factor" == dc & names(dc) %in% setdiff(vars,byvar)
@@ -74,6 +74,10 @@ explore <- function(dataset,
     tab <- dat %>% select(isNum) %>%
       gather("variable", "value") %>%
       group_by_("variable")  %>% summarise_each(pfun)
+
+    ## order by the variable names selected
+    tab <- tab[match(vars, tab[[1]]),]
+
     if (ncol(tab) == 2) colnames(tab) <- c("variable", names(pfun))
   } else {
 
@@ -287,6 +291,7 @@ make_expl <- function(expl,
                       search = "",
                       searchCols = NULL,
                       order = NULL) {
+
 
   tab <- expl %>% flip(top)
   cn_all <- colnames(tab)

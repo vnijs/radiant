@@ -24,7 +24,8 @@ output$ui_pf_vars <- renderUI({
 })
 
 output$ui_pre_factor <- renderUI({
-  list(
+  req(input$dataset)
+  tagList(
   	wellPanel(
 	  	uiOutput("ui_pf_vars")
 	  ),
@@ -79,17 +80,12 @@ output$pre_factor <- renderUI({
 })
 
 .plot_pre_factor <- reactive({
-
   if (not_available(input$pf_vars) || length(input$pf_vars) < 2)
     return(invisible())
 
   plot(.pre_factor())
 })
 
-observe({
-  if (not_pressed(input$pre_factor_report)) return()
-  isolate({
-    update_report(inp_main = clean_args(pf_inputs(), pf_args),
-                  fun_name = "pre_factor")
-  })
+observeEvent(input$pre_factor_report,{
+  update_report(inp_main = clean_args(pf_inputs(), pf_args), fun_name = "pre_factor")
 })

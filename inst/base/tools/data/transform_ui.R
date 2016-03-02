@@ -28,9 +28,29 @@ output$ui_tr_tab2dat <- renderUI({
               selected = "none")
 })
 
+output$ui_tr_gather <- renderUI({
+  tagList(
+    # HTML("<label>Key-Value labels:</label>"),
+    tags$table(
+      tags$td(returnTextInput("tr_gather_key", "Key name:", "key")),
+      tags$td(returnTextInput("tr_gather_value", "Value name:", "value"))
+    )
+  )
+})
+
+output$ui_tr_spread <- renderUI({
+  req(input$tr_change_type)
+  vars <- c("None" = "none", varnames())
+  tagList(
+    selectInput("tr_spread_key", "Key:", choices  = vars, selected = "none", multiple = FALSE),
+    selectInput("tr_spread_value", "Value:", choices  = vars, selected = "none", multiple = FALSE)
+  )
+})
+
 output$ui_tr_reorg_vars <- renderUI({
   ## need a dependency to reset list of variables
-  if (is_empty(input$tr_change_type)) return()
+  # if (is_empty(input$tr_change_type)) return()
+  req(input$tr_change_type)
   vars <- varnames()
   selectizeInput("tr_reorg_vars", "Reorder/remove variables:", choices  = vars,
     selected = vars, multiple = TRUE,
@@ -40,7 +60,8 @@ output$ui_tr_reorg_vars <- renderUI({
 
 output$ui_tr_reorg_levs <- renderUI({
   ## need a dependency to reset levels
-  if (is_empty(input$tr_change_type)) return()
+  # if (is_empty(input$tr_change_type)) return()
+  req(input$tr_change_type)
 	if (not_available(input$tr_vars)) return()
   fctCol <- input$tr_vars[1]
 	isFct <- "factor" == .getclass()[fctCol]
@@ -55,7 +76,7 @@ output$ui_tr_reorg_levs <- renderUI({
 
 output$ui_tr_log <- renderUI({
   tagList(
-    "<label>Transform command log:</label><br>" %>% HTML,
+    HTML("<label>Transform command log:</label><br>"),
     tags$textarea(state_init("tr_log",""), id = "tr_log", type = "text", rows = 5, class = "form-control")
   )
 })
@@ -106,6 +127,10 @@ output$ui_tr_dataset <- renderUI({
     tr_dataset <- paste0(tr_dataset, "_holdout")
   } else if (input$tr_change_type == "tab2dat") {
     tr_dataset <- paste0(tr_dataset, "_dat")
+  } else if (input$tr_change_type == "gather") {
+    tr_dataset <- paste0(tr_dataset, "_gathered")
+  } else if (input$tr_change_type == "spread") {
+    tr_dataset <- paste0(tr_dataset, "_spread")
   }
   tags$table(
     tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
@@ -140,7 +165,10 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Show duplicates" = "show_dup",
                     "Training variable" = "training",
                     "Holdout sample" = "holdout",
-                    "Table-to-data" = "tab2dat")
+                    "Table-to-data" = "tab2dat",
+                    "Gather columns" = "gather",
+                    "Spread column" = "spread")
+
 
 output$ui_Transform <- renderUI({
 	## Inspired by Ian Fellow's transform ui in JGR/Deducer
@@ -159,6 +187,12 @@ output$ui_Transform <- renderUI({
     ),
     conditionalPanel(condition = "input.tr_change_type == 'tab2dat'",
       uiOutput("ui_tr_tab2dat")
+    ),
+    conditionalPanel(condition = "input.tr_change_type == 'gather'",
+      uiOutput("ui_tr_gather")
+    ),
+    conditionalPanel(condition = "input.tr_change_type == 'spread'",
+      uiOutput("ui_tr_spread")
     ),
     conditionalPanel(condition = "input.tr_change_type == 'create'",
 	    returnTextAreaInput("tr_create", "Create (e.g., x = y - z):", "")
@@ -401,6 +435,40 @@ observeEvent(input$tr_change_type, {
   }
 }
 
+.gather <- function(dataset, vars, key, value,
+                    store_dat = "",
+                    store = TRUE) {
+
+  if (!store && !is.character(dataset)) {
+    gather_(dataset, key, value, vars, factor_key = TRUE)
+  } else {
+    if (store_dat == "") store_dat <- dataset
+    paste0("## Gather columns\nr_data[[\"",store_dat,"\"]] <- gather(r_data[[\"",dataset,"\"]], ", key, ", ", value, ", ", paste0(vars, collapse = ", "),", factor_key = TRUE)\n")
+  }
+}
+
+.spread <- function(dataset, key, value,
+                    store_dat = "",
+                    store = TRUE) {
+
+  if (!store && !is.character(dataset)) {
+
+    cn <- colnames(dataset)
+    if (!key %in% cn || !value %in% cn) return("Key of value variable is not in the dataset")
+    spread_(dataset, key, value)
+  } else {
+    if (store_dat == "") store_dat <- dataset
+    paste0("## Spread columns\nr_data[[\"",store_dat,"\"]] <- spread(r_data[[\"",dataset,"\"]], ", key, ", ", value, ")\n")
+  }
+}
+
+# df <- data.frame(row = rep(c(1, 51), each = 3),
+#                  var = c("Sepal.Length", "Species", "Species_num"),
+#                  value = c(5.1, "setosa", 1, 7.0, "versicolor", 2))
+
+# df %>% spread(var, value)
+# df %>% spread(var, value, convert = TRUE)
+
 .bin <- function(dataset,
                  vars = "",
                  bins = 10,
@@ -617,6 +685,8 @@ transform_main <- reactive({
       return("Select a one or more variables to see the effects of removing missing values")
     } else if (input$tr_change_type %in% c("remove_dup","show_dup")) {
       return("Select a one or more variables to see the effects of removing duplicates")
+    } else if (input$tr_change_type == 'gather') {
+      return("Select one or more variables to gather")
     }
   }
 
@@ -675,6 +745,13 @@ transform_main <- reactive({
     return(.holdout(dat, inp_vars("tr_vars"), filt = input$data_filter, rev = input$tr_holdout_rev, store = FALSE))
   }
 
+  ## spread a variable
+  if (input$tr_change_type == "spread") {
+    if (is_empty(input$tr_spread_key, "none") ||
+        is_empty(input$tr_spread_value, "none")) return("Select a Key and Value pair to spread")
+    return(.spread(dat, key = input$tr_spread_key, value = input$tr_spread_value, store = FALSE))
+  }
+
   ## only use the functions below if variables have been selected
   if (!is_empty(input$tr_vars)) {
     if (not_available(input$tr_vars)) return()
@@ -688,6 +765,13 @@ transform_main <- reactive({
       return(.bin(dat, inp_vars("tr_vars"), bins = input$tr_bin_n, rev = input$tr_bin_rev, ext = input$tr_ext_bin, store = FALSE))
              # bin_order = input$tr_bin_order, store = FALSE))
 
+    ## gather variables
+    if (input$tr_change_type == "gather") {
+      if (is_empty(input$tr_gather_key) || is_empty(input$tr_gather_value))
+        return("Provide a name for the Key and Value variables")
+      return(.gather(dat, inp_vars("tr_vars"), key = input$tr_gather_key, value = input$tr_gather_value, store = FALSE))
+    }
+
     ## remove duplicates
     if (input$tr_change_type == "remove_dup")
       return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
@@ -695,7 +779,6 @@ transform_main <- reactive({
     ## show duplicates
     if (input$tr_change_type == "show_dup")
       return(.show_dup(dat, inp_vars("tr_vars"), store = FALSE))
-
 
     if (input$tr_change_type == 'normalize') {
       if (is_empty(input$tr_normalizer, "none")) {
@@ -842,6 +925,12 @@ observeEvent(input$tr_store, {
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'tab2dat') {
     cmd <- .tab2dat(input$dataset, input$tr_tab2dat, vars = input$tr_vars, input$tr_dataset)
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'gather') {
+    cmd <- .gather(input$dataset, vars = input$tr_vars, key = input$tr_gather_key, value = input$tr_gather_value, input$tr_dataset)
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'spread') {
+    cmd <- .spread(input$dataset, key = input$tr_spread_key, value = input$tr_spread_value, input$tr_dataset)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'reorg_vars') {
     cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)

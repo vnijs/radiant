@@ -22,11 +22,8 @@ cp_inputs <- reactive({
 ###############################
 output$ui_cp_var1 <- renderUI({
   vars <- c("None", groupable_vars())
-  selectInput(inputId = "cp_var1",
-              label = "Select a grouping variable:",
-              choices = vars,
-              selected = state_single("cp_var1",vars),
-              multiple = FALSE)
+  selectInput(inputId = "cp_var1",label = "Select a grouping variable:",
+    choices = vars, selected = state_single("cp_var1",vars), multiple = FALSE)
 })
 
 output$ui_cp_var2 <- renderUI({
@@ -34,18 +31,18 @@ output$ui_cp_var2 <- renderUI({
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
-  isolate({
-    init <- input$cp_var2 %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-  })
+  # isolate({
+  #   init <- input$cp_var2 %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
 
   if (not_available(input$cp_var1)) return()
   if (input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
 
   vars <- c("None",vars)
   selectInput(inputId = "cp_var2", label = "Variable (select one):",
-              selected = state_single("cp_var2", vars, init),
-              choices = vars, multiple = FALSE)
+    selected = state_single("cp_var2", vars, init),
+    choices = vars, multiple = FALSE)
 })
 
 output$ui_cp_levs <- renderUI({
@@ -81,6 +78,7 @@ output$ui_cp_comb <- renderUI({
 
 
 output$ui_compare_props <- renderUI({
+  req(input$dataset)
   tagList(
     conditionalPanel(condition = "input.tabs_compare_props == 'Plot'",
       wellPanel(
@@ -98,9 +96,9 @@ output$ui_compare_props <- renderUI({
       conditionalPanel(condition = "input.tabs_compare_props == 'Summary'",
         uiOutput("ui_cp_comb"),
         selectInput(inputId = "cp_alternative", label = "Alternative hypothesis:",
-                    choices = cp_alt,
-                    selected = state_single("cp_alternative", cp_alt,
-                                               cp_args$alternative)),
+          choices = cp_alt,
+          selected = state_init("cp_alternative", cp_args$alternative)),
+          # selected = state_single("cp_alternative", cp_alt, cp_args$alternative)),
         checkboxInput("cp_show", "Show additional statistics", value = state_init("cp_show", FALSE)),
         sliderInput("cp_conf_lev","Confidence level:", min = 0.85, max = 0.99,
           value = state_init("cp_conf_lev",cp_args$conf_lev), step = 0.01),

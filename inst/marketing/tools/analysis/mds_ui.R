@@ -62,7 +62,8 @@ output$ui_mds_rev_dim <- renderUI({
 })
 
 output$ui_mds <- renderUI({
-  list(
+  req(input$dataset)
+  tagList(
   	wellPanel(
 	  	uiOutput("ui_mds_id1"),
 	  	uiOutput("ui_mds_id2"),

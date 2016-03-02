@@ -24,7 +24,8 @@ output$ui_smp_var <- renderUI({
 })
 
 output$ui_sampling <- renderUI({
-  list(
+  req(input$dataset)
+  tagList(
   	wellPanel(
 	 	 	uiOutput("ui_smp_var"),
 	  	numericInput("smp_sample_size", "Sample size:", min = 1,

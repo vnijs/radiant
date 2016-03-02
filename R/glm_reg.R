@@ -56,7 +56,6 @@ glm_reg <- function(dataset, rvar, evar,
   if (!is.null(wts)) {
     wts <- dat[[wtsname]]
     dat <- select_(dat, .dots = paste0("-",wtsname))
-    # wts <- wtstmp; rm(wtstmp)
   }
 
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
@@ -81,13 +80,20 @@ glm_reg <- function(dataset, rvar, evar,
   if ("standardize" %in% check) {
     ## express evars in std. deviations
     isNum <- sapply(dat, is.numeric)
-    if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(. / (2*sd(., na.rm = TRUE))))
+    if (sum(isNum) > 0) {
+      if (length(wts) > 0) {
+        ## use weighted.sd if weights are used in estimation
+        dat[,isNum] %<>% data.frame %>% mutate_each(funs(. / (2*weighted.sd(., wts, na.rm = TRUE))))
+      } else {
+        dat[,isNum] %<>% data.frame %>% mutate_each(funs(. / (2*sd(., na.rm = TRUE))))
+      }
+    }
   }
 
   form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
 
   if ("stepwise" %in% check) {
-    # use k = 2 for AIC, use k = log(nrow(dat)) for BIC
+    ## use k = 2 for AIC, use k = log(nrow(dat)) for BIC
     model <- sshhr(glm(as.formula(paste(rvar, "~ 1")), weights = wts,
                  family = binomial(link = link), data = dat) %>%
              step(k = 2, scope = list(upper = form), direction = 'both'))
@@ -95,10 +101,7 @@ glm_reg <- function(dataset, rvar, evar,
     model <- sshhr(glm(form, weights = wts, family = binomial(link = link), data = dat))
   }
 
-
-
   coeff <- tidy(model)
-
   coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
 
@@ -111,18 +114,21 @@ glm_reg <- function(dataset, rvar, evar,
   }
   coeff$`  ` %<>% format(justify = "left")
 
-
-  if (!is_empty(wts, "None")) {
-    # cov.m1 <- sqrt(diag(sandwich::vcovHC(model, type="HC0"))
-    # coeff$std.error <- sqrt(diag(cov.m1))
-    coeff$std.error <- sqrt(diag(sandwich::vcovHC(model, type="HC0")))
+  if (!is_empty(wts, "None") && class(wts) != "integer") {
+    vcov <- sandwich::vcovHC(model, type="HC0")
+    # coeff$std.error <- sqrt(diag(sandwich::vcovHC(model, type="HC0")))
+    coeff$std.error <- sqrt(diag(vcov))
     coeff$z.value <- coef(model) / coeff$std.error
     coeff$p.value <- 2 * pnorm(abs(coef(model)/coeff$std.error), lower.tail=FALSE)
     coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
   }
 
   colnames(coeff) <- c("  ","coefficient","std.error","z.value","p.value"," ")
-  coeff$OR <- exp(coeff$coefficient)
+  if (link == "logit") {
+    coeff$OR <- exp(coeff$coefficient)
+  } else {
+    coeff$OR <- ""
+  }
   coeff <- coeff[,c("  ","OR", "coefficient","std.error","z.value","p.value"," ")]
 
   rm(dat) ## dat not needed elsewhere
@@ -152,7 +158,8 @@ glm_reg <- function(dataset, rvar, evar,
 #' @seealso \code{\link{predict.glm_reg}} to generate predictions
 #' @seealso \code{\link{plot.glm_predict}} to plot prediction output
 #'
-#' @importFrom car vif
+#' @importFrom car vif linearHypothesis
+#' @importFrom sandwich vcovHC
 #'
 #' @export
 summary.glm_reg <- function(object,
@@ -180,8 +187,14 @@ summary.glm_reg <- function(object,
   expl_var <- if (length(object$evar) == 1) object$evar else "x"
   cat(paste0("Null hyp.: there is no effect of ", expl_var, " on ", object$rvar, "\n"))
   cat(paste0("Alt. hyp.: there is an effect of ", expl_var, " on ", object$rvar, "\n"))
-  if ("standardize" %in% object$check)
-    cat("**Standardized odds-ratios and coefficients shown**\n")
+  if ("standardize" %in% object$check) {
+    if (object$link == "logit")
+      cat("**Standardized odds-ratios and coefficients shown**\n")
+    else
+      cat("**Standardized coefficients shown**\n")
+  }
+  if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
+    cat("**Robust standard errors used**\n")
   cat("\n")
 
   coeff <- object$coeff
@@ -205,11 +218,19 @@ summary.glm_reg <- function(object,
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
   cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(dec), " df(",
                with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
-  cat("Nr obs:", glm_fit$df.null + 1, "\n\n")
+
+  if (!is_empty(object$wts, "None") && class(object$wts) == "integer")
+    cat("Nr obs:", nrprint(sum(object$wts), dec = 0), "\n\n")
+  else
+    cat("Nr obs:", nrprint(glm_fit$df.null + 1, dec = 0), "\n\n")
+
+  if (anyNA(object$model$coeff))
+    cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\n")
 
   if ("vif" %in% sum_check) {
     if (anyNA(object$model$coeff)) {
-      cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
+      # cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nmulticollinearity diagnostics were not calculated.\n")
+      cat("Multicollinearity diagnostics were not calculated.")
     } else {
       if (length(object$evar) > 1) {
         cat("Variance Inflation Factors\n")
@@ -230,18 +251,20 @@ summary.glm_reg <- function(object,
   if (any(c("confint","odds") %in% sum_check)) {
     if (any(is.na(object$model$coeff))) {
       cat("There is perfect multicollineary in the set of explanatory variables.\nOne or more variables were dropped from the estimation.\n")
+      cat("Confidence intervals were not calculated.\n")
     } else {
       ci_perc <- ci_label(cl = conf_lev)
 
       # cnfint <- ifelse (is_empty(object$wts, "None"), confint.default, radiant::confint_robust)
-      if (is_empty(object$wts, "None"))
-        cnfint <- confint.default
-      else
+      # if (is_empty(object$wts, "None"))
+      if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
         cnfint <- radiant::confint_robust
+      else
+        cnfint <- confint.default
 
       ci_tab <-
         # confint.default(object$model, level = conf_lev) %>%
-        cnfint(object$model, level = conf_lev) %>%
+        cnfint(object$model, level = conf_lev, vcov = object$vcov) %>%
         as.data.frame %>%
         set_colnames(c("Low","High")) %>%
         cbind(select(object$coeff,3),.)
@@ -298,14 +321,79 @@ summary.glm_reg <- function(object,
       # glm_sub <- update(object$model, sub_form, data = object$model$model)
       glm_sub <- sshhr(glm(as.formula(sub_form), weights = object$wts, family = binomial(link = object$link), data = object$model$model))
       glm_sub_fit <- glance(glm_sub)
-      glm_sub <- anova(glm_sub, object$model, test='Chi')
+      glm_sub_test <- anova(glm_sub, object$model, test='Chi')
+
+      # object <- list()
+      # dat <- mtcars
+      # dat$disp <- dat$disp > 200
+      # dat$cyl365 <- dat$cyl
+      # object$model <- glm(vs ~ mpg + cyl365 + disp + disp:cyl365, family = binomial(link = "logit"), data = dat)
+      # glm_sub <- glm(vs ~ mpg, family = binomial(link = "logit"), data = dat)
+      # glm_sub_fit <- glance(glm_sub)
+      # glm_sub <- anova(glm_sub, object$model, test='Chi')
+      # test_var <- "cyl:disp"
+      # summary(object$model)
+
+      # test_var <- c("cyl365","cyl:disp")
+      # linearHypothesis(object$model, matchCoefs(object$model, test_var))
+      # linearHypothesis(object$model, matchCf(object$model$coef, test_var))
+      # cf <- object$model$coef
+
+      matchCf <- function(clist, vlist) {
+
+        matcher <- function(vl, cn)
+        if (grepl(":", vl)) {
+          strsplit(vl,":") %>%
+          unlist %>%
+          sapply(function(x) gsub("var",x, "((var.*:)|(:var))")) %>%
+          paste0(collapse = "|") %>%
+          grepl(cn) %>%
+          cn[.]
+        } else {
+          mf <- grepl(paste0("^",vl,"$"),cn) %>% cn[.]
+          if (length(mf) == 0)
+            mf <- grepl(paste0("^",vl), cn) %>% cn[.]
+          mf
+        }
+
+        cn <- names(clist)
+        sapply(vlist, matcher, cn) %>% unname
+
+        ## testing
+        # matchCf(cl, "disp:cyl365")
+        # matchCf(cl, "disp")
+        # matchCf(cl, c("disp","dips:cyl365"))
+      }
+
+      if (!is_empty(object$wts, "None") && class(object$wts) != "integer") {
+        ## http://stats.stackexchange.com/a/132521/61693
+        # if (is.null(object$vcov))
+          # object$vcov <- sandwich::vcovHC(object$model, type="HC0")
+        # sub_form <- paste(test_var, "= 0")
+        # glm_sub_lh <- linearHypothesis(object$model, sub_form, vcov = object$vcov)
+        glm_sub_lh <- linearHypothesis(object$model,
+                                       matchCf(object$model$coef, test_var),
+                                       vcov = object$vcov)
+        # glm_sub_lh <- linearHypothesis(object$model, sub_form, vcov = vcovHC)
+        # glm_sub_lh <- linearHypothesis(object$model, glm_sub, vcov = vcovHC)
+        pval <- glm_sub_lh[2,"Pr(>Chisq)"]
+        df <- glm_sub_lh[2,"Df"]
+        # chi2 <- qchisq(1 - pval, df)
+        chi2 <- glm_sub_lh[2,"Chisq"]
+      } else {
+        pval <- glm_sub_test[2,"Pr(>Chi)"]
+        df <- glm_sub_test[2,"Df"]
+        chi2 <- glm_sub_test[2,"Deviance"]
+      }
 
       ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
       glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(dec)
-      glm_sub_pval <- glm_sub[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(., dec) }
-      cat(attr(glm_sub,"heading")[2])
+      # glm_sub_pval <- glm_sub_test[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(., dec) }
+      glm_sub_pval <- if (pval < .001) "< .001" else round(pval, dec)
+      cat(attr(glm_sub_test,"heading")[2])
       cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
-      cat(paste0("\nChi-statistic: ", round(glm_sub$Deviance[2], dec), " df(", glm_sub$Df[2], "), p.value ", glm_sub_pval))
+      # cat(paste0("\nChi-statistic: ", round(glm_sub_test$Deviance[2], dec), " df(", glm_sub_test$Df[2], "), p.value ", glm_sub_pval))
+      cat(paste0("\nChi-squared: ", round(chi2, dec), " df(", df, "), p.value ", glm_sub_pval))
     }
   }
 }
@@ -372,23 +460,27 @@ plot.glm_reg <- function(x,
   if ("coef" %in% plots) {
     nrCol <- 1
     # cnfint <- ifelse (is_empty(object$wts, "None"), confint.default, radiant::confint_robust)
-    if (is_empty(object$wts, "None"))
-      cnfint <- confint.default
-    else
+    # if (is_empty(object$wts, "None"))
+    if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
       cnfint <- radiant::confint_robust
+    else
+      cnfint <- confint.default
+
     # plot_list[["coef"]] <- confint.default(object$model, level = conf_lev) %>%
-    plot_list[["coef"]] <- cnfint(object$model, level = conf_lev) %>%
+    plot_list[["coef"]] <- cnfint(object$model, level = conf_lev, vcov = object$vcov) %>%
+          exp %>%
           data.frame %>%
           set_colnames(c("Low","High")) %>%
-          cbind(select(object$coeff,3),.) %>%
+          cbind(select(object$coeff,2),.) %>%
           # cbind(object$coeff[["coefficient"]],.) %>%
           set_rownames(object$coeff$`  `) %>%
           { if (!intercept) .[-1,] else . } %>%
           mutate(variable = rownames(.)) %>%
           ggplot() +
-            geom_pointrange(aes_string(x = "variable", y = "coefficient", ymin = "Low", ymax = "High")) +
-            geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") +
-            coord_flip()
+            # geom_pointrange(aes_string(x = "variable", y = "coefficient", ymin = "Low", ymax = "High")) +
+            geom_pointrange(aes_string(x = "variable", y = "OR", ymin = "Low", ymax = "High")) +
+            geom_hline(yintercept = 1, linetype = 'dotdash', color = "blue") +
+            ylab("Odds-ratio") + coord_flip()
   }
 
   if (plots == "scatter") {
@@ -480,7 +572,7 @@ predict.glm_reg <- function(object,
   pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
   ## used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% object$check) {
-    return("Currently you cannot use standardized coefficients for prediction.\nPlease uncheck the standardized coefficients box and try again" %>% set_class(c("glm_predict",class(.))))
+    return(cat("Standardized coefficients cannot be used for prediction.\nPlease uncheck the standardized coefficients box and try again"))
   } else if (pred_count == 3) {
     return("Please specify a command to generate predictions. For example,\n pclass = levels(pclass) would produce predictions for the different\n levels of factor pclass. To add another variable use a ,\n(e.g., pclass = levels(pclass), age = seq(0,100,20))\n\nMake sure to press return after you finish entering the command. If no\nresults are shown the command was invalid. Alternatively specify a dataset\nto generate predictions. You could create this in a spreadsheet and use the\nclipboard feature in Data > Manage to bring it into Radiant" %>% set_class(c("glm_predict",class(.))))
   }
@@ -497,7 +589,7 @@ predict.glm_reg <- function(object,
   pred_type <- "cmd"
   vars <- object$evar
   if (pred_data == "" && pred_cmd != "") {
-    pred_cmd %<>% gsub("\"","\'", .) %>% gsub(";",",", .)
+    pred_cmd %<>% gsub("\"","\'",.) %>% gsub(";\\s*$","",.) %>% gsub(";",",",.)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
       return(paste0("The command entered did not generate valid data for prediction. The\nerror message was:\n\n", attr(pred,"condition")$message, "\n\nPlease try again. Examples are shown in the help file.") %>% set_class(c("glm_predict",class(.))))
@@ -586,7 +678,7 @@ predict.glm_reg <- function(object,
     pred %<>% na.omit()
   }
 
-  pred_val <- try(predict(object$model, pred, type = 'response', se.fit = se), silent = TRUE)
+  pred_val <- try(sshhr(predict(object$model, pred, type = 'response', se.fit = se)), silent = TRUE)
   if (!is(pred_val, 'try-error')) {
     if (se) {
       pred_val %<>% data.frame %>% select(1:2)
@@ -769,12 +861,13 @@ store_glm <- function(object,
 #' @param object A fitted model object
 #' @param parm A specification of which parameters are to be given confidence intervals, either a vector of numbers or a vector of names. If missing, all parameters are considered
 #' @param level The confidence level required
+#' @param vcov Covariance matrix generated by, e.g., sandwich::vcovHC
 #' @param ... Additional argument(s) for methods
 #'
 #' @importFrom sandwich vcovHC
 #'
 #' @export
-confint_robust <- function (object, parm, level = 0.95, ...) {
+confint_robust <- function (object, parm, level = 0.95, vcov = NULL, ...) {
     cf <- coef(object)
     pnames <- names(cf)
     if (missing(parm))
@@ -787,7 +880,11 @@ confint_robust <- function (object, parm, level = 0.95, ...) {
     fac <- qnorm(a)
     # ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, pct))
     ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, c("Low","High")))
-    ses <- sqrt(diag(sandwich::vcovHC(object)))[parm]
+
+    if (is.null(vcov))
+      vcov <- sandwich::vcovHC(object, type="HC0")
+    ses <- sqrt(diag(vcov))[parm]
+    # coeff$std.error <- sqrt(diag(sandwich::vcovHC(model, type="HC0")))
     ci[] <- cf[parm] + ses %o% fac
     ci
 }

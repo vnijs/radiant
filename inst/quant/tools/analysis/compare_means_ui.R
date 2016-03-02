@@ -46,10 +46,10 @@ output$ui_cm_var2 <- renderUI({
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
-  isolate({
-    init <- input$cm_var2 %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-  })
+  # isolate({
+  #   init <- input$cm_var2 %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
 
   if (input$cm_var1 %in% vars) {
     ## when cm_var1 is numeric comparisons for multiple variables are possible
@@ -57,16 +57,16 @@ output$ui_cm_var2 <- renderUI({
     if (length(vars) == 0) return()
 
     selectizeInput(inputId = "cm_var2", label = "Numeric variable(s):",
-                selected = state_multiple("cm_var2", vars, init),
-                choices = vars, multiple = TRUE,
-                options = list(placeholder = 'Select variables',
-                               plugins = list('remove_button', 'drag_drop')))
+      selected = state_multiple("cm_var2", vars),
+      choices = vars, multiple = TRUE,
+      options = list(placeholder = 'Select variables',
+                     plugins = list('remove_button', 'drag_drop')))
   } else {
     ## when cm_var1 is not numeric comparisons are across levels/groups
     vars <- c("None", vars)
     selectInput(inputId = "cm_var2", label = "Numeric variable:",
-                selected = state_single("cm_var2", vars, init),
-                choices = vars, multiple = FALSE)
+      selected = state_single("cm_var2", vars),
+      choices = vars, multiple = FALSE)
   }
 })
 
@@ -94,6 +94,7 @@ output$ui_cm_comb <- renderUI({
 
 
 output$ui_compare_means <- renderUI({
+  req(input$dataset)
   tagList(
     conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
       wellPanel(
@@ -110,9 +111,8 @@ output$ui_compare_means <- renderUI({
       conditionalPanel(condition = "input.tabs_compare_means == 'Summary'",
         uiOutput("ui_cm_comb"),
         selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:",
-                    choices = cm_alt,
-                    selected = state_single("cm_alternative", cm_alt,
-                                               cm_args$alternative)),
+          choices = cm_alt,
+          selected = state_init("cm_alternative", cm_args$alternative)),
         sliderInput('cm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
           value = state_init("cm_conf_lev",cm_args$conf_lev), step = 0.01),
         checkboxInput("cm_show", "Show additional statistics", value = state_init("cm_show", FALSE)),

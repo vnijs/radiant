@@ -25,7 +25,7 @@ r_pkgs <- c("DiagrammeR", "car", "gridExtra", "GPArotation", "psych", "wordcloud
             "AlgDesign", "knitr", "lubridate", "ggplot2", "ggdendro",
             "pryr", "shiny", "magrittr", "tidyr", "dplyr", "broom",
             "htmlwidgets", "readr", "rmarkdown", "shinyAce", "data.tree",
-            "yaml","nnet","NeuralNetTools")
+            "yaml","nnet","NeuralNetTools","sandwich")
 # options(r_pkgs = r_pkgs); rm(r_pkgs)
 
 ## needed but clunky
@@ -79,11 +79,12 @@ addResourcePath("js", file.path(r_path,"base/www/js/"))
 
 ## ensure that MathJax is only used if loaded to avoid breaking conditional panels
 ## https://github.com/rstudio/shiny/issues/692
-withMathJax <- function (...) {
-  path <- "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-  tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
-      ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
-}
+## No longer need as of shiny 0.13.2
+# withMathJax <- function (...) {
+#   path <- "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+#   tagList(tags$head(singleton(tags$script(src = path, type = "text/javascript"))),
+#       ..., tags$script(HTML("if (window.MathJax) MathJax.Hub.Queue([\"Typeset\", MathJax.Hub]);")))
+# }
 
 nav_ui <-
   list(windowTitle = "Radiant", id = "nav_radiant", inverse = TRUE,

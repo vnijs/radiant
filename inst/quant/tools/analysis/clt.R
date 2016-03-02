@@ -5,7 +5,10 @@ clt_dist <- c("Normal" = "rnorm", "Binomial" = "binom", "Uniform" = "runif", "Ex
 clt_stat <- c("Sum" = "Sum", "Mean" = "Mean")
 
 output$ui_clt <- renderUI({
-  list(
+  tagList(
+    wellPanel(
+      actionButton("clt_resample", "Sample", width = "100%")
+    ),
     wellPanel(
       selectInput(inputId = "clt_dist", label = "Distribution (select one):", choices = clt_dist,
         selected = state_single("clt_dist", clt_dist), multiple = FALSE),
@@ -59,9 +62,6 @@ output$ui_clt <- renderUI({
       radioButtons("clt_stat", label = NULL, choices = clt_stat, selected = state_init("clt_stat", "Sum"),
                    inline = TRUE)
     ),
-    wellPanel(
-		  actionButton("clt_resample", "Sample", width = "100%")
-		),
     help_modal('Central Limit Theorem', 'clt_help', inclMD(file.path(r_path,"quant/tools/help/clt.md")))
  	)
 })
@@ -94,7 +94,7 @@ output$clt <- renderUI({
 
 })
 
-.clt<- reactive({
+.clt<- eventReactive(input$clt_resample, {
 
   if(is.null(input$clt_dist)) return("Please choose a distribution")
 
@@ -119,7 +119,7 @@ output$clt <- renderUI({
     return("Please choose a probability between 0 and 1 for the binomial distribution.")
 
   ## creating a dependency so a new set of draw is generated every time the button is pressed
-  input$clt_resample
+  # input$clt_resample
 
 	clt(input$clt_dist, input$clt_n, input$clt_m, input$clt_stat)
 })
@@ -151,8 +151,8 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
   }
 
   m <- dim(result)[2]
-  data1 <- data.frame(sample_1 = result[[1]])
-  datam <- data.frame(sample_m = result[[m]])
+  data1 <- data.frame(sample_1 = result[,1])
+  datam <- data.frame(sample_m = result[,m])
 
   plots <- list()
 

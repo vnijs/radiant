@@ -49,7 +49,7 @@ output$ui_clipboard_save <- renderUI({
       "<label>Add data description:</label><br>" %>% HTML,
       tags$textarea(class="form-control", id="save_cdata",
         rows="5",
-        capture.output(write.table(.getdata(), file = "", row.names = FALSE,
+        capture.output(write.table(.getdata_transform(), file = "", row.names = FALSE,
                        sep = "\t")) %>%
           paste(collapse = "\n"))
     )
@@ -183,25 +183,25 @@ output$downloadData <- downloadHandler(
     if (ext == 'rda') {
       if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
         ## save data description
-        dat <- .getdata()
+        dat <- .getdata_transform()
         attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
         assign(robj, dat)
         save(list = robj, file = file)
       } else {
-        assign(robj, .getdata())
+        assign(robj, .getdata_transform())
         save(list = robj, file = file)
       }
     } else if (ext == 'rds') {
       if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
         ## save data description
-        dat <- .getdata()
+        dat <- .getdata_transform()
         attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
         saveRDS(dat, file = file)
       } else {
-        saveRDS(.getdata(), file = file)
+        saveRDS(.getdata_transform(), file = file)
       }
     } else if (ext == 'csv') {
-      write.csv(.getdata(), file, row.names = FALSE)
+      write.csv(.getdata_transform(), file, row.names = FALSE)
       ## some weirdness going on here with the number of digits written to file
       # write_csv(.getdata(), file)
     }

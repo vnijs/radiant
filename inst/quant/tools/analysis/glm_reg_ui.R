@@ -100,14 +100,15 @@ output$ui_glm_lev <- renderUI({
   else
     levs <- c()
   selectInput(inputId = "glm_lev", label = "Choose level:",
-    choices = levs, selected = use_input_nonvar("glm_lev", levs))
+    # choices = levs, selected = use_input_nonvar("glm_lev", levs))
+    choices = levs, selected = state_init("glm_lev"))
 })
 
 output$ui_glm_evar <- renderUI({
   req(available(input$glm_rvar))
 	notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if (length(vars) > 0)
+  if (length(vars) > 0 && input$glm_rvar %in% vars)
     vars <- vars[-which(vars == input$glm_rvar)]
 
   selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
@@ -152,10 +153,12 @@ output$ui_glm_test_var <- renderUI({
 })
 
 output$ui_glm_show_interactions <- renderUI({
+  # req(input$glm_evar)
   choices <- glm_show_interactions[1:max(min(3,length(input$glm_evar)),1)]
   radioButtons(inputId = "glm_show_interactions", label = "Interactions:",
     choices = choices,
-    selected = use_input_nonvar("glm_show_interactions", choices, init = ""),
+    # selected = use_input_nonvar("glm_show_interactions", choices, init = ""),
+    selected = state_init("glm_show_interactions"),
     inline = TRUE)
 })
 
@@ -173,7 +176,8 @@ output$ui_glm_int <- renderUI({
   }
 
 	selectInput("glm_int", label = NULL, choices = choices,
-    selected = use_input_nonvar("glm_int", choices),
+    # selected = use_input_nonvar("glm_int", choices),
+    selected = state_init("glm_int"),
   	multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
 
@@ -209,6 +213,7 @@ output$ui_glm_color <- renderUI({
 })
 
 output$ui_glm_reg <- renderUI({
+  req(input$dataset)
   tagList(
     # conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
       wellPanel(
@@ -251,6 +256,12 @@ output$ui_glm_reg <- renderUI({
             tags$td(actionButton("glm_store_pred", "Store"), style="padding-top:30px;")
           )
         )
+        # conditionalPanel("input.glm_predict == 'cmd'",
+        #   tags$table(
+        #     tags$td(textInput("glm_store_pred_dat_name", "Store predicted dataset:", state_init("glm_store_pred_dat_name",paste0(input$dataset,"_pred")))),
+        #     tags$td(actionButton("glm_store_pred", "Store"), style="padding-top:30px;")
+        #   )
+        # )
       )
     ),
     conditionalPanel(condition = "input.tabs_glm_reg == 'Plot'",
@@ -407,8 +418,8 @@ glm_available <- reactive({
   req(input$glm_wts == "None" || available(input$glm_wts))
 
   ## need dependency on glm_int so I can have names(input) in isolate
-  input$glm_int
-  isolate(req("glm_int" %in% names(input)))
+  # input$glm_int
+  # isolate(req("glm_int" %in% names(input)))
 
   withProgress(message = 'Estimating model', value = 0,
     do.call(glm_reg, glm_inputs())
@@ -418,6 +429,8 @@ glm_available <- reactive({
 .summary_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
   # ret <- .glm_reg()
+  # if (!exists("ret")) return("** Press the Estimate button to estimate the model **")
+  if (not_pressed(input$glm_run)) return("** Press the Estimate button to estimate the model **")
   # print(str(ret))
   # if (is.null(ret)) return("** Press the Estimate button to generate results **")
   # do.call(summary, c(list(object = ret), glm_sum_inputs()))
@@ -436,6 +449,8 @@ glm_available <- reactive({
 
 .predict_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
+  if (not_pressed(input$glm_run)) return("** Press the Estimate button to estimate the model **")
+  if (is_empty(input$glm_predict, "none")) return("** Select prediction input **")
   req(!is_empty(input$glm_predict, "none"),
      (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
 

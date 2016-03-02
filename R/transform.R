@@ -340,6 +340,25 @@ show_duplicated <- function(tbl, ...) {
   }
 }
 
+#' Weighted standard deviation
+#'
+#' @details Calculated a weighted standard deviation
+#'
+#' @param x Numeric vector
+#' @param wt Numeric vector of weights
+#' @param na.rm Remove missing values (default is TRUE)
+#'
+#' @export
+weighted.sd <- function(x, wt, na.rm = TRUE) {
+  if (na.rm) {
+    x <- na.omit(x)
+    wt <- na.omit(wt)
+  }
+  wt <- wt/sum(wt)
+  wm <- weighted.mean(x, wt)
+  sqrt(sum(wt * (x - wm)^2))
+}
+
 #' Create data.frame summary
 #'
 #' @details Used in Radiant's Data > Transform tab

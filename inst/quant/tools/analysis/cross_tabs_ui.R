@@ -34,19 +34,21 @@ output$ui_ct_var2 <- renderUI({
 
   ## if possible, keep current indep value when depvar changes
   ## after storing residuals or predictions
-  isolate({
-    init <- input$ct_var2 %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-  })
+  # isolate({
+  #   init <- input$ct_var2 %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
 
   if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a categorical variable:",
-    selected = state_single("ct_var2", vars, init),
+    selected = state_single("ct_var2", vars),
+    # selected = state_single("ct_var2", vars, init),
     choices = vars, multiple = FALSE)
 })
 
 output$ui_cross_tabs <- renderUI({
-  list(
+  req(input$dataset)
+  tagList(
   	wellPanel(
 	    uiOutput("ui_ct_var1"),
 	    uiOutput("ui_ct_var2"),

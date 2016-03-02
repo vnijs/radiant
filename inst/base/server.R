@@ -19,7 +19,7 @@ shinyServer(function(input, output, session) {
 		}
 	} else {
     # environment(radiant) <- environment()
-	  copy_from(radiant, state_init, state_single, state_multiple)
+	  # copy_from(radiant, state_init, state_single, state_multiple)
 	}
 
 	## source data & analysis tools

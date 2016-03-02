@@ -1,15 +1,4 @@
-
 # visNetwork looks fantastic!!
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
-# https://github.com/rich-iannone/DiagrammeR/issues/110
 # https://github.com/rich-iannone/DiagrammeR/issues/110
 
 #' Parse yaml input for dtree to provide (more) useful error messages

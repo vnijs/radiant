@@ -65,7 +65,8 @@ output$ui_crs_pred <- renderUI({
 
   selectInput(inputId = "crs_pred", label = "Choose prediction products:",
               choices = levs,
-              selected = use_input_nonvar("crs_pred", levs),
+              # selected = use_input_nonvar("crs_pred", levs),
+              selected = state_init("crs_pred", levs),
               multiple = TRUE, size = min(3, length(levs)),
               selectize = FALSE)
 })
@@ -79,12 +80,27 @@ output$ui_crs_rate <- renderUI({
     selected = state_single("crs_rate", vars), multiple = FALSE)
 })
 
+# observe({
+#   print("---")
+#   print(input$crs_pause)
+#   print("---")
+#   print("crs_pause" %in% names(input))
+#   # print(names(input) %in% "crs_pause")
+#   print("-=-")
+# })
+
+# output$ui_crs_pause <- renderUI({
+#   checkboxInput("crs_pause", "Pause prediction", state_init2("crs_pause", FALSE))
+# })
+
 
 output$ui_crs <- renderUI({
+  req(input$dataset)
   tagList(
   	wellPanel(
       checkboxInput("crs_pause", "Pause prediction", state_init("crs_pause", FALSE)),
-	    uiOutput("ui_crs_id"),
+	    # uiOutput("ui_crs_pause"),
+      uiOutput("ui_crs_id"),
       # uiOutput("ui_crs_uid"),
       uiOutput("ui_crs_prod"),
       # uiOutput("ui_crs_train"),
@@ -143,7 +159,7 @@ output$crs <- renderUI({
 
 .crs <- reactive({
   req(available(input$crs_id))
-  req(input$crs_pause == FALSE, cancelOutput = TRUE)
+  # req(input$crs_pause == FALSE, cancelOutput = TRUE)
 
 	do.call(crs, crs_inputs())
 })

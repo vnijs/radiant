@@ -32,6 +32,7 @@ output$ui_hc_vars <- renderUI({
 })
 
 output$ui_hier_clus <- renderUI({
+  req(input$dataset)
   tagList(
   	wellPanel(
 	    uiOutput("ui_hc_vars"),

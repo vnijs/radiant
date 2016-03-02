@@ -46,48 +46,6 @@ test_that("is_empty", {
   expect_true(is_empty("nothing", empty = "nothing"))
 })
 
-test_that("state_init", {
- r_state <<- list()
- expect_equal(state_init("test"),"")
- expect_equal(state_init("test",0),0)
- # outside of tests use <- not <<-
- r_state$test <<- c("a","b")
- expect_equal(state_init("test",0),c("a","b"))
- expect_equal(state_init("rb", "a"),"a")
- r_state$rb <<- "b"
- expect_equal(state_init("rb", "a"),"b")
- rm(r_state, envir = .GlobalEnv)
- expect_error(state_init("rb", "a"),"Error in state_init.*")
- cat("\n")
-})
-
-test_that("state_single", {
- r_state <<- list()
- expect_equal(state_single("test",1:10,1),1)
- # outside of tests use <- not <<-
- r_state$test <<- 8
- expect_equal(state_single("test",1:10,1),8)
- expect_equal(state_single("si"),character(0))
- r_state$si <<- "b"
- expect_equal(state_single("si",c("a","b"),"a"),"b")
- rm(r_state, envir = .GlobalEnv)
- expect_error(state_single("si"),"Error in state_single.*")
- cat("\n")
-})
-
-test_that("state_multiple", {
- r_state <<- list()
- expect_equal(state_multiple("test",1:10,1:3),1:3)
- # outside of tests use <- not <<-
- r_state$test <<- 8:10
- expect_equal(state_multiple("test",1:10,1:3),8:10)
- expect_equal(state_multiple("sim", c("a","b")),character(0))
- r_state$sim <<- c("a","b")
- expect_equal(state_multiple("sim", c("a","b")),c("a","b"))
- rm(r_state, envir = .GlobalEnv)
- expect_error(state_multiple("sim", c("a","b")),"Error in state_multiple.*")
-})
-
 test_that("options", {
   options("width"=10)
   options("scipen"=0)

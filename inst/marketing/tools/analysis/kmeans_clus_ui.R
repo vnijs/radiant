@@ -31,6 +31,7 @@ output$ui_km_vars <- renderUI({
 })
 
 output$ui_kmeans_clus <- renderUI({
+  req(input$dataset)
   tagList(
   	wellPanel(
 	    uiOutput("ui_km_vars"),

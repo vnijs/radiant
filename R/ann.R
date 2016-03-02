@@ -143,8 +143,11 @@ summary.ann <- function(object, ...) {
   cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n")
   if (length(object$wtsname) > 0)
     cat("Weights used         :", object$wtsname, "\n")
-  cat("Nr obs               :", length(object$rv), "\n\n")
-  cat("\n")
+
+  if (!is_empty(object$wts, "None") && class(object$wts) == "integer")
+    cat("Nr obs               :", nrprint(sum(object$wts), dec = 0), "\n\n")
+  else
+    cat("Nr obs               :", nrprint(length(object$rv), dec = 0), "\n\n")
 
   print(object$model)
   # print(caret::varImp(object$model))

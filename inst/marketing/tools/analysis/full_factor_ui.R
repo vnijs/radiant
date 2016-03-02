@@ -27,8 +27,8 @@ output$ui_ff_vars <- renderUI({
 })
 
 output$ui_full_factor <- renderUI({
-	# for ui
-	list(
+  req(input$dataset)
+	tagList(
     wellPanel(
       uiOutput("ui_ff_vars"),
       selectInput("ff_method", label = "Method:", choices = ff_method,

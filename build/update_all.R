@@ -72,7 +72,7 @@ deployApp(account = "vnijs", launch.browser = FALSE)
 
 # fn <- "~/gh/radiant/inst/base/www/style.css"
 # readLines(fn) %>%
-#   gsub("top: 145px;", "top: 95px;", .) %>%
+#   gsub("top: 145px;", "top: 95px;", .)
 #   cat(file = fn, sep = "\n")
 
 setwd("~/gh/radiant/")

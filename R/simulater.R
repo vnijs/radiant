@@ -493,7 +493,6 @@ repeater <- function(nr = 12,
     dat <- getdata(sim)
   }
 
-
   seed %>% gsub("[^0-9]","",.) %>% { if (. != "") set.seed(seed) }
 
   if (identical(vars, "") && identical(grid, "")) {

@@ -257,7 +257,8 @@ update_report_fun <- function(cmd) {
   isolate({
     # if (isolate(r_data$manual)) {
     # if (input$rmd_manual == "Manual paste") {
-    if (use_input_nonvar("rmd_manual", rmd_manual, "Auto paste") == "Manual paste") {
+    # if (use_input_nonvar("rmd_manual", rmd_manual, "Auto paste") == "Manual paste") {
+    if (state_init("rmd_manual", "Auto paste") == "Manual paste") {
       os_type <- Sys.info()["sysname"]
       if (os_type == 'Windows') {
         cat(cmd, file = "clipboard")
@@ -290,7 +291,8 @@ update_report_fun <- function(cmd) {
       )
     }
 
-    if (use_input_nonvar("rmd_switch", rmd_switch, "Switch tab") == "Switch tab")
+    # if (use_input_nonvar("rmd_switch", rmd_switch, "Switch tab") == "Switch tab")
+    if (state_init("rmd_switch", "Switch tab") == "Switch tab")
       updateTabsetPanel(session, "nav_radiant", selected = "Report")
   })
 }

@@ -59,11 +59,11 @@ output$ui_expl_byvar <- renderUI({
         names(vars) <- varnames() %>% {.[match(vars, .)]} %>% names
       }
     }
-    sel <- use_input("expl_byvar", vars, "", fun = "state_multiple")
   })
 
   selectizeInput("expl_byvar", label = "Group by:", choices = vars,
-    selected = sel, multiple = TRUE,
+    selected = state_multiple("expl_byvar", vars),
+    multiple = TRUE,
     options = list(placeholder = 'Select group-by variable',
                    plugins = list('remove_button', 'drag_drop'))
   )
@@ -149,7 +149,7 @@ expl_reset <- function(var, ncol) {
 
 output$explorer <- DT::renderDataTable({
   expl <- .explore()
-  if (is.null(expl)) return()
+  if (is.null(expl)) return(data.frame())
   expl$shiny <- TRUE
 
   ## resetting DT when changes occur
@@ -172,8 +172,6 @@ output$explorer <- DT::renderDataTable({
   })
 
   top <- ifelse (input$expl_top == "", "fun", input$expl_top)
-
-  # req(input$expl_pause == FALSE)
 
   withProgress(message = 'Generating explore table', value = 0,
     make_expl(expl, top = top, dec = input$expl_dec, search = search,

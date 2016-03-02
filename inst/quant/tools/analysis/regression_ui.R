@@ -89,21 +89,20 @@ output$ui_reg_rvar <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
   selectInput(inputId = "reg_rvar", label = "Response variable:", choices = vars,
-    selected = use_input("reg_rvar",vars), multiple = FALSE)
+    selected = state_single("reg_rvar",vars), multiple = FALSE)
+    # selected = use_input("reg_rvar",vars), multiple = FALSE)
 })
 
 output$ui_reg_evar <- renderUI({
-  # req(available(input$reg_rvar), !input$reg_store_res)
   req(available(input$reg_rvar))
-  # print(isolate(input$reg_store_res))
-  # if(input$reg_store_res > 0) return()
   notChar <- "character" != .getclass()
   vars <- varnames()[notChar]
-  if (length(vars) > 0)
+  if (length(vars) > 0 && input$reg_rvar %in% vars)
     vars <- vars[-which(vars == input$reg_rvar)]
 
   selectInput(inputId = "reg_evar", label = "Explanatory variables:", choices = vars,
-    selected = use_input("reg_evar", vars, fun = "state_multiple"),
+    # selected = use_input("reg_evar", vars, fun = "state_multiple"),
+    selected = state_multiple("reg_evar", vars),
     multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -122,7 +121,8 @@ output$ui_reg_test_var <- renderUI({
 
   selectizeInput(inputId = "reg_test_var", label = "Variables to test:",
     choices = vars,
-    selected = use_input("reg_test_var", vars, fun = "state_multiple"),
+    # selected = use_input("reg_test_var", vars, fun = "state_multiple"),
+    selected = state_multiple("reg_test_var", vars),
     multiple = TRUE,
     options = list(placeholder = 'None', plugins = list('remove_button'))
   )
@@ -132,7 +132,8 @@ output$ui_reg_show_interactions <- renderUI({
   choices <- reg_show_interactions[1:max(min(3,length(input$reg_evar)),1)]
   radioButtons(inputId = "reg_show_interactions", label = "Interactions:",
     choices = choices,
-    selected = use_input_nonvar("reg_show_interactions", choices),
+    # selected = use_input_nonvar("reg_show_interactions", choices),
+    selected = state_init("reg_show_interactions"),
     inline = TRUE)
  })
 
@@ -150,13 +151,10 @@ output$ui_reg_int <- renderUI({
   }
 
   selectInput("reg_int", label = NULL, choices = choices,
-    selected = use_input_nonvar("reg_int", choices),
+    # selected = use_input_nonvar("reg_int", choices),
+    selected = state_init("reg_int"),
     multiple = TRUE, size = min(4,length(choices)), selectize = FALSE)
 })
-
-# observeEvent(input$reg_show_interactions == "", {
-#   updateSelectInput(session = session, inputId = "reg_int", selected = NULL)
-# })
 
 # X - variable
 output$ui_reg_xvar <- renderUI({
@@ -214,6 +212,7 @@ output$ui_reg_color <- renderUI({
 
 ## data ui and tabs
 output$ui_regression <- renderUI({
+  req(input$dataset)
   tagList(
     wellPanel(
       actionButton("reg_run", "Estimate", width = "100%")
@@ -391,8 +390,8 @@ reg_available <- reactive({
   req(available(input$reg_rvar), available(input$reg_evar))
 
   ## need dependency in reg_int so I can have names(input) in isolate
-  input$reg_int
-  isolate(req("reg_int" %in% names(input)))
+  # input$reg_int
+  # isolate(req("reg_int" %in% names(input)))
 
   # req(input$reg_pause == FALSE, cancelOutput = TRUE)
 
@@ -402,14 +401,16 @@ reg_available <- reactive({
 .summary_regression <- reactive({
   if (reg_available() != "available") return(reg_available())
   if (input$reg_rvar %in% input$reg_evar) return()
+  if (not_pressed(input$reg_run)) return("** Press the Estimate button to estimate the model **")
   do.call(summary, c(list(object = .regression()), reg_sum_inputs()))
 })
 
 .predict_regression <- reactive({
   if (reg_available() != "available") return(reg_available())
+  if (not_pressed(input$reg_run)) return("** Press the Estimate button to estimate the model **")
+  if (is_empty(input$reg_predict, "none")) return("** Select prediction input **")
   req(!is_empty(input$reg_predict, "none"),
      (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
-
   withProgress(message = "Generating predictions", value = 0, {
     do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
   })

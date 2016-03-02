@@ -2,7 +2,8 @@
 # Conjoint profiles
 ###############################
 output$ui_conjoint_profiles <- renderUI({
-  list(
+  req(input$dataset)
+  tagList(
   	wellPanel(
 			fileInput('cap_upload', 'Upload attributes:', multiple=FALSE),
       # conditionalPanel(condition = "input.cap_upload != null",
@@ -43,15 +44,11 @@ output$conjoint_profiles <- renderUI({
 	summary(.conjoint_profiles())
 })
 
-observe({
-  if (not_pressed(input$conjoint_profiles_report)) return()
-  isolate({
-    xcmd <- "# write.csv(result$frac, file = '~/conjoint_profiles.csv', row.names = FALSE)"
-    update_report(inp_main = list(dataset = "cap_attr"),
-                  fun_name = "conjoint_profiles",
-                  inp_out = list("",""), outputs = "summary",
-                  figs = FALSE, xcmd = xcmd)
-  })
+observeEvent(input$conjoint_profiles_report, {
+  xcmd <- "# write.csv(result$frac, file = '~/conjoint_profiles.csv', row.names = FALSE)"
+  update_report(inp_main = list(dataset = "cap_attr"),
+    fun_name = "conjoint_profiles", inp_out = list("",""), outputs = "summary",
+    figs = FALSE, xcmd = xcmd)
 })
 
 observe({
