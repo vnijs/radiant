@@ -35,7 +35,7 @@ output$ui_cm_var1 <- renderUI({
   selectInput(inputId = "cm_var1",
               label = "Select a factor or numeric variable:",
               choices = vars,
-              selected = use_input("cm_var1",vars),
+              selected = state_single("cm_var1",vars),
               multiple = FALSE)
 })
 

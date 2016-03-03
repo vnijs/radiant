@@ -90,7 +90,7 @@ output$ui_glm_rvar <- renderUI({
   # req(input$dataset)
  	vars <- two_level_vars()
   selectInput(inputId = "glm_rvar", label = "Response variable:", choices = vars,
-  	selected = use_input("glm_rvar",vars), multiple = FALSE)
+  	selected = state_single("glm_rvar",vars), multiple = FALSE)
 })
 
 output$ui_glm_lev <- renderUI({
@@ -112,7 +112,7 @@ output$ui_glm_evar <- renderUI({
     vars <- vars[-which(vars == input$glm_rvar)]
 
   selectInput(inputId = "glm_evar", label = "Explanatory variables:", choices = vars,
-    selected = use_input("glm_evar", vars, fun = "state_multiple"),
+    selected = state_multiple("glm_evar", vars),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -127,7 +127,7 @@ output$ui_glm_wts <- renderUI({
   vars <- c("None", vars)
 
   selectInput(inputId = "glm_wts", label = "Weights:", choices = vars,
-    selected = use_input("glm_wts", vars),
+    selected = state_single("glm_wts", vars),
     multiple = FALSE)
 })
 
@@ -146,7 +146,7 @@ output$ui_glm_test_var <- renderUI({
 
   selectizeInput(inputId = "glm_test_var", label = "Variables to test:",
     choices = vars,
-    selected = use_input("glm_test_var", vars, fun = "state_multiple"),
+    selected = state_multiple("glm_test_var", vars),
     multiple = TRUE,
     options = list(placeholder = "None", plugins = list("remove_button"))
   )

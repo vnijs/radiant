@@ -20,8 +20,12 @@ stop_radiant <- function() {
 
       if (!is_empty(input$rmd_report)) {
 
-        "```{r echo = FALSE}\n# knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\n# suppressMessages(library(radiant))\n# uncomment the lines above to 'knit' the Rmd file in Rstudio\n# you will also need to load the data using load()\n```\n\n" %>%
-          paste0(.,input$rmd_report) -> rmd_report
+        rmd_report <-
+          paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nloadr('~/r_sessions/r_data.rda')\n```\n\n") %>%
+          paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.)
+
+        # "```{r echo = FALSE}\n# knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)\n# suppressMessages(library(radiant))\n# uncomment the lines above to 'knit' the Rmd file in Rstudio\n# you will also need to load the data using load()\n```\n\n" %>%
+          # paste0(.,input$rmd_report) -> rmd_report
         os_type <- Sys.info()["sysname"]
         if (os_type == 'Windows') {
           cat(rmd_report, file = "clipboard")
@@ -39,7 +43,15 @@ stop_radiant <- function() {
       unlink("~/r_figures/", recursive = TRUE)
       sshhr(try(rm(js_head, nav_ui, r_encoding, r_functions, r_help, r_local, r_path, r_pkgs, shared_ui, withMathJax, envir = .GlobalEnv), silent = TRUE))
       cat(stop_message)
-      stopApp("-- Stopped Radiant --")
+      # stopApp("-- Stopped Radiant --")
+
+      if (rstudioapi::isAvailable() && !is_empty(input$rmd_report)) {
+        path <- file.path(normalizePath("~"),"r_sessions")
+        saver(get("r_data", envir = .GlobalEnv), file = file.path(path, "r_data.rda"))
+        stopApp(rstudioapi::insertText(rmd_report))
+      } else {
+        stopApp("-- Stopped Radiant --")
+      }
     })
   } else {
     stopApp("-- Stopped Radiant --")

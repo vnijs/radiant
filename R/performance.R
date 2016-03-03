@@ -97,7 +97,7 @@ performance <- function(dataset, pred, rvar,
 	  	lg_list[[pname]] <-
 			  dat %>%
 			  select_(.dots = c(pred[j],rvar)) %>%
-				mutate_(.dots = setNames(paste0(method,"(",pred[j],",", qnt,")"), pred[j])) %>%
+				mutate_(.dots = setNames(paste0(method,"(",pred[j],",", qnt,", rev = TRUE)"), pred[j])) %>%
 				setNames(c(qnt_name,rvar)) %>%
 		    group_by_(.dots = qnt_name) %>%
 			  summarise_(.dots = c(
@@ -110,7 +110,6 @@ performance <- function(dataset, pred, rvar,
 			  ) %>%
 			  { if (first(.$resp_rate) < last(.$resp_rate)) mutate_each(., funs(rev))
 			  	else . } %>%
-			  # arrange(desc(resp_rate)) %>%
 			  mutate(
 			    profit = margin * cumsum(nr_resp) - cost * cumsum(nr_obs),
 			    ROME = profit / (cost * cumsum(nr_obs)),
@@ -168,7 +167,6 @@ summary.performance <- function(object, prn = TRUE, ...) {
 		# cat("Method     :", gsub("radiant::","",object$method), "\n")
 		cat("Bins        :", object$qnt, "\n")
 		cat("Margin/Cost :", object$margin, " / ", object$cost, "\n")
-		# prof <- unlist(object$prof_list)
 		prof <- object$prof_list
 		cat("Profit index:", paste0(names(prof), " (", round(prof,3), ")", collapse=", "), "\n")
 		auc <- unlist(object$auc_list)
@@ -251,8 +249,6 @@ plot.performance <- function(x,
 		init$profit <- init$cum_prop <- init$obs <- 0
 		dat <- bind_rows(init, dat) %>% arrange(pred, obs)
 
-		# dat <- mutate(dat, profit = ifelse (is.na(profit), 0, profit))
-
 		plot_list[["profit"]] <-
 			visualize(dat, xvar = "cum_prop", yvar = "profit", type = "line", color = "pred", custom = TRUE) +
 			geom_point() +
@@ -262,7 +258,6 @@ plot.performance <- function(x,
 	}
 
 	if ("rome" %in% plots) {
-		# dat <- mutate(object$dat, ROME = ifelse (is.na(ROME), 0, ROME))
 		plot_list[["rome"]] <-
 			visualize(object$dat, xvar = "cum_prop", yvar = "ROME", type = "line", color = "pred", custom = TRUE) +
 			geom_point() +
@@ -312,6 +307,7 @@ auc <- function(pred, rvar, lev) {
  	stopifnot(length(lev) == 1, lev %in% rvar)
  	x1 <- pred[rvar == lev]
   x2 <- pred[rvar != lev]
+  ## need as.numeric to avoid inter-overflows
  	denom <- as.numeric(length(x1)) * length(x2)
 	wt <- wilcox.test(x1, x2, exact = FALSE)$statistic / denom
 	ifelse (wt < .5, 1 - wt, wt)

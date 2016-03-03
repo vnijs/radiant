@@ -1,20 +1,24 @@
 Name: Radiant - Base
-Description: Radiant - Base app
+Description: Start Radiant - Base app
 Binding: radiant_base
 Interactive: true
 
 Name: Radiant - Quant
-Description: App used for Quantative Analysis
+Description: Start app used for Quantative Analysis
 Binding: radiant_quant
 Interactive: true
 
 Name: Radiant - Marketing
-Description: App used for Research Methods for Marketing Decisions
+Description: Start app used for Research Methods for Marketing Decisions
 Binding: radiant_marketing
 Interactive: true
 
 Name: Radiant - Analytics
-Description: App used for Customer Analytics
+Description: Start app used for Customer Analytics
 Binding: radiant_analytics
 Interactive: true
 
+Name: Update Radiant
+Description: Update Radiant to the latest version
+Binding: update_radiant
+Interactive: true

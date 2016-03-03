@@ -201,14 +201,19 @@ summary.glm_reg <- function(object,
   p.small <- coeff$p.value < .001
   coeff[,2:6] %<>% dfprint(dec)
   coeff$p.value[p.small] <- "< .001"
-  # coeff$OR[1] <- ""
-  print(coeff, row.names=FALSE)
+  coeff %>% {.$OR[1] <- ""; .} %>% print(row.names=FALSE)
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
   glm_fit <- glance(object$model)
 
   ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
   glm_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(dec)
+  if (!is_empty(object$wts, "None") && class(object$wts) == "integer") {
+    nobs <- sum(object$wts)
+    glm_fit$BIC <- round(-2*glm_fit$logLik + ln(nobs) * with(glm_fit, 1 + df.null - df.residual), dec)
+  } else {
+    nobs <- glm_fit$df.null + 1
+  }
 
   ## chi-squared test of overall model fit (p-value) - http://www.ats.ucla.edu/stat/r/dae/logit.htm
   chi_pval <- with(object$model, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
@@ -218,11 +223,7 @@ summary.glm_reg <- function(object,
   cat(paste0("\nLog-likelihood: ", glm_fit$logLik, ", AIC: ", glm_fit$AIC, ", BIC: ", glm_fit$BIC))
   cat(paste0("\nChi-squared: ", with(glm_fit, null.deviance - deviance) %>% round(dec), " df(",
                with(glm_fit, df.null - df.residual), "), p.value ", chi_pval), "\n")
-
-  if (!is_empty(object$wts, "None") && class(object$wts) == "integer")
-    cat("Nr obs:", nrprint(sum(object$wts), dec = 0), "\n\n")
-  else
-    cat("Nr obs:", nrprint(glm_fit$df.null + 1, dec = 0), "\n\n")
+  cat("Nr obs:", nrprint(nobs, dec = 0), "\n\n")
 
   if (anyNA(object$model$coeff))
     cat("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\n")
@@ -480,7 +481,11 @@ plot.glm_reg <- function(x,
             # geom_pointrange(aes_string(x = "variable", y = "coefficient", ymin = "Low", ymax = "High")) +
             geom_pointrange(aes_string(x = "variable", y = "OR", ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 1, linetype = 'dotdash', color = "blue") +
-            ylab("Odds-ratio") + coord_flip()
+            ylab("Odds-ratio") +
+            ## can't use coord_trans together with coord_flip
+            # http://stackoverflow.com/a/26185278/1974918
+            scale_y_log10(breaks = c(0,0.5,1:10)) +
+            coord_flip()
   }
 
   if (plots == "scatter") {
