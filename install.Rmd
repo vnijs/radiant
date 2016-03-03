@@ -20,11 +20,13 @@ For windows you can get the latest release here: <a href="https://cran.rstudio.c
 
 On Mac you can accept all the defaults. Installing R should create 2 shortcuts on your Desktop. If there are indeed 2 shortcuts you can remove the icon named ("R i386 3.2.3").
 
-#### 2. Install Rstudio (OPTIONAL)
+#### 2. Install Rstudio (RECOMMENDED)
 
 Get the latest release of Rstudio for your system from:
 
 <a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">https://www.rstudio.com/products/rstudio/download/</a>
+
+If you have Rstudio (version 0.99.891 or later) installed you can easily start and update Radiant through the `Addins` menu at the top of the screen. Note that when your first install Radiant you must use the `install.packages` command mentioned below.
 
 Particularly for Windows users, I recommend installing <a href="https://cran.rstudio.com/bin/windows/Rtools/Rtools33.exe" target="_blank">Rtools</a>.
 
