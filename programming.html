@@ -83,9 +83,9 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
 }
 </style>
 <div class="container-fluid main-container">
@@ -248,16 +248,16 @@ img {
 <pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;, &quot;price&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
-Data      : diamonds 
-Variable  : price 
-Confidence: 0.95 
-Null hyp. : the mean of price = 0 
-Alt. hyp. : the mean of price is not equal to 0 
+Data      : diamonds
+Variable  : price
+Confidence: 0.95
+Null hyp. : the mean of price = 0
+Alt. hyp. : the mean of price is not equal to 0
 
      mean       sd    n n_missing
  3907.186 3956.915 3000         0
 
-     diff     se t.value p.value   df     2.5%    97.5%    
+     diff     se t.value p.value   df     2.5%    97.5%
  3907.186 72.243  54.084  &lt; .001 2999 3765.535 4048.837 ***
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
@@ -276,17 +276,17 @@ library(radiant)</code></pre>
 <pre class="r"><code>result &lt;- single_mean(&quot;mtcars&quot;, &quot;mpg&quot;, comp_value = 20, alternative = &quot;greater&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
-Data      : mtcars 
-Variable  : mpg 
-Confidence: 0.95 
-Null hyp. : the mean of mpg = 20 
-Alt. hyp. : the mean of mpg is &gt; 20 
+Data      : mtcars
+Variable  : mpg
+Confidence: 0.95
+Null hyp. : the mean of mpg = 20
+Alt. hyp. : the mean of mpg is &gt; 20
 
    mean    sd  n n_missing
  20.091 6.027 32         0
 
-  diff    se t.value p.value df     5% 100%  
- 0.091 1.065   0.085   0.466 31 18.284  Inf  
+  diff    se t.value p.value df     5% 100%
+ 0.091 1.065   0.085   0.466 31 18.284  Inf
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result, plots = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
@@ -295,11 +295,11 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <pre class="r"><code>result &lt;- compare_means(&quot;diamonds&quot;, &quot;clarity&quot;, &quot;price&quot;)
 summary(result)</code></pre>
 <pre><code>Pairwise mean comparisons (t-test)
-Data      : diamonds 
-Variables : clarity, price 
-Samples   : independent 
-Confidence: 0.95 
-Adjustment: None 
+Data      : diamonds
+Variables : clarity, price
+Samples   : independent
+Confidence: 0.95
+Adjustment: None
 
  clarity     mean   n       sd      se      ci
       I1 4194.775  40 2519.678 398.396 805.832
@@ -311,12 +311,12 @@ Adjustment: None
     VVS1 2608.460 224 3201.282 213.895 421.513
       IF 2411.697  99 3330.560 334.734 664.268
 
- Null hyp.     Alt. hyp.                diff     p.value    
- I1 = SI2      I1 not equal to SI2      -905.414 0.045   *  
- I1 = SI1      I1 not equal to SI1       196.198 0.645      
- I1 = VS2      I1 not equal to VS2       371.808 0.387      
- I1 = VS1      I1 not equal to VS1       405.594 0.36       
- I1 = VVS2     I1 not equal to VVS2      856.955 0.068   .  
+ Null hyp.     Alt. hyp.                diff     p.value
+ I1 = SI2      I1 not equal to SI2      -905.414 0.045   *
+ I1 = SI1      I1 not equal to SI1       196.198 0.645
+ I1 = VS2      I1 not equal to VS2       371.808 0.387
+ I1 = VS1      I1 not equal to VS1       405.594 0.36
+ I1 = VVS2     I1 not equal to VVS2      856.955 0.068   .
  I1 = VVS1     I1 not equal to VVS1     1586.315 0.001   ***
  I1 = IF       I1 not equal to IF       1783.078 0.001   ***
  SI2 = SI1     SI2 not equal to SI1     1101.612 &lt; .001  ***
@@ -325,21 +325,21 @@ Adjustment: None
  SI2 = VVS2    SI2 not equal to VVS2    1762.369 &lt; .001  ***
  SI2 = VVS1    SI2 not equal to VVS1    2491.729 &lt; .001  ***
  SI2 = IF      SI2 not equal to IF      2688.492 &lt; .001  ***
- SI1 = VS2     SI1 not equal to VS2      175.610 0.399      
- SI1 = VS1     SI1 not equal to VS1      209.396 0.369      
- SI1 = VVS2    SI1 not equal to VVS2     660.757 0.016   *  
+ SI1 = VS2     SI1 not equal to VS2      175.610 0.399
+ SI1 = VS1     SI1 not equal to VS1      209.396 0.369
+ SI1 = VVS2    SI1 not equal to VVS2     660.757 0.016   *
  SI1 = VVS1    SI1 not equal to VVS1    1390.117 &lt; .001  ***
  SI1 = IF      SI1 not equal to IF      1586.880 &lt; .001  ***
- VS2 = VS1     VS2 not equal to VS1       33.786 0.888      
- VS2 = VVS2    VS2 not equal to VVS2     485.147 0.082   .  
+ VS2 = VS1     VS2 not equal to VS1       33.786 0.888
+ VS2 = VVS2    VS2 not equal to VVS2     485.147 0.082   .
  VS2 = VVS1    VS2 not equal to VVS1    1214.507 &lt; .001  ***
  VS2 = IF      VS2 not equal to IF      1411.270 &lt; .001  ***
- VS1 = VVS2    VS1 not equal to VVS2     451.361 0.13       
+ VS1 = VVS2    VS1 not equal to VVS2     451.361 0.13
  VS1 = VVS1    VS1 not equal to VVS1    1180.721 &lt; .001  ***
  VS1 = IF      VS1 not equal to IF      1377.484 &lt; .001  ***
- VVS2 = VVS1   VVS2 not equal to VVS1    729.360 0.022   *  
- VVS2 = IF     VVS2 not equal to IF      926.123 0.024   *  
- VVS1 = IF     VVS1 not equal to IF      196.763 0.621      
+ VVS2 = VVS1   VVS2 not equal to VVS1    729.360 0.022   *
+ VVS2 = IF     VVS2 not equal to IF      926.123 0.024   *
+ VVS1 = IF     VVS1 not equal to IF      196.763 0.621
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result, plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
@@ -351,18 +351,18 @@ radiant()</code></pre>
 <pre class="r"><code>result &lt;- compare_means(&quot;salary&quot;, &quot;rank&quot;, &quot;salary&quot;)
 summary(result)</code></pre>
 <pre><code>Pairwise mean comparisons (t-test)
-Data      : salary 
-Variables : rank, salary 
-Samples   : independent 
-Confidence: 0.95 
-Adjustment: None 
+Data      : salary
+Variables : rank, salary
+Samples   : independent
+Confidence: 0.95
+Adjustment: None
 
       rank      mean   n        sd       se       ci
   AsstProf  80775.99  67  8174.113  998.627 1993.823
  AssocProf  93876.44  64 13831.700 1728.962 3455.056
       Prof 126772.11 266 27718.675 1699.541 3346.322
 
- Null hyp.              Alt. hyp.                         diff      p.value    
+ Null hyp.              Alt. hyp.                         diff      p.value
  AsstProf = AssocProf   AsstProf not equal to AssocProf   -13100.45 &lt; .001  ***
  AsstProf = Prof        AsstProf not equal to Prof        -45996.12 &lt; .001  ***
  AssocProf = Prof       AssocProf not equal to Prof       -32895.67 &lt; .001  ***
@@ -375,18 +375,18 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
   {summary(.); plot(.)}</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" title="" alt="" width="672" /></p>
 <pre><code>Pairwise mean comparisons (t-test)
-Data      : ----- 
-Variables : rank, salary 
-Samples   : independent 
-Confidence: 0.95 
-Adjustment: None 
+Data      : -----
+Variables : rank, salary
+Samples   : independent
+Confidence: 0.95
+Adjustment: None
 
       rank      mean   n        sd       se       ci
   AsstProf  80775.99  67  8174.113  998.627 1993.823
  AssocProf  93876.44  64 13831.700 1728.962 3455.056
       Prof 126772.11 266 27718.675 1699.541 3346.322
 
- Null hyp.              Alt. hyp.                         diff      p.value    
+ Null hyp.              Alt. hyp.                         diff      p.value
  AsstProf = AssocProf   AsstProf not equal to AssocProf   -13100.45 &lt; .001  ***
  AsstProf = Prof        AsstProf not equal to Prof        -45996.12 &lt; .001  ***
  AssocProf = Prof       AssocProf not equal to Prof       -32895.67 &lt; .001  ***
@@ -396,13 +396,13 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <pre class="r"><code>result &lt;- regression(&quot;diamonds&quot;, &quot;price&quot;, c(&quot;carat&quot;,&quot;clarity&quot;))
 summary(result, sum_check = &quot;confint&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
-Data     : diamonds 
-Response variable    : price 
-Explanatory variables: carat, clarity 
+Data     : diamonds
+Response variable    : price
+Explanatory variables: carat, clarity
 Null hyp.: the effect of x on price is zero
 Alt. hyp.: the effect of x on price is not zero
 
-              coefficient std.error t.value p.value    
+              coefficient std.error t.value p.value
  (Intercept)    -6780.993   204.952 -33.086  &lt; .001 ***
  carat           8438.030    51.101 165.125  &lt; .001 ***
  clarity|SI2     2790.760   201.395  13.857  &lt; .001 ***
@@ -415,9 +415,9 @@ Alt. hyp.: the effect of x on price is not zero
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-R-squared: 0.904,  Adjusted R-squared: 0.904 
+R-squared: 0.904,  Adjusted R-squared: 0.904
 F-statistic: 3530.024 df(8,2991), p.value &lt; .001
-Nr obs: 3,000 
+Nr obs: 3,000
 
              coefficient      2.5%     97.5%     +/-
 (Intercept)    -6780.993 -7182.855 -6379.131 401.862
@@ -431,9 +431,9 @@ clarity|VVS1    5027.669  4607.574  5447.764 420.095
 clarity|IF      5265.170  4807.024  5723.317 458.147</code></pre>
 <pre class="r"><code>predict(result, pred_cmd = &quot;carat = 1:10&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
-Data       : diamonds 
-Response variable    : price 
-Explanatory variables: carat, clarity 
+Data       : diamonds
+Response variable    : price
+Explanatory variables: carat, clarity
 
 Predicted values for:
  clarity carat Prediction      2.5%     97.5%      +/-
@@ -484,10 +484,10 @@ result &lt;- hier_clus(&quot;shopping&quot;, &quot;v1:v6&quot;)
 ## summary - not much here - plots are more important
 summary(result)</code></pre>
 <pre><code>Hierarchical cluster analysis
-Data        : shopping 
-Variables   : v1:v6 
-Method      : ward.D 
-Distance    : sq.euclidian 
+Data        : shopping
+Variables   : v1:v6
+Method      : ward.D
+Distance    : sq.euclidian
 Observations: 20 </code></pre>
 <pre class="r"><code>## check the help file on how to plot results from hierarchical cluster analysis
 ## default plots - looks like there is a big jump in the overall within-cluster
@@ -503,12 +503,12 @@ plot(result, plots = &quot;dendro&quot;, cutoff = 0.1)</code></pre>
 result &lt;- kmeans_clus(&quot;shopping&quot;, vars = &quot;v1:v6&quot;, nr_clus = 3)
 summary(result)</code></pre>
 <pre><code>K-means cluster analysis
-Data        : shopping 
-Variables   : v1:v6 
-Method      : ward.D 
-Distance    : sq.euclidian 
-Observations: 20 
-Generated   : 3 clusters of sizes 8, 6, 6 
+Data        : shopping
+Variables   : v1:v6
+Method      : ward.D
+Distance    : sq.euclidian
+Observations: 20
+Generated   : 3 clusters of sizes 8, 6, 6
 
 Cluster means:
              v1    v2    v3    v4    v5    v6
@@ -517,7 +517,7 @@ Cluster 2 1.667 3.000 1.833 3.500 5.500 3.333
 Cluster 3 3.500 5.833 3.333 6.000 3.500 6.000
 
 Percentage of within cluster variance accounted for by each cluster:
-                
+
 Cluster 1 40.31%
 Cluster 2 25.98%
 Cluster 3 33.71%
@@ -540,7 +540,7 @@ getdata(&quot;shopping&quot;) %&gt;% head</code></pre>
 <p>See if you can reproduce this output in the radiant web-interface. Start radiant using <code>radiant()</code>. Apart from the graphical user interface you can also run code inside the Radiant app in the R &gt; Code tab. See <a href="/radiant/base/code.html">Code</a> page for details.</p>
 
 
-&copy; Vincent Nijs (2015) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
 
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>
