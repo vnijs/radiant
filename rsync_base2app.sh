@@ -8,6 +8,10 @@ rsync -av ~/gh/radiant_gh-pages/quant/figures_quant/  ~/gh/radiant/inst/quant/to
 rsync -av ~/gh/radiant_gh-pages/marketing/app/  ~/gh/radiant/inst/marketing/tools/help/
 rsync -av ~/gh/radiant_gh-pages/marketing/figures_marketing/  ~/gh/radiant/inst/marketing/tools/help/figures/
 
+rsync -av ~/gh/radiant_gh-pages/analytics/app/  ~/gh/radiant/inst/analytics/tools/help/
+rsync -av ~/gh/radiant_gh-pages/analytics/figures_analytics/  ~/gh/radiant/inst/analytics/tools/help/figures/
+
+
 # rsync -auv ~/gh/radiant/inst/base/tools/help/ ~/gh/radiant_gh-pages/base/app/
 # rsync -auv ~/gh/radiant/inst/base/tools/help/figures/ ~/gh/radiant_gh-pages/base/figures/
 #
