@@ -1,11 +1,11 @@
 output$ui_doe_int <- renderUI({
 
-  req(!is_empty(input$doe_profiles))
+  req(!is_empty(input$doe_factors))
 
   # dp <- "free_ship; $300; $200\ndiscount; 15%; 20%\ncoup_entry; manual; automatic"
   # dp_list <-
   vars <-
-    gsub("[\n]{2,}$","",input$doe_profiles) %>%
+    gsub("[\n]{2,}$","",input$doe_factors) %>%
     strsplit(.,"\n") %>% .[[1]] %>%
     strsplit(";") %>%
     sapply(function(x) x[1]) %>%
@@ -60,16 +60,15 @@ output$ui_doe <- renderUI({
     ),
     wellPanel(
       actionButton("doe_run", "Create"),
-      downloadButton('doe_download', 'Partial'),
+      downloadButton('doe_download_part', 'Partial'),
       downloadButton('doe_download_full', 'Full')
     ),
     wellPanel(
 
-      HTML("<label>Upload profiles:</label><div class='form-group shiny-input-container'>
+      HTML("<label>Upload factors:</label><div class='form-group shiny-input-container'>
               <input id='doe_upload' name='doe_upload' type='file' accept='.txt'/>
-            </div><br><label>Save profiles:</label><br>"),
-      # fileInput('upload_dp', 'Upload profiles', multiple=FALSE, accept = ".txt"),
-      downloadButton('doe_save', 'Save')
+            </div><br><label>Download factors:</label><br>"),
+      downloadButton('doe_download', 'Download')
     ),
     help_and_report(modal_title = "Design of Experiments", fun_name = "doe",
                     help_file = inclMD(file.path(r_path,"analytics/tools/help/doe.md")))
@@ -86,20 +85,20 @@ observeEvent(input$doe_add, {
   }
   dup <- paste(dup, collapse = "; ")
 
-  if (is_empty(input[["doe_profiles"]]))
+  if (is_empty(input[["doe_factors"]]))
     val <- dup
   else
-    val <- paste0(dup, "\n", input[["doe_profiles"]])
+    val <- paste0(dup, "\n", input[["doe_factors"]])
 
-  updateTextInput(session = session, "doe_profiles", value = val)
+  updateTextInput(session = session, "doe_factors", value = val)
 })
 
 observeEvent(input$doe_del, {
-  input[["doe_profiles"]] %>% strsplit("\n") %>% unlist %>% .[-1] %>% paste0(collapse = "\n") %>%
-    updateTextInput(session = session, "doe_profiles", value = .)
+  input[["doe_factors"]] %>% strsplit("\n") %>% unlist %>% .[-1] %>% paste0(collapse = "\n") %>%
+    updateTextInput(session = session, "doe_factors", value = .)
 })
 
-doe_maker <- function(id = "profiles", rows = "5", pre = "doe_") {
+doe_maker <- function(id = "factors", rows = "5", pre = "doe_") {
   id <- paste0(pre, id)
   tags$textarea(state_init(id), id = id, type = "text", rows = rows, class = "form-control")
 }
@@ -112,8 +111,8 @@ output$doe <- renderUI({
     ## single tab with components stacked
     doe_output_panels <- tagList(
       tabPanel("Summary",
-        HTML("<label>Design profiles:</label>"),
-        doe_maker("profiles", rows = "5"),
+        HTML("<label>Design factors:</label>"),
+        doe_maker("factors", rows = "5"),
         HTML("<br><label>Generated experimental design:</label>"),
         verbatimTextOutput("summary_doe")
       )
@@ -127,14 +126,14 @@ output$doe <- renderUI({
 })
 
 .doe <- eventReactive(input$doe_run, {
-  req(!is_empty(input$doe_profiles))
+  req(!is_empty(input$doe_factors))
 
   int <- ""
   if (length(input$doe_int) > 0)
     int <- input$doe_int
 
   # withProgress(message = 'Generating design', value = 0, {
-  #   doe(input$doe_profiles, int, trials = input$doe_trials, seed = input$doe_seed)
+  #   doe(input$doe_factors, int, trials = input$doe_trials, seed = input$doe_seed)
   # })
 
   withProgress(message = 'Generating design', value = 0, {
@@ -142,27 +141,27 @@ output$doe <- renderUI({
   })
 })
 
-doe <- function(profiles, int = "", trials = NA, seed = NA) {
-  dp_list <-
-    gsub("\\\\n","\n",profiles) %>%
+doe <- function(factors, int = "", trials = NA, seed = NA) {
+  df_list <-
+    gsub("\\\\n","\n",factors) %>%
     gsub("[\n]{2,}$","",.) %>%
     strsplit(.,"\n") %>%
     .[[1]] %>% strsplit(";")
-  dp_names <- c()
-  for (i in seq_len(length(dp_list))) {
-    dt <- dp_list[[i]] %>% gsub("^\\s+|\\s+$", "", .)
-    dp_names <- c(dp_names, dt[1])
-    dp_list[[i]] <- dt[-1]
+  df_names <- c()
+  for (i in seq_len(length(df_list))) {
+    dt <- df_list[[i]] %>% gsub("^\\s+|\\s+$", "", .)
+    df_names <- c(df_names, dt[1])
+    df_list[[i]] <- dt[-1]
   }
-  names(dp_list) <- dp_names
-  model <- paste0("~ ", paste0(dp_names, collapse = " + "))
+  names(df_list) <- df_names
+  model <- paste0("~ ", paste0(df_names, collapse = " + "))
   nInt <- 0
   if (!is_empty(int)) {
     model <- paste0(model, " + ", paste0(int, collapse = " + "))
     nInt <- length(int)
   }
 
-  part_frac(dp_list, model = as.formula(model), int = nInt, trials = trials, seed = seed) %>%
+  part_frac(df_list, model = as.formula(model), int = nInt, trials = trials, seed = seed) %>%
     set_class(c("doe",class(.)))
 }
 
@@ -181,10 +180,10 @@ doe_inputs <- reactive({
 })
 
 
-part_frac <- function(dp, model = ~ ., int = 0, trials = NA, seed = 172110) {
+part_frac <- function(df, model = ~ ., int = 0, trials = NA, seed = 172110) {
 # part_frac <- function(dp, model = ~ ., int = 0, trials = NA, seed = 1) {
 
-  full <- expand.grid(dp)
+  full <- expand.grid(df)
 
   ###############################################
   # eliminate combinations from full
@@ -192,23 +191,23 @@ part_frac <- function(dp, model = ~ ., int = 0, trials = NA, seed = 172110) {
   # http://stackoverflow.com/questions/18459311/creating-a-fractional-factorial-design-in-r-without-prohibited-pairs?rq=1
   ###############################################
 
-  levs <- sapply(dp, length)
+  levs <- sapply(df, length)
   nr_levels <- sum(levs)
-  min_profiles <- nr_levels - length(dp) + 1
-  max_profiles <- nrow(full)
+  min_trials <- nr_levels - length(df) + 1
+  max_trials <- nrow(full)
 
-  if (!is_not(trials)) max_profiles <- min_profiles <- trials
+  if (!is_not(trials)) max_trials <- min_trials <- trials
 
   eff <-
     data.frame(
-      Profiles = min_profiles:max_profiles,
+      Trials = min_trials:max_trials,
       "D-efficiency" = NA,
       "Determinant" = NA,
       "Balanced" = NA,
       check.names = FALSE
     )
 
-  for (i in min_profiles:max_profiles) {
+  for (i in min_trials:max_trials) {
     if (!is_not(seed)) set.seed(seed) # needs to be in the loop
     design <- try(optFederov(model, data = full, nRepeat = 50,
                          nTrials = i, maxIteration=1000,
@@ -221,7 +220,7 @@ part_frac <- function(dp, model = ~ ., int = 0, trials = NA, seed = 172110) {
     # print(det(cor_mat))
     # if (det(round(cor_mat,6)==1) break
     detcm <- det(cor_mat)
-    ind <- which(eff$Profiles %in% i)
+    ind <- which(eff$Trials %in% i)
     eff[ind,"D-efficiency"] <- design$Dea
     eff[ind,"Determinant"] <- detcm
     eff[ind,"Balanced"] <-  all(i %% levs == 0)
@@ -231,9 +230,9 @@ part_frac <- function(dp, model = ~ ., int = 0, trials = NA, seed = 172110) {
   }
 
   if (exists("cor_mat")) {
-    list(dp = dp, cor_mat = cor_mat, detcm = detcm, Dea = design$Dea,
-         part = arrange_(design$design, .dots = names(dp)),
-         full = arrange_(full, .dots = names(dp)),
+    list(df = df, cor_mat = cor_mat, detcm = detcm, Dea = design$Dea,
+         part = arrange_(design$design, .dots = names(df)),
+         full = arrange_(full, .dots = names(df)),
          eff = na.omit(eff),
          seed = seed)
   } else if (!is.na(trials)) {
@@ -263,9 +262,9 @@ summary.doe <- function(object, eff = TRUE, part = TRUE, full = TRUE, ...) {
   cat("\nAttributes and levels:\n")
   # print(as.data.frame(object$dp))
   # apply(object$dp, 1, function(x) {cat(x); cat("\n")})
-  nl <- names(object$dp)
+  nl <- names(object$df)
   for (i in nl) {
-    cat(paste0(i, ":"), paste0(object$dp[[i]], collapse = ", "), "\n")
+    cat(paste0(i, ":"), paste0(object$df[[i]], collapse = ", "), "\n")
   }
 
   # if (nrow(object$eff) > 1) {
@@ -281,22 +280,22 @@ summary.doe <- function(object, eff = TRUE, part = TRUE, full = TRUE, ...) {
     print(dfprint(data.frame(object$cor_mat), dec = nrdec) , row.names = FALSE)
 
     cat("\nPartial factorial design:\n")
-    print(object$part, row.names = FALSE)
+    print(object$part)
   }
 
   if (full) {
     cat("\nFull factorial design:\n")
-    print(object$full, row.names = FALSE)
+    print(object$full)
   }
 }
 
-output$doe_download <- downloadHandler(
+output$doe_download_part <- downloadHandler(
   filename = function() { 'part_factorial.csv' },
   content = function(file) {
     .doe() %>%
     # { if (class(.)[1] == "character") . else sample_n(.$part, size = nrow(.$part)) } %>%
     { if (class(.)[1] == "character") . else .$part } %>%
-    write.csv(file, row.names = FALSE)
+    write.csv(file)
   }
 )
 
@@ -306,21 +305,20 @@ output$doe_download_full <- downloadHandler(
     .doe() %>%
     # { if (class(.)[1] == "character") . else sample_n(.$full, size = nrow(.$full)) } %>%
     { if (class(.)[1] == "character") . else .$full } %>%
-    write.csv(file, row.names = FALSE)
+    write.csv(file)
   }
 )
 
-output$doe_save <- downloadHandler(
-  filename = function() { 'profiles.txt' },
+output$doe_download <- downloadHandler(
+  filename = function() { 'design_factors.txt' },
   content = function(file) {
-    # write.csv(file, row.names = FALSE)
-    cat(paste0(input$doe_profiles,"\n"), file  = file)
+    cat(paste0(input$doe_factors,"\n"), file  = file)
   }
 )
 
 observeEvent(input$doe_upload, {
     paste0(readLines(input$doe_upload$datapath), collapse = "\n") %>%
-    updateTextInput(session = session, "doe_profiles", value = .)
+    updateTextInput(session = session, "doe_factors", value = .)
 
     ## cleaning out previous settings
     updateNumericInput(session = session, "doe_max", value = 2)
@@ -335,7 +333,7 @@ observeEvent(input$doe_upload, {
 # report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
 
 observeEvent(input$doe_report, {
-  xcmd <- "# write.csv(result$part, file = '~/part_factorial.csv', row.names = FALSE)"
+  xcmd <- "# write.csv(result$part, file = '~/part_factorial.csv')"
   inp_out = list(list(eff = TRUE, part = TRUE, full = TRUE))
   update_report(inp_main = clean_args(doe_inputs(), doe_args),
                 fun_name = "doe",
