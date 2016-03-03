@@ -40,6 +40,7 @@ devtools::install_github("fawda123/NeuralNetTools")
 devtools::install_github("vnijs/radiant")
 devtools::install_github("trestletech/shinyAce")
 devtools::install_github("rstudio/shiny")
+devtools::install_github("rstudio/DT")
 devtools::install_github("rich-iannone/DiagrammeR")
 
 # devtools::install_github("vnijs/MathJaxR")
