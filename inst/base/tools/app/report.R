@@ -2,7 +2,11 @@
 # Create dynamic reports using Radiant and the shinyAce editor
 ################################################################
 rmd_switch <- c("Switch tab", "Don't switch tab")
+
+
 rmd_manual <- c("Manual paste", "Auto paste")
+if (rstudioapi::isAvailable())
+  rmd_manual <- c(rmd_manual, "To Rmd", "To R")
 
 rmd_example <- "## Sample report
 
@@ -44,20 +48,7 @@ visualize(dataset = 'diamonds', xvar = 'carat', yvar = 'price',
 > **Put your own code here or delete this sample report and create your own**
 "
 
-# observeEvent(input$manual_paste, {
-#   r_data$manual %<>% {. == FALSE}
-# })
-
-# output$ui_manual <- renderUI({
-#   ## initialize manual cmd paste to false
-#   if (is.null(r_data$manual)) r_data$manual <- FALSE
-#   actionButton("manual_paste",
-#     if (r_data$manual) "Manual paste (on)" else "Manual paste (off)")
-# })
-
 output$ui_rmd_manual <- renderUI({
-  ## initialize manual cmd paste to false
-  # if (is.null(r_data$manual)) r_data$manual <- FALSE
   selectInput(inputId = "rmd_manual", label = NULL,
     choices = rmd_manual,
     selected = state_init("rmd_manual", "Auto paste"),
@@ -66,11 +57,21 @@ output$ui_rmd_manual <- renderUI({
 })
 
 output$ui_rmd_switch <- renderUI({
+  req(input$rmd_manual)
+  if(!input$rmd_manual %in% c("Manual paste","Auto paste"))
+    init <- "Don't switch tab"
+  else
+    init <- "Switch tab"
   selectInput(inputId = "rmd_switch", label = NULL,
     choices = rmd_switch,
-    selected = state_init("rmd_switch", "Switch tab"),
+    selected = state_init("rmd_switch", init),
     multiple = FALSE, selectize = FALSE,
     width = "140px")
+})
+
+observeEvent(input$rmd_manual, {
+  if(!input$rmd_manual %in% c("Manual paste","Auto paste"))
+    updateSelectInput(session, "rmd_switch", select = "Don't switch tab")
 })
 
 esc_slash <- function(x) gsub("([^\\])\\\\([^\\\\$])","\\1\\\\\\\\\\2",x)
@@ -84,7 +85,6 @@ output$report <- renderUI({
                        inclMD(file.path(r_path,"base/tools/help/report.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("evalRmd", "Knit report"), style= "padding-top:5px;"),
-            # td(uiOutput("ui_manual")),
             td(uiOutput("ui_rmd_manual")),
             td(uiOutput("ui_rmd_switch")),
             td(downloadButton("saveHTML", "Save HTML"), style= "padding-top:5px;"),
@@ -252,12 +252,7 @@ observeEvent(input$rmd_report, {
 })
 
 update_report_fun <- function(cmd) {
-  # req(input$rmd_manual)
-  # req(input$rmd_switch)
   isolate({
-    # if (isolate(r_data$manual)) {
-    # if (input$rmd_manual == "Manual paste") {
-    # if (use_input_nonvar("rmd_manual", rmd_manual, "Auto paste") == "Manual paste") {
     if (state_init("rmd_manual", "Auto paste") == "Manual paste") {
       os_type <- Sys.info()["sysname"]
       if (os_type == 'Windows') {
@@ -269,29 +264,29 @@ update_report_fun <- function(cmd) {
       } else if (os_type == "Linux") {
         cat("Clipboard not supported on linux")
       }
-
       withProgress(message = 'Putting command in clipboard', value = 0,
         cat("")
-        # shinyAce::updateAceEditor(session, "rmd_report",
-        #                           value = esc_slash(r_state$rmd_report))
       )
-
-      ## nothing is added to report
-      # updateTabsetPanel(session, "nav_radiant", selected = "Report")
+    } else if (state_init("rmd_manual", "Auto paste") == "To Rmd") {
+      withProgress(message = 'Putting Rmd chunk in Rstudio', value = 0,
+        rstudioapi::insertText(cmd)
+      )
+    } else if (state_init("rmd_manual", "Auto paste") == "To R") {
+      withProgress(message = 'Putting R-command in Rstudio', value = 0,
+        gsub("(```\\{.*\\}\n)|(```\n)","",cmd) %>% rstudioapi::insertText(.)
+      )
     } else {
       if (is_empty(r_state$rmd_report)) {
         r_state$rmd_report <<- paste0("## Your report title\n", cmd)
       } else {
         r_state$rmd_report <<- paste0(esc_slash(r_state$rmd_report),"\n",cmd)
       }
-
       withProgress(message = 'Updating report', value = 0,
         shinyAce::updateAceEditor(session, "rmd_report",
                                   value = esc_slash(r_state$rmd_report))
       )
     }
 
-    # if (use_input_nonvar("rmd_switch", rmd_switch, "Switch tab") == "Switch tab")
     if (state_init("rmd_switch", "Switch tab") == "Switch tab")
       updateTabsetPanel(session, "nav_radiant", selected = "Report")
   })
