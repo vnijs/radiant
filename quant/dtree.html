@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -274,11 +277,11 @@ img {
 <p>The <code>Final</code> decision graph shows the optimal decision determined by <code>folding-back</code> the tree. As also shown in the <em>Model</em> tab, the optimal decision is to <code>Sign with Movie Company</code> because this decision has a higher <strong>Expected Monetary Value</strong>. Note that the optimal decision at each decision node is indicated by a thickness of the line connecting to the next node.</p>
 <p><img src="figures_quant/dtree_plot_final.png" alt="dtree plot final" /></p>
 <p>The EMV for the chance node following a decision to <code>Sign with Movie Company</code> is:</p>
-<p><span class="math">\[
+<p><span class="math display">\[
     0.3 \times 200,000 + 0.6 \times 1,000,000 + 0.1 \times 3000000 = 960,000
 \]</span></p>
 <p>The EMV for the chance node following a decision to <code>Sign with TV Network</code> is:</p>
-<p><span class="math">\[
+<p><span class="math display">\[
     0.3 \times 900,000 + 0.6 \times 900,000 + 0.1 \times 900,000 = 900,000
 \]</span></p>
 </div>

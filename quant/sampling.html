@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -245,7 +248,7 @@ img {
 </blockquote>
 <p>To use the sampling tool you will need a data set with a variable of type character. Entries should be unique (i.e., no duplicates). A dataset that fits these requirements is bundled with Radiant. On the Data &gt; Manage tab click the examples radio button and then click <code>Load examples</code>. Select <code>rndnames</code> from the <code>Datasets</code> dropdown.</p>
 <p><code>Names</code> is the relevant column in this dataset and it will automatically be used as the base for sampling. Now simply choose the sample size you want and a list of names of the desired length will be created.</p>
-<p>How does it work? Each person in the data is assigned a random number between 0 and 1 from a uniform distribution. Rows are then sorted on that random number and the <span class="math">\(n\)</span> people from the list with the highest score are selected for the sample. By using a random number every respondent has the same probability of being in the sample. For example, if we need a sample of 10 people from the 100 included in the rndnames dataset each individual has a 10% chances of being included in the sample.</p>
+<p>How does it work? Each person in the data is assigned a random number between 0 and 1 from a uniform distribution. Rows are then sorted on that random number and the <span class="math inline">\(n\)</span> people from the list with the highest score are selected for the sample. By using a random number every respondent has the same probability of being in the sample. For example, if we need a sample of 10 people from the 100 included in the rndnames dataset each individual has a 10% chances of being included in the sample.</p>
 <p><img src="figures_quant/sampling.png" alt="Summary" /></p>
 <p>The full list of 100 people is the <code>sampling frame</code>. Ideally, this is a comprehensive list of <em>all</em> sampling units (e.g., customers or companies) in your target market.</p>
 <p>How do you determine the appropriate value for <em>n</em>? See the sample size tool in the <code>Sample</code> menu.</p>

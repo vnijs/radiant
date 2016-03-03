@@ -6,7 +6,7 @@ title: Radiant -- Business analytics using R and Shiny
 
 ## How to install Radiant
 
-Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: https://github.com/vnijs/radiant/issues. For other questions and comments please use radiant@rady.ucsd.edu.
+Radiant is a platform-independent browser-based interface for business analytics in [R](http://www.r-project.org/), based on the [Shiny](http://www.rstudio.com/shiny/) package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: <a href="https://github.com/vnijs/radiant/issues" _target="_blank">https://github.com/vnijs/radiant/issues</a>. For other questions and comments please use radiant@rady.ucsd.edu.
 
 > **Note:** Profiles (or usernames or logins) containing non-ASCII characters will cause problems during the install. To address this issue please use a profile name (login) which contains ASCII (A-E, a-e) Letters only. For example, c:\\users\\myprofilename
 
@@ -26,6 +26,8 @@ Get the latest release of Rstudio for your system from:
 
 <a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">https://www.rstudio.com/products/rstudio/download/</a>
 
+Particularly for Windows users, I recommend installing <a href="https://cran.rstudio.com/bin/windows/Rtools/Rtools33.exe" target="_blank">Rtools</a>.
+
 #### 3. Use a modern browser
 
 For example, [Chrome](https://www.google.com/intl/en/chrome/browser/desktop/) or Safari. Internet Explorer (version 11 or higher) should work as well. Chrome, however, is the recommended browser.
@@ -40,7 +42,7 @@ To install Radiant open R (or Rstudio) and copy-and-paste the command below. The
 install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
 ```
 
-If you are asked where to install Radiant and its dependencies (i.e., "Would you like to use a personal library instead?") answer "yes" or "y" and then press return.
+> **Important:** If you use Windows and are asked where to install Radiant (i.e., "Would you like to use a personal library instead?") you didn't install R to directory C:\\R\\R-3.2.3. You should uninstall and reinstall R in the suggested directory before proceeding.
 
 #### 5. Create a desktop launcher
 
@@ -69,6 +71,8 @@ radiant("marketing")
 
 radiant("analytics")
 ```
+
+If you installed Rstudio (version 0.99.879 or newer) you can update radiant or start any of the applications from the `Addins` menu at the top of your screen.
 
 When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click `Stop`. The Radiant process will stop and the browser window will close (Chrome) or gray-out.
 

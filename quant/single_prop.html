@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -269,7 +272,7 @@ save(consider, file = "~/Desktop/consider.rda")
 <p>The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., the proportion of “yes” responses). The final row of output shows the following:</p>
 <ul>
 <li><code>diff</code> is the difference between the sample proportion (0.093) and the comparison value (0.1)</li>
-<li><code>ns</code> is the number of <em>successes</em>. This is the number we can compare to a binomial-distribution with paramters <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.10\)</span>.</li>
+<li><code>ns</code> is the number of <em>successes</em>. This is the number we can compare to a binomial-distribution with paramters <span class="math inline">\(n = 1000\)</span> and <span class="math inline">\(p = 0.10\)</span>.</li>
 <li><code>p.value</code> is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)</li>
 <li><code>0% 95%</code> show the 95% confidence interval around the sample proportion (0 to 0.11). These numbers provide a range within which the true population mean is likely to fall</li>
 </ul>
@@ -278,17 +281,17 @@ save(consider, file = "~/Desktop/consider.rda")
 <p>There are three approaches we can use to evaluate the null hypothesis. We will choose a significance level of 0.05.<sup>1</sup> Of course, each approach will lead to the same conclusion.</p>
 <div id="p.value" class="section level4">
 <h4>p.value</h4>
-<p>Because the p.value is <strong>larger</strong> than the conventional significance level (<span class="math">\(0.249 &gt; 0.05\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
-<p>We can also obtain the p.value by using the probability calculator in the <em>Base</em> menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.1\)</span>. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that <span class="math">\(P(X &lt;= 93) = 0.249\)</span> which is the same value we got from <em>Base &gt; Single proportion</em>.</p>
+<p>Because the p.value is <strong>larger</strong> than the conventional significance level (<span class="math inline">\(0.249 &gt; 0.05\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
+<p>We can also obtain the p.value by using the probability calculator in the <em>Base</em> menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with <span class="math inline">\(n = 1000\)</span> and <span class="math inline">\(p = 0.1\)</span>. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that <span class="math inline">\(P(X &lt;= 93) = 0.249\)</span> which is the same value we got from <em>Base &gt; Single proportion</em>.</p>
 <p><img src="figures_quant/single_prop_prob_calc_v.png" alt="prob_calc" /></p>
 </div>
 <div id="confidence-interval" class="section level4">
 <h4>confidence interval</h4>
-<p>Because the <code>comparison value</code> <strong>is</strong> contained in the confidence interval (i.e., <span class="math">\(0 &lt; 0.1 &lt; 0.11\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
+<p>Because the <code>comparison value</code> <strong>is</strong> contained in the confidence interval (i.e., <span class="math inline">\(0 &lt; 0.1 &lt; 0.11\)</span>) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
 </div>
 <div id="number-of-successes" class="section level4">
 <h4>number of successes</h4>
-<p>We can obtain the critical value by using the probability calculator in the <em>Base</em> menu. For a binomial-distribution with <span class="math">\(n = 1000\)</span> and <span class="math">\(p = 0.1\)</span> the critical value is 85. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is <code>Less than</code>.<sup>2</sup></p>
+<p>We can obtain the critical value by using the probability calculator in the <em>Base</em> menu. For a binomial-distribution with <span class="math inline">\(n = 1000\)</span> and <span class="math inline">\(p = 0.1\)</span> the critical value is 85. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is <code>Less than</code>.<sup>2</sup></p>
 <p><img src="figures_quant/single_prop_prob_calc_p.png" alt="prob_calc" /></p>
 <p>Because the number of successes (i.e., the number of “yes” responses) <strong>is</strong> larger than the critical value (93 vs 85) we <strong>cannot</strong> reject the null hypothesis and <strong>do not suggest</strong> that management should commit resources to increase brand awareness.</p>
 <!--
@@ -303,8 +306,8 @@ In addition to the numerical output provided in the _Summary_ tab we can visuali
 <p>This is a <strong>single proportion</strong> test of the null hypothesis that the true population <strong>proportion</strong> is equal to <strong>0.1</strong>. Using a significance level of 0.05, we <strong>cannot</strong> reject the null hypothesis, and <strong>cannot</strong> conclude that the true population <strong>proportion</strong> is <strong>less</strong> than <strong>0.1</strong>.</p>
 <p>The p.value for this test is <strong>0.249</strong>. This is the probability of observing a sample <strong>proportion</strong> (or <strong>number of successes</strong>) that is as or more extreme than the sample value we estimated from the data if the null hypothesis is true. In this case, it is the probability of observing a sample <strong>proportion</strong> (<strong>number of successes</strong>) that is less than (or equal to) <strong>0.093</strong> (<strong>93</strong>) if the true population <strong>proportion</strong> is <strong>0.1</strong>.</p>
 <p>The 95% confidence bound is <strong>0.11</strong>. If repeated samples were taken and the 95% confidence bound computed for each one, the true population proportion would be below that bound in 95% of the samples</p>
-<p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
-<p><sup>2</sup> <span class="math">\(1 - \alpha\)</span> is called the <strong>confidence level</strong>. A commonly used confidence level is 0.95 (or 95%)</p>
+<p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math inline">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
+<p><sup>2</sup> <span class="math inline">\(1 - \alpha\)</span> is called the <strong>confidence level</strong>. A commonly used confidence level is 0.95 (or 95%)</p>
 </div>
 </div>
 

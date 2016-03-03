@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -266,11 +269,11 @@ img {
 <li>10% of customers buy 4 cups.</li>
 </ul>
 <p>The number of cups a customer buys is a (discrete) random variable and the assigned probabilities describe the probability distribution. We can use the probability distribution of a random variable to calculate its <strong>mean</strong> or <strong>expected value</strong> as follows;</p>
-<p><span class="math">\[
+<p><span class="math display">\[
   E(C) = \mu_C = 1 \times 0.40 + 2 \times 0.30 + 3 \times 0.20 + 4 \times 0.10 = 2\,,
 \]</span></p>
-<p>where <span class="math">\(C\)</span> is the number of cups purchased and <span class="math">\(\mu_C\)</span> is the mean number of cups purchased. This means that we can <em>expect</em> a customer to buy 2 cups. The variance of Iceskimo customer consumption is calculated as follow:</p>
-<p><span class="math">\[
+<p>where <span class="math inline">\(C\)</span> is the number of cups purchased and <span class="math inline">\(\mu_C\)</span> is the mean number of cups purchased. This means that we can <em>expect</em> a customer to buy 2 cups. The variance of Iceskimo customer consumption is calculated as follow:</p>
+<p><span class="math display">\[
   Var(C) = (1 - 2)^2 \times 0.4 + (2 - 2)^2 \times 0.3 + (3 - 2)^2 \times 0.2 + (4 - 2)^2 \times 0.1 = 1\,.
 \]</span></p>
 <p>To get the mean and standard deviation of the discrete probability distribution above, as well as the probability a customer will buy 2 or more cups (0.6), specify the following in the probability calculator.</p>

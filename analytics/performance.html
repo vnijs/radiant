@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -246,7 +249,7 @@ img {
 <p>To download the table as a csv-files click on the top download button on the right of your screen. To download the plots at a png file click the lower download icon on the right of your screen.</p>
 <div id="response-variable" class="section level4">
 <h4>Response variable</h4>
-<p>The outcome, or response, variable of interest. This should be binary variable, either a factor or an integer.</p>
+<p>The outcome, or response, variable of interest. This should be binary variable, either a factor or an integer with two value (i.e., 0 and 1).</p>
 </div>
 <div id="choose-level" class="section level4">
 <h4>Choose level</h4>
@@ -254,15 +257,15 @@ img {
 </div>
 <div id="predictor" class="section level4">
 <h4>Predictor</h4>
-<p>Select one or more variables that can be used to <em>predict</em> the chosen level in the response variable. This could be a variable, an RFM index, or predicted values from a model (e.g., a logistic regression estimated using <em>Regression &gt; GLM</em>).</p>
+<p>Select one or more variables that can be used to <em>predict</em> the chosen level in the response variable. This could be a variable, an RFM index, or predicted values from a model (e.g., from a logistic regression estimated using <em>Regression &gt; GLM</em> or a Neural Network estimated using <em>Model &gt; Neural Network (ANN)</em>).</p>
 </div>
 <div id="quantiles" class="section level4">
 <h4># quantiles</h4>
-<p>The number of buckets generate.</p>
+<p>The number of buckets to create.</p>
 </div>
-<div id="quantiles-1" class="section level4">
-<h4># quantiles</h4>
-<p>The number of buckets generate by <code>method</code>.</p>
+<div id="margin-cost" class="section level4">
+<h4>Margin &amp; Cost</h4>
+<p>To use the <code>Profit</code> and <code>ROME</code> (Return on Marketing Expenditures) charts, enter the <code>Margin</code> for each sale and the estimated <code>Cost</code> per contact (e.g., mailing costs or opportunity cost of email or text). For example, if the margin on a sale is $10 (excluding the contact cost) and the contact cost is $1 enter 10 and 1 in the <code>Margin</code> and <code>Cost</code> input windows.</p>
 </div>
 <div id="show-results-for" class="section level4">
 <h4>Show results for</h4>
@@ -270,7 +273,14 @@ img {
 </div>
 <div id="plots" class="section level4">
 <h4>Plots</h4>
-<p>Generate a Lift chart, a Gains chart, or both.</p>
+<p>Generate Lift, Gains, Profit, and/or ROME charts. The profit chart displays the</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>The Gains and Profit charts below show little evidence of overfitting and suggest that targeting approximately 72% of customers would maximize profits.</p>
+<p><img src="figures_analytics/perf_profit_gain.png" alt="profit and gains" /></p>
+<p>The prediction used in the screen shot above was derived from a logistic regression on the <code>dvd</code> data. The data is available through the <em>Data &gt; Manage</em> tab (i.e., choose <code>Examples</code> from the <code>Load data of type</code> drop-down and press <code>Load examples</code>). The model was estimated using <em>Regression &gt; GLM</em>. The predictions shown below were generated in the <em>Predict</em> tab.</p>
+<p><img src="figures_analytics/perf_logistic.png" alt="logistic" /></p>
 </div>
 
 

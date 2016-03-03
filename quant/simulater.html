@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -465,7 +468,7 @@ pmax(x,y)
 <p>To determine, the probability that annual profits are below $36,500 we enter the formula below into the <code>Repeated simulation formula</code> text input.</p>
 <p><code>profit_365 = profit &lt; 36500</code></p>
 <p>When you are done with the input values click the <code>Repeat</code> button. Because we specified a name for <code>Repeat data</code> two data sets will be created. “simdat_repeat” will have all elements of the repeated simulation (i.e., 1000 x 365 rows) and “simdat_repeat_sum” will have the summarized data grouped per simulation. Note that the extension “_sum&quot; was used because we selected <code>sum</code> from the <code>Apply function</code> dropdown.</p>
-<p>Descriptive statistics for the repeated simulation are shown in the main panel under <code>Repeated simulation summary</code>. We see that the annual expected profit (i.e., the mean of <code>sum of profit</code>) for the company is 172,311.836 with a standard deviation of 10,772.291. Although we found above that daily profits can be below 100, the chance that profits are below <span class="math">\(365 \times 100\)</span> for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below $36,500 is equal to 0).</p>
+<p>Descriptive statistics for the repeated simulation are shown in the main panel under <code>Repeated simulation summary</code>. We see that the annual expected profit (i.e., the mean of <code>sum of profit</code>) for the company is 172,311.836 with a standard deviation of 10,772.291. Although we found above that daily profits can be below 100, the chance that profits are below <span class="math inline">\(365 \times 100\)</span> for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below $36,500 is equal to 0).</p>
 <p><img src="figures_quant/simulater_repeat.png" alt="sim output" /></p>
 <p>A histogram of annual profits (<code>sum of profit</code>) is shown in the main panel under <code>Repeated simulation plots</code>. There is no plot for <code>profit_365</code> because it only has one value (i.e., FALSE).</p>
 <p>The state file for the example in the screenshot above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a></p>

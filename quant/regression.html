@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -282,14 +285,14 @@ img {
 <p><img src="figures_quant/regression_catalog_summary.png" alt="Regression 1 - summary" /></p>
 <p>The null and alternate hypothesis for the F-test test can be formulated as follows:</p>
 <ul>
-<li><span class="math">\(H_0\)</span>: All regression coefficients are equal to 0</li>
-<li><span class="math">\(H_a\)</span>: At least one regression coefficient is not equal to zero</li>
+<li><span class="math inline">\(H_0\)</span>: All regression coefficients are equal to 0</li>
+<li><span class="math inline">\(H_a\)</span>: At least one regression coefficient is not equal to zero</li>
 </ul>
 <p>The F-statistic suggests that the regression model as a whole explains a significant amount of variance in Sales. The calculated F-value is equal to 32.33 and has a very small p-value (&lt; 0.001). The amount of variance in sales explained by the model is equal to 33.1% (see R-squared).</p>
 <p>We can replicate the standard F-test that is reported as part of all regression output. To do so, select <code>income</code>, <code>HH.size</code>, and <code>Age</code> in the <code>Variables to test</code> box. The relevant output is shown below.</p>
 <p><img src="figures_quant/regression_catalog_F_test.png" alt="Regression 1 - F-test" width="400" /></p>
-<p>Note that in this example, “model 1” is a regression without explanatory variables. As you might expect, the explained variance for model 1 is equal to zero. The F-test compares the <em>fit</em> of model 1 and model 2, adjusted for the difference in the number of coefficients estimated in each model. The test statistic to use is described below. <span class="math">\(R^2_2\)</span> is the explained variance for model 2 and <span class="math">\(R^2_1\)</span> is the explained variance for model 1. <span class="math">\(n\)</span> is equal to the number of rows in the data, and <span class="math">\(k_2\)</span> (<span class="math">\(k_1\)</span>) is equal to the number of estimated coefficients in model 2 (model 1).</p>
-<p><span class="math">\[
+<p>Note that in this example, “model 1” is a regression without explanatory variables. As you might expect, the explained variance for model 1 is equal to zero. The F-test compares the <em>fit</em> of model 1 and model 2, adjusted for the difference in the number of coefficients estimated in each model. The test statistic to use is described below. <span class="math inline">\(R^2_2\)</span> is the explained variance for model 2 and <span class="math inline">\(R^2_1\)</span> is the explained variance for model 1. <span class="math inline">\(n\)</span> is equal to the number of rows in the data, and <span class="math inline">\(k_2\)</span> (<span class="math inline">\(k_1\)</span>) is equal to the number of estimated coefficients in model 2 (model 1).</p>
+<p><span class="math display">\[
 \begin{eqnarray}
     F &amp; = &amp; \frac{(R^2_2 - R^2_1)/(k_2 - k_1)}{(1 - R^2_2)/(n - k_2 - 1)} \\\\
       &amp; = &amp; \frac{(0.331 - 0)/(3 - 0)}{(1 - 0.331)/(200 - 3 - 1)} \\\\
@@ -375,75 +378,75 @@ img {
 <div id="coefficient-interpretation-for-a-linear-model" class="section level4">
 <h4>Coefficient interpretation for a linear model</h4>
 <p>To illustrate the interpretation of coefficients in a regression model we start with the following equation:</p>
-<p><span class="math">\[
+<p><span class="math display">\[
   S_t = a + b P_t + c D_t + \epsilon_t
 \]</span></p>
-<p>where <span class="math">\(S_t\)</span> is sales in units at time <span class="math">\(t\)</span>, <span class="math">\(P_t\)</span> is the price in $ at time <span class="math">\(t\)</span>, <span class="math">\(D_t\)</span> is a dummy variable that indicates if a product is on display in a given week, and <span class="math">\(\epsilon_t\)</span> is the error term.</p>
-<p>For a continuous variable such as price we can determine the effect of a $1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to <span class="math">\(P\)</span>.</p>
-<p><span class="math">\[
+<p>where <span class="math inline">\(S_t\)</span> is sales in units at time <span class="math inline">\(t\)</span>, <span class="math inline">\(P_t\)</span> is the price in $ at time <span class="math inline">\(t\)</span>, <span class="math inline">\(D_t\)</span> is a dummy variable that indicates if a product is on display in a given week, and <span class="math inline">\(\epsilon_t\)</span> is the error term.</p>
+<p>For a continuous variable such as price we can determine the effect of a $1 change, while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to <span class="math inline">\(P\)</span>.</p>
+<p><span class="math display">\[
   \frac{ \partial S_t }{ \partial P_t } = b
 \]</span></p>
-<p>So <span class="math">\(b\)</span> is the marginal effect on sales of a $1 change in price. Because a dummy variable such as <span class="math">\(D\)</span> is not continuous we cannot use differentiation and the approach needed to determine the marginal effect is a little different. If we compare sales levels when <span class="math">\(D = 1\)</span> to sales levels when <span class="math">\(D = 0\)</span> we see that</p>
-<p><span class="math">\[
+<p>So <span class="math inline">\(b\)</span> is the marginal effect on sales of a $1 change in price. Because a dummy variable such as <span class="math inline">\(D\)</span> is not continuous we cannot use differentiation and the approach needed to determine the marginal effect is a little different. If we compare sales levels when <span class="math inline">\(D = 1\)</span> to sales levels when <span class="math inline">\(D = 0\)</span> we see that</p>
+<p><span class="math display">\[
   a + b P_t + c \times 1 - a + b P_t + c \times 0 = c
 \]</span></p>
-<p>For a linear model <span class="math">\(c\)</span> is the marginal effect on sales when the product is on display.</p>
+<p>For a linear model <span class="math inline">\(c\)</span> is the marginal effect on sales when the product is on display.</p>
 </div>
 <div id="coefficient-interpretation-for-a-semi-log-model" class="section level4">
 <h4>Coefficient interpretation for a semi-log model</h4>
 <p>To illustrate the interpretation of coefficients in a semi-log regression model we start with the following equation:</p>
-<p><span class="math">\[
+<p><span class="math display">\[
   ln S_t = a + b P_t + c D_t + \epsilon_t
 \]</span></p>
-<p>where <span class="math">\(ln S_t\)</span> is the (natural) log of sales at time <span class="math">\(t\)</span>. For a continuous variable such as price we can again determine the effect of a small change (e.g., $1 for a $100 dollar product), while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to <span class="math">\(P\)</span>. For the left-hand side of the equation we can use the chain-rule to get</p>
-<p><span class="math">\[
+<p>where <span class="math inline">\(ln S_t\)</span> is the (natural) log of sales at time <span class="math inline">\(t\)</span>. For a continuous variable such as price we can again determine the effect of a small change (e.g., $1 for a $100 dollar product), while keeping all other variables constant, by taking the partial derivative of the sales equation with respect to <span class="math inline">\(P\)</span>. For the left-hand side of the equation we can use the chain-rule to get</p>
+<p><span class="math display">\[
   \frac {\partial ln S_t}{\partial P_t} = \frac{1}{S_t} \frac{\partial S_t}{\partial P_t}
 \]</span></p>
 <p>In words, the derivative of the natural logarithm of a variable is the reciprocal of that variable, times the derivative of that variable. From the discussion on the linear model above we know that</p>
-<p><span class="math">\[
+<p><span class="math display">\[
     \frac{ \partial a + b P_t + c D_t}{ \partial P_t } = b
 \]</span></p>
 <p>Combining these two equations gives</p>
-<p><span class="math">\[
+<p><span class="math display">\[
   \frac {1}{S_t} \frac{\partial S_t}{\partial P_t} = b \; \text{or} \; \frac {\Delta S_t}{S_t} \approx b
 \]</span></p>
-<p>So a $1 change in price leads to a <span class="math">\(100 \times b\%\)</span> change in sales. Note that this approximation is only appropriate for small changes in the explanatory variable and may be affected by the scaling used (e.g., price in cents, dollars, or 1,000s of dollars). The approach outlined below for dummy variables is more general and can also be applied to continuous variables.</p>
-<p>Because a dummy variable such as <span class="math">\(D\)</span> is not continuous we cannot use differentiation and will again compare sales levels when <span class="math">\(D = 1\)</span> to sales levels when <span class="math">\(D = 0\)</span> to get <span class="math">\(\frac {\Delta S_t}{S_t}\)</span>. To get <span class="math">\(S_t\)</span> rather than <span class="math">\(ln S_t\)</span> on the left hand side we take the exponent of both sides. This gives <span class="math">\(S_t = e^{a + b P_t + c D_t}\)</span>. The percentage change in <span class="math">\(S_t\)</span> when <span class="math">\(D_t\)</span> changes from 0 to 1 is then given by:</p>
-<p><span class="math">\[
+<p>So a $1 change in price leads to a <span class="math inline">\(100 \times b\%\)</span> change in sales. Note that this approximation is only appropriate for small changes in the explanatory variable and may be affected by the scaling used (e.g., price in cents, dollars, or 1,000s of dollars). The approach outlined below for dummy variables is more general and can also be applied to continuous variables.</p>
+<p>Because a dummy variable such as <span class="math inline">\(D\)</span> is not continuous we cannot use differentiation and will again compare sales levels when <span class="math inline">\(D = 1\)</span> to sales levels when <span class="math inline">\(D = 0\)</span> to get <span class="math inline">\(\frac {\Delta S_t}{S_t}\)</span>. To get <span class="math inline">\(S_t\)</span> rather than <span class="math inline">\(ln S_t\)</span> on the left hand side we take the exponent of both sides. This gives <span class="math inline">\(S_t = e^{a + b P_t + c D_t}\)</span>. The percentage change in <span class="math inline">\(S_t\)</span> when <span class="math inline">\(D_t\)</span> changes from 0 to 1 is then given by:</p>
+<p><span class="math display">\[
   \begin{aligned}
   \frac {\Delta S_t}{S_t} &amp;\approx \frac{ e^{a + b P_t + c\times 1} - e^{a + b P_t + c \times 0} } {e^{a + b P_t + c \times 0} }\\
   &amp;= \frac{ e^{a + b P_t} e^c - e^{a + b P_t} }{ e^{a + b P_t} }\\
   &amp;= e^c - 1
   \end{aligned}
 \]</span></p>
-<p>For the semi-log model <span class="math">\(100 \times\:(exp(c)-1)\)</span> is the percentage change in sales when the product is on display. Similarly, for a $10 increase in price we would expect a <span class="math">\(100 \times\:(exp(b \times 10)-1)\)</span> increase in sales, keeping other variables constant.</p>
+<p>For the semi-log model <span class="math inline">\(100 \times\:(exp(c)-1)\)</span> is the percentage change in sales when the product is on display. Similarly, for a $10 increase in price we would expect a <span class="math inline">\(100 \times\:(exp(b \times 10)-1)\)</span> increase in sales, keeping other variables constant.</p>
 </div>
 <div id="coefficient-interpretation-for-a-log-log-model" class="section level4">
 <h4>Coefficient interpretation for a log-log model</h4>
 <p>To illustrate the interpretation of coefficients in a log-log regression model we start with the following equation:</p>
-<p><span class="math">\[
+<p><span class="math display">\[
   ln S_t = a + b ln P_t + \epsilon_t
 \]</span></p>
-<p>where <span class="math">\(ln P_t\)</span> is the (natural) log of sales at time <span class="math">\(t\)</span>. Ignoring the error term for simplicity we can rewrite this model in its multiplicative form by taking the exponent on both sides:</p>
-<p><span class="math">\[
+<p>where <span class="math inline">\(ln P_t\)</span> is the (natural) log of sales at time <span class="math inline">\(t\)</span>. Ignoring the error term for simplicity we can rewrite this model in its multiplicative form by taking the exponent on both sides:</p>
+<p><span class="math display">\[
   \begin{aligned}
   S_t &amp;= e^a + e^{b ln P_t}\\
   S_t &amp;= a^* P^b_t
   \end{aligned}
 \]</span></p>
-<p>where <span class="math">\(a^* = e^a\)</span> For a continuous variable such as price we can again take the partial derivative of the sales equation with respect to <span class="math">\(P_t\)</span> to get the marginal effect.</p>
-<p><span class="math">\[
+<p>where <span class="math inline">\(a^* = e^a\)</span> For a continuous variable such as price we can again take the partial derivative of the sales equation with respect to <span class="math inline">\(P_t\)</span> to get the marginal effect.</p>
+<p><span class="math display">\[
   \begin{aligned}
   \frac{\partial S_t}{\partial P_t} &amp;= b a^* P^{b-1}_t\\
   &amp;= b S_t P^{-1}_t\\
   &amp;= b \frac{S_t}{P_t}
   \end{aligned}
 \]</span></p>
-<p>The general formula for an elasticity is <span class="math">\(\frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t}\)</span>. Adding this information to the equation above we see that the coefficient <span class="math">\(b\)</span> estimated from a log-log regression can be directly interpreted as an elasticity:</p>
-<p><span class="math">\[
+<p>The general formula for an elasticity is <span class="math inline">\(\frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t}\)</span>. Adding this information to the equation above we see that the coefficient <span class="math inline">\(b\)</span> estimated from a log-log regression can be directly interpreted as an elasticity:</p>
+<p><span class="math display">\[
   \frac{\partial S_t}{\partial P_t} \frac{P_t}{S_t} = b \frac{S_t}{P_t} \frac{P_t}{S_t} = b
 \]</span></p>
-<p>So a 1% change in price leads to a <span class="math">\(b\)</span>% change in sales.</p>
+<p>So a 1% change in price leads to a <span class="math inline">\(b\)</span>% change in sales.</p>
 </div>
 </div>
 

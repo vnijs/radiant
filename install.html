@@ -206,6 +206,9 @@ img {
              <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Model</li>
+             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
+             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
+             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
@@ -242,7 +245,7 @@ img {
 <hr />
 <div id="how-to-install-radiant" class="section level2">
 <h2>How to install Radiant</h2>
-<p>Radiant is a platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http://www.rstudio.com/shiny/">Shiny</a> package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: <a href="https://github.com/vnijs/radiant/issues" class="uri">https://github.com/vnijs/radiant/issues</a>. For other questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
+<p>Radiant is a platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http://www.rstudio.com/shiny/">Shiny</a> package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: <a href="https://github.com/vnijs/radiant/issues" _target="_blank">https://github.com/vnijs/radiant/issues</a>. For other questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
 <blockquote>
 <p><strong>Note:</strong> Profiles (or usernames or logins) containing non-ASCII characters will cause problems during the install. To address this issue please use a profile name (login) which contains ASCII (A-E, a-e) Letters only. For example, c:\users\myprofilename</p>
 </blockquote>
@@ -259,6 +262,7 @@ img {
 <h4>2. Install Rstudio (OPTIONAL)</h4>
 <p>Get the latest release of Rstudio for your system from:</p>
 <p><a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">https://www.rstudio.com/products/rstudio/download/</a></p>
+<p>Particularly for Windows users, I recommend installing <a href="https://cran.rstudio.com/bin/windows/Rtools/Rtools33.exe" target="_blank">Rtools</a>.</p>
 </div>
 <div id="use-a-modern-browser" class="section level4">
 <h4>3. Use a modern browser</h4>
@@ -271,7 +275,9 @@ img {
 <p><strong>Note:</strong> On Windows you may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing <code>run as administrator</code>.</p>
 </blockquote>
 <pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;, type = &quot;binary&quot;)</code></pre>
-<p>If you are asked where to install Radiant and its dependencies (i.e., “Would you like to use a personal library instead?”) answer “yes” or “y” and then press return.</p>
+<blockquote>
+<p><strong>Important:</strong> If you use Windows and are asked where to install Radiant (i.e., “Would you like to use a personal library instead?”) you didn’t install R to directory C:\R\R-3.2.3. You should uninstall and reinstall R in the suggested directory before proceeding.</p>
+</blockquote>
 </div>
 <div id="create-a-desktop-launcher" class="section level4">
 <h4>5. Create a desktop launcher</h4>
@@ -292,6 +298,7 @@ radiant(&quot;quant&quot;)
 radiant(&quot;marketing&quot;)
 
 radiant(&quot;analytics&quot;)</code></pre>
+<p>If you installed Rstudio (version 0.99.879 or newer) you can update radiant or start any of the applications from the <code>Addins</code> menu at the top of your screen.</p>
 <p>When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code>. The Radiant process will stop and the browser window will close (Chrome) or gray-out.</p>
 <p>If you get stuck, take a look at the <code>Installing Radiant</code> video:</p>
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen>
