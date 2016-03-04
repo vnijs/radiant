@@ -390,7 +390,7 @@ summary.glm_reg <- function(object,
       ## pseudo R2 (likelihood ratio) - http://en.wikipedia.org/wiki/Logistic_regression
       glm_sub_fit %<>% mutate(r2 = (null.deviance - deviance) / null.deviance) %>% round(dec)
       # glm_sub_pval <- glm_sub_test[,"Pr(>Chi)"][2] %>% { if (. < .001) "< .001" else round(., dec) }
-      glm_sub_pval <- if (pval < .001) "< .001" else round(pval, dec)
+      glm_sub_pval <- if (!is.na(pval) && pval < .001) "< .001" else round(pval, dec)
       cat(attr(glm_sub_test,"heading")[2])
       cat("\nPseudo R-squared, Model 1 vs 2:", c(glm_sub_fit$r2, glm_fit$r2))
       # cat(paste0("\nChi-statistic: ", round(glm_sub_test$Deviance[2], dec), " df(", glm_sub_test$Df[2], "), p.value ", glm_sub_pval))
@@ -435,9 +435,6 @@ plot.glm_reg <- function(x,
   if (plots[1] == "")
     return(cat("Please select a glm regression plot from the drop-down menu"))
 
-  # no plots if aliased coefficients present
-  if (anyNA(object$model$coeff)) plots <- return("")
-
   model <- ggplot2::fortify(object$model)
   model$.fitted <- predict(object$model, type = 'response')
   model$.actual <- as.numeric(object$rv)
@@ -459,9 +456,12 @@ plot.glm_reg <- function(x,
   }
 
   if ("coef" %in% plots) {
+
+    # no plots if aliased coefficients present
+    if (anyNA(object$model$coeff))
+      return("Model has missing coefficient(s) because the set of explanatory variables\nexhibit perfect multicollinearity. No plot shown.")
+
     nrCol <- 1
-    # cnfint <- ifelse (is_empty(object$wts, "None"), confint.default, radiant::confint_robust)
-    # if (is_empty(object$wts, "None"))
     if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
       cnfint <- radiant::confint_robust
     else

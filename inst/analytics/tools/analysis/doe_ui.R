@@ -5,7 +5,8 @@ output$ui_doe_int <- renderUI({
   # dp <- "free_ship; $300; $200\ndiscount; 15%; 20%\ncoup_entry; manual; automatic"
   # dp_list <-
   vars <-
-    gsub("[\n]{2,}$","",input$doe_factors) %>%
+    gsub("/","",input$doe_factors) %>%
+    gsub("[\n]{2,}$","",.) %>%
     strsplit(.,"\n") %>% .[[1]] %>%
     strsplit(";") %>%
     sapply(function(x) x[1]) %>%
@@ -17,18 +18,14 @@ output$ui_doe_int <- renderUI({
     choices <- iterms(vars, 2)
 
   selectInput("doe_int", label = "Interactions:", choices = choices,
-    # selected = use_input_nonvar("doe_int", choices),
     selected = state_init("doe_int"),
     multiple = TRUE, size = min(3,length(choices)), selectize = FALSE)
 })
 
 output$ui_doe_levels <- renderUI({
-
   req(input$doe_max > 2)
-
   make_level <- function(nr) {
     textInput(paste0("doe_level",nr), paste0("Level ",nr, ":"),
-              # value = use_input_nonvar(paste0("doe_level", nr)))
               value = state_init(paste0("doe_level", nr)))
   }
 
@@ -42,13 +39,10 @@ output$ui_doe <- renderUI({
       tags$table(
         tags$td(numericInput("doe_max", label = "Max levels:", min = 2, max = 10,
                    value = state_init("doe_max", init = 2), width = "77px")),
-                   # value = use_input_nonvar("doe_max", init = 2), width = "77px")),
         tags$td(numericInput("doe_trials", label = "# trials:", min = 0,
                    value = state_init("doe_trials", init = NA), width = "77px")),
-                   # value = use_input_nonvar("doe_trials", init = NA), width = "77px")),
         tags$td(numericInput("doe_seed", label = "Rnd. seed:", min = 0,
                    value = state_init("doe_seed", init = 172110), width = "77px"))
-                   # value = use_input_nonvar("doe_seed", init = 172110), width = "77px"))
       ),
       HTML("<label>Variable name: <i id='doe_add' title='Add variable' href='#' class='action-button fa fa-plus-circle'></i>
             <i id='doe_del' title='Remove variable' href='#' class='action-button fa fa-minus-circle'></i></label>"),
@@ -143,7 +137,8 @@ output$doe <- renderUI({
 
 doe <- function(factors, int = "", trials = NA, seed = NA) {
   df_list <-
-    gsub("\\\\n","\n",factors) %>%
+    gsub("/","",factors) %>%
+    gsub("\\\\n","\n",.) %>%
     gsub("[\n]{2,}$","",.) %>%
     strsplit(.,"\n") %>%
     .[[1]] %>% strsplit(";")
