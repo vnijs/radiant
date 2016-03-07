@@ -408,7 +408,24 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 </div>
 <div id="holdout-sample" class="section level2">
 <h2>Holdout sample</h2>
-<p>To create a holdout sample based on (the reverse of) a filter select <code>Holdout sample</code> from the <code>Transformation type</code> dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where <code>data &lt; &quot;2015-1-1&quot;</code> then the holdout sample will be based on the filter <code>data &gt;= &quot;2015-1-1&quot;</code> if the <code>Reverse filter</code> box is checked.</p>
+<p>To create a holdout sample based on (the reverse of) a filter select <code>Holdout sample</code> from the <code>Transformation type</code> dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where <code>date &lt; &quot;2014-12-13&quot;</code> then the holdout sample will be based on the filter <code>date &gt;= &quot;2014-12-13&quot;</code> if the <code>Reverse filter</code> box is checked.</p>
+<!-- r_data[["diamonds"]] <- mutate(r_data[["diamonds"]], date = as_ymd("2012-1-1") + as.integer(runif(30,1,4*365)) %>% sample(3000, replace = TRUE) %>% sort) -->
+</div>
+<div id="gather" class="section level2">
+<h2>Gather</h2>
+<p>Combine multiple columns into one column.</p>
+</div>
+<div id="spread" class="section level2">
+<h2>Spread</h2>
+<p>Spread one column into multiple columns.</p>
+</div>
+<div id="table-to-data" class="section level2">
+<h2>Table-to-data</h2>
+<p>Turn a dataset with frequencies into a dataset with the number of rows equal to the sum of the frequencies.</p>
+</div>
+<div id="expand-grid" class="section level2">
+<h2>Expand grid</h2>
+<p>Create a dataset with all combinations of values for a selection of variables.</p>
 </div>
 
 
