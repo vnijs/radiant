@@ -55,6 +55,11 @@ glm_reg <- function(dataset, rvar, evar,
 
   if (!is.null(wts)) {
     wts <- dat[[wtsname]]
+    if (!is.integer(wts)) {
+      wts_int <- as.integer(wts)
+      if (all(wts == wts_int)) wts <- wts_int
+      rm(wts_int)
+    }
     dat <- select_(dat, .dots = paste0("-",wtsname))
   }
 
@@ -452,14 +457,13 @@ plot.glm_reg <- function(x,
   if ("hist" %in% plots) {
     for (i in vars)
       plot_list[[i]] <- visualize(select_(model, .dots = i), xvar = i, bins = 10, custom = TRUE)
-      # plot_list[[i]] <- ggplot(model, aes_string(x = i)) + geom_histogram()
   }
 
   if ("coef" %in% plots) {
 
-    # no plots if aliased coefficients present
-    if (anyNA(object$model$coeff))
-      return("Model has missing coefficient(s) because the set of explanatory variables\nexhibit perfect multicollinearity. No plot shown.")
+    ## no plots if aliased coefficients present
+    # if (anyNA(object$model$coeff))
+      # return("Model has missing coefficient(s) because the set of explanatory variables\nexhibit perfect multicollinearity. No plot shown.")
 
     nrCol <- 1
     if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
@@ -467,18 +471,16 @@ plot.glm_reg <- function(x,
     else
       cnfint <- confint.default
 
-    # plot_list[["coef"]] <- confint.default(object$model, level = conf_lev) %>%
     plot_list[["coef"]] <- cnfint(object$model, level = conf_lev, vcov = object$vcov) %>%
           exp %>%
           data.frame %>%
+          na.omit %>%
           set_colnames(c("Low","High")) %>%
           cbind(select(object$coeff,2),.) %>%
-          # cbind(object$coeff[["coefficient"]],.) %>%
           set_rownames(object$coeff$`  `) %>%
           { if (!intercept) .[-1,] else . } %>%
           mutate(variable = rownames(.)) %>%
           ggplot() +
-            # geom_pointrange(aes_string(x = "variable", y = "coefficient", ymin = "Low", ymax = "High")) +
             geom_pointrange(aes_string(x = "variable", y = "OR", ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 1, linetype = 'dotdash', color = "blue") +
             ylab("Odds-ratio") +

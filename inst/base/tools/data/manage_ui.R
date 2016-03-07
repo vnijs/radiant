@@ -391,8 +391,9 @@ observeEvent(input$renameButton, {
   r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
   r_data[[paste0(input$dataset,"_descr")]] <- NULL
 
-  ind <- which(input$dataset == r_data[['datasetlist']])
-  r_data[['datasetlist']][ind] <- input$data_rename
+  ind <- which(input$dataset == r_data[["datasetlist"]])
+  r_data[["datasetlist"]][ind] <- input$data_rename
+  r_data[["datasetlist"]] %<>% unique
 
   updateSelectInput(session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
                     selected = input$data_rename)

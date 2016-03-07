@@ -457,6 +457,35 @@ table2data <- function(dat, freq = tail(colnames(dat),1)) {
   mutate_each(funs(as.factor))
 }
 
+#' Generate list of levels and unique values
+#'
+#' @param dat A data.frame
+#' @param ... Unquoted variable names to evaluate
+#'
+#' @examples
+#' data.frame(a = c(rep("a",5),rep("b",5)), b = c(rep(1,5),6:10)) %>% level_list
+#' level_list(mtcars, mpg, cyl)
+#'
+#' @importFrom pryr named_dots
+#'
+#' @export
+level_list <- function(dat, ...) {
+  fl <- function(x) {
+    cx <- class(x)[1]
+    if (cx == "factor") {
+      levels(x)
+    } else {
+      unique(x)
+    }
+  }
+  dots <- pryr::named_dots(...) %>% names
+  if (length(dots) > 0) {
+    lapply(select_(dat, .dots = dots), fl)
+  } else {
+    lapply(dat, fl)
+  }
+}
+
 # dat <-
 #   data.frame(
 #     free_ship = c("$200","$300","$200","$300"),

@@ -16,6 +16,9 @@ viz_inputs <- reactive({
   for (i in r_drop(names(viz_args)))
     viz_args[[i]] <- input[[paste0("viz_",i)]]
   # print(paste0(names(viz_args), viz_args, collapse = ", "))
+  # isolate({
+  #   cat(paste0(names(viz_args), " ", viz_args, collapse = ", "), file = stderr(), "\n")
+  # })
   viz_args
 })
 
@@ -99,27 +102,51 @@ output$ui_viz_xvar <- renderUI({
 #   }
 # })
 
-observeEvent(length(input$viz_yvar) < 2, {
-  r_state[["viz_comby"]] <<- FALSE
-  updateCheckboxInput(session, "viz_comby", value = FALSE)
-})
+# observeEvent(length(input$viz_yvar) < 2, {
+#   r_state[["viz_comby"]] <<- FALSE
+#   updateCheckboxInput(session, "viz_comby", value = FALSE)
+# })
 
 output$ui_viz_comby <- renderUI({
-  if (length(input$viz_yvar) < 2) return(NULL)
-  checkboxInput("viz_comby", "Combine Y-variables in one plot",
-    state_init("viz_comby", FALSE))
+  # if (length(input$viz_yvar) < 2) return(NULL)
+  # checkboxInput("viz_comby", "Combine Y-variables in one plot",
+  #   state_init("viz_comby", FALSE))
+
+  if (length(input$viz_yvar) > 1) {
+    checkboxInput("viz_comby", "Combine Y-variables in one plot",
+      state_init("viz_comby", FALSE))
+  } else {
+    return()
+  }
 })
 
-observeEvent(length(input$viz_xvar) < 2, {
-  r_state[["viz_combx"]] <<- FALSE
-  updateCheckboxInput(session, "viz_combx", value = FALSE)
-})
+# observeEvent(!is.null(input$viz_xvar) && length(input$viz_xvar) < 2, {
+#   r_state[["viz_combx"]] <<- FALSE
+#   updateCheckboxInput(session, "viz_combx", value = FALSE)
+# })
+
+# observeEvent(length(input$viz_xvar) == 1, {
+#   r_state[["viz_combx"]] <<- FALSE
+#   updateCheckboxInput(session, "viz_combx", value = FALSE)
+# })
+
+# observeEvent(input$viz_xvar, {
+#   if (length(input$viz_xvar) < 2) {
+#     r_state[["viz_combx"]] <<- FALSE
+#     updateCheckboxInput(session, "viz_combx", value = FALSE)
+#   }
+# })
 
 output$ui_viz_combx <- renderUI({
   # req(length(input$viz_xvar) > 1)
-  if (length(input$viz_xvar) < 2) return(NULL)
-  checkboxInput("viz_combx", "Combine X-variables in one plot",
-    state_init("viz_combx", FALSE))
+  # if (!is.null(input$viz_xvar) && length(input$viz_xvar) < 2) return(NULL)
+  # if (!is.null(input$viz_xvar) && length(input$viz_xvar) < 2) return(NULL)
+  if (length(input$viz_xvar) > 1) {
+    checkboxInput("viz_combx", "Combine X-variables in one plot",
+      state_init("viz_combx", FALSE))
+  } else {
+    return()
+  }
 })
 
 # observeEvent(input$viz_xvar < 2, {
@@ -420,7 +447,7 @@ output$visualize <- renderPlot({
 })
 
 observeEvent(input$visualize_report, {
-  ## this seems to work (mostly) as intended - compare to observeEvent above
+  ## resetting hidden elements to default values
   vi <- viz_inputs()
   if (input$viz_type != "hist") vi$bins <- viz_args$bins
   if (!input$viz_type %in% c("density","scatter") ||
@@ -428,6 +455,12 @@ observeEvent(input$visualize_report, {
 
   if (!input$viz_type %in% c("scatter", "box") &&
       "jitter" %in% input$viz_check) vi$check <- setdiff(vi$check, "jitter")
+
+  if (isTRUE(input$viz_combx) && length(input$viz_xvar) < 2)
+      vi$combx <- FALSE
+
+  if (isTRUE(input$viz_comby) && length(input$viz_yvar) < 2)
+      vi$comby <- FALSE
 
   inp_main <- clean_args(vi, viz_args)
   inp_main[["custom"]] <- FALSE

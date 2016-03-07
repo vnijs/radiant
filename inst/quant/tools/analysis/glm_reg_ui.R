@@ -33,8 +33,6 @@ glm_sum_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(glm_sum_args))
     glm_sum_args[[i]] <- input[[paste0("glm_",i)]]
-
-  # cat(paste0(names(glm_sum_args), " ", glm_sum_args, collapse = ", "), file = stderr(), "\n")
   glm_sum_args
 })
 
@@ -313,7 +311,7 @@ output$ui_glm_reg <- renderUI({
         )
       )
 	  ),
-  	help_and_report(modal_title = "GLM", fun_name = "glm_reg",
+  	help_and_report(modal_title = "Logist regression (GLM)", fun_name = "glm_reg",
   	                help_file = inclRmd(file.path(r_path,"quant/tools/help/glm_reg.Rmd")))
 	)
 })
@@ -370,16 +368,12 @@ output$glm_reg <- renderUI({
         downloadLink("dl_glm_pred", "", class = "fa fa-download alignright"), br(),
         verbatimTextOutput("predict_glm_reg")
       ),
-
 	    tabPanel("Plot", plot_downloader("glm_reg", height = glm_plot_height()),
                plotOutput("plot_glm_reg", width = "100%", height = "100%"))
 	  )
 
-		stat_tab_panel(menu = "Regression",
-		              tool = "GLM",
-		              tool_ui = "ui_glm_reg",
-		             	output_panels = glm_output_panels)
-
+		stat_tab_panel(menu = "Regression", tool = "Logistic regression (GLM)",
+                   tool_ui = "ui_glm_reg", output_panels = glm_output_panels)
 })
 
 glm_available <- reactive({
@@ -459,6 +453,16 @@ glm_available <- reactive({
   })
 })
 
+# observeEvent(input$store_glm_cmd, {
+#   view_store(input$dataset, input$view_vars, input$view_dat, data_filter, input$dataviewer_rows_all)
+# })
+
+# store_glm_cmd <- function(dataset)
+#   r_data[[dataset]] <- .getdata_transform()
+#   r_data[[paste0(dataset,"_descr")]] <- "New data"
+#   r_data[['datasetlist']] %<>% c(dataset,.) %>% unique
+# }
+
 .predict_plot_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
   req(input$glm_pred_plot, input$glm_xvar, !is_empty(input$glm_predict, "none"),
@@ -489,6 +493,9 @@ observeEvent(input$glm_reg_report, {
     xcmd <-
       paste0("store_glm(pred, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
       paste0("# write.csv(pred, file = '~/glm_predictions.csv', row.names = FALSE)")
+
+    if (input$glm_predict == "cmd") xcmd <- ""
+
     if (input$glm_pred_plot && !is_empty(input$glm_xvar)) {
       inp_out[[3 + figs]] <- clean_args(glm_pred_plot_inputs(), glm_pred_plot_args[-1])
       inp_out[[3 + figs]]$result <- "pred"

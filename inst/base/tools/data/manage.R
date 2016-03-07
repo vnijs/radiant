@@ -32,7 +32,7 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
     upload_error_handler(objname,ret)
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
-    r_data[[objname]] <- dat %>% as.data.frame(check.names = FALSE)
+    r_data[[objname]] <- dat %>% as.data.frame(check.names = FALSE) %>% factorizer
     r_data[[paste0(objname,"_descr")]] <- ret
   }
   r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique

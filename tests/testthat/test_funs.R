@@ -35,7 +35,7 @@ test_that("changedata", {
 })
 
 test_that("getclass", {
-  expect_equal(getclass(diamonds), sapply(diamonds,class))
+  expect_equal(getclass(diamonds), sapply(diamonds,class) %>% tolower)
 })
 
 test_that("is_empty", {

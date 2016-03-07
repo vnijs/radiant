@@ -209,4 +209,25 @@ To create a variable that can be used to randomly filter a dataset for analysis 
 
 ## Holdout sample
 
-To create a holdout sample based on (the reverse of) a filter select `Holdout sample` from the `Transformation type` dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where `data < "2015-1-1"` then the holdout sample will be based on the filter `data >= "2015-1-1"` if the `Reverse filter` box is checked.
+To create a holdout sample based on (the reverse of) a filter select `Holdout sample` from the `Transformation type` dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where `date < "2014-12-13"` then the holdout sample will be based on the filter `date >= "2014-12-13"` if the `Reverse filter` box is checked.
+
+<!-- r_data[["diamonds"]] <- mutate(r_data[["diamonds"]], date = as_ymd("2012-1-1") + as.integer(runif(30,1,4*365)) %>% sample(3000, replace = TRUE) %>% sort) -->
+
+## Gather
+
+Combine multiple columns into one column.
+
+## Spread
+
+Spread one column into multiple columns.
+
+## Table-to-data
+
+Turn a dataset with frequencies into a dataset with the number of rows equal to the sum of the frequencies.
+
+## Expand grid
+
+Create a dataset with all combinations of values for a selection of variables.
+
+
+

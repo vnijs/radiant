@@ -131,6 +131,8 @@ output$ui_tr_dataset <- renderUI({
     tr_dataset <- paste0(tr_dataset, "_gathered")
   } else if (input$tr_change_type == "spread") {
     tr_dataset <- paste0(tr_dataset, "_spread")
+  } else if (input$tr_change_type == "expand") {
+    tr_dataset <- paste0(tr_dataset, "_expand")
   }
   tags$table(
     tags$td(textInput("tr_dataset", "Store changes in:", tr_dataset)),
@@ -165,9 +167,10 @@ trans_types <- list("None" = "none", "Type" = "type", "Transform" = "transform",
                     "Show duplicates" = "show_dup",
                     "Training variable" = "training",
                     "Holdout sample" = "holdout",
-                    "Table-to-data" = "tab2dat",
                     "Gather columns" = "gather",
-                    "Spread column" = "spread")
+                    "Spread column" = "spread",
+                    "Table-to-data" = "tab2dat",
+                    "Expand grid" = "expand")
 
 
 output$ui_Transform <- renderUI({
@@ -469,6 +472,21 @@ observeEvent(input$tr_change_type, {
 # df %>% spread(var, value)
 # df %>% spread(var, value, convert = TRUE)
 
+.expand <- function(dataset,
+                    vars = "",
+                    store_dat = "",
+                    store = TRUE) {
+
+  if (!store || !is.character(dataset)) {
+    if (all(vars == ""))
+      paste0("Select variables to expand")
+    else
+      expand.grid(level_list(select_(dataset, .dots = vars)))
+  } else {
+    paste0("## expanding data\nr_data[[\"",store_dat,"\"]] <- expand.grid(level_list(r_data[[\"",dataset,"\"]], ", paste0(vars, collapse = ", "),"))\n")
+  }
+}
+
 .bin <- function(dataset,
                  vars = "",
                  bins = 10,
@@ -687,6 +705,8 @@ transform_main <- reactive({
       return("Select a one or more variables to see the effects of removing duplicates")
     } else if (input$tr_change_type == 'gather') {
       return("Select one or more variables to gather")
+    } else if (input$tr_change_type == 'expand') {
+      return("Select one or more variables to expand")
     }
   }
 
@@ -775,6 +795,10 @@ transform_main <- reactive({
     ## remove duplicates
     if (input$tr_change_type == "remove_dup")
       return(.remove_dup(dat, inp_vars("tr_vars"), store = FALSE))
+
+    ## expand grid
+    if (input$tr_change_type == "expand")
+      return(.expand(dat, inp_vars("tr_vars"), store = FALSE))
 
     ## show duplicates
     if (input$tr_change_type == "show_dup")
@@ -931,6 +955,9 @@ observeEvent(input$tr_store, {
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'spread') {
     cmd <- .spread(input$dataset, key = input$tr_spread_key, value = input$tr_spread_value, input$tr_dataset)
+    r_data[[dataset]] <- dat
+  } else if (input$tr_change_type == 'expand') {
+    cmd <- .expand(input$dataset, vars = input$tr_vars, input$tr_dataset)
     r_data[[dataset]] <- dat
   } else if (input$tr_change_type == 'reorg_vars') {
     cmd <- .reorg_vars(input$dataset, vars = input$tr_reorg_vars, input$tr_dataset)

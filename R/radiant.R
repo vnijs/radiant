@@ -180,7 +180,7 @@ factorizer <- function(dat, safx = 20) {
   if (sum(isChar) == 0) return(dat)
     toFct <-
       select(dat, which(isChar)) %>%
-      summarise_each(funs(n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx))) %>%
+      summarise_each(funs(nrow(dat) < 101 | (n_distinct(.) < 100 & (n_distinct(.)/length(.)) < (1/safx)))) %>%
       select(which(. == TRUE)) %>% names
   if (length(toFct) == 0) return(dat)
 

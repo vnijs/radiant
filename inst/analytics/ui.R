@@ -30,8 +30,8 @@ analytics_ui <- tagList(
 
   navbarMenu("Regression",
     tabPanel("Correlation", uiOutput("correlation")),
-    tabPanel("Linear (OLS)", uiOutput("regression")),
-    tabPanel("GLM", uiOutput("glm_reg"))
+    tabPanel("Linear regression (OLS)", uiOutput("regression")),
+    tabPanel("Logistic regression (GLM)", uiOutput("glm_reg"))
   ),
 
   navbarMenu("Model",
@@ -41,10 +41,10 @@ analytics_ui <- tagList(
     tabPanel("Model performance", uiOutput("performance"))
   ),
 
-  navbarMenu("Decide",
-    tabPanel("Decision tree", uiOutput("dtree")),
-    tabPanel("Simulate", uiOutput("simulater"))
-  ),
+  # navbarMenu("Decide",
+  #   tabPanel("Decision tree", uiOutput("dtree")),
+  #   tabPanel("Simulate", uiOutput("simulater"))
+  # ),
 
   navbarMenu("Cluster",
     tabPanel("Hierarchical", uiOutput("hier_clus")),

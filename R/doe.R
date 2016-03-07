@@ -1,205 +1,153 @@
-# #' Create fractional factorial design for conjoint analysis
-# #'
-# #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
-# #'
-# #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-# #'
-# #' @return A list with all variables defined in the function as an object of class conjoint_profiles
-# #'
-# #' @examples
-# #' \dontrun{
-# #'  cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
-# #'         "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
-# #'         "audio.visual = c('Small plain','Large plain','Large digital')",
-# #'         "food = c('No food','Hot dogs and popcorn','Gourmet food')")
-# #'  result <- conjoint_profiles("cp")
-# #'  result <- cp %>% conjoint_profiles
-# #'  rm(cp, envir = .GlobalEnv)
-# #' }
-# #'
-# #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
-# #'
-# #' @export
-# conjoint_profiles <- function(dataset) {
+#' Create (partial) factorial design
+#'
+#' @details See \url{http://vnijs.github.io/radiant/analytics/doe.html} for an example in Radiant
+#'
+#' @param factors Categorical variables used as input for design
+#' @param int Vector of interaction terms to consider when generating design
+#' @param trials Number of trial to create. If NA then all feasible designs will be considered until a design with perfect D-efficiency is found
+#' @param seed Random seed to use as the starting point
+#'
+#' @return A list with all variables defined in the function as an object of class conjoint_profiles
+#'
+#' @examples
+#' "price; $10; $13; $16\nfood; popcorn; gourmet; no food" %>% doe
+#'
+#' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
+#'
+#' @importFrom AlgDesign optFederov
+#'
+#' @export
+doe <- function(factors, int = "", trials = NA, seed = NA) {
+  df_list <-
+    gsub("/","",factors) %>%
+    gsub("\\\\n","\n",.) %>%
+    gsub("[\n]{2,}$","",.) %>%
+    strsplit(.,"\n") %>%
+    .[[1]] %>% strsplit(";")
 
-# 	cp <- getdata(dataset)
-# 	cmd <- "cap_attr <- list(c()"
-# 	for (l in cp) {
-# 		if (l != "") cmd <- paste(cmd, ",", l)
-# 	}
-# 	cmd <- paste(cmd, ")")
-# 	eval(parse(text = cmd))
-# 	cap_attr <- cap_attr[-1]
-# 	cn <- names(cap_attr)
+  df_names <- c()
+  for (i in seq_len(length(df_list))) {
+    dt <- df_list[[i]] %>% gsub("^\\s+|\\s+$", "", .)
+    df_names <- c(df_names, dt[1])
+    df_list[[i]] <- dt[-1]
+  }
+  names(df_list) <- df_names
+  model <- paste0("~ ", paste0(df_names, collapse = " + "))
+  nInt <- 0
+  if (!is_empty(int)) {
+    model <- paste0(model, " + ", paste0(int, collapse = " + "))
+    nInt <- length(int)
+  }
 
-# 	# reordering the attributes affects the number of profiles generated - strange
-# 	for (itt in 1:20) {
-# 		ret <- sample(cap_attr) %>% ff_design(itt)
-# 		if (!is.null(ret)) break
-# 	}
+  part_frac <- function(df, model = ~ ., int = 0, trials = NA, seed = 172110) {
 
-# 	frac <- ret$frac[,cn] %>% arrange_(.dots = cn) %>%
-# 					  data.frame(Profile = 1:nrow(.), .)
+	  full <- expand.grid(df)
 
-# 	prof_cor <- cor(data.matrix(frac[,-1]))
+	  ###############################################
+	  # eliminate combinations from full
+	  # by removing then from the variable _experiment_
+	  # http://stackoverflow.com/questions/18459311/creating-a-fractional-factorial-design-in-r-without-prohibited-pairs?rq=1
+	  ###############################################
 
-# 	full <- ret$full[,cn] %>% arrange_(.dots = cn) %>%
-# 					  data.frame(Profile = 1:nrow(.), .)
+	  levs <- sapply(df, length)
+	  nr_levels <- sum(levs)
+	  min_trials <- nr_levels - length(df) + 1
+	  max_trials <- nrow(full)
 
-# 	rm(l, itt, cmd, ret, cn)
+	  if (!is.null(trials) && !is.na(trials)) max_trials <- min_trials <- trials
 
-# 	environment() %>% as.list %>% set_class(c("conjoint_profiles",class(.)))
-# }
+	  eff <-
+	    data.frame(
+	      Trials = min_trials:max_trials,
+	      "D-efficiency" = NA,
+	      "Determinant" = NA,
+	      "Balanced" = NA,
+	      check.names = FALSE
+	    )
 
-# #' Summary method for the conjoint_profiles function
-# #'
-# #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
-# #'
-# #' @param object Return value from \code{\link{conjoint_profiles}}
-# #' @param ... further arguments passed to or from other methods.
-# #'
-# #' @examples
-# #' \dontrun{
-# #' cp <<- c("price = c('$10','$13','$16')", "sight = c('Staggered','Not Staggered')",
-# #'        "comfort = c('Average no cupholder','Average cupholder','Large cupholder')",
-# #'        "audio.visual = c('Small plain','Large plain','Large digital')",
-# #'        "food = c('No food','Hot dogs and popcorn','Gourmet food')")
-# #' result <- conjoint_profiles("cp")
-# #' summary(result)
-# #' rm(cp, envir = .GlobalEnv)
-# #' }
-# #'
-# #' @seealso \code{\link{conjoint_profiles}} to calculate results
-# #'
-# #' @export
-# summary.conjoint_profiles <- function(object, ...) {
 
-# 	cat("Generate conjoint profiles\n")
-# 	cat("Data      :", object$dataset, "\n")
-# 	cat("# profiles:", nrow(object$frac))
+	  for (i in min_trials:max_trials) {
+	    if (!is.null(seed) && !is.na(seed)) set.seed(seed) # needs to be in the loop
+	    design <- try(optFederov(model, data = full, nRepeats = 50,
+                    nTrials = i, maxIteration=1000,
+                    approximate = FALSE), silent = TRUE)
 
-# 	cat("\n\nAttributes and levels:\n")
-# 	cat(paste0(object$cp, collapse="\n"),"\n")
+	    if (is(design, 'try-error')) next
+	    cor_mat <- cor(data.matrix(design$design))
+	    detcm <- det(cor_mat)
+	    ind <- which(eff$Trials %in% i)
+	    eff[ind,"D-efficiency"] <- design$Dea
+	    eff[ind,"Determinant"] <- round(detcm,3)
+	    eff[ind,"Balanced"] <-  all(i %% levs == 0)
 
-# 	cat("\nFractional factorial design correlations:\n")
-# 	print(object$prof_cor, row.names = FALSE)
+	    if (design$Dea == 1) break
+	  }
 
-# 	cat("\nFractional factorial design:\n")
-# 	print(object$frac, row.names = FALSE)
+	  if (exists("cor_mat")) {
+	    list(df = df, cor_mat = cor_mat, detcm = detcm, Dea = design$Dea,
+	         part = arrange_(design$design, .dots = names(df)),
+	         full = arrange_(full, .dots = names(df)),
+	         eff = na.omit(eff),
+	         seed = seed)
+	  } else if (!is.na(trials)) {
+	    "No solution exists for the selected number of trials"
+	  } else {
+	    "No solution found"
+	  }
+	}
 
-# 	cat("\nFull factorial design:\n")
-# 	print(object$full, row.names = FALSE)
-# }
+  part_frac(df_list, model = as.formula(model), int = nInt, trials = trials, seed = seed) %>%
+    set_class(c("doe",class(.)))
+}
 
-# #' Function to generate a fractional factorial design
-# #'
-# #' @details See \url{http://vnijs.github.io/radiant/marketing/conjoint_profiles.html} for an example in Radiant
-# #'
-# #' @param attr Attributes used to generate profiles
-# #' @param trial Number of trials that have already been run
-# #' @param rseed Random seed to use
-# #'
-# #' @seealso \code{\link{conjoint_profiles}} to calculate results
-# #' @seealso \code{\link{summary.conjoint_profiles}} to summarize results
-# #'
-# #' @importFrom AlgDesign optFederov
-# #'
-# #' @export
-# ff_design <- function(attr,
-#                       trial = 0,
-#                       rseed = 172110) {
+#' Summary method for doe function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/analytics/doe.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{conjoint_profiles}}
+#' @param eff If TRUE print efficiency output
+#' @param part If TRUE print partial factorial
+#' @param full If TRUE print full factorial
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @seealso \code{\link{doe}} to calculate results
+#'
+#' @examples
+#' "price; $10; $13; $16\nfood; popcorn; gourmet; no food" %>% doe %>% summary
+#'
+#' @export
+summary.doe <- function(object, eff = TRUE, part = TRUE, full = TRUE, ...) {
 
-# 	experiment <- expand.grid(attr)
+  if (!is.list(object)) return(object)
 
-# 	###############################################
-# 	# eliminate combinations from experiment
-# 	# by removing then from the variable _experiment_
-# 	# http://stackoverflow.com/questions/18459311/creating-a-fractional-factorial-design-in-r-without-prohibited-pairs?rq=1
-# 	###############################################
+  cat("Experimental design\n")
+  cat("# trials for partial factorial:", nrow(object$part),"\n")
+  cat("# trials for full factorial   :", nrow(object$full),"\n")
+  if (!is.null(object$seed) && !is.na(object$seed))
+    cat("Random seed                   :", object$seed,"\n")
 
-# 	nr_levels <- sapply(attr, length) %>% sum
-# 	min_profiles <- nr_levels - length(attr) + 1
-# 	max_profiles <- nrow(experiment)
+  cat("\nAttributes and levels:\n")
+  nl <- names(object$df)
+  for (i in nl) {
+    cat(paste0(i, ":"), paste0(object$df[[i]], collapse = ", "), "\n")
+  }
 
-# 	for (i in min_profiles:max_profiles) {
-# 		set.seed(rseed) 		# needs to be in the loop
-# 		design <- optFederov(data = experiment, nTrials=i, maxIteration=1000)
-# 		cor_mat <- cor(data.matrix(design$design))
-# 		# print(as.dist(cor_mat), digits = 1)
-# 		# cat('\nD-efficiency:',design$Dea,'\n')
-# 		# if (design$Dea == 1) break
-# 		if (det(cor_mat)==1) break
-# 	}
+  if (eff) {
+    cat("\nDesign efficiency:\n")
+    print(dfprint(object$eff, dec = 3), row.names = FALSE)
+  }
 
-# 	nr_profiles <- design$design %>% nrow
-# 	if (nr_profiles> 24) {
-# 		if (trial < 20) {
-# 			return() 	# try again
-# 		} else {
-# 			cat(paste("The number of profiles required to generate an orthogonal design is\ngreater than the recommended maximum of 24. Consider\nreducing the number of attributes and/or levels.\n"))
-# 		}
-# 	}
-# 	list(frac = design$design, full = experiment)
-# }
+  if (part) {
+    cat("\nPartial factorial design correlations:\n")
+    nrdec <- ifelse (object$detcm == 1, 0, 3)
+    print(dfprint(data.frame(object$cor_mat), dec = nrdec) , row.names = FALSE)
 
-# #####################################################################
-# # Exprerimenting with the DoE package
-# #####################################################################
+    cat("\nPartial factorial design:\n")
+    print(object$part)
+  }
 
-# # library(DoE.base)
-# # # attr <- read.csv("~/Desktop/conjoint_profiles.csv") %>%
-# # attr <- structure(list(sight = structure(c(1L, 1L, 1L, 1L, 1L, 1L, 1L,
-# # 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L), .Label = c("Not Staggered",
-# # "Staggered"), class = "factor"), food = structure(c(1L, 1L, 1L,
-# # 2L, 2L, 2L, 3L, 3L, 3L, 1L, 1L, 1L, 2L, 2L, 2L, 3L, 3L, 3L), .Label = c("Gourmet food",
-# # "Hot dogs and popcorn", "No food"), class = "factor"), price = structure(c(1L,
-# # 1L, 2L, 2L, 2L, 3L, 1L, 3L, 3L, 2L, 3L, 3L, 1L, 1L, 3L, 1L, 2L,
-# # 2L), .Label = c("$10", "$13", "$16"), class = "factor"), comfort = structure(c(1L,
-# # 3L, 3L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 2L, 2L, 3L, 3L, 1L, 1L,
-# # 3L), .Label = c("Average cup", "Average no cup", "Large cup"), class = "factor"),
-# #     audio.visual = structure(c(1L, 3L, 2L, 2L, 3L, 1L, 3L, 1L,
-# #     2L, 1L, 3L, 2L, 2L, 1L, 3L, 2L, 3L, 1L), .Label = c("Large digital",
-# #     "Large plain", "Small plain"), class = "factor")), class = "data.frame", row.names = c(NA,
-# # -18L), .Names = c("sight", "food", "price", "comfort", "audio.visual")) %>%
-# #     select(sight, food, price, comfort, audio.visual) %>%
-# #     arrange(sight, food, price, comfort, audio.visual)
-
-# # lev <- list(price = c('$10','$13','$16'),
-# #             sight = c('Staggered','Not Staggered'),
-# #             comfort = c('Average no cup','Average cup','Large cup'),
-# #             audio.visual = c('Small plain','Large plain','Large digital'),
-# #             food = c('No food','Hot dogs and popcorn','Gourmet food'))
-
-# # to_pad <- sapply(lev, length)
-# # max(to_pad) == min(to_pad)
-# # for (i in 1:length(lev)) {
-# # 	lev[[i]] <- c(lev[[i]], rep("",max(to_pad)-length(lev[[i]])))
-# # }
-
-# # write.csv(lev, "~/Desktop/test.csv", row.names = FALSE)
-# # read.csv(test, colClasses = "character")
-
-# # oa.design(seed = 1234, factor.names = sample(lev), columns="min34") %>%
-# #   select(sight, food, price, comfort, audio.visual) %>%
-# #   arrange(sight, food, price, comfort, audio.visual)
-
-# # cor_mat <- cor(data.matrix(res))
-# # cor_mat
-# # cat(paste(nrow(res)," ", det(cor_mat)), "\n")
-
-# # library(DoE.base)
-# # library(dplyr)
-# # lev <- list(price = c('$10','$13','$16'),
-# #             sight = c('Staggered','Not Staggered'),
-# #             comfort = c('Average no cup','Average cup','Large cup'),
-# #             audio.visual = c('Small plain','Large plain','Large digital'),
-# #             food = c('No food','Hot dogs and popcorn','Gourmet food'))
-
-# # oa.design(seed = 1234, factor.names = sample(lev), columns="min34") %>%
-# #   select(sight, food, price, comfort, audio.visual) %>%
-# #   arrange(sight, food, price, comfort, audio.visual)
-
-# # cor_mat <- cor(data.matrix(res))
-# # cor_mat
-# # cat(paste(nrow(res)," ", det(cor_mat)), "\n")
-
+  if (full) {
+    cat("\nFull factorial design:\n")
+    print(object$full)
+  }
+}

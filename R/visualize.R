@@ -288,7 +288,8 @@ visualize <- function(dataset, xvar,
       for (j in yvar) {
         flab <- ""
         if (color == 'none') {
-          if ("factor" %in% dc[i]) {
+          # if ("factor" %in% dc[i]) {
+          if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j) %>% summarise_each(make_funs(fun))
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j)) + geom_point() + geom_line(aes(group = 1))
@@ -296,7 +297,8 @@ visualize <- function(dataset, xvar,
             plot_list[[itt]] <- ggplot(dat, aes_string(x=i, y=j)) + geom_line()
           }
         } else {
-          if ("factor" %in% dc[i]) {
+          # if ("factor" %in% dc[i]) {
+          if (dc[i] %in% c("factor","date")) {
             tbv <- if (is.null(byvar)) i else c(i, byvar)
             tmp <- dat %>% group_by_(.dots = tbv) %>% select_(j, color) %>% summarise_each(make_funs(fun))
             plot_list[[itt]] <- ggplot(tmp, aes_string(x=i, y=j, color = color, group = color)) + geom_point() + geom_line()
@@ -306,7 +308,8 @@ visualize <- function(dataset, xvar,
         }
         if ("log_x" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + xlab(paste("log", i))
         if ("log_y" %in% axes) plot_list[[itt]] <- plot_list[[itt]] + ylab(paste("log", j))
-        if ("factor" %in% dc[i]) plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+        # if ("factor" %in% dc[i]) plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
+        if (dc[i] %in% c("factor","date")) plot_list[[itt]]$labels$y %<>% paste0(., " (", fun, ")")
 
         itt <- itt + 1
       }

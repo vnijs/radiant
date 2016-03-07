@@ -13,8 +13,7 @@ reg_plots <- c("None" = "", "Histograms" = "hist",
                "Correlations" = "correlations", "Scatter" = "scatter",
                "Dashboard" = "dashboard",
                "Residual vs explanatory" = "resid_pred",
-               "Coefficient plot" = "coef",
-               "Leverage plots" = "leverage")
+               "Coefficient plot" = "coef")
 
 reg_args <- as.list(formals(regression))
 
@@ -370,7 +369,7 @@ output$regression <- renderUI({
     )
 
     stat_tab_panel(menu = "Regression",
-                  tool = "Linear (OLS)",
+                  tool = "Linear regression (OLS)",
                   tool_ui = "ui_regression",
                   output_panels = reg_output_panels)
 })

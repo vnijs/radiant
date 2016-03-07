@@ -299,15 +299,18 @@ plot.regression <- function(x,
   object <- x; rm(x)
   if (is.character(object)) return(object)
 
+    # if (anyNA(object$model$coeff))
+    #   plots <- return("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nLeverage plot will not be shown")
+
   dec <- object$dec
 
   if (class(object$model)[1] != 'lm') return(object)
 
-  if (plots[1] == "")
-    return(cat("Please select a regression plot from the drop-down menu"))
+  # if (anyNA(object$model$coeff))
+  #   plots <- ""
 
-  # no plots if aliased coefficients present
-  if (anyNA(object$model$coeff)) plots <- return("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nRegression plots will not be shown")
+  # if (plots[1] == "")
+    # return("Please specify a regression plot")
 
   # object_size(object$model, model)
   model <- ggplot2::fortify(object$model)
@@ -388,28 +391,31 @@ plot.regression <- function(x,
   }
 
   if ("coef" %in% plots) {
-    if (!anyNA(object$model$coeff)) {
-      confint(object$model, level = conf_lev) %>%
-        data.frame %>%
-        set_colnames(c("Low","High")) %>%
-        cbind(select(object$coeff,2),.) %>%
-        set_rownames(object$coeff$`  `) %>%
-        { if (!intercept) .[-1,] else . } %>%
-        mutate(variable = rownames(.)) %>%
-          ggplot() +
-            geom_pointrange(aes_string(x = "variable", y = "coefficient",
-                            ymin = "Low", ymax = "High")) +
-            geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip() -> p
-            return(p)
-    }
+    confint(object$model, level = conf_lev) %>%
+      data.frame %>%
+      na.omit %>%
+      set_colnames(c("Low","High")) %>%
+      cbind(select(object$coeff,2),.) %>%
+      set_rownames(object$coeff$`  `) %>%
+      { if (!intercept) .[-1,] else . } %>%
+      mutate(variable = rownames(.)) %>%
+        ggplot() +
+          geom_pointrange(aes_string(x = "variable", y = "coefficient",
+                          ymin = "Low", ymax = "High")) +
+          geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip() -> p
+          return(p)
   }
 
   if ("correlations" %in% plots)
     return(plot.correlation_(object$model$model))
 
-  if ("leverage" %in% plots)
+  if ("leverage" %in% plots) {
+    ## no plots if aliased coefficients present
+    if (anyNA(object$model$coeff))
+      return("The set of explanatory variables exhibit perfect multicollinearity.\nOne or more variables were dropped from the estimation.\nLeverage plot will not be shown")
     return(leveragePlots(object$model, main = "", ask=FALSE, id.n = 1,
            layout = c(ceiling(length(evar)/2),2)))
+  }
 
   if (exists("plot_list")) {
     sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 2))) ) %>%

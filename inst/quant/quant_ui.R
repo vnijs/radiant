@@ -16,8 +16,8 @@ quant_ui <- tagList(
 
   navbarMenu("Regression",
     tabPanel("Correlation", uiOutput("correlation")),
-    tabPanel("Linear (OLS)", uiOutput("regression")),
-    tabPanel("GLM", uiOutput("glm_reg"))
+    tabPanel("Linear regression (OLS)", uiOutput("regression")),
+    tabPanel("Logistic regression (GLM)", uiOutput("glm_reg"))
   ),
 
   navbarMenu("Decide",

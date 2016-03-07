@@ -1,9 +1,17 @@
+## list of function arguments
+doe_args <- as.list(formals(doe))
+
+## list of function inputs selected by user
+doe_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(doe_args))
+    doe_args[[i]] <- input[[paste0("doe_",i)]]
+  doe_args
+})
+
 output$ui_doe_int <- renderUI({
 
   req(!is_empty(input$doe_factors))
-
-  # dp <- "free_ship; $300; $200\ndiscount; 15%; 20%\ncoup_entry; manual; automatic"
-  # dp_list <-
   vars <-
     gsub("/","",input$doe_factors) %>%
     gsub("[\n]{2,}$","",.) %>%
@@ -126,163 +134,14 @@ output$doe <- renderUI({
   if (length(input$doe_int) > 0)
     int <- input$doe_int
 
-  # withProgress(message = 'Generating design', value = 0, {
-  #   doe(input$doe_factors, int, trials = input$doe_trials, seed = input$doe_seed)
-  # })
-
   withProgress(message = 'Generating design', value = 0, {
     do.call(doe, doe_inputs())
   })
 })
 
-doe <- function(factors, int = "", trials = NA, seed = NA) {
-  df_list <-
-    gsub("/","",factors) %>%
-    gsub("\\\\n","\n",.) %>%
-    gsub("[\n]{2,}$","",.) %>%
-    strsplit(.,"\n") %>%
-    .[[1]] %>% strsplit(";")
-  df_names <- c()
-  for (i in seq_len(length(df_list))) {
-    dt <- df_list[[i]] %>% gsub("^\\s+|\\s+$", "", .)
-    df_names <- c(df_names, dt[1])
-    df_list[[i]] <- dt[-1]
-  }
-  names(df_list) <- df_names
-  model <- paste0("~ ", paste0(df_names, collapse = " + "))
-  nInt <- 0
-  if (!is_empty(int)) {
-    model <- paste0(model, " + ", paste0(int, collapse = " + "))
-    nInt <- length(int)
-  }
-
-  part_frac(df_list, model = as.formula(model), int = nInt, trials = trials, seed = seed) %>%
-    set_class(c("doe",class(.)))
-}
-
-## list of function arguments
-doe_args <- as.list(formals(doe))
-
-## list of function inputs selected by user
-doe_inputs <- reactive({
-  ## loop needed because reactive values don't allow single bracket indexing
-  # doe_args$data_filter <- if (input$show_filter) input$data_filter else ""
-  # doe_args$dataset <- input$dataset
-  # for (i in r_drop(names(doe_args)))
-  for (i in names(doe_args))
-    doe_args[[i]] <- input[[paste0("doe_",i)]]
-  doe_args
-})
-
-
-part_frac <- function(df, model = ~ ., int = 0, trials = NA, seed = 172110) {
-# part_frac <- function(dp, model = ~ ., int = 0, trials = NA, seed = 1) {
-
-  full <- expand.grid(df)
-
-  ###############################################
-  # eliminate combinations from full
-  # by removing then from the variable _experiment_
-  # http://stackoverflow.com/questions/18459311/creating-a-fractional-factorial-design-in-r-without-prohibited-pairs?rq=1
-  ###############################################
-
-  levs <- sapply(df, length)
-  nr_levels <- sum(levs)
-  min_trials <- nr_levels - length(df) + 1
-  max_trials <- nrow(full)
-
-  if (!is_not(trials)) max_trials <- min_trials <- trials
-
-  eff <-
-    data.frame(
-      Trials = min_trials:max_trials,
-      "D-efficiency" = NA,
-      "Determinant" = NA,
-      "Balanced" = NA,
-      check.names = FALSE
-    )
-
-  for (i in min_trials:max_trials) {
-    if (!is_not(seed)) set.seed(seed) # needs to be in the loop
-    design <- try(optFederov(model, data = full, nRepeat = 50,
-                         nTrials = i, maxIteration=1000,
-                         approximate = FALSE), silent = TRUE)
-    if (is(design, 'try-error')) next
-    # cor_mat <- cor(data.matrix(design$design)) %>% round(6)
-    cor_mat <- cor(data.matrix(design$design))
-    # print(as.dist(cor_mat), digits = 1)
-    # cat('\nD-efficiency:',design$Dea,'\n')
-    # print(det(cor_mat))
-    # if (det(round(cor_mat,6)==1) break
-    detcm <- det(cor_mat)
-    ind <- which(eff$Trials %in% i)
-    eff[ind,"D-efficiency"] <- design$Dea
-    eff[ind,"Determinant"] <- detcm
-    eff[ind,"Balanced"] <-  all(i %% levs == 0)
-
-    if (design$Dea == 1) break
-    # if (detcm == 1) break
-  }
-
-  if (exists("cor_mat")) {
-    list(df = df, cor_mat = cor_mat, detcm = detcm, Dea = design$Dea,
-         part = arrange_(design$design, .dots = names(df)),
-         full = arrange_(full, .dots = names(df)),
-         eff = na.omit(eff),
-         seed = seed)
-  } else if (!is.na(trials)) {
-    "No solution exists for the selected number of trials"
-  } else {
-    "No solution found"
-  }
-}
-
 .summary_doe <- reactive({
   summary(.doe(), eff = TRUE, part = TRUE, full = TRUE)
 })
-
-summary.doe <- function(object, eff = TRUE, part = TRUE, full = TRUE, ...) {
-
-  if (!is.list(object)) return(object)
-
-  cat("Experimental design\n")
-  cat("# trials for partial factorial:", nrow(object$part),"\n")
-  cat("# trials for full factorial   :", nrow(object$full),"\n")
-  if (!is_not(object$seed))
-    cat("Random seed                   :", object$seed,"\n")
-
-  # cat("D-efficiency                  :", object$Dea,"\n")
-  # cat("Determinant of corr. matrix   :", nrprint(object$detcm,dec = 3))
-
-  cat("\nAttributes and levels:\n")
-  # print(as.data.frame(object$dp))
-  # apply(object$dp, 1, function(x) {cat(x); cat("\n")})
-  nl <- names(object$df)
-  for (i in nl) {
-    cat(paste0(i, ":"), paste0(object$df[[i]], collapse = ", "), "\n")
-  }
-
-  # if (nrow(object$eff) > 1) {
-  # if (is.null(object$trials) || is.na(object$trials)) {
-  if (eff) {
-    cat("\nDesign efficiency:\n")
-    print(dfprint(object$eff, dec = 3), row.names = FALSE)
-  }
-
-  if (part) {
-    cat("\nPartial factorial design correlations:\n")
-    nrdec <- ifelse (object$detcm == 1, 0, 3)
-    print(dfprint(data.frame(object$cor_mat), dec = nrdec) , row.names = FALSE)
-
-    cat("\nPartial factorial design:\n")
-    print(object$part)
-  }
-
-  if (full) {
-    cat("\nFull factorial design:\n")
-    print(object$full)
-  }
-}
 
 output$doe_download_part <- downloadHandler(
   filename = function() { 'part_factorial.csv' },
@@ -325,8 +184,6 @@ observeEvent(input$doe_upload, {
     }
 })
 
-# report_cleaner <- function(x) x %>% gsub("\n",";",.) %>% gsub("[;]{2,}",";",.)
-
 observeEvent(input$doe_report, {
   xcmd <- "# write.csv(result$part, file = '~/part_factorial.csv')"
   inp_out = list(list(eff = TRUE, part = TRUE, full = TRUE))
@@ -337,25 +194,3 @@ observeEvent(input$doe_report, {
                 figs = FALSE,
                 xcmd = xcmd)
 })
-
-# observeEvent(input$simulater_report, {
-#   sim_dec <- input$sim_dec %>% {ifelse(is.na(.), 3, .)}
-#   update_report(inp_main = clean_args(sim_inputs(), sim_args) %>% lapply(report_cleaner),
-#                 fun_name = "simulater", inp_out = list(list(dec = sim_dec),""),
-#                 outputs = c("summary","plot"), figs = TRUE,
-#                 fig.width = round(7 * sim_plot_width()/650,2),
-#                 fig.height = round(7 * (sim_plot_height()/650),2))
-# })
-
-# observeEvent(input$repeater_report, {
-#   outputs <- c("summary", "plot")
-#   inp_out <- list("","")
-#   inp_out[[1]] <- clean_args(rep_sum_inputs(), rep_sum_args[-1]) %>% lapply(report_cleaner)
-#   inp_out[[2]] <- clean_args(rep_plot_inputs(), rep_plot_args[-1]) %>% lapply(report_cleaner)
-
-#   update_report(inp_main = clean_args(rep_inputs(), rep_args) %>% lapply(report_cleaner),
-#                 fun_name = "repeater", inp_out = inp_out,
-#                 outputs = outputs, figs = TRUE,
-#                 fig.width = round(7 * rep_plot_width()/650,2),
-#                 fig.height = round(7 * (rep_plot_height()/650),2))
-# })
