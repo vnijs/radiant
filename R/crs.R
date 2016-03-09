@@ -18,6 +18,15 @@ crs <- function(dataset, id, prod, pred, rate, name = "pred", data_filter = "") 
   if (data_filter == "")
     return("A data filter must be set" %>% set_class(c("crs",class(.))))
 
+  # library(radiant)
+  # loadr("~/ca/week7/crs/cf_demo.rda")
+  # dataset <- "cf_demo"
+  # id <- "Users"
+  # prod <- "Movies"
+  # rate <- "Ratings"
+  # data_filter <- "training == 1"
+  # pred
+
   vars <- c(id, prod, rate)
   dat <- getdata(dataset, vars, na.rm = FALSE)
   if (!is_string(dataset)) dataset <- "-----"
@@ -32,6 +41,10 @@ crs <- function(dataset, id, prod, pred, rate, name = "pred", data_filter = "") 
 
   dat <- select_(dat, paste0("-",id))
 
+  ## stop if insufficient overlap in ratings
+  if (length(pred) >= (ncol(dat) - 1))
+    return("Cannot predict for all products. Ratings must overlap on at least two products." %>% set_class(c("crs",class(.))))
+
   ## indices
   cn <- colnames(dat)
   nind <- which(cn %in% pred)
@@ -42,16 +55,25 @@ crs <- function(dataset, id, prod, pred, rate, name = "pred", data_filter = "") 
   ravg <- min_rank(desc(avg)) %>% t %>% as.data.frame
   names(ravg) <- names(avg)
 
-
   ## actual scores and rankings (if available, else will be NA)
   act <- slice(dat, -uid) %>% select(nind)
+
+  ## ract line below doesn't work with ratings0 when only one movie has been selected
+  # print(act)
+  # return()
+
   ract <- as.data.frame(t(apply(act,1, function(x) min_rank(desc(x))))) %>%
-    bind_cols(slice(idv,-uid),.) %>% as.data.frame
-  act <-  bind_cols(slice(idv,-uid),act) %>% as.data.frame
+    bind_cols(slice(idv,-uid),.) %>% as_data_frame
+  act <- bind_cols(slice(idv,-uid),act) %>% as.data.frame
 
   ## CF calculations
   ms <- apply(select(dat,-nind), 1, function(x) mean(x, na.rm = TRUE))
   sds <- apply(select(dat,-nind), 1, function(x) sd(x, na.rm = TRUE))
+
+  # print(head(dat))
+  # print(print(environment() %>% as.list))
+  # print(sys.call())
+  # return(environment() %>% as.list %>% set_class(c("crs",class(.))))
 
   ## to forego standardization
   # ms <- ms * 0
@@ -99,6 +121,8 @@ summary.crs <- function(object, ...) {
   if (is.character(object))
     return(cat(object))
 
+  # return("here")
+
   cat("Avergage Ratings:\n\n")
   print(dfprint(object$avg, dec = 2), row.names = FALSE)
 
@@ -134,8 +158,8 @@ summary.crs <- function(object, ...) {
 #' @export
 plot.crs <- function(x, shiny = FALSE, ...) {
 
-  object <- x; rm(x)
-  if (is.character(object)) return(object)
+  # object <- x; rm(x)
+  # if (is.character(object)) return(object)
 
   return("Plotting for Collaborative Filter not yet available")
 

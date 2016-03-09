@@ -391,7 +391,8 @@ plot.regression <- function(x,
   }
 
   if ("coef" %in% plots) {
-    confint(object$model, level = conf_lev) %>%
+    p <-
+      confint(object$model, level = conf_lev) %>%
       data.frame %>%
       na.omit %>%
       set_colnames(c("Low","High")) %>%
@@ -402,8 +403,11 @@ plot.regression <- function(x,
         ggplot() +
           geom_pointrange(aes_string(x = "variable", y = "coefficient",
                           ymin = "Low", ymax = "High")) +
-          geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") + coord_flip() -> p
-          return(p)
+          geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") +
+          xlab("") +
+          scale_x_discrete(limits = {if (intercept) rev(object$coeff$`  `) else rev(object$coeff$`  `[-1])}) +
+          coord_flip() + theme(axis.text.y = element_text(hjust = 0))
+    return(p)
   }
 
   if ("correlations" %in% plots)

@@ -1012,10 +1012,15 @@ observeEvent(input$tr_change_type, {
  	updateTextInput(session = session, inputId = "tr_recode", value = "")
  	updateTextInput(session = session, inputId = "tr_rename", value = "")
  	updateTextInput(session = session, inputId = "tr_paste", value = "")
+  updateTextInput(session = session, inputId = "tr_gather_key", value = "")
+  updateTextInput(session = session, inputId = "tr_gather_value", value = "")
+  updateTextInput(session = session, inputId = "tr_spread_key", value = "")
+  updateTextInput(session = session, inputId = "tr_spread_value", value = "")
 	updateSelectInput(session = session, inputId = "tr_typefunction", selected = "none")
 	updateSelectInput(session = session, inputId = "tr_transfunction", selected = "none")
   updateSelectInput(session = session, inputId = "tr_replace", selected = "None")
   updateSelectInput(session = session, inputId = "tr_normalizer", selected = "none")
+  updateSelectInput(session = session, inputId = "tr_tab2dat", selected = "none")
 })
 
 observeEvent(input$transform_report, {

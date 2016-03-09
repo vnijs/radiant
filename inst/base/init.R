@@ -206,16 +206,21 @@ url_list <-
        "Correlation" = list("tabs_correlation" = list("Summary" = "regression/correlation/",
                                                       "Plot"    = "regression/correlation/plot/")),
 
-       "Linear (OLS)" = list("tabs_regression" = list("Summary" = "regression/linear/",
+       "Linear regression (OLS)" = list("tabs_regression" = list("Summary" = "regression/linear/",
                                                       "Predict" = "regression/linear/predict/",
                                                       "Plot"    = "regression/linear/plot/")),
 
-       "GLM" = list("tabs_glm_reg" = list("Summary" = "regression/glm/",
+       "Logistic regression (GLM)" = list("tabs_glm_reg" = list("Summary" = "regression/glm/",
                                           "Predict" = "regression/glm/predict/",
                                           "Plot"    = "regression/glm/plot/")),
 
        "Neural Network (ANN)" = list("tabs_ann" = list("Summary" = "model/ann/",
                                                        "Plot" = "model/ann/plot/")),
+
+       "Collaborative Filtering" = list("tabs_crs" = list("Summary" = "model/crs/",
+                                                          "Plot" = "model/crs/plot/")),
+
+       "Design of Experiments (DOE)" = "model/doe/",
 
        "Model performance" = list("tabs_performance" = list("Summary" = "model/performance/",
                                                             "Plot" = "model/performance/plot/")),

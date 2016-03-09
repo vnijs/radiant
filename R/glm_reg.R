@@ -480,15 +480,20 @@ plot.glm_reg <- function(x,
           set_rownames(object$coeff$`  `) %>%
           { if (!intercept) .[-1,] else . } %>%
           mutate(variable = rownames(.)) %>%
+          # mutate(variable = format(variable, justify = "right")) %>%
           ggplot() +
             geom_pointrange(aes_string(x = "variable", y = "OR", ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 1, linetype = 'dotdash', color = "blue") +
             ylab("Odds-ratio") +
+            xlab("") +
             ## can't use coord_trans together with coord_flip
             # http://stackoverflow.com/a/26185278/1974918
-            scale_y_log10(breaks = c(0,0.5,1:10)) +
-            coord_flip()
+            scale_x_discrete(limits = {if (intercept) rev(object$coeff$`  `) else rev(object$coeff$`  `[-1])}) +
+            scale_y_continuous(breaks = c(0,0.5,1:10), trans = "log") +
+            coord_flip() +
+            theme(axis.text.y = element_text(hjust = 0))
   }
+
 
   if (plots == "scatter") {
     for (i in evar) {

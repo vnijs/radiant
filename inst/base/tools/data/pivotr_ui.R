@@ -170,6 +170,9 @@ pvt_plot_inputs <- reactive({
     return()
   }
 
+  if (!is_empty(input$pvt_nvar, "None"))
+    req(available(input$pvt_nvar))
+
   if (any(input$pvt_nvar %in% input$pvt_cvars)) return()
 
   req(input$pvt_pause == FALSE, cancelOutput = TRUE)

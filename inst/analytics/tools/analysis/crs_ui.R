@@ -33,14 +33,14 @@ output$ui_crs_id <- renderUI({
 #               selectize = FALSE)
 # })
 
-# output$ui_crs_prod <- renderUI({
-#   req(available(input$crs_id))
-#   vars <- varnames()
-#   vars <- vars[-which(input$crs_id %in% vars)]
+output$ui_crs_prod <- renderUI({
+  req(available(input$crs_id))
+  vars <- varnames()
+  vars <- vars[-which(input$crs_id %in% vars)]
 
-#   selectInput(inputId = "crs_prod", label = "Product id:", choices = vars,
-#     selected = state_single("crs_prod", vars), multiple = FALSE)
-# })
+  selectInput(inputId = "crs_prod", label = "Product id:", choices = vars,
+    selected = state_single("crs_prod", vars), multiple = FALSE)
+})
 
 # output$ui_crs_train <- renderUI({
 #   req(input$crs_prod)
