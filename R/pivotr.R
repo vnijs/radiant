@@ -404,23 +404,26 @@ plot.pivotr <- function(x,
 
   if (length(cvars) == 1) {
     plot_list[[1]] <-
-      ggplot(tab %>% na.omit, aes_string(x = cvars, y = nvar)) +
+      ggplot(na.omit(tab), aes_string(x = cvars, y = nvar)) +
         geom_bar(stat="identity", position = "dodge", alpha=.7)
   } else if (length(cvars) == 2) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
+    dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
     plot_list[[1]] <-
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
+        mutate_(.dots = setNames(dots,cvars[1])) %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7)
-
   } else if (length(cvars) == 3) {
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
+    dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
     plot_list[[1]] <-
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
+        mutate_(.dots = setNames(dots,cvars[1])) %>%
         ggplot(aes_string(x = cvars[1], y = nvar, fill = cvars[2])) +
           geom_bar(stat="identity", position = type, alpha=.7) +
           facet_grid(paste(cvars[3], '~ .'))
@@ -441,6 +444,7 @@ plot.pivotr <- function(x,
  if (custom)
    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-  sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+  # sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+  sshhr( plot_list[[1]] ) %>%
     { if (shiny) . else print(.) }
 }
