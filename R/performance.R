@@ -86,7 +86,6 @@ performance <- function(dataset, pred, rvar,
 
 	  ## tip for summarise_ from http://stackoverflow.com/a/27592077/1974918
 	  ## put summaries in list so you can print and plot
-		# tot_resp = sum(dat[[rvar]] == 1)
 		tot_resp = sum(dat[[rvar]])
 		tot_obs = nrow(dat)
 		tot_rate = tot_resp / tot_obs
@@ -125,7 +124,7 @@ performance <- function(dataset, pred, rvar,
 
 	  	  pl <- c(pl, max(lg_list[[pname]]$profit))
 		}
-		prof_list <- c(prof_list, pl / max(pl))
+		prof_list <- c(prof_list, pl / abs(max(pl)))
 		pdat[[i]] <- bind_rows(lg_list) %>% mutate(profit = profit / abs(max(profit)))
 	}
 	dat <- bind_rows(pdat) %>% mutate(profit = ifelse (is.na(profit), 0, profit))
@@ -164,7 +163,6 @@ summary.performance <- function(object, prn = TRUE, ...) {
 		cat("Perdictors  :", paste0(object$pred, collapse=", "), "\n")
 		cat("Response    :", object$rvar, "\n")
 	  cat("Level       :", object$lev, "in", object$rvar, "\n")
-		# cat("Method     :", gsub("radiant::","",object$method), "\n")
 		cat("Bins        :", object$qnt, "\n")
 		cat("Margin/Cost :", object$margin, " / ", object$cost, "\n")
 		prof <- object$prof_list
@@ -261,11 +259,10 @@ plot.performance <- function(x,
 		plot_list[["rome"]] <-
 			visualize(object$dat, xvar = "cum_prop", yvar = "ROME", type = "line", color = "pred", custom = TRUE) +
 			geom_point() +
-			geom_segment(aes(x = 0, y = 1, xend = 1, yend = 1), size = .1, color = "black") +
+			geom_segment(aes(x = 0, y = 0, xend = 1, yend = 0), size = .1, color = "black") +
 			ylab("Return on Marketing Expenditures (ROME)") +
 			xlab("Proportion of customers")
 	}
-
 
 	for (i in names(plot_list)) {
 		if (length(object$pred) < 2 && object$train != "Both")

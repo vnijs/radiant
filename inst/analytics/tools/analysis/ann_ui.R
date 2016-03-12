@@ -39,7 +39,7 @@ output$ui_ann_evar <- renderUI({
 
   selectInput(inputId = "ann_evar", label = "Explanatory variables:", choices = vars,
     # selected = use_input("ann_evar", vars, fun = "state_multiple"),
-    selected = state_multiple("ann_evar", vars),
+    selected = state_multiple("ann_evar", vars, input$glm_evar),
   	multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
@@ -98,7 +98,7 @@ output$ui_ann <- renderUI({
 ann_plot <- reactive({
 
   if (ann_available() != "available") return()
-  plot_height <- 500
+  plot_height <- max(500, length(.ann()$model$coefnames) * 15)
   plot_width <- 650
   list(plot_width = plot_width, plot_height = plot_height)
 })
@@ -109,7 +109,7 @@ ann_plot_width <- function()
 ann_plot_height <- function()
   ann_plot() %>% { if (is.list(.)) .$plot_height else 500 }
 
-# output is called from the main radiant ui.R
+## output is called from the main radiant ui.R
 output$ann <- renderUI({
 
 		register_print_output("summary_ann", ".summary_ann")
@@ -121,7 +121,7 @@ output$ann <- renderUI({
                           height_fun = "ann_plot_height",
                           width_fun = "ann_plot_width")
 
-		# two separate tabs
+		## two separate tabs
 		ann_output_panels <- tabsetPanel(
 	    id = "tabs_ann",
 	    tabPanel("Summary",
@@ -150,14 +150,8 @@ ann_available <- reactive({
   "available"
 })
 
-# .ann <- reactive({
 # .ann <- eventReactive(input$ann_run | input$ann_pause == TRUE, {
 .ann <- eventReactive(input$ann_run, {
-
-  # req(input$ann_pause == FALSE, cancelOutput = TRUE)
-
-  # req(input$ann_wts == "None" || available(input$ann_wts))
-
   withProgress(message = 'Estimating model', value = 0,
 	  do.call(ann, ann_inputs())
   )
@@ -166,6 +160,7 @@ ann_available <- reactive({
 .summary_ann <- reactive({
   if (ann_available() != "available") return(ann_available())
   if (not_pressed(input$ann_run)) return("** Press the Estimate button to estimate the model **")
+
   summary(.ann())
 })
 

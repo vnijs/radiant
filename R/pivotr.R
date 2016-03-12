@@ -410,7 +410,8 @@ plot.pivotr <- function(x,
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
+    # dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
+    dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2]),collapse="','"),"'))")
     plot_list[[1]] <-
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2])) %>% na.omit %>%
         mutate_(.dots = setNames(dots,cvars[1])) %>%
@@ -420,7 +421,8 @@ plot.pivotr <- function(x,
     ctot <- which(colnames(tab) == "Total")
     if (length(ctot) > 0) tab %<>% select(-matches("Total"))
 
-    dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
+    # dots <- paste0(cvars[1]," = factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
+    dots <- paste0("factor(",cvars[1],", levels = c('", paste0(setdiff(colnames(tab),cvars[2:3]),collapse="','"),"'))")
     plot_list[[1]] <-
       tab %>% gather_(cvars[1], nvar, setdiff(colnames(.),cvars[2:3])) %>% na.omit %>%
         mutate_(.dots = setNames(dots,cvars[1])) %>%

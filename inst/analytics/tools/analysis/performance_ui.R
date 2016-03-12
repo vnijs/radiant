@@ -30,8 +30,6 @@ output$ui_perf_lev <- renderUI({
     levs <- .getdata()[[input$perf_rvar]] %>% as.factor %>% levels
   else
     levs <- c()
-  # levs[1]
-
   selectInput(inputId = "perf_lev", label = "Choose level:",
               choices = levs,
               selected = state_init("perf_lev"))
@@ -41,11 +39,8 @@ output$ui_perf_lev <- renderUI({
 output$ui_perf_pred <- renderUI({
   isNum <- .getclass() %in% c("integer","numeric")
   vars <- varnames()[isNum]
-  # isolate(sel <- use_input("perf_pred", vars, fun = "state_multiple"))
-  # isolate(sel <- state_single("perf_pred", vars)
-
   selectInput(inputId = "perf_pred", label = "Predictor:", choices = vars,
-    selected = state_single("perf_pred", vars),
+    selected = state_multiple("perf_pred", vars),
     multiple = TRUE, size = min(4, length(vars)), selectize = FALSE)
 })
 
@@ -130,7 +125,6 @@ output$performance <- renderUI({
 
 .performance <- reactive({
   req(input$perf_pause == FALSE, cancelOutput = TRUE)
-
 	do.call(performance, perf_inputs())
 })
 

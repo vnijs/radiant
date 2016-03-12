@@ -465,7 +465,7 @@ glm_available <- reactive({
 
 .predict_plot_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
-  req(input$glm_pred_plot, input$glm_xvar, !is_empty(input$glm_predict, "none"),
+  req(input$glm_pred_plot, available(input$glm_xvar), !is_empty(input$glm_predict, "none"),
       (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
   do.call(plot, c(list(x = .predict_glm_reg()), glm_pred_plot_inputs()))
 })
