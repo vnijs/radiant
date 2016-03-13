@@ -45,7 +45,11 @@ regression <- function(dataset, rvar, evar,
 
   if ("standardize" %in% check) {
     isNum <- sapply(dat, is.numeric)
-    if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+    # if (sum(isNum) > 0) dat[,isNum] %<>% data.frame %>% mutate_each(funs(scale))
+    if (sum(isNum) > 0)
+      dat[,isNum] %<>% data.frame %>% mutate_each(funs(center(.) / (2*sd(., na.rm = TRUE))))
+  } else if ("center" %in% check) {
+    dat %<>% mutate_each(funs(center(.)))
   }
 
   form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
@@ -122,8 +126,11 @@ summary.regression <- function(object,
   expl_var <- if (length(object$evar) == 1) object$evar else "x"
   cat(paste0("Null hyp.: the effect of ", expl_var, " on ", object$rvar, " is zero\n"))
   cat(paste0("Alt. hyp.: the effect of ", expl_var, " on ", object$rvar, " is not zero\n"))
-  if ("standardize" %in% object$check)
-    cat("**Standardized coefficients shown**\n")
+  if ("standardize" %in% object$check) {
+    cat("**Standardized coefficients shown (2 X SD)**\n")
+  } else if ("center" %in% object$check) {
+    cat("**Centered coefficients shown (x - mean(x))**\n")
+  }
 
   coeff <- object$coeff
   # object$coeff$p.value <- "NaN"
@@ -391,6 +398,9 @@ plot.regression <- function(x,
   }
 
   if ("coef" %in% plots) {
+
+    yl <- if ("standardize" %in% object$check) "Coefficient (standardized)" else "Coefficient"
+
     p <-
       confint(object$model, level = conf_lev) %>%
       data.frame %>%
@@ -405,6 +415,7 @@ plot.regression <- function(x,
                           ymin = "Low", ymax = "High")) +
           geom_hline(yintercept = 0, linetype = 'dotdash', color = "blue") +
           xlab("") +
+          ylab(yl) +
           scale_x_discrete(limits = {if (intercept) rev(object$coeff$`  `) else rev(object$coeff$`  `[-1])}) +
           coord_flip() + theme(axis.text.y = element_text(hjust = 0))
     return(p)
@@ -558,6 +569,8 @@ predict.regression <- function(object,
     } else {
       pred_type <- "data"
     }
+
+    if ("center" %in% object$check) pred %<>% mutate_each(funs(center(.)))
 
     pred %<>% na.omit()
   }

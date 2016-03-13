@@ -4,8 +4,8 @@
 reg_show_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
 # reg_predict <- c("None" = "none", "Variable" = "vars", "Data" = "data","Command" = "cmd")
 reg_predict <- c("None" = "none", "Data" = "data","Command" = "cmd", "Data & Command" = "datacmd")
-reg_check <- c("Standardized coefficients" = "standardize",
-               "Stepwise selection" = "stepwise")
+reg_check <- c("Standardize" = "standardize", "Center" = "center",
+               "Stepwise" = "stepwise")
 reg_sum_check <- c("RMSE" = "rmse", "Sum of squares" = "sumsquares",
                    "VIF" = "vif", "Confidence intervals" = "confint")
 reg_lines <- c("Line" = "line", "Loess" = "loess", "Jitter" = "jitter")
@@ -355,7 +355,9 @@ output$regression <- renderUI({
     # two separate tabs
     reg_output_panels <- tabsetPanel(
       id = "tabs_regression",
-      tabPanel("Summary", verbatimTextOutput("summary_regression")),
+      tabPanel("Summary",
+        downloadLink("dl_reg_coef", "", class = "fa fa-download alignright"), br(),
+        verbatimTextOutput("summary_regression")),
       tabPanel("Predict",
         conditionalPanel("input.reg_pred_plot == true",
           plot_downloader("regression", height = reg_pred_plot_height(), po = "dlp_", pre = ".predict_plot_"),
@@ -488,6 +490,23 @@ observeEvent(input$reg_store_pred, {
   store_reg(pred, data = input$reg_pred_data, type = "prediction", name = input$reg_store_pred_name)
 })
 
+output$dl_reg_coef <- downloadHandler(
+  filename = function() { "reg_coefficients.csv" },
+  content = function(file) {
+    if (pressed(input$reg_run)) {
+      ret <- .regression()[["coeff"]][-1,]
+      if ("standardize" %in% input$glm_check) {
+        cat("Standardized coefficients selected\n\n", file = file)
+        sshhr(write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE))
+      } else {
+        cat("Standardized coefficients not selected\n\n", file = file)
+        sshhr(write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE))
+      }
+    } else {
+      cat("No output available", file = file)
+    }
+  }
+)
 
 output$dl_reg_pred <- downloadHandler(
   filename = function() { "reg_predictions.csv" },

@@ -2,8 +2,8 @@ glm_link <- c("Logit" = "logit", "Probit" = "probit")
 glm_show_interactions <- c("None" = "", "2-way" = 2, "3-way" = 3)
 # glm_predict <- c("None" = "none", "Variable" = "vars", "Data" = "data","Command" = "cmd")
 glm_predict <- c("None" = "none", "Data" = "data","Command" = "cmd", "Data & Command" = "datacmd")
-glm_check <- c("Standardized coefficients" = "standardize",
-               "Stepwise selection" = "stepwise")
+glm_check <- c("Standardize" = "standardize", "Center" = "center",
+               "Stepwise" = "stepwise")
 glm_sum_check <- c("VIF" = "vif", "Confidence intervals" = "confint",
                    "Odds" = "odds")
 glm_plots <- c("None" = "", "Histograms" = "hist",
@@ -538,25 +538,18 @@ observeEvent(input$glm_store_pred, {
 output$dl_glm_coef <- downloadHandler(
   filename = function() { "glm_coefficients.csv" },
   content = function(file) {
-    ret <- .glm_reg()
-    if (!is.null(ret)) {
-      ret <- ret[["coeff"]][-1,]
+    if (pressed(input$glm_run)) {
+      ret <- .glm_reg()[["coeff"]][-1,]
       if ("standardize" %in% input$glm_check) {
-        # sqrt_n <- sqrt(nrow(ret[["model"]]$model))
-        # ret <- ret[-1,-(c(3,4,6))]
-        # ret <- ret[-1,-(c(4,6))]
-        # ret$coefficient <- exp(ret$coefficient)
-        ## can't get std.dev because coefficients are standardized
-        # ret$std.error <- ret$std.error * sqrt_n
-        # colnames(ret)[2] <- "OR2"
         ret$importance <- pmax(ret$OR, 1/ret$OR)
-        write.csv(ret, file = file, row.names = FALSE)
+        cat("Standardized coefficients selected\n\n", file = file)
+        sshhr(write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE))
       } else {
-        write.csv("Standardized coefficients were not selected", file = file, row.names = FALSE)
-        write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE)
+        cat("Standardized coefficients not selected\n\n", file = file)
+        sshhr(write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE))
       }
     } else {
-      write.csv("No output available", file = file, row.names = FALSE)
+      cat("No output available", file = file)
     }
   }
 )

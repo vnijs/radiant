@@ -95,6 +95,19 @@ glm_reg <- function(dataset, rvar, evar,
     }
   }
 
+  if ("center" %in% check) {
+    ## express evars in deviation from mean
+    isNum <- sapply(dat, is.numeric)
+    if (sum(isNum) > 0) {
+      if (length(wts) > 0) {
+        ## use weighted.mean if weights are used in estimation
+        dat[,isNum] %<>% data.frame %>% mutate_each(funs(. - weighted.mean(., wts, na.rm = TRUE)))
+      } else {
+        dat[,isNum] %<>% data.frame %>% mutate_each(funs(center(.)))
+      }
+    }
+  }
+
   form <- paste(rvar, "~", paste(vars, collapse = " + ")) %>% as.formula
 
   if ("stepwise" %in% check) {
@@ -194,10 +207,17 @@ summary.glm_reg <- function(object,
   cat(paste0("Alt. hyp.: there is an effect of ", expl_var, " on ", object$rvar, "\n"))
   if ("standardize" %in% object$check) {
     if (object$link == "logit")
-      cat("**Standardized odds-ratios and coefficients shown**\n")
+      cat("**Standardized odds-ratios and coefficients shown (2 X SD)**\n")
     else
-      cat("**Standardized coefficients shown**\n")
+      cat("**Standardized coefficients shown (2 X SD)**\n")
   }
+  if ("center" %in% object$check) {
+    if (object$link == "logit")
+      cat("**Centered odds-ratios and coefficients shown (x - mean(x))**\n")
+    else
+      cat("**Centered coefficients shown (x - mean(x))**\n")
+  }
+
   if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
     cat("**Robust standard errors used**\n")
   cat("\n")
@@ -465,6 +485,17 @@ plot.glm_reg <- function(x,
     # if (anyNA(object$model$coeff))
       # return("Model has missing coefficient(s) because the set of explanatory variables\nexhibit perfect multicollinearity. No plot shown.")
 
+    yl <-
+      {if (sum(c("standardize","center") %in% object$check) == 2) {
+        "Odds-ratio (Standardized & Centered)"
+      } else if ("standardize" %in% object$check) {
+        "Odds-ratio (standardized)"
+      } else if ("center" %in% object$check) {
+        "Odds-ratio (centered)"
+      } else {
+        "Odds-ratio"
+      }}
+
     nrCol <- 1
     if (!is_empty(object$wts, "None") && class(object$wts) != "integer")
       cnfint <- radiant::confint_robust
@@ -483,7 +514,7 @@ plot.glm_reg <- function(x,
           ggplot() +
             geom_pointrange(aes_string(x = "variable", y = "OR", ymin = "Low", ymax = "High")) +
             geom_hline(yintercept = 1, linetype = 'dotdash', color = "blue") +
-            ylab("Odds-ratio") +
+            ylab(yl) +
             xlab("") +
             ## can't use coord_trans together with coord_flip
             # http://stackoverflow.com/a/26185278/1974918
@@ -684,6 +715,19 @@ predict.glm_reg <- function(object,
       pred_type <- "datacmd"
     } else {
       pred_type <- "data"
+    }
+
+    if ("center" %in% object$check) {
+      ## express evars in deviation from mean
+      isNum <- sapply(pred, is.numeric)
+      if (sum(isNum) > 0) {
+        if (length(object$wts) > 0) {
+          ## use weighted.mean if weights are used in estimation
+          pred[,isNum] %<>% data.frame %>% mutate_each(funs(. - weighted.mean(., object$wts, na.rm = TRUE)))
+        } else {
+          pred[,isNum] %<>% data.frame %>% mutate_each(funs(center(.)))
+        }
+      }
     }
 
     pred %<>% na.omit()

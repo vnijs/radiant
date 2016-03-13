@@ -32,7 +32,7 @@ crs <- function(dataset, id, prod, pred, rate, name = "pred", data_filter = "") 
   if (!is_string(dataset)) dataset <- "-----"
 
   ## creating a matrix layout
-  ## NOT efficient -- improvement possible with dplyr?
+  ## NOT efficient -- improvement possible with dplyr or sparse matrix?
   dat <- spread_(dat, prod, rate)
 
   idv <- select_(dat,id)
