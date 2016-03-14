@@ -18,10 +18,45 @@
 #'
 #' @export
 doe <- function(factors, int = "", trials = NA, seed = NA) {
+
+# library(magrittr)
+# factors <- "Annual fee; $0; $20
+
+# factors <- "Annual   fee;  $0 ;   $20 ;
+
+
+
+# Card_type ; MC ; Visa  ; ;
+
+
+
+# "
+    # gsub("[\n]{2,}","\n",factors) %>%
+    # gsub("/","",.) %>%
+    # gsub("(([ ]+;)|(;[ ]+))",";",.) %>%
+    # gsub(";{2,}",";",.) %>%
+    # gsub("[;]+[ ]{0,}\n","\n",.) %>%
+    # gsub("[ ]*\n$","",.) %>%
+    # gsub("[ ]+","_",.) %>%
+    # gsub(";_+","; ",.) %>%
+    # gsub("_+\n","\n",.) %>%
+
+# factors <- "Annual fee;  $0;  $20
+
+#  Card type ; MC; Visa
+
+
+# "
   df_list <-
-    gsub("/","",factors) %>%
-    gsub("\\\\n","\n",.) %>%
-    gsub("[\n]{2,}$","",.) %>%
+    gsub("[ ]{2,}"," ",factors) %>%
+    gsub("/","",.) %>%
+    gsub("[ ]*;[ ]*",";",.) %>%
+    gsub(";{2,}",";",.) %>%
+    gsub("[;]+[ ]{0,}\n","\n",.) %>%
+    gsub("[ ]{1,}\n","\n",.) %>%
+    gsub("\n[ ]+","\n",.) %>%
+    gsub("[\n]{2,}","\n",.) %>%
+    gsub("[ ]+","_",.) %>%
     strsplit(.,"\n") %>%
     .[[1]] %>% strsplit(";")
 

@@ -12,9 +12,61 @@ doe_inputs <- reactive({
 output$ui_doe_int <- renderUI({
 
   req(!is_empty(input$doe_factors))
+
+# factors <- "Annual   fee;  $0 ;   $20 ;
+
+
+
+# Card_type ; MC ; Visa  ; ;
+
+
+
+
+# "
+# factors <- "Annual_fee;  $0;  $20
+# Card_type ; MC; Visa"
+
+# factors <- "Annual fee;  $0;  $20
+
+# Card type ; MC; Visa
+
+# test  ; lkjlkads
+
+# "
+#   gsub("$","\n", factors) %>%
+#   gsub("[ ]*;[^\n]*[\n]+","\n",.) %>%
+#   %>%
+#   gsub("\n[\\s]*","\n",.)
+
+#   %>%
+#   sub("\n$","",.)
+
+#   %>%
+#   gsub("[\n[ ]*\n",";",.)
+
+#   %>%
+
+
+# vars <-
+#   # gsub("$","\n", input$doe_factors) %>%
+#   gsub("$","\n", factors) %>%
+#   gsub("[ ]*;[^\n]*[\n]+","\n",.) %>%
+#   gsub("\n[ ]+\n",";",.) %>%
+#   sub("\n$","",.)
+
+#   %>%
+#   strsplit(.,"\n") %>% .[[1]] %>% unique
+
   vars <-
-    gsub("/","",input$doe_factors) %>%
-    gsub("[\n]{2,}$","",.) %>%
+    gsub("[ ]{2,}"," ",input$doe_factors) %>%
+    gsub("/","",.) %>%
+    gsub("[ ]*;[ ]*",";",.) %>%
+    gsub(";{2,}",";",.) %>%
+    gsub("[;]+[ ]{0,}\n","\n",.) %>%
+    gsub("[ ]{1,}\n","\n",.) %>%
+    gsub("\n[ ]+","\n",.) %>%
+    gsub("[\n]{2,}","\n",.) %>%
+    gsub("[ ]+","_",.) %>%
     strsplit(.,"\n") %>% .[[1]] %>%
     strsplit(";") %>%
     sapply(function(x) x[1]) %>%

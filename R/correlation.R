@@ -149,7 +149,7 @@ plot.correlation_ <- function(x, ...) {
 	    text(.8, .8, sig, cex = cex, col = 'blue')
 	}
 	panel.smooth <- function(x, y) {
-    points(jitter(x,.3), jitter(y,.3), pch = 16, col = alpha("black", 0.5))
+    points(jitter(x,.3), jitter(y,.3), pch = 16, col = ggplot2::alpha("black", 0.5))
     ## uncomment the lines below if you want linear and loess lines
     ## in the scatter plot matrix
 		# abline(lm(y~x), col="red")
