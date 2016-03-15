@@ -44,6 +44,20 @@ update_radiant <- function() {
   install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
 }
 
+#' Install webshot and phantomjs
+#' @export
+install_webshot <- function() {
+  # if ("package:radiant" %in% search())
+  if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
+  install.packages("webshot", repos = "http://cran.rstudio.com", type = "binary")
+  webshot::install_phantomjs()
+
+  # Name: Webshot - Install
+  # Description: Install Webshot
+  # Binding: install_webshot
+  # Interactive: true
+}
+
 #' Alias used to set the class for analysis function return
 #'
 #' @examples

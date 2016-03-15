@@ -192,7 +192,10 @@ summary.glm_reg <- function(object,
   dec <- object$dec
 
   if ("stepwise" %in% object$check) cat("-----------------------------------------------\n")
-  cat("Generalized linear model (GLM)")
+  if (object$link == "logit")
+    cat("Logistic regression (GLM)")
+  else if (object$link == "probit")
+    cat("Probit regression (GLM)")
   cat("\nLink function:", object$link)
   cat("\nData         :", object$dataset)
   if (object$data_filter %>% gsub("\\s","",.) != "")
@@ -745,7 +748,10 @@ predict.glm_reg <- function(object,
     pred <- data.frame(pred, pred_val, check.names = FALSE)
 
     if (prn == TRUE || prn != 0) {
-      cat("Generalized linear model (GLM)")
+      if (object$link == "logit")
+        cat("Logistic regression (GLM)")
+      else if (object$link == "probit")
+        cat("Probit regression (GLM)")
       cat("\nLink function:", object$link)
       cat("\nData         :", object$dataset)
       if (object$data_filter %>% gsub("\\s","",.) != "")

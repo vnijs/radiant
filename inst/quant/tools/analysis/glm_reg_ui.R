@@ -368,7 +368,8 @@ output$glm_reg <- renderUI({
         downloadLink("dl_glm_pred", "", class = "fa fa-download alignright"), br(),
         verbatimTextOutput("predict_glm_reg")
       ),
-	    tabPanel("Plot", plot_downloader("glm_reg", height = glm_plot_height()),
+	    tabPanel("Plot",
+               plot_downloader("glm_reg", height = glm_plot_height()),
                plotOutput("plot_glm_reg", width = "100%", height = "100%"))
 	  )
 
@@ -422,12 +423,7 @@ glm_available <- reactive({
 
 .summary_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
-  # ret <- .glm_reg()
-  # if (!exists("ret")) return("** Press the Estimate button to estimate the model **")
   if (not_pressed(input$glm_run)) return("** Press the Estimate button to estimate the model **")
-  # print(str(ret))
-  # if (is.null(ret)) return("** Press the Estimate button to generate results **")
-  # do.call(summary, c(list(object = ret), glm_sum_inputs()))
   do.call(summary, c(list(object = .glm_reg()), glm_sum_inputs()))
 })
 
@@ -435,6 +431,7 @@ glm_available <- reactive({
   if (glm_available() != "available") return(glm_available())
   if (is_empty(input$glm_plots))
     return("Please select a regression plot from the drop-down menu")
+  if (not_pressed(input$glm_run)) return("** Press the Estimate button to estimate the model **")
 
   pinp <- glm_plot_inputs()
   pinp$shiny <- TRUE
@@ -515,6 +512,7 @@ observeEvent(input$glm_reg_report, {
 })
 
 observeEvent(input$glm_store_res, {
+  req(pressed(input$glm_run))
   robj <- .glm_reg()
   if (!is.list(robj)) return()
   if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
@@ -523,10 +521,9 @@ observeEvent(input$glm_store_res, {
 })
 
 observeEvent(input$glm_store_pred, {
-  req(!is_empty(input$glm_pred_data))
+  req(!is_empty(input$glm_pred_data), pressed(input$glm_run))
   pred <- .predict_glm_reg()
   if (is.null(pred)) return()
-
   if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
     return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
 
@@ -549,7 +546,7 @@ output$dl_glm_coef <- downloadHandler(
         sshhr(write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE))
       }
     } else {
-      cat("No output available", file = file)
+      cat("No output available. Press the Estimate button to generate results", file = file)
     }
   }
 )
@@ -557,7 +554,11 @@ output$dl_glm_coef <- downloadHandler(
 output$dl_glm_pred <- downloadHandler(
   filename = function() { "glm_predictions.csv" },
   content = function(file) {
-    .predict_glm_reg() %>%
-      write.csv(file = file, row.names = FALSE)
+    if (pressed(input$glm_run)) {
+      .predict_glm_reg() %>%
+        write.csv(file = file, row.names = FALSE)
+    } else {
+      cat("No output available. Press the Estimate button to generate results", file = file)
+    }
   }
 )

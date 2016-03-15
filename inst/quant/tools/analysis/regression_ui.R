@@ -426,8 +426,8 @@ reg_available <- reactive({
 
 .plot_regression <- reactive({
   if (reg_available() != "available") return(reg_available())
-  if (is_empty(input$reg_plots))
-    return("Please select a regression plot from the drop-down menu")
+  if (is_empty(input$reg_plots)) return("Please select a regression plot from the drop-down menu")
+  if (not_pressed(input$reg_run)) return("** Press the Estimate button to estimate the model **")
 
   if (input$reg_plots %in% c("correlations", "leverage"))
     capture_plot( do.call(plot, c(list(x = .regression()), reg_plot_inputs())) )
@@ -473,6 +473,7 @@ observeEvent(input$regression_report, {
 })
 
 observeEvent(input$reg_store_res, {
+  req(pressed(input$reg_run))
   robj <- .regression()
   if (!is.list(robj)) return()
   if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE))) {
@@ -482,7 +483,7 @@ observeEvent(input$reg_store_res, {
 })
 
 observeEvent(input$reg_store_pred, {
-  # pred <- r_data$reg_pred
+  req(!is_empty(input$reg_pred_data), pressed(input$reg_run))
   pred <- .predict_regression()
   if (is.null(pred)) return()
   if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
@@ -503,7 +504,7 @@ output$dl_reg_coef <- downloadHandler(
         sshhr(write.table(ret, sep = ",", append = TRUE, file = file, row.names = FALSE))
       }
     } else {
-      cat("No output available", file = file)
+      cat("No output available. Press the Estimate button to generate results", file = file)
     }
   }
 )
@@ -511,7 +512,11 @@ output$dl_reg_coef <- downloadHandler(
 output$dl_reg_pred <- downloadHandler(
   filename = function() { "reg_predictions.csv" },
   content = function(file) {
-    .predict_regression() %>%
-      write.csv(file = file, row.names = FALSE)
+    if (pressed(input$reg_run)) {
+      .predict_regression() %>%
+        write.csv(file = file, row.names = FALSE)
+    } else {
+      cat("No output available. Press the Estimate button to generate results", file = file)
+    }
   }
 )

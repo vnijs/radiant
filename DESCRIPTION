@@ -38,7 +38,7 @@ Imports:
     stringr (>= 1.0),
     nnet (>= 7.3.11),
     NeuralNetTools (>= 1.4.0),
-    rstudioapi (>= 0.4),
+    rstudioapi (>= 0.5),
     sandwich (>= 2.3.4)
 Suggests:
     rmarkdown (>= 0.7),
