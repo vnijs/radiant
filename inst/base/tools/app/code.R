@@ -30,7 +30,6 @@ help(package = 'radiant')
 transform_main() %>% head"
 
 output$rcode <- renderUI({
-
   tagList(
     with(tags,
       table(
@@ -38,6 +37,7 @@ output$rcode <- renderUI({
                        inclMD(file.path(r_path,"base/tools/help/code.md")))),
             td(HTML("&nbsp;&nbsp;")),
             td(actionButton("rEval", "Run code")),
+            td(downloadButton("save2HTML", "Save HTML")),
             td(downloadButton('saveCode', 'Save')),
             td(HTML("<div class='form-group shiny-input-container'>
                 <input id='load_code' name='load_code' type='file' accept='.r,.R'/>
@@ -101,3 +101,21 @@ observe({
     })
   }
 })
+
+output$save2HTML <- downloadHandler(
+  filename = function() {"code.html"},
+  content = function(file) {
+    if (r_local) {
+      isolate({
+        withProgress(message = "Knitting report", value = 0, {
+          rmd_code <- if (is_empty(input$rmd_code_selection)) input$rmd_code
+                      else input$rmd_code_selection
+          paste0("```{r cache = FALSE, echo = TRUE}\n", rmd_code ,"\n```") %>%
+          knitIt %>% cat(file=file,sep="\n")
+          # knitr::knit2html(text = ., fragment.only = TRUE, quiet = TRUE, envir = r_env) %>%
+          # HTML %>% cat(file=file,sep="\n")
+        })
+      })
+    }
+  }
+)

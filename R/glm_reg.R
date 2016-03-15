@@ -49,15 +49,15 @@ glm_reg <- function(dataset, rvar, evar,
     vars <- c(rvar, evar, wtsname)
   }
 
-  # dat <- getdata(dataset, c(rvar, evar), filt = data_filter)
   dat <- getdata(dataset, vars, filt = data_filter)
   if (!is_string(dataset)) dataset <- "-----"
 
   if (!is.null(wts)) {
     wts <- dat[[wtsname]]
     if (!is.integer(wts)) {
-      wts_int <- as.integer(wts)
-      if (all(wts == wts_int)) wts <- wts_int
+      ## rounding to avoid machine precision differences
+      wts_int <- as.integer(round(wts,.Machine$double.rounding))
+      if (all(round(wts,.Machine$double.rounding) == wts_int)) wts <- wts_int
       rm(wts_int)
     }
     dat <- select_(dat, .dots = paste0("-",wtsname))
