@@ -50,8 +50,11 @@ install_webshot <- function() {
   # if ("package:radiant" %in% search())
   if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
   install.packages("webshot", repos = "http://cran.rstudio.com", type = "binary")
-  webshot::install_phantomjs()
 
+  ## avoid requiring webshot ... for now
+  eval(parse(text = "webshot::install_phantomjs()"))
+
+  ## Add to inst/rstudio/addins.dcf
   # Name: Webshot - Install
   # Description: Install Webshot
   # Binding: install_webshot
