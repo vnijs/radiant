@@ -1048,3 +1048,11 @@ which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
 #'
 #' @export
 which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
+
+#' Method to store variables a dataset in Radiant
+#'
+#' @param x Object of relevant class that has required information to store
+#' @param ... Additional arguments
+#'
+#' @export
+store <- function (x, ...) UseMethod("store", x)

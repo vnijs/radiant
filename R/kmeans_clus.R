@@ -169,7 +169,7 @@ plot.kmeans_clus <- function(x,
 #' @examples
 #' \dontrun{
 #' result <- kmeans_clus("shopping", vars = c("v1:v6"))
-#' save_membership(result)
+#' store.kmeans_clus(result)
 #' head(shopping)
 #' }
 #' @seealso \code{\link{kmeans_clus}} to generate results
@@ -177,9 +177,15 @@ plot.kmeans_clus <- function(x,
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
 #'
 #' @export
-save_membership <- function(object) {
+# store_kmeans <- function(object) {
+store.kmeans_clus <- function(object) {
 	if (object$data_filter != "")
-    return("Please deactivate data filters before trying to save cluster membership")
-	as.factor(object$km_out$cluster) %>%
-	changedata(object$dataset, vars = ., var_names = paste0("kclus",object$nr_clus))
+    return("Please deactivate data filters before trying to store cluster membership")
+
+	km <- object$km_out$cluster
+  if (nrow(km) != nrow(getdata(object$dataset, filt = "", na.rm = FALSE)))
+    return(message("The number of membership estimates is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+
+	# as.factor(object$km_out$cluster) %>%
+	changedata(object$dataset, vars = as.factor(km), var_names = paste0("kclus",object$nr_clus))
 }

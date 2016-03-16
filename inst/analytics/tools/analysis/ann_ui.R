@@ -166,6 +166,7 @@ ann_available <- reactive({
 
 .plot_ann <- reactive({
   if (ann_available() != "available") return(ann_available())
+  if (not_pressed(input$ann_run)) return("** Press the Estimate button to estimate the model **")
   plot(.ann(), shiny = TRUE)
 })
 
