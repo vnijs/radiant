@@ -60,6 +60,7 @@ output$ui_doe_int <- renderUI({
   vars <-
     gsub("[ ]{2,}"," ",input$doe_factors) %>%
     gsub("/","",.) %>%
+    gsub("\\\\n","\n",.) %>%
     gsub("[ ]*;[ ]*",";",.) %>%
     gsub(";{2,}",";",.) %>%
     gsub("[;]+[ ]{0,}\n","\n",.) %>%

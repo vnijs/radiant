@@ -50,6 +50,7 @@ doe <- function(factors, int = "", trials = NA, seed = NA) {
   df_list <-
     gsub("[ ]{2,}"," ",factors) %>%
     gsub("/","",.) %>%
+    gsub("\\\\n","\n",.) %>%
     gsub("[ ]*;[ ]*",";",.) %>%
     gsub(";{2,}",";",.) %>%
     gsub("[;]+[ ]{0,}\n","\n",.) %>%
