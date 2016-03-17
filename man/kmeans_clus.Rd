@@ -42,6 +42,6 @@ result <- kmeans_clus("shopping", c("v1:v6"))
 
 \code{\link{plot.kmeans_clus}} to plot results
 
-\code{\link{save_membership}} to add cluster membership to the selected dataset
+\code{\link{store.kmeans_clus}} to add cluster membership to the selected dataset
 }
 

@@ -4,10 +4,14 @@
 \alias{store.kmeans_clus}
 \title{Add a cluster membership variable to the active dataset}
 \usage{
-\method{store}{kmeans_clus}(object)
+\method{store}{kmeans_clus}(object, ..., name = "")
 }
 \arguments{
 \item{object}{Return value from \code{\link{kmeans_clus}}}
+
+\item{...}{Additional arguments}
+
+\item{name}{Name of cluster membership variable}
 }
 \description{
 Add a cluster membership variable to the active dataset
@@ -18,7 +22,7 @@ See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an examp
 \examples{
 \dontrun{
 result <- kmeans_clus("shopping", vars = c("v1:v6"))
-store_kmeans(result)
+store.kmeans_clus(result)
 head(shopping)
 }
 }

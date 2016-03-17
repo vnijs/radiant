@@ -29,6 +29,6 @@ plot(result)
 
 \code{\link{summary.kmeans_clus}} to summarize results
 
-\code{\link{save_membership}} to add cluster membership to the selected dataset
+\code{\link{store.kmeans_clus}} to add cluster membership to the selected dataset
 }
 

@@ -28,6 +28,6 @@ shopping \%>\% kmeans_clus(vars = c("v1:v6"), nr_clus = 3) \%>\% summary
 
 \code{\link{plot.kmeans_clus}} to plot results
 
-\code{\link{save_membership}} to add cluster membership to the selected dataset
+\code{\link{store.kmeans_clus}} to add cluster membership to the selected dataset
 }
 

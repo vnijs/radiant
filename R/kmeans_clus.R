@@ -18,7 +18,7 @@
 #'
 #' @seealso \code{\link{summary.kmeans_clus}} to summarize results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
-#' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
+#' @seealso \code{\link{store.kmeans_clus}} to add cluster membership to the selected dataset
 #'
 #' @export
 kmeans_clus <- function(dataset, vars,
@@ -83,7 +83,7 @@ kmeans_clus <- function(dataset, vars,
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
-#' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
+#' @seealso \code{\link{store.kmeans_clus}} to add cluster membership to the selected dataset
 #'
 #' @export
 summary.kmeans_clus <- function(object, ...) {
@@ -134,7 +134,7 @@ summary.kmeans_clus <- function(object, ...) {
 #'
 #' @seealso \code{\link{kmeans_clus}} to generate results
 #' @seealso \code{\link{summary.kmeans_clus}} to summarize results
-#' @seealso \code{\link{save_membership}} to add cluster membership to the selected dataset
+#' @seealso \code{\link{store.kmeans_clus}} to add cluster membership to the selected dataset
 #'
 #' @export
 plot.kmeans_clus <- function(x,
@@ -165,6 +165,8 @@ plot.kmeans_clus <- function(x,
 #' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{kmeans_clus}}
+#' @param ... Additional arguments
+#' @param name Name of cluster membership variable
 #'
 #' @examples
 #' \dontrun{
@@ -177,15 +179,39 @@ plot.kmeans_clus <- function(x,
 #' @seealso \code{\link{plot.kmeans_clus}} to plot results
 #'
 #' @export
-# store_kmeans <- function(object) {
-store.kmeans_clus <- function(object) {
-	if (object$data_filter != "")
-    return("Please deactivate data filters before trying to store cluster membership")
+store.kmeans_clus <- function(object, ..., name = "") {
+	## membership variable name
+  if (is_empty(name))
+  	name <- paste0("kclus",object$nr_clus)
 
-	km <- object$km_out$cluster
-  if (nrow(km) != nrow(getdata(object$dataset, filt = "", na.rm = FALSE)))
-    return(message("The number of membership estimates is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+  ## creating an index to deal with filters and missing values
+	# km <- NA
+	# ind <-
+	#   getdata(object$dataset, na.rm = FALSE) %>%
+	#   mutate(i_m_f = 1:nrow(.)) %>%
+ #    {km <<- rep(NA, nrow(.)); .} %>%
+ #    {if (object$data_filter != "") filter_(., object$data_filter)
+ #     else .} %>%
+ #    select_(.dots = c("i_m_f",object$vars)) %>%
+	#   na.omit %>%
+	#   .[["i_m_f"]]
 
-	# as.factor(object$km_out$cluster) %>%
-	changedata(object$dataset, vars = as.factor(km), var_names = paste0("kclus",object$nr_clus))
+	indr <- indexr(object$dataset, object$vars, object$data_filter)
+	km <- rep(NA,indr$nr)
+	km[indr$ind] <- object$km_out$cluster
+	changedata(object$dataset, vars = as.factor(km), var_names = name)
 }
+
+#' Deprecated function to store cluster membership
+#' @param object Return value from \code{\link{kmeans_clus}}
+#' @param ... Additional arguments
+#' @param name Name of cluster membership variable
+#' @seealso Use \code{\link{store.kmeans_clus}} instead
+#' @export
+save_membership <- store.kmeans_clus
+
+
+
+
+
+

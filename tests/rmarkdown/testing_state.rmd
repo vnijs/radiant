@@ -115,7 +115,7 @@ plot(result, plots = c("scree", "diff", "dendro"))
 result <- kmeans_clus(dataset = "toothpaste", vars = "v1:v6", nr_clus = 3)
 summary(result)
 plot(result)
-save_membership(result)
+store(result)
 write.csv(result$clus_means, file = '~/kmeans.csv')
 ```
 

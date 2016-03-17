@@ -4,10 +4,10 @@
 \alias{store}
 \title{Method to store variables a dataset in Radiant}
 \usage{
-store(x, ...)
+store(object, ...)
 }
 \arguments{
-\item{x}{Object of relevant class that has required information to store}
+\item{object}{Object of relevant class that has required information to store}
 
 \item{...}{Additional arguments}
 }

@@ -55,9 +55,6 @@ output$ui_kmeans_clus <- renderUI({
 	    numericInput("km_nr_clus", "Number of clusters:", min = 2,
 	    	value = state_init('km_nr_clus',2)),
       conditionalPanel(condition = "input.km_vars != null",
-				# HTML("<label>Store cluster membership:</label>"), br(),
-	      # downloadButton("km_save_kmeans", "Means"),
-		    # actionButton("km_save_membership", "Membership")
         tags$table(
           tags$td(textInput("km_store_name", "Store membership:", state_init("km_store_name","kclus"))),
           tags$td(actionButton("km_store", "Store"), style="padding-top:30px;")
@@ -138,16 +135,8 @@ observeEvent(input$kmeans_clus_report, {
                 fun_name = "kmeans_clus",
                 fig.width = round(7 * km_plot_width()/650,2),
                 fig.height = round(7 * km_plot_height()/650,2),
-								xcmd = paste0("# save_membership(result)\n# write.csv(result$clus_means, file = '~/kmeans.csv')"))
+								xcmd = paste0("# store(result, name = '", input$km_store_name,"')\n# write.csv(result$clus_means, file = '~/kmeans.csv')"))
 })
-
-# save cluster means when download button is pressed
-# output$km_save_kmeans <- downloadHandler(
-#   filename = function() { "kmeans.csv" },
-#   content = function(file) {
-#   	.kmeans_clus() %>% { if (is.list(.)) write.csv(.$clus_means, file) }
-#   }
-# )
 
 output$dl_km_means <- downloadHandler(
   filename = function() { "kmeans.csv" },
@@ -163,7 +152,6 @@ output$dl_km_means <- downloadHandler(
 ## store cluster membership
 observeEvent(input$km_store, {
   if (pressed(input$km_run)) {
-    # .kmeans_clus() %>% { if (is.list(.)) save_membership(.) }
-    .kmeans_clus() %>% { if (is.list(.)) store(.) }
+    .kmeans_clus() %>% { if (is.list(.)) store(., name = input$km_store_name) }
   }
 })

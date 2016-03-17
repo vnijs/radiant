@@ -1051,8 +1051,35 @@ which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
 
 #' Method to store variables a dataset in Radiant
 #'
-#' @param x Object of relevant class that has required information to store
+#' @param object Object of relevant class that has required information to store
 #' @param ... Additional arguments
 #'
 #' @export
-store <- function (x, ...) UseMethod("store", x)
+store <- function(object, ...) UseMethod("store", object)
+
+#' Find index corrected for missing values and filters
+#'
+#' @param dataset Dataset name
+#' @param vars Variables to select
+#' @param filt Data filter
+#'
+#' @export
+indexr <- function(dataset, vars = "", filt = "") {
+  dat <- getdata(dataset, na.rm = FALSE)
+  if (is_empty(vars)) vars <- colnames(dat)
+  nr <- nrow(dat)
+  ind <-
+    dat %>%
+    mutate(imf___ = 1:nr) %>%
+    {if (filt == "") . else filterdata(., filt)} %>%
+    select_(.dots = unique(c("imf___", vars))) %>%
+    na.omit %>%
+    .[["imf___"]]
+
+  list(nr = nr, ind = ind)
+}
+
+
+
+
+
