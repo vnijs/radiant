@@ -85,7 +85,7 @@ summary(result)
 plot(result)
 
 ## to add a variable with segment membership information to the shopping dataset
-save_membership(result)
+store(result)
 
 ## did that work? there should be a column 'kclus3' in the dataset
 getdata("shopping") %>% head
