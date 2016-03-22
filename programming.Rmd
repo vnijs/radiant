@@ -135,7 +135,7 @@ plot(result, plots = "dendro", cutoff = 0.1)
 result <- kmeans_clus("shopping", vars = "v1:v6", nr_clus = 3)
 summary(result)
 plot(result)
-save_membership(result)
+store(result)
 
 ## was the data really changed?
 getdata("shopping") %>% head
