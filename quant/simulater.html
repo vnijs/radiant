@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -246,22 +242,22 @@ img {
 <blockquote>
 <p>Simulation for decision analysis</p>
 </blockquote>
-<p>Start by selecting the types of variables to use in the analysis from the <code>Select types</code> dropdown in the <em>Simulate</em> tab. Available types include Constant, Binomial, Discrete, Normal, Uniform, and Sequence.</p>
-<div id="constant" class="section level3">
-<h3>Constant</h3>
-<p>List the constants to include in the analysis in the <code>Constant variables</code> input. You can either enter names and values directly into the text area (e.g., “cost 3”) or enter a name (“cost”) and a value (5) in the <code>Name</code> and <code>Value</code> input respectively and then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Press the <i title='Remove variable' href='#' class='fa fa-minus-circle'></i> icon to remove a variable. Note that only variables listed in the (larger) text-input boxes will be included in the simulation.</p>
-</div>
+<p>Start by selecting the types of variables to use in the simulation from the <code>Select types</code> dropdown in the <em>Simulate</em> tab. Available types include Binomial, Constant, Discrete, Log normal, Normal, Uniform, Data, Grid search, and Sequence.</p>
 <div id="binomial" class="section level3">
 <h3>Binomial</h3>
 <p>Add random variables with a binomial distribution using the <code>Binomial variables</code> inputs. Start by specifying a <code>Name</code> (“crash”), the number of trials (n) (e.g., 20) and the probability (p) of a “success” (.01). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., crash 20 .01).</p>
+</div>
+<div id="constant" class="section level3">
+<h3>Constant</h3>
+<p>List the constants to include in the analysis in the <code>Constant variables</code> input. You can either enter names and values directly into the text area (e.g., “cost 3”) or enter a name (“cost”) and a value (5) in the <code>Name</code> and <code>Value</code> input respectively and then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Press the <i title='Remove variable' href='#' class='fa fa-minus-circle'></i> icon to remove an entry. Note that only variables listed in the (larger) text-input boxes will be included in the simulation.</p>
 </div>
 <div id="discrete" class="section level3">
 <h3>Discrete</h3>
 <p>Define random variables with a discrete distribution using the <code>Discrete variables</code> inputs. Start by specifying a <code>Name</code> (“price”), the values (6 8), and their associated probabilities (.3 .7). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., price 6 8 .3 .7). Note that the probabilities must sum to 1. If not, a message will be displayed and the simulation cannot be run.</p>
 </div>
-<div id="normal" class="section level3">
-<h3>Normal</h3>
-<p>To include normally distributed random variables in the analysis select <code>Normal</code> from the <code>Select types</code> dropdown and use <code>Normal variables</code> inputs. For example, enter a <code>Name</code> (“demand”), the <code>Mean</code> (1000) and the standard deviation (<code>St.dev.</code>, 100). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., “demand 1000 100”).</p>
+<div id="log-normal" class="section level3">
+<h3>(Log) Normal</h3>
+<p>To include (log) normally distributed random variables in the analysis select <code>Normal</code> from the <code>Select types</code> dropdown and use <code>Normal variables</code> inputs. For example, enter a <code>Name</code> (“demand”), the <code>Mean</code> (1000) and the standard deviation (<code>St.dev.</code>, 100). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., “demand 1000 100”).</p>
 </div>
 <div id="uniform" class="section level3">
 <h3>Uniform</h3>
@@ -269,12 +265,12 @@ img {
 </div>
 <div id="data" class="section level3">
 <h3>Data</h3>
-<p>To include variables from a separate data-set in the calculations specified in the <code>Simulation formulas</code> input choose a data-set from the <code>Input data for calculations</code> dropdown. This can be very useful in combination with the <code>Grid search</code> feature for portfolio optimization. However, when used in conjunction with other inputs care must be taken to ensure the number of values returned by different calculations is the same. Otherwise you will see an error like:</p>
+<p>To include variables from a separate data-set in the calculations specified in the <code>Simulation formulas</code> input box, choose a data-set from the <code>Input data for calculations</code> dropdown. This can be very useful in combination with the <code>Grid search</code> feature for portfolio optimization. However, when used in conjunction with other inputs care must be taken to ensure the number of values returned by different calculations is the same. Otherwise you will see an error like:</p>
 <p><code>Error: arguments imply differing number of rows: 999, 3000</code></p>
 </div>
 <div id="grid-search" class="section level3">
 <h3>Grid search</h3>
-<p>To include a sequence of values select <code>Grid search</code> from the <code>Select types</code> dropdown. Provide the minimum and maximum values as well as the step-size in the <code>Grid search</code> inputs. For example, enter a <code>Name</code> (“price”), the <code>Min</code> (4), <code>Max</code> (10), and <code>Step</code> (0.01) value. If multiple variables are specified in <code>Grid search</code> all possible value combinations will be created and evaluated in the simulation. For example, suppose a first variable is defines as <code>x 1 3 1</code> and a second as <code>y 4 5 1</code> in the <code>Grid search</code> text input then the following data is generated:</p>
+<p>To include a sequence of values select <code>Grid search</code> from the <code>Select types</code> dropdown. Provide the minimum and maximum values as well as the step-size in the <code>Grid search</code> inputs. For example, enter a <code>Name</code> (“price”), the <code>Min</code> (4), <code>Max</code> (10), and <code>Step</code> (0.01) value. If multiple variables are specified in <code>Grid search</code> all possible value combinations will be created and evaluated in the simulation. For example, suppose a first variable is defined as <code>x 1 3 1</code> and a second as <code>y 4 5 1</code> in the <code>Grid search</code> text input then the following data is generated:</p>
 <table class="table table-condensed table-hover" style="width:40%;">
 <thead>
 <tr>
@@ -345,8 +341,8 @@ y
 </div>
 <div id="formulas" class="section level3">
 <h3>Formulas</h3>
-<p>To perform a calculation using the generated variables create a formula in the <code>Simulation formulas</code> input box in the main panel (e.g., “profit = demand * (price - cost)”). Formulas are used to add new variables to the simulation or to update existing variables. You must specify the name of the new variable to the left of a <code>=</code> sign. Variable names can contain letters, numbers, and <code>_</code> but no other characters or spaces. You can enter multiple formulas. If, for example, you would also like to calculate the margin in each simulation press <code>return</code> after the first formula and type “margin = price - cost”.</p>
-<p>Many of the same functions used with <code>Create</code> in the <em>Data &gt; Transform</em> tab and in <code>Filters</code> in <em>Data &gt; View</em> can also be included in formulas. You can use <code>&gt;</code> and <code>&lt;</code> signs and combine them. For example <code>x &gt; 3 &amp; y == 2</code> would evaluate as “TRUE” when the variable <code>x</code> has values larger than 3 <strong>AND</strong> <code>y</code> has values equal to 2. Recall that in R, and most other programming languages, <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is exactly equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expressions that have an <strong>OR</strong> condition. For example, to determine when <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code>|</code> is the symbol for <strong>OR</strong> and <code>&amp;</code> is the symbol for <strong>AND</strong> (see also the help file for <em>Data &gt; View</em>).</p>
+<p>To perform a calculation using the generated variables, create a formula in the <code>Simulation formulas</code> input box in the main panel (e.g., “profit = demand * (price - cost)”). Formulas are used to add (calculated) variables to the simulation or to update existing variables. You must specify the name of the new variable to the left of a <code>=</code> sign. Variable names can contain letters, numbers, and <code>_</code> but no other characters or spaces. You can enter multiple formulas. If, for example, you would also like to calculate the margin in each simulation press <code>return</code> after the first formula and type “margin = price - cost”.</p>
+<p>Many of the same functions used with <code>Create</code> in the <em>Data &gt; Transform</em> tab and in <code>Filters</code> in <em>Data &gt; View</em> can also be included in formulas. You can use <code>&gt;</code> and <code>&lt;</code> signs and combine them. For example <code>x &gt; 3 &amp; y == 2</code> would evaluate to “TRUE” when the variable <code>x</code> has values larger than 3 <strong>AND</strong> <code>y</code> has values equal to 2. Recall that in R, and most other programming languages, <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is exactly equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expressions that have an <strong>OR</strong> condition. For example, to determine when <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code>|</code> is the symbol for <strong>OR</strong> and <code>&amp;</code> is the symbol for <strong>AND</strong> (see also the help file for <em>Data &gt; View</em>).</p>
 <p>A few additional examples of formulas are shown below:</p>
 <ol style="list-style-type: decimal">
 <li><p>Create a new variable z that is the difference between variables x and y</p>
@@ -357,7 +353,7 @@ y
 <p>z = x == y</p></li>
 <li><p>The command above is equivalent to the one below using <code>ifelse</code>. Note the similarity to <code>if</code> statements in Excel</p>
 <p>z = ifelse(x &lt; y, TRUE, FALSE)</p></li>
-<li><p><code>ifelse</code> statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 0 if x is smaller than 60. If x is larger than 100 z is set equal to 1. Finally, when x is 60, 100, or between 60 and 100, z is set to 2. <strong>Note:</strong> make sure to include the appropriate number of opening <code>(</code> and closing <code>)</code> brackets</p>
+<li><p><code>ifelse</code> statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 0 if x is smaller than 60. If x is larger than 100, z is set equal to 1. Finally, when x is 60, 100, or between 60 and 100, z is set to 2. <strong>Note:</strong> make sure to include the appropriate number of opening <code>(</code> and closing <code>)</code> brackets!</p>
 <p>z = ifelse(x &lt; 60, 0, ifelse(x &gt; 100, 1, 2))</p></li>
 <li><p>To create a new variable z that is a transformation of variable x but with mean equal to zero:</p>
 <p>z = x - mean(x)</p></li>
@@ -366,7 +362,7 @@ y
 <li><p>To find the value for <code>price</code> that maximizes <code>profit</code> use the <code>find_max</code> command. In this example <code>price</code> could be a random or <code>Sequence variable</code>. There is also a <code>find_min</code> command.</p>
 <p>optimal_price = find_max(profit, price)</p></li>
 <li><p>To determine the minimum (maximum) value for each pair of values across two variables (e.g., x and y) use the functions <code>pmin</code> and <code>pmax</code>. In the example below, z will take on the value of x when x is larger than y and take on the value of y otherwise</p>
-<p>z = pmax(x,y)</p></li>
+<p>z = pmax(x, y)</p></li>
 </ol>
 <p>See the table below for an example:</p>
 <table class="table table-condensed table-hover" style="width:40%;">
@@ -452,26 +448,28 @@ pmax(x,y)
 <div id="running-the-simulation" class="section level3">
 <h3>Running the simulation</h3>
 <p>The value shown in the <code># sims</code> input determines the number of simulation <em>draws</em>. To redo a simulation with the same randomly generated values, specify a number in the <code>Set random seed</code> input (e.g., 1234).</p>
-<p>To save the simulated data for further analysis specify a name in the <code>Simulated data</code> input box. You can then investigate the simulated data by choosing the data with the specified name from the <code>Datasets</code> dropdown in any of the <em>Data</em> tabs (e.g., <em>Data &gt; View</em>, <em>Data &gt; Visualize</em>, or <em>Data &gt; Explore</em>).</p>
+<p>To save the simulated data for further analysis, specify a name in the <code>Simulated data</code> input box. You can then investigate the simulated data by choosing the data with the specified name from the <code>Datasets</code> dropdown in any of the <em>Data</em> tabs (e.g., <em>Data &gt; View</em>, <em>Data &gt; Visualize</em>, or <em>Data &gt; Explore</em>).</p>
 <p>When all required inputs have been specified press the <code>Simulate</code> button to run the simulation.</p>
 <p>In the screen shot below <code>var_cost</code> and <code>fixed_cost</code> are specified as constants. <code>E</code> is normally distributed with a mean of 0 and a standard deviation of 100. <code>price</code> is a discrete random variable that is set to $6 (30% probability) or $8 (70% probability). There are three formulas in the <code>Simulation formulas</code> text-input. The first establishes the dependence of <code>demand</code> on the simulated variable <code>price</code>. The second formula specifies the profit function. The final formula is used to determine the number (and proportion) of cases where profit is below 100. The result is assigned to a new variable <code>profit_small</code>.</p>
-<p><img src="figures_quant/simulater.png" alt="sim output" /></p>
+<p><img src="figures_quant/simulater_sim.png" alt="sim output" /></p>
 <p>In the output under <code>Simulation summary</code> we first see details on the specification of the simulation (e.g., the number of simulations). The section <code>Constants</code> lists the value of variables that do not vary across simulations. The sections <code>Random variables</code> and <code>Logicals</code> list the outcomes of the simulation. We see that average <code>demand</code> in the simulation is 627.940 with a standard deviation of 109.323. Other characteristics of the simulated data are also provided (e.g., the maximum profit is 1758.770). Finally, we see that the probability of <code>profits</code> below 100 is equal 0.315 (i.e., profits were below 100 in 315 out of the 1000 simulations).</p>
-<p>Histograms of of the random variables as well as the variables created using <code>Simulation formulas</code> are shown in the main panel under <code>Simulation plots</code>.</p>
+<p>Histograms of of the random variables as well as the variables created using <code>Simulation formulas</code> are shown in the <em>Plot (simulate)</em> tab under <code>Simulation plots</code>.</p>
+<p><img src="figures_quant/simulater_sim_plot.png" alt="sim output" /></p>
 <p>Because we specified a name in the <code>Simulated data</code> box the data are available as <code>simdat</code> within Radiant (see screen shots below). To use the data in Excel click the download icon on the top-right of the screen in the <em>Data &gt; View</em> tab or go to the <em>Data &gt; Manage</em> tab and save the data to a csv file (or use the clipboard feature). For more information see the help file for the <em>Data &gt; Manage</em> tab.</p>
 <p><img src="figures_quant/simulater_view.png" alt="sim output" /></p>
 </div>
 <div id="repeating-the-simulation" class="section level2">
 <h2>Repeating the simulation</h2>
 <p>Suppose the simulation discussed above was used to get a better understanding of daily profits. To develop insights into annual profits we could re-run the simulation 365 times. This can be done easily by using the functionality available in the <em>Repeat</em> tab. First, select the <code>Variables to re-simulate</code>, here <code>E</code> and <code>price</code>. Then select the variable(s) of interest in the <code>Output variables</code> box (e.g., <code>profit</code>). Set <code># reps</code> to 365.</p>
-<p>Next, we need to determine how to summarize the data. If we select <code>Simulation</code> in <code>Group by</code> the data will be summarized for each draw in the simulation <strong>across</strong> 365 repeated simulations resulting in 1000 values. If we select <code>Repeat</code> in <code>Group by</code> the data will be summarized for each repetition <strong>across</strong> 1000 simulations resulting in 365 values. If you imagine the full set of repeated simulated data as a table with 1000 rows and 365 columns, grouping by <code>Simulation</code> will create a summary statistic for each row and grouping by <code>Repeat</code> will create a summary statistic for each column. In this example we want to determine the <code>sum</code> of simulated daily profits across 365 repetitions so we select <code>Simulation</code> in the <code>Group by</code> box and <code>sum</code> in the <code>Apply function</code> box.</p>
+<p>Next, we need to determine how to summarize the data. If we select <code>Simulation</code> in <code>Group by</code> the data will be summarized for each draw in the simulation <strong>across</strong> 365 repeated simulations resulting in 1,000 values. If we select <code>Repeat</code> in <code>Group by</code> the data will be summarized for each repetition <strong>across</strong> 1000 simulations resulting in 365 values. If you imagine the full set of repeated simulated data as a table with 1,000 rows and 365 columns, grouping by <code>Simulation</code> will create a summary statistic for each row and grouping by <code>Repeat</code> will create a summary statistic for each column. In this example we want to determine the <code>sum</code> of simulated daily profits across 365 repetitions so we select <code>Simulation</code> in the <code>Group by</code> box and <code>sum</code> in the <code>Apply function</code> box.</p>
 <p>To determine, the probability that annual profits are below $36,500 we enter the formula below into the <code>Repeated simulation formula</code> text input.</p>
 <p><code>profit_365 = profit &lt; 36500</code></p>
-<p>When you are done with the input values click the <code>Repeat</code> button. Because we specified a name for <code>Repeat data</code> two data sets will be created. “simdat_repeat” will have all elements of the repeated simulation (i.e., 1000 x 365 rows) and “simdat_repeat_sum” will have the summarized data grouped per simulation. Note that the extension “_sum&quot; was used because we selected <code>sum</code> from the <code>Apply function</code> dropdown.</p>
-<p>Descriptive statistics for the repeated simulation are shown in the main panel under <code>Repeated simulation summary</code>. We see that the annual expected profit (i.e., the mean of <code>sum of profit</code>) for the company is 172,311.836 with a standard deviation of 10,772.291. Although we found above that daily profits can be below 100, the chance that profits are below <span class="math inline">\(365 \times 100\)</span> for the year are slim to none (i.e., the proportion of repeated simulations with annual profits below $36,500 is equal to 0).</p>
+<p>When you are done with the input values click the <code>Repeat</code> button. Because we specified a name for <code>Repeat data</code> two data sets will be created. “simdat_repeat” will have all elements from the repeated simulation (i.e., 1,000 x 365 rows) and “simdat_repeat_sum” will have the summarized data grouped per simulation (i.e., 1,000 rows). Note that the extension “_sum&quot; was used because we selected <code>sum</code> from the <code>Apply function</code> dropdown.</p>
+<p>Descriptive statistics for the repeated simulation are shown in the main panel under <code>Repeated simulation summary</code>. We see that the annual expected profit (i.e., the mean of <code>sum of profit</code>) for the company is 172,311.836 with a standard deviation of 10,772.291. Although we found above that daily profits can be below 100, the chance that profits are below <span class="math inline">\(365 \times 100\)</span> for the entire year are slim to none (i.e., the proportion of repeated simulations with annual profits below $36,500 is equal to 0).</p>
 <p><img src="figures_quant/simulater_repeat.png" alt="sim output" /></p>
-<p>A histogram of annual profits (<code>sum of profit</code>) is shown in the main panel under <code>Repeated simulation plots</code>. There is no plot for <code>profit_365</code> because it only has one value (i.e., FALSE).</p>
-<p>The state file for the example in the screenshot above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a></p>
+<p>A histogram of annual profits (<code>sum of profit</code>) is shown in the <em>Plot (repeat)</em> under <code>Repeated simulation plots</code>. There is no plot for <code>profit_365</code> because it only has one value (i.e., FALSE).</p>
+<p><img src="figures_quant/simulater_repeat_plot.png" alt="sim output" /></p>
+<p>The state-file for the example in the screenshots above is available for download <a href="https://vnijs.github.io/radiant/examples/sim_help_state.rda">here</a></p>
 <p>For a simple example of how the simulate tool could be used to find the price that maximizes profits see the state-file available for download <a href="https://vnijs.github.io/radiant/examples/iceskimo_optimal_price_state.rda">here</a></p>
 <div id="using-grid-search-in-the-repeat-tab" class="section level3">
 <h3>Using Grid Search in the Repeat tab</h3>

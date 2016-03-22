@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -247,14 +243,14 @@ img {
 <p>Create and evaluate a decision tree</p>
 </blockquote>
 <p>To create and evaluate a decision tree first (1) enter the structure of the tree in the input editor or (2) load a tree structure from a file. When you first navigate to the <em>Decide &gt; Decision tree</em> tab you will see an example tree structure. This example was created by Christop Glur, the developer of the <a href="https://github.com/gluc/data.tree">data.tree</a> library (<a href="https://github.com/gluc/useR15/blob/master/00_data/jennylind.yaml">example source</a>).</p>
-<p>To enter a new structure start by providing a name for the tree. In the example below the name for the decision tree is entered as follow: <code>name: Jenny Lind</code>. The next step is to indicate the <strong>type</strong> of the first <strong>node</strong>. Options are <code>type: decision</code> or <code>type: chance</code>.</p>
-<p>In the provided example the first node is a <strong>decision node</strong>. The decision maker has to decide to <code>Sign with Movie Company</code> or <code>Sign with TV Network</code>. Both options lead to a <strong>chance</strong> node with probabilities and payoffs.</p>
+<p>To enter a new structure, start by providing a name for the tree. In the example below the name for the decision tree is entered as follow: <code>name: Jenny Lind</code>. The next step is to indicate the <strong>type</strong> of the first <strong>node</strong>. Options are <code>type: decision</code> or <code>type: chance</code>.</p>
+<p>In the provided example, the first node is a <strong>decision node</strong>. The decision maker has to decide to <code>Sign with Movie Company</code> or <code>Sign with TV Network</code>. Both options lead to a <strong>chance</strong> node with probabilities and payoffs.</p>
 <blockquote>
 <p><strong>Note:</strong> Indentation is critically important when defining a tree structure. Use tabs to create branches as shown in the example. Names for branches <strong>must</strong> be followed by a <code>:</code> and information about the branch <strong>must</strong> be indented using a tab.</p>
 </blockquote>
-<p>After providing the name for the decision <code>Sign with Movie Company</code> the next line <strong>must</strong> be indented with a tab. In the example, the next line starts the description of a chance node (<code>type: chance</code>). There are 3 possibilities in the example: (1) <code>Small Box Office</code>, (2) <code>Medium Box Office</code>, and (3) <code>Large Box Office</code>, each with a probability and a payoff. These are the end-points for one branch of the tree and are often referred to as <code>terminal nodes</code> or <code>leaves</code> of a tree. All endpoints must have a <code>payoff</code> value.</p>
+<p>After providing the name for the decision <code>Sign with Movie Company</code>, the next line <strong>must</strong> be indented using a tab. In the example, the next line starts the description of a chance node (<code>type: chance</code>). There are 3 possibilities in the example: (1) <code>Small Box Office</code>, (2) <code>Medium Box Office</code>, and (3) <code>Large Box Office</code>, each with a probability and a payoff. These are end-points for one branch of the tree and are often referred to as <code>terminal nodes</code> or <code>leaves</code>. All endpoints must have a <code>payoff</code> value.</p>
 <blockquote>
-<p><strong>Note:</strong> Probabilities for a chance node should sum to one and all probabilities smaller than 1 <strong>must</strong> be entered with a leading zero (i.e., 0.1 will work but .1 will not). If you do enter a probability without a leading zero anyway you will see the following message: <code>Error: non-numeric argument to a binary operator</code>. Add leading 0’s as needed and the error will go away when you click on the <code>Calculate</code> button again.</p>
+<p><strong>Note:</strong> Probabilities for a chance node should sum to one and all probabilities smaller than 1.</p>
 </blockquote>
 <p>In the example, the decision option <code>Sign with TV Network</code> has the same structure and terminal nodes but different payoffs.</p>
 <div id="rules-for-decision-tree-input" class="section level2">
@@ -262,19 +258,19 @@ img {
 <ol style="list-style-type: decimal">
 <li>Always start with a tree name (e.g., “name: My tree”)</li>
 <li>The second line always defines a node type (i.e., “type: chance” or “type: decision”)</li>
-<li>All lines must have a ‘:’. For node names the ‘:’ ends the line. For all other lines it assigns a value. Specically, it assigns a name (e.g., “name: My tree”), a node type (e.g., “type: decision”), or a number (e.g., “payoff: 100”)</li>
+<li>All lines must have a ‘:’. For node names the ‘:’ ends the line. For all other lines it assigns a value. Specically, it assigns a name (e.g., “name: My tree”), a node type (e.g., “type: decision”), or a number (e.g., “payoff: 100”, “p: 0.1”, “cost: 10”)</li>
 <li>A node type must be followed on the next line by a node name (e.g., “Cancel orders:”)</li>
 <li>Use only letters in node names (i.e., no symbols)</li>
 <li>The line after a node name must be indented</li>
-<li>End (or terminal) nodes must have a payoff</li>
+<li>End (or terminal or leave) nodes must have a payoff (e.g., “payoff: 100”)</li>
 <li>If linked to a chance node, a terminal node must have a probability (e.g, “p: 0.4”) and a payoff</li>
 </ol>
-<p>If you run into an error you cannot figure out post a question to the the class Piazza site <a href="https://piazza.com/ucsd/fall2015/mgt403" target="_blank" >piazza.com/ucsd/fall2015/mgt403</a></p>
-<p>After specifying the tree structure in the editor, press the <code>Calculate</code> button to see the <code>Initial</code> and <code>Final</code> decision tree in text format on the right-side of the screen (see screen shot below). The initial tree simply shows the tree structure that was specified, together with the node types, probabilities, and payoffs. The final tree shows the optimal decision strategy determined by <code>folding-back</code> the tree. In this case, the optimal decision is to <code>Sign with Movie Company</code> because this decision has a higher <strong>Expected Monetary Value (EMV)</strong> or payoff.</p>
+<p>If you run into an error you cannot figure out post a question to the class Piazza site <a href="https://piazza.com/ucsd/spring2016/mgt403" target="_blank" >piazza.com/ucsd/spring2016/mgt403</a></p>
+<p>After specifying the tree structure in the editor, press the <code>Calculate</code> button to see the <code>Initial</code> and <code>Final</code> decision tree in text format on the right-side of the screen (see screen shot below). The initial tree simply shows the tree structure that was specified, together with the node types, probabilities, and payoffs. The final tree shows the optimal decision strategy determined by <code>folding-back</code> the tree. In this case, the optimal decision is to <code>Sign with Movie Company</code> because this decision has a higher <strong>Expected Monetary Value (EMV)</strong>.</p>
 <p><img src="figures_quant/dtree_model.png" alt="dtree model" /></p>
-<p>For visual representation of the decision tree click the <em>Plot</em> tab. If you already clicked the <code>Calculate</code> button in the <em>Model</em> tab you will see a graph of the <code>Initial</code> decision tree (see screen shot below). Decision nodes are shown in green and chance nodes in orange. If the tree does not look as you intended/expected please return to the <em>Model</em> tab and edit the tree structure.</p>
+<p>For a visual representation of the decision tree open the <em>Plot</em> tab. If you already clicked the <code>Calculate</code> button in the <em>Model</em> tab you will see a graph of the <code>Initial</code> decision tree (see screen shot below). Decision nodes are shown in green and chance nodes in orange. If the tree does not look as you intended/expected, return to the <em>Model</em> tab and edit the tree structure.</p>
 <p><img src="figures_quant/dtree_plot_initial.png" alt="dtree plot initial" /></p>
-<p>The <code>Final</code> decision graph shows the optimal decision determined by <code>folding-back</code> the tree. As also shown in the <em>Model</em> tab, the optimal decision is to <code>Sign with Movie Company</code> because this decision has a higher <strong>Expected Monetary Value</strong>. Note that the optimal decision at each decision node is indicated by a thickness of the line connecting to the next node.</p>
+<p>The <code>Final</code> decision graph shows the optimal decision determined by <code>folding-back</code> the tree. As also shown in the <em>Model</em> tab, the optimal decision is to <code>Sign with Movie Company</code> because this decision has a higher <strong>Expected Monetary Value</strong>. Note that the optimal decision at each decision node is indicated by a thickness of the line connecting to the nodes.</p>
 <p><img src="figures_quant/dtree_plot_final.png" alt="dtree plot final" /></p>
 <p>The EMV for the chance node following a decision to <code>Sign with Movie Company</code> is:</p>
 <p><span class="math display">\[
@@ -291,14 +287,13 @@ img {
 <ul>
 <li>To see this help file click the <i class="fa fa-question" ></i> icon</li>
 <li>To generate a report about the decision tree in the <em>R &gt; Report</em> tab click the <i class="fa fa-edit" ></i> icon</li>
-<li>To save the tree structure entered into the editor window press the <code>Save input</code> button</li>
+<li>Choose to maximize (<code>Max</code>) or minimize (<code>Min</code>) payoffs (or cost)</li>
+<li>Specify a name for your decision tree in the text input. Click <code>Store</code> to ensure settings are saved. If multiple tree structures are available there will also be a dropdown where you can select which structure to use</li>
+<li>To save the tree structure entered into the editor window to disk press the <code>Save input</code> button</li>
 <li>To save the text representation of the initial and final tree to a text file click the <code>Save output</code> button</li>
-<li>To load a tree structure from a file in <code>yaml</code> format use the <code>Choose File</code> button</li>
+<li>To load a tree structure from a file in <code>yaml</code> format click the <code>Choose File</code> button</li>
 </ul>
-<p>In the <em>Plot</em> tab:</p>
-<ul>
-<li>Click the download icon in the top right of your browser to save either the initial or final plot to a pdf-file</li>
-</ul>
+<p>In the <em>Plot</em> tab: * To generate a report about the decision tree in the <em>R &gt; Report</em> tab click the <i class="fa fa-edit" ></i> icon * Show either the <code>Initial</code> or <code>Final</code> decision tree * Enter the number of decimal places to show in the plot (default is 3) * Enter the symbol to use for the payoffs (e.g., $ or RMB) * Click the download icon in the top right of your browser to <em>print</em> either the initial or final plot to a pdf-file</p>
 </div>
 
 

@@ -1,5 +1,5 @@
 ---
-title: Regression > Linear (OLS)
+title: Regression > Linear regression (OLS)
 ---
 
 ***

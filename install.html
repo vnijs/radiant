@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -247,23 +243,23 @@ img {
 <h2>How to install Radiant</h2>
 <p>Radiant is a platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http://www.rstudio.com/shiny/">Shiny</a> package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: <a href="https://github.com/vnijs/radiant/issues" _target="_blank">https://github.com/vnijs/radiant/issues</a>. For other questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
 <blockquote>
-<p><strong>Note:</strong> Profiles (or usernames or logins) containing non-ASCII characters will cause problems during the install. To address this issue please use a profile name (login) which contains ASCII (A-E, a-e) Letters only. For example, c:\users\myprofilename</p>
+<p><strong>Note:</strong> User profiles (or usernames or logins) containing non-ASCII characters will likely cause problems during installation. To address this issue please use a profile name (login) that contains ASCII (A-E, a-e) letters only. For example, c:\users\myprofilename</p>
 </blockquote>
 <div id="install-r-for-your-system" class="section level4">
 <h4>1. Install R for your system</h4>
 <p>For mac go to <a href="https://cran.rstudio.com/bin/macosx/" target="_blank">https://cran.rstudio.com/bin/macosx/</a></p>
 <p>For windows you can get the latest release here: <a href="https://cran.rstudio.com/bin/windows/base/release.htm" target="_blank">https://cran.rstudio.com/bin/windows/base/release.htm</a></p>
 <blockquote>
-<p><strong>Important:</strong> Windows users should install R to directory C:\R\R-3.2.3</p>
+<p><strong>Important:</strong> Windows users must install R in directory C:\R\R-3.2.4</p>
 </blockquote>
-<p>On Mac you can accept all the defaults. Installing R should create 2 shortcuts on your Desktop. If there are indeed 2 shortcuts you can remove the icon named (“R i386 3.2.3”).</p>
+<p>On Mac you can accept all the defaults. Installing R should create 2 shortcuts on your Desktop. Because we will be using Rstudio to start Radiant you can delete these shortcuts.</p>
 </div>
-<div id="install-rstudio-recommended" class="section level4">
-<h4>2. Install Rstudio (RECOMMENDED)</h4>
+<div id="install-rstudio" class="section level4">
+<h4>2. Install Rstudio</h4>
 <p>Get the latest release of Rstudio for your system from:</p>
 <p><a href="https://www.rstudio.com/products/rstudio/download/" target="_blank">https://www.rstudio.com/products/rstudio/download/</a></p>
-<p>If you have Rstudio (version 0.99.891 or later) installed you can easily start and update Radiant through the <code>Addins</code> menu at the top of the screen. Note that when your first install Radiant you must use the <code>install.packages</code> command mentioned below.</p>
-<p>Particularly for Windows users, I recommend installing <a href="https://cran.rstudio.com/bin/windows/Rtools/Rtools33.exe" target="_blank">Rtools</a>.</p>
+<p>Install Rstudio and accept all default settings. Make sure to put a shortcut to Rstudio on your Desktop.</p>
+<p>Although not required, I recommend that Windows users install <a href="https://cran.rstudio.com/bin/windows/Rtools/Rtools33.exe" target="_blank">Rtools</a>.</p>
 </div>
 <div id="use-a-modern-browser" class="section level4">
 <h4>3. Use a modern browser</h4>
@@ -271,37 +267,44 @@ img {
 </div>
 <div id="install-radiant" class="section level4">
 <h4>4. Install Radiant</h4>
-<p>To install Radiant open R (or Rstudio) and copy-and-paste the command below. Then press return. R (Rstudio) will now install Radiant and several dependencies. This may take a few minutes depending on the speed of your internet connection.</p>
+<p>To install Radiant open Rstudio and copy-and-paste the command below into the <strong>Console</strong> window on the bottom left of the application. Then press return. R(studio) will now install Radiant and several dependencies. This may take a few minutes depending on the speed of your internet connection.</p>
 <blockquote>
-<p><strong>Note:</strong> On Windows you may need to start R (or Rstudio) by right-clicking on the desktop shortcut and choosing <code>run as administrator</code>.</p>
+<p><strong>Note:</strong> On Windows you may need to start Rstudio by right-clicking on the desktop shortcut and choosing <code>run as administrator</code>.</p>
 </blockquote>
 <pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;, type = &quot;binary&quot;)</code></pre>
 <blockquote>
-<p><strong>Important:</strong> If you use Windows and are asked where to install Radiant (i.e., “Would you like to use a personal library instead?”) you didn’t install R to directory C:\R\R-3.2.3. You should uninstall and reinstall R in the suggested directory before proceeding.</p>
+<p><strong>Important:</strong> If you use Windows and are asked where to install Radiant (i.e., “Would you like to use a personal library instead?”) you did <strong>not</strong> install R in directory C:\R\R-3.2.4 as stated above. You will need to uninstall and reinstall R in the suggested directory before proceeding.</p>
 </blockquote>
+<!--
+#### 5. Create a desktop launcher
+
+To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) ONE of the commands below into R (or Rstudio). For the Quantitative Analysis app use the `quant` command, for the Marketing Research app use the `marketing` command, and for the Customer Analytics app use the `analytics` command:
+
+```r
+## Choose one of the following three commands depending on the class you are in
+radiant::launcher("quant")
+
+radiant::launcher("marketing")
+
+radiant::launcher("analytics")
+```
+
+After pasting the command press return. When asked if you want to create a short-cut type `y` and press return. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release.
+-->
 </div>
-<div id="create-a-desktop-launcher" class="section level4">
-<h4>5. Create a desktop launcher</h4>
-<p>To create icons on your Desktop to start and update Radiant, copy-and-paste (or type) ONE of the commands below into R (or Rstudio). For the Quantitative Analysis app use the <code>quant</code> command, for the Marketing Research app use the <code>marketing</code> command, and for the Customer Analytics app use the <code>analytics</code> command:</p>
-<pre class="r"><code>## Choose one of the following three commands depending on the class you are in
-radiant::launcher(&quot;quant&quot;)
-
-radiant::launcher(&quot;marketing&quot;)
-
-radiant::launcher(&quot;analytics&quot;)</code></pre>
-<p>After pasting the command press return. When asked if you want to create a short-cut type <code>y</code> and press return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
-<p>Alternatively, you can start Radiant from R (or Rstudio) using one of the commands below. For the Quantitative Analysis app use <code>quant</code>, for the Marketing Research app use <code>marketing</code>, and for the Customer Analytics app use <code>analytics</code>:</p>
+<div id="starting-radiant" class="section level4">
+<h4>5. Starting Radiant</h4>
+<p>When you open Rstudio (version 0.99.893 or later) by double-clicking the icon on your Desktop you can start and update Radiant through the <code>Addins</code> menu at the top of the screen. Note that when you first install Radiant you must use the <code>install.packages</code> command mentioned above. For Quantitative Analysis or Business Analytics click <code>Radiant - Quant</code>, for Marketing Research click <code>Radiant - Marketing</code>, and for Customer Analytics click <code>Radiant - Analytics</code>:</p>
+<p>Alternatively, you can start Radiant from R(studio) using one of the commands below. For Quantitative Analysis or Business Analytics use <code>quant</code>, for Marketing Research use <code>marketing</code>, and for Customer Analytics use <code>analytics</code>:</p>
 <pre class="r"><code>library(radiant)
 
-## Choose one of the following three commands depending on the class you are in
+## Choose ONE of the following three commands depending on the class you are in
 radiant(&quot;quant&quot;)
 
 radiant(&quot;marketing&quot;)
 
 radiant(&quot;analytics&quot;)</code></pre>
-<p>If you installed Rstudio (version 0.99.879 or newer) you can update radiant or start any of the applications from the <code>Addins</code> menu at the top of your screen.</p>
-<p>When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code>. The Radiant process will stop and the browser window will close (Chrome) or gray-out.</p>
-<p>If you get stuck, take a look at the <code>Installing Radiant</code> video:</p>
+<p>When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code>. The Radiant process will stop and the browser window will close (Chrome) or gray-out. If you get stuck, take a look at the <code>Installing Radiant</code> video:</p>
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen>
 </iframe>
 </div>
@@ -313,10 +316,10 @@ radiant(&quot;analytics&quot;)</code></pre>
 </div>
 <div id="trouble-shooting" class="section level2">
 <h2>Trouble shooting</h2>
-<p>As mentioned above, Windows users may need to start R (or Rstudio) by right-clicking on the R (or Rstudio) desktop shortcut and choosing <code>run as administrator</code>.</p>
-<p>On Windows, if you see a message such as “Warning: unable to move temporary installation ‘C:-library.254ad976f6’ to ‘C:-library.2’” you may need to reinstall R into another directory (e.g., C:\R\R-3.2.3). You should then first remove the directory Documents\R from your computer</p>
+<p>As mentioned above, Windows users may need to start Rstudio) by right-clicking on the Rstudio desktop shortcut and choosing <code>run as administrator</code>.</p>
+<p>On Windows, if you see a message such as “Warning: unable to move temporary installation ‘C:-library.254ad976f6’ to ‘C:-library.2’” you will need to reinstall R into C:\R\R-3.2.4 as mentioned above. You should also remove the directory Documents\R from your computer</p>
 <p>On rare occasions R(studio) may complain that a package is not yet installed. If so, install the package mentioned using the command below but replace ‘package-that-is-not-yet-installed’ with the package name mentioned in the error message</p>
-<pre class="r"><code>install.packages(&quot;package-that-is-not-yet-installed&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)</code></pre>
+<pre class="r"><code>install.packages(&quot;package-that-is-not-yet-installed&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;, type = &quot;binary&quot;)</code></pre>
 <p>If R(studio) complains about not being able to delete a package or directory please copy-and-paste the commands below into R (or Rstudio) and press return. Then double-click the <code>update_radiant</code> icon on your desktop again. If the update is successful (i.e., no error messages) try double clicking the <code>radiant</code> icon on your desktop again.</p>
 <pre class="r"><code>remove.packages(&quot;Rcpp&quot;, lib = .libPaths())
 remove.packages(&quot;dplyr&quot;, lib = .libPaths())</code></pre>

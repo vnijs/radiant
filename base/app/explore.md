@@ -19,7 +19,10 @@ You can select options from `Column variable` dropdown to switch between differe
 * `sd` and `var` calculate the sample standard deviation and variance
 * `sdp` and `varp` calculate the population standard deviation and variance
 
-
 ### Filter
 
-Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for Data > View for details.
+Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for _Data > View_ for details.
+
+### Pause explore
+
+For larger datasets it can useful to click `Pause explore` before selecting categorical and numerical variables, entering filters, etc. When you are ready to generate the explore table make sure that `Pause explore` is not checked. When `Pause explore` is not checked, any changes to the inputs will automatically result in a new table.

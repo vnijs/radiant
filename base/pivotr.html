@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -246,14 +242,18 @@ img {
 <blockquote>
 <p>Create pivot tables to explore your data</p>
 </blockquote>
-<p>If you have used pivot-tables in Excel the functionality provided in the Pivot tab should be familiar to you. Similar to the Explore tab, you can generate summary statistics for variables in your data. You can also easily generate frequency tables. Perhaps the most powerful feature in Pivot is that you can describe the data <em>by</em> one or more other variables.</p>
+<p>If you have used pivot-tables in Excel the functionality provided in the Pivot tab should be familiar to you. Similar to the <em>Data &gt; Explore</em> tab, you can generate summary statistics for variables in your data. You can also generate frequency tables. Perhaps the most powerful feature in Pivot is that you can easily describe the data <em>by</em> one or more other variables.</p>
 <p>For example, with the <code>diamonds</code> data select <code>clarity</code> and <code>cut</code> from the Categorical variables drop-down. You can drag-and-drop the selected variables to change their order. The categories for the first variable will be the column headers. After selecting these two variables a frequency table of diamonds with different levels of clarity and quality of cut. Choose <code>Row</code>, <code>Column</code>, or <code>Total</code> from the Normalize drop-down to normalize the frequencies by row, column, or overall total. If a normalize option is selected it can be convenient to check the <code>Percentage</code> box to express the numbers as percentages. Choose <code>Color bar</code> or <code>Heat map</code> from the Conditional formatting drop-down to emphasize the highest frequency counts.</p>
 <p>It is also possible to summarize numerical variables. Select <code>price</code> from the Numerical variables drop-down. This will create the table shown below. Just as in the View tab you can sort the table by clicking on the column headers. You can also use sliders (e.g., click in the input box below <code>I1</code>) to limit the view to values in a specified range. To view only information for diamonds with <code>Fair</code> or <code>Good</code> cut quality click in the input box below the <code>cut</code> header.</p>
 <p><img src="figures/pivotr.png" alt="pivotr table" /></p>
 <p>You can also create a bar chart based on the generated table (see image above). To download the table to <em>csv</em> format or the plot to a <em>png</em> format click the download icon on the right.</p>
 <div id="filter" class="section level3">
 <h3>Filter</h3>
-<p>Use the <code>Filter</code> box to select (or omit) specific sets of rows from the data. See the help file for Data &gt; View for details.</p>
+<p>Use the <code>Filter</code> box to select (or omit) specific sets of rows from the data. See the help file for <em>Data &gt; View</em> for details.</p>
+</div>
+<div id="pause-pivot" class="section level3">
+<h3>Pause pivot</h3>
+<p>For larger datasets it can useful to click <code>Pause pivot</code> before selecting categorical and numerical variables, entering filters, etc. When you are ready to generate the pivot table make sure that <code>Pause pivot</code> is not checked. When <code>Pause pivot</code> is not checked, any changes to the inputs will automatically result in a new table.</p>
 </div>
 
 

@@ -1,5 +1,5 @@
 ---
-title: Regression > GLM
+title: Regression > Logistic regression (GLM)
 ---
 
 ***

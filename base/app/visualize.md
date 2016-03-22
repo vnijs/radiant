@@ -2,11 +2,15 @@
 
 ### Filter
 
-Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for Data > View for details.
+Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for _Data > View_ for details.
+
+### Pause plotting
+
+For larger datasets it can useful to click `Pause pause` before selecting variables, entering filters, etc. When you are ready to generate the plot make sure that `Pause plotting` is not checked. When `Pause plotting` is not checked, any changes to the inputs will automatically result in a new plot.
 
 ### Plot-type
 
-Select the plot type you want. Choose histograms or density for one or more single variable plots. For example, with the `diamonds` data loaded select `Histogram` and all (X) variables (use CTRL-a or CMD-a). This will create histograms for all variables in your dataset. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical variable (X-axis) and the average value of a numeric variable (Y-axis). Box-plots are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
+Select the plot type you want. Choose histograms or density plots for one or more single variable plots. For example, with the `diamonds` data loaded select `Histogram` and all (X) variables (use CTRL-a or CMD-a). This will create histograms for all variables in your dataset. Scatter plots are used to visualize the relationship between two variables. Select one or more variables to plot on the Y-axis and one or more variables to plot on the X-axis. If one of the variables is categorical (e.g., a {factor}) it should be specified as an X-variable. Line plots are similar to scatter plots but they connect-the-dots and are particularly useful for time-series data. Bar plots are used to show the relationship between a categorical (or integer) variable (X-axis) and the average value of a numeric variable (Y-axis). If the Y-variable in a bar plot is categorical (i.e., a {factor}) the proportion of occurrence of the first-level in that variable is shown (e.g., if we select `color` from the `diamonds` data as the Y-variable each bar should show the proportion of observations with the value `D`). Box-plots are also used when you have a numeric Y-variable and a categorical X-variable. They are more informative than bar charts but also require a bit more effort to evaluate.
 
 ### Box plots
 
@@ -29,13 +33,13 @@ If you select a scatter or line plot a `Color` drop-down will be shown. Selectin
 
 ### Line, loess, and jitter
 
-To add a linear or non-linear regression line to a scatter plot check the Line and/or Loess boxes. If your data take on a limited number of values checking Jitter can be useful to get a better feel for where most of the data points are located. Jitter-ing simply adds a small random value to each data point so they do not overlap completely in the plot(s).
+To add a linear or non-linear regression line to a scatter plot check the `Line` and/or `Loess` boxes. If your data take on a limited number of values, `Jitter` can be useful to get a better feel for where most of the data points are located. `Jitter`-ing simply adds a small random value to each data point so they do not overlap completely in the plot(s).
 
 ### Axis scale
 
-The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see Data > Transform) and easier to estimate. Perhaps the most common data transformation applied to business data is the (natural) log. To see if a log-linear or log-log transformation may be appropriate for your data check the `Log X` and/or `Log Y` boxes.
+The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see _Data > Transform_) and easier to estimate using, for example, _Regression > Linear regression (OLS)`. Perhaps the most common data transformation applied to business data is the (natural) logarithm. To see if log transformation(s) may be appropriate for your data check the `Log X` and/or `Log Y` boxes.
 
-By default the scale of the y-axis is the same across sub-plots when using `Facet row`. To allow the y-axis to be specific to each sub-plot click the `Scale-y` check-box.
+By default the scale of the Y-axis is the same across sub-plots when using `Facet row`. To allow the Y-axis to be specific to each sub-plot click the `Scale-y` check-box.
 
 ### Flip axes
 
@@ -45,12 +49,16 @@ To switch the variable on the X- and Y-axis check the `Flip` box.
 
 To make plots bigger or smaller adjust the values in the height and width boxes on the bottom left.
 
-### Customizing plots in R > Report
+### Keep plots
 
-To customize a plot first generate the `visualize` command by clicking the report icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
+The best way to keep/store plots is to generate a `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit></i>) icon on the bottom left of your screen. Alternatively, click the <i title='Download' class='fa fa-download></i> icon on the top right of your screen.
+
+### Customizing plots in _R > Report_
+
+To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit></i>) icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
 
 ```r
-visualize(dataset = "diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
+visualize("diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
   ggtitle("A scatterplot") + xlab("price in $")
 ```
 

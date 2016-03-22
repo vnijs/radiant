@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -258,6 +254,27 @@ img {
 </ul>
 <p><img src="figures_quant/correlation_plot.png" alt="Plot" /></p>
 <p>The font-size used in the plot is proportional to the size and significance of the correlation between two variables.</p>
+<div id="method" class="section level3">
+<h3>Method</h3>
+<p>Select the method to use to calculate correlations. The most common method is <code>Pearson</code>. See <a href="https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient" target = "_blank">Wikipedia</a> for details.</p>
+</div>
+<div id="correlation-cutoff" class="section level3">
+<h3>Correlation cutoff</h3>
+<p>To show only correlations above a certain value choose a non-zero value in the numeric input between 0 and 1 (e.g., 0.15).</p>
+</div>
+<div id="covariance-matrix" class="section level3">
+<h3>Covariance matrix</h3>
+<p>Although we generally prefer to see the correlation matrix, you can also see the covariance matrix by checking the <code>Show covariance matrix</code> box.</p>
+</div>
+<div id="pause-estimation" class="section level3">
+<h3>Pause estimation</h3>
+<p>For larger datasets it can useful to click <code>Pause estimation</code> before selecting variables, entering filters, correlation cutoffs, etc. When you are ready to generate the correlation matrix or correlation plot make sure that <code>Pause estimation</code> is not checked. When <code>Pause estimation</code> is not checked, any changes to the inputs will automatically result in a new matrix and/or plot.</p>
+</div>
+<div id="khan-on-correlation" class="section level3">
+<h3>Khan on correlation</h3>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/-Y-M9aD_ccQ" frameborder="0" allowfullscreen>
+</iframe>
+</div>
 
 
 &copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>

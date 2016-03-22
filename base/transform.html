@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -259,6 +255,10 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <div id="filter" class="section level3">
 <h3>Filter</h3>
 <p>If a filter has been specified it will be ignored for (most) functions available in <em>Data &gt; Transform</em>. To create a new dataset based on a filter navigate to the <em>Data &gt; View</em> tab and click the <code>Store</code> button. Alternatively, create new dataset based on a Filter select <code>Holdout sample</code> from the <code>Transformation type</code> dropdown.</p>
+</div>
+<div id="hide-summaries" class="section level3">
+<h3>Hide summaries</h3>
+<p>For larger datasets, or when summaries are not needed, it can useful to click <code>Hide summaries</code>before selecting the transformation type and specifying how you want to change variables and data. If you want to see data and variable summaries make sure that <code>Hide summaries</code> is not checked.</p>
 </div>
 <div id="type" class="section level3">
 <h3>Type</h3>
@@ -340,9 +340,10 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 </ol>
 <p>Note: For examples 7, 8, and 15 above you may need to change the new variable to type <code>factor</code> before using it for further analysis (see <code>Type</code> above)</p>
 </div>
-<div id="bin" class="section level2">
-<h2>Bin</h2>
+<div id="bin" class="section level3">
+<h3>Bin</h3>
 <p>The <code>Bin</code> option is a convenience function for the <code>xtile</code> command mentioned above when you want to create multiple quitile/decile/… variables. To calculate quintiles enter “5” as the <code>Nr bins</code>. The <code>reverse</code> option replaces 1 by 5, 2 by 4, …, 5 by 1. Choose an appropriate variable name extension for the new variables.</p>
+</div>
 <div id="clipboard" class="section level3">
 <h3>Clipboard</h3>
 <p>It is possible to manipulate your data in a spreadsheet (e.g., Excel or Google sheets) and copy-and-paste the data back into Radiant. If you don’t have the original data in a spreadsheet already use the clipboard feature in <em>Data &gt; Manage</em> so you can paste it into the spreadsheet or click the download icon on the top right of your screen in the <em>Data &gt; View</em> tab. Apply your transformations in the spreadsheet program and then copy the new variable(s), with a header label, to the clipboard (i.e., CTRL-C on windows and CMD-C on mac). Select <code>Clipboard</code> from the <code>Transformation type</code> drop-down and paste the new data into the <code>Paste from spreadsheet</code> box. It is key that new variable(s) have the same number of observations as the data in Radiant. To add the new variables to the data click <code>Store</code>.</p>
@@ -401,31 +402,31 @@ r_data[["diamonds"]] <- mutate_each(r_data[["diamonds"]], funs(log), ext = "_log
 <h3>Show duplicates</h3>
 <p>If there are duplicates in the data use <code>Show duplicates</code> to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the <em>View</em> tab make sure to <code>Store</code> them in a different dataset (i.e., make sure <strong>not</strong> to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are <strong>exactly</strong> the same so showing 2 or 3 isn’t helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with <strong>all</strong> rows that are deemed similar.</p>
 </div>
-</div>
-<div id="training-variable" class="section level2">
-<h2>Training variable</h2>
+<div id="training-variable" class="section level3">
+<h3>Training variable</h3>
 <p>To create a variable that can be used to randomly filter a dataset for analysis (or training) and holdout, select <code>Training variable</code> from the <code>Transformation type</code> dropdown. Specify either the number of observations to use for training (i.e., <code>Size</code> &gt; 1) or a proportion of observations to select (i.e., <code>Size</code> &gt; 1). The new variable will have a value “1” for training and “0” holdout.</p>
 </div>
-<div id="holdout-sample" class="section level2">
-<h2>Holdout sample</h2>
+<div id="holdout-sample" class="section level3">
+<h3>Holdout sample</h3>
 <p>To create a holdout sample based on (the reverse of) a filter select <code>Holdout sample</code> from the <code>Transformation type</code> dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where <code>date &lt; &quot;2014-12-13&quot;</code> then the holdout sample will be based on the filter <code>date &gt;= &quot;2014-12-13&quot;</code> if the <code>Reverse filter</code> box is checked.</p>
 <!-- r_data[["diamonds"]] <- mutate(r_data[["diamonds"]], date = as_ymd("2012-1-1") + as.integer(runif(30,1,4*365)) %>% sample(3000, replace = TRUE) %>% sort) -->
 </div>
-<div id="gather" class="section level2">
-<h2>Gather</h2>
-<p>Combine multiple columns into one column.</p>
+<div id="gather-columns" class="section level3">
+<h3>Gather columns</h3>
+<p>Combine multiple columns into one column. If you have the <code>diamonds</code> dataset loaded, select <code>cut</code> and <code>color</code> in the <code>Select variable(s)</code> box after selecting <code>Gather columns</code> from the <code>Transformation type</code> dropdown. This will create new variables <code>key</code> and <code>value</code>. <code>key</code> has two values: <code>cut</code> and <code>color</code> while <code>value</code> captures all values that were in <code>cut</code> and <code>color</code>.</p>
 </div>
-<div id="spread" class="section level2">
-<h2>Spread</h2>
-<p>Spread one column into multiple columns.</p>
+<div id="spread-column" class="section level3">
+<h3>Spread column</h3>
+<p>Spread one column into multiple columns. The opposite operation for <code>gather</code>.</p>
 </div>
-<div id="table-to-data" class="section level2">
-<h2>Table-to-data</h2>
-<p>Turn a dataset with frequencies into a dataset with the number of rows equal to the sum of the frequencies.</p>
+<div id="table-to-data" class="section level3">
+<h3>Table-to-data</h3>
+<p>Turn a frequency table into a dataset. The number of rows will equal the sum of all frequencies.</p>
 </div>
-<div id="expand-grid" class="section level2">
-<h2>Expand grid</h2>
-<p>Create a dataset with all combinations of values for a selection of variables.</p>
+<div id="expand-grid" class="section level3">
+<h3>Expand grid</h3>
+<p>Create a dataset with all combinations of values for a selection of variables. Useful to generate datasets for prediction in, for example, <em>Regression &gt; Linear regression (OLS)</em> or <em>Regression &gt; Logistic regression (GLM)</em>. Suppose you wanted to create a dataset with all possible combinations of values for <code>cut</code> and <code>color</code> of a diamond. By selecting <code>Expand grid</code> from the <code>Transformation type</code> dropdown and <code>cut</code> and <code>color</code> in the <code>Select variable(s)</code> box we can see in the screenshot below that there are 35 combinations (i.e., <code>cut</code> has 5 unique values and <code>color</code> has 7 unique values so 5 x 7 combinations are possible). Choose a name for the new dataset (e.g., diamonds_expand) and click the <code>Store</code> button to add it to the <code>Datasets</code> dropdown.</p>
+<p><img src="figures/expand_grid.png" alt="expand" /></p>
 </div>
 
 

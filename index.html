@@ -136,8 +136,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -161,8 +161,8 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Regression</li>
              <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">GLM</a></li>
+             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
+             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
              <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
@@ -211,10 +211,6 @@ img {
              <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
              <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
              <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
              <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
@@ -249,7 +245,7 @@ img {
 <ul>
 <li>Explore: Quickly and easily summarize, visualize, and analyze your data</li>
 <li>Cross-platform: It runs in a browser on Windows, Mac, and Linux</li>
-<li>Reproducible: Recreate results and share work with others as a state file or an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> report</li>
+<li>Reproducible: Recreate results and share work with others as a state-file or an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> report</li>
 <li>Programming: Integrate Radiant’s analysis functions into your own R-code</li>
 <li>Context: Data and examples focus on business applications</li>
 </ul>
@@ -257,7 +253,7 @@ img {
 </iframe>
 <div id="explore" class="section level4">
 <h4>Explore</h4>
-<p>Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes). This greatly facilitates exploration and understanding of the data.</p>
+<p>Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes) and/or when a button is pressed (e.g., <code>Estimate</code> in <em>Regression &gt; Logist regression (GLM)</em>). This greatly facilitates exploration and understanding of the data.</p>
 </div>
 <div id="cross-platform" class="section level4">
 <h4>Cross-platform</h4>
@@ -268,12 +264,12 @@ img {
 </div>
 <div id="reproducible" class="section level4">
 <h4>Reproducible</h4>
-<p>Simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another computer. Share state files with others and create reproducible reports using <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a>. See also the section on <code>Saving and loading state</code> below</p>
+<p>To conduct high-quality analysis, simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another computer. Share state-files with others and create reproducible reports using <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a>. See also the section on <code>Saving and loading state</code> below</p>
 <p>If you are using Radiant on a server you can even share the url (include the SSUID) with others so they can see what you are working on. Thanks for this feature go to <a href="https://github.com/jcheng5">Joe Cheng</a>.</p>
 </div>
 <div id="programming" class="section level4">
 <h4>Programming</h4>
-<p>Although Radiant’s web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For more information about programming with Radiant see the <a href="http://vnijs.github.io/radiant/programming.html">programming</a> page on the documentation site.</p>
+<p>Although Radiant’s web-interface can handle quite a few data and analysis tasks, you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For more information about programming with Radiant see the <a href="http://vnijs.github.io/radiant/programming.html">programming</a> page on the documentation site.</p>
 </div>
 <div id="context" class="section level4">
 <h4>Context</h4>
@@ -283,16 +279,14 @@ img {
 <div id="how-to-install-radiant" class="section level2">
 <h2>How to install Radiant</h2>
 <ul>
-<li>Required: <a href="http://cran.rstudio.com/">R</a> version 3.2 or later</li>
+<li>Required: <a href="http://cran.rstudio.com/">R</a> version 3.2.4 or later</li>
 <li>Required: A modern browser (e.g., <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Chrome</a> or Safari). Internet Explorer (version 11 or higher) should work as well</li>
 <li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
 </ul>
-<!--
-An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html).
--->
-<p>To install the latest version for Windows of Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:</p>
+<p>If you use Rstudio (version 0.99.893 or later) you can start and update Radiant through the <code>Addins</code> menu at the top of the screen. For Quantitative Analysis or Business Analytics click <code>Radiant - Quant</code>, for Marketing Research click <code>Radiant - Marketing</code>, and for Customer Analytics click <code>Radiant - Analytics</code>:</p>
+<p>To install the latest version of Radiant for Windows or Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:</p>
 <pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;, type = &#39;binary&#39;)</code></pre>
-<p>Once all packages are installed use the command below to launch the app (use either “base”, “quant”, “marketing” or “analytics”):</p>
+<p>Once all packages are installed use the command below to launch the app (use either “base”, “quant”, “marketing”, or “analytics”), or use the <code>Addins</code> menu in Rstudio:</p>
 <pre class="r"><code>radiant::radiant(&quot;analytics&quot;)</code></pre>
 <p>See the <a href="http://vnijs.github.io/radiant/install.html">installing radiant</a> page for more details.</p>
 <!--
@@ -300,7 +294,7 @@ See also the `Installing Radiant` video:
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
 -->
-<p>You can create a launcher on your Desktop to start Radiant by typing <code>radiant::launcher(&quot;analytics&quot;)</code> in the R(studio) console and pressing return. Again, enter either “base”, “quant”, “marketing” or “analytics” depending on the app you want to use. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
+<p>You can also create a launcher on your Desktop to start Radiant by typing <code>radiant::launcher(&quot;analytics&quot;)</code> in the R(studio) console and pressing return. Again, enter either “base”, “quant”, “marketing” or “analytics” depending on the app you want to use. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
 <p>When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code>. The Radiant process will stop and the browser window will close (Chrome) or gray-out.</p>
 </div>
 <div id="documentation" class="section level2">
@@ -310,7 +304,7 @@ See also the `Installing Radiant` video:
 </div>
 <div id="reporting-issues" class="section level2">
 <h2>Reporting issues</h2>
-<p>Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> if you have any problems with Radiant.</p>
+<p>Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> if you have any problems using Radiant.</p>
 </div>
 <div id="online" class="section level2">
 <h2>Online</h2>
@@ -328,15 +322,15 @@ See also the `Installing Radiant` video:
 </div>
 <div id="saving-and-loading-state" class="section level2">
 <h2>Saving and loading state</h2>
-<p>To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on <code>Save state</code> (see also the <code>Data &gt; Manage</code> tab). You can open this state file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file <a href="https://vnijs.github.io/radiant/examples/radiant-state.rda"><code>radiant-state.rda</code></a> through the Data &gt; Manage tab. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings. There is also a report in <code>R &gt; Report</code> that was created using the Radiant interface. The html file <a href="https://vnijs.github.io/radiant/examples/radiant-state.html" target="_blank"><code>radiant-state.html</code></a> contains the output.</p>
+<p>To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on <code>Save state</code> (see also the <code>Data &gt; Manage</code> tab). You can open this state-file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file <a href="https://vnijs.github.io/radiant/examples/radiant-state.rda"><code>radiant-state.rda</code></a> through the Data &gt; Manage tab. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings. There is also a report in <code>R &gt; Report</code> that was created using the Radiant interface. The html file <a href="https://vnijs.github.io/radiant/examples/radiant-state.html" target="_blank"><code>radiant-state.html</code></a> contains the output.</p>
 <p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use <code>Reset</code> in the <i title='Power off' class='fa fa-power-off'></i> menu in the navigation bar to return to a clean/new state.</p>
-<p>Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use <i title='Power off' class='fa fa-power-off'></i> &gt; <code>Stop</code> to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state file directly into Rstudio it will be used when you start Radiant to recreate a previous state.</p>
-<p><strong>Technical note</strong>: The way loading state works in Radiant is as follows: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> list is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
+<p>Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use <i title='Power off' class='fa fa-power-off'></i> &gt; <code>Stop</code> to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state-file directly into Rstudio it will be used when you start Radiant to recreate a previous state.</p>
+<p><strong>Technical note</strong>: Loading state works as follows in Radiant: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state-file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> list is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
 <pre class="r"><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$comp_value))</code></pre>
 </div>
 <div id="source-code" class="section level2">
 <h2>Source code</h2>
-<p>The source code is available on GitHub at <a href="https://github.com/vnijs/radiant" class="uri">https://github.com/vnijs/radiant</a>. Three (related) apps are included in the inst/ directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. This app is used in the <em>Quantitative Analysis</em> class at the Rady School of Management (UCSD). Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools. The <code>quant</code> app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The <code>marketing</code> app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc. This app is used in the <em>Research for Marketing Decisions</em> class at Rady (UCSD).</p>
+<p>The source code is available on GitHub at <a href="https://github.com/vnijs/radiant" class="uri">https://github.com/vnijs/radiant</a>. Three (related) apps are included in the inst/ directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. This app is used in the <em>Quantitative Analysis</em> class at the Rady School of Management (UCSD). Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools. The <code>quant</code> app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The <code>marketing</code> app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc. This app is used in the <em>Business Analytics</em>, <em>Quantitative Analysis</em>, <em>Research for Marketing Decisions</em>, and <em>Customer Analytics</em> classes at the Rady School of Management (UCSD).</p>
 </div>
 <div id="credits" class="section level2">
 <h2>Credits</h2>
