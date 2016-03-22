@@ -16,3 +16,23 @@ Stars shown in the Plot tab are interpreted as:
 ![Plot](figures_quant/correlation_plot.png)
 
 The font-size used in the plot is proportional to the size and significance of the correlation between two variables.
+
+### Method
+
+Select the method to use to calculate correlations. The most common method is `Pearson`. See <a href="https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient" target = "_blank">Wikipedia</a> for details.
+
+### Correlation cutoff
+
+To show only correlations above a certain value choose a non-zero value in the numeric input between 0 and 1 (e.g., 0.15).
+
+### Covariance matrix
+
+Although we generally prefer to see the correlation matrix, you can also see the covariance matrix by checking the `Show covariance matrix` box.
+
+### Pause estimation
+
+For larger datasets it can useful to click `Pause estimation` before selecting variables, entering filters, correlation cutoffs, etc. When you are ready to generate the correlation matrix or correlation plot make sure that `Pause estimation` is not checked. When `Pause estimation` is not checked, any changes to the inputs will automatically result in a new matrix and/or plot.
+
+### Khan on correlation
+
+<iframe width="640" height="375" src="https://www.youtube.com/embed/-Y-M9aD_ccQ" frameborder="0" allowfullscreen></iframe>

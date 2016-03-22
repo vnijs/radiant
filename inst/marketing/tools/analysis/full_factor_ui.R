@@ -30,17 +30,16 @@ output$ui_full_factor <- renderUI({
   req(input$dataset)
 	tagList(
     wellPanel(
+      actionButton("ff_run", "Estimate", width = "100%")
+    ),
+    wellPanel(
       uiOutput("ui_ff_vars"),
       selectInput("ff_method", label = "Method:", choices = ff_method,
       	selected = state_single("ff_method", ff_method, "PCA")),
-			div(class="row",
- 	    	div(class="col-xs-6", numericInput("ff_nr_fact",
- 	    	    label = "# of factors:", min = 1,
- 	    	    value = state_init('ff_nr_fact',1))),
-	    	div(class="col-xs-6", numericInput("ff_cutoff",
-	    	    label = "Cutt-off", min = 0, max = 1,
-	    	    value = state_init('ff_cutoff',0), step = .05))
-  	  ),
+      tags$table(
+        tags$td(numericInput("ff_nr_fact", label = "Nr. of factors:", min = 1, value = state_init('ff_nr_fact',1))),
+        tags$td(numericInput("ff_cutoff", label = "Cutt-off", min = 0, max = 1, value = state_init('ff_cutoff',0), step = .05, width = "117px"))
+      ),
   	  conditionalPanel(condition = "input.tabs_full_factor == 'Summary'",
         checkboxInput("ff_fsort", "Sort", value = state_init("ff_fsort",FALSE))
       ),
@@ -48,9 +47,10 @@ output$ui_full_factor <- renderUI({
       	selected = state_init("ff_rotation", "varimax"),
       	inline = TRUE),
       conditionalPanel(condition = "input.ff_vars != null",
-        HTML("<label>Save:</label>"), br(),
-        downloadButton("ff_save_loadings", "Loadings"),
-        actionButton("ff_save_scores", "Scores")
+        tags$table(
+          tags$td(textInput("ff_store_name", "Store scores:", state_init("ff_store_name","factor"))),
+          tags$td(actionButton("ff_store", "Store"), style="padding-top:30px;")
+        )
       )
   	),
 		help_and_report(modal_title = "Factor",
@@ -87,10 +87,12 @@ output$full_factor <- renderUI({
 
 	  ff_output_panels <- tabsetPanel(
 	    id = "tabs_full_factor",
-	    tabPanel("Summary", verbatimTextOutput("summary_full_factor")),
+	    tabPanel("Summary",
+        downloadLink("dl_ff_loadings", "", class = "fa fa-download alignright"), br(),
+        verbatimTextOutput("summary_full_factor")),
 	    tabPanel("Plot",
-               plot_downloader("full_factor", height = ff_plot_height()),
-               plotOutput("plot_full_factor", height = "100%"))
+        plot_downloader("full_factor", height = ff_plot_height()),
+        plotOutput("plot_full_factor", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Factor",
@@ -99,28 +101,30 @@ output$full_factor <- renderUI({
 		             	output_panels = ff_output_panels)
 })
 
-.full_factor <- reactive({
-	do.call(full_factor, ff_inputs())
+.ff_available <- reactive({
+  if (not_available(input$ff_vars))
+    return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
+  if (length(input$ff_vars) < 2) return("Please select two or more variables")
+  if (not_pressed(input$ff_run)) return("** Press the Estimate button to generate factor analysis results **")
+
+  "available"
+})
+
+.full_factor <- eventReactive(input$ff_run, {
+  withProgress(message = 'Estimating factor solution', value = 0,
+	  do.call(full_factor, ff_inputs())
+  )
 })
 
 .summary_full_factor <- reactive({
-  if (not_available(input$ff_vars))
-		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
-
-
-	if (length(input$ff_vars) < 2) return("Please select two or more variables")
-	if (is.null(input$ff_nr_fact)) return("Number of factors should be > 1.")
-
+  if (.ff_available() != "available") return(.ff_available())
+	if (is_not(input$ff_nr_fact)) return("Number of factors should be >= 1.")
   summary(.full_factor(), cutoff = input$ff_cutoff, fsort = input$ff_fsort)
 })
 
 .plot_full_factor <- reactive({
-  if (not_available(input$ff_vars))
-    return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
-
-	if (length(input$ff_vars) < 2) return("Please select two or more variables")
-	if (is.null(input$ff_nr_fact)) return("Number of factors should be > 1.")
-
+  if (.ff_available() != "available") return(.ff_available())
+  if (is_not(input$ff_nr_fact) || input$ff_nr_fact < 2) return("Plot requires 2 or more factors")
   plot(.full_factor(), shiny = TRUE)
 })
 
@@ -131,7 +135,7 @@ observe({
     inp_out <- list()
     inp_out[[1]] <- list(cutoff = input$ff_cutoff, fsort = input$ff_fsort)
   	inp_out[[2]] <- ""
-    xcmd = paste0("# save_factors(result)\n# clean_loadings(result$floadings,", input$ff_cutoff, ",", input$ff_fsort, ") %>% write.csv(file = '~/factor_loadings.csv')")
+    xcmd = paste0("# store(result, name = '", input$ff_store_name, "')\n# clean_loadings(result$floadings,", input$ff_cutoff, ",", input$ff_fsort, ") %>% write.csv(file = '~/loadings.csv')")
 
     update_report(inp_main = clean_args(ff_inputs(), ff_args),
                    fun_name = "full_factor",
@@ -142,21 +146,24 @@ observe({
   })
 })
 
-# save factor loadings when download button is pressed
-output$ff_save_loadings <- downloadHandler(
+## save factor loadings when download button is pressed
+output$dl_ff_loadings <- downloadHandler(
   filename = function() { "loadings.csv" },
   content = function(file) {
-    .full_factor() %>%
-      { if (is.list(.)) .$floadings else return() } %>%
-      clean_loadings(input$ff_cutoff, input$ff_fsort) %>%
-      write.csv(file)
+    if (pressed(input$ff_run)) {
+      .full_factor() %>%
+        { if (is.list(.)) .$floadings else return() } %>%
+        clean_loadings(input$ff_cutoff, input$ff_fsort) %>%
+        write.csv(file = file)
+    } else {
+      cat("No output available. Press the Estimate button to generate the factor analysis results", file = file)
+    }
   }
 )
 
-# save factor scores when action button is pressed
-observe({
-	if (not_pressed(input$ff_save_scores)) return()
-	isolate({
-	 .full_factor() %>% { if (!is.character(.)) save_factors(.) }
-	})
+## store factor scores
+observeEvent(input$ff_store, {
+  if (pressed(input$ff_run)) {
+    .full_factor() %>% { if (!is.character(.)) store(., name = input$ff_store_name) }
+  }
 })

@@ -193,26 +193,53 @@ plot.full_factor <- function(x,
 	 	{if (shiny) . else print(.)}
 }
 
-#' Save factor scores to active dataset
+#' Store factor scores to active dataset
 #'
 #' @details See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{full_factor}}
+#' @param ... Additional arguments
+#' @param name Name of factor score variables
 #'
 #' @examples
 #' \dontrun{
 #' result <- full_factor("diamonds",c("price","carat","table"))
-#' save_factors(result)
+#' store(result)
 #' head(diamonds)
 #' }
 #'
+#' @seealso \code{\link{full_factor}} to generate results
+#' @seealso \code{\link{summary.full_factor}} to summarize results
+#' @seealso \code{\link{plot.full_factor}} to plot results
+#'
 #' @export
-save_factors <- function(object) {
-  if (object$data_filter != "")
-    return("Please deactivate data filters before trying to save factor scores")
-  object$fres$scores %>% as.data.frame %>%
-    changedata(object$dataset, vars = ., var_names = paste0("fac", 1:ncol(.)))
+store.full_factor <- function(object, ..., name = "") {
+	## membership variable name
+	fscores <- as.data.frame(object$fres$scores)
+  if (is_empty(name))
+  	name <- paste0("factor",1:ncol(fscores))
+  else
+  	name <- paste0(name,1:ncol(fscores))
+
+	indr <- indexr(object$dataset, object$vars, object$data_filter)
+	fs <- data.frame(matrix(NA, nrow = indr$nr, ncol = ncol(fscores)))
+	fs[indr$ind, ] <- fscores
+
+	# fs <- data.frame(matrix(NA, nrow = indr$nr, ncol = object$nr_fact))
+	# fs <- scores
+
+	# changedata(object$dataset, vars = as.factor(km), var_names = name)
+  changedata(object$dataset, vars = fs, var_names = name)
 }
+
+#' Deprecated function to store factor loadings
+#' @param object Return value from \code{\link{full_factor}}
+#' @param ... Additional arguments
+#' @param name Name of factor score variables
+#' @seealso Use \code{\link{store.full_factor}} instead
+#' @export
+save_factors <- store.full_factor
+
 
 #' Sort and clean loadings
 #'
@@ -245,3 +272,12 @@ clean_loadings <- function(floadings,
   }
   floadings
 }
+
+
+
+
+
+
+
+
+

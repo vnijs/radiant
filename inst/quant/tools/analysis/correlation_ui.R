@@ -99,7 +99,7 @@ output$correlation <- renderUI({
 
 cor_available <- reactive({
   if (not_available(input$cor_vars) || length(input$cor_vars) < 2)
-    return("This analysis requires two or more variables or type numeric, integer,\nor factor. If these variable types are not available please select\nanother dataset.\n\n" %>% suggest_data("diamonds"))
+    return("This analysis requires two or more variables or type numeric,\ninteger,or factor. If these variable types are not available\nplease select another dataset.\n\n" %>% suggest_data("diamonds"))
 
   # req(input$cor_pause == FALSE)
   "available"

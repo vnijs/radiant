@@ -333,7 +333,7 @@ observe({
       #   fext <- tools::file_ext(filename)
       #   objname <- sub(paste0(".",fext,"$"),"", filename)
       #   print(objname)
-      #   upload_error_handler(objname, "### The file loaded does not seem to be a statefile. Try loading it as an 'rda' file")
+      #   upload_error_handler(objname, "### The file loaded does not seem to be a state-file. Try loading it as an 'rda' file")
       #   return()
       # }
 

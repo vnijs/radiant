@@ -35,7 +35,8 @@ output$ui_dtree_list <- renderUI({
   if (length(dtree_list) == 0) return(invisible())
   selectInput(inputId = "dtree_list", label = NULL,
     choices = dtree_list, selected = state_init("dtree_list", dtree_list[1]),
-    multiple = FALSE, selectize = FALSE, width = "100%")
+    multiple = FALSE, selectize = FALSE, width = "110px")
+    # multiple = FALSE, selectize = FALSE, width = "100%")
 })
 
 output$ui_dtree_name <- renderUI({
@@ -79,21 +80,23 @@ output$dtree <- renderUI({
     tabPanel("Plot",
       actionLink("dtree_save_plot", "", class = "fa fa-download alignright", onclick = "window.print();"),
       with(tags, table(
-        td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
+        td(HTML("<i title='Report results' class='fa fa-edit action-button shiny-bound-input' href='' id='dtree_report2'></i>"), style="padding-top:30px;"),
+        td(HTML("&nbsp;&nbsp;&nbsp;")),
+        td(radioButtons(inputId = "dtree_final", label = "Plot decision tree:",
           c("Initial" = FALSE, "Final" = TRUE),
-          selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
+          selected = state_init("dtree_final", FALSE), inline = TRUE)),
         td(actionButton("dtree_eval_plot", "Calculate"), style="padding-top:30px;"),
-        td(numericInput("dtree_round", "Round", value = state_init("dtree_round", 3),
-           min = 0, max = 10, width = "50px")),
+        td(numericInput("dtree_dec", "Decimals", value = state_init("dtree_dec", 3),
+           min = 0, max = 10, width = "70px")),
         td(textInput("dtree_symbol", "Symbol", state_init("dtree_symbol", "$"), width = "50px"))
       )),
       DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px"))
     # ,tabPanel("Sensitivity", verbatimTextOutput("something")
       # actionLink("dtree_save_splot", "", class = "fa fa-download alignright", onclick = "window.print();"),
 #       with(tags, table(
-#         td(radioButtons(inputId = "dtree_plot_init", label = "Plot decision tree:",
+#         td(radioButtons(inputId = "dtree_final", label = "Plot decision tree:",
 #           c("Initial" = FALSE, "Final" = TRUE),
-#           selected = state_init("dtree_plot_init", FALSE), inline = TRUE)),
+#           selected = state_init("dtree_final", FALSE), inline = TRUE)),
 #         td(actionButton("dtree_eval_plot", "Calculate"))
 #       )),
       # DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px")
@@ -147,29 +150,46 @@ output$dtree_print <- renderPrint({
   dtree_eval() %>% {if (is.null(.)) invisible() else summary(.)}
 })
 
+dtree_plot_args <- as.list(if (exists("plot.dtree")) formals(plot.dtree)
+                         else formals(radiant:::plot.dtree))
+
+## list of function inputs selected by user
+dtree_plot_inputs <- reactive({
+  ## loop needed because reactive values don't allow single bracket indexing
+  for (i in names(dtree_plot_args))
+    dtree_plot_args[[i]] <- input[[paste0("dtree_",i)]]
+
+  # cat(paste0(names(dtree_plot_args), " ", dtree_plot_args, collapse = ", "), file = stderr(), "\n")
+  dtree_plot_args
+})
+
 output$dtree_plot <- DiagrammeR::renderDiagrammeR({
-  if (is_empty(input$dtree_plot_init)) return(invisible())
+  if (is_empty(input$dtree_final)) return(invisible())
   dt <- dtree_eval()
   if (is.null(dt)) {
     return(invisible())
   } else {
-    DiagrammeR::DiagrammeR(plot(dt, symbol = input$dtree_symbol,
-                           dec = input$dtree_round, final = input$dtree_plot_init,
-                           shiny = TRUE))
+    # DiagrammeR::DiagrammeR(plot(dt, symbol = input$dtree_symbol,
+    #                        dec = input$dtree_dec, final = input$dtree_final,
+    #                        shiny = TRUE))
+
+    pinp <- dtree_plot_inputs()
+    pinp$shiny <- TRUE
+    DiagrammeR::DiagrammeR(do.call(plot, c(list(x = dt), pinp)))
   }
 })
 
-.plot_dtree <- reactive({
-  if (is_empty(input$dtree_plot_init)) return(invisible())
-  dt <- dtree_eval()
-  if (is.null(dt)) {
-    return(invisible())
-  } else {
-    # DiagrammeR(plot(dt, final = input$dtree_plot_init, shiny = TRUE))
-    plot(dt, symbol = input$dtree_symbol, dec = input$dtree_round,
-         final = input$dtree_plot_init, shiny = TRUE)
-  }
-})
+# .plot_dtree <- reactive({
+#   if (is_empty(input$dtree_final)) return(invisible())
+#   dt <- dtree_eval()
+#   if (is.null(dt)) {
+#     return(invisible())
+#   } else {
+#     # DiagrammeR(plot(dt, final = input$dtree_final, shiny = TRUE))
+#     plot(dt, symbol = input$dtree_symbol, dec = input$dtree_dec,
+#          final = input$dtree_final, shiny = TRUE)
+#   }
+# })
 
 output$dtree_save <- downloadHandler(
   filename = function() {"dtree.txt"},
@@ -208,6 +228,14 @@ observeEvent(input$dtree_list, {
 })
 
 observeEvent(input$dtree_report, {
+  .dtree_report()
+})
+
+observeEvent(input$dtree_report2, {
+  .dtree_report()
+})
+
+.dtree_report <- reactive({
   dtree_name <- input$dtree_list
   if (is_empty(dtree_name)) dtree_name <- input$dtree_name
   if (is_empty(dtree_name)) dtree_name <- dtree_name()
@@ -215,8 +243,16 @@ observeEvent(input$dtree_report, {
   r_data[[dtree_name]] <- input$dtree_edit
   r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
 
+  xcmd <-
+    clean_args(dtree_plot_inputs(), dtree_plot_args[-1]) %>%
+    deparse(control = c("keepNA"), width.cutoff = 500L) %T>%
+    print %>%
+    {if (. == "list()") "DiagrammeR::renderDiagrammeR(plot(result))"
+     else paste0(sub("list(", "DiagrammeR::renderDiagrammeR(plot(result, ", ., fixed = TRUE),")")}
+
   update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
                 fun_name = "dtree",
                 inp_out = list("",""), outputs = "summary",
-                figs = FALSE)
+                figs = FALSE,
+                xcmd = xcmd)
 })

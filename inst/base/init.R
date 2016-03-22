@@ -234,7 +234,13 @@ url_list <-
        "Simulate" = list("tabs_simulate" = list("Simulate" = "decide/simulate/",
                                                 "Plot (simulate)" = "decide/simulate/plot/",
                                                 "Repeat" = "decide/simulate/repeat/",
-                                                "Plot (repeat)" = "decide/simulate/repeat/plot/"))
+                                                "Plot (repeat)" = "decide/simulate/repeat/plot/")),
+
+       "(Dis)similarity" = list("tabs_mds" = list("Summary" = "maps/mds/",
+                                                  "Plot" = "maps/mds/plot/")),
+
+       "Attributes" = list("tabs_pmap" = list("Summary" = "maps/pmap/",
+                                              "Plot" = "maps/pmap/plot/"))
   )
 
 ## generate url patterns for navigation

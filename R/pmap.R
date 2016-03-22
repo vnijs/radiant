@@ -27,7 +27,8 @@ pmap <- function(dataset, brand, attr,
                  data_filter = "") {
 
 	nr_dim <- as.numeric(nr_dim)
-	dat <- getdata(dataset, c(brand, attr), filt = data_filter)
+	vars <- c(brand,attr)
+	dat <- getdata(dataset, vars, filt = data_filter)
 
 	brands <- dat[,1] %>% as.character %>% gsub("^\\s+|\\s+$", "", .)
 	f_data <- dat[,-1]
@@ -45,7 +46,8 @@ pmap <- function(dataset, brand, attr,
 	fres$scores <- scale(as.matrix(f_data), center = TRUE, scale = TRUE) %*% cscm
 	rownames(fres$scores) <- brands
 
-	if (!is.null(pref) && pref != "") {
+	if (!is_empty(pref)) {
+		vars <- c(vars, pref)
 		pref_cor <- sshhr(getdata(dataset, pref, filt = data_filter)) %>%
 								  cor(fres$scores) %>%
 								  data.frame
@@ -239,3 +241,12 @@ plot.pmap <- function(x,
 
 	par(op)
 }
+
+#' Store factor scores from attribute based perceptual map
+#' @param object Return value from \code{\link{pmap}}
+#' @param ... Additional arguments
+#' @param name Name of factor score variables
+#' @seealso Use \code{\link{store.full_factor}} instead
+#' @export
+store.pmap <- store.full_factor
+

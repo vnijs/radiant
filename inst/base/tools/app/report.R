@@ -128,6 +128,49 @@ knitIt <- function(text) {
   scrub %>% HTML
 }
 
+## Based on http://stackoverflow.com/a/31797947/1974918
+knitIt3 <- function(text) {
+
+  # text <- "DiagrammeR::renderDiagrammeR(plot(result, final = 'TRUE'))"
+  text <-
+    gsub("DiagrammeR::renderDiagrammeR", "", text) %>%
+    gsub("DT::renderDataTable", "", .)
+  ## Read input and convert to Markdown
+  md <- knit(text = text)
+  ## Get dependencies from knitr
+  deps <- knit_meta()
+
+  ## Convert script dependencies into data URIs, and stylesheet
+  ## dependencies into inline stylesheets
+  dep_scripts <-
+    lapply(deps, function(x) {
+      lapply(x$script, function(script) file.path(x$src$file, script))})
+  dep_stylesheets <-
+    lapply(deps, function(x) {
+      lapply(x$stylesheet, function(stylesheet) file.path(x$src$file, stylesheet))})
+  dep_scripts <- unique(unlist(dep_scripts))
+  dep_stylesheets <- unique(unlist(dep_stylesheets))
+  dep_html <- c(
+    sapply(dep_scripts, function(script) {
+      sprintf('<script type="text/javascript" src="%s"></script>',
+              base64enc::dataURI(file = script))
+    }),
+    sapply(dep_stylesheets, function(sheet) {
+      sprintf('<style>%s</style>',
+              paste(sshhr(readLines(sheet)), collapse = "\n"))
+    })
+  )
+
+  # Extract the <!--html_preserve--> bits
+  preserved <- htmltools::extractPreserveChunks(md)
+
+  # Render the HTML, and then restore the preserved chunks
+  markdown::markdownToHTML(text = preserved$value, header = dep_html,
+                                   stylesheet = file.path(r_path,"base/www/bootstrap.min.css"),
+                                   options=c("mathjax", "base64_images")) %>%
+  htmltools::restorePreserveChunks(preserved$chunks)
+}
+
 ## Knit for report in Radiant
 knitIt2 <- function(text) {
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
@@ -162,7 +205,7 @@ output$saveHTML <- downloadHandler(
         withProgress(message = "Knitting report", value = 0, {
           ifelse (is_empty(input$rmd_selection), input$rmd_report,
                   input$rmd_selection) %>%
-            knitIt %>% cat(file=file,sep="\n")
+            knitIt3 %>% cat(file=file,sep="\n")
         })
       })
     }

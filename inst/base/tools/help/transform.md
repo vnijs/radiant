@@ -17,6 +17,10 @@ To add commands contained in the command log window to a report in _R > Report_ 
 
 If a filter has been specified it will be ignored for (most) functions available in _Data > Transform_. To create a new dataset based on a filter navigate to the _Data > View_ tab and click the `Store` button. Alternatively, create new dataset based on a Filter select `Holdout sample` from the `Transformation type` dropdown.
 
+### Hide summaries
+
+For larger datasets, or when summaries are not needed, it can useful to click `Hide summaries`before selecting the transformation type and specifying how you want to change variables and data. If you want to see data and variable summaries make sure that `Hide summaries` is not checked.
+
 ### Type
 
 When you select `Type` from the `Transformation type` drop-down another drop-down menu is shown that will allow you to change the type (or class) of one or more variables. For example, you can change a variable of type integer to a variable of type factor. Click the `Store` button to change variable(s) in the data set. A description of the transformations included in Radiant is provided below.
@@ -130,7 +134,7 @@ Choose `Create` from the `Transformation type` drop-down. This is the most flexi
 
 Note: For examples 7, 8, and 15 above you may need to change the new variable to type `factor` before using it for further analysis (see `Type` above)
 
-## Bin
+### Bin
 
 The `Bin` option is a convenience function for the `xtile` command mentioned above when you want to create multiple quitile/decile/... variables. To calculate quintiles enter "5" as the `Nr bins`. The `reverse` option replaces 1 by 5, 2 by 4, ..., 5 by 1. Choose an appropriate variable name extension for the new variables.
 
@@ -203,31 +207,30 @@ It is common to have one or more variables in a dataset that **should** have onl
 
 If there are duplicates in the data use `Show duplicates` to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the _View_ tab make sure to `Store` them in a different dataset (i.e., make sure **not** to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are **exactly** the same so showing 2 or 3 isn't helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with **all** rows that are deemed similar.
 
-## Training variable
+### Training variable
 
 To create a variable that can be used to randomly filter a dataset for analysis (or training) and holdout, select `Training variable` from the `Transformation type` dropdown. Specify either the number of observations to use for training (i.e., `Size` > 1) or a proportion of observations to select (i.e., `Size` > 1). The new variable will have a value "1" for training and "0" holdout.
 
-## Holdout sample
+### Holdout sample
 
 To create a holdout sample based on (the reverse of) a filter select `Holdout sample` from the `Transformation type` dropdown. By default the opposite of the active filter is used. For example, is analysis is conducted on all observations where `date < "2014-12-13"` then the holdout sample will be based on the filter `date >= "2014-12-13"` if the `Reverse filter` box is checked.
 
 <!-- r_data[["diamonds"]] <- mutate(r_data[["diamonds"]], date = as_ymd("2012-1-1") + as.integer(runif(30,1,4*365)) %>% sample(3000, replace = TRUE) %>% sort) -->
 
-## Gather
+### Gather columns
 
-Combine multiple columns into one column.
+Combine multiple columns into one column. If you have the `diamonds` dataset loaded, select `cut` and `color` in the `Select variable(s)` box after selecting `Gather columns` from the `Transformation type` dropdown. This will create new variables `key` and `value`. `key` has two values: `cut` and `color` while `value` captures all values that were in `cut` and `color`.
 
-## Spread
+### Spread column
 
-Spread one column into multiple columns.
+Spread one column into multiple columns. The opposite operation for `gather`.
 
-## Table-to-data
+### Table-to-data
 
-Turn a dataset with frequencies into a dataset with the number of rows equal to the sum of the frequencies.
+Turn a frequency table into a dataset. The number of rows will equal the sum of all frequencies.
 
-## Expand grid
+### Expand grid
 
-Create a dataset with all combinations of values for a selection of variables.
+Create a dataset with all combinations of values for a selection of variables. Useful to generate datasets for prediction in, for example, _Regression > Linear regression (OLS)_ or _Regression > Logistic regression (GLM)_. Suppose you wanted to create a dataset with all possible combinations of values for `cut` and `color` of a diamond. By selecting `Expand grid` from the `Transformation type` dropdown and `cut` and `color` in the `Select variable(s)` box we can see in the screenshot below that there are 35 combinations (i.e., `cut` has 5 unique values and `color` has 7 unique values so 5 x 7 combinations are possible). Choose a name for the new dataset (e.g., diamonds_expand) and click the `Store` button to add it to the `Datasets` dropdown.
 
-
-
+![expand](figures/expand_grid.png)

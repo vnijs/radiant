@@ -81,8 +81,20 @@ summary.conjoint <- function(object,
 		print(.$IW, row.names = FALSE)
 	}
 
+  # coeff <- tidy(model)
+  # coeff$` ` <- sig_stars(coeff$p.value) %>% format(justify = "left")
+  # colnames(coeff) <- c("  ","coefficient","std.error","t.value","p.value"," ")
+  # isFct <- sapply(select(dat,-1), function(x) is.factor(x) || is.logical(x))
+  # if (sum(isFct) > 0) {
+  #   for (i in names(isFct[isFct]))
+  #     coeff$`  ` %<>% gsub(i, paste0(i,"|"), .) %>% gsub("\\|\\|","\\|",.)
+
+  #   rm(i, isFct)
+  # }
+  # coeff$`  ` %<>% format(justify = "left")
+
 	cat("\nConjoint regression results:\n")
-  for (i in object$evar) object$model$term %<>% gsub(i, paste0(i," > "), .)
+  for (i in object$evar) object$model$term %<>% gsub(i, paste0(i,"|"), .) %>% gsub("\\|\\|","\\|",.)
 	object$model$estimate %>% data.frame %>% round(3) %>%
 	  set_colnames("coefficient") %>%
 	  set_rownames(object$model$term) %>% print(.)

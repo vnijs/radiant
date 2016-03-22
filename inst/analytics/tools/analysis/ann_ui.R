@@ -74,9 +74,9 @@ output$ui_ann <- renderUI({
       uiOutput("ui_ann_wts"),
       tags$table(
         tags$td(numericInput("ann_size", label = "Size:", min = 1, max = 20,
-          value = state_init("ann_size",1), width = "115px")),
+          value = state_init("ann_size",1), width = "117px")),
         tags$td(numericInput("ann_decay", label = "Decay:", min = 0, max = 1,
-          step = .1, value = state_init("ann_decay",.5), width = "115px"))
+          step = .1, value = state_init("ann_decay",.5), width = "117px"))
       )
     ),
     wellPanel(
@@ -182,7 +182,7 @@ observeEvent(input$ann_report, {
   inp_out <- list("","")
   xcmd <- "NeuralNetTools::plotnet(result$model)\n"
   xcmd <- paste0(xcmd, "pred <- predict(result,'", input$ann_pred_data,"')\n")
-  xcmd <-  paste0(xcmd, "store_ann(pred, data = '", input$ann_pred_data, "', name = '", input$ann_pred_name,"')\n")
+  xcmd <-  paste0(xcmd, "store(pred, data = '", input$ann_pred_data, "', name = '", input$ann_pred_name,"')\n")
   xcmd <-  paste0(xcmd, "# write.csv(pred, file = '~/ann_predictions.csv', row.names = FALSE)")
   update_report(inp_main = clean_args(ann_inputs(), ann_args),
                 fun_name = "ann",
@@ -199,18 +199,18 @@ observeEvent(input$ann_pred, {
   if (is_empty(input$ann_pred_data,"None")) return("No data selected for prediction")
   withProgress(message = 'Storing predictions', value = 0,
     predict(.ann(), input$ann_pred_data) %>%
-    store_ann(data = input$ann_pred_data, name = input$ann_pred_name)
+    store(data = input$ann_pred_data, name = input$ann_pred_name)
   )
 })
 
 output$dl_ann_pred <- downloadHandler(
   filename = function() { "ann_predictions.csv" },
   content = function(file) {
-    if (ann_available() != "available") {
-      write.csv(ann_available(), file = file, row.names = FALSE)
-    } else {
+    if (pressed(input$ann_run)) {
       data.frame(pred_ann = predict(.ann(), input$ann_pred_data)) %>%
         write.csv(file = file, row.names = FALSE)
+    } else {
+      cat("No output available. Press the Estimate button to generate results", file = file)
     }
   }
 )

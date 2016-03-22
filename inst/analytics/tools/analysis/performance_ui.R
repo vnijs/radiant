@@ -71,9 +71,9 @@ output$ui_performance <- renderUI({
         #   inline = TRUE),
       tags$table(
         tags$td(numericInput("perf_margin", label = "Margin:",
-          value = state_init("perf_margin",1), width = "115px")),
+          value = state_init("perf_margin",1), width = "117px")),
         tags$td(numericInput("perf_cost", label = "Cost:",
-          value = state_init("perf_cost",1), width = "115px"))
+          value = state_init("perf_cost",1)))
       ),
       uiOutput("ui_perf_train"),
       conditionalPanel("input.tabs_performance == 'Plot'",

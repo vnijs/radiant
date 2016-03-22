@@ -208,22 +208,33 @@ predict.ann <- function(object, dataset, ...) {
 
   getdata(dataset, filt = "", na.rm = FALSE) %>%
   mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
-  {predict(object$model, .)[,1]}  ## using nnet's predict method
+  {predict(object$model, .)[,1]} %>%  ## using nnet's predict method
+  set_class(c("ann",class(.)))
 }
 
 #' Store predicted values generated in the ann function
 #'
 #' @details See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
 #'
-#' @param pred Return value from predict.nnet
+#' @param object Return value from predict.nnet
+#' @param ... Additional arguments
 #' @param data Dataset name
 #' @param name Variable name assigned to the predicted values
 #'
 #' @export
-store_ann <- function(pred, data,
-                      name = "predict_ann") {
+store.ann <- function(object, ..., data = "", name = "predict_ann") {
 
   ## fix empty name input
   if (gsub("\\s","",name) == "") name <- "pred_ann"
-  changedata(data, vars = pred, var_names = name)
+  ## need to remove the ann class which is first in line
+  if (class(object)[1] == "ann") object %<>% set_class(class(.)[-1])
+  changedata(data, vars = object, var_names = name)
 }
+
+#' Deprecated function to store predictions from an ANN
+#' @param object Return value from predict.nnet
+#' @param ... Additional arguments
+#' @param data Dataset name
+#' @param name Variable name assigned to the predicted values
+#' @export
+store_ann <- store.ann

@@ -95,7 +95,7 @@ summary.hier_clus <- function(object, ...) {
 #' @export
 plot.hier_clus <- function(x,
                            plots = c("scree","diff"),
-                           cutoff = 0.02,
+                           cutoff = 0.05,
                            shiny = FALSE,
                            ...) {
 
@@ -106,45 +106,51 @@ plot.hier_clus <- function(x,
 
 	plot_list <- list()
 	if ("scree" %in% plots) {
-		object$hc_out$height[object$hc_out$height > cutoff] %>%
-		data.frame(height = ., nr_clus = length(.):1) %>%
-		ggplot(aes(x=factor(nr_clus,levels=nr_clus), y=height, group = 1)) +
-				  geom_line(colour="blue", linetype = 'dotdash', size=.7) +
-	  		  geom_point(colour="blue", size=4, shape=21, fill="white") +
-		  	  labs(list(title = paste("Scree plot"), x = "# clusters",
-		  	       y = "Within cluster heterogeneity")) -> plot_list[['scree']]
+		plot_list[['scree']] <-
+			object$hc_out$height[object$hc_out$height > cutoff] %>%
+			data.frame(height = ., nr_clus = length(.):1) %>%
+			ggplot(aes(x=factor(nr_clus,levels=nr_clus), y=height, group = 1)) +
+					  geom_line(colour="blue", linetype = 'dotdash', size=.7) +
+		  		  geom_point(colour="blue", size=4, shape=21, fill="white") +
+			 		  scale_y_continuous(labels = scales::percent) +
+			  	  labs(list(title = paste("Scree plot"), x = "# clusters",
+			  	       y = "Within cluster heterogeneity"))
 	}
 
 	if ("diff" %in% plots) {
-		object$hc_out$height[object$hc_out$height > cutoff] %>%
-			{ (. - lag(.)) / lag(.) } %>%
-			data.frame(bump = ., nr_clus = paste0((length(.)+1):2, "-", length(.):1)) %>%
-			na.omit %>%
-			ggplot(aes(x=factor(nr_clus, levels = nr_clus), y=bump)) +
-				geom_bar(stat = "identity") +
-				labs(list(title = paste("Change in within-cluster heterogeneity"),
-				     x = "# clusters", y = "Change in within-cluster heterogeneity")) -> plot_list[['diff']]
+		plot_list[['diff']] <-
+			object$hc_out$height[object$hc_out$height > cutoff] %>%
+				{ (. - lag(.)) / lag(.) } %>%
+				data.frame(bump = ., nr_clus = paste0((length(.)+1):2, "-", length(.):1)) %>%
+				na.omit %>%
+				ggplot(aes(x=factor(nr_clus, levels = nr_clus), y=bump)) +
+					geom_bar(stat = "identity", alpha = .5) +
+		 		  scale_y_continuous(labels = scales::percent) +
+					labs(list(title = paste("Change in within-cluster heterogeneity"),
+					     x = "# clusters", y = "Change in within-cluster heterogeneity"))
 	}
 
 	if ("dendro" %in% plots) {
 
 		if (length(object$hc_out$height) < 100) {
-
+			## ggdendro is too slow for larger datasets
 			if (cutoff == 0) {
-				ggdendrogram(object$hc_out) + labs(list(title = paste("Dendrogram"), x = "",
-				  y = "Within cluster heterogeneity")) + theme_bw() +
-					theme(axis.text.x  = element_text(angle=90, size=6)) -> plot_list[['dendro']]
+				plot_list[['dendro']] <-
+					ggdendrogram(object$hc_out) + labs(list(title = paste("Dendrogram"), x = "",
+					  y = "Within cluster heterogeneity")) + theme_bw() +
+						theme(axis.text.x  = element_text(angle=90, size=6))
 
 			} else {
-				object$hc_out %>% dendro_data(type="rectangle") %>%
-					segment %>% filter(y > cutoff) %>%
-					ggplot(.) + geom_segment(aes_string(x="x", y="y", xend="xend", yend="yend")) +
-					  # scale_y_continuous(limits=c(cutoff, 1)) +
-					  labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
-					  theme_bw() + theme(axis.text.x = element_blank()) -> plot_list[['dendro']]
+				plot_list[['dendro']] <-
+					object$hc_out %>% dendro_data(type="rectangle") %>%
+						segment %>% filter(y > cutoff) %>%
+						ggplot(.) + geom_segment(aes_string(x="x", y="y", xend="xend", yend="yend")) +
+						  # scale_y_continuous(limits=c(cutoff, 1)) +
+						  labs(list(title = paste("Cutoff dendrogram"), x = "", y = "Within cluster heterogeneity")) +
+	 					  theme_bw() + theme(axis.text.x = element_blank())
 			}
 		} else {
-			# this plot will disappear if the user zooms in/out
+			## this plot will disappear if the user zooms in/out
 			as.dendrogram(object$hc_out) %>%
 			{
 				if (length(plots) > 1) {
@@ -157,6 +163,7 @@ plot.hier_clus <- function(x,
 				} else {
 					plot(., ylim = c(cutoff,1), leaflab='none',
 					     main = "Cutoff dendrogram", xlab = xlab, ylab = "Within cluster heterogeneity")
+					     # main = "Cutoff dendrogram", xlab = xlab, ylab = "Within cluster heterogeneity", lab = nrprint(height, perc = TRUE, dec = 1))
 				}
 			}
 			return(invisible())
@@ -165,5 +172,4 @@ plot.hier_clus <- function(x,
 
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	 	{ if (shiny) . else print(.) }
-
 }

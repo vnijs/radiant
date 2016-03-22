@@ -388,7 +388,10 @@ changedata <- function(dataset,
                        vars = c(),
                        var_names = names(vars)) {
 
-  if (exists("r_env")) {
+  if (!is.character(dataset)) {
+    dataset[,var_names] <- vars
+    return(dataset)
+  } else if (exists("r_env")) {
     message("Dataset ", dataset, " changed in r_env\n")
     r_env$r_data[[dataset]][,var_names] <- vars
   } else if (exists("r_data") && !is.null(r_data[[dataset]])) {

@@ -295,9 +295,7 @@ output$ui_regression <- renderUI({
                          step = 0.01)
         ),
         ## Only save residuals when filter is off
-        conditionalPanel(condition = "input.tabs_regression == 'Summary' &
-                                      (input.show_filter == false |
-                                      input.data_filter == '')",
+        conditionalPanel(condition = "input.tabs_regression == 'Summary'",
           tags$table(
             tags$td(textInput("reg_store_res_name", "Store residuals:", state_init("reg_store_res_name","residuals_reg"))),
             tags$td(actionButton("reg_store_res", "Store"), style="padding-top:30px;")
@@ -410,8 +408,15 @@ reg_available <- reactive({
   if (reg_available() != "available") return(reg_available())
   if (not_pressed(input$reg_run)) return("** Press the Estimate button to estimate the model **")
   if (is_empty(input$reg_predict, "none")) return("** Select prediction input **")
-  req(!is_empty(input$reg_predict, "none"),
-     (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
+  # req(!is_empty(input$reg_predict, "none"))
+     # (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
+  # if (is_empty(input$reg_predict, "none"))
+
+  if((input$reg_predict == "data" || input$reg_predict == "datacmd") && is_empty(input$reg_pred_data))
+    return("** Select data for prediction **")
+  if(input$reg_predict == "cmd" && is_empty(input$reg_pred_cmd))
+    return("** Enter prediction commands **")
+
   withProgress(message = "Generating predictions", value = 0, {
     do.call(predict, c(list(object = .regression()), reg_pred_inputs()))
   })
@@ -419,8 +424,14 @@ reg_available <- reactive({
 
 .predict_plot_regression <- reactive({
   if (reg_available() != "available") return(reg_available())
-  req(input$reg_pred_plot, input$reg_xvar, !is_empty(input$reg_predict, "none"),
-      (!is_empty(input$reg_pred_data) || !is_empty(input$reg_pred_cmd)))
+  # req(input$reg_pred_plot, input$reg_xvar, !is_empty(input$reg_predict, "none"), pressed(input$reg_run))
+  req(input$reg_pred_plot, available(input$reg_xvar))
+  if (not_pressed(input$reg_run)) return(invisible())
+  if (is_empty(input$reg_predict, "none")) return(invisible())
+  if((input$reg_predict == "data" || input$reg_predict == "datacmd") && is_empty(input$reg_pred_data))
+    return(invisible())
+  if(input$reg_predict == "cmd" && is_empty(input$reg_pred_cmd))
+    return(invisible())
   do.call(plot, c(list(x = .predict_regression()), reg_pred_plot_inputs()))
 })
 
@@ -455,7 +466,7 @@ observeEvent(input$regression_report, {
     outputs <- c(outputs, "pred <- predict")
     dataset <- if (input$reg_predict %in% c("data","datacmd")) input$reg_pred_data else input$dataset
     xcmd <-
-      paste0("store_reg(pred, data = '", dataset, "', type = 'prediction', name = '", input$reg_store_pred_name,"')\n") %>%
+      paste0("store(pred, data = '", dataset, "', name = '", input$reg_store_pred_name,"')\n") %>%
       paste0("# write.csv(pred, file = '~/reg_predictions.csv', row.names = FALSE)")
     if (input$reg_pred_plot && !is_empty(input$reg_xvar)) {
       inp_out[[3 + figs]] <- clean_args(reg_pred_plot_inputs(), reg_pred_plot_args[-1])
@@ -476,19 +487,25 @@ observeEvent(input$reg_store_res, {
   req(pressed(input$reg_run))
   robj <- .regression()
   if (!is.list(robj)) return()
-  if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE))) {
-    return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-  }
-  store_reg(robj, data = input$dataset, type = "residuals", name = input$reg_store_res_name)
+  # if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE))) {
+  #   return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+  # }
+  # store_reg(robj, data = input$dataset, type = "residuals", name = input$reg_store_res_name)
+  withProgress(message = 'Storing residuals', value = 0,
+    store(robj, name = input$reg_store_res_name)
+  )
 })
 
 observeEvent(input$reg_store_pred, {
   req(!is_empty(input$reg_pred_data), pressed(input$reg_run))
   pred <- .predict_regression()
   if (is.null(pred)) return()
-  if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
-    return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-  store_reg(pred, data = input$reg_pred_data, type = "prediction", name = input$reg_store_pred_name)
+  # if (nrow(pred) != nrow(getdata(input$reg_pred_data, filt = "", na.rm = FALSE)))
+  #   return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+  # store_reg(pred, data = input$reg_pred_data, type = "prediction", name = input$reg_store_pred_name)
+  withProgress(message = 'Storing predictions', value = 0,
+    store(pred, data = input$reg_pred_data, name = input$reg_store_pred_name)
+  )
 })
 
 output$dl_reg_coef <- downloadHandler(

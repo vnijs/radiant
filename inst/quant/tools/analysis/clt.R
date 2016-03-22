@@ -10,7 +10,7 @@ output$ui_clt <- renderUI({
       actionButton("clt_resample", "Sample", width = "100%")
     ),
     wellPanel(
-      selectInput(inputId = "clt_dist", label = "Distribution (select one):", choices = clt_dist,
+      selectInput(inputId = "clt_dist", label = "Distribution:", choices = clt_dist,
         selected = state_single("clt_dist", clt_dist), multiple = FALSE),
       conditionalPanel(condition = "input.clt_dist == 'runif'",
       #   with(tags, table(
@@ -139,6 +139,8 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
 }
 
 .plot_clt <- function(result = .clt()) {
+
+  if (not_pressed(input$clt_resample)) return("** Press the Sample button to simulate data **")
 
   if(result %>% is.character) return(result)
 

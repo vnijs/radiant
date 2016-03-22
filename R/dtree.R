@@ -472,6 +472,7 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
   paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
     style, sep = "\n") %>%
   {if (shiny) . else DiagrammeR::DiagrammeR(.)}
+  # {if (shiny) . else DiagrammeR::renderDiagrammeR(DiagrammeR::DiagrammeR(.))}
   # {if (shiny) . else DiagrammeR::mermaid(.)}
 }
 

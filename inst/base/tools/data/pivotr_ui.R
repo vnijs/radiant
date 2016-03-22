@@ -309,11 +309,31 @@ observeEvent(input$pivotr_report, {
     outputs <- c("summary")
     figs <- FALSE
   }
+
+  search <- input$pivotr_state$search$search
+  if (is.null(search)) search <- ""
+  # r_state$pivotr_search_columns <<- rep("", ncol(pvt$tab))
+  # searchCols <- lapply(input$pivotr_search_columns, function(x) list(search = x))
+  order <- input$pivotr_state$order[1]
+  # if (all(is.null(order))) order <- "''"
+
+  xcmd <- paste0("DT::renderDataTable(make_dt(result, format = '", input$pvt_format,
+                 "', perc = ", input$pvt_perc,
+                 ", dec = ", input$pvt_dec,
+                 ", search = '", search,
+                 "', order = ", order,
+                 # "', searchCols = ", searchCols,
+                 # ", order = ", order,
+                 "))")
+
+  xcmd <- ""
+
   update_report(inp_main = c(clean_args(pvt_inputs(), pvt_args), tabsort = "", tabfilt = ""),
                 fun_name = "pivotr",
                 outputs = outputs,
                 inp_out = inp_out,
                 figs = figs,
                 fig.width = round(7 * pvt_plot_width()/650,2),
-                fig.height = round(7 * pvt_plot_height()/650,2))
+                fig.height = round(7 * pvt_plot_height()/650,2),
+                xcmd = xcmd)
 })

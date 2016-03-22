@@ -2,7 +2,7 @@
 % Please edit documentation in R/glm_reg.R
 \name{store_glm}
 \alias{store_glm}
-\title{Store residuals or predicted values generated in the glm_reg function}
+\title{Deprecated function to store logistic regression residuals and predictions}
 \usage{
 store_glm(object, data = object$dataset, type = "residuals",
   name = paste0(type, "_glm"))
@@ -17,15 +17,11 @@ store_glm(object, data = object$dataset, type = "residuals",
 \item{name}{Variable name assigned to the residuals or predicted values}
 }
 \description{
-Store residuals or predicted values generated in the glm_reg function
+Deprecated function to store logistic regression residuals and predictions
 }
 \details{
+Use \code{\link{store.glm_predict}} or \code{\link{store.glm_reg}} instead
+
 See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
-}
-\examples{
-\dontrun{
-result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-store_glm(result)
-}
 }
 

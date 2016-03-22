@@ -2,21 +2,20 @@
 % Please edit documentation in R/ann.R
 \name{store_ann}
 \alias{store_ann}
-\title{Store predicted values generated in the ann function}
+\title{Deprecated function to store predictions from an ANN}
 \usage{
-store_ann(pred, data, name = "predict_ann")
+store_ann(object, ..., data = "", name = "predict_ann")
 }
 \arguments{
-\item{pred}{Return value from predict.nnet}
+\item{object}{Return value from predict.nnet}
+
+\item{...}{Additional arguments}
 
 \item{data}{Dataset name}
 
 \item{name}{Variable name assigned to the predicted values}
 }
 \description{
-Store predicted values generated in the ann function
-}
-\details{
-See \url{http://vnijs.github.io/radiant/analytics/ann.html} for an example in Radiant
+Deprecated function to store predictions from an ANN
 }
 

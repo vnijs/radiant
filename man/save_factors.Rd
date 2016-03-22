@@ -2,25 +2,21 @@
 % Please edit documentation in R/full_factor.R
 \name{save_factors}
 \alias{save_factors}
-\title{Save factor scores to active dataset}
+\title{Deprecated function to store factor loadings}
 \usage{
-save_factors(object)
+save_factors(object, ..., name = "")
 }
 \arguments{
 \item{object}{Return value from \code{\link{full_factor}}}
+
+\item{...}{Additional arguments}
+
+\item{name}{Name of factor score variables}
 }
 \description{
-Save factor scores to active dataset
+Deprecated function to store factor loadings
 }
-\details{
-See \url{http://vnijs.github.io/radiant/marketing/full_factor.html} for an example in Radiant
-}
-\examples{
-\dontrun{
-result <- full_factor("diamonds",c("price","carat","table"))
-save_factors(result)
-head(diamonds)
-}
-
+\seealso{
+Use \code{\link{store.full_factor}} instead
 }
 

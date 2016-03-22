@@ -269,8 +269,13 @@ register_print_output <- function(fun_name, rfun_name,
   output[[out_name]] <- renderPrint({
     ## when no analysis was conducted (e.g., no variables selected)
     get(rfun_name)() %>%
-    { if (is.character(.)) cat(.,"\n") else . } %>% rm
+      {if (is.character(.)) cat(.,"\n") else .} %>%
+      rm(.)
+    # ret <- get(rfun_name)()
+    # if (is.character(ret)) cat(ret,"\n") else rm(ret)
+    # rm(ret)
   })
+  return(invisible())
 }
 
 # fun_name is a string of the main function name

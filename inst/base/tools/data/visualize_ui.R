@@ -335,16 +335,28 @@ output$ui_Visualize <- renderUI({
       ),
       sliderInput("viz_alpha", label = "Opacity:", min = 0, max = 1,
         value = state_init("viz_alpha",.5), step = .01),
-      div(class="row",
-          div(class="col-xs-6",
-              numericInput("viz_plot_height", label = "Plot height:", min = 100,
-                           max = 2000, step = 50,
-                           value = state_init("viz_plot_height", r_data$plot_height))),
-          div(class="col-xs-6",
-              numericInput("viz_plot_width", label = "Plot width:", min = 100,
-                           max = 2000, step = 50,
-                           value = state_init("viz_plot_width", r_data$plot_width)))
+
+      tags$table(
+        tags$td(numericInput("viz_plot_height", label = "Plot height:", min = 100,
+                             max = 2000, step = 50,
+                             value = state_init("viz_plot_height", r_data$plot_height),
+                             width = "117px")),
+
+        tags$td(numericInput("viz_plot_width", label = "Plot width:", min = 100,
+                             max = 2000, step = 50,
+                             value = state_init("viz_plot_width", r_data$plot_width),
+                             width = "117px"))
       )
+      # div(class="row",
+      #     div(class="col-xs-6",
+      #         numericInput("viz_plot_height", label = "Plot height:", min = 100,
+      #                      max = 2000, step = 50,
+      #                      value = state_init("viz_plot_height", r_data$plot_height))),
+      #     div(class="col-xs-6",
+      #         numericInput("viz_plot_width", label = "Plot width:", min = 100,
+      #                      max = 2000, step = 50,
+      #                      value = state_init("viz_plot_width", r_data$plot_width)))
+      # )
     ),
     help_and_report(modal_title = "Visualize",
                     fun_name = "visualize",

@@ -33,7 +33,7 @@ marketing_ui <- tagList(
   ),
 
   navbarMenu("Conjoint",
-    tabPanel("Create profiles", uiOutput("conjoint_profiles")),
+    tabPanel("Create profiles", uiOutput("doe")),
     tabPanel("Conjoint", uiOutput("conjoint"))
   )
 )

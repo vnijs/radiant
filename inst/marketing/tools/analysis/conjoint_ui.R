@@ -35,6 +35,9 @@ output$ui_ca_evar <- renderUI({
 output$ui_conjoint <- renderUI({
   req(input$dataset)
   tagList(
+    wellPanel(
+      actionButton("ca_run", "Estimate", width = "100%")
+    ),
 	  conditionalPanel(condition = "input.tabs_conjoint == 'Plot'",
   		wellPanel(
 	      selectInput("ca_plots", "Conjoint plots:", choices = ca_plots,
@@ -52,8 +55,7 @@ output$ui_conjoint <- renderUI({
 			  	value = state_init('ca_reverse',FALSE)),
 		    conditionalPanel(condition = "input.tabs_conjoint == 'Summary'",
 			    checkboxInput(inputId = "ca_mc_diag", label = "VIF",
-				  	value = state_init('ca_mc_diag',FALSE)),
-			  	downloadButton('downloadPWs', 'Save PWs')
+				  	value = state_init('ca_mc_diag',FALSE))
 		  	)
 		  )
 	  ),
@@ -92,7 +94,9 @@ output$conjoint <- renderUI({
 		# two separate tabs
 		ca_output_panels <- tabsetPanel(
 	    id = "tabs_conjoint",
-	    tabPanel("Summary", verbatimTextOutput("summary_conjoint")),
+	    tabPanel("Summary",
+        downloadLink("dl_ca_PWs", "", class = "fa fa-download alignright"), br(),
+	      verbatimTextOutput("summary_conjoint")),
 	    # tabPanel("Predict", verbatimTextOutput("predict_conjoint")),
 	    tabPanel("Plot",
                plot_downloader("conjoint", height = ca_plot_height()),
@@ -106,16 +110,18 @@ output$conjoint <- renderUI({
 		             	output_panels = ca_output_panels)
 })
 
-.conjoint <- reactive({
-	do.call(conjoint, ca_inputs())
+.conjoint <- eventReactive(input$ca_run, {
+  withProgress(message = 'Estimating model', value = 0,
+	  do.call(conjoint, ca_inputs())
+	)
 })
 
 .summary_conjoint <- reactive({
 	if (not_available(input$ca_rvar))
 		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset\n\n" %>% suggest_data("carpet"))
-
 	if (not_available(input$ca_evar))
 		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset\n\n" %>% suggest_data("carpet"))
+  if (not_pressed(input$ca_run)) return("** Press the Estimate button to generate results **")
 
   summary(.conjoint(), mc_diag = input$ca_mc_diag)
 })
@@ -128,9 +134,9 @@ output$conjoint <- renderUI({
 .plot_conjoint <- reactive({
 	if (not_available(input$ca_rvar))
 		return("This analysis requires a response variable of type integer or \nnumeric and one or more explanatory variables of type factor.\nIf these variables are not available please select another dataset\n\n" %>% suggest_data("carpet"))
-
 	if (not_available(input$ca_evar))
 		return("Please select one or more explanatory variables of type factor.\nIf none are available please choose another dataset\n\n" %>% suggest_data("carpet"))
+  if (not_pressed(input$ca_run)) return("** Press the Estimate button to generate results **")
 
   plot(.conjoint(), plots = input$ca_plots,
        							scale_plot = input$ca_scale_plot,
@@ -158,11 +164,13 @@ observe({
   })
 })
 
-
-output$downloadPWs <- downloadHandler(
+output$dl_ca_PWs <- downloadHandler(
 	filename = function() { paste(input$dataset, '_PWs.csv', sep='') },
   content = function(file) {
-  	.conjoint()$the_table$PW %>%
-	  write.csv(file = file, row.names = FALSE)
+	  if (pressed(input$ca_run)) {
+	    .conjoint()$the_table$PW %>% write.csv(file = file, row.names = FALSE)
+	  } else {
+	    cat("No output available. Press the Estimate button to generate results", file = file)
+	  }
   }
 )

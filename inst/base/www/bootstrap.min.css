@@ -11,3 +11,10 @@ body {
   padding: 1em;
   line-height: 20px;
 }
+
+.mermaid g .edgeLabel span {
+  background: white !important;
+  /* extra padding needed for non-chrome browsers */
+  padding-right: 8px;
+  padding-left: 8px;
+}

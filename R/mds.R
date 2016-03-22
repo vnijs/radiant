@@ -53,7 +53,7 @@ mds <- function(dataset, id1, id2, dis,
 	} else if ((lower + nrLev) == nrObs) {
 		mds_dis_mat[lower.tri(mds_dis_mat, diag = TRUE)] <- d
 	} else {
-		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset." %>% set_class(c("mds",class(.))))
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\nFor an example dataset go to Data > Manage, select 'examples' from the\n'Load data of type' dropdown, and press the 'Load examples' button. Then\nselect the \'city' dataset." %>% set_class(c("mds",class(.))))
 	}
 
 	mds_dis_mat %<>% set_rownames(lab) %>%

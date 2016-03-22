@@ -26,6 +26,9 @@ output$ui_pf_vars <- renderUI({
 output$ui_pre_factor <- renderUI({
   req(input$dataset)
   tagList(
+    wellPanel(
+      actionButton("pf_run", "Estimate", width = "100%")
+    ),
   	wellPanel(
 	  	uiOutput("ui_pf_vars")
 	  ),
@@ -66,21 +69,23 @@ output$pre_factor <- renderUI({
 	             	output_panels = pf_output_panels)
 })
 
-.pre_factor <- reactive({
-  do.call(pre_factor, pf_inputs())
+.pre_factor <- eventReactive(input$pf_run, {
+  withProgress(message = 'Estimating factor solution', value = 0,
+    do.call(pre_factor, pf_inputs())
+  )
 })
 
 .summary_pre_factor <- reactive({
 	if (not_available(input$pf_vars))
 		return("This analysis requires multiple variables of type numeric or integer.\nIf these variables are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
-
 	if (length(input$pf_vars) < 2) return("Please select two or more numeric variables")
+  if (not_pressed(input$pf_run)) return("** Press the Estimate button to generate factor analysis diagnostics **")
 
   summary(.pre_factor())
 })
 
 .plot_pre_factor <- reactive({
-  if (not_available(input$pf_vars) || length(input$pf_vars) < 2)
+  if (not_available(input$pf_vars) || length(input$pf_vars) < 2 || not_pressed(input$pf_run))
     return(invisible())
 
   plot(.pre_factor())

@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression.R
 \name{store_reg}
 \alias{store_reg}
-\title{Store residuals or predicted values generated in the regression function}
+\title{Deprecated function to store regression residuals and predictions}
 \usage{
 store_reg(object, data = object$dataset, type = "residuals",
   name = paste0(type, "_reg"))
@@ -17,15 +17,9 @@ store_reg(object, data = object$dataset, type = "residuals",
 \item{name}{Variable name assigned to the residuals or predicted values}
 }
 \description{
-Store residuals or predicted values generated in the regression function
+Deprecated function to store regression residuals and predictions
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/regression.html} for an example in Radiant
-}
-\examples{
-\dontrun{
-result <- regression("diamonds", "price", c("carat","clarity"))
-store_reg(result)
-}
+Use \code{\link{store.reg_predict}} or \code{\link{store.regression}} instead
 }
 

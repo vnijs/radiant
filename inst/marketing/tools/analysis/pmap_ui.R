@@ -64,6 +64,9 @@ output$ui_pm_plots <- renderUI({
 output$ui_pmap <- renderUI({
   req(input$dataset)
   tagList(
+    wellPanel(
+      actionButton("pm_run", "Estimate", width = "100%")
+    ),
   	wellPanel(
 	  	uiOutput("ui_pm_brand"),
 	  	uiOutput("ui_pm_attr"),
@@ -73,18 +76,21 @@ output$ui_pmap <- renderUI({
 		   	inline = TRUE),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Plot'",
 		  	uiOutput("ui_pm_plots"),
-	 	    div(class="row",
-		    	div(class="col-xs-6", numericInput("pm_scaling", "Arrow scale:",
-		    	    state_init("pm_scaling",2.1), .5, 4, .1)),
-		      div(class="col-xs-6", numericInput("pm_fontsz", "Font size:",
-		          state_init("pm_fontsz",1.3), .5, 4, .1))
-		    )
+        tags$table(
+          tags$td(numericInput("pm_scaling", "Arrow scale:", state_init("pm_scaling",2.1), .5, 4, .1, width = "117px")),
+          tags$td(numericInput("pm_fontsz", "Font size:", state_init("pm_fontsz",1.3), .5, 4, .1, width = "117px")),
+          width = "100%"
+        )
 	    ),
 	 	 	conditionalPanel(condition = "input.tabs_pmap == 'Summary'",
 	    	numericInput("pm_cutoff", label = "Loadings cutoff:", min = 0,
 	    	             max = 1, state_init("pm_cutoff",0), step = .05),
       	conditionalPanel(condition = "input.pm_attr != null",
-		    	actionButton("pm_save_scores", "Save scores")
+		    	# actionButton("pm_save_scores", "Save scores")
+	        tags$table(
+	          tags$td(textInput("pm_store_name", "Store scores:", state_init("pm_store_name","factor"))),
+	          tags$td(actionButton("pm_store", "Store"), style="padding-top:30px;")
+	        )
 		    )
 		  )
  		),
@@ -95,6 +101,7 @@ output$ui_pmap <- renderUI({
 })
 
 pm_plot <- reactive({
+	req(input$pm_nr_dim)
 	nrDim <- as.numeric(input$pm_nr_dim)
 	nrPlots <- (nrDim * (nrDim - 1)) / 2
   list(plot_width = 650, plot_height = 650 * nrPlots)
@@ -114,10 +121,12 @@ output$pmap <- renderUI({
 
 	  pm_output_panels <- tabsetPanel(
 	    id = "tabs_pmap",
-	    tabPanel("Summary", verbatimTextOutput("summary_pmap")),
+	    tabPanel("Summary",
+        downloadLink("dl_pm_loadings", "", class = "fa fa-download alignright"), br(),
+	      verbatimTextOutput("summary_pmap")),
 	    tabPanel("Plot",
-               plot_downloader("pmap", height = pm_plot_height()),
-	             plotOutput("plot_pmap", height = "100%"))
+        plot_downloader("pmap", height = pm_plot_height()),
+        plotOutput("plot_pmap", height = "100%"))
 	  )
 
 		stat_tab_panel(menu = "Maps",
@@ -126,34 +135,33 @@ output$pmap <- renderUI({
 		             	output_panels = pm_output_panels)
 })
 
+.pmap_available <- reactive({
+	if (not_available(input$pm_brand) || not_available(input$pm_attr))
+		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailers"))
+	brand <- .getdata()[[input$pm_brand]]
+	if (length(unique(brand)) < length(brand))
+		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailers"))
+	if (length(input$pm_attr) < 2) return("Please select two or more attribute variables")
+
+  if (not_pressed(input$pm_run)) return("** Press the Estimate button to generate perceptual maps **")
+
+  "available"
+})
+
+
 .pmap <- reactive({
-	do.call(pmap, pm_inputs())
+  withProgress(message = 'Generating perceptual map', value = 0,
+	  do.call(pmap, pm_inputs())
+	)
 })
 
 .summary_pmap <- reactive({
-	if (not_available(input$pm_brand) || not_available(input$pm_attr))
-		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailer"))
-
-	brand <- .getdata()[[input$pm_brand]]
-	if (length(unique(brand)) < length(brand))
-		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailer"))
-
-	if (length(input$pm_attr) < 2) return("Please select two or more attribute variables")
-
+  if (.pmap_available() != "available") return(.pmap_available())
   summary(.pmap(), cutoff = input$pm_cutoff)
 })
 
 .plot_pmap <- reactive({
-
-	if (not_available(input$pm_brand) || not_available(input$pm_attr))
-		return("This analysis requires a brand variable of type factor or character and multiple attribute variables\nof type numeric or integer. If these variables are not available please select another dataset.\n\n" %>% suggest_data("retailer"))
-
-	brand <- .getdata()[[input$pm_brand]]
-	if (length(unique(brand)) < length(brand))
-		return("Number of observations and unique IDs for the brand variable do not match.\nPlease choose another brand variable or another dataset.\n\n" %>% suggest_data("retailer"))
-
-	if (length(input$pm_attr) < 2) return("Please select two or more attribute variables")
-
+  if (.pmap_available() != "available") return(.pmap_available())
   capture_plot( do.call(plot, c(list(x = .pmap()), pm_plot_inputs())) )
 })
 
@@ -165,9 +173,27 @@ observeEvent(input$pmap_report, {
                 fun_name = "pmap", inp_out = inp_out,
                 fig.width = round(7 * pm_plot_width()/650,2),
                 fig.height = round(7 * pm_plot_height()/650,2),
-                xcmd = paste0("# save_factors(result)"))
+                xcmd = paste0("# store(result, name = '", input$pm_store_name, "')"))
 })
 
-observeEvent(input$pm_save_scores,{
-  .pmap() %>% { if (!is.character(.)) save_factors(.) }
+## save factor loadings when download button is pressed
+output$dl_pm_loadings <- downloadHandler(
+  filename = function() { "loadings.csv" },
+  content = function(file) {
+    if (pressed(input$pm_run)) {
+      .pmap() %>%
+        { if (is.list(.)) .$fres$loadings else return() } %>%
+        clean_loadings(input$pm_cutoff, fsort = FALSE) %>%
+        write.csv(file = file)
+    } else {
+      cat("No output available. Press the Estimate button to generate the factor analysis results", file = file)
+    }
+  }
+)
+
+## store factor scores
+observeEvent(input$pm_store, {
+  if (pressed(input$pm_run)) {
+    .pmap() %>% { if (!is.character(.)) store(., name = input$pm_store_name) }
+  }
 })

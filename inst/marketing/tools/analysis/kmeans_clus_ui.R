@@ -101,9 +101,13 @@ output$kmeans_clus <- renderUI({
 		             	output_panels = km_output_panels)
 })
 
-# .kmeans_clus <- reactive({
-# 	do.call(kmeans_clus, km_inputs())
-# })
+.km_available <- reactive({
+  if (not_available(input$km_vars))
+    return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
+  if (not_pressed(input$km_run)) return("** Press the Estimate button to generate the cluster solution **")
+
+  "available"
+})
 
 .kmeans_clus <- eventReactive(input$km_run, {
   withProgress(message = 'Estimating cluster solution', value = 0,
@@ -113,20 +117,12 @@ output$kmeans_clus <- renderUI({
 })
 
 .summary_kmeans_clus <- reactive({
-  if (not_available(input$km_vars))
-    return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
-
-  if (not_pressed(input$km_run)) return("** Press the Estimate button to estimate the cluster solution **")
-
+  if (.km_available() != "available") return(.km_available())
   summary(.kmeans_clus())
 })
 
 .plot_kmeans_clus <- reactive({
-  if (not_available(input$km_vars))
-    return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
-
-  if (not_pressed(input$km_run)) return("** Press the Estimate button to estimate the cluster solution **")
-
+  if (.km_available() != "available") return(.km_available())
   plot(.kmeans_clus(), shiny = TRUE)
 })
 
@@ -142,9 +138,9 @@ output$dl_km_means <- downloadHandler(
   filename = function() { "kmeans.csv" },
   content = function(file) {
     if (pressed(input$km_run)) {
-      .kmeans_clus() %>% { if (is.list(.)) write.csv(.$clus_means, file) }
+      .kmeans_clus() %>% { if (is.list(.)) write.csv(.$clus_means, file = file) }
     } else {
-      cat("No output available. Press the Estimate button to generate results", file = file)
+      cat("No output available. Press the Estimate button to generate the cluster solution", file = file)
     }
   }
 )

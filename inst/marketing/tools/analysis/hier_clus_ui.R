@@ -34,6 +34,9 @@ output$ui_hc_vars <- renderUI({
 output$ui_hier_clus <- renderUI({
   req(input$dataset)
   tagList(
+    wellPanel(
+      actionButton("hc_run", "Estimate", width = "100%")
+    ),
   	wellPanel(
 	    uiOutput("ui_hc_vars"),
 	    selectInput("hc_distance", label = "Distance measure:", choices =hc_distance ,
@@ -50,9 +53,9 @@ output$ui_hier_clus <- renderUI({
       with(tags, table(
         tr(
           td(numericInput("hc_cutoff", "Plot cutoff:", min = 0, max = 1,
-             value = state_init('hc_cutoff',0.05), step = .02, width = "110px")),
+             value = state_init('hc_cutoff',0.05), step = .02, width = "117px")),
           td(numericInput("hc_max_cases", "Max cases:", min = 1,
-             value = state_init('hc_max_cases',5000), step = 10, width = "110px"))
+             value = state_init('hc_max_cases',5000), step = 10))
         )
       ))
   	),
@@ -96,20 +99,24 @@ output$hier_clus <- renderUI({
 
 })
 
-.hier_clus <- reactive({
-	do.call(hier_clus, hc_inputs())
+.hier_clus <- eventReactive(input$hc_run, {
+  withProgress(message = 'Estimating cluster solution', value = 0,
+	  do.call(hier_clus, hc_inputs())
+  )
 })
 
 .summary_hier_clus <- reactive({
   if (not_available(input$hc_vars))
     return("This analysis requires one or more variables of type numeric or integer.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("toothpaste"))
 
+  if (not_pressed(input$hc_run)) return("** Press the Estimate button to generate cluster solution **")
+
   summary(.hier_clus())
 })
 
 .plot_hier_clus <- reactive({
-  if (not_available(input$hc_vars))
-		return(" ")
+  if (not_available(input$hc_vars) || not_pressed(input$hc_run))
+		return(invisible())
 
   .hier_clus() %>%
     { if ("dendro" %in% input$hc_plots && length(.$hc_out$height) > 100) {

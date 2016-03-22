@@ -64,6 +64,9 @@ output$ui_mds_rev_dim <- renderUI({
 output$ui_mds <- renderUI({
   req(input$dataset)
   tagList(
+    wellPanel(
+      actionButton("mds_run", "Estimate", width = "100%")
+    ),
   	wellPanel(
 	  	uiOutput("ui_mds_id1"),
 	  	uiOutput("ui_mds_id2"),
@@ -86,6 +89,7 @@ output$ui_mds <- renderUI({
 })
 
 mds_plot <- reactive({
+  req(input$mds_nr_dim)
 	nrDim <- as.numeric(input$mds_nr_dim)
 	nrPlots <- (nrDim * (nrDim - 1)) / 2
   list(plot_width = 650, plot_height = 650 * nrPlots)
@@ -117,18 +121,26 @@ output$mds <- renderUI({
 		             	output_panels = mds_output_panels)
 })
 
-.mds <- reactive({
+.mds_available <- reactive({
   if (not_available(input$mds_id2) || not_available(input$mds_dis))
     return("This analysis requires two id-variables of type character or factor and a measure\nof dissimilarity of type numeric or interval. Please select another dataset\n\n" %>% suggest_data("city"))
+  if (not_pressed(input$mds_run)) return("** Press the Estimate button to generate maps **")
+  "available"
+})
 
-	do.call(mds, mds_inputs())
+.mds <- eventReactive(input$mds_run, {
+  withProgress(message = 'Generating MDS solution', value = 0,
+	  do.call(mds, mds_inputs())
+  )
 })
 
 .summary_mds <- reactive({
+  if (.mds_available() != "available") return(.mds_available())
   .mds() %>% { if (is.character(.)) . else summary(., dec = 1) }
 })
 
 .plot_mds <- reactive({
+  if (.mds_available() != "available") return(.mds_available())
   .mds() %>%
   	{ if (is.character(.)) .
   	  else capture_plot( do.call(plot, c(list(x = .), mds_plot_inputs())) ) }

@@ -4,7 +4,7 @@
 \alias{plot.hier_clus}
 \title{Plot method for the hier_clus function}
 \usage{
-\method{plot}{hier_clus}(x, plots = c("scree", "diff"), cutoff = 0.02,
+\method{plot}{hier_clus}(x, plots = c("scree", "diff"), cutoff = 0.05,
   shiny = FALSE, ...)
 }
 \arguments{

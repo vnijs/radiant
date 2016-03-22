@@ -301,9 +301,7 @@ output$ui_glm_reg <- renderUI({
    					             step = 0.01)
   		  ),
         ## Only save residuals when filter is off
-        conditionalPanel(condition = "input.tabs_glm_reg == 'Summary' &
-                                      (input.show_filter == false |
-                                      input.data_filter == '')",
+        conditionalPanel(condition = "input.tabs_glm_reg == 'Summary'",
           tags$table(
             tags$td(textInput("glm_store_res_name", "Store residuals:", state_init("glm_store_res_name","residuals_glm"))),
             tags$td(actionButton("glm_store_res", "Store"), style="padding-top:30px;")
@@ -442,8 +440,16 @@ glm_available <- reactive({
   if (glm_available() != "available") return(glm_available())
   if (not_pressed(input$glm_run)) return("** Press the Estimate button to estimate the model **")
   if (is_empty(input$glm_predict, "none")) return("** Select prediction input **")
-  req(!is_empty(input$glm_predict, "none"),
-     (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
+  # req(!is_empty(input$glm_predict, "none"),
+  # req(!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd))
+
+  # if(is_empty(input$glm_pred_data) && is_empty(input$glm_pred_cmd))
+    # return("** Select prediction data or commands **")
+
+  if((input$glm_predict == "data" || input$glm_predict == "datacmd") && is_empty(input$glm_pred_data))
+    return("** Select data for prediction **")
+  if(input$glm_predict == "cmd" && is_empty(input$glm_pred_cmd))
+    return("** Enter prediction commands **")
 
   withProgress(message = "Generating predictions", value = 0, {
     do.call(predict, c(list(object = .glm_reg()), glm_pred_inputs()))
@@ -462,8 +468,13 @@ glm_available <- reactive({
 
 .predict_plot_glm_reg <- reactive({
   if (glm_available() != "available") return(glm_available())
-  req(input$glm_pred_plot, available(input$glm_xvar), !is_empty(input$glm_predict, "none"),
-      (!is_empty(input$glm_pred_data) || !is_empty(input$glm_pred_cmd)))
+  req(input$glm_pred_plot, available(input$glm_xvar))
+  if (not_pressed(input$glm_run)) return(invisible())
+  if (is_empty(input$glm_predict, "none")) return(invisible())
+  if((input$glm_predict == "data" || input$glm_predict == "datacmd") && is_empty(input$glm_pred_data))
+    return(invisible())
+  if(input$glm_predict == "cmd" && is_empty(input$glm_pred_cmd))
+    return(invisible())
   do.call(plot, c(list(x = .predict_glm_reg()), glm_pred_plot_inputs()))
 })
 
@@ -488,7 +499,8 @@ observeEvent(input$glm_reg_report, {
     outputs <- c(outputs,"pred <- predict")
     dataset <- if (input$glm_predict %in% c("data","datacmd")) input$glm_pred_data else input$dataset
     xcmd <-
-      paste0("store_glm(pred, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
+      # paste0("store_glm(pred, data = '", dataset, "', type = 'prediction', name = '", input$glm_store_pred_name,"')\n") %>%
+      paste0("store(pred, data = '", dataset, "', name = '", input$glm_store_pred_name,"')\n") %>%
       paste0("# write.csv(pred, file = '~/glm_predictions.csv', row.names = FALSE)")
 
     if (input$glm_predict == "cmd") xcmd <- ""
@@ -515,20 +527,22 @@ observeEvent(input$glm_store_res, {
   req(pressed(input$glm_run))
   robj <- .glm_reg()
   if (!is.list(robj)) return()
-  if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
-    return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-  store_glm(robj, data = input$dataset, type = "residuals", name = input$glm_store_res_name)
+  # if (length(robj$model$residuals) != nrow(getdata(input$dataset, filt = "", na.rm = FALSE)))
+  #   return(message("The number of residuals is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
+  # store_glm(robj, data = input$dataset, type = "residuals", name = input$glm_store_res_name)
+  withProgress(message = 'Storing residuals', value = 0,
+    store(robj, name = input$glm_store_res_name)
+  )
 })
 
 observeEvent(input$glm_store_pred, {
   req(!is_empty(input$glm_pred_data), pressed(input$glm_run))
   pred <- .predict_glm_reg()
   if (is.null(pred)) return()
-  if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
-    return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
-
+  # if (nrow(pred) != nrow(getdata(input$glm_pred_data, filt = "", na.rm = FALSE)))
+  #   return(message("The number of predicted values is not equal to the number of rows in the data. If the data has missing values these will need to be removed."))
   withProgress(message = 'Storing predictions', value = 0,
-    store_glm(pred, data = input$glm_pred_data, type = "prediction", name = input$glm_store_pred_name)
+    store(pred, data = input$glm_pred_data, name = input$glm_store_pred_name)
   )
 })
 

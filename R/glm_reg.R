@@ -112,9 +112,9 @@ glm_reg <- function(dataset, rvar, evar,
 
   if ("stepwise" %in% check) {
     ## use k = 2 for AIC, use k = log(nrow(dat)) for BIC
-    model <- sshhr(glm(as.formula(paste(rvar, "~ 1")), weights = wts,
-                 family = binomial(link = link), data = dat) %>%
-             step(k = 2, scope = list(upper = form), direction = 'both'))
+    # model <- sshhr(glm(as.formula(paste(rvar, "~ 1")), weights = wts,
+    model <- sshhr(glm(form, weights = wts, family = binomial(link = link), data = dat)) %>%
+             step(k = 2, scope = list(upper = form), direction = 'backward')
   } else {
     model <- sshhr(glm(form, weights = wts, family = binomial(link = link), data = dat))
   }
@@ -614,7 +614,7 @@ predict.glm_reg <- function(object,
                             ...) {
 
   if (is.character(object)) return(object)
-  pred_count <- sum(c(pred_vars == "", pred_cmd == "", pred_data == ""))
+  pred_count <- sum(c(pred_vars == "", pred_cmd == "", is.character(pred_data) && pred_data == ""))
   ## used http://www.r-tutor.com/elementary-statistics/simple-linear-regression/prediction-interval-linear-regression as starting point
   if ("standardize" %in% object$check) {
     return(cat("Standardized coefficients cannot be used for prediction.\nPlease uncheck the standardized coefficients box and try again"))
@@ -624,16 +624,9 @@ predict.glm_reg <- function(object,
 
   dec <- object$dec
 
-  # if (pred_count < 2) {
-  #   if (pred_cmd != "")
-  #     cat("Multiple inputs where specified for prediciton. The command will be used.\nTo use variables or a dataset remove the command.")
-  #   if (pred_vars != "")
-  #     cat("Multiple inputs where specified for prediciton. The variables selected will be used.\nTo use a command or dataset unselect variables.")
-  # }
-
   pred_type <- "cmd"
   vars <- object$evar
-  if (pred_data == "" && pred_cmd != "") {
+  if ((is.character(pred_data) && pred_data == "") && pred_cmd != "") {
     pred_cmd %<>% gsub("\"","\'",.) %>% gsub(";\\s*$","",.) %>% gsub(";",",",.)
     pred <- try(eval(parse(text = paste0("with(object$model$model, expand.grid(", pred_cmd ,"))"))), silent = TRUE)
     if (is(pred, 'try-error')) {
@@ -760,6 +753,7 @@ predict.glm_reg <- function(object,
       cat("\nLevel                :", object$lev, "in", object$rvar)
       cat("\nExplanatory variables:", paste0(object$evar, collapse=", "),"\n\n")
 
+      if (!is.character(pred_data)) pred_data <- "-----"
       if (pred_type == "cmd") {
         cat("Predicted values for:\n")
       } else if (pred_type == "datacmd") {
@@ -871,7 +865,9 @@ plot.glm_predict <- function(x,
   sshhr( p )
 }
 
-#' Store residuals or predicted values generated in the glm_reg function
+#' Deprecated function to store logistic regression residuals and predictions
+#'
+#' @details Use \code{\link{store.glm_predict}} or \code{\link{store.glm_reg}} instead
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
 #'
@@ -880,39 +876,44 @@ plot.glm_predict <- function(x,
 #' @param type Residuals ("residuals") or predictions ("predictions"). For predictions the dataset name must be provided
 #' @param name Variable name assigned to the residuals or predicted values
 #'
-#' @examples
-#' \dontrun{
-#' result <- glm_reg("titanic", "survived", "pclass", lev = "Yes")
-#' store_glm(result)
-#' }
 #' @export
-store_glm <- function(object,
-                      data = object$dataset,
-                      type = "residuals",
-                      name = paste0(type, "_glm")) {
+store_glm <- function(object, data = object$dataset,
+                      type = "residuals", name = paste0(type, "_glm")) {
 
-  # if (!is.null(object$data_filter) && object$data_filter != "")
-  # if (!is_empty(object$data_filter))
-  #   return(message("Please deactivate data filters before trying to store predictions or residuals"))
+  if (type == "residuals")
+    store.glm_reg(object, data = data, name = name)
+  else
+    store.glm_predict(object, data = data, name = name)
+}
 
-  ## fix empty name input
-  if (gsub("\\s","",name) == "") name <- paste0(type, "_glm")
+#' Store predicted values generated in the glm_reg function
+#'
+#' @details Use \code{\link{store.glm_predict}} or \code{\link{store.glm_reg}} instead
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{glm_reg}} or \code{\link{predict.glm_reg}}
+#' @param ... Additional arguments. Must include data or dataset name (e.g., data = mtcars or data = "mtcars")
+#' @param name Variable name assigned to the residuals or predicted values
+#'
+#' @export
+store.glm_predict <- function(object, ..., name = "pred_glm") {
+  if (is_empty(name)) name <- "pred_glm"
+  store.reg_predict(object, ..., name = name)
+}
 
-  if (type == "residuals") {
-    store <- object$model$residuals
-  } else {
-    ## gsub needed because trailing/leading spaces may be added to the variable name
-    name <- unlist(strsplit(name, ",")) %>% gsub("\\s","",.)
-    if (length(name) > 1) {
-      name <- name[1:min(2, length(name))]
-      ind <- which(colnames(object) == "Prediction") %>% {.:(. + length(name[-1]))}
-      store <- object[,ind]
-    } else {
-      store <- object$Prediction
-    }
-  }
-
-  changedata(data, vars = store, var_names = name)
+#' Store residuals from a model generated in the glm_reg function
+#'
+#' @details See \url{http://vnijs.github.io/radiant/quant/glm_reg} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{glm_reg}}
+#' @param ... Additional arguments
+#' @param name Variable name(s) assigned to predicted values
+#'
+#' @export
+store.glm_reg <- function(object, ..., name = "residuals_glm") {
+  if (is_empty(name)) name <- "residuals_glm"
+  store.regression(object, ..., name = name)
 }
 
 #' Confidence interval for robust estimators
@@ -937,15 +938,12 @@ confint_robust <- function (object, parm, level = 0.95, vcov = NULL, ...) {
         parm <- pnames[parm]
     a <- (1 - level)/2
     a <- c(a, 1 - a)
-    # pct <- format.perc(a, 3)
     fac <- qnorm(a)
-    # ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, pct))
     ci <- array(NA, dim = c(length(parm), 2L), dimnames = list(parm, c("Low","High")))
 
     if (is.null(vcov))
       vcov <- sandwich::vcovHC(object, type="HC0")
     ses <- sqrt(diag(vcov))[parm]
-    # coeff$std.error <- sqrt(diag(sandwich::vcovHC(model, type="HC0")))
     ci[] <- cf[parm] + ses %o% fac
     ci
 }

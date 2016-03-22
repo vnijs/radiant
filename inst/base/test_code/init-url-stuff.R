@@ -56,7 +56,7 @@
 #       state_email(c("Session size (MB):",session_size,"\nSession ages in days:",ages))
 #   }
 #
-#   ## are there any state files dumped more than 1 minute ago?
+#   ## are there any state-files dumped more than 1 minute ago?
 #   check_age_and_size()
 # }
 #
