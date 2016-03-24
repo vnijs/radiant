@@ -25,7 +25,6 @@ sample_size <- function(type = "mean",
                         sd_mean = 10,
                         err_prop = .1,
                         p_prop = .5,
-                        # conf_lev = .95,
                         conf_lev = 1.96,
                         incidence = 1,
                         response = 1,
@@ -96,18 +95,21 @@ summary.sample_size <- function(object, ...) {
 		cat("Population correction: None\n")
 	} else {
 		cat("Population correction: Yes\n")
-		cat("Population size      :", format(object$pop_size, big.mark = ",",
-		    																 scientific = FALSE), "\n")
+		cat("Population size      :", nrprint(object$pop_size, dec = 0), "\n")
+				# cat("Population size      :", format(object$pop_size, big.mark = ",",
+		    																 # scientific = FALSE), "\n")
 	}
 
-	cat("\nRequired sample size     :", format(object$n, big.mark = ",",
-	    																			 scientific = FALSE))
-	cat("\nRequired contact attempts:", format(ceiling(object$n / object$incidence / object$response),
-	    																			 big.mark = ",", scientific = FALSE))
-	cat("\n\nChoose a Z-value:\n")
+	cat("\nRequired sample size     :", nrprint(object$n, dec = 0))
+	# cat("\nRequired sample size     :", format(object$n, big.mark = ",",
+	    																			 # scientific = FALSE))
+	cat("\nRequired contact attempts:", nrprint(ceiling(object$n / object$incidence / object$response), dec = 0))
+	# cat("\nRequired contact attempts:", format(ceiling(object$n / object$incidence / object$response),
+	    																			 # big.mark = ",", scientific = FALSE))
+	cat("\n\nChoose a z.value:\n")
 
   for (z in c(.80, .85, .90, .95, .99))
-    cat(paste0(100*z,"%\t"),-qnorm((1-z)/2) %>% round(2),"\n")
+    cat(paste0(100*z,"%\t"),-qnorm((1 - z)/2) %>% round(2),"\n")
 
   rm(object)
 }

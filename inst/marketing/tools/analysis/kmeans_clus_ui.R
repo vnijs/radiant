@@ -19,14 +19,14 @@ output$ui_km_vars <- renderUI({
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
 
-  isolate({
-    init <- input$km_vars %>%
-      {if (!is_empty(.) && . %in% vars) . else input$hc_vars}
-    if (length(init) > 0) r_state$km_vars <<- init
-  })
+  # isolate({
+  #   init <- input$km_vars %>%
+  #     {if (!is_empty(.) && . %in% vars) . else input$hc_vars}
+  #   if (length(init) > 0) r_state$km_vars <<- init
+  # })
 
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars,
-	  selected = state_multiple("km_vars", vars, init),
+	  selected = state_multiple("km_vars", vars, input$hc_vars),
 	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
 })
 

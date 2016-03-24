@@ -100,6 +100,12 @@ shared_ui <-
     navbarMenu(title = "", id = "Stop", icon = icon("power-off"),
                tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
                                    onclick = "setTimeout(function(){window.close();}, 100); ")),
+               if (rstudioapi::isAvailable()) {
+                 tabPanel(actionLink("stop_radiant_rmd", "Stop & Report to Rstudio", icon = icon("stop"),
+                                     onclick = "setTimeout(function(){window.close();}, 100); "))
+               } else {
+                 tabPanel("")
+               },
                tabPanel(tags$a(id = "refresh_radiant", href = "#", class = "action-button",
                                list(icon("refresh"), "Refresh"), onclick = "window.location.reload();")),
                ## had to remove class = "action-button" to make this work

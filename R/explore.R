@@ -81,32 +81,18 @@ explore <- function(dataset,
     if (ncol(tab) == 2) colnames(tab) <- c("variable", names(pfun))
   } else {
 
+    ## convert categorical variables to factors if needed
     ## needed to deal with empty/missing values
-    # for (bv in byvar) {
-    #   if (!is.factor(dat[[bv]])) dat[[bv]] %<>% as.factor
-
-    #   levs <- levels(dat[[bv]])
-    #   if ("" %in% levs) {
-    #     levs[levs == ""] <- "[EMPTY]"
-    #     dat[[bv]] <- factor(dat[[bv]], levels = levs)
-    #     dat[[bv]][is.na(dat[[bv]])] <- "[EMPTY]"
-    #   }
-    # }
-
-    # if (identical(vars, byvar)) {
-    #   dat <- bind_cols(dat,dat) %>% set_colnames(c("byvar",vars))
-    #   byvar <- "byvar"
-    # }
-
-    ## needed to deal with empty/missing values
-    ## function and mutate_each should replace previous block
     empty_level <- function(x) {
       if (!is.factor(x)) x %<>% as.factor
       levs <- levels(x)
       if ("" %in% levs) {
-        levs[levs == ""] <- "[EMPTY]"
+        levs[levs == ""] <- "NA"
         x <- factor(x, levels = levs)
-        x[is.na(x)] <- "[EMPTY]"
+        x[is.na(x)] <- "NA"
+      } else if (any(is.na(x))) {
+        x <- factor(x, levels = c(levs,"NA"))
+        x[is.na(x)] <- "NA"
       }
       x
     }
@@ -602,4 +588,19 @@ make_funs <- function(x) {
   xclean <- gsub("_rm$","",x) %>% sub("length","n",.)
   env <- if (exists("radiant")) environment(radiant::radiant) else parent.frame()
   dplyr::funs_(lapply(paste0(xclean, " = ~", x), as.formula, env = env) %>% setNames(xclean))
+}
+
+## Function not exported
+.empty_level <- function(x) {
+  if (!is.factor(x)) x %<>% as.factor
+  levs <- levels(x)
+  if ("" %in% levs) {
+    levs[levs == ""] <- "[EMPTY]"
+    x <- factor(x, levels = levs)
+    x[is.na(x)] <- "[EMPTY]"
+  } else if (any(is.na(x))) {
+    x[is.na(x)] <- "[EMPTY]"
+    x <- factor(x, levels = c(levs,"[EMPTY]"))
+  }
+  x
 }

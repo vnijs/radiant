@@ -41,10 +41,10 @@ analytics_ui <- tagList(
     tabPanel("Model performance", uiOutput("performance"))
   ),
 
-  # navbarMenu("Decide",
-  #   tabPanel("Decision tree", uiOutput("dtree")),
-  #   tabPanel("Simulate", uiOutput("simulater"))
-  # ),
+  navbarMenu("Factor",
+    tabPanel("Pre-factor", uiOutput("pre_factor")),
+    tabPanel("Factor", uiOutput("full_factor"))
+  ),
 
   navbarMenu("Cluster",
     tabPanel("Hierarchical", uiOutput("hier_clus")),

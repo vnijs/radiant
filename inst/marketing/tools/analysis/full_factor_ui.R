@@ -124,7 +124,7 @@ output$full_factor <- renderUI({
 
 .plot_full_factor <- reactive({
   if (.ff_available() != "available") return(.ff_available())
-  if (is_not(input$ff_nr_fact) || input$ff_nr_fact < 2) return("Plot requires 2 or more factors")
+  if (is_not(input$ff_nr_fact) || input$ff_nr_fact < 2) return("Plot requires 2 or more factors.\nChange the number of factors and re-estimate")
   plot(.full_factor(), shiny = TRUE)
 })
 

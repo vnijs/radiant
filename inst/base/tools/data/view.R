@@ -66,12 +66,12 @@ output$dataviewer <- DT::renderDataTable({
     fbox <- "none"
   } else {
     fbox <- list(position = "top")
-    dc <- getclass(dat)
-    if ("factor" %in% dc) {
-      toChar <- sapply(select(dat, which(dc == "factor")), function(x) length(levels(x))) > 100
-      if (any(toChar))
-        dat <- mutate_each_(dat, funs(as.character), vars = names(toChar)[toChar])
-    }
+  #   dc <- getclass(dat)
+  #   if ("factor" %in% dc) {
+  #     toChar <- sapply(select(dat, which(dc == "factor")), function(x) length(levels(x))) > 100
+  #     if (any(toChar))
+  #       dat <- mutate_each_(dat, funs(as.character), vars = names(toChar)[toChar])
+  #   }
   }
 
   withProgress(message = 'Generating view table', value = 0,

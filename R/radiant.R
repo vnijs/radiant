@@ -408,14 +408,6 @@ changedata <- function(dataset,
   }
 }
 
-## use ensurer to check if nrow(vars) == nrow(dataset)
-## http://cran.r-project.org/web/packages/ensurer/vignettes/ensurer.html
-
-## adding variable when filter is active?
-# dat <- mtcars
-# dat$new <- NA
-# dat$new[1:10] <- 1:10
-
 #' View data
 #'
 #' @details View, search, sort, etc. your data
@@ -949,7 +941,6 @@ dfprint <- function(tbl, dec = 3, perc = FALSE) {
   mutate_each(
     funs(if (is.double(.)) sprintf(paste0("%.", dec ,frm), .) else .)
   )
-
 }
 
 #' Print a number with a specified number of decimal places, thousand sep, and a symbol
@@ -1052,7 +1043,7 @@ which.pmax <- function(...) unname(apply(cbind(...), 1, which.max))
 #' @export
 which.pmin <- function(...) unname(apply(cbind(...), 1, which.min))
 
-#' Method to store variables a dataset in Radiant
+#' Method to store variables in a dataset in Radiant
 #'
 #' @param object Object of relevant class that has required information to store
 #' @param ... Additional arguments
@@ -1081,8 +1072,3 @@ indexr <- function(dataset, vars = "", filt = "") {
 
   list(nr = nr, ind = ind)
 }
-
-
-
-
-

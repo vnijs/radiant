@@ -19,7 +19,7 @@ You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant 
 
 Alternatively, you can select and copy the data in the spreadsheet using CTRL-C (or CMD-C on mac), go to Radiant, choose `clipboard` from the `Load data of type` dropdown, and click the `Paste data` button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted. If you see a message in Radiant that the data were not transferred fully try saving the data in csv format and loading it into Radiant as described above.
 
-To access all data files bundled with Radiant choose `examples` from the `Load data of type` dropdown and then click `Load examples` button. These files are used to illustrate the various analysis tools accessible in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., _Regression > Linear (OLS)_).
+To access all data files bundled with Radiant choose `examples` from the `Load data of type` dropdown and then click `Load examples` button. These files are used to illustrate the various analysis tools accessible in Radiant. For example, the catalog sales data is used as an example in the help file for regression (i.e., _Regression > Linear regression (OLS)_).
 
 ### Save data
 

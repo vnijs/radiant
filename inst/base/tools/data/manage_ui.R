@@ -3,8 +3,8 @@
 #######################################
 
 output$ui_fileUpload <- renderUI({
-
-  if (is.null(input$dataType)) return()
+  # if (is.null(input$dataType)) return()
+  req(input$dataType)
   if (input$dataType == "csv") {
     fileInput('uploadfile', '', multiple=TRUE,
               accept = c('text/csv','text/comma-separated-values',
@@ -212,7 +212,7 @@ observeEvent(input$uploadfile, {
   ## loading files from disk
   inFile <- input$uploadfile
   if (is.null(inFile)) return()
-    # iterating through the files to upload
+    ## iterating through the files to upload
     for (i in 1:(dim(inFile)[1]))
       loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
                    header = input$man_header,
@@ -325,18 +325,6 @@ observe({
       tmpEnv <- new.env(parent = emptyenv())
       load(inFile$datapath, envir=tmpEnv)
 
-      ## upload_error_handler doesn't show warning for some reason
-      # print(str(inFile))
-      # print(exists("r_data", envir = tmpEnv))
-      # if (!exists("r_data", envir = tmpEnv)) {
-      #   filename <- basename(inFile$name)
-      #   fext <- tools::file_ext(filename)
-      #   objname <- sub(paste0(".",fext,"$"),"", filename)
-      #   print(objname)
-      #   upload_error_handler(objname, "### The file loaded does not seem to be a state-file. Try loading it as an 'rda' file")
-      #   return()
-      # }
-
       ## remove characters that may cause problems in shinyAce
       if (!is.null(tmpEnv$r_state$rmd_report))
         tmpEnv$r_state$rmd_report %<>% gsub("[\x80-\xFF]", "", .) %>% gsub("\r","\n",.)
@@ -355,7 +343,7 @@ observe({
 output$refreshOnUpload <- renderUI({
   inFile <- input$uploadState
   if (!is.null(inFile)) {
-    # Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
+    ## Joe Cheng: https://groups.google.com/forum/#!topic/shiny-discuss/Olr8m0JwMTo
     tags$script("window.location.reload();")
   }
 })
@@ -382,22 +370,37 @@ output$saveState <- downloadHandler(
 #######################################
 # Loading data into memory
 #######################################
+# observeEvent({pressed(input$renameButton) || !is_empty(input$data_rename)}, {
 observeEvent(input$renameButton, {
-  if (is_empty(input$data_rename)) return()
-  ## use pryr::object_size to see that the size of the list doesn't change
-  ## when you assign a list element another name
-  r_data[[input$data_rename]] <- r_data[[input$dataset]]
-  r_data[[input$dataset]] <- NULL
-  r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
-  r_data[[paste0(input$dataset,"_descr")]] <- NULL
-
-  ind <- which(input$dataset == r_data[["datasetlist"]])
-  r_data[["datasetlist"]][ind] <- input$data_rename
-  r_data[["datasetlist"]] %<>% unique
-
-  updateSelectInput(session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
-                    selected = input$data_rename)
+  .data_rename()
 })
+
+## would be nice to update name with either a button OR return in text input
+# observeEvent(input$data_rename, {
+#   req(input$dataset != input$data_rename)
+#   .data_rename()
+# })
+
+# .data_rename <- reactive({
+.data_rename <- function() {
+  isolate({
+    if (is_empty(input$data_rename)) return()
+    ## use pryr::object_size to see that the size of the list doesn't change
+    ## when you assign a list element another name
+    r_data[[input$data_rename]] <- r_data[[input$dataset]]
+    r_data[[input$dataset]] <- NULL
+    r_data[[paste0(input$data_rename,"_descr")]] <- r_data[[paste0(input$dataset,"_descr")]]
+    r_data[[paste0(input$dataset,"_descr")]] <- NULL
+
+    ind <- which(input$dataset == r_data[["datasetlist"]])
+    r_data[["datasetlist"]][ind] <- input$data_rename
+    r_data[["datasetlist"]] %<>% unique
+
+    updateSelectInput(session, "dataset", label = "Datasets:", choices = r_data$datasetlist,
+                      selected = input$data_rename)
+
+  })
+}
 
 output$ui_datasets <- renderUI({
   ## Drop-down selection of active dataset

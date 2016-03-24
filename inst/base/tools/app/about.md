@@ -62,12 +62,6 @@ radiant::radiant("analytics")
 
 See the [installing radiant](http://vnijs.github.io/radiant/install.html) page for more details.
 
-<!--
-See also the `Installing Radiant` video:
-
-<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
--->
-
 You can also create a launcher on your Desktop to start Radiant by typing `radiant::launcher("analytics")` in the R(studio) console and pressing return. Again, enter either "base", "quant", "marketing" or "analytics" depending on the app you want to use. A file called `radiant.bat` (windows) or `radiant.command` (mac) will be created that you can double-click to start Radiant in your default browser. The `launcher` command will also create a file called `update_radiant.bat` (windows) or `update_radiant.command` (mac) that you can double-click to update Radiant to the latest release.
 
 When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click `Stop`. The Radiant process will stop and the browser window will close (Chrome) or gray-out.

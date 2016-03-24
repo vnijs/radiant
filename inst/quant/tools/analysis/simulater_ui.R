@@ -79,17 +79,18 @@ output$ui_sim_data <- renderUI({
 
   ## keep current selection if possible
   choices <- c("None" = "none", r_data$datasetlist)
-  isolate({
-    if (is_empty(input$sim_data)) {
-      init <- if (is_empty(r_state$sim_data)) "none" else r_state$sim_data
-    } else {
-      init <- input$sim_data
-    }
-  })
+  # isolate({
+  #   if (is_empty(input$sim_data)) {
+  #     init <- if (is_empty(r_state$sim_data)) "none" else r_state$sim_data
+  #   } else {
+  #     init <- input$sim_data
+  #   }
+  # })
 
   selectizeInput(inputId = "sim_data", label = "Input data for calculations:",
     choices = choices,
-    selected = state_single("sim_data", choices, init),
+    # selected = state_single("sim_data", choices, init),
+    selected = state_single("sim_data", choices),
     multiple = FALSE)
 })
 
@@ -124,18 +125,18 @@ output$ui_rep_vars <- renderUI({
   #     {if (!is_empty(.) && . %in% vars) . else character(0)}
   # })
 
-  isolate({
-    if (is_empty(input$rep_vars)) {
-      init <- if (is_empty(r_state$rep_vars)) "none" else r_state$rep_vars
-    } else {
-      init <- input$rep_vars
-    }
-  })
+  # isolate({
+  #   if (is_empty(input$rep_vars)) {
+  #     init <- if (is_empty(r_state$rep_vars)) "none" else r_state$rep_vars
+  #   } else {
+  #     init <- input$rep_vars
+  #   }
+  # })
 
   selectizeInput("rep_vars", label = "Variables to re-simulate:",
     choices = vars, multiple = TRUE,
-    selected = state_multiple("rep_vars", vars, init),
-    # selected = state_multiple("rep_vars", vars),
+    # selected = state_multiple("rep_vars", vars, init),
+    selected = state_multiple("rep_vars", vars),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button'))
     )
@@ -163,15 +164,15 @@ output$ui_rep_sum_vars <- renderUI({
   vars <- sim_vars()
   if (is_empty(vars)) return()
 
-  isolate({
-    init <- input$rep_sum_vars %>%
-      {if (!is_empty(.) && . %in% vars) . else character(0)}
-  })
+  # isolate({
+  #   init <- input$rep_sum_vars %>%
+  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
+  # })
 
   selectizeInput("rep_sum_vars", label = "Output variables:",
     choices = vars, multiple = TRUE,
-    selected = state_multiple("rep_sum_vars", vars, init),
-    # selected = state_multiple("rep_sum_vars", vars),
+    # selected = state_multiple("rep_sum_vars", vars, init),
+    selected = state_multiple("rep_sum_vars", vars),
     options = list(placeholder = 'Select variables',
                    plugins = list('remove_button', 'drag_drop'))
     )

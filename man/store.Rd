@@ -2,7 +2,7 @@
 % Please edit documentation in R/radiant.R
 \name{store}
 \alias{store}
-\title{Method to store variables a dataset in Radiant}
+\title{Method to store variables in a dataset in Radiant}
 \usage{
 store(object, ...)
 }
@@ -12,6 +12,6 @@ store(object, ...)
 \item{...}{Additional arguments}
 }
 \description{
-Method to store variables a dataset in Radiant
+Method to store variables in a dataset in Radiant
 }
 

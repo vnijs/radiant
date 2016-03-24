@@ -41,7 +41,7 @@ output$ui_cp_var2 <- renderUI({
 
   vars <- c("None",vars)
   selectInput(inputId = "cp_var2", label = "Variable (select one):",
-    selected = state_single("cp_var2", vars, init),
+    selected = state_single("cp_var2", vars),
     choices = vars, multiple = FALSE)
 })
 

@@ -50,30 +50,22 @@ pivotr <- function(dataset,
   }
 
   ## convert categorical variables to factors if needed
-  ## use loop or mutate_each?
-  for (cv in cvars) {
-    if (!is.factor(dat[[cv]])) dat[[cv]] %<>% as.factor
-
-    levs <- levels(dat[[cv]])
+  ## needed to deal with empty/missing values
+  empty_level <- function(x) {
+    if (!is.factor(x)) x %<>% as.factor
+    levs <- levels(x)
     if ("" %in% levs) {
-      levs[levs == ""] <- "[EMPTY]"
-      dat[[cv]] <- factor(dat[[cv]], levels = levs)
-      dat[[cv]][is.na(dat[[cv]])] <- "[EMPTY]"
+      levs[levs == ""] <- "NA"
+      x <- factor(x, levels = levs)
+      x[is.na(x)] <- "NA"
+    } else if (any(is.na(x))) {
+      x <- factor(x, levels = c(levs,"NA"))
+      x[is.na(x)] <- "NA"
     }
+    x
   }
 
-  # empty_level <- function(x) {
-  #   if (!is.factor(x)) x %<>% as.factor
-  #   levs <- levels(x)
-  #   if ("" %in% levs) {
-  #     levs[levs == ""] <- "[EMPTY]"
-  #     x <- factor(x, levels = levs)
-  #     x[is.na(x)] <- "[EMPTY]"
-  #   }
-  #   x
-  # }
-
-  # dat[,cv] <- select_(dat, .dots = cv) %>% mutate_each(funs(empty_level(.)))
+  dat[,cvars] <- select_(dat, .dots = cvars) %>% mutate_each(funs(empty_level(.)))
 
   sel <- function(x, nvar) if (nvar == "n") x else select_(x, .dots = nvar)
   sfun <- function(x, nvar, cvars = "", fun = fun) {
