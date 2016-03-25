@@ -128,12 +128,18 @@ knitIt <- function(text) {
   scrub %>% HTML
 }
 
+## cleanout widgets not needed outside shiny apps
+cleanout <- function(x) {
+  gsub("DiagrammeR::renderDiagrammeR", "", x) %>%
+  gsub("DT::renderDataTable", "", .)
+}
+
 ## Based on http://stackoverflow.com/a/31797947/1974918
 knitIt3 <- function(text) {
 
-  text <-
-    gsub("DiagrammeR::renderDiagrammeR", "", text) %>%
-    gsub("DT::renderDataTable", "", .)
+  text <- cleanout(text)
+    # gsub("DiagrammeR::renderDiagrammeR", "", text) %>%
+    # gsub("DT::renderDataTable", "", .)
   ## Read input and convert to Markdown
   md <- knit(text = text)
   ## Get dependencies from knitr
@@ -311,11 +317,13 @@ update_report_fun <- function(cmd) {
       )
     } else if (state_init("rmd_manual", "Auto paste") == "To Rmd") {
       withProgress(message = 'Putting Rmd chunk in Rstudio', value = 0,
-        rstudioapi::insertText(cmd)
+        cleanout(cmd) %>%
+        rstudioapi::insertText(.)
       )
     } else if (state_init("rmd_manual", "Auto paste") == "To R") {
       withProgress(message = 'Putting R-command in Rstudio', value = 0,
-        gsub("(```\\{.*\\}\n)|(```\n)","",cmd) %>% rstudioapi::insertText(.)
+        gsub("(```\\{.*\\}\n)|(```\n)","",cmd) %>% cleanout(.) %>%
+        rstudioapi::insertText(.)
       )
     } else {
       if (is_empty(r_state$rmd_report)) {

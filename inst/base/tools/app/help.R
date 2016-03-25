@@ -42,10 +42,12 @@ append_help <- function(help_str, help_path, Rmd = TRUE) {
 }
 
 help_data <- c("Manage" = "manage.md","View" = "view.md", "Visualize" = "visualize.md",
-               "Pivot" = "pivotr.md", "Explore" = "explore.md", "Combine" = "combine.md", "Transform" = "transform.md")
+               "Pivot" = "pivotr.md", "Explore" = "explore.md", "Transform" = "transform.md",
+               "Combine" = "combine.md")
 output$help_data <- reactive(append_help("help_data", file.path(r_path,"base/tools/help/")))
 
-help_sample <- c("Sampling" = "sampling.md", "Sample size" = "sample_size.Rmd")
+help_sample <- c("Sampling" = "sampling.md", "Sample size (single)" = "sample_size.Rmd",
+                 "Sample size (compare)" = "sample_size_comp.Rmd")
 output$help_sample <- reactive(append_help("help_sample", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
 help_base_menu <- c("Probability calculator" = "prob_calc.md", "Central limit theorem" = "clt.md",
@@ -55,7 +57,7 @@ help_base_menu <- c("Probability calculator" = "prob_calc.md", "Central limit th
 
 output$help_base_menu <- reactive(append_help("help_base_menu", file.path(r_path,"quant/tools/help/")))
 
-help_regression <- c("Correlation" = "correlation.md", "Regression" = "regression.Rmd", "GLM" = "glm_reg.Rmd")
+help_regression <- c("Correlation" = "correlation.md", "Linear regression (OLS)" = "regression.Rmd", "Logistic regression (GLM)" = "glm_reg.Rmd")
 output$help_regression <- reactive(append_help("help_regression", file.path(r_path,"quant/tools/help/"), Rmd = TRUE))
 
 help_decide <- c("Decision tree" = "dtree.Rmd", "Simulate" = "simulater.md")
@@ -172,7 +174,7 @@ observeEvent(input$help_maps_none, {help_switch(input$help_maps_none, "help_maps
 help_factor <- c("Pre-factor" = "pre_factor.md", "Factor" = "full_factor.md")
 output$help_factor <- reactive(append_help("help_factor", file.path(r_path,"marketing/tools/help/")))
 observeEvent(input$help_factor_all, {help_switch(input$help_factor_all, "help_factor")})
-observeEvent(input$help_factor_all, {help_switch(input$help_factor_none, "help_factor", help_on = FALSE)})
+observeEvent(input$help_factor_none, {help_switch(input$help_factor_none, "help_factor", help_on = FALSE)})
 
 help_cluster <- c("Hierarchical" = "hier_clus.md", "Kmeans" = "kmeans_clus.md")
 output$help_cluster <- reactive(append_help("help_cluster", file.path(r_path,"marketing/tools/help/")))
@@ -228,7 +230,8 @@ output$help_marketing <- renderUI({
   )
 })
 
-help_model <- c("Neural Network (ANN)" = "ann.md", "Model performance" = "performance.md")
+help_model <- c("Neural Network (ANN)" = "ann.md", "Collaborative filtering" = "crs.md",
+                "Design of Experiments (DOE)" = "doe.md", "Model performance" = "performance.md")
 output$help_model <- reactive(append_help("help_model", file.path(r_path,"analytics/tools/help/")))
 observeEvent(input$help_model_all, {help_switch(input$help_model_all, "help_model")})
 observeEvent(input$help_model_none, {help_switch(input$help_model_none, "help_model", help_on = FALSE)})
@@ -239,6 +242,12 @@ help_analytics_ui <- tagList(
     <i id='help_model_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_model", NULL, help_model,
       selected = state_init("help_model"), inline = TRUE)
+  ),
+  wellPanel(
+    HTML("<label>Factor menu: <i id='help_factor_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
+    <i id='help_factor_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
+    checkboxGroupInput("help_factor", NULL, help_factor,
+      selected = state_init("help_factor"), inline = TRUE)
   ),
   wellPanel(
     HTML("<label>Cluster menu: <i id='help_cluster_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
@@ -258,6 +267,7 @@ output$help_analytics <- renderUI({
     mainPanel(
       help_quant_main,
       htmlOutput("help_model"),
+      htmlOutput("help_factor"),
       htmlOutput("help_cluster")
     )
   )

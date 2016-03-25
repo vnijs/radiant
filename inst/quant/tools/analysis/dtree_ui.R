@@ -236,6 +236,10 @@ observeEvent(input$dtree_report2, {
 })
 
 .dtree_report <- reactive({
+  ## dependencies needed?
+  # input$dtree_report2
+  # input$dtree_report
+
   dtree_name <- input$dtree_list
   if (is_empty(dtree_name)) dtree_name <- input$dtree_name
   if (is_empty(dtree_name)) dtree_name <- dtree_name()
@@ -245,8 +249,7 @@ observeEvent(input$dtree_report2, {
 
   xcmd <-
     clean_args(dtree_plot_inputs(), dtree_plot_args[-1]) %>%
-    deparse(control = c("keepNA"), width.cutoff = 500L) %T>%
-    print %>%
+    deparse(control = c("keepNA"), width.cutoff = 500L) %>%
     {if (. == "list()") "DiagrammeR::renderDiagrammeR(plot(result))"
      else paste0(sub("list(", "DiagrammeR::renderDiagrammeR(plot(result, ", ., fixed = TRUE),")")}
 
