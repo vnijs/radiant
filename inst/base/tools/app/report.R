@@ -131,7 +131,6 @@ knitIt <- function(text) {
 ## Based on http://stackoverflow.com/a/31797947/1974918
 knitIt3 <- function(text) {
 
-  # text <- "DiagrammeR::renderDiagrammeR(plot(result, final = 'TRUE'))"
   text <-
     gsub("DiagrammeR::renderDiagrammeR", "", text) %>%
     gsub("DT::renderDataTable", "", .)
