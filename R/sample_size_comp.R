@@ -3,11 +3,15 @@
 #' @details See \url{http://vnijs.github.io/radiant/quant/sample_size_comp.html} for an example in Radiant
 #'
 #' @param type Choose "mean" or "proportion"
-#' @param conf Confidence level
+#' @param n Sample size
+#' @param p1 Proportion 1 (only used when "proportion" is selected)
+#' @param p2 Proportion 2 (only used when "proportion" is selected)
+#' @param delta Difference in means between two groups (only used when "mean" is selected)
+#' @param sd Standard deviation (only used when "mean" is selected)
+#' @param conf_lev Confidence level
 #' @param power Power
-#' @param diff Detectible difference
-#' @param prop Initial proportion
-#' @param alt Two or one sided test
+#' @param ratio Sampling ratio (n1 / n2)
+#' @param alternative Two or one sided test
 #'
 #' @return A list of variables defined in sample_size_comp as an object of class sample_size_comp
 #'
@@ -15,37 +19,73 @@
 #' @export
 sample_size_comp <- function(type,
                              n = NULL,
-                             p1 = .5,
+                             p1 = NULL,
                              p2 = NULL,
                              delta = NULL,
-                             sd = 1,
-                             conf_lev = .95,
+                             sd = NULL,
+                             conf_lev = NULL,
                              power = NULL,
+                             ratio = 1,
                              alternative = "two.sided") {
 
-	# Za <- ifelse(alt == "Two sided", qnorm(1 - (1-conf)/2), qnorm(conf))
-	# Zb <- ifelse(alt == "Two sided", qnorm(1 - (1-power)/2), qnorm(power))
   if (!is.null(n) && is.na(n)) n <- NULL
-  if (!is.null(power) && is.na(power)) n <- NULL
+  if (!is.null(power) && is.na(power)) power <- NULL
+  if (!is.null(conf_lev) && is.na(conf_lev)) conf_lev <- NULL
+  sig.level <- if (is.null(conf_lev)) NULL else 1 - conf_lev
+  adj <- ifelse (alternative == "two.sided", 2, 1)
 
 	if (type == 'mean') {
-    if (!is.null(delta) && is.na(delta)) n <- NULL
+    if (!is.null(delta) && is.na(delta)) delta <- NULL
+    if (!is.null(delta)) delta <- abs(delta)
+    if (!is.null(sd) && is.na(sd)) sd <- NULL
+
+    nr_null <- is.null(n)+is.null(power)+is.null(delta)+is.null(sd)+is.null(conf_lev)
+    if (nr_null == 0 || nr_null > 1)
+    	return("Exactly one of 'Sample size', 'Delta', 'Std. deviation',\n'Confidence level', and 'Power' must be blank or NULL" %>% set_class(c("sample_size_comp",class(.))))
 
     res <-
-      power.t.test(n = n, delta = delta, sd = sd, sig.level = 1 - conf_lev, power = power, alternative = alternative) %>%
+      power.t.test(n = n, delta = delta, sd = sd, sig.level = sig.level, power = power, alternative = alternative) %>%
       tidy
+
+	  ## adjustment based on http://powerandsamplesize.com/Calculators/Compare-2-Means/2-Sample-Equality
+	  if (is.null(ratio) || is.na(ratio)) ratio <- 1
+    n2 <-
+      (1 + 1 / ratio) *
+      (res$sd * (qnorm(1 - res$sig.level/adj) + qnorm(res$power)) /
+      (res$delta))^2
+    n2 <- ceiling(n2)
+    n1 <- ceiling(ratio * n2)
+
 	} else {
-    if (!is.null(p2) && is.na(p2)) n <- NULL
-		# n <- ((Za * sqrt(2 * prop * (1 - prop))) + (Zb * sqrt(prop * (1 - prop) + (prop + diff)*(1 - prop - diff))))^2 / diff^2
-	  # ?power.prop.test
-	  # ?power.t.test
+    if (!is.null(p1) && is.na(p1)) p1 <- NULL
+    if (!is.null(p2) && is.na(p2)) p2 <- NULL
+
+    if (!is.null(p1) && !is.null(p2)) {
+    	if (p1 == p2)
+    	  return("Proportion 1 and 2 should not be set equal. Please change the proportion values" %>% set_class(c("sample_size_comp",class(.))))
+    }
+
+    nr_null <- is.null(n)+is.null(power)+is.null(p1)+is.null(p2)+is.null(conf_lev)
+    if (nr_null == 0 || nr_null > 1)
+    	return("Exactly one of 'Sample size', 'Proportion 1', 'Proportion 2',\n'Confidence level', and 'Power' must be blank or NULL" %>% set_class(c("sample_size_comp",class(.))))
 
     res <-
-      power.prop.test(p1 = p1, p2 = p2, sig.level = 1 - conf_lev, power = power, alternative = alternative) %>%
+      power.prop.test(n = n, p1 = p1, p2 = p2, sig.level = sig.level, power = power, alternative = alternative) %>%
       tidy
+
+	  ## adjustment based on http://powerandsamplesize.com/Calculators/Compare-2-Proportions/2-Sample-Equality
+	  if (is.null(ratio) || is.na(ratio)) ratio <- 1
+	  adj <- ifelse (alternative == "two.sided", 2, 1)
+    n2 <-
+      (res$p1 * (1 - res$p1)/ratio + res$p2 * (1 - res$p2)) *
+      ((qnorm(1 - res$sig.level/adj) + qnorm(res$power))/(res$p1 - res$p2))^2
+    n2 <- ceiling(n2)
+    n1 <- ceiling(ratio * n2)
 	}
 
-	# n <- ceiling(n)
+	res$n <- nrprint(ceiling(res$n), dec = 0)
+	res$n1 <- nrprint(n1, dec = 0)
+	res$n2 <- nrprint(n2, dec = 0)
 
   environment() %>% as.list %>% set_class(c("sample_size_comp",class(.)))
 }
@@ -62,41 +102,28 @@ sample_size_comp <- function(type,
 #'
 #' @export
 summary.sample_size_comp <- function(object, ...) {
+
+  if (is.character(object)) return(object)
+
 	cat("Sample size calculation for comparisons\n")
 
-	if (object$type == "mean") {
-	  cat("Calculation type     : Mean\n")
+	cat("Type            :", object$type, "\n")
+	if (object$ratio == 1) {
+    cat("Sample size     :", object$res$n, "\n")
 	} else {
-	  cat("Type: Proportion\n")
+	  cat(paste0("Sample size 1   : ", object$res$n1, " (", object$res$n2, " x ", object$ratio, ")\n"))
+	  cat(paste0("Sample size 2   : ", object$res$n2, "\n"))
 	}
 
-	# cat("Confidence level     :", object$zval, "\n")
-	cat("Confidence level     :", object$conf, "\n")
-	cat("Power                :", object$power, "\n")
-	cat("Alternative          :", object$alternative, "\n")
-	# cat("\nRequired sample size     :", nrprint(object$n, dec = 0))
-  # rm(object)
-	print(object$res, row.names = FALSE)
+	if (object$type == "mean") {
+		cat("Delta           :", object$res$delta, "\n")
+		cat("Std. deviation  :", object$res$sd, "\n")
+	} else {
+		cat("Proportion 1    :", object$res$p1, "\n")
+		cat("Proportion 2    :", object$res$p2, "\n")
+	}
+	cat("Confidence level:", 1 - object$res$sig.level, "\n")
+	cat("Power           :", object$res$power, "\n")
+	cat("Ratio (n1 / n2) :", object$ratio, "\n")
+	cat("Alternative     :", object$alternative, "\n\n")
 }
-
-# library(radiant)
-
-# sample_size_comp(type = "prop", conf = .95, power = .8, diff = .01, prop = .5, alt = "Two sided") %>% summary
-# sample_size_comp(type = "prop", conf = .95, power = .8, diff = .01, prop = .5, alt = "One sided") %>% summary
-# sample_size_comp(type = "prop", conf = .95, power = .95, diff = .005, prop = .03, alt = "One sided") %>% summary
-# sample_size_comp(type = "prop", conf = .95, power = .8, diff = .15, prop = .3, alt = "Two sided") %>% summary
-# power.prop.test()
-# library(broom)
-# power.prop.test(p1 = .3, p2 = 0.15, sig.level=.05, power=0.80) %>% tidy
-
-# power.t.test(n = NULL, delta = 1, sd = 1, sig.level = 1 - .95, power = .8, alternative = "two.sided") %>% tidy
-# power.t.test(n = NULL, delta = -1, sd = 1, sig.level = 1 - .95, power = .8, alternative = "two.sided") %>% tidy
-# power.t.test(n = 100, delta = 1, sd = 1, sig.level = 1 - .95, power = NULL, alternative = "two.sided") %>% tidy
-
-# sample_size_comp(type = "mean", delta = 1, sd = 1, conf_lev = .95, power = .8)
-
-# power.prop.test(p1 = .3, p2 = .15, sig.level = 1 - .95, power = .8, alternative = "two.sided") %>% tidy
-# power.prop.test(p1 = .3, p2 = .45, sig.level = 1 - .95, power = .8, alternative = "two.sided") %>% tidy
-
-# sample_size_comp(type = "prop", p1 = .3, p2 = .15, conf_lev = .95, power = .8)
-

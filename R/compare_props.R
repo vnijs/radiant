@@ -92,6 +92,10 @@ compare_props <- function(dataset, var1, var2,
   	ind <- c(which(cmb[i,1] == rownames(prop_input)), which(cmb[i,2] == rownames(prop_input)))
 
     pinp <- prop_input[ind,]
+
+    print(pinp)
+    print(prop_input)
+
   	res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
 	    sshhr( prop.test(pinp, alternative = alternative, conf.level = conf_lev,
 	             correct = FALSE) ) %>%

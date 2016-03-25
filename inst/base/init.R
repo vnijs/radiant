@@ -189,7 +189,8 @@ url_list <-
                                         "Combine"   = "data/combine/")),
 
        "Sampling"    = "sample/sampling/",
-       "Sample size" = "sample/sample-size/",
+       "Sample size (single)" = "sample/sample-size/",
+       "Sample size (compare)" = "sample/sample-size-comp/",
 
        "Single mean" = list("tabs_single_mean" = list("Summary" = "base/single-mean/",
                                                       "Plot"    = "base/single-mean/plot/")),
