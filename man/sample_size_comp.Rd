@@ -4,21 +4,30 @@
 \alias{sample_size_comp}
 \title{Sample size calculation for comparisons}
 \usage{
-sample_size_comp(type, n = NULL, p1 = 0.5, p2 = NULL, delta = NULL,
-  sd = 1, conf_lev = 0.95, power = NULL, alternative = "two.sided")
+sample_size_comp(type, n = NULL, p1 = NULL, p2 = NULL, delta = NULL,
+  sd = NULL, conf_lev = NULL, power = NULL, ratio = 1,
+  alternative = "two.sided")
 }
 \arguments{
 \item{type}{Choose "mean" or "proportion"}
 
+\item{n}{Sample size}
+
+\item{p1}{Proportion 1 (only used when "proportion" is selected)}
+
+\item{p2}{Proportion 2 (only used when "proportion" is selected)}
+
+\item{delta}{Difference in means between two groups (only used when "mean" is selected)}
+
+\item{sd}{Standard deviation (only used when "mean" is selected)}
+
+\item{conf_lev}{Confidence level}
+
 \item{power}{Power}
 
-\item{conf}{Confidence level}
+\item{ratio}{Sampling ratio (n1 / n2)}
 
-\item{diff}{Detectible difference}
-
-\item{prop}{Initial proportion}
-
-\item{alt}{Two or one sided test}
+\item{alternative}{Two or one sided test}
 }
 \value{
 A list of variables defined in sample_size_comp as an object of class sample_size_comp

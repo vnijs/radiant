@@ -29,7 +29,7 @@ Imports:
     shiny (>= 0.13.1),
     jsonlite (>= 0.9.17),
     shinyAce (>= 0.2.1),
-    DT (>= 0.1.45),
+    DT (>= 0.1.55),
     readr (>= 0.2.2),
     data.tree (>= 0.1.9),
     yaml (>= 2.1.13),

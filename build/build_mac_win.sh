@@ -25,10 +25,10 @@ rm $dirmac/radiant*
 rm $dirmac_mav/radiant*
 rm $dirwin/radiant*
 
-# rm $dirsource/DT*
-# rm $dirmac/DT*
-# rm $dirmac_mav/DT*
-# rm $dirwin/DT*
+rm $dirsource/DT*
+rm $dirmac/DT*
+rm $dirmac_mav/DT*
+rm $dirwin/DT*
 
 # rm $dirsource/data.tree*
 # rm $dirmac/data.tree*
