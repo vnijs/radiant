@@ -10,7 +10,7 @@
 
 
 
-<title>Factor &gt; Pre-factor</title>
+<title>Random &gt; Sample size</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -245,26 +245,41 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Factor &gt; Pre-factor</h1>
+<h1 class="title">Random &gt; Sample size</h1>
 </div>
 
 
 <hr />
 <blockquote>
-<p>Evaluate if data are appropriate for Factor analysis</p>
+<p>Determine the required sample size for comparisons of means or proportions</p>
 </blockquote>
-<p>The goal of Factor Analysis (and Principal Components Analysis) is to reduce the dimensionality of the data with minimal loss of information by identifying and using the structure in the correlation matrix of the variables included in the analysis. The researcher will often try to link the original variables to an underlying factor and provide a descriptive label for each.</p>
-<div id="example-toothpaste" class="section level3">
-<h3>Example: Toothpaste</h3>
-<p>Click the <code>examples</code> radio button on the Data &gt; Manage page and click <code>Load examples</code>. Then choose the <code>toothpaste</code> data from the datasets dropdown. The dataset contains information from 60 consumers who were asked to respond to six questions to determine their attitudes towards toothpaste. The scores shown for variables v1-v6 indicate the level of agreement with statements on a 7-point scale where 1 = strongly disagree and 7 = strongly agree.</p>
-<p>The first step in factor analysis is to determine if the data has the required characteristics. Data with limited or no correlation between the variables are not appropriate for factor analysis. We will use three criteria to test if the data are suitable for factor analysis: Bartlett, KMO, and Collinearity for each variable</p>
-<p>The KMO and Bartlett test evaluate all available data together. A KMO value over 0.6 and a significance level for the Bartlett’s test below .05 suggest there is correlation in the data. Variable collinearity indicates how strongly a single variable is correlated with other variables. Values above .4 are considered appropriate.</p>
-<p>As can be seen in the output from Factor &gt; Pre-factor, Bartlett’s test statistic is large and significant (p-value very close to 0) as desired. The Kaiser-Meyer-Olkin (KMO) &gt; 0.6 and thus acceptable. The variable collinearity values are all above 0.4 so all variables can be used in the analysis.</p>
-<p><img src="figures_marketing/pre_factor_summary_plot.png" alt="Summary and Plot" /></p>
-<p>The next step is to determine the number of factors needed to capture the structure underlying the data. Factors that do not capture even as much variance as could be expected by chance are generally omitted from further consideration. These factors have eigenvalues &lt; 1 in the output.</p>
-<p>A further criteria that is often used to determine the number of factors is the scree-plot. This is a plot of the eigenvalues against the number of factors, in order of extraction. Often a break or <em>elbow</em> is visible in the plot. Factors up to and including this elbow are selected for further analysis if they all have eigenvalues above 1. A set of factors that explain &gt; 70% of the variance in the original data is generally considered acceptable. The eigenvalues for all factors are shown above. Only two factors have eigenvalues above 1.</p>
-<p>At first glance the Scree Plot of the Eigenvalues seems to suggest that 3 factors should be extracted (i.e., look for the <em>elbow</em>). However, because the value for the third factor is below one we will extract 2 factors.</p>
-<p>The increase in cumulative % explained variance is relatively small going from 2 to 3 factors (i.e., from 82.49% to 89.85%). This is confirmed by the fact that the eigenvalue for factor 3 is smaller than 1 (= .442). Again, we choose 2 factors. The first 2 factors capture 82% of the variance in the original data which is excellent.</p>
+<p>Leave one of the inputs blank to determine its value. By default the sample size input is left empty and the required sample size is calculated. Note that only one input can be left blank.</p>
+<div id="input" class="section level3">
+<h3>Input</h3>
+<ul>
+<li>Sample size: Number of respondents required</li>
+<li>Confidence level: 1 - significance level (e.g, .95 = 1 - .05).<sup>1, 2</sup></li>
+<li>Power: 1 - <span class="math inline">\(\beta\)</span> (e.g, .8 = 1 - .2).<sup>3</sup></li>
+<li>Ratio: Relative sample size for group 1 (control) and group 2 (test)</li>
+</ul>
+</div>
+<div id="input-for-a-comparison-of-means" class="section level3">
+<h3>Input for a comparison of means</h3>
+<ul>
+<li>Delta: Difference between group means that we hope to detect</li>
+<li>Std. deviation: Assumed standard deviation</li>
+</ul>
+</div>
+<div id="input-for-a-comparison-of-proportions" class="section level3">
+<h3>Input for a comparison of proportions</h3>
+<ul>
+<li>Proportion 1: Assumed proportion in group 1 (e.g., .1)</li>
+<li>Proportion 2: Proportion 1 plus the difference we hope to detect (e.g., .1 + .05 = .15)</li>
+</ul>
+<p><strong>Note:</strong> The (matching) ratio of the control group sample size (<em>n1</em>) to the test group sample size (<em>n2</em>) is 1 by default (i.e., groups are of the same size). If no value is provided, a value of 1 is assumed.</p>
+<p><sup>1</sup> The <strong>significance level</strong>, often denoted by <span class="math inline">\(\alpha\)</span>, is the highest probability you are willing to accept of rejecting the null hypothesis when it is actually true. A commonly used significance level is 0.05 (or 5%)</p>
+<p><sup>2</sup> <span class="math inline">\(1 - \alpha\)</span> is called the <strong>confidence level</strong>. A commonly used confidence level is 0.95 (or 95%)</p>
+<p><sup>3</sup> Beta (<span class="math inline">\(\beta\)</span>), is the probability of accepting null hypothesis when it is actually false. The power of a test is calculated as 1 - <span class="math inline">\(\beta\)</span>. A commonly used power level is 0.8 (or 80%)</p>
 </div>
 
 
