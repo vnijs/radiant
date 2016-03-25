@@ -11,8 +11,8 @@ descr_out <- function(descr, ret_type = 'html') {
 
 upload_error_handler <- function(objname, ret) {
   ## create an empty data.frame and return error message as description
-  r_data[[paste0(objname,"_descr")]] <<- ret
-  r_data[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2))
+  # r_data[[paste0(objname,"_descr")]] <<- ret
+  r_data[[objname]] <<- data.frame(matrix(rep("",12), nrow = 2)) %>% {attr(.,"description") <- ret; .}
 }
 
 loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRUE, sep = "\t") {
@@ -50,6 +50,7 @@ saveClipboardData <- function() {
 }
 
 loadUserData <- function(fname, uFile, ext,
+                         .csv = FALSE,
                          header = TRUE,
                          man_str_as_factor = TRUE,
                          sep = ",",
@@ -68,8 +69,6 @@ loadUserData <- function(fname, uFile, ext,
 
   ## if ext isn't in the filename nothing was replaced and so ...
   if (objname == filename) {
-    # fext <- tools::file_ext(filename) %>% tolower
-
     if (fext %in% c("xls","xlsx")) {
       ret <- "### Radiant does not load xls files directly. Please save the data as a csv file and try again."
     } else {
@@ -93,9 +92,8 @@ loadUserData <- function(fname, uFile, ext,
         upload_error_handler(objname,"### More than one R object contained in the data.")
       }
     } else {
-      # r_data[[objname]] <- as.data.frame(get(robjname)) %>% {gsub("^\\s+|\\s+$", "", names(.))}
       r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
-      r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+      # r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
     }
   } else if (ext == 'rds') {
     ## objname will hold the name of the object(s) inside the R datafile
@@ -104,18 +102,19 @@ loadUserData <- function(fname, uFile, ext,
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds.")
     } else {
       r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
-      r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
+      # r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
     }
   } else if (ext == 'csv') {
-    r_data[[objname]] <- loadcsv(uFile, header = header, sep = sep, saf = man_str_as_factor) %>%
+    r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, sep = sep, saf = man_str_as_factor) %>%
       {if (is.character(.)) upload_error_handler(objname, mess) else .} %>%
       {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
 
-  } else {
+  } else if (ext != "---") {
 
     ret <- paste0("### The selected filetype is not currently supported (",fext,").")
     upload_error_handler(objname,ret)
   }
 
+  r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
   r_data[['datasetlist']] <<- c(objname, r_data[['datasetlist']]) %>% unique
 }

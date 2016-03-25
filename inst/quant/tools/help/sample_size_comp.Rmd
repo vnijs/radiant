@@ -25,4 +25,4 @@ Leave one of the inputs blank to determine its value. By default the sample size
 
 <sup>2</sup> $1 - \alpha$ is called the **confidence level**. A commonly used confidence level is 0.95 (or 95%)
 
-<sup>3</sup> Beta ($\beta$), is the probability of accepting null hypothesis when it is actually false. The power of a test is calculated as 1 - $\beta$. A commonly used power level is 0.8 (or 80%)
+<sup>3</sup> Beta ($\beta$), is the probability of accepting the null hypothesis when it is actually false. The power of a test is calculated as 1 - $\beta$. A commonly used power level is 0.8 (or 80%)

@@ -4,11 +4,13 @@
 \alias{loadcsv}
 \title{Load a csv file with read.csv and read_csv}
 \usage{
-loadcsv(fn, header = TRUE, sep = ",", dec = ".", saf = TRUE,
-  safx = 20)
+loadcsv(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".",
+  saf = TRUE, safx = 20)
 }
 \arguments{
 \item{fn}{File name string}
+
+\item{.csv}{Use read.csv instead of read_csv to load file (default is FALSE)}
 
 \item{header}{Header in file (TRUE, FALSE)}
 

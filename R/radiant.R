@@ -286,6 +286,7 @@ saver <- function(objname, file) {
 #' Load a csv file with read.csv and read_csv
 #'
 #' @param fn File name string
+#' @param .csv Use read.csv instead of read_csv to load file (default is FALSE)
 #' @param header Header in file (TRUE, FALSE)
 #' @param sep Use , (default) or ; or \\t
 #' @param dec Decimal symbol. Use . (default) or ,
@@ -295,25 +296,41 @@ saver <- function(objname, file) {
 #' @return Data.frame with (some) variables converted to factors
 #'
 #' @export
-loadcsv <- function(fn, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
+loadcsv <- function(fn, .csv = FALSE, header = TRUE, sep = ",", dec = ".", saf = TRUE, safx = 20) {
 
+  # cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
+  # try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
+  #   {if (is(., 'try-error') || nrow(readr::problems(.)) > 0)
+  #      try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
+  #    else . } %>%
+  #   {if (is(., 'try-error'))
+  #      return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+  #    else .} %>%
+  #   {if (saf) factorizer(., safx) else . } %>% as.data.frame
+
+
+  rprob <- ""
   cn <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE, nrows = 1), silent = TRUE)
-  # dat <- try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
-  try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE) %>%
-    {if (is(., 'try-error') || nrow(readr::problems(.)) > 0)
-       try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
-     else . } %>%
-    {if (is(., 'try-error'))
-       return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
-     else .} %>%
-    {if (saf) factorizer(., safx) else . } %>% as.data.frame
+  if (!.csv) {
+    dat <- try(read_delim(fn, sep, col_names = colnames(cn), skip = header), silent = TRUE)
+    if (!is(dat, 'try-error')) {
+      prb <- readr::problems(dat)
+      if (nrow(prb) > 0) {
+        tab_big <- "class='table table-condensed table-hover' style='width:70%;'"
+        rprob <- knitr::kable(slice(prb,1:(min(nrow(prb):10))), align = 'l', format = 'html', table.attr = tab_big, caption = "Read issues (max 10 rows shown): Consider selecting read.csv to read the file (see check-box on the left). To reload the file you may need to refresh the browser first")
+      }
+      rm(prb)
+    }
+  } else {
+    dat <- try(read.table(fn, header = header, sep = sep, comment.char = "", quote = "\"", fill = TRUE, stringsAsFactors = FALSE), silent = TRUE)
+    rprob <- "Used read.csv to load file"
+  }
 
-  ## workaround for https://github.com/rstudio/DT/issues/161
-  # isDate <- sapply(dat, is.Date)
-  # if (sum(isDate) == 0) return(dat)
-  # for (i in colnames(dat)[isDate]) dat[[i]] %<>% as.POSIXct %>% as.Date
-
-  # dat
+  if (is(dat, 'try-error')) return("### There was an error loading the data. Please make sure the data are in either rda or csv format.")
+  if (saf) dat <- factorizer(dat, safx)
+  dat <- as.data.frame(dat)
+  attr(dat, "description") <- rprob
+  dat
 }
 
 #' Load a csv file with from a url

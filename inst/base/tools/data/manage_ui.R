@@ -70,6 +70,7 @@ output$ui_Manage <- renderUI({
           with(tags, table(td(checkboxInput('man_header', 'Header', TRUE)),
             td(HTML("&nbsp;&nbsp;")),
             td(checkboxInput('man_str_as_factor', 'Str. as Factor', TRUE)))),
+          checkboxInput('man_read.csv', 'use read.csv', FALSE),
           radioButtons('man_sep', "Separator:", c(Comma=',', Semicolon=';', Tab='\t'),
                        ',', inline = TRUE),
           radioButtons('man_dec', "Decimal:", c(Period='.', Comma=','),
@@ -215,6 +216,7 @@ observeEvent(input$uploadfile, {
     ## iterating through the files to upload
     for (i in 1:(dim(inFile)[1]))
       loadUserData(inFile[i,'name'], inFile[i,'datapath'], input$dataType,
+                   .csv = input$man_read.csv,
                    header = input$man_header,
                    man_str_as_factor = input$man_str_as_factor,
                    sep = input$man_sep, dec = input$man_dec)
