@@ -164,7 +164,7 @@ pivotr <- function(dataset,
 
   if (!shiny) tab <- as.data.frame(tab, as.is = TRUE)
 
-  rm(cv, isNum, dat, sfun, sel, i, levs, total, ind)
+  rm(isNum, dat, sfun, sel, i, levs, total, ind)
 
   environment() %>% as.list %>% set_class(c("pivotr",class(.)))
 }
