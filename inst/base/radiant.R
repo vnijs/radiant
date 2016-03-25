@@ -38,8 +38,9 @@ observeEvent(input$refresh_radiant, {
 saveStateOnRefresh <- function(session = session) {
   session$onSessionEnded(function() {
     isolate({
+      url_query <- parseQueryString(session$clientData$url_search)
       if (not_pressed(input$refresh_radiant) && not_pressed(input$stop_radiant) &&
-          is.null(input$uploadState)) {
+          is.null(input$uploadState) && !"fixed" %in% names(url_query)) {
         saveSession(session)
       } else {
         if (is.null(input$uploadState)) {
