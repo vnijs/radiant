@@ -185,11 +185,13 @@ output$downloadData <- downloadHandler(
       if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
         ## save data description
         dat <- .getdata_transform()
-        attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
-        assign(robj, dat)
+        # attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
+        # assign(robj, dat, inherits = TRUE)
+        assign(robj, .getdata_transform())
+        attr(get(robj),"description") <- r_data[[paste0(robj,"_descr")]]
         save(list = robj, file = file)
       } else {
-        assign(robj, .getdata_transform())
+        assign(robj, .getdata_transform(), inherits = TRUE)
         save(list = robj, file = file)
       }
     } else if (ext == 'rds') {
@@ -202,9 +204,10 @@ output$downloadData <- downloadHandler(
         saveRDS(.getdata_transform(), file = file)
       }
     } else if (ext == 'csv') {
-      write.csv(.getdata_transform(), file, row.names = FALSE)
-      ## some weirdness going on here with the number of digits written to file
-      # write_csv(.getdata(), file)
+      ## previously weirdness with number of digits written to file
+      ## should be ok now
+      # write.csv(.getdata_transform(), file, row.names = FALSE)
+      write_csv(.getdata_transform(), file)
     }
   }
 )

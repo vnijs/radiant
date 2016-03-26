@@ -362,7 +362,7 @@ observeEvent(input$tr_change_type, {
     if (is(nvar, 'try-error')) {
       paste0("The recode command was not valid. The error message was:\n", attr(nvar,"condition")$message, "\nPlease try again. Examples are shown in the help file (click the ? icon).")
     } else {
-      data.frame(nvar) %>% setNames(rcname)
+      as.data.frame(nvar) %>% setNames(rcname)
     }
   } else {
     if (store_dat == "") store_dat <- dataset

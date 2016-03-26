@@ -33,8 +33,9 @@ loadClipboardData <- function(objname = "copy_and_paste", ret = "", header = TRU
   } else {
     ret <- paste0("### Clipboard data\nData copied from clipboard on ", lubridate::now())
     r_data[[objname]] <- dat %>% as.data.frame(check.names = FALSE) %>% factorizer
-    r_data[[paste0(objname,"_descr")]] <- ret
   }
+
+  r_data[[paste0(objname,"_descr")]] <- ret
   r_data[['datasetlist']] <- c(objname,r_data[['datasetlist']]) %>% unique
 }
 
@@ -93,7 +94,6 @@ loadUserData <- function(fname, uFile, ext,
       }
     } else {
       r_data[[objname]] <- as.data.frame(get(robjname)) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
-      # r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
     }
   } else if (ext == 'rds') {
     ## objname will hold the name of the object(s) inside the R datafile
@@ -102,7 +102,6 @@ loadUserData <- function(fname, uFile, ext,
       upload_error_handler(objname, "### There was an error loading the data. Please make sure the data are in rds.")
     } else {
       r_data[[objname]] <- as.data.frame(robj) %>% {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
-      # r_data[[paste0(objname,"_descr")]] <- attr(r_data[[objname]], "description")
     }
   } else if (ext == 'csv') {
     r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, sep = sep, saf = man_str_as_factor) %>%
