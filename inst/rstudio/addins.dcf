@@ -23,3 +23,7 @@ Description: Update Radiant to the latest version
 Binding: update_radiant
 Interactive: true
 
+Name: Webshot - Install
+Description: Install Webshot
+Binding: install_webshot
+Interactive: true

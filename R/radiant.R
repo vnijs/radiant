@@ -47,18 +47,9 @@ update_radiant <- function() {
 #' Install webshot and phantomjs
 #' @export
 install_webshot <- function() {
-  # if ("package:radiant" %in% search())
-  if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
+  if (isNamespaceLoaded("webshot")) unloadNamespace("webshot")
   install.packages("webshot", repos = "http://cran.rstudio.com", type = "binary")
-
-  ## avoid requiring webshot ... for now
   eval(parse(text = "webshot::install_phantomjs()"))
-
-  ## Add to inst/rstudio/addins.dcf
-  # Name: Webshot - Install
-  # Description: Install Webshot
-  # Binding: install_webshot
-  # Interactive: true
 }
 
 #' Alias used to set the class for analysis function return

@@ -88,6 +88,7 @@ output$report <- renderUI({
             td(uiOutput("ui_rmd_manual")),
             td(uiOutput("ui_rmd_switch")),
             td(downloadButton("saveHTML", "Save HTML"), style= "padding-top:5px;"),
+            # td(downloadButton("saveWord", "Save Word"), style= "padding-top:5px;"),
             td(downloadButton("saveRmd", "Save Rmd"), style= "padding-top:5px;"),
             td(HTML("<div class='form-group shiny-input-container'>
                 <input id='load_rmd' name='load_rmd' type='file' accept='.rmd,.Rmd,.md'/>
@@ -123,7 +124,7 @@ scrub <-
 ## Knit to save html
 knitIt <- function(text) {
   knitr::knit2html(text = text, quiet = TRUE, envir = r_knitr,
-                   options=c("mathjax", "base64_images"),
+                   options = c("mathjax", "base64_images"),
                    stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
   scrub %>% HTML
 }
@@ -172,7 +173,7 @@ knitIt3 <- function(text) {
   # Render the HTML, and then restore the preserved chunks
   markdown::markdownToHTML(text = preserved$value, header = dep_html,
                                    stylesheet = file.path(r_path,"base/www/bootstrap.min.css"),
-                                   options=c("mathjax", "base64_images")) %>%
+                                   options = c("mathjax", "base64_images")) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
 
@@ -217,11 +218,32 @@ output$saveHTML <- downloadHandler(
   }
 )
 
+output$saveWord <- downloadHandler(
+  filename = function() {"report.doc"},
+  content = function(file) {
+    if (r_local) {
+      isolate({
+        withProgress(message = "Knitting report", value = 0, {
+          # fp <- tempdir()
+          fp <- "~/Desktop"
+          fn <- file.path(fp, "temp.Rmd")
+          paste0("---\ntitle: \"Radiant Report\"\noutput:\n  word_document:\n    highlight: \"tango\"\n---\n\n```{r}\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n") %>%
+          paste0(., ifelse (is_empty(input$rmd_selection), input$rmd_report,
+                  input$rmd_selection)) %T>%
+          print %>%
+          cat(file = fn,sep="\n")
+          rmarkdown::render(fn, envir = r_knitr)
+        })
+      })
+    }
+  },
+  contentType = "application/Word"
+)
+
 output$saveRmd <- downloadHandler(
   filename = function() {"report.zip"},
   content = function(fname) {
     isolate({
-
       cdir <- getwd()
       setwd(tempdir())
       fbase <- "report"

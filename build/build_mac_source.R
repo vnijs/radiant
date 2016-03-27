@@ -10,18 +10,17 @@ build('../radiant', binary = TRUE)
 # build('../DT')
 # build('../DT', binary = TRUE)
 
-# devtools::install('~/gh/data.tree')
-#build('../data.tree')
-#build('../data.tree', binary = TRUE)
+install('../shiny')
+build('../shiny')
+build('../shiny', binary = TRUE)
 
-# install('../shinyAce')
-# build('../shinyAce')
-# build('../shinyAce', binary = TRUE)
+install('../NeuralNetTools')
+build('../NeuralNetTools')
+build('../NeuralNetTools', binary = TRUE)
 
-# devtools::install('../MathJaxR')
-# build('../MathJaxR')
-# build('../MathJaxR', binary = TRUE)
+install('../knitr')
+build('../knitr')
+build('../knitr', binary = TRUE)
 
-# install('../shiny')
-# build('../shiny')
-# build('../shiny', binary = TRUE)
+
+
