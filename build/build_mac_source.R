@@ -10,17 +10,17 @@ build('../radiant', binary = TRUE)
 # build('../DT')
 # build('../DT', binary = TRUE)
 
-install('../shiny')
-build('../shiny')
-build('../shiny', binary = TRUE)
-
-install('../NeuralNetTools')
-build('../NeuralNetTools')
-build('../NeuralNetTools', binary = TRUE)
-
-install('../knitr')
-build('../knitr')
-build('../knitr', binary = TRUE)
+# install('../shiny')
+# build('../shiny')
+# build('../shiny', binary = TRUE)
+#
+# install('../NeuralNetTools')
+# build('../NeuralNetTools')
+# build('../NeuralNetTools', binary = TRUE)
+#
+# install('../knitr')
+# build('../knitr')
+# build('../knitr', binary = TRUE)
 
 
 

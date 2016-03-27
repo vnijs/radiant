@@ -26,7 +26,7 @@ Imports:
     ggdendro (>= 0.1.17),
     broom (>= 0.4.0),
     pryr (>= 0.1.2),
-    shiny (>= 0.13.1.9002),
+    shiny (>= 0.13.1.9000),
     jsonlite (>= 0.9.17),
     shinyAce (>= 0.2.1),
     DT (>= 0.1.55),

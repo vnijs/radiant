@@ -3,14 +3,14 @@
 library(devtools)
 document(roclets = c('rd', 'collate', 'namespace'))
 
-install('../shiny')
-build('../shiny', binary = TRUE)
-
-install('../NeuralNetTools')
-build('../NeuralNetTools', binary = TRUE)
-
-install('../knitr')
-build('../knitr', binary = TRUE)
+# install('../shiny')
+# build('../shiny', binary = TRUE)
+#
+# install('../NeuralNetTools')
+# build('../NeuralNetTools', binary = TRUE)
+#
+# install('../knitr')
+# build('../knitr', binary = TRUE)
 
 # install('../DT')
 # build('../DT', binary = TRUE)

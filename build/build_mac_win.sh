@@ -30,20 +30,20 @@ rm $dirwin/radiant*
 # rm $dirmac_mav/DT*
 # rm $dirwin/DT*
 
-rm $dirsource/shiny*
-rm $dirmac/shiny*
-rm $dirmac_mav/shiny*
-rm $dirwin/shiny*
-
-rm $dirsource/NeuralNetTools*
-rm $dirmac/NeuralNetTools*
-rm $dirmac_mav/NeuralNetTools*
-rm $dirwin/NeuralNetTools*
-
-rm $dirsource/knitr*
-rm $dirmac/knitr*
-rm $dirmac_mav/knitr*
-rm $dirwin/knitr*
+# rm $dirsource/shiny*
+# rm $dirmac/shiny*
+# rm $dirmac_mav/shiny*
+# rm $dirwin/shiny*
+#
+# rm $dirsource/NeuralNetTools*
+# rm $dirmac/NeuralNetTools*
+# rm $dirmac_mav/NeuralNetTools*
+# rm $dirwin/NeuralNetTools*
+#
+# rm $dirsource/knitr*
+# rm $dirmac/knitr*
+# rm $dirmac_mav/knitr*
+# rm $dirwin/knitr*
 
 # build source and mac version
 R --save < build/build_mac_source.R 2>&1
