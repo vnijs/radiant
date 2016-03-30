@@ -242,7 +242,8 @@ summary.explore <- function(object, top = "fun", dec = 3, ...) {
 #'
 #' @export
 flip <- function(expl, top = "fun") {
-  cvars <- expl$byvar %>% {if (.[1] == "") character(0) else .}
+  # cvars <- expl$byvar %>% {if (.[1] == "") character(0) else .}
+  cvars <- expl$byvar %>% {if (is_empty(.[1])) character(0) else .}
   if (top[1] == "var")
     expl$tab %>% gather("function", "value", -(1:(length(cvars)+1))) %>% spread_("variable", "value")
   else if (top[1] == "byvar" && length(cvars) > 0)

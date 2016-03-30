@@ -1,6 +1,6 @@
 help_menu <-
   tagList(
-    navbarMenu(title = "", id = "Help", icon = icon("question-circle"),
+    navbarMenu("", icon = icon("question-circle"),
       tabPanel("Help", uiOutput("help_base"), icon = icon("question")),
       tabPanel("Videos", uiOutput("help_videos"), icon = icon("film")),
       tabPanel("About", uiOutput("help_about"), icon = icon("info")),

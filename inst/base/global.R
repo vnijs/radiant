@@ -82,8 +82,7 @@ shared_ui <-
                tabPanel("Code", uiOutput("rcode"), icon = icon("code"))
     ),
 
-    # navbarMenu(title = icon("save"), id = "State", icon = icon("save"),
-    navbarMenu(title = "", icon = icon("save"),
+    navbarMenu("", icon = icon("save"),
                tabPanel(downloadLink("saveStateNav", " Save state", class = "fa fa-download")),
                ## waiting for this feature in Shiny
                # tabPanel(tags$a(id = "loadStateNav", href = "", class = "shiny-input-container",
@@ -98,8 +97,7 @@ shared_ui <-
     #          list(icon("power-off"), ""), onclick = "window.close();")),
 
     ## stop app *and* close browser window
-    # navbarMenu(title = " ", id = "Stop", icon = icon("power-off"),
-    navbarMenu(title = "", icon = icon("power-off"),
+    navbarMenu("", icon = icon("power-off"),
                tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
                                    onclick = "setTimeout(function(){window.close();}, 100); ")),
                if (rstudioapi::isAvailable()) {

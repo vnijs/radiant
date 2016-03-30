@@ -314,12 +314,11 @@ make_dt <- function(pvt,
     }
   }
 
-  # dt_tab <- tab %>% dfround(dec) %>%
   dt_tab <- tab %>% {if (!perc) dfround(.,dec) else .} %>%
   DT::datatable(container = sketch, selection = "none", rownames = FALSE,
     filter = fbox,
-    # filter = list(position = "top", clear = FALSE, plain = TRUE),
-    style = ifelse (pvt$shiny, "bootstrap", "default"),
+    # style = ifelse (pvt$shiny, "bootstrap", "default"),
+    style = "bootstrap",
     options = list(
       stateSave = TRUE,
       search = list(search = search, regex = TRUE),

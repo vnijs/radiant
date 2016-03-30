@@ -14,7 +14,7 @@ output$ui_pvt_cvars <- renderUI({
   req(available(vars))
 
   isolate({
-    ## if nothing is selected expl_byvar is also null
+    ## if nothing is selected pvt_cvars is also null
     if ("pvt_cvars" %in% names(input) && is.null(input$pvt_cvars)) {
       r_state$pvt_cvars <<- NULL
     } else {
@@ -160,25 +160,34 @@ pvt_plot_inputs <- reactive({
 })
 
 .pivotr <- reactive({
-  if (not_available(input$pvt_cvars)) return()
-  if (is_empty(input$pvt_fun)) {
-    updateSelectInput(session, "pvt_fun", selected = "length")
-    return()
-  }
-  if (is_empty(input$pvt_nvar)) {
-    updateSelectInput(session, "pvt_nvar", selected = "None")
-    return()
-  }
+  # if (not_available(input$pvt_cvars)) return()
+  req(available(input$pvt_cvars))
+  req(!any(input$pvt_nvar %in% input$pvt_cvars))
 
-  if (!is_empty(input$pvt_nvar, "None"))
-    req(available(input$pvt_nvar))
+  pvti <- pvt_inputs()
 
-  if (any(input$pvt_nvar %in% input$pvt_cvars)) return()
+  # if (is_empty(input$pvt_fun)) {
+  #   updateSelectInput(session, "pvt_fun", selected = "length")
+  #   return()
+  # }
+  # if (is_empty(input$pvt_nvar)) {
+  #   updateSelectInput(session, "pvt_nvar", selected = "None")
+  #   return()
+  # }
+
+  # if (!is_empty(input$pvt_nvar, "None")) req(available(input$pvt_nvar))
+
+  if (is_empty(input$pvt_fun)) pvti$fun <- "length"
+  if (is_empty(input$pvt_nvar)) pvti$nvar <- "None"
+
+  if (!is_empty(pvti$nvar, "None"))
+    req(available(pvti$nvar))
 
   req(input$pvt_pause == FALSE, cancelOutput = TRUE)
 
   withProgress(message = "Calculating", value = 0, {
-    sshhr( do.call(pivotr, pvt_inputs()) )
+    # sshhr( do.call(pivotr, pvt_inputs()) )
+    sshhr( do.call(pivotr, pvti) )
   })
 })
 

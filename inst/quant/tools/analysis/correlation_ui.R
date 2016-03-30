@@ -107,7 +107,7 @@ cor_available <- reactive({
 
 
 .correlation <- reactive({
-  # req(input$cor_pause == FALSE)
+  req(input$cor_pause == FALSE, cancelOutput = TRUE)
 	do.call(correlation, cor_inputs())
 })
 
