@@ -1,13 +1,17 @@
 # Radiant - Business analytics using R and Shiny
 
 
+## Introduction to Radiant
+
+<iframe width="640" height="375" src="https://www.youtube.com/embed/kFVxcpdoKi8" frameborder="0" allowfullscreen></iframe>
+
 ## Installing Radiant
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/NEPSFiHH_dw" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/XLR9cquIMAg" frameborder="0" allowfullscreen></iframe>
 
 ## Starting and stopping
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/fC3EMC7N7_w" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/P7MCwnjdYjc" frameborder="0" allowfullscreen></iframe>
 
 ## Getting help
 
@@ -18,6 +22,10 @@
 <iframe width="640" height="375" src="https://www.youtube.com/embed/ojNeFoMm4uQ" frameborder="0" allowfullscreen></iframe>
 
 ## Selecting variables for fast and efficient analysis
+
+<iframe width="640" height="375" src="https://www.youtube.com/embed/-pWmlaRzbNk" frameborder="0" allowfullscreen></iframe>
+
+## Reproducible analysis
 
 <iframe width="640" height="375" src="https://www.youtube.com/embed/-pWmlaRzbNk" frameborder="0" allowfullscreen></iframe>
 

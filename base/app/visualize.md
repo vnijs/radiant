@@ -51,11 +51,11 @@ To make plots bigger or smaller adjust the values in the height and width boxes 
 
 ### Keep plots
 
-The best way to keep/store plots is to generate a `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit></i>) icon on the bottom left of your screen. Alternatively, click the <i title='Download' class='fa fa-download></i> icon on the top right of your screen.
+The best way to keep/store plots is to generate a `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen. Alternatively, click the <i title='Download' class='fa fa-download'></i> icon on the top right of your screen.
 
 ### Customizing plots in _R > Report_
 
-To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit></i>) icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
+To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
 
 ```r
 visualize("diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +
