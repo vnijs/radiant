@@ -213,7 +213,7 @@ show_data_snippet <- function(dat = input$dataset, nshow = 7, title = "") {
           sanitize.text.function = identity,
           html.table.attributes = "class='table table-condensed table-hover'") %>%
     paste0(title, .) %>%
-    {if (n <= nshow) . else paste0(.,'\n<label>',nshow,' of ', n, ' rows shown. See View-tab for details.</label>')} %>%
+    {if (n <= nshow) . else paste0(.,'\n<label>', nshow,' of ', nrprint(n,dec = 0), ' rows shown. See View-tab for details.</label>')} %>%
     enc2utf8
 }
 

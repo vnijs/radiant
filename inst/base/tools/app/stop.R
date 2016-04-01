@@ -20,7 +20,7 @@ stop_radiant <- function(rmd = FALSE) {
 
       assign("r_data", reactiveValuesToList(r_data), envir = .GlobalEnv)
 
-      stop_message <- "\nStopping Radiant. State available as 'r_state' and 'r_data'.\n"
+      stop_message <- "\nStopped Radiant. State available as r_state and r_data.\n"
 
       if (!is_empty(input$rmd_report)) {
         rmd_report <-
@@ -43,19 +43,20 @@ stop_radiant <- function(rmd = FALSE) {
       ## removing r_env and r_sessions
       if (exists("r_sessions")) rm(r_sessions, envir = .GlobalEnv)
       unlink("~/r_figures/", recursive = TRUE)
-      sshhr(try(rm(js_head, nav_ui, r_encoding, r_functions, r_help, r_local, r_path, r_pkgs, shared_ui, envir = .GlobalEnv), silent = TRUE))
-      cat(stop_message)
+      sshh(try(rm(js_head, nav_ui, r_encoding, r_functions, r_help, r_local, r_path, r_pkgs, shared_ui, envir = .GlobalEnv), silent = TRUE))
+      sshh(try(rm(quant_ui, envir = .GlobalEnv), silent = TRUE))
+      message(stop_message)
 
       if (rstudioapi::isAvailable() && !is_empty(input$rmd_report) && rmd) {
         path <- file.path(normalizePath("~"),"r_sessions")
         saver(get("r_data", envir = .GlobalEnv), file = file.path(path, "r_data.rda"))
         stopApp(rstudioapi::insertText(rmd_report))
       } else {
-        stopApp("-- Stopped Radiant --")
+        stopApp()
       }
     })
   } else {
-    stopApp("-- Stopped Radiant --")
+    stopApp()
     q("no")
   }
 }

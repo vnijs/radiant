@@ -41,7 +41,6 @@ The relationship between variables depicted in a scatter plot may be non-linear.
 
 By default the scale of the Y-axis is the same across sub-plots when using `Facet row`. To allow the Y-axis to be specific to each sub-plot click the `Scale-y` check-box.
 
-
 ### Flip axes
 
 To switch the variable on the X- and Y-axis check the `Flip` box.
@@ -57,7 +56,6 @@ The best way to keep/store plots is to generate a `visualize` command by clickin
 ### Customizing plots in _R > Report_
 
 To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen. The example below illustrates how to customize a command in the `R > Report` tab. Notice that `custom` is set to `TRUE`.
-
 
 ```r
 visualize("diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +

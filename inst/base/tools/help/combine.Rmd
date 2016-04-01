@@ -24,7 +24,7 @@ knitr::kable(publishers, align = 'l', format = 'html', caption = "Publishers",
              table.attr = tab_small)
 ```
 
-In the screen-shot of the Data > Combine tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Data name` text input box.
+In the screen-shot of the _Data > Combine_ tab below we see the two datasets. The tables share the variable _publisher_ which is automatically selected for the join. Different join options are available from the `Combine type` dropdown. You can also specify a name for the combined dataset in the `Data name` text input box.
 
 ![join](figures/join_superheroes_publishers.png)
 
@@ -168,7 +168,7 @@ We now get **only** _Hellboy_, the only superhero not in `publishers` and we do 
 
 ### Dataset order
 
-Note that the order of the datasets selected may matter for a join. If we setup the Data > Combine tab as below the results are as follows:
+Note that the order of the datasets selected may matter for a join. If we setup the _Data > Combine_ tab as below the results are as follows:
 
 ![join order](figures/join_publishers_superheroes.png)
 
@@ -223,7 +223,7 @@ Only publisher _Image_ is retained because both _Marvel_ and _DC_ are in `superh
 
 When two datasets have the same columns (or rows) there are additional ways in which we can combine them into a new dataset. We have already used the `superheroes` dataset and will now try to combine it with the `avengers` data. These two datasets have the same number of rows and columns and the columns have the same names.
 
-In the screen-shot of the Data > Combine tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Data name` text input box.
+In the screen-shot of the _Data > Combine_ tab below we see the two datasets. There is no need to select variables to combine the datasets here. Any variables in `Select variables` are ignored in the commands below. Again, you can specify a name for the combined dataset in the `Data name` text input box.
 
 ![combine](figures/combine_avengers_superheroes.png)
 

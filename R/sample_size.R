@@ -31,23 +31,23 @@ sample_size <- function(type = "mean",
                         pop_correction = "no",
                         pop_size = 1000000) {
 
-	# if (is.na(conf_lev) || is.null(conf_lev) || conf_lev < 0 || conf_lev > 1)
+	if (is.na(conf_lev) || is.null(conf_lev) || conf_lev < 0 || conf_lev > 1)
 	# 	conf_lev <- .95
 
 	# zval <- qnorm(conf_lev + (1 - conf_lev)/2, 0, 1)
 
-	if (is.na(conf_lev) || is.null(conf_lev) || conf_lev < 0)
+	if (pop_correction == "yes" && is_not(pop_size)) pop_size <- 1000000
+
+	if (is_not(conf_lev) || conf_lev < 0)
 		conf_lev <- 1.96
 
 	zval <- conf_lev
 
 	if (type == 'mean') {
-		if (is.na(err_mean)) return("Please select an error value greater 0.")
-
+		if (is_not(err_mean)) return("Please select an acceptable error greater than 0" %>% set_class(c("sample_size",class(.))))
 		n <- (zval^2 * sd_mean^2) / err_mean^2
 	} else {
-
-		if (is.na(err_prop)) return("Please select an error value greater 0.")
+		if (is_not(err_prop)) return("Please select an acceptable error greater than 0" %>% set_class(c("sample_size",class(.))))
 		n <- (zval^2 * p_prop * (1 - p_prop)) / err_prop^2
 	}
 
@@ -74,6 +74,9 @@ sample_size <- function(type = "mean",
 #'
 #' @export
 summary.sample_size <- function(object, ...) {
+
+  if (is.character(object)) return(object)
+
 	cat("Sample size calculation\n")
 
 	if (object$type == "mean") {
