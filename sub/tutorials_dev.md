@@ -19,15 +19,15 @@
 
 ## Getting data in and out
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/ojNeFoMm4uQ" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/DdzKqcGxz14" frameborder="0" allowfullscreen></iframe>
 
-## Selecting variables for fast and efficient analysis
+## Fast and efficient analysis
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/-pWmlaRzbNk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/UClNhiXJqFM" frameborder="0" allowfullscreen></iframe>
 
 ## Reproducible analysis
 
-<iframe width="640" height="375" src="https://www.youtube.com/embed/-pWmlaRzbNk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/o32VNc7EZUM" frameborder="0" allowfullscreen></iframe>
 
 <!--
 ## Visualizing data
@@ -37,15 +37,6 @@
 ## Generating predictions from regression and GLM
 
 <iframe width="640" height="375" src="//www.youtube.com/embed/Xp1REGAewGU" frameborder="0" allowfullscreen></iframe>
-
-## Creating a report
-
-<iframe width="640" height="375" src="//www.youtube.com/embed/T_NQPfrWN-g" frameborder="0" allowfullscreen></iframe>
-
-## View data in table form
-## Visualize data
-## Explore data
-## Transform data
 -->
 
 ## License
