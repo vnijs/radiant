@@ -38,10 +38,26 @@ radiant_analytics <- function() radiant("analytics")
 #' @export
 update_radiant <- function() {
   # if ("package:radiant" %in% search())
-  if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
-
+  # if (isNamespaceLoaded("radiant")) unloadNamespace("radiant")
   unlink("~/r_sessions/*.rds", force = TRUE)
-  install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
+
+  ## avoid problems with loaded packages
+  system(paste0(Sys.which("R"), " -e \"install.packages('radiant', repos = 'http://vnijs.github.io/radiant_miniCRAN/', type = 'binary')\""))
+  # install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/", type = "binary")
+
+  ## Restarting Rstudio session from http://stackoverflow.com/a/25934774/1974918
+  ret <- .rs.restartR()
+}
+
+#' Create launchers
+#' @export
+create_launcher <- function() {
+  radiant::launcher("quant")
+
+  # Name: Create Launcher
+  # Description: Create launcher on Desktop
+  # Binding: create_launcher
+  # Interactive: true
 }
 
 #' Install webshot and phantomjs
@@ -49,7 +65,7 @@ update_radiant <- function() {
 install_webshot <- function() {
   if (isNamespaceLoaded("webshot")) unloadNamespace("webshot")
   install.packages("webshot", repos = "http://cran.rstudio.com", type = "binary")
-  eval(parse(text = "webshot::install_phantomjs()"))
+  if (Sys.which("phantomjs") == "") eval(parse(text = "webshot::install_phantomjs()"))
 }
 
 #' Alias used to set the class for analysis function return
@@ -597,7 +613,6 @@ win_launcher <- function(app = c("analytics", "marketing", "quant", "base")) {
     local_dir <- Sys.getenv("R_LIBS_USER")
     if (!file.exists(local_dir)) dir.create(local_dir, recursive = TRUE)
 
-    # pt <- normalizePath(paste0(Sys.getenv("USERPROFILE") ,"/Desktop/"), winslash='/')
     pt <- file.path(Sys.getenv("HOME") ,"Desktop")
     if (!file.exists(pt))
       pt <- file.path(Sys.getenv("USERPROFILE") ,"Desktop", fsep = "\\")

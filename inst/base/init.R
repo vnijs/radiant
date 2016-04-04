@@ -13,8 +13,8 @@
 # options(warn=-1)
 
 ## set autoreload on if found TRUE in .Rprofile
-options("autoreload")[[1]] %>%
-  {options(shiny.autoreload = ifelse (!is.null(.) && ., TRUE, FALSE))}
+# options("autoreload")[[1]] %>%
+#   {options(shiny.autoreload = ifelse (!is.null(.) && ., TRUE, FALSE))}
 
 init_state <- function(r_data) {
 

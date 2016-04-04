@@ -179,35 +179,22 @@ output$downloadData <- downloadHandler(
   content = function(file) {
 
     ext <- input$saveAs
-    robj <- input$dataset
 
-    if (ext == 'rda') {
-      if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-        ## save data description
-        dat <- .getdata_transform()
-        # attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
-        # assign(robj, dat, inherits = TRUE)
-        assign(robj, .getdata_transform())
-        attr(get(robj),"description") <- r_data[[paste0(robj,"_descr")]]
-        save(list = robj, file = file)
-      } else {
-        assign(robj, .getdata_transform(), inherits = TRUE)
-        save(list = robj, file = file)
-      }
-    } else if (ext == 'rds') {
-      if (!is.null(input$man_data_descr) && input$man_data_descr != "") {
-        ## save data description
-        dat <- .getdata_transform()
-        attr(dat,"description") <- r_data[[paste0(robj,"_descr")]]
-        saveRDS(dat, file = file)
-      } else {
-        saveRDS(.getdata_transform(), file = file)
-      }
-    } else if (ext == 'csv') {
-      ## previously weirdness with number of digits written to file
-      ## should be ok now
-      # write.csv(.getdata_transform(), file, row.names = FALSE)
+    if (ext == 'csv') {
       write_csv(.getdata_transform(), file)
+    } else {
+
+      robj <- input$dataset
+      tmp <- new.env(parent = emptyenv())
+      tmp[[robj]] <- .getdata_transform()
+      if (!is.null(input$man_data_descr) && input$man_data_descr != "")
+        attr(tmp[[robj]],"description") <- r_data[[paste0(robj,"_descr")]]
+
+      if (ext == 'rda') {
+        save(list = robj, file = file, envir = tmp)
+      } else {
+        saveRDS(tmp[[robj]], file = file)
+      }
     }
   }
 )

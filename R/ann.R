@@ -91,8 +91,14 @@ ann <- function(dataset, rvar, evar,
 
   ## stability issues ...
   # http://stats.stackexchange.com/questions/23235/how-do-i-improve-my-neural-network-stability
-  scale_df <- function(x) if (is.numeric(x)) scale(x) else x
-  dat <- mutate_each_(dat, funs(scale_df), vars = colnames(dat)[-1])
+  # scale_df <- function(x) if (is.numeric(x)) scale(x) else x
+  # dat <- mutate_each_(dat, funs(scale_df), vars = colnames(dat)[-1])
+  isNum <- sapply(dat, is.numeric)
+  if (sum(isNum) > 0) {
+    ms <- select(dat, which(isNum)) %>% summarize_each(funs(mean(., na.rm = TRUE)))
+    sds <- select(dat, which(isNum)) %>% summarize_each(funs(sd(., na.rm = TRUE)))
+    dat[,isNum] <- select(dat, which(isNum)) %>% mutate_each(funs((. - ms$.) / sds$.))
+  }
 
   vars <- evar
   if (length(vars) < (ncol(dat)-1)) vars <- colnames(dat)[-1]
@@ -101,6 +107,7 @@ ann <- function(dataset, rvar, evar,
   # http://stats.stackexchange.com/a/70146/61693
 
   form <- paste(rvar, "~ . ")
+  # set.seed(1)
   nninput <- list(formula = as.formula(form),
               rang = .1, size = size, decay = decay, weights = wts, maxit = 10000,
               entropy = TRUE, trace = FALSE, data = dat)
@@ -204,10 +211,23 @@ plot.ann <- function(x, shiny = FALSE, ...) {
 #'
 #' @export
 predict.ann <- function(object, dataset, ...) {
-  scale_df <- function(x) if (is.numeric(x)) scale(x) else x
 
-  getdata(dataset, filt = "", na.rm = FALSE) %>%
-  mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
+  dat <- getdata(dataset, filt = "", na.rm = FALSE)
+  isNum <- object$isNum
+  if (sum(isNum) > 0) {
+    ms <- object$ms
+    sds <- object$sds
+    dat[,isNum] <- select(dat,which(isNum)) %>% mutate_each(funs((. - ms$.) / sds$.))
+    # print(summarize_each(select(dat,which(isNum)), funs(mean,sd)))
+  }
+
+  ## does not use scaling information from training sample
+  # scale_df <- function(x) if (is.numeric(x)) scale(x) else x
+  # dat <- mutate_each_(dat, funs(scale_df), vars = colnames(dat)[-1])
+
+  dat %>%
+  # getdata(dataset, filt = "", na.rm = FALSE) %>%
+  # mutate_each_(funs(scale_df), vars = colnames(.)[-1]) %>%
   {predict(object$model, .)[,1]} %>%  ## using nnet's predict method
   set_class(c("ann",class(.)))
 }

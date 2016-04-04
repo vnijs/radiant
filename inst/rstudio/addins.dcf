@@ -3,8 +3,8 @@ Description: Start Radiant - Base app
 Binding: radiant_base
 Interactive: true
 
-Name: Radiant - Quant
-Description: Start app used for Quantative Analysis
+Name: Radiant - Quant/BA
+Description: Start app used for Quantative Analysis and Business Analytics
 Binding: radiant_quant
 Interactive: true
 

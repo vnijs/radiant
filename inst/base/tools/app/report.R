@@ -28,9 +28,9 @@ To show the output press the `Knit report` button.
 
 ### Documenting analysis results in Radiant
 
-The report feature in Radiant should be used in conjunction with the <i title='Report results' class='fa fa-edit'></i> icons shown at the bottom of the side bar on (almost) all pages. When that icon is clicked the command used to create the ouput is copied into the editor in the R > Report. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report. However, you can turn off that feature by clicking the `Manual paste (off)` button. The text in the button should now read `Manual paste (on)`. Click the button again to turn manual paste off again. With manual paste on the code is put in the clipboard when you click a report icon and you can paste it where you want in the R > Report editor window.
+The report feature in Radiant should be used in conjunction with the <i title='Report results' class='fa fa-edit'></i> icons shown at the bottom of the side bar on (almost) all pages. When that icon is clicked the command used to create the ouput is copied into the editor in the _R > Report_ tab. By default Radiant will paste the code generated for the analysis you just completed at the bottom of the report (i.e., `Auto paste`). However, you can turn off that feature by selecting `Manual paste` from the dropown. With manual paste on, the code is put in the clipboard when you click a report icon and you can paste it where you want in the _R > Report_ editor window.
 
-By clicking the `Knit report` button, the output from the analysis will be recreated. You can add text, bullets, headers, etc. around the code blocks to describe and explain the results using <a href='http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html' target='_blank'>markdown</a>.
+By clicking the `Knit report` button or pressing CTRL-return (CMD-return on Mac), the output from the analysis will be recreated. You can add text, bullets, headers, etc. around the code blocks to describe and explain the results using <a href='http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html' target='_blank'>markdown</a>. You can also select part of the report you want to render.
 
 Below is some code created in Radiant that will generate regression outputfor the _diamonds_ data. These are histograms and a scatterplot / heatmap of the price of diamonds versus carats. The colors in the plot reflect the clarity of the diamond.
 
@@ -138,11 +138,8 @@ cleanout <- function(x) {
 ## Based on http://stackoverflow.com/a/31797947/1974918
 knitIt3 <- function(text) {
 
-  text <- cleanout(text)
-    # gsub("DiagrammeR::renderDiagrammeR", "", text) %>%
-    # gsub("DT::renderDataTable", "", .)
   ## Read input and convert to Markdown
-  md <- knit(text = text)
+  md <- knit(text = cleanout(text))
   ## Get dependencies from knitr
   deps <- knit_meta()
 
@@ -171,9 +168,9 @@ knitIt3 <- function(text) {
   preserved <- htmltools::extractPreserveChunks(md)
 
   # Render the HTML, and then restore the preserved chunks
-  markdown::markdownToHTML(text = preserved$value, header = dep_html,
-                                   stylesheet = file.path(r_path,"base/www/bootstrap.min.css"),
-                                   options = c("mathjax", "base64_images")) %>%
+  knitr::knit2html(text = gsub("\\\\\\\\","\\\\",preserved$value), header = dep_html, quiet = TRUE, envir = r_knitr,
+                   options = c("mathjax", "base64_images"),
+                   stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
 
