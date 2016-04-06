@@ -74,9 +74,11 @@ output$ui_ann <- renderUI({
       uiOutput("ui_ann_wts"),
       tags$table(
         tags$td(numericInput("ann_size", label = "Size:", min = 1, max = 20,
-          value = state_init("ann_size",1), width = "117px")),
+          value = state_init("ann_size",1), width = "77px")),
         tags$td(numericInput("ann_decay", label = "Decay:", min = 0, max = 1,
-          step = .1, value = state_init("ann_decay",.5), width = "117px"))
+          step = .1, value = state_init("ann_decay",.5), width = "77px")),
+        tags$td(numericInput("ann_seed", label = "Seed:",
+          value = state_init("ann_seed", 1234), width = "77px"))
       )
     ),
     wellPanel(

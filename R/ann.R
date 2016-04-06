@@ -9,6 +9,7 @@
 #' @param size Number of units (nodes) in the hidden layer
 #' @param decay Paramater decay
 #' @param wts Weights to use in estimation
+#' @param seed Random seed to use as the starting point
 #' @param check Optional output or estimation parameters. "vif" to show the multicollinearity diagnostics. "confint" to show coefficient confidence interval estimates. "odds" to show odds ratios and confidence interval estimates. "standardize" to output standardized coefficient estimates. "stepwise" to apply step-wise selection of variables
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -31,6 +32,7 @@ ann <- function(dataset, rvar, evar,
                 size = 1,
                 decay = .5,
                 wts = "None",
+                seed = NA,
                 check = "",
                 dec = 3,
                 data_filter = "") {
@@ -107,12 +109,12 @@ ann <- function(dataset, rvar, evar,
   # http://stats.stackexchange.com/a/70146/61693
 
   form <- paste(rvar, "~ . ")
-  # set.seed(1)
   nninput <- list(formula = as.formula(form),
               rang = .1, size = size, decay = decay, weights = wts, maxit = 10000,
               entropy = TRUE, trace = FALSE, data = dat)
 
   ## need do.call so Garson plot will work
+  if (!is.null(seed) && !is.na(seed)) set.seed(seed)
   model <- do.call(nnet::nnet, nninput)
 
   rm(dat) ## dat not needed elsewhere

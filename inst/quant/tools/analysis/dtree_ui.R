@@ -104,7 +104,7 @@ output$dtree <- renderUI({
   )
 })
 
-vals_dtree <- reactiveValues(dtree_run = 0)
+vals_dtree <- reactiveValues(dtree_run = 0, dtree_report = 0)
 
 observe({
   input$dtree_run
@@ -228,34 +228,34 @@ observeEvent(input$dtree_list, {
 })
 
 observeEvent(input$dtree_report, {
-  .dtree_report()
+  vals_dtree$dtree_report %<>% add(1)
 })
 
 observeEvent(input$dtree_report2, {
-  .dtree_report()
+  vals_dtree$dtree_report %<>% add(1)
 })
 
-.dtree_report <- reactive({
-  ## dependencies needed?
-  # input$dtree_report2
-  # input$dtree_report
+.dtree_report <- observeEvent(vals_dtree$dtree_report, {
+  req(vals_dtree$dtree_report > 0)
 
-  dtree_name <- input$dtree_list
-  if (is_empty(dtree_name)) dtree_name <- input$dtree_name
-  if (is_empty(dtree_name)) dtree_name <- dtree_name()
+  isolate({
+    dtree_name <- input$dtree_list
+    if (is_empty(dtree_name)) dtree_name <- input$dtree_name
+    if (is_empty(dtree_name)) dtree_name <- dtree_name()
 
-  r_data[[dtree_name]] <- input$dtree_edit
-  r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
+    r_data[[dtree_name]] <- input$dtree_edit
+    r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
 
-  xcmd <-
-    clean_args(dtree_plot_inputs(), dtree_plot_args[-1]) %>%
-    deparse(control = c("keepNA"), width.cutoff = 500L) %>%
-    {if (. == "list()") "DiagrammeR::renderDiagrammeR(plot(result))"
-     else paste0(sub("list(", "DiagrammeR::renderDiagrammeR(plot(result, ", ., fixed = TRUE),")")}
+    xcmd <-
+      clean_args(dtree_plot_inputs(), dtree_plot_args[-1]) %>%
+      deparse(control = c("keepNA"), width.cutoff = 500L) %>%
+      {if (. == "list()") "DiagrammeR::renderDiagrammeR(plot(result))"
+       else paste0(sub("list(", "DiagrammeR::renderDiagrammeR(plot(result, ", ., fixed = TRUE),")")}
 
-  update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
-                fun_name = "dtree",
-                inp_out = list("",""), outputs = "summary",
-                figs = FALSE,
-                xcmd = xcmd)
+    update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
+                  fun_name = "dtree",
+                  inp_out = list("",""), outputs = "summary",
+                  figs = FALSE,
+                  xcmd = xcmd)
+  })
 })
