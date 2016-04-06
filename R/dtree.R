@@ -20,8 +20,10 @@ dtree_parser <- function(yl) {
   # library(radiant)
   # yl <- readLines("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/bio-imaging/bio-imaging-input.yaml")
   # yl <- readLines("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter1/tee-times/tee-times-monday-input.yaml")
+  # yl <- readLines("~/Dropbox/teaching/MGT403-2015/homework/radiant/chapter2/san-carlos/san-carlos-with-variables.yaml")
   # yl <- paste0(yl, collapse = "\n")
   ############################
+
 
   if (is_string(yl)) yl <- unlist(strsplit(yl, "\n"))
 
@@ -32,19 +34,15 @@ dtree_parser <- function(yl) {
       var <- strsplit(yl[i], "=")[[1]]
       var[1] <- gsub("^\\s+|\\s+$", "", var[1]) %>% gsub("(\\W)", "\\\\\\1", .)
       var[2] <- eval(parse(text = gsub("[a-zA-Z]+","",var[2])))
-      # yl[-i] <- gsub(paste0(":(\\s*)",var[1],"\\s*$"), paste0(":\\1 ",var[2]), yl[-i], perl = TRUE)
-      yl[-i] <- gsub(paste0(":\\s*",var[1],"\\s*$"), paste0(": ",var[2]), yl[-i], perl = TRUE)
 
-      # var <- c("MF", .15)
-      # var <- c("MF", .15)
-      # gsub(paste0(":(\\s*)",var[1],"\\s*$"), paste0(":\\1 ",var[2]), ": NMF\n :MF", perl = TRUE)
+      if (i < max(var_def))
+        yl[(i+1):max(var_def)] <- gsub(var[1], var[2], yl[(i+1):max(var_def)], perl = TRUE)
 
-      # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i], fixed = TRUE)
-      ## can't work in the variable definition section
-      # yl[-i] <- gsub(paste0(":\\s*",var[1]), paste0(": ",var[2]), yl[-i])
+      yl[-(1:i)] <- gsub(paste0(":\\s*",var[1],"\\s*$"), paste0(": ",var[2]), yl[-(1:i)], perl = TRUE)
     }
     yl[var_def] <- paste0("# ", yl[var_def])
   }
+  # yl
 
   ## collect errors
   err <- c()
@@ -472,8 +470,6 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
   paste("graph LR", paste( paste0(df$from,df$edge, df$to), collapse = "\n"),
     style, sep = "\n") %>%
   {if (shiny) . else DiagrammeR::DiagrammeR(.)}
-  # {if (shiny) . else DiagrammeR::renderDiagrammeR(DiagrammeR::DiagrammeR(.))}
-  # {if (shiny) . else DiagrammeR::mermaid(.)}
 }
 
 ## some initial ideas for sensitivity analysis

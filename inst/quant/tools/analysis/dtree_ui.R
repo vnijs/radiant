@@ -158,7 +158,6 @@ dtree_plot_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   for (i in names(dtree_plot_args))
     dtree_plot_args[[i]] <- input[[paste0("dtree_",i)]]
-
   # cat(paste0(names(dtree_plot_args), " ", dtree_plot_args, collapse = ", "), file = stderr(), "\n")
   dtree_plot_args
 })
@@ -169,27 +168,11 @@ output$dtree_plot <- DiagrammeR::renderDiagrammeR({
   if (is.null(dt)) {
     return(invisible())
   } else {
-    # DiagrammeR::DiagrammeR(plot(dt, symbol = input$dtree_symbol,
-    #                        dec = input$dtree_dec, final = input$dtree_final,
-    #                        shiny = TRUE))
-
     pinp <- dtree_plot_inputs()
     pinp$shiny <- TRUE
     DiagrammeR::DiagrammeR(do.call(plot, c(list(x = dt), pinp)))
   }
 })
-
-# .plot_dtree <- reactive({
-#   if (is_empty(input$dtree_final)) return(invisible())
-#   dt <- dtree_eval()
-#   if (is.null(dt)) {
-#     return(invisible())
-#   } else {
-#     # DiagrammeR(plot(dt, final = input$dtree_final, shiny = TRUE))
-#     plot(dt, symbol = input$dtree_symbol, dec = input$dtree_dec,
-#          final = input$dtree_final, shiny = TRUE)
-#   }
-# })
 
 output$dtree_save <- downloadHandler(
   filename = function() {"dtree.txt"},
@@ -218,6 +201,7 @@ observe({
       dtree_name <- sub(paste0(".",tools::file_ext(inFile$name)),"",inFile$name)
       r_data[[dtree_name]] <- yaml_file
       r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
+      updateSelectInput(session = session, inputId = "dtree_list", selected = dtree_name)
       shinyAce::updateAceEditor(session, "dtree_edit", value = yaml_file)
     })
   }
