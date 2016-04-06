@@ -1095,3 +1095,15 @@ indexr <- function(dataset, vars = "", filt = "") {
 
   list(nr = nr, ind = ind)
 }
+
+#' Convenience function for is.null or is.na
+#'
+#' @param x Input
+#'
+#' @examples
+#' is_not(NA)
+#' is_not(NULL)
+#'
+#' @export
+is_not <- function(x) is.null(x) || is.na(x)
+

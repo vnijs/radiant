@@ -176,8 +176,6 @@ not_available <- function(x)
 ## check if a variable is null or not in the selected data.frame
 available <- function(x) not_available(x) == FALSE
 
-is_not <- function(x) is.null(x) || is.na(x)
-
 ## check if a button was NOT pressed
 not_pressed <- function(x) if (is.null(x) || x == 0) TRUE else FALSE
 
