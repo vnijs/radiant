@@ -230,11 +230,12 @@ observeEvent(input$dtree_report2, {
     r_data[[dtree_name]] <- input$dtree_edit
     r_data[["dtree_list"]] <- c(dtree_name, r_data[["dtree_list"]]) %>% unique
 
+    id <- sample(1:1000000,1)
     xcmd <-
       clean_args(dtree_plot_inputs(), dtree_plot_args[-1]) %>%
       deparse(control = c("keepNA"), width.cutoff = 500L) %>%
-      {if (. == "list()") "DiagrammeR::renderDiagrammeR(plot(result))"
-       else paste0(sub("list(", "DiagrammeR::renderDiagrammeR(plot(result, ", ., fixed = TRUE),")")}
+      {if (. == "list()") paste0("plt", id, " <- plot(result)\nDiagrammeR::renderDiagrammeR(plt",id,")")
+       else paste0(sub("list(", paste0("plt",id," <- plot(result, "), ., fixed = TRUE),paste0("\nDiagrammeR::renderDiagrammeR(plt", id,")"))}
 
     update_report(inp_main = list(yl = dtree_name, opt = input$dtree_opt),
                   fun_name = "dtree",
