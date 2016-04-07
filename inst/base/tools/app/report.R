@@ -129,7 +129,6 @@ knitIt <- function(text) {
   scrub %>% HTML
 }
 
-
 ## cleanout widgets not needed outside shiny apps
 cleanout <- function(x) {
   gsub("DiagrammeR::renderDiagrammeR", "", x) %>%
@@ -165,7 +164,6 @@ knitIt3 <- function(text) {
     })
   )
 
-
   # Extract the <!--html_preserve--> bits
   preserved <- htmltools::extractPreserveChunks(md)
 
@@ -175,8 +173,6 @@ knitIt3 <- function(text) {
                    stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
-
-# knitIt <- knitIt3
 
 ## Knit for report in Radiant
 knitIt2 <- function(text) {

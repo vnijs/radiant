@@ -14,6 +14,8 @@ document(roclets = c('rd', 'collate', 'namespace'))
 
 # install('../DT')
 # build('../DT', binary = TRUE)
+# install('../DiagrammeR')
+# build('../DiagrammeR', binary = TRUE)
 
 build('../radiant', binary = TRUE)
 
