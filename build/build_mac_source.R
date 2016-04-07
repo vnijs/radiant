@@ -22,9 +22,9 @@ build('../radiant', binary = TRUE)
 # build('../knitr')
 # build('../knitr', binary = TRUE)
 
-install('../DiagrammeR')
-build('../DiagrammeR')
-build('../DiagrammeR', binary = TRUE)
+# install('../DiagrammeR')
+# build('../DiagrammeR')
+# build('../DiagrammeR', binary = TRUE)
 
 
 
