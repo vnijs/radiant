@@ -20,6 +20,8 @@ globalVariables(c("r_env", "r_data", "r_state", "r_local", "r_path", ".",
 #' @importFrom markdown markdownToHTML
 #' @importFrom shinyAce aceEditor updateAceEditor
 #' @importFrom readr read_delim write_csv
+#' @importFrom rmarkdown render
+#' @importFrom base64enc dataURI
 NULL
 
 #' Exporting the recode function from the car package

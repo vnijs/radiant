@@ -22,7 +22,7 @@ Imports:
     GPArotation (>= 2014.11.1),
     wordcloud (>= 2.5),
     markdown (>= 0.7.7),
-    knitr (>= 1.12.22),
+    knitr (>= 1.12.3),
     ggdendro (>= 0.1.17),
     broom (>= 0.4.0),
     pryr (>= 0.1.2),
@@ -39,9 +39,10 @@ Imports:
     nnet (>= 7.3.11),
     NeuralNetTools (>= 1.4.0),
     rstudioapi (>= 0.5),
-    sandwich (>= 2.3.4)
+    sandwich (>= 2.3.4),
+    rmarkdown (>= 0.9.5),
+    base64enc
 Suggests:
-    rmarkdown (>= 0.7),
     devtools (>= 1.8.0),
     testthat (>= 0.10.0),
     covr (>= 1.2.0)
