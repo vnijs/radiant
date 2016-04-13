@@ -25,7 +25,7 @@
 #' @export
 full_factor <- function(dataset, vars,
                         method = "PCA",
-                        nr_fact = 2,
+                        nr_fact = 1,
                         rotation = "varimax",
                         data_filter = "") {
 

@@ -4,13 +4,13 @@ hc_method <- list("Ward's" = "ward.D", "Single" = "single", "Complete" = "comple
 hc_distance <- c("Squared euclidean" = "sq.euclidian", "Euclidian" = "euclidean",
 	"Maximum" = "maximum", "Manhattan" = "manhattan", "Canberra" = "canberra", "Binary" = "binary", "Minkowski" = "minkowski")
 
-hc_plots <- c("Scree" = "scree", "Difference" = "diff", "Dendrogram" = "dendro")
+hc_plots <- c("Scree" = "scree", "Change" = "change", "Dendrogram" = "dendro")
 
-# list of function arguments
+## list of function arguments
 hc_args <- as.list(formals(hier_clus))
 
 hc_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   hc_args$data_filter <- if (input$show_filter) input$data_filter else ""
   hc_args$dataset <- input$dataset
   for (i in r_drop(names(hc_args)))
@@ -45,7 +45,7 @@ output$ui_hier_clus <- renderUI({
 	    selectInput("hc_method", label = "Method:", choices = hc_method,
 	     	selected = state_single("hc_method", hc_method, "ward.D"), multiple = FALSE),
  			selectizeInput("hc_plots", label = "Plot(s):", choices = hc_plots,
-               selected = state_multiple("hc_plots", hc_plots, c("scree","diff")),
+               selected = state_multiple("hc_plots", hc_plots, c("scree","change")),
                multiple = TRUE,
                options = list(placeholder = 'Select plot(s)',
                               plugins = list('remove_button', 'drag_drop'))),
@@ -76,7 +76,7 @@ hc_plot_width <- function()
 hc_plot_height <- function()
   hc_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
-# output is called from the main radiant ui.R
+## output is called from the main radiant ui.R
 output$hier_clus <- renderUI({
 
 		register_print_output("summary_hier_clus", ".summary_hier_clus")
@@ -84,7 +84,7 @@ output$hier_clus <- renderUI({
                          	width_fun = "hc_plot_width",
                          	height_fun = "hc_plot_height")
 
-		# one output with components stacked
+		## one output with components stacked
 		hc_output_panels <- tagList(
 	     tabPanel("Summary", verbatimTextOutput("summary_hier_clus")),
 	     tabPanel("Plot",
