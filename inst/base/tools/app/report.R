@@ -176,6 +176,8 @@ knitIt3 <- function(text) {
 
 ## Knit for report in Radiant
 knitIt2 <- function(text) {
+  ## fragment now also available with rmarkdown
+  ## http://rmarkdown.rstudio.com/html_fragment_format.html
   paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
         envir = r_knitr, stylesheet = ""),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",

@@ -88,7 +88,7 @@ output$dtree <- renderUI({
         td(actionButton("dtree_eval_plot", "Calculate"), style="padding-top:30px;"),
         td(numericInput("dtree_dec", "Decimals", value = state_init("dtree_dec", 3),
            min = 0, max = 10, width = "70px")),
-        td(textInput("dtree_symbol", "Symbol", state_init("dtree_symbol", "$"), width = "50px"))
+        td(textInput("dtree_symbol", "Symbol", state_init("dtree_symbol", "$"), width = "70px"))
       )),
       DiagrammeR::DiagrammeROutput("dtree_plot", height = "600px"))
     # ,tabPanel("Sensitivity", verbatimTextOutput("something")
