@@ -7,17 +7,18 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
 
 <title>Cluster &gt; Hierarchical</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 
 <style type="text/css">
 
@@ -69,6 +70,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
+
 </head>
 
 <body>
@@ -83,12 +85,55 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -244,8 +289,11 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
+<div class="fluid-row" id="header">
+
+
 <h1 class="title">Cluster &gt; Hierarchical</h1>
+
 </div>
 
 
@@ -256,14 +304,15 @@ img {
 <p>The goal of Cluster Analysis is to group respondents (e.g., consumers) into segments based on needs, benefits, and/or behaviors. The tool tries to achieve this goal by looking for respondents that are similar, putting them together in a cluster or segment, and separating them from other, dissimilar, respondents. The researcher compares the segments and provides a descriptive label for each.</p>
 <div id="example-toothpaste" class="section level3">
 <h3>Example: Toothpaste</h3>
-<p>Click the <code>examples</code> radio button on the Data &gt; Manage page and click <code>Load examples</code> then choose the toothpaste data from the Datasets dropdown. The dataset contains information from 60 consumers who were asked to respond to six questions about their attitudes towards toothpaste. The scores shown for variables v1-v6 indicate the level of agreement with the statement on a 7-point scale where 1 = strongly disagree and 7 = strongly agree.</p>
+<p>First, go to the <em>Data &gt; Manage</em> tab, select <strong>examples</strong> from the <code>Load data of type</code> dropdown, and press the <code>Load examples</code> button. Then select the <code>toothpaste</code> dataset. The dataset contains information from 60 consumers who were asked to respond to six questions to determine their attitudes towards toothpaste. The scores shown for variables v1-v6 indicate the level of agreement with statements on a 7-point scale where 1 = strongly disagree and 7 = strongly agree.</p>
 <p>We first establish the number of segments/clusters in the data using Hierarchical Cluster Analysis. Ward’s method with Squared Euclidean distance is often used to determine how (dis)similar individuals are. These are the default values in Radiant but they can be changed if desired. The most important information from this analysis is provide by the plots, so we will focus our attention there.</p>
-<p>Select variables v1 through v6 in the Variables box. The Dendrogram shown below provides information to help you determine the most appropriate number of clusters.</p>
-<p>Hierarchical cluster analysis starts with many segments, as many as there are respondents, and in a stepwise (i.e., hierarchical) process adds the most similar respondents or groups together until only one segment remains. To determine the appropriate number of segments look for a <em>jump</em> along the vertical axis of the plot. At that point two dissimilar segments have been joined. The measure along the vertical axis indicates of the level of heterogeneity within the segments that have been formed. The purpose of clustering is to create homogeneous groups of individuals so we want to avoid creating a heterogeneous segment. Since the most obvious <em>jump</em> in heterogeneity occurs when we go from 3 to 2 segments we choose 3 segments (i.e., we avoid creating a heterogeneous segment).</p>
+<p>Select variables v1 through v6 in the Variables box and click the <code>Estimate</code> button. Note that Hierarchical Cluster Analysis can be time-consuming and memory intensive for large datasets. If your dataset has more than 5,000 observations make sure to increase the value in the <code>Max cases</code> input to the appropriate number. The Dendrogram shown below provides information to help you determine the most appropriate number of clusters (or segments).</p>
+<p>Hierarchical cluster analysis starts with many segments, as many as there are respondents, and in a stepwise (i.e., hierarchical) process adds the most similar respondents or groups together until only one segment remains. To determine the appropriate number of segments look for a <em>jump</em> along the vertical axis of the plot. At that point two dissimilar segments have been joined. The measure along the vertical axis indicates of the level of heterogeneity <strong>within</strong> the segments that have been formed. The purpose of clustering is to create homogeneous groups to avoid segments with heterogeneous characteristics, needs, etc. Since the most obvious <em>jump</em> in heterogeneity occurs when we go from 3 to 2 segments we choose 3 segments (i.e., we avoid creating a heterogeneous segment).</p>
 <p><img src="figures_marketing/hier_clus_dendro.png" alt="Dendogram" /></p>
-<p>Another plot that can be used to determine the number of segments is a scree-plot. This is a plot of the within-segment heterogeneity on the vertical axis and the number of segments on the horizontal axis. Again, Hierarchical cluster analysis starts with many segments and groups respondents together until only one segments is left. The scree plot is created in the Plot tab by selecting <code>Scree</code> from the <code>Plot(s)</code> dropdown menu.</p>
+<p>Another plot that can be used to determine the number of segments is a scree-plot. This is a plot of the within-cluster heterogeneity on the vertical axis and the number of segments on the horizontal axis. Again, Hierarchical cluster analysis starts with many segments and groups respondents together until only one segments is left. The scree plot is created by selecting <code>Scree</code> (and <code>Change</code>) from the <code>Plot(s)</code> dropdown menu. If <code>Plot cutoff</code> is set to 0 we see results for all possible cluster solutions. To make the plot easier to evaluate, we can set <code>Plot cutoff</code> to, for example, 0.05 (i.e. show only solutions that have <code>Within-cluster heterogeneity</code> above 5%).</p>
 <p><img src="figures_marketing/hier_clus_scree.png" alt="Scree" /></p>
-<p>Reading the plot from left-to-right we see that within segment heterogeneity increases sharply when we move from 3 to 2 segments. This is also very clear from the <code>Change in within-cluster heterogeneity</code> plot. To avoid creating a heterogeneous segment we, again, choose 3 segments. Now that we have determined the appropriate number of segments to extract we will use K-means to generate the final cluster solution.</p>
+<p>Reading the plot from left-to-right we see that within-segment heterogeneity increases sharply when we move from 3 to 2 segments. This is also clear from the <code>Change in within-cluster heterogeneity</code> plot (i.e., <code>Change</code>). To avoid creating a heterogeneous segment we, again, choose 3 segments. Now that we have determined the appropriate number of segments to extract we can use <em>Cluster &gt; K-means</em> to generate the final cluster solution.</p>
+<p>To download the plots click the download button on the top-right of the screen.</p>
 </div>
 
 
@@ -305,6 +354,8 @@ img {
   ga('send', 'pageview');
 
 </script>
+
+
 
 </div>
 
