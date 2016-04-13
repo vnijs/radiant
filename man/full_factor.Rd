@@ -4,7 +4,7 @@
 \alias{full_factor}
 \title{Factor analysis (PCA)}
 \usage{
-full_factor(dataset, vars, method = "PCA", nr_fact = 2,
+full_factor(dataset, vars, method = "PCA", nr_fact = 1,
   rotation = "varimax", data_filter = "")
 }
 \arguments{
