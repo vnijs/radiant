@@ -1,8 +1,8 @@
 library(shinyapps)
-# devtools::install_github("rich-iannone/DiagrammeR")
-install.packages("DiagrammeR")
-devtools::install_github("fawda123/NeuralNetTools")
-devtools::install_github(c("vnijs/radiant","trestletech/shinyAce"))
+devtools::install_github("rich-iannone/DiagrammeR")
+# install.packages("DiagrammeR")
+# devtools::install_github("fawda123/NeuralNetTools")
+devtools::install_github("vnijs/radiant")
 
 ## update as needed
 fpath <- "~/gh/radiant/inst/base"

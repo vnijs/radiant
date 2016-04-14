@@ -436,7 +436,7 @@ plot.dtree <- function(x, symbol = "$", dec = 3, final = FALSE, shiny = FALSE, .
 
   FormatPayoff <- function(payoff) {
     if (is.null(payoff)) payoff <- 0
-    paste0(symbol, format(round(payoff, dec), scientific = FALSE, big.mark = ","))
+    paste0("\"",symbol,"\"", format(round(payoff, dec), scientific = FALSE, big.mark = ","))
   }
 
   ToLabel <- function(node) {

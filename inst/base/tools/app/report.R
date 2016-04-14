@@ -250,7 +250,9 @@ output$saveRmd <- downloadHandler(
       fnames <- c("report.Rmd", "r_data.rda")
 
       paste0("```{r echo = FALSE}\nknitr::opts_chunk$set(comment=NA, echo = FALSE, cache=FALSE, message=FALSE, warning=FALSE)\nsuppressWarnings(suppressMessages(library(radiant)))\nload(\"", fnames[2], "\")\n```\n\n") %>%
-        paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>% cat(., file = fnames[1],sep="\n")
+        paste0(., input$rmd_report) %>% gsub("\\\\\\\\","\\\\",.) %>%
+        cleanout(.) %>%
+        cat(., file = fnames[1],sep="\n")
 
       r_data <- reactiveValuesToList(r_data)
       save(r_data, file = fnames[2])
