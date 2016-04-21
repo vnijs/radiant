@@ -626,7 +626,7 @@ summary.prob_fdist <- function(object, type = "values",  ...) {
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
+		cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
 		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {
@@ -845,7 +845,6 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		# cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
 		cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
 		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
 
@@ -1973,7 +1972,7 @@ summary.prob_expo <- function(object, type = "values",  ...) {
 	if (!is.null(mess)) return(mess)
 
 	if (type == "values") {
-		cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
+		cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
 		cat("Upper bound :", if (is.na(ub)) "Inf" else ub, "\n")
 
 		if (!is.na(ub) || !is.na(lb)) {

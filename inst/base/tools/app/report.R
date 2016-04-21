@@ -139,7 +139,7 @@ cleanout <- function(x) {
 knitIt3 <- function(text) {
 
   ## Read input and convert to Markdown
-  md <- knit(text = cleanout(text))
+  md <- knit(text = cleanout(text), envir = r_knitr)
   ## Get dependencies from knitr
   deps <- knit_meta()
 
@@ -164,13 +164,18 @@ knitIt3 <- function(text) {
     })
   )
 
-  # Extract the <!--html_preserve--> bits
+  ## Extract the <!--html_preserve--> bits
   preserved <- htmltools::extractPreserveChunks(md)
 
   # Render the HTML, and then restore the preserved chunks
-  knitr::knit2html(text = gsub("\\\\\\\\","\\\\",preserved$value), header = dep_html, quiet = TRUE, envir = r_knitr,
-                   options = c("mathjax", "base64_images"),
-                   stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
+  # knitr::knit2html(text = gsub("\\\\\\\\","\\\\",preserved$value), header = dep_html, quiet = TRUE, envir = r_knitr,
+  #                  options = c("mathjax", "base64_images"),
+  #                  stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
+  # htmltools::restorePreserveChunks(preserved$chunks)
+  markdown::markdownToHTML(text = gsub("\\\\\\\\","\\\\",preserved$value),
+                           header = dep_html,
+                           options = c("mathjax", "base64_images"),
+                           stylesheet = file.path(r_path,"base/www/bootstrap.min.css")) %>%
   htmltools::restorePreserveChunks(preserved$chunks)
 }
 
@@ -178,10 +183,16 @@ knitIt3 <- function(text) {
 knitIt2 <- function(text) {
   ## fragment now also available with rmarkdown
   ## http://rmarkdown.rstudio.com/html_fragment_format.html
-  paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
-        envir = r_knitr, stylesheet = ""),
+
+  md <- knit(text = text, envir = r_knitr)
+  paste(markdown::markdownToHTML(text = md, fragment.only = TRUE, stylesheet = ""),
         "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
+
+  # paste(knitr::knit2html(text = text, fragment.only = TRUE, quiet = TRUE,
+  #       envir = r_knitr, stylesheet = ""),
+  #       "<script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+  #       "<script>if (window.MathJax) MathJax.Hub.Typeset();</script>", sep = '\n') %>% scrub %>% HTML
 }
 
 output$rmd_knitted <- renderUI({

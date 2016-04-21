@@ -105,7 +105,7 @@ loadUserData <- function(fname, uFile, ext,
     }
   } else if (ext == 'csv') {
     r_data[[objname]] <- loadcsv(uFile, .csv = .csv, header = header, sep = sep, saf = man_str_as_factor) %>%
-      {if (is.character(.)) upload_error_handler(objname, mess) else .} %>%
+      {if (is.character(.)) upload_error_handler(objname, "### There was an error loading the data") else .} %>%
       {set_colnames(., gsub("^\\s+|\\s+$", "", names(.)))}
 
   } else if (ext != "---") {

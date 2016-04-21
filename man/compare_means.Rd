@@ -25,7 +25,7 @@ compare_means(dataset, var1, var2, samples = "independent",
 
 \item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
 
-\item{test}{T-test ("t") or Wilcox ("wilcox")}
+\item{test}{t-test ("t") or Wilcox ("wilcox")}
 
 \item{dec}{Number of decimals to show}
 

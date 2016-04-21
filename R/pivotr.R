@@ -352,6 +352,11 @@ make_dt <- function(pvt,
   ## show percentage
   if (perc) dt_tab %<>% DT::formatPercentage(cn, dec)
 
+
+  dt_tab$dependencies <- c(
+    list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
+  )
+
   dt_tab
 
   ## can use this in R > Report inside Radiant but doesn't export

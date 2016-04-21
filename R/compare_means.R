@@ -10,7 +10,7 @@
 #' @param conf_lev Span of the confidence interval
 #' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
-#' @param test T-test ("t") or Wilcox ("wilcox")
+#' @param test t-test ("t") or Wilcox ("wilcox")
 #' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
@@ -43,6 +43,7 @@ compare_means <- function(dataset, var1, var2,
 
   if (is.numeric(dat[[var1]])) {
 		dat %<>% gather_("variable", "values", vars)
+		dat[["variable"]] %<>% factor(levels = vars)
 		cname <- " "
 	} else {
     if (is.character(dat[[var1]])) dat[[var1]] <- as.factor(dat[[var1]])
@@ -65,7 +66,6 @@ compare_means <- function(dataset, var1, var2,
     if (summary(dat[["variable"]]) %>% {max(.) != min(.)})
       samples <- "independent (obs. per level unequal)"
   }
-
 
 	levs <- levels(dat[["variable"]])
 

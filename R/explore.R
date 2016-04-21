@@ -329,6 +329,10 @@ make_expl <- function(expl,
       , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
 
+  dt_tab$dependencies <- c(
+    list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
+  )
+
   dt_tab
 
   ## can use this in R > Report inside Radiant but doesn't export

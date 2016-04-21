@@ -44,7 +44,7 @@ r_functions <-
 ## for report and code in menu R
 knitr::opts_knit$set(progress = TRUE)
 knitr::opts_chunk$set(echo = FALSE, comment = NA, cache = FALSE, message = FALSE,
-                      warning = FALSE, fig.path = "~/r_figures/")
+                      warning = FALSE, screenshot.force = FALSE, fig.path = "~/r_figures/")
 
 ## running local or on a server
 if (Sys.getenv('SHINY_PORT') == "") {
