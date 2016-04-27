@@ -25,7 +25,7 @@ The first two blocks of output show basic information about the test (e.g.,. sel
 
 * `Null hyp.` is the null hypothesis and `Alt. hyp.` the alternative hypothesis
 * `diff` is the difference between the sample means for two groups (e.g., 80775.99 - 93876.44 = -13100.45). If the null hypothesis is true we expect this difference to be small (i.e., close to zero)
-* `p.value` is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)
+* `p.value` is the probability of finding a value as extreme or more extreme than `diff` if the null hypothesis is true
 
 If we check `Show additional statistics` the following output is added:
 

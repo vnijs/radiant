@@ -140,19 +140,22 @@ knitIt3 <- function(text) {
 
   ## Read input and convert to Markdown
   md <- knit(text = cleanout(text), envir = r_knitr)
+
   ## Get dependencies from knitr
   deps <- knit_meta()
+
+  ## not sure how to use knit_meta_add for bootstrap
+  # knit_meta_add(list(rmarkdown::html_dependency_bootstrap('bootstrap')))
+  # deps <- c(list(rmarkdown::html_dependency_bootstrap('bootstrap')), knit_meta())
 
   ## Convert script dependencies into data URIs, and stylesheet
   ## dependencies into inline stylesheets
   dep_scripts <-
-    lapply(deps, function(x) {
-      lapply(x$script, function(script) file.path(x$src$file, script))})
+    lapply(deps, function(x) {lapply(x$script, function(script) file.path(x$src$file, script))}) %>%
+    unlist %>% unique
   dep_stylesheets <-
-    lapply(deps, function(x) {
-      lapply(x$stylesheet, function(stylesheet) file.path(x$src$file, stylesheet))})
-  dep_scripts <- unique(unlist(dep_scripts))
-  dep_stylesheets <- unique(unlist(dep_stylesheets))
+    lapply(deps, function(x) {lapply(x$stylesheet, function(stylesheet) file.path(x$src$file, stylesheet))}) %>%
+    unlist %>% unique
   dep_html <- c(
     sapply(dep_scripts, function(script) {
       sprintf('<script type="text/javascript" src="%s"></script>',

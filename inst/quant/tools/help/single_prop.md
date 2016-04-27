@@ -36,7 +36,7 @@ The first two blocks of output show basic information about the test (e.g.,. the
 
 * `diff` is the difference between the sample proportion (0.093) and the comparison value (0.1)
 * `ns` is the number of _successes_. This is the number we can compare to a binomial-distribution with paramters $n = 1000$ and $p = 0.10$.
-* `p.value` is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)
+* `p.value` is the probability of finding a value as extreme or more extreme than `diff` if the null hypothesis is true
 * `0% 95%` show the 95% confidence interval around the sample proportion (0 to 0.11). These numbers provide a range within which the true population mean is likely to fall
 
 ### Testing

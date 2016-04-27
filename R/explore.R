@@ -329,6 +329,7 @@ make_expl <- function(expl,
       , callback = DT::JS("$(window).unload(function() { table.state.clear(); })")
     ) %>% DT::formatStyle(., cn_cat,  color = "white", backgroundColor = "grey")
 
+  ## see https://github.com/yihui/knitr/issues/1198
   dt_tab$dependencies <- c(
     list(rmarkdown::html_dependency_bootstrap('bootstrap')), dt_tab$dependencies
   )
