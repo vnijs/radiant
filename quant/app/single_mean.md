@@ -17,7 +17,7 @@ The first two blocks of output show basic information about the test (e.g.,. the
 * `diff` is the difference between the sample mean (1953.393) and the comparison value (1750)
 * `se` is the standard error (i.e., the standard deviation of the sampling distribution of `diff`)
 * `t.value` is the _t_ statistic associated with `diff` that we can compare to a t-distribution (i.e., `diff` / `se`)
-* `p.value` is the probability of being wrong if we choose to reject the null hypothesis (i.e., the type I error)
+* `p.value` is the probability of finding a value as extreme or more extreme than `diff` if the null hypothesis is true
 * `df` is the degrees of freedom associated with the statistical test (i.e., _n_ - 1)
 * `5% 100%` show the 95% confidence interval around the sample mean (1897 to Inf.). These numbers provide a range within which the true population mean is likely to fall
 
