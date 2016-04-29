@@ -21,11 +21,10 @@ prob_norm <- function(mean,
 
 	p_ub <- pnorm(ub, mean, stdev)
 	p_lb <- pnorm(lb, mean, stdev)
-	p_int <- max(p_ub - p_lb, 0)
+	p_int <- max(p_ub - p_lb, 0) %>% round(dec)
 
 	p_ub %<>% round(dec)
 	p_lb %<>% round(dec)
-	p_int %<>% round(dec)
 
 	if (!is.na(pub)) {
 		if (pub > 1) pub <- 1
@@ -37,11 +36,8 @@ prob_norm <- function(mean,
 		if (plb < 0) plb <- 0
 	}
 
-	v_ub <- qnorm(pub, mean, stdev)
-	v_lb <- qnorm(plb, mean, stdev)
-
-	v_ub %<>% round(dec)
-	v_lb %<>% round(dec)
+	v_ub <- qnorm(pub, mean, stdev) %>% round(dec)
+	v_lb <- qnorm(plb, mean, stdev) %>% round(dec)
 
 	if (!is.na(lb) && !is.na(ub)) {
 		if (lb > ub) {
@@ -1509,7 +1505,9 @@ prob_disc <- function(v, p,
 
 	ddisc <- function(b, df) filter(df, v == b)$p
 	pdisc <- function(b, df) filter(df, v < b)$p  %>% sum
-	qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1) %>% .$v
+	# qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1) %>% .$v
+	## consistent with http://www.stat.umn.edu/geyer/old/5101/rlook.html#qbinom
+	qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p >= prob) %>% .$v %>% min
 
 	if (is.na(lb)) {
 		p_elb <- p_lb <- lb <- NA
