@@ -96,19 +96,11 @@ plot(result, plots = "dashboard")
 As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
 
 ```{r fig.height=8}
-## set working directory to your Desktop
-# setwd("~/Desktop") # or setwd("~/Documents/Desktop")
-
 ## load the radiant library (not needed if run in Radiant's R > Code tab)
 library(radiant)
 
 ## load the data directly from a url
 shopping <- loadrda_url("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
-
-## to download the data and load it use the commands below
-## if the file is not found make sure your working directory is set to the Desktop
-# browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
-# load("~/Desktop/shopping.rda") # or load("~/Documents/Desktop/shopping.rda")
 
 ## start with hierarchical clustering, view help
 ## run hierarchical cluster analysis on the shopping data, variables v1 through v6
@@ -141,5 +133,5 @@ store(result)
 getdata("shopping") %>% head
 ```
 
-See if you can reproduce this output in the radiant web-interface. Start radiant using `radiant()`. Apart from the graphical user interface you can also run code inside the Radiant app in the R > Code tab. See <a href="/radiant/base/code.html">Code</a> page for details.
+See if you can reproduce this output in the radiant web-interface. Start `Radiant - Marketing` from the `Addins` dropdown in Rstudio. Apart from the graphical user interface you can also run code inside the Radiant app in the _R > Code_ tab. See <a href="/radiant/base/code.html">Code</a> page for details.
 

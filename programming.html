@@ -524,19 +524,11 @@ Predicted values for:
 <pre class="r"><code>plot(result, plots = &quot;dashboard&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
-<pre class="r"><code>## set working directory to your Desktop
-# setwd(&quot;~/Desktop&quot;) # or setwd(&quot;~/Documents/Desktop&quot;)
-
-## load the radiant library (not needed if run in Radiant&#39;s R &gt; Code tab)
+<pre class="r"><code>## load the radiant library (not needed if run in Radiant&#39;s R &gt; Code tab)
 library(radiant)
 
 ## load the data directly from a url
 shopping &lt;- loadrda_url(&quot;https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
-
-## to download the data and load it use the commands below
-## if the file is not found make sure your working directory is set to the Desktop
-# browseURL(&quot;https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
-# load(&quot;~/Desktop/shopping.rda&quot;) # or load(&quot;~/Documents/Desktop/shopping.rda&quot;)
 
 ## start with hierarchical clustering, view help
 ## run hierarchical cluster analysis on the shopping data, variables v1 through v6
@@ -598,7 +590,7 @@ getdata(&quot;shopping&quot;) %&gt;% head</code></pre>
 4  4  4  6  4  5  3  6      3
 5  5  1  3  2  2  6  4      2
 6  6  6  4  6  3  3  4      1</code></pre>
-<p>See if you can reproduce this output in the radiant web-interface. Start radiant using <code>radiant()</code>. Apart from the graphical user interface you can also run code inside the Radiant app in the R &gt; Code tab. See <a href="/radiant/base/code.html">Code</a> page for details.</p>
+<p>See if you can reproduce this output in the radiant web-interface. Start <code>Radiant - Marketing</code> from the <code>Addins</code> dropdown in Rstudio. Apart from the graphical user interface you can also run code inside the Radiant app in the <em>R &gt; Code</em> tab. See <a href="/radiant/base/code.html">Code</a> page for details.</p>
 
 
 &copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
