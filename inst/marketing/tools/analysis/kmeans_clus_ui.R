@@ -2,6 +2,8 @@
 # Kmeans clustering
 ###############################################################
 
+km_plots <- c("Density" = "density", "Bar" = "bar", "Scatter" = "scatter")
+
 # list of function arguments
 km_args <- as.list(formals(kmeans_clus))
 
@@ -18,13 +20,6 @@ output$ui_km_vars <- renderUI({
 
  	isNum <- "numeric" == .getclass() | "integer" == .getclass()
  	vars <- varnames()[isNum]
-
-  # isolate({
-  #   init <- input$km_vars %>%
-  #     {if (!is_empty(.) && . %in% vars) . else input$hc_vars}
-  #   if (length(init) > 0) r_state$km_vars <<- init
-  # })
-
   selectInput(inputId = "km_vars", label = "Variables:", choices = vars,
 	  selected = state_multiple("km_vars", vars, input$hc_vars),
 	  multiple = TRUE, size = min(8, length(vars)), selectize = FALSE)
@@ -54,6 +49,11 @@ output$ui_kmeans_clus <- renderUI({
 		  ),
 	    numericInput("km_nr_clus", "Number of clusters:", min = 2,
 	    	value = state_init('km_nr_clus',2)),
+      conditionalPanel(condition = "input.tabs_kmeans_clus == 'Plot'",
+        selectInput("km_plots", label = "Plot(s):", choices = km_plots,
+                 selected = state_multiple("km_plots", km_plots, "density"),
+                 multiple = FALSE)
+      ),
       conditionalPanel(condition = "input.km_vars != null",
         tags$table(
           tags$td(textInput("km_store_name", "Store membership:", state_init("km_store_name","kclus"))),
@@ -123,7 +123,7 @@ output$kmeans_clus <- renderUI({
 
 .plot_kmeans_clus <- reactive({
   if (.km_available() != "available") return(.km_available())
-  plot(.kmeans_clus(), shiny = TRUE)
+  plot(.kmeans_clus(), plots = input$km_plots, shiny = TRUE)
 })
 
 observeEvent(input$kmeans_clus_report, {

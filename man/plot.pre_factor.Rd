@@ -4,10 +4,17 @@
 \alias{plot.pre_factor}
 \title{Plot method for the pre_factor function}
 \usage{
-\method{plot}{pre_factor}(x, ...)
+\method{plot}{pre_factor}(x, plots = c("scree", "change"), cutoff = 0.2,
+  shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{pre_factor}}}
+
+\item{plots}{Plots to return. "change" shows the change in eigenvalues as variables are grouped into different number of factors, "scree" shows a scree plot of eigenvalues}
+
+\item{cutoff}{For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., eigenvalues of .8 or higher) factors with the least explanatory power are removed from the plot}
+
+\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -20,6 +27,7 @@ See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an exampl
 \examples{
 result <- pre_factor("diamonds",c("price","carat","table"))
 plot(result)
+plot(result, plots = c("change", "scree"), cutoff = .05)
 
 }
 \seealso{

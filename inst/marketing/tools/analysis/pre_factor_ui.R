@@ -2,6 +2,8 @@
 # Pre-factor analysis
 ###############################
 
+pf_plots <- c("Scree" = "scree", "Change" = "change")
+
 ## list of function arguments
 pf_args <- as.list(formals(pre_factor))
 
@@ -31,6 +33,16 @@ output$ui_pre_factor <- renderUI({
     ),
   	wellPanel(
 	  	uiOutput("ui_pf_vars")
+    ),
+    conditionalPanel(condition = "input.tabs_pre_factor == 'Plot'",
+      wellPanel(
+        selectizeInput("pf_plots", label = "Plot(s):", choices = pf_plots,
+                 selected = state_multiple("pf_plots", pf_plots, c("scree","change")),
+                 multiple = TRUE,
+                 options = list(placeholder = "Select plot(s)",
+                                plugins = list("remove_button", "drag_drop"))),
+        numericInput("pf_cutoff", "Plot cutoff:", min = 0, max = 2, value = state_init("pf_cutoff",0.2), step = .05)
+      )
 	  ),
     help_and_report(modal_title = "Pre-factor analysis",
                     fun_name = "pre_factor",
@@ -39,14 +51,14 @@ output$ui_pre_factor <- renderUI({
 })
 
 pf_plot <- reactive({
-  list(plot_width = 600, plot_height = 500)
+  list(plot_width = 600, plot_height = length(input$pf_plots) * 400)
 })
 
 pf_plot_width <- function()
   pf_plot() %>% { if (is.list(.)) .$plot_width else 600 }
 
 pf_plot_height <- function()
-  pf_plot() %>% { if (is.list(.)) .$plot_height else 500 }
+  pf_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
 output$pre_factor <- renderUI({
 
@@ -55,8 +67,9 @@ output$pre_factor <- renderUI({
                        	width_fun = "pf_plot_width",
                        	height_fun = "pf_plot_height")
 
-	# one output with components stacked
-	pf_output_panels <- tagList(
+	## two outputs in a summary and plot tab
+  pf_output_panels <- tabsetPanel(
+     id = "tabs_pre_factor",
      tabPanel("Summary", verbatimTextOutput("summary_pre_factor")),
      tabPanel("Plot",
               plot_downloader("pre_factor", height = pf_plot_height()),
@@ -88,7 +101,7 @@ output$pre_factor <- renderUI({
   if (not_available(input$pf_vars) || length(input$pf_vars) < 2 || not_pressed(input$pf_run))
     return(invisible())
 
-  plot(.pre_factor())
+  plot(.pre_factor(), plots = input$pf_plots, cutoff = input$pf_cutoff, shiny = TRUE)
 })
 
 observeEvent(input$pre_factor_report,{

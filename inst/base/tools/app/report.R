@@ -232,27 +232,27 @@ output$saveHTML <- downloadHandler(
   }
 )
 
-output$saveWord <- downloadHandler(
-  filename = function() {"report.doc"},
-  content = function(file) {
-    if (r_local) {
-      isolate({
-        withProgress(message = "Knitting report", value = 0, {
-          # fp <- tempdir()
-          fp <- "~/Desktop"
-          fn <- file.path(fp, "temp.Rmd")
-          paste0("---\ntitle: \"Radiant Report\"\noutput:\n  word_document:\n    highlight: \"tango\"\n---\n\n```{r}\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n") %>%
-          paste0(., ifelse (is_empty(input$rmd_selection), input$rmd_report,
-                  input$rmd_selection)) %T>%
-          print %>%
-          cat(file = fn,sep="\n")
-          rmarkdown::render(fn, envir = r_knitr)
-        })
-      })
-    }
-  },
-  contentType = "application/Word"
-)
+# output$saveWord <- downloadHandler(
+#   filename = function() {"report.doc"},
+#   content = function(file) {
+#     if (r_local) {
+#       isolate({
+#         withProgress(message = "Knitting report", value = 0, {
+#           # fp <- tempdir()
+#           fp <- "~/Desktop"
+#           fn <- file.path(fp, "temp.Rmd")
+#           paste0("---\ntitle: \"Radiant Report\"\noutput:\n  word_document:\n    highlight: \"tango\"\n---\n\n```{r}\nsuppressWarnings(suppressMessages(library(radiant)))\n```\n") %>%
+#           paste0(., ifelse (is_empty(input$rmd_selection), input$rmd_report,
+#                   input$rmd_selection)) %T>%
+#           print %>%
+#           cat(file = fn,sep="\n")
+#           rmarkdown::render(fn, envir = r_knitr)
+#         })
+#       })
+#     }
+#   },
+#   contentType = "application/Word"
+# )
 
 output$saveRmd <- downloadHandler(
   filename = function() {"report.zip"},

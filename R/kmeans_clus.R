@@ -125,6 +125,7 @@ summary.kmeans_clus <- function(object, ...) {
 #' @details See \url{http://vnijs.github.io/radiant/marketing/kmeans_clus.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{kmeans_clus}}
+#' @param plots One of "density", "bar", or "scatter")
 #' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
@@ -138,21 +139,54 @@ summary.kmeans_clus <- function(object, ...) {
 #'
 #' @export
 plot.kmeans_clus <- function(x,
+                             plots = "density",
                              shiny = FALSE,
                              ...) {
+
 
 	object <- x; rm(x)
 
 	# reloading the data
 	with(object, sshhr(getdata(dataset, vars, filt = data_filter))) %>%
-	mutate(clus_var = as.factor(object$km_out$cluster)) -> dat
+	mutate(Cluster = as.factor(object$km_out$cluster)) -> dat
 	vars <- colnames(dat) %>% .[-length(.)]
 
 	plot_list <- list()
-	for (var in vars) {
-		plot_list[[var]] <- ggplot(dat, aes_string(x=var, fill='clus_var')) +
-				geom_density(adjust=2.5, alpha=.3) +
-				labs(y = "") + theme(axis.text.y = element_blank())
+
+	if ("density" %in% plots) {
+		for (var in vars) {
+			plot_list[[var]] <- ggplot(dat, aes_string(x=var, fill = "Cluster")) +
+					geom_density(adjust=2.5, alpha=.3) +
+					labs(y = "") + theme(axis.text.y = element_blank())
+		}
+	} else if ("bar" %in% plots) {
+
+	  ci_calc <- function(se, n, conf.lev = .95)
+	 	  se * qt(conf.lev/2 + .5, n - 1)
+
+		for (var in vars) {
+
+  	  dat_summary <-
+		    select_(dat, .dots = c(var, "Cluster"))  %>%
+		    group_by_("Cluster") %>%
+		    summarise_each(funs(mean, n = length(.), sd,
+		                        se = sd/sqrt(n),
+		                        ci = ci_calc(se,n,.95)))
+
+		  plot_list[[var]] <-
+		    ggplot(dat_summary,
+		           aes_string(x = "Cluster", y = "mean", fill = "Cluster")) +
+		    geom_bar(stat = "identity")  +
+		    geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
+		    geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), colour = "blue") +
+		    theme(legend.position = "none") +
+		    ylab(paste0(var, " (mean)"))
+		 }
+
+	} else {
+		 plot_list <-
+		   visualize(dat, xvar = "Cluster", yvar = vars, type = "scatter",
+		             check = "jitter", custom = TRUE)
 	}
 
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = min(length(plot_list),2)))) ) %>%
@@ -183,19 +217,6 @@ store.kmeans_clus <- function(object, ..., name = "") {
 	## membership variable name
   if (is_empty(name))
   	name <- paste0("kclus",object$nr_clus)
-
-  ## creating an index to deal with filters and missing values
-	# km <- NA
-	# ind <-
-	#   getdata(object$dataset, na.rm = FALSE) %>%
-	#   mutate(i_m_f = 1:nrow(.)) %>%
- #    {km <<- rep(NA, nrow(.)); .} %>%
- #    {if (object$data_filter != "") filter_(., object$data_filter)
- #     else .} %>%
- #    select_(.dots = c("i_m_f",object$vars)) %>%
-	#   na.omit %>%
-	#   .[["i_m_f"]]
-
 	indr <- indexr(object$dataset, object$vars, object$data_filter)
 	km <- rep(NA,indr$nr)
 	km[indr$ind] <- object$km_out$cluster

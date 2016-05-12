@@ -4,10 +4,12 @@
 \alias{plot.kmeans_clus}
 \title{Plot method for kmeans_clus}
 \usage{
-\method{plot}{kmeans_clus}(x, shiny = FALSE, ...)
+\method{plot}{kmeans_clus}(x, plots = "density", shiny = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{kmeans_clus}}}
+
+\item{plots}{One of "density", "bar", or "scatter")}
 
 \item{shiny}{Did the function call originate inside a shiny app}
 

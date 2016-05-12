@@ -241,7 +241,10 @@ url_list <-
                                                   "Plot" = "maps/mds/plot/")),
 
        "Attributes" = list("tabs_pmap" = list("Summary" = "maps/pmap/",
-                                              "Plot" = "maps/pmap/plot/"))
+                                              "Plot" = "maps/pmap/plot/")),
+
+       "K-means" = list("tabs_kmeans_clus" = list("Summary" = "cluster/kmeans/",
+                                              "Plot" = "cluster/kmeans/plot/"))
   )
 
 ## generate url patterns for navigation

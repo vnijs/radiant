@@ -119,28 +119,63 @@ summary.pre_factor <- function(object, ...) {
 #'
 #' @details See \url{http://vnijs.github.io/radiant/marketing/pre_factor.html} for an example in Radiant
 #' @param x Return value from \code{\link{pre_factor}}
+#' @param plots Plots to return. "change" shows the change in eigenvalues as variables are grouped into different number of factors, "scree" shows a scree plot of eigenvalues
+#' @param cutoff For large datasets plots can take time to render and become hard to interpret. By selection a cutoff point (e.g., eigenvalues of .8 or higher) factors with the least explanatory power are removed from the plot
+#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
 #' result <- pre_factor("diamonds",c("price","carat","table"))
 #' plot(result)
+#' plot(result, plots = c("change", "scree"), cutoff = .05)
 #'
 #' @seealso \code{\link{pre_factor}} to calculate results
 #' @seealso \code{\link{summary.pre_factor}} to summarize results
 #'
 #' @export
-plot.pre_factor <- function(x, ...){
+plot.pre_factor <- function(x,
+                           	plots = c("scree","change"),
+                           	cutoff = 0.2,
+                           	shiny = FALSE,
+                            ...){
 
 	object <- x; rm(x)
+	# print(object)
+	# return(invisible())
+	if (is.character(object) || is.character(object$pre_r2) ||
+	    length(plots) == 0) return(invisible())
 
-	if (is.character(object)) return(invisible())
+	cutoff <- ifelse(is_not(cutoff), .2, cutoff)
 
-	if (object$pre_r2 %>% is.character) return(invisible())
+	pre_eigen <- with(object, pre_eigen[pre_eigen > cutoff])
+	dat <- data.frame(y = pre_eigen, x = 1:length(pre_eigen))
 
-	data.frame(y = object$pre_eigen, x = 1:length(object$pre_eigen)) %>%
-	ggplot(aes(x=x, y=y, group = 1)) +
-    geom_line(colour="blue", linetype = 'dotdash', size=.7) +
-    geom_point(colour="blue", size=4, shape=21, fill="white") +
-		geom_hline(yintercept = 1, color = 'black', linetype = 'solid', size = 1) +
-	  labs(list(title = "Screeplot of Eigenvalues", x = "# factors", y = "Eigenvalues"))
+	plot_list <- list()
+	if ("scree" %in% plots) {
+		plot_list[["scree"]] <-
+			ggplot(dat, aes(x=x, y=y, group = 1)) +
+		    geom_line(colour="blue", linetype = 'dotdash', size=.7) +
+		    geom_point(colour="blue", size=4, shape=21, fill="white") +
+				geom_hline(yintercept = 1, color = 'black', linetype = 'solid', size = 1) +
+			  labs(list(title = "Screeplot", x = "# factors", y = "Eigenvalues"))
+	}
+
+
+	# pre_eigen <- pre_eigen/sum(pre_eigen)
+
+	if ("change" %in% plots) {
+		plot_list[["change"]] <-
+			pre_eigen %>%
+			{(. - lag(.)) / lag(.)} %>%
+			{. / min(., na.rm = TRUE)} %>%
+				data.frame(bump = ., nr_fact = paste0(0:(length(.)-1), "-", 1:length(.))) %>%
+				na.omit() %>%
+				ggplot(aes(x=factor(nr_fact, levels = nr_fact), y=bump)) +
+					geom_bar(stat = "identity", alpha = .5) +
+					labs(list(title = paste("Change in Eigenvalues"),
+					     x = "# factors", y = "Rate of change index"))
+	}
+
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	 	{ if (shiny) . else print(.) }
 }
