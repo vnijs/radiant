@@ -65,6 +65,9 @@ mv ../*.zip $dirwin
 # write package files for CRAN structure
 R --save < build/write_package_files.R 2>&1
 
+rsync -av ~/gh/radiant_miniCRAN/bin/macosx/mavericks/contrib/3.2/ ~/gh/radiant_miniCRAN/bin/macosx/mavericks/contrib/3.3/
+rsync -av ~/gh/radiant_miniCRAN/bin/windows/contrib/3.2/ ~/gh/radiant_miniCRAN/bin/windows/contrib/3.3/
+
 # commit to repo
 cd ../radiant_miniCRAN
 git add --all .
