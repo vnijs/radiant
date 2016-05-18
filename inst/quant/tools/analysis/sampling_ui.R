@@ -16,8 +16,9 @@ smp_inputs <- reactive({
 })
 
 output$ui_smp_var <- renderUI({
-	isChar <- "character" == .getclass()
-  vars <- varnames()[isChar]
+	# isChar <- "character" == .getclass()
+  # vars <- varnames()[isChar]
+  vars <- varnames()
   selectInput(inputId = "smp_var", label = "ID variable:",
               choices = vars, selected = state_single("smp_var",vars),
               multiple = FALSE)
@@ -45,7 +46,7 @@ output$sampling <- renderUI({
     )
 
     stat_tab_panel(menu = "Sample",
-                  tool = "Sampling",
+                  tool = "Random sampling",
                   tool_ui = "ui_sampling",
                   output_panels = smp_output_panels)
 })
@@ -56,12 +57,14 @@ output$sampling <- renderUI({
 
 .summary_sampling <- reactive({
 
-  "This analysis requires a variable of type character.\nEntries should be unique (i.e., no duplicates).\nIf a variable of this type is not available please select another dataset.\n\n" %>%
-  suggest_data("rndnames") -> rt
+  rt <-
+    "Entries for the selected ID variable should be unique (i.e., no duplicates).\nIf a variable of this type is not available please select another dataset.\n\n" %>%
+    suggest_data("rndnames")
 
   if (not_available(input$smp_var)) return(rt)
-  if (is.na(input$smp_sample_size)) return("Please select a sample size of 1 or greater.")
-  if (has_duplicates(getdata(input$dataset, vars = input$smp_var))) return(rt)
+  if (is_not(input$smp_sample_size)) return("Please select a sample size of 1 or greater.")
+  # if (has_duplicates(getdata(input$dataset, vars = input$smp_var))) return(rt)
+  if (has_duplicates(.getdata()[[input$smp_var]])) return(rt)
 
   summary(.sampling(), print_sf = TRUE)
 })

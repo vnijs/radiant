@@ -1,6 +1,6 @@
 quant_ui <- tagList(
   navbarMenu("Sample",
-    tabPanel("Sampling", uiOutput("sampling")),
+    tabPanel("Random sampling", uiOutput("sampling")),
     # tabPanel("Sample size", uiOutput("sample_size"))
     tabPanel("Sample size (single)", uiOutput("sample_size")),
     tabPanel("Sample size (compare)", uiOutput("sample_size_comp"))

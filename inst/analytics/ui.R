@@ -13,7 +13,9 @@ help_menu <-
   )
 
 analytics_ui <- tagList(
-  navbarMenu("Sample",
+  navbarMenu("Design",
+    tabPanel("Design of Experiments (DOE)", uiOutput("doe")),
+    "----",
     tabPanel("Sampling", uiOutput("sampling")),
     tabPanel("Sample size (single)", uiOutput("sample_size")),
     tabPanel("Sample size (compare)", uiOutput("sample_size_comp"))
@@ -22,10 +24,13 @@ analytics_ui <- tagList(
   navbarMenu("Base",
     tabPanel("Probability calculator", uiOutput("prob_calc")),
     tabPanel("Central Limit Theorem", uiOutput("clt")),
+    "----", "Means",
     tabPanel("Single mean", uiOutput("single_mean")),
     tabPanel("Compare means", uiOutput("compare_means")),
+    "----", "Proportions",
     tabPanel("Single proportion", uiOutput("single_prop")),
     tabPanel("Compare proportions", uiOutput("compare_props")),
+    "----", "Tables",
     tabPanel("Cross-tabs", uiOutput("cross_tabs"))
   ),
 
@@ -38,7 +43,7 @@ analytics_ui <- tagList(
   navbarMenu("Model",
     tabPanel("Neural Network (ANN)", uiOutput("ann")),
     tabPanel("Collaborative Filtering", uiOutput("crs")),
-    tabPanel("Design of Experiments (DOE)", uiOutput("doe")),
+    # tabPanel("Design of Experiments (DOE)", uiOutput("doe")),
     tabPanel("Model performance", uiOutput("performance"))
   ),
 
