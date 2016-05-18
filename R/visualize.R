@@ -205,7 +205,7 @@ visualize <- function(dataset, xvar,
       }
 
       hist_par <- list(alpha = alpha, position = "dodge")
-      plot_list[[i]] <- ggplot(dat, aes_string(x=i))
+      plot_list[[i]] <- ggplot(dat, aes_string(x = i))
       if ("density" %in% axes && !"factor" %in% dc[i]) {
         hist_par <- list(aes(y = ..density..), alpha = alpha, position = "dodge")
         plot_list[[i]] <- plot_list[[i]] + geom_density(color = "blue", size = .5)
@@ -218,7 +218,6 @@ visualize <- function(dataset, xvar,
         hist_par[["binwidth"]] <- select_(dat,i) %>% range %>% {diff(.)/bins}
       }
 
-      # plot_list[[i]] <- plot_list[[i]] + do.call(geom_histogram, hist_par)
       plot_list[[i]] <- plot_list[[i]] + do.call(plot_fun, hist_par)
       if ("log_x" %in% axes) plot_list[[i]] <- plot_list[[i]] + xlab(paste("log", i))
     }
