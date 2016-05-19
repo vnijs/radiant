@@ -21,7 +21,7 @@ analytics_ui <- tagList(
     tabPanel("Sample size (compare)", uiOutput("sample_size_comp"))
   ),
 
-  navbarMenu("Base",
+  navbarMenu("Basic",
     tabPanel("Probability calculator", uiOutput("prob_calc")),
     tabPanel("Central Limit Theorem", uiOutput("clt")),
     "----", "Means",
