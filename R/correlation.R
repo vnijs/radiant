@@ -67,7 +67,7 @@ summary.correlation_ <- function(object,
 	# library(psych)
 	# cutoff <- 0
 
-	cmat <- sshhr( corr.test(object$dat, method = object$method) )
+	cmat <- sshhr( psych::corr.test(object$dat, method = object$method) )
 	dec <- object$dec
 
 	cr <- format(round(cmat$r, dec))

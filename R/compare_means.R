@@ -215,6 +215,7 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 #' @param x Return value from \code{\link{compare_means}}
 #' @param plots One or more plots ("bar", "density", "box", or "scatter")
 #' @param shiny Did the function call originate inside a shiny app
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -228,6 +229,7 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 plot.compare_means <- function(x,
                                plots = "scatter",
                                shiny = FALSE,
+                               custom = FALSE,
                                ...) {
 
 	if (is.character(x)) return(x)
@@ -266,17 +268,11 @@ plot.compare_means <- function(x,
 		plot_list[[which("box" == plots)]] <-
 		  visualize(dat, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
 			theme(legend.position = "none") + xlab(var1) + ylab(var2)
-			# ggplot(dat, aes_string(x = v1, y = v2, fill = v1)) +
-				# geom_boxplot(alpha = .7) + theme(legend.position = "none") +
 	}
 
 	if ("density" %in% plots) {
 		plot_list[[which("density" == plots)]] <-
 		  visualize(dat, xvar = v2, type = "density", fill = v1, custom = TRUE) +
-			# ggplot(dat, aes_string(x = v2, fill = v1)) + geom_density(alpha = .7) +
-	 		  # xlab(var1) + ylab(var2) +
-	 		  # xlab(var2) +
-	 		  # guides(fill = guide_legend(title = var1))
 	 		  xlab(var2) + guides(fill = guide_legend(title = var1))
 	}
 
@@ -286,12 +282,10 @@ plot.compare_means <- function(x,
 		plot_list[[which("scatter" == plots)]] <-
 		  visualize(dat, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = .3, custom = TRUE) +
 	 		xlab(var1) + ylab(paste0(var2, " (mean)"))
-      # ggplot(dat, aes_string(x=v1, y=v2)) +
-      #   geom_jitter(alpha = .3, position = position_jitter(width = 0.4, height = 0.1)) +
-      #   geom_errorbar(stat = "hline", yintercept = "mean", width = .8, size = 1, color = "blue", aes(ymax = ..y.., ymin = ..y..)) +
-      #   ylim(ymin,ymax) +
-	 		  # xlab(var1) + ylab(var2)
   }
+
+ if (custom)
+   if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }

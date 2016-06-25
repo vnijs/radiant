@@ -1,5 +1,5 @@
 #######################################
-# Shiny interface for data functions
+# Shiny interface for data tabs
 #######################################
 
 ## show error message from filter dialog
@@ -12,8 +12,6 @@ output$ui_filter_error <- renderUI({
 output$ui_data <- renderUI({
   tagList(
     includeCSS(file.path(r_path,"base/www/style.css")),
-    # includeScript(file.path(r_path,"base/www/js/returnTextAreaBinding.js")),
-    # includeScript(file.path(r_path,"base/www/js/returnTextInputBinding.js")),
     sidebarLayout(
       sidebarPanel(
         ## based on https://groups.google.com/forum/?fromgroups=#!topic/shiny-discuss/PzlSAmAxxwo

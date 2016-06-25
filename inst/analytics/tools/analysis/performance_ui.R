@@ -114,6 +114,10 @@ output$performance <- renderUI({
      tabPanel("Plot",
        plot_downloader("performance", height = perf_plot_height()),
        plotOutput("plot_performance", height = "100%")
+    ),
+    tabPanel("Table",
+       # downloadLink("dl_confusion_tab", "", class = "fa fa-download alignright"), br(),
+       ## use explorer as starting point
     )
   )
 

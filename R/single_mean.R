@@ -113,6 +113,7 @@ summary.single_mean <- function(object, ...) {
 #' @param x Return value from \code{\link{single_mean}}
 #' @param plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #' @param shiny Did the function call originate inside a shiny app
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -126,6 +127,7 @@ summary.single_mean <- function(object, ...) {
 plot.single_mean <- function(x,
                              plots = "hist",
                              shiny = FALSE,
+                             custom = FALSE,
                              ...) {
 
   object <- x; rm(x)
@@ -171,6 +173,9 @@ plot.single_mean <- function(x,
 				           color = 'red', linetype = 'longdash', size = .5) +
 	 	 		ggtitle(paste0("Simulated means if null hyp. is true (", object$var, ")"))
 	}
+
+  if (custom)
+    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	  { if (shiny) . else print(.) }

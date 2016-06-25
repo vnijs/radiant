@@ -754,7 +754,7 @@ transform_main <- reactive({
       } else if (nrow(cpdat) != nrow(dat)) {
         return("The pasted data does not have the correct number of rows. Please make sure **\n** the number of rows in the data in Radiant and in the spreadsheet are the **\n** same and try again.")
       } else {
-        return(cpdat)
+        return(as.data.frame(cpdat, check.names = FALSE) %>% factorizer)
       }
     }
   }

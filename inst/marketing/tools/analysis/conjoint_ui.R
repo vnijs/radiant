@@ -104,10 +104,8 @@ output$conjoint <- renderUI({
 	    # tabPanel("Plot", plotOutput("plot_conjoint"))
 	  )
 
-		stat_tab_panel(menu = "Conjoint",
-		              tool = "Conjoint",
-		              tool_ui = "ui_conjoint",
-		             	output_panels = ca_output_panels)
+		stat_tab_panel(menu = "Multivariate", tool = "Conjoint",
+		               tool_ui = "ui_conjoint", output_panels = ca_output_panels)
 })
 
 .conjoint <- eventReactive(input$ca_run, {

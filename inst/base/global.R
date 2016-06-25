@@ -101,7 +101,7 @@ shared_ui <-
                tabPanel(actionLink("stop_radiant", "Stop", icon = icon("stop"),
                                    onclick = "setTimeout(function(){window.close();}, 100); ")),
                if (rstudioapi::isAvailable()) {
-                 tabPanel(actionLink("stop_radiant_rmd", "Stop & Report to Rstudio", icon = icon("stop"),
+                 tabPanel(actionLink("stop_radiant_rmd", "Stop & Report", icon = icon("stop"),
                                      onclick = "setTimeout(function(){window.close();}, 100); "))
                } else {
                  tabPanel("")

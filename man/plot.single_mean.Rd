@@ -4,7 +4,8 @@
 \alias{plot.single_mean}
 \title{Plot method for the single_mean function}
 \usage{
-\method{plot}{single_mean}(x, plots = "hist", shiny = FALSE, ...)
+\method{plot}{single_mean}(x, plots = "hist", shiny = FALSE,
+  custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_mean}}}
@@ -12,6 +13,8 @@
 \item{plots}{Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis}
 
 \item{shiny}{Did the function call originate inside a shiny app}
+
+\item{custom}{Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.}
 
 \item{...}{further arguments passed to or from other methods}
 }

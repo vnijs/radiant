@@ -136,6 +136,7 @@ summary.single_prop <- function(object, ...) {
 #' @param x Return value from \code{\link{single_prop}}
 #' @param plots Plots to generate. "bar" shows a bar chart of the data. The "simulate" chart shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #' @param shiny Did the function call originate inside a shiny app
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -151,6 +152,7 @@ summary.single_prop <- function(object, ...) {
 plot.single_prop <- function(x,
                              plots = "bar",
                              shiny = FALSE,
+                             custom = FALSE,
                              ...) {
 
 	## bar used to called hist - changed for consistency with compare_props
@@ -202,6 +204,9 @@ plot.single_prop <- function(x,
 	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$var, ")")) +
 	 	 		labs(x = paste0("Level ",lev_name, " in variable ", object$var))
 	}
+
+  if (custom)
+    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
 	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	  { if (shiny) . else print(.) }

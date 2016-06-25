@@ -137,6 +137,6 @@ observeEvent(input$single_prop_report, {
   update_report(inp_main = clean_args(sp_inputs(), sp_args),
                 fun_name = "single_prop", inp_out = inp_out,
                 outputs = outputs, figs = figs,
-                fig.width = round(7 * sp_plot_width()/650,2),
-                fig.height = round(7 * sp_plot_height()/650,2))
+                fig.width = sp_plot_width(),
+                fig.height = sp_plot_height())
 })

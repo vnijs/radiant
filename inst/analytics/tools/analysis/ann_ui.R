@@ -191,8 +191,8 @@ observeEvent(input$ann_report, {
                 inp_out = inp_out,
                 outputs = outputs,
                 figs = TRUE,
-                fig.width = round(7 * ann_plot_width()/650,2),
-                fig.height = round(7 * ann_plot_height()/650,2),
+                fig.width = ann_plot_width(),
+                fig.height = ann_plot_height(),
                 xcmd = xcmd)
 })
 
