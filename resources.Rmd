@@ -20,7 +20,7 @@ title: R resources
 
 ## Parsing text data (regular expressions)
 
-<http://cran.r-project.org/web/packages/stringr/vignettes/stringr.html>
+<https://cran.r-project.org/web/packages/stringr/vignettes/stringr.html>
 
 ## ggplot2
 
@@ -30,7 +30,7 @@ title: R resources
 
 ## Radiant
 
-<http://vnijs.github.io/radiant>
+<http://radiant-rstats.github.io/docs>
 
 In R(studio) enter: `help(package = "radiant")`
 

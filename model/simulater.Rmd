@@ -1,0 +1,8 @@
+---
+title: Model > Decide > Simulate
+---
+
+***
+
+```{r child='app/simulater.md'}
+```

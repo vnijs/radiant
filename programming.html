@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -51,10 +51,21 @@ body {
 	margin-bottom: 2px;
 }
 
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
 </style>
 
 <link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
-<link rel="shortcut icon" type="image/png" href="/radiant/images/radiant_red.png"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -76,25 +87,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -116,6 +109,30 @@ h5 {
 h6 {
   font-size: 12px;
 }
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
 .tabbed-pane {
   padding-top: 12px;
 }
@@ -128,7 +145,7 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation-1.0/tabsets.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -150,146 +167,109 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://github.com/vnijs/radiant">Radiant</a>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="/radiant/index.html">Home</a></li>
-        <li><a href="/radiant/news.html">News</a></li>
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
         <li class="dropdown">
-          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li><a href="/radiant/base/manage.html">Manage</a></li>
-             <li><a href="/radiant/base/view.html">View</a></li>
-             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
-             <li><a href="/radiant/base/pivotr.html">Pivot</a></li>
-             <li><a href="/radiant/base/explore.html">Explore</a></li>
-             <li><a href="/radiant/base/transform.html">Transform</a></li>
-             <li><a href="/radiant/base/combine.html">Combine</a></li>
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quantitative Analysis<span class="caret"></span></a>
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
              <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing Research<span class="caret"></span></a>
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
              <li class="dropdown-header">Maps</li>
-             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Conjoint</li>
-             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
-             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/analytics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Customer Analytics<span class="caret"></span></a>
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Model</li>
-             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
-             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
-             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
-             <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
           </ul>
         </li>
-
-        <li class="dropdown">
-          <a href="/radiant/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-             <li><a href="/radiant/base/report.html">Report</a></li>
-             <li><a href="/radiant/base/code.html">Code</a></li>
-             <li><a href="/radiant/programming.html">Programming</a></li>
-             <li><a href="/radiant/resources.html">Resources</a></li>
-          </ul>
-        </li>
-        <li><a href="/radiant/tutorials.html">Tutorials</a></li>
-        <li><a href="/radiant/about.html">About</a></li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -298,18 +278,26 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">Programming with Radiant</h1>
+
+<h1 class="title toc-ignore">Programming with Radiant</h1>
 
 </div>
 
 
-<p>Radiant’s goal is to provide access to the power of R for business analytics. Although Radiant’s web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <code>Base &gt; Single mean</code> page) to start working on your report. Press the <code>Knit report</code> button on the <code>R &gt; Report</code> page to render the report to HTML. See <a href="/radiant/base/report.html">Report</a> page for details. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.</p>
+<p>Radiant’s goal is to provide access to the power of R for business analytics. Although Radiant’s web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the <em>Basics &gt; Means &gt; Single mean</em> page) to start working on your report. Press the <code>Knit report</code> button on the <em>R &gt; Report</em> page to render the report to HTML. See <a href="/radiant/data/report.html">Report</a> page for details. The function manuals are available linked below:</p>
+<ul>
+<li><a href="http://radiant-rstats.github.io/docs/radiant.data.pdf" target="_blank">radiant.data</a></li>
+<li><a href="http://radiant-rstats.github.io/docs/radiant.design.pdf" target="_blank">radiant.design</a></li>
+<li><a href="http://radiant-rstats.github.io/docs/radiant.basics.pdf" target="_blank">radiant.basic</a></li>
+<li><a href="http://radiant-rstats.github.io/docs/radiant.model.pdf" target="_blank">radiant.model</a></li>
+<li><a href="http://radiant-rstats.github.io/docs/radiant.multivariate.pdf" target="_blank">radiant.multivariate</a></li>
+</ul>
 <p>You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.</p>
 <p>If you close Radiant by clicking the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code> after launching it from R(studio) you can paste the commands below into the command console to get the same output as in the browser interface.</p>
-<pre class="r"><code>result &lt;- single_mean(&quot;diamonds&quot;, &quot;price&quot;)
+<pre class="r"><code>result &lt;- single_mean(diamonds, &quot;price&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
-Data      : diamonds 
+Data      : ----- 
 Variable  : price 
 Confidence: 0.95 
 Null hyp. : the mean of price = 0 
@@ -325,19 +313,19 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>You can also call functions for visualization (see below) and access help from the console using <code>?visualize</code></p>
-<pre class="r"><code>visualize(dataset = &quot;diamonds&quot;, xvar = &quot;carat&quot;, yvar = &quot;price&quot;,
-          type = &quot;scatter&quot;, facet_row = &quot;clarity&quot;, color = &quot;clarity&quot;)</code></pre>
+<pre class="r"><code>visualize(diamonds, xvar = &quot;carat&quot;, yvar = &quot;price&quot;, type = &quot;scatter&quot;,
+          facet_row = &quot;clarity&quot;, color = &quot;clarity&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>As an example, you can render the <a href="https://vnijs.github.io/radiant/examples/single_mean.Rmd"><code>single_mean.Rmd</code></a> file into html (or pdf or word if you prefer) in Rstudio. Try the code in <a href="https://vnijs.github.io/radiant/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example.</p>
-<p>An older version of Radiant is available on <a href="http://cran.r-project.org/web/packages/radiant/index.html">CRAN</a>. To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:</p>
-<pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;)
+<p>As an example, you can render the <a href="https://radiant-rstats.github.io/docs/examples/single_mean.Rmd"><code>single_mean.Rmd</code></a> file into html (or PDF or Word if you prefer) in Rstudio. Try the code in <a href="https://radiant-rstats.github.io/docs/examples/radiant_rcode.R"><code>radiant_rcode.R</code></a> for a more extensive example.</p>
+<p>To install the latest version of Radiant with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:</p>
+<pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;https://radiant-rstats.github.io/minicran/&quot;)
 library(radiant)</code></pre>
 <p>This will load the library and the required packages. To see the index of functions currently available in the Radiant package using the <code>help(package = &quot;radiant&quot;)</code> command</p>
-<p>Lets start by comparing the mean of a variable to a (population) value using the built-in <code>mtcars</code> dataset. This functionality is in the Radiant menu <code>Base &gt; Single mean</code>. The analysis is conducted in function <code>single_mean</code>. Calling the <code>summary</code> method on the result object will show tabular output. Calling <code>plot</code> on the same result will produce plots to help evaluate the hypothesis.</p>
-<pre class="r"><code>result &lt;- single_mean(&quot;mtcars&quot;, &quot;mpg&quot;, comp_value = 20, alternative = &quot;greater&quot;)
+<p>Lets start by comparing the mean of a variable to a (population) value using R’s built-in <code>mtcars</code> dataset. This functionality is in the Radiant menu <em>Basics &gt; Means &gt; Single mean</em>. The analysis is conducted in function <code>single_mean</code>. Calling the <code>summary</code> method on the result object will show tabular output. Calling <code>plot</code> on the same result object will produce plots to help evaluate the hypothesis.</p>
+<pre class="r"><code>result &lt;- single_mean(mtcars, &quot;mpg&quot;, comp_value = 20, alternative = &quot;greater&quot;)
 summary(result)</code></pre>
 <pre><code>Single mean test
-Data      : mtcars 
+Data      : ----- 
 Variable  : mpg 
 Confidence: 0.95 
 Null hyp. : the mean of mpg = 20 
@@ -353,10 +341,10 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <pre class="r"><code>plot(result, plots = c(&quot;hist&quot;,&quot;simulate&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>To compare the mean price of diamonds across different levels of clarity we can call the <code>compare_means</code> function:</p>
-<pre class="r"><code>result &lt;- compare_means(&quot;diamonds&quot;, &quot;clarity&quot;, &quot;price&quot;)
+<pre class="r"><code>result &lt;- compare_means(diamonds, &quot;clarity&quot;, &quot;price&quot;)
 summary(result)</code></pre>
 <pre><code>Pairwise mean comparisons (t-test)
-Data      : diamonds 
+Data      : ----- 
 Variables : clarity, price 
 Samples   : independent 
 Confidence: 0.95 
@@ -405,14 +393,14 @@ Adjustment: None
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result, plots = c(&quot;bar&quot;,&quot;density&quot;))</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>These datasets are available after loading the radiant library. We can also load data through Radiant’s web interface and then access the data from the console after closing the app. Start radiant using the command below and then click <code>examples &gt; Load examples</code> in the <code>Data &gt; Manage</code> tab. Then close the app using <code>Quit &gt; Quit</code>.</p>
-<pre class="r"><code>## start radiant, load the example data, then Quit &gt; Quit
+<p>These datasets are available after loading the radiant library. We can also load data through Radiant’s web interface and then access the data from the console after closing the app. Start radiant using the command below and then click select <code>Examples</code> from the <code>Load data of type</code> dropdown in the <em>Data &gt; Manage</em> tab. Then close the app by clicking the power icon and then clicking <code>Stop</code>.</p>
+<pre class="r"><code>## start radiant in Rstudio, load the example data, then click the power icon and Stop
 radiant()</code></pre>
 <p>We can now use the <code>compare_means</code> function to evaluate salary data for professors of different ranks using:</p>
-<pre class="r"><code>result &lt;- compare_means(&quot;salary&quot;, &quot;rank&quot;, &quot;salary&quot;)
+<pre class="r"><code>result &lt;- compare_means(salary, &quot;rank&quot;, &quot;salary&quot;)
 summary(result)</code></pre>
 <pre><code>Pairwise mean comparisons (t-test)
-Data      : salary 
+Data      : ----- 
 Variables : rank, salary 
 Samples   : independent 
 Confidence: 0.95 
@@ -431,9 +419,8 @@ Adjustment: None
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>An alternative way to write this code is to use <code>piping</code> (see <a href="http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">dplyr</a> and <a href="http://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html">magrittr</a> vignettes):</p>
-<pre class="r"><code>salary %&gt;% compare_means(&quot;rank&quot;, &quot;salary&quot;) %&gt;%
-  {summary(.); plot(.)}</code></pre>
+<p>An alternative way to write this code is to use <code>piping</code> (see <a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">dplyr</a> and <a href="https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html">magrittr</a> vignettes)):</p>
+<pre class="r"><code>salary %&gt;% compare_means(&quot;rank&quot;, &quot;salary&quot;) %&gt;% {summary(.); plot(.)}</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre><code>Pairwise mean comparisons (t-test)
 Data      : ----- 
@@ -453,11 +440,11 @@ Adjustment: None
  AssocProf = Prof       AssocProf not equal to Prof       -32895.67 &lt; .001  ***
 
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>We can also run regressions and get output that would require writting many lines of code to produce from scratch:</p>
-<pre class="r"><code>result &lt;- regression(&quot;diamonds&quot;, &quot;price&quot;, c(&quot;carat&quot;,&quot;clarity&quot;))
+<p>We can also run regressions and get output in a format that would require many lines of code to produce from scratch:</p>
+<pre class="r"><code>result &lt;- regress(diamonds, &quot;price&quot;, c(&quot;carat&quot;,&quot;clarity&quot;))
 summary(result, sum_check = &quot;confint&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
-Data     : diamonds 
+Data     : ----- 
 Response variable    : price 
 Explanatory variables: carat, clarity 
 Null hyp.: the effect of x on price is zero
@@ -492,11 +479,11 @@ clarity|VVS1    5027.669  4607.574  5447.764 420.095
 clarity|IF      5265.170  4807.024  5723.317 458.147</code></pre>
 <pre class="r"><code>predict(result, pred_cmd = &quot;carat = 1:10&quot;)</code></pre>
 <pre><code>Linear regression (OLS)
-Data       : diamonds 
+Data                 : ----- 
 Response variable    : price 
 Explanatory variables: carat, clarity 
+Prediction command   : carat  =  1:10 
 
-Predicted values for:
  clarity carat Prediction      2.5%     97.5%      +/-
      SI1     1   5265.569  2859.633  7671.505 2405.936
      SI1     2  13703.599 11294.952 16112.246 2408.647
@@ -508,42 +495,30 @@ Predicted values for:
      SI1     8  64331.781 61821.491 66842.072 2510.291
      SI1     9  72769.811 70229.110 75310.513 2540.701
      SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
-<pre><code>   clarity carat Prediction      2.5%     97.5%      +/-
-1      SI1     1   5265.569  2859.633  7671.505 2405.936
-2      SI1     2  13703.599 11294.952 16112.246 2408.647
-3      SI1     3  22141.629 19726.114 24557.145 2415.515
-4      SI1     4  30579.660 28153.155 33006.165 2426.505
-5      SI1     5  39017.690 36576.130 41459.250 2441.560
-6      SI1     6  47455.720 44995.114 49916.327 2460.607
-7      SI1     7  55893.751 53410.198 58377.303 2483.552
-8      SI1     8  64331.781 61821.491 66842.072 2510.291
-9      SI1     9  72769.811 70229.110 75310.513 2540.701
-10     SI1    10  81207.842 78633.187 83782.496 2574.655</code></pre>
 <pre class="r"><code>plot(result, plots = &quot;coef&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>plot(result, plots = &quot;dashboard&quot;)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.</p>
+<p>As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use <code>?hier_clus</code>, <code>?plot.hier_clus</code>, and <code>?kmeans_clus</code>. See also the Radiant function manuals linked above.</p>
 <pre class="r"><code>## load the radiant library (not needed if run in Radiant&#39;s R &gt; Code tab)
-library(radiant)
+library(radiant.multivariate)
 
 ## load the data directly from a url
-shopping &lt;- loadrda_url(&quot;https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true&quot;)
+shopping &lt;- loadrda_url(&quot;https://github.com/radiant-rstats/radiant.multivariate/blob/master/data/shopping.rda?raw=true&quot;)
 
-## start with hierarchical clustering, view help
 ## run hierarchical cluster analysis on the shopping data, variables v1 through v6
-result &lt;- hier_clus(&quot;shopping&quot;, &quot;v1:v6&quot;)
+result &lt;- hier_clus(shopping, &quot;v1:v6&quot;)
 
 ## summary - not much here - plots are more important
 summary(result)</code></pre>
 <pre><code>Hierarchical cluster analysis
-Data        : shopping 
+Data        : ----- 
 Variables   : v1:v6 
 Method      : ward.D 
 Distance    : sq.euclidian 
 Observations: 20 </code></pre>
 <pre class="r"><code>## check the help file on how to plot results from hierarchical cluster analysis
-## default plots - looks like there is a big jump in the overall within-cluster
+## default plots - looks like there is a big jump in overall within-cluster
 ## heterogeneity in the step from 3 to 2 segments
 plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
@@ -553,10 +528,10 @@ plot(result, plots = &quot;dendro&quot;, cutoff = 0.1)</code></pre>
 <pre class="r"><code>## plots created above suggest 3 clusters may be  most appropriate
 ## use kmeans to create the clusters
 ## generate output and save clustermembership to the datafile
-result &lt;- kmeans_clus(&quot;shopping&quot;, vars = &quot;v1:v6&quot;, nr_clus = 3)
+result &lt;- kmeans_clus(shopping, vars = &quot;v1:v6&quot;, nr_clus = 3)
 summary(result)</code></pre>
 <pre><code>K-means cluster analysis
-Data        : shopping 
+Data        : ----- 
 Variables   : v1:v6 
 Method      : ward.D 
 Distance    : sq.euclidian 
@@ -564,10 +539,10 @@ Observations: 20
 Generated   : 3 clusters of sizes 8, 6, 6 
 
 Cluster means:
-             v1    v2    v3    v4    v5    v6
-Cluster 1 5.750 3.625 6.000 3.125 1.875 3.875
-Cluster 2 1.667 3.000 1.833 3.500 5.500 3.333
-Cluster 3 3.500 5.833 3.333 6.000 3.500 6.000
+             v1   v2   v3   v4   v5   v6
+ Cluster 1 5.75 3.62 6.00 3.12 1.88 3.88
+ Cluster 2 1.67 3.00 1.83 3.50 5.50 3.33
+ Cluster 3 3.50 5.83 3.33 6.00 3.50 6.00
 
 Percentage of within cluster variance accounted for by each cluster:
                 
@@ -579,21 +554,21 @@ Between cluster variance accounts for 73.93% of the
 total variance in the data (higher is better).</code></pre>
 <pre class="r"><code>plot(result)</code></pre>
 <p><img src="programming_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<pre class="r"><code>store(result)
+<pre class="r"><code>shopping &lt;- store(result)
 
 ## was the data really changed?
-getdata(&quot;shopping&quot;) %&gt;% head</code></pre>
-<pre><code>  id v1 v2 v3 v4 v5 v6 kclus3
-1  1  6  4  7  3  2  3      1
-2  2  2  3  1  4  5  4      2
-3  3  7  2  6  4  1  3      1
-4  4  4  6  4  5  3  6      3
-5  5  1  3  2  2  6  4      2
-6  6  6  4  6  3  3  4      1</code></pre>
-<p>See if you can reproduce this output in the radiant web-interface. Start <code>Radiant - Marketing</code> from the <code>Addins</code> dropdown in Rstudio. Apart from the graphical user interface you can also run code inside the Radiant app in the <em>R &gt; Code</em> tab. See <a href="/radiant/base/code.html">Code</a> page for details.</p>
+head(shopping)</code></pre>
+<pre><code>  v1 v2 v3 v4 v5 v6 kclus3
+1  6  4  7  3  2  3      1
+2  2  3  1  4  5  4      2
+3  7  2  6  4  1  3      1
+4  4  6  4  5  3  6      3
+5  1  3  2  2  6  4      2
+6  6  4  6  3  3  4      1</code></pre>
+<p>See if you can reproduce this output in the radiant web-interface. Start <code>Radiant</code> from the <code>Addins</code> dropdown in Rstudio. You can also run code inside the Radiant app in the <em>R &gt; Code</em> tab. See <a href="/radiant/data/code.html" target="_blank">Code</a> page for details.</p>
 
 
-&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
 
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>

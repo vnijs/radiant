@@ -7,20 +7,26 @@ suppressMessages(library(radiant))
 knitr::opts_chunk$set(comment=NA, cache=FALSE, message=FALSE, warning=FALSE)
 
 # change path as needed
-fpath <- "~/gh/radiant/inst/base/data/"
-load(file.path(fpath,"diamonds.rda"))
-load(file.path(fpath,"salary.rda"))
-load(file.path(fpath,"../../marketing/data/shopping.rda"))
+fpath <- "~/gh/radiant/data/"
+load("~/gh/radiant.data/data/diamonds.rda")
+load("~/gh/radiant.basics/data/salary.rda")
+load("~/gh/radiant.multivariate/data/shopping.rda")
 ```
 
-Radiant's goal is to provide access to the power of R for business analytics. Although Radiant's web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown](http://rmarkdown.rstudio.com/) document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the `Base > Single mean` page) to start working on your report. Press the `Knit report` button on the `R > Report` page to render the report to HTML. See <a href="/radiant/base/report.html">Report</a> page for details. The full function manual is available at <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">http://vnijs.github.io/radiant/radiant.pdf</a>.
+Radiant's goal is to provide access to the power of R for business analytics. Although Radiant's web-interface can handle quite a few data and analysis tasks, at times you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For example, you can run your analyses in Radiant and output the relevant function calls to an [Rmarkdown](http://rmarkdown.rstudio.com/) document. Most pages in the app have an icon you can click (e.g., the book icon on the bottom left on the _Basics > Means > Single mean_ page) to start working on your report. Press the `Knit report` button on the _R > Report_ page to render the report to HTML. See <a href="/radiant/data/report.html">Report</a> page for details. The function manuals are available linked below:
+
+* <a href="http://radiant-rstats.github.io/docs/radiant.data.pdf" target="_blank">radiant.data</a>
+* <a href="http://radiant-rstats.github.io/docs/radiant.design.pdf" target="_blank">radiant.design</a>
+* <a href="http://radiant-rstats.github.io/docs/radiant.basics.pdf" target="_blank">radiant.basic</a>
+* <a href="http://radiant-rstats.github.io/docs/radiant.model.pdf" target="_blank">radiant.model</a>
+* <a href="http://radiant-rstats.github.io/docs/radiant.multivariate.pdf" target="_blank">radiant.multivariate</a>
 
 You can also use Rstudio to render and edit Rmarkdown documents generated in Radiant. When you install and load Radiant it exports functions that can be called from R-code and/or an Rmarkdown document.
 
 If you close Radiant by clicking the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click `Stop` after launching it from R(studio) you can paste the commands below into the command console to get the same output as in the browser interface.
 
 ```{r}
-result <- single_mean("diamonds", "price")
+result <- single_mean(diamonds, "price")
 summary(result)
 plot(result)
 ```
@@ -28,25 +34,25 @@ plot(result)
 You can also call functions for visualization (see below) and access help from the console using `?visualize`
 
 ```{r}
-visualize(dataset = "diamonds", xvar = "carat", yvar = "price",
-          type = "scatter", facet_row = "clarity", color = "clarity")
+visualize(diamonds, xvar = "carat", yvar = "price", type = "scatter",
+          facet_row = "clarity", color = "clarity")
 ```
 
-As an example, you can render the [`single_mean.Rmd`](https://vnijs.github.io/radiant/examples/single_mean.Rmd) file into html (or pdf or word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://vnijs.github.io/radiant/examples/radiant_rcode.R) for a more extensive example.
+As an example, you can render the [`single_mean.Rmd`](https://radiant-rstats.github.io/docs/examples/single_mean.Rmd) file into html (or PDF or Word if you prefer) in Rstudio. Try the code in [`radiant_rcode.R`](https://radiant-rstats.github.io/docs/examples/radiant_rcode.R) for a more extensive example.
 
-An older version of Radiant is available on [CRAN](http://cran.r-project.org/web/packages/radiant/index.html). To install the latest version with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
+To install the latest version of Radiant with complete documentation for offline access, open R(studio) and copy-and-paste the commands below:
 
 ```r
-install.packages("radiant", repos = "http://vnijs.github.io/radiant_miniCRAN/")
+install.packages("radiant", repos = "https://radiant-rstats.github.io/minicran/")
 library(radiant)
 ```
 
 This will load the library and the required packages. To see the index of functions currently available in the Radiant package using the `help(package = "radiant")` command
 
-Lets start by comparing the mean of a variable to a (population) value using the built-in `mtcars` dataset. This functionality is in the Radiant menu `Base > Single mean`. The analysis is conducted in function `single_mean`. Calling the `summary` method on the result object will show tabular output. Calling `plot` on the same result will produce plots to help evaluate the hypothesis.
+Lets start by comparing the mean of a variable to a (population) value using R's built-in `mtcars` dataset. This functionality is in the Radiant menu _Basics > Means > Single mean_. The analysis is conducted in function `single_mean`. Calling the `summary` method on the result object will show tabular output. Calling `plot` on the same result object will produce plots to help evaluate the hypothesis.
 
 ```{r}
-result <- single_mean("mtcars", "mpg", comp_value = 20, alternative = "greater")
+result <- single_mean(mtcars, "mpg", comp_value = 20, alternative = "greater")
 summary(result)
 plot(result, plots = c("hist","simulate"))
 ```
@@ -54,37 +60,36 @@ plot(result, plots = c("hist","simulate"))
 To compare the mean price of diamonds across different levels of clarity we can call the `compare_means` function:
 
 ```{r}
-result <- compare_means("diamonds", "clarity", "price")
+result <- compare_means(diamonds, "clarity", "price")
 summary(result)
 plot(result, plots = c("bar","density"))
 ```
 
-These datasets are available after loading the radiant library. We can also load data through Radiant's web interface and then access the data from the console after closing the app. Start radiant using the command below and then click `examples > Load examples` in the `	Data > Manage` tab. Then close the app using `Quit > Quit`.
+These datasets are available after loading the radiant library. We can also load data through Radiant's web interface and then access the data from the console after closing the app. Start radiant using the command below and then click select `Examples` from the `Load data of type` dropdown in the _Data > Manage_ tab. Then close the app by clicking the power icon and then clicking `Stop`.
 
 ```r
-## start radiant, load the example data, then Quit > Quit
+## start radiant in Rstudio, load the example data, then click the power icon and Stop
 radiant()
 ```
 
 We can now use the `compare_means` function to evaluate salary data for professors of different ranks using:
 
 ```{r}
-result <- compare_means("salary", "rank", "salary")
+result <- compare_means(salary, "rank", "salary")
 summary(result)
 plot(result)
 ```
 
-An alternative way to write this code is to use `piping` (see [dplyr](http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html) and [magrittr](http://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html) vignettes):
+An alternative way to write this code is to use `piping` (see [dplyr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html) and [magrittr](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html) vignettes)):
 
 ```{r}
-salary %>% compare_means("rank", "salary") %>%
-  {summary(.); plot(.)}
+salary %>% compare_means("rank", "salary") %>% {summary(.); plot(.)}
 ```
 
-We can also run regressions and get output that would require writting many lines of code to produce from scratch:
+We can also run regressions and get output in a format that would require many lines of code to produce from scratch:
 
 ```{r}
-result <- regression("diamonds", "price", c("carat","clarity"))
+result <- regress(diamonds, "price", c("carat","clarity"))
 summary(result, sum_check = "confint")
 predict(result, pred_cmd = "carat = 1:10")
 plot(result, plots = "coef")
@@ -93,24 +98,23 @@ plot(result, plots = "coef")
 plot(result, plots = "dashboard")
 ```
 
-As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the <a href="http://vnijs.github.io/radiant/radiant.pdf" target="_blank">radiant function manual</a>.
+As another example, imagine that you want to segment a sample of respondents based on their toothpaste attitudes. Below is the required code to produce results using functions from the Radiant package. For help on the commands and options for cluster analysis use `?hier_clus`, `?plot.hier_clus`, and `?kmeans_clus`. See also the Radiant function manuals linked above.
 
 ```{r fig.height=8}
 ## load the radiant library (not needed if run in Radiant's R > Code tab)
-library(radiant)
+library(radiant.multivariate)
 
 ## load the data directly from a url
-shopping <- loadrda_url("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
+shopping <- loadrda_url("https://github.com/radiant-rstats/radiant.multivariate/blob/master/data/shopping.rda?raw=true")
 
-## start with hierarchical clustering, view help
 ## run hierarchical cluster analysis on the shopping data, variables v1 through v6
-result <- hier_clus("shopping", "v1:v6")
+result <- hier_clus(shopping, "v1:v6")
 
 ## summary - not much here - plots are more important
 summary(result)
 
 ## check the help file on how to plot results from hierarchical cluster analysis
-## default plots - looks like there is a big jump in the overall within-cluster
+## default plots - looks like there is a big jump in overall within-cluster
 ## heterogeneity in the step from 3 to 2 segments
 plot(result)
 ```
@@ -124,14 +128,14 @@ plot(result, plots = "dendro", cutoff = 0.1)
 ## plots created above suggest 3 clusters may be  most appropriate
 ## use kmeans to create the clusters
 ## generate output and save clustermembership to the datafile
-result <- kmeans_clus("shopping", vars = "v1:v6", nr_clus = 3)
+result <- kmeans_clus(shopping, vars = "v1:v6", nr_clus = 3)
 summary(result)
 plot(result)
-store(result)
+shopping <- store(result)
 
 ## was the data really changed?
-getdata("shopping") %>% head
+head(shopping)
 ```
 
-See if you can reproduce this output in the radiant web-interface. Start `Radiant - Marketing` from the `Addins` dropdown in Rstudio. Apart from the graphical user interface you can also run code inside the Radiant app in the _R > Code_ tab. See <a href="/radiant/base/code.html">Code</a> page for details.
+See if you can reproduce this output in the radiant web-interface. Start `Radiant` from the `Addins` dropdown in Rstudio. You can also run code inside the Radiant app in the _R > Code_ tab. See <a href="/radiant/data/code.html" target="_blank">Code</a> page for details.
 

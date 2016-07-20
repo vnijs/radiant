@@ -1,8 +1,0 @@
----
-title: Base > Cross-tabs
----
-
-***
-
-```{r child='app/cross_tabs.md'}
-```

@@ -1,7 +1,0 @@
----
-title: "Random > Sample size"
----
-***
-
-```{r child='app/sample_size_comp.Rmd'}
-```

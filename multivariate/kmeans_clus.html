@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Multivariate &gt; Cluster &gt; K-means</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+	display: inline;
+  color: black;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dropdown-menu .divider {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
+        <li class="dropdown">
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Sample</li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
+          </ul>
+        </li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Multivariate &gt; Cluster &gt; K-means</h1>
+
+</div>
+
+
+<hr />
+<blockquote>
+<p>Create segments using K-means clustering</p>
+</blockquote>
+<p>The goal of Cluster Analysis is to group respondents (e.g., consumers) into segments based on needs, benefits, and/or behaviors. The tool tries to achieve this goal by looking for respondents that are similar, putting them together in a cluster or segment, and separating them from other, dissimilar, respondents. The researcher compares the segments and provides a descriptive label for each.</p>
+<div id="example-toothpaste" class="section level3">
+<h3>Example: Toothpaste</h3>
+<p>First, go to the <em>Data &gt; Manage</em> tab, select <strong>examples</strong> from the <code>Load data of type</code> dropdown, and press the <code>Load examples</code> button. Then select the <code>toothpaste</code> dataset. The dataset contains information from 60 consumers who were asked to respond to six questions to determine their attitudes towards toothpaste. The scores shown for variables v1-v6 indicate the level of agreement with statements on a 7-point scale where 1 = strongly disagree and 7 = strongly agree.</p>
+<p>After determining the appropriate number of clusters to extract using Hierarchical cluster analysis we use K-means to create the final segments. The main advantage of this algorithm is it’s flexibility and robustness in finding the most appropriate grouping of respondents. For marketing and business data we often use Hierarchical cluster analysis to select the number of segments and K-means cluster analysis to create the final segments.</p>
+<p>To apply K-means to the toothpaste data select variables v1 through v6 in the <code>Variables</code> box and select 3 as the number of clusters. Because the data has relatively few observations we can use Hierarchical Cluster Analysis (HC) to provide the initial cluster centers. After the settings have been changed press the <code>Estimate</code> button to generate results.</p>
+<p>In the <em>Summary</em> tab we use the <code>Cluster means</code> table to describe the individuals assigned to a segment. Each number in the table shows the average score on a variable for people in that segment. For example, segment 3 has an average score of 5.750 out of 7 on question v2. We are looking for either very high or very low mean values to help distinguish segments because we want to establish how one segment differs from the others. If there are no substantial differences in the mean value of a variable across different segments that variable is not very useful for interpretation. By highlighting the variables that most clearly distinguish the different segments we can generate a name or label that describes consumers in each segment and illustrates how the segments differ from one another.</p>
+<p align="center">
+<img src="figures_multivariate/kmeans_clus_summary.png">
+</p>
+<p>It can be useful to visualize how well the segments are separated by plotting the data for each segment and variable. The figures shown below are density plots. For variable v1 the clusters are nicely separated. The average response to the question ‘It is important to buy a toothpaste that prevents cavities’ for segment 2 (green) seems lower than for both segment 3 (blue) and segment 1 (pink). Segment 1, in turn stands out with a higher score on this question compared to the other two segments. For question v4 we see a different pattern. The average response to the question ‘I prefer a toothpaste that freshens breath’ for segments 1 (green) and 2 (pink) is very similar and the plots overlap. Segment 3 (blue), in turn, stands out with a higher score on this question compared to the other two segments.</p>
+<p align="center">
+<img src="figures_multivariate/kmeans_clus_plot.png">
+</p>
+<p>By reviewing the Cluster means table in the <em>Summary</em> tab and the density plots in the <em>Plots</em> tab we can derive the following labels: Segment 3 stands out with higher scores on questions v2, v4, and v6. We could call them the ‘Cosmetic brushers’. Segment 1 stands out with higher scores on questions v1 and v3 and a lower score on v5. They seem to care most about the health benefits of toothpaste so we might call them the ‘Therapeutic brushers’. Segment 2 scores lower in v1 and v3 and higher on v5, i.e., they seem to care little about the health benefits of toothpaste. Since their scores for the cosmetics benefits are middle-of-the-road we could label them the ‘Uninvolved brushers’. To save the table of cluster means to a csv file press the download button on the top-right of your screen.</p>
+<p>Once we categorize the segments we can create a segment (or cluster) membership variable by clicking the <code>Store</code> button. A new variable is added to the toothpaste data showing which respondents were assigned to each cluster (i.e., cluster membership). We can change the created cluster variable to show the descriptive labels above through the <em>Data &gt; Transform</em> menu. Select the <code>kclus</code> variable in the Select column(s) box. Then select <code>Recode</code> from the <code>Transform type</code> dropdown. In the recode box type (or paste) the command below and press return:</p>
+<pre class="r"><code>1 = &#39;Therapeutic&#39;; 2 = &#39;Uninvolved&#39;; 3 = &#39;Cosmetic&#39;</code></pre>
+<p>This should produce the output shown below. After verifying the results are as expected, click the <code>Store</code> button to add the recoded variable to the toothpaste dataset.</p>
+<p align="center">
+<img src="figures_multivariate/kmeans_clus_transform_recode.png">
+</p>
+<p>We can profile these segments with demographic data using cross-tabs (e.g., gender vs segment membership). Go to <em>Basics &gt; Tables &gt; Cross-tabs</em>. Our null hypothesis and alternative hypothesis are:</p>
+<pre class="r"><code>H0: There is no relationship between gender and segment membership
+Ha: There is a relationship between gender and segment membership</code></pre>
+<p>In the <em>Summary</em> tab we see there is a significant association between these two variables. The p.value is .001 and there are no cells with expected values below 5 (see the help file for <em>Basics &gt; Tables &gt; Cross-tabs</em> for a detailed discussion).</p>
+<p align="center">
+<img src="figures_multivariate/kmeans_clus_cross_tabs_summary.png">
+</p>
+<p>For a graphical depiction of the association go to the <em>Plot</em> tab. If we select <code>Deviation std.</code> we see that the <code>Uninvolved</code> segment has significantly more men than we would expect under the null of no-association. We could also argue that there are more women in the <code>Cosmetic</code> segment than we would expect under the null of no-association, although the significance level is marginal (i.e., &lt; .1 but not &lt; .05). In sum, in these data men seem more likely to belong to the <code>Uninvolved brushers</code> segment and women seem (marginally) more likely to be in the <code>Cosmetic brushers</code> segment.</p>
+<p align="center">
+<img src="figures_multivariate/kmeans_clus_cross_tabs_plot.png">
+</p>
+</div>
+
+
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<!-- <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> -->
+
+<script>
+
+  // manage active state of menu based on current page
+  $(document).ready(function () {
+
+      // active menu
+      href = window.location.pathname
+      href = href.substr(href.lastIndexOf('/') + 1)
+      $('a[href="' + href + '"]').parent().addClass('active');
+
+      // manage active menu header
+      if (href.startsWith('authoring_'))
+        $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+      else if (href.endsWith('_format.html'))
+        $('a[href="' + 'formats' + '"]').parent().addClass('active');
+      else if (href.startsWith('developer_'))
+        $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+  });
+
+  // Google analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61296577-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

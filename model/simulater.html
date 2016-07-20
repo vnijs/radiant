@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Model &gt; Decide &gt; Simulate</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+	display: inline;
+  color: black;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dropdown-menu .divider {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
+        <li class="dropdown">
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Sample</li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
+          </ul>
+        </li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Model &gt; Decide &gt; Simulate</h1>
+
+</div>
+
+
+<hr />
+<blockquote>
+<p>Simulation for decision analysis</p>
+</blockquote>
+<p>Start by selecting the types of variables to use in the simulation from the <code>Select types</code> dropdown in the <em>Simulate</em> tab. Available types include Binomial, Constant, Discrete, Log normal, Normal, Uniform, Data, Grid search, and Sequence.</p>
+<div id="binomial" class="section level3">
+<h3>Binomial</h3>
+<p>Add random variables with a binomial distribution using the <code>Binomial variables</code> inputs. Start by specifying a <code>Name</code> (<code>crash</code>), the number of trials (n) (e.g., 20) and the probability (p) of a <code>success</code> (.01). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., crash 20 .01).</p>
+</div>
+<div id="constant" class="section level3">
+<h3>Constant</h3>
+<p>List the constants to include in the analysis in the <code>Constant variables</code> input. You can either enter names and values directly into the text area (e.g., <code>cost 3</code>) or enter a name (<code>cost</code>) and a value (5) in the <code>Name</code> and <code>Value</code> input respectively and then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Press the <i title='Remove variable' href='#' class='fa fa-minus-circle'></i> icon to remove an entry. Note that only variables listed in the (larger) text-input boxes will be included in the simulation.</p>
+</div>
+<div id="discrete" class="section level3">
+<h3>Discrete</h3>
+<p>Define random variables with a discrete distribution using the <code>Discrete variables</code> inputs. Start by specifying a <code>Name</code> (<code>price</code>), the values (6 8), and their associated probabilities (.3 .7). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., price 6 8 .3 .7). Note that the probabilities must sum to 1. If not, a message will be displayed and the simulation cannot be run.</p>
+</div>
+<div id="log-normal" class="section level3">
+<h3>(Log) Normal</h3>
+<p>To include (log) normally distributed random variables in the analysis select <code>Normal</code> from the <code>Select types</code> dropdown and use <code>Normal variables</code> inputs. For example, enter a <code>Name</code> (<code>demand</code>), the <code>Mean</code> (1000) and the standard deviation (<code>St.dev.</code>, 100). Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., <code>demand 1000 100</code>).</p>
+</div>
+<div id="uniform" class="section level3">
+<h3>Uniform</h3>
+<p>To include uniformly distributed random variables in the analysis select <code>Uniform</code> from the <code>Select types</code> dropdown. Provide parameters in the <code>Uniform variables</code> inputs. For example, enter a <code>Name</code> (<code>cost</code>), the <code>Min</code> (10) and the <code>Max</code> (15) value. Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., <code>cost 10 15</code>).</p>
+</div>
+<div id="data" class="section level3">
+<h3>Data</h3>
+<p>To include variables from a separate data-set in the calculations specified in the <code>Simulation formulas</code> input box, choose a data-set from the <code>Input data for calculations</code> dropdown. This can be very useful in combination with the <code>Grid search</code> feature for portfolio optimization. However, when used in conjunction with other inputs care must be taken to ensure the number of values returned by different calculations is the same. Otherwise you will see an error like:</p>
+<p><code>Error: arguments imply differing number of rows: 999, 3000</code></p>
+</div>
+<div id="grid-search" class="section level3">
+<h3>Grid search</h3>
+<p>To include a sequence of values select <code>Grid search</code> from the <code>Select types</code> dropdown. Provide the minimum and maximum values as well as the step-size in the <code>Grid search</code> inputs. For example, enter a <code>Name</code> (<code>price</code>), the <code>Min</code> (4), <code>Max</code> (10), and <code>Step</code> (0.01) value. If multiple variables are specified in <code>Grid search</code> all possible value combinations will be created and evaluated in the simulation. For example, suppose a first variable is defined as <code>x 1 3 1</code> and a second as <code>y 4 5 1</code> in the <code>Grid search</code> text input then the following data is generated:</p>
+<table class="table table-condensed table-hover" style="width:40%;">
+<thead>
+<tr>
+<th style="text-align:left;">
+x
+</th>
+<th style="text-align:left;">
+y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that if <code>Grid search</code> has been selected the number of values generated will override the number of simulations or repetitions specified in <code># sims</code> or <code># reps</code>. If this is not what you want use <code>Sequence</code>. Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., <code>price 4 10 0.01</code>).</p>
+</div>
+<div id="sequence" class="section level3">
+<h3>Sequence</h3>
+<p>To include a sequence of values select <code>Sequence</code> from the <code>Select types</code> dropdown. Provide the minimum and maximum values in the <code>Sequence variables</code> inputs. For example, enter a <code>Name</code> (<code>trend</code>), the <code>Min</code> (1) and the <code>Max</code> (1000) value. Note that the number of ‘steps’ is determined by the number of simulations. Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., <code>trend 1 1000</code>).</p>
+</div>
+<div id="formulas" class="section level3">
+<h3>Formulas</h3>
+<p>To perform a calculation using the generated variables, create a formula in the <code>Simulation formulas</code> input box in the main panel (e.g., <code>profit = demand * (price - cost)</code>). Formulas are used to add (calculated) variables to the simulation or to update existing variables. You must specify the name of the new variable to the left of a <code>=</code> sign. Variable names can contain letters, numbers, and <code>_</code> but no other characters or spaces. You can enter multiple formulas. If, for example, you would also like to calculate the margin in each simulation press <code>return</code> after the first formula and type <code>margin = price - cost</code>.</p>
+<p>Many of the same functions used with <code>Create</code> in the <em>Data &gt; Transform</em> tab and in <code>Filters</code> in <em>Data &gt; View</em> can also be included in formulas. You can use <code>&gt;</code> and <code>&lt;</code> signs and combine them. For example <code>x &gt; 3 &amp; y == 2</code> would evaluate to <code>TRUE</code> when the variable <code>x</code> has values larger than 3 <strong>AND</strong> <code>y</code> has values equal to 2. Recall that in R, and most other programming languages, <code>=</code> is used to <em>assign</em> a value and <code>==</code> to evaluate if the value of a variable is exactly equal to some other value. In contrast <code>!=</code> is used to determine if a variable is <em>unequal</em> to some value. You can also use expressions that have an <strong>OR</strong> condition. For example, to determine when <code>Salary</code> is smaller than $100,000 <strong>OR</strong> larger than $20,000 use <code>Salary &gt; 20000 | Salary &lt; 100000</code>. <code>|</code> is the symbol for <strong>OR</strong> and <code>&amp;</code> is the symbol for <strong>AND</strong> (see also the help file for <em>Data &gt; View</em>).</p>
+<p>A few additional examples of formulas are shown below:</p>
+<ol style="list-style-type: decimal">
+<li>Create a new variable z that is the difference between variables x and y</li>
+</ol>
+<pre class="r"><code>z = x - y</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Create a new <code>logical</code> variable z that takes on the value TRUE when x &gt; y and FALSE otherwise</li>
+</ol>
+<pre class="r"><code>z = x &gt; y</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Create a new <code>logical</code> z that takes on the value TRUE when x is equal to y and FALSE otherwise</li>
+</ol>
+<pre class="r"><code>z = x == y</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>The command above is equivalent to the one below using <code>ifelse</code>. Note the similarity to <code>if</code> statements in Excel</li>
+</ol>
+<pre class="r"><code>z = ifelse(x &lt; y, TRUE, FALSE)</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li><code>ifelse</code> statements can be used to create more complex (numeric) variables as well. In the example below, z will take on the value 0 if x is smaller than 60. If x is larger than 100, z is set equal to 1. Finally, when x is 60, 100, or between 60 and 100, z is set to 2. <strong>Note:</strong> make sure to include the appropriate number of opening <code>(</code> and closing <code>)</code> brackets!</li>
+</ol>
+<pre class="r"><code>z = ifelse(x &lt; 60, 0, ifelse(x &gt; 100, 1, 2))</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>To create a new variable z that is a transformation of variable x but with mean equal to zero:</li>
+</ol>
+<pre class="r"><code>z = x - mean(x)</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>To create a new variable z that shows the absolute values of x:</li>
+</ol>
+<pre class="r"><code>z = abs(x)</code></pre>
+<ol start="8" style="list-style-type: decimal">
+<li>To find the value for <code>price</code> that maximizes <code>profit</code> use the <code>find_max</code> command. In this example <code>price</code> could be a random or <code>Sequence variable</code>. There is also a <code>find_min</code> command.</li>
+</ol>
+<pre class="r"><code>optimal_price = find_max(profit, price)</code></pre>
+<ol start="9" style="list-style-type: decimal">
+<li>To determine the minimum (maximum) value for each pair of values across two variables (e.g., x and y) use the functions <code>pmin</code> and <code>pmax</code>. In the example below, z will take on the value of x when x is larger than y and take on the value of y otherwise</li>
+</ol>
+<pre class="r"><code>z = pmax(x, y)</code></pre>
+<p>See the table below for an example:</p>
+<table class="table table-condensed table-hover" style="width:40%;">
+<thead>
+<tr>
+<th style="text-align:left;">
+x
+</th>
+<th style="text-align:left;">
+y
+</th>
+<th style="text-align:left;">
+pmax(x,y)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+10
+</td>
+<td style="text-align:left;">
+10
+</td>
+</tr>
+</tbody>
+</table>
+<p>Other commonly used functions are <code>ln</code> for the natural logaritm (e.g., ln(x)), <code>sqrt</code> for the square-root of x (e.g., sqrt(x)) and <code>square</code> to calculate square of a variable (e.g., square(x)).</p>
+<p>To return a single value from a calculation use functions such as <code>min</code>, <code>max</code>, <code>mean</code>, <code>sd</code>, etc.</p>
+<ol start="10" style="list-style-type: decimal">
+<li>A special function useful for portfolio optimization is <code>sdw</code>. It takes weights and variables as inputs and returns the standard deviation of the weighted sum of the variables. For example, to calculated the standard deviation for a portfolio of three stocks (e.g., Boeing, GM, and Exxon) you could use the equation below in the <code>Simulation formulas</code> input. <code>f</code> and <code>g</code> could be values (e.g., 0.2 and 0.8) or vectors of different weights specified in a <code>Grid search</code> input (see above). <code>Boeing</code>, <code>GM</code>, and <code>Exxon</code> are names of variables in a data-set included in the simulation using a <code>Data</code> input (see above).</li>
+</ol>
+<pre class="r"><code>Pstdev = sdw(f, g, 1-f-g, Boeing, GM, Exxon)</code></pre>
+<p>For an example of how the simulate tool could be used for portfolio optimization see the state-file available for download <a href="https://radiant-rstats.github.io/docs/examples/investment-state-3stocks.rda">here</a></p>
+</div>
+<div id="running-the-simulation" class="section level3">
+<h3>Running the simulation</h3>
+<p>The value shown in the <code># sims</code> input determines the number of simulation <em>draws</em>. To redo a simulation with the same randomly generated values, specify a number in the <code>Set random seed</code> input (e.g., 1234).</p>
+<p>To save the simulated data for further analysis, specify a name in the <code>Simulated data</code> input box. You can then investigate the simulated data by choosing the data with the specified name from the <code>Datasets</code> dropdown in any of the <em>Data</em> tabs (e.g., <em>Data &gt; View</em>, <em>Data &gt; Visualize</em>, or <em>Data &gt; Explore</em>).</p>
+<p>When all required inputs have been specified press the <code>Simulate</code> button to run the simulation.</p>
+<p>In the screen shot below <code>var_cost</code> and <code>fixed_cost</code> are specified as constants. <code>E</code> is normally distributed with a mean of 0 and a standard deviation of 100. <code>price</code> is a discrete random variable that is set to $6 (30% probability) or $8 (70% probability). There are three formulas in the <code>Simulation formulas</code> text-input. The first establishes the dependence of <code>demand</code> on the simulated variable <code>price</code>. The second formula specifies the profit function. The final formula is used to determine the number (and proportion) of cases where profit is below 100. The result is assigned to a new variable <code>profit_small</code>.</p>
+<p align="center">
+<img src="figures_model/simulater_sim.png">
+</p>
+<p>In the output under <code>Simulation summary</code> we first see details on the specification of the simulation (e.g., the number of simulations). The section <code>Constants</code> lists the value of variables that do not vary across simulations. The sections <code>Random variables</code> and <code>Logicals</code> list the outcomes of the simulation. We see that average <code>demand</code> in the simulation is 627.94 with a standard deviation of 109.32. Other characteristics of the simulated data are also provided (e.g., the maximum profit is 1758.77). Finally, we see that the probability of <code>profits</code> below 100 is equal 0.32 (i.e., profits were below $100 in 315 out of the 1,000 simulations).</p>
+<p>To view histograms of the random variables as well as the variables created using <code>Simulation formulas</code> ensure <code>Show plots</code> is checked.</p>
+<p align="center">
+<img src="figures_model/simulater_sim_plot.png">
+</p>
+<p>Because we specified a name in the <code>Simulated data</code> box the data are available as <code>simdat</code> within Radiant (see screen shots below). To use the data in Excel click the download icon on the top-right of the screen in the <em>Data &gt; View</em> tab or go to the <em>Data &gt; Manage</em> tab and save the data to a csv file (or use the clipboard feature). For more information see the help file for the <em>Data &gt; Manage</em> tab.</p>
+<p align="center">
+<img src="figures_model/simulater_view.png">
+</p>
+</div>
+<div id="repeating-the-simulation" class="section level2">
+<h2>Repeating the simulation</h2>
+<p>Suppose the simulation discussed above was used to get a better understanding of daily profits. To develop insights into annual profits we could re-run the simulation 365 times. This can be done easily by using the functionality available in the <em>Repeat</em> tab. First, select the <code>Variables to re-simulate</code>, here <code>E</code> and <code>price</code>. Then select the variable(s) of interest in the <code>Output variables</code> box (e.g., <code>profit</code>). Set <code># reps</code> to 365.</p>
+<p>Next, we need to determine how to summarize the data. If we select <code>Simulation</code> in <code>Group by</code> the data will be summarized for each draw in the simulation <strong>across</strong> 365 repeated simulations resulting in 1,000 values. If we select <code>Repeat</code> in <code>Group by</code> the data will be summarized for each repetition <strong>across</strong> 1000 simulations resulting in 365 values. If you imagine the full set of repeated simulated data as a table with 1,000 rows and 365 columns, grouping by <code>Simulation</code> will create a summary statistic for each row and grouping by <code>Repeat</code> will create a summary statistic for each column. In this example we want to determine the <code>sum</code> of simulated daily profits across 365 repetitions so we select <code>Simulation</code> in the <code>Group by</code> box and <code>sum</code> in the <code>Apply function</code> box.</p>
+<p>To determine, the probability that annual profits are below $36,500 we enter the formula below into the <code>Repeated simulation formula</code> text input.</p>
+<pre class="r"><code>profit_365 = profit &lt; 36500</code></pre>
+<p>When you are done with the input values click the <code>Repeat</code> button. Because we specified a name for <code>Repeat data</code> a new data set will be created. <code>repdat&quot; will have will contain the summarized data grouped per simulation (i.e., 1,000 rows). To store all 365 x 1,000 simulations/repetitions select</code>none<code>from the</code>Apply function` dropdown.</p>
+<p>Descriptive statistics for the repeated simulation are shown in the main panel under <code>Repeated simulation summary</code>. We see that the annual expected profit (i.e., the mean of <code>sum of profit</code>) for the company is 172,311.84 with a standard deviation of 10,772.29. Although we found above that daily profits can be below $100, the chance that profits are below <span class="math inline">\(365 \times 100\)</span> for the entire year are slim to none (i.e., the proportion of repeated simulations with annual profits below $36,500 is equal to 0).</p>
+<p align="center">
+<img src="figures_model/simulater_repeat.png">
+</p>
+<p>If <code>Show plots</code> is checked a histogram of annual profits (<code>sum of profit</code>) is shown under <code>Repeated simulation plots</code>. There is no plot for <code>profit_365</code> because it has only one value (i.e., FALSE).</p>
+<p align="center">
+<img src="figures_model/simulater_repeat_plot.png">
+</p>
+<p>The state-file for the example in the screenshots above is available for download <a href="https://radiant-rstats.github.io/docs/examples/sim-help-state.rda">here</a></p>
+<p>For a simple example of how the simulate tool could be used to find the price that maximizes profits see the state-file available for download <a href="https://radiant-rstats.github.io/docs/examples/iceskimo_optimal_price_state.rda">here</a></p>
+<div id="using-grid-search-in-the-repeat-tab" class="section level3">
+<h3>Using Grid Search in the Repeat tab</h3>
+<p>Note that the <em>Repeat</em> tab also has the option to use a <code>Grid search</code> input to repeat a simulation by replacing one or more <code>Constants</code> specified in the <code>Simulation</code> tab in an iterative fashion. This input option is shown only when <code>Group by</code> is set to <code>Repeat</code>. Provide the minimum and maximum values as well as the step-size in the <code>Grid search</code> inputs. For example, enter a <code>Name</code> (<code>price</code>), the <code>Min</code> (4), <code>Max</code> (10), and <code>Step</code> (0.01) value. If multiple variables are specified in <code>Grid search</code> all possible value combinations will be created and evaluated in the simulation. Note that if <code>Grid search</code> has been selected the number of values generated will override the number of repetitions specified <code># reps</code>. Then press the <i title='Add variable' href='#' class='fa fa-plus-circle'></i> icon. Alternatively, enter (or remove) input directly in text area (e.g., <code>price 4 10 0.01</code>).</p>
+</div>
+</div>
+
+
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<!-- <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> -->
+
+<script>
+
+  // manage active state of menu based on current page
+  $(document).ready(function () {
+
+      // active menu
+      href = window.location.pathname
+      href = href.substr(href.lastIndexOf('/') + 1)
+      $('a[href="' + href + '"]').parent().addClass('active');
+
+      // manage active menu header
+      if (href.startsWith('authoring_'))
+        $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+      else if (href.endsWith('_format.html'))
+        $('a[href="' + 'formats' + '"]').parent().addClass('active');
+      else if (href.startsWith('developer_'))
+        $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+  });
+
+  // Google analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61296577-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

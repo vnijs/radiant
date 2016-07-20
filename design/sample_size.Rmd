@@ -1,0 +1,7 @@
+---
+title: "Design > Sample > Sample size (single)"
+---
+***
+
+```{r child='app/sample_size.md'}
+```

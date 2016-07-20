@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Data &gt; Manage</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+	display: inline;
+  color: black;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dropdown-menu .divider {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
+        <li class="dropdown">
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Sample</li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
+          </ul>
+        </li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data &gt; Manage</h1>
+
+</div>
+
+
+<hr />
+<blockquote>
+<p>Manage data and state: Load data into Radiant, Save data to disk, Remove a dataset from memory, or Save/Load the state of the app</p>
+</blockquote>
+<div id="datasets" class="section level3">
+<h3>Datasets</h3>
+<p>When you first start Radiant a dataset (<code>diamonds</code>) with information on diamond prices is shown.</p>
+<p>It is good practice to add a description of the data and variables to each file you use. For the files that are bundled with Radiant you will see a brief overview of the variables etc. below a table of the first 10 rows of the data. To add a description for your own data click the <code>Add/edit data description</code> check-box. A text-input box will open below the table where you can add text in <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format. The description provided for the <code>diamonds</code> data included with Radiant should serve as a good example. After adding or editing a description click the <code>Update description</code> button.</p>
+<p>To rename a dataset loaded in Radiant click the <code>Rename data</code> check box, enter a new name, and click the <code>Rename</code> button</p>
+</div>
+<div id="load-data" class="section level3">
+<h3>Load data</h3>
+<p>The best way to load and save data for use in Radiant (and R) is to use the R-data format (rda or rds). These are binary files that can be stored compactly and read into R quickly. Select <code>rda</code> (or <code>rds</code>) from the <code>Load data of type</code> dropdown and click <code>Choose Files</code> to locate the file(s) you want to load on your computer.</p>
+<p>You can get data from a spreadsheet (e.g., Excel or Google sheets) into Radiant in two ways. First, you can save data from the spreadsheet in csv format and then, in Radiant, choose <code>csv</code> from the <code>Load data of type</code> dropdown. Most likely you will have a header row in the csv file with variable names. If the data are not comma separated you can choose semicolon or tab separated. To load a csv file click ‘Choose files’ and locate the file on your computer.</p>
+<blockquote>
+<p><strong>Note:</strong> For Windows users with data that contain multibyte characters please make sure your data are in ANSI format so R(adiant) can load the characters correctly.</p>
+</blockquote>
+<p>Alternatively, you can select and copy the data in the spreadsheet using CTRL-C (or CMD-C on mac), go to Radiant, choose <code>clipboard</code> from the <code>Load data of type</code> dropdown, and click the <code>Paste</code> button. This is a short-cut that can be convenient for smaller datasets that are cleanly formatted.</p>
+<p>If the data is available in R’s global workspace (e.g., you opened a data set in Rstudio and then started Radiant from the <code>addins</code> menu) you can move (or copy) it to Radiant by selecting <code>from global workspace</code>. Select the data.frame(s) you want to use and click the <code>Load</code> button.</p>
+<p>To access all data files bundled with Radiant choose <code>examples</code> from the <code>Load data of type</code> dropdown and then click <code>Load</code> button. These files are used to illustrate the various data and analysis tools accessible in Radiant. For example, the <code>avengers</code> and <code>publishers</code> data are used to illustrate how to combine data in R(adiant) (i.e., <em>Data &gt; Combine</em>).</p>
+<p>If <code>csv</code> data is available online choose <code>csv (url)</code> from the dropdown, paste the url into the text input shown, and press <code>Load</code>. If an <code>rda</code> file is available online choose <code>rda (url)</code> from the dropdown, paste the url into the text input, and press <code>Load</code>.</p>
+</div>
+<div id="save-data" class="section level3">
+<h3>Save data</h3>
+<p>As mentioned above, the most convenient way to get data in and out of Radiant is to use the R-data format (rda or rds). Choose <code>rda</code> (or <code>rds</code>) from the <code>Save data to type</code> dropdown and click the <code>Save</code> button to save the selected dataset to file.</p>
+<p>Again, it is good practice to add a description of the data and variables to each file you use. To add a description for your own data click the ‘Add/edit data description’ check-box, add text to the text-input window shown in <a href="http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html" target="_blank">markdown</a> format, and then click the <code>Update description</code> button. When you save the data as an rda (or rds) file the description you created (or edited) will automatically be added to the file as an <code>attribute</code>.</p>
+<p>Getting data from Radiant into a spreadsheet can be achieved in two ways. First, you can save data in csv format and load the file into the spreadsheet (i.e., choose <code>csv</code> from the <code>Save data to type</code> dropdown and click the <code>Save</code> button). Alternatively, you can copy the data from Radiant into the clipboard by choosing <code>clipboard</code> from the dropdown and clicking the <code>Copy</code> button, open the spreadsheet, and paste the data from Radiant using CTRL-V (or CMD-V on mac).</p>
+<p>To move or copy data from Radiant into R’s global workspace select <code>to global workspace</code> from the <code>Save data to type</code> dropdown and click the <code>Save</code> button.</p>
+</div>
+<div id="save-and-load-state" class="section level3">
+<h3>Save and load state</h3>
+<p>You can save and load the state of the Radiant app just as you would a data file. The state file (extension rda) will contain (1) the data loaded in Radiant, (2) settings for the analyses you were working on, (3) and any reports or code from the R-menu. Save the state-file to your hard-disk and, when you are ready to continue, simply load it by selecting <code>state</code> from the <code>Load data of type</code> dropdown and clicking the <code>Choose file</code> button. For convenience you can also save the state of the app by clicking the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on <code>Save state</code>.</p>
+<p>It is convenient to work with state files if you want complete your work at another time, perhaps on another computer, or to review any assignments you completed using Radiant. You can also share the file with others that would like to replicate your analyses. As an example, download and then load the state-file <a href="https://radiant-rstats.github.io/docs/examples/radiant-state.rda">radiant-state.rda</a> as described above. You will navigate automatically to the <em>Data &gt; Visualize</em> tab and will see a plot. See also the <em>Data &gt; View</em> tab for some additional settings loaded from the state-file. There is also a report in <code>R &gt; Report</code> created using the Radiant interface. The html file <a href="https://radiant-rstats.github.io/docs/examples/radiant-state.html" target="_blank">radiant-state.html</a> contains the output created by clicking the <code>Knit report</code> button.</p>
+<p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use <code>Refresh</code> in the <i title='Power off' class='fa fa-power-off'></i> menu in the navbar to return to a clean/new state.</p>
+<p>Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use <i title='Power off' class='fa fa-power-off'></i> and then click <code>Stop</code>, <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again from the <code>addins</code> menu it will use these lists to restore state. This can be convenient if you want to make changes to a dataset in Rstudio and load it back into Radiant quickly. Also, if you load a state-file directly into Rstudio it will be used when you start Radiant.</p>
+</div>
+<div id="remove-data-from-memory" class="section level3">
+<h3>Remove data from memory</h3>
+<p>If data are loaded in memory that you no longer need in the current session check the <code>Remove data from memory</code> box. Then select the data to remove and click the <code>Remove data</code> button. One datafile will always remain open.</p>
+</div>
+<div id="using-commands-to-load-and-save-data" class="section level3">
+<h3>Using commands to load and save data</h3>
+<p>The <code>loadr</code> command can be used in <em>R &gt; Report</em> or <em>R &gt; Code</em> to load data from a file directly into the active Radiant session and add it to the <code>Datasets</code> dropdown. The <code>saver</code> command can be used to exact data from Radiant and save it to disk. Data can be loaded or saved as <code>rda</code> or <code>rds</code> format depending on the file extension chosen. These commands can also be used without the Radiant browser interface. See <code>?loadr</code> and <code>?saver</code> for details.</p>
+</div>
+
+
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<!-- <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> -->
+
+<script>
+
+  // manage active state of menu based on current page
+  $(document).ready(function () {
+
+      // active menu
+      href = window.location.pathname
+      href = href.substr(href.lastIndexOf('/') + 1)
+      $('a[href="' + href + '"]').parent().addClass('active');
+
+      // manage active menu header
+      if (href.startsWith('authoring_'))
+        $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+      else if (href.endsWith('_format.html'))
+        $('a[href="' + 'formats' + '"]').parent().addClass('active');
+      else if (href.startsWith('developer_'))
+        $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+  });
+
+  // Google analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61296577-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

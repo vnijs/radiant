@@ -1,8 +1,0 @@
----
-title: Cluster > K-means
----
-
-***
-
-```{r child='app/kmeans_clus.md'}
-```

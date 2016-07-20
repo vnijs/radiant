@@ -1,8 +1,0 @@
----
-title: Base > Single proportion
----
-
-***
-
-```{r child='app/single_prop.md'}
-```

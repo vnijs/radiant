@@ -1,0 +1,8 @@
+---
+title: Basics > Probability > Central Limit Theorem
+---
+
+***
+
+```{r child='app/clt.md'}
+```

@@ -1,8 +1,0 @@
----
-title: Factor > Pre-factor
----
-
-***
-
-```{r child='app/pre_factor.md'}
-```

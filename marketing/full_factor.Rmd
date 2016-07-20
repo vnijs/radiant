@@ -1,8 +1,0 @@
----
-title: Factor > Factor
----
-
-***
-
-```{r child='app/full_factor.md'}
-```

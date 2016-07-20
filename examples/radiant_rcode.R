@@ -1,49 +1,26 @@
 library(radiant)
 
 ## analysis on built-in dataset mtcars
-result <- single_mean("mtcars", "mpg", comp_value = 20, alternative = "greater")
+result <- single_mean(mtcars, "mpg", comp_value = 20, alternative = "greater")
 summary(result)
 plot(result)
 
-result <- compare_means("mtcars", "cyl", "mpg")
+result <- compare_means(mtcars, "cyl", "mpg")
 summary(result)
 plot(result)
 
-result <- compare_means("diamonds", "cut", "price")
+result <- compare_means(diamonds, "cut", "price")
 summary(result)
 plot(result)
-
-## in radiant load Examples > Load examples from the Data > Manage tab
-## then quit the app using Quit > Quit
-radiant()
-
-## this result will differ from the previous one because the data from radiant
-## is used which includes only a subset of all diamond prices for illustration
-## purposes
-## if you get an error here - run the previous command, and follow the
-## instructions in the comment
-result <- compare_means("diamonds", "cut", "price")
-summary(result)
-plot(result, plots = "box")
-
-## if the salary data was loaded in radiant you should get output here
-result <- compare_means("salary", "rank", "salary")
-summary(result)
-plot(result, plots = c("bar","density"))
-
-## should produce an error because no dataset with that name exists
-result <- try(compare_means("no_dat", "cyl", "mpg"), silent = TRUE)
-if (is(result, 'try-error')) cat("Error produced as expected")
 
 ## regression
-result <- regression("diamonds", "price", c("carat","clarity"))
+result <- regress(diamonds, "price", c("carat","clarity"))
 summary(result)
 plot(result, plots = "coef")
-result <- regression("diamonds", "price", c("carat","clarity"))
 plot(result, plots = "dashboard")
 
 ## get help for the regression function
-?regression
+?regress
 
 ## set working directory to Desktop - checking two possible locations
 path2desktop <- "~/Desktop/"
@@ -51,18 +28,14 @@ if (!file.exists(path2desktop))
 	path2desktop <- "~/Documents/Desktop"
 setwd(path2desktop)
 
-## get the data from the link below and save it to your desktop
-browseURL("https://github.com/vnijs/radiant/blob/master/inst/marketing/data/shopping.rda?raw=true")
-
-## load example dataset, if the file is not found make sure your working directory
-## is set to Desktop
-load("shopping.rda")
+## load the data from  url
+shopping <- loadrda_url("https://github.com/radiant-rstats/radiant.multivariate/blob/master/data/shopping.rda?raw=true")
 
 ## start with hierarchical clustering, view help
 ?hier_clus
 
 ## run hierarchical cluster analysis on the shopping data, variables v1 through v6
-result <- hier_clus("shopping", "v1:v6")
+result <- hier_clus(shopping, "v1:v6")
 
 ## summary - not much here - plots are more important
 summary(result)
@@ -80,15 +53,15 @@ plot(result, plots = "dendro")
 plot(result, plots = "dendro", cutoff = 0)
 
 ## there seems to be three clusters (segments)
-result <- kmeans_clus("shopping", vars = "v1:v6", nr_clus = 3)
+result <- kmeans_clus(shopping, vars = "v1:v6", nr_clus = 3)
 summary(result)
 plot(result)
 
 ## to add a variable with segment membership information to the shopping dataset
-store(result)
+shopping <- store(result)
 
 ## did that work? there should be a column 'kclus3' in the dataset
-getdata("shopping") %>% head
+head(shopping)
 
 ## to save the average shopping attitude scores for each segment
 write.csv(result$clus_means, file = "kmeans.csv")
@@ -100,10 +73,8 @@ browseURL("kmeans.csv")
 ## the shopping data should be loaded from the global environment
 radiant()
 
-## if you use Quit > Quit to stop radiant the app will dump the current state
-## into the global environment if you start radiant again it will read the state
-## information and you can continue where you left-off. To reset to a clean state
-## go to Quit and hit the reset button
-
-## to unload radiant ...
-## detach("package:radiant", unload=TRUE)
+## if you stop radiant by clicking the power icon and then refresh the app
+## will put the the current state into the global environment
+## if you start radiant again it will read the state and you can continue
+## where you left-off. To reset to a clean state click the power icon and
+## then click refresh

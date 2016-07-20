@@ -1,8 +1,0 @@
----
-title: Model > Neural Network (ANN)
----
-
-***
-
-```{r child='app/ann.md'}
-```

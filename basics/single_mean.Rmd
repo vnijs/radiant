@@ -1,0 +1,9 @@
+---
+title: Basics > Means > Single mean
+---
+
+***
+
+```{r child='app/single_mean.md'}
+```
+

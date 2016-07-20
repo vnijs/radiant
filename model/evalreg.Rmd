@@ -1,0 +1,8 @@
+---
+title: Model > Evaluate > Evaluate regression
+---
+
+***
+
+```{r child='app/evalreg.md'}
+```

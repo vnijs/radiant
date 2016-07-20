@@ -1,8 +1,0 @@
----
-title: Conjoint > Conjoint
----
-
-***
-
-```{r child='app/conjoint_profiles.md'}
-```

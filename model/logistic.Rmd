@@ -1,0 +1,10 @@
+---
+title: Model > Estimate > Logistic regression (GLM)
+---
+
+***
+
+
+```{r child='app/logistic.md'}
+```
+

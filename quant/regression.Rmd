@@ -1,8 +1,0 @@
----
-title: Regression > Linear regression (OLS)
----
-
-***
-
-```{r child='app/regression.Rmd'}
-```

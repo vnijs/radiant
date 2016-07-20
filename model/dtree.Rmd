@@ -1,0 +1,8 @@
+---
+title: Model > Decide > Decision analysis
+---
+
+***
+
+```{r child='app/dtree.md'}
+```

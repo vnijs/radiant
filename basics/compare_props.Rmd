@@ -1,0 +1,8 @@
+---
+title: Basics > Proportions > Compare proportions
+---
+
+***
+
+```{r child='app/compare_props.md'}
+```

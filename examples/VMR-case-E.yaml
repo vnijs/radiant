@@ -1,0 +1,70 @@
+name: Value of Information, Case E
+variables:
+    ## use words to identify payoffs (and costs)
+    success payoff: 4000000
+    failure payoff: -2500000
+    research cost: 0
+    ## use mathematical notation for probabilities
+    P(S): 0.6
+    P(F): 0.4
+    ## Research is not perfect
+    P(Pos|S): 0.8
+    P(Neg|S): 1 - P(Pos|S)
+    P(Neg|F): 0.65
+    P(Pos|F): 1 - P(Neg|F)
+    ## Derived probabilities
+    P(Pos and S): P(Pos|S) * P(S)
+    P(Pos and F): P(Pos|F) * P(F)
+    P(Neg and S): P(Neg|S) * P(S)
+    P(Neg and F): P(Neg|F) * P(F)
+    P(Pos): P(Pos and S) + P(Pos and F)
+    P(Neg): P(Neg and S) + P(Neg and F)
+    P(S|Pos): P(Pos and S) / P(Pos)
+    P(S|Neg): P(Neg and S) / P(Neg)
+    P(F|Pos): P(Pos and F) / P(Pos)
+    P(F|Neg): P(Neg and F) / P(Neg)
+    ## or P(F|Pos): 1 - P(S|Pos)
+    ## or P(F|Neg): 1 - P(S|Neg)
+type: decision
+No research:
+    type: decision
+    Introduce:
+        type: chance
+        Success:
+            p: P(S)
+            payoff: success payoff
+        Failure:
+            p: P(F)
+            payoff: failure payoff
+    Don't introduce:
+        payoff: 0
+Research:
+    cost: research cost
+    type: chance
+    Positive recommendation:
+        p: P(Pos)
+        type: decision
+        Introduce:
+            type: chance
+            Success:
+                p: P(S|Pos)
+                payoff: success payoff
+            Failure:
+                p: P(F|Pos)
+                payoff: failure payoff
+        Don't introduce:
+            payoff: 0
+    Negative recommendation:
+        p: P(Neg)
+        type: decision
+        Introduce:
+            type: chance
+            Success:
+                p: P(S|Neg)
+                payoff: success payoff
+            Failure:
+                p: P(F|Neg)
+                payoff: failure payoff
+        Don't introduce:
+            payoff: 0
+

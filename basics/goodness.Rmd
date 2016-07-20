@@ -1,0 +1,8 @@
+---
+title: Basics > Tables > Goodness-of-fit
+---
+
+***
+
+```{r child='app/goodness.md'}
+```

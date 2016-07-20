@@ -1,0 +1,8 @@
+---
+title: Basics > Proportions > Single proportion
+---
+
+***
+
+```{r child='app/single_prop.md'}
+```

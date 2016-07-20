@@ -1,8 +1,0 @@
----
-title: Random > Sampling
----
-
-***
-
-```{r child='app/sampling.md'}
-```

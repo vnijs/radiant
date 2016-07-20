@@ -1,0 +1,8 @@
+---
+title: Multivariate > Maps > (Dis)similarity
+---
+
+***
+
+```{r child='app/mds.md'}
+```

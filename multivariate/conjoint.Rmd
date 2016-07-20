@@ -1,0 +1,8 @@
+---
+title: Multivariate > Conjoint > Conjoint
+---
+
+***
+
+```{r child='app/conjoint.md'}
+```

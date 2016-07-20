@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -51,10 +51,21 @@ body {
 	margin-bottom: 2px;
 }
 
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
 </style>
 
 <link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
-<link rel="shortcut icon" type="image/png" href="/radiant/images/radiant_red.png"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -76,25 +87,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -116,6 +109,30 @@ h5 {
 h6 {
   font-size: 12px;
 }
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
 .tabbed-pane {
   padding-top: 12px;
 }
@@ -128,7 +145,7 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation-1.0/tabsets.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -150,146 +167,109 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://github.com/vnijs/radiant">Radiant</a>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="/radiant/index.html">Home</a></li>
-        <li><a href="/radiant/news.html">News</a></li>
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
         <li class="dropdown">
-          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li><a href="/radiant/base/manage.html">Manage</a></li>
-             <li><a href="/radiant/base/view.html">View</a></li>
-             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
-             <li><a href="/radiant/base/pivotr.html">Pivot</a></li>
-             <li><a href="/radiant/base/explore.html">Explore</a></li>
-             <li><a href="/radiant/base/transform.html">Transform</a></li>
-             <li><a href="/radiant/base/combine.html">Combine</a></li>
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quantitative Analysis<span class="caret"></span></a>
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
              <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing Research<span class="caret"></span></a>
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
              <li class="dropdown-header">Maps</li>
-             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Conjoint</li>
-             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
-             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/analytics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Customer Analytics<span class="caret"></span></a>
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Model</li>
-             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
-             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
-             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
-             <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
           </ul>
         </li>
-
-        <li class="dropdown">
-          <a href="/radiant/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-             <li><a href="/radiant/base/report.html">Report</a></li>
-             <li><a href="/radiant/base/code.html">Code</a></li>
-             <li><a href="/radiant/programming.html">Programming</a></li>
-             <li><a href="/radiant/resources.html">Resources</a></li>
-          </ul>
-        </li>
-        <li><a href="/radiant/tutorials.html">Tutorials</a></li>
-        <li><a href="/radiant/about.html">About</a></li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -298,7 +278,8 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">Radiant – Business analytics using R and Shiny</h1>
+
+<h1 class="title toc-ignore">Radiant – Business analytics using R and Shiny</h1>
 
 </div>
 
@@ -307,20 +288,19 @@ $(document).ready(function () {
 <div id="radiant-code" class="section level2">
 <h2>Radiant code</h2>
 <!-- [![Travis-CI Build Status](https://travis-ci.org/vnijs/radiant.png?branch=master)](https://travis-ci.org/vnijs/radiant) -->
-<p>Version: 0.4.70, Date: 2016-4-28</p>
-<p>Built using <a href="http://www.rstudio.com/shiny/" target="_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="_blank">Rstudio</a>. Code available on <a href="https://github.com/vnijs/radiant" target="_blank">GitHub</a></p>
+<p>Version: 0.5.3, Date: 2016-7-8</p>
+<p>Built using <a href="http://www.rstudio.com/shiny/" target="_blank">Shiny</a> by <a href="http://www.rstudio.com/" target="_blank">Rstudio</a>. The full source code is available on <a href="https://github.com/radiant-rstats" target="_blank">GitHub</a></p>
 </div>
 <div id="package-dependencies" class="section level2">
 <h2>Package dependencies</h2>
-<p>Package dependencies: car, gridExtra, GPArotation, psych, wordcloud, AlgDesign, knitr, ggdendro, lubridate, ggplot2, pryr, shiny, magrittr, tidyr, dplyr, broom, shiny, rmarkdown, shinyAce, DT, radiant</p>
+<p>Package dependencies: car, miniCRAN, gridExtra, GPArotation, psych, wordcloud, AlgDesign, knitr, ggdendro, lubridate, ggplot2, pryr, shiny, magrittr, tidyr, dplyr, broom, shiny, rmarkdown, shiny, NeuralNetTools, data.tree, nnet, DT</p>
 <p><details> <summary>Citing packages</summary></p>
 <pre><code>
 To cite package &#39;radiant&#39; in publications use:
 
   Vincent Nijs (2016). radiant: Business Analytics using R and
-  Shiny. R package version 0.4.70.
-  https://github.com/vnijs/radiant,
-  http://vnijs.github.io/radiant/
+  Shiny. R package version 0.5.3.
+  https://github.com/radiant-rstats/radiant
 
 A BibTeX entry for LaTeX users is
 
@@ -328,8 +308,8 @@ A BibTeX entry for LaTeX users is
     title = {radiant: Business Analytics using R and Shiny},
     author = {Vincent Nijs},
     year = {2016},
-    note = {R package version 0.4.70},
-    url = {https://github.com/vnijs/radiant, http://vnijs.github.io/radiant/},
+    note = {R package version 0.5.3},
+    url = {https://github.com/radiant-rstats/radiant},
   }
 
 
@@ -349,6 +329,25 @@ A BibTeX entry for LaTeX users is
     publisher = {Sage},
     address = {Thousand Oaks {CA}},
     url = {http://socserv.socsci.mcmaster.ca/jfox/Books/Companion},
+  }
+
+
+To cite package &#39;miniCRAN&#39; in publications use:
+
+  Revolution Analytics and Andrie de Vries (2016). miniCRAN:
+  Create a Mini Version of CRAN Containing Only Selected Packages.
+  R package version 0.2.5.
+  https://CRAN.R-project.org/package=miniCRAN
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {miniCRAN: Create a Mini Version of CRAN Containing Only Selected Packages},
+    author = {{Revolution Analytics} and Andrie {de
+    Vries}},
+    year = {2016},
+    note = {R package version 0.2.5},
+    url = {https://CRAN.R-project.org/package=miniCRAN},
   }
 
 
@@ -392,10 +391,10 @@ A BibTeX entry for LaTeX users is
 
 To cite the psych package in publications use:
 
-  Revelle, W. (2015) psych: Procedures for Personality and
+  Revelle, W. (2016) psych: Procedures for Personality and
   Psychological Research, Northwestern University, Evanston,
   Illinois, USA, http://CRAN.R-project.org/package=psych Version =
-  1.5.8.
+  1.6.6.
 
 A BibTeX entry for LaTeX users is
 
@@ -404,8 +403,8 @@ A BibTeX entry for LaTeX users is
     author = {William Revelle},
     organization = { Northwestern University},
     address = { Evanston, Illinois},
-    year = {2015},
-    note = {R package version 1.5.8},
+    year = {2016},
+    note = {R package version 1.6.6},
     url = {http://CRAN.R-project.org/package=psych},
   }
 
@@ -454,7 +453,7 @@ the package DESCRIPTION file and may need manual editing, see
 To cite the &#39;knitr&#39; package in publications use:
 
   Yihui Xie (2016). knitr: A General-Purpose Package for Dynamic
-  Report Generation in R. R package version 1.12.23.
+  Report Generation in R. R package version 1.13.
 
   Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd
   edition. Chapman and Hall/CRC. ISBN 978-1498716963
@@ -467,17 +466,17 @@ To cite the &#39;knitr&#39; package in publications use:
 
 To cite package &#39;ggdendro&#39; in publications use:
 
-  Andrie de Vries and Brian D. Ripley (2016). ggdendro: Create
+  Andrie de Vries and Brian D. Ripley (2015). ggdendro: Create
   Dendrograms and Tree Diagrams Using &#39;ggplot2&#39;. R package version
-  0.1-20. https://CRAN.R-project.org/package=ggdendro
+  0.1-17. https://CRAN.R-project.org/package=ggdendro
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
     title = {ggdendro: Create Dendrograms and Tree Diagrams Using &#39;ggplot2&#39;},
     author = {Andrie {de Vries} and Brian D. Ripley},
-    year = {2016},
-    note = {R package version 0.1-20},
+    year = {2015},
+    note = {R package version 0.1-17},
     url = {https://CRAN.R-project.org/package=ggdendro},
   }
 
@@ -540,7 +539,7 @@ To cite package &#39;shiny&#39; in publications use:
 
   Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
   McPherson (2016). shiny: Web Application Framework for R. R
-  package version 0.13.2. https://CRAN.R-project.org/package=shiny
+  package version 0.13.2.9004. http://shiny.rstudio.com
 
 A BibTeX entry for LaTeX users is
 
@@ -548,8 +547,8 @@ A BibTeX entry for LaTeX users is
     title = {shiny: Web Application Framework for R},
     author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
     year = {2016},
-    note = {R package version 0.13.2},
-    url = {https://CRAN.R-project.org/package=shiny},
+    note = {R package version 0.13.2.9004},
+    url = {http://shiny.rstudio.com},
   }
 
 
@@ -577,7 +576,7 @@ the package DESCRIPTION file and may need manual editing, see
 To cite package &#39;tidyr&#39; in publications use:
 
   Hadley Wickham (2016). tidyr: Easily Tidy Data with `spread()`
-  and `gather()` Functions. R package version 0.4.1.
+  and `gather()` Functions. R package version 0.5.1.
   https://CRAN.R-project.org/package=tidyr
 
 A BibTeX entry for LaTeX users is
@@ -586,15 +585,15 @@ A BibTeX entry for LaTeX users is
     title = {tidyr: Easily Tidy Data with `spread()` and `gather()` Functions},
     author = {Hadley Wickham},
     year = {2016},
-    note = {R package version 0.4.1},
+    note = {R package version 0.5.1},
     url = {https://CRAN.R-project.org/package=tidyr},
   }
 
 
 To cite package &#39;dplyr&#39; in publications use:
 
-  Hadley Wickham and Romain Francois (2015). dplyr: A Grammar of
-  Data Manipulation. R package version 0.4.3.
+  Hadley Wickham and Romain Francois (2016). dplyr: A Grammar of
+  Data Manipulation. R package version 0.5.0.
   https://CRAN.R-project.org/package=dplyr
 
 A BibTeX entry for LaTeX users is
@@ -602,16 +601,16 @@ A BibTeX entry for LaTeX users is
   @Manual{,
     title = {dplyr: A Grammar of Data Manipulation},
     author = {Hadley Wickham and Romain Francois},
-    year = {2015},
-    note = {R package version 0.4.3},
+    year = {2016},
+    note = {R package version 0.5.0},
     url = {https://CRAN.R-project.org/package=dplyr},
   }
 
 
 To cite package &#39;broom&#39; in publications use:
 
-  David Robinson (2015). broom: Convert Statistical Analysis
-  Objects into Tidy Data Frames. R package version 0.4.0.
+  David Robinson (2016). broom: Convert Statistical Analysis
+  Objects into Tidy Data Frames. R package version 0.4.1.
   https://CRAN.R-project.org/package=broom
 
 A BibTeX entry for LaTeX users is
@@ -619,8 +618,8 @@ A BibTeX entry for LaTeX users is
   @Manual{,
     title = {broom: Convert Statistical Analysis Objects into Tidy Data Frames},
     author = {David Robinson},
-    year = {2015},
-    note = {R package version 0.4.0},
+    year = {2016},
+    note = {R package version 0.4.1},
     url = {https://CRAN.R-project.org/package=broom},
   }
 
@@ -629,7 +628,7 @@ To cite package &#39;shiny&#39; in publications use:
 
   Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
   McPherson (2016). shiny: Web Application Framework for R. R
-  package version 0.13.2. https://CRAN.R-project.org/package=shiny
+  package version 0.13.2.9004. http://shiny.rstudio.com
 
 A BibTeX entry for LaTeX users is
 
@@ -637,8 +636,8 @@ A BibTeX entry for LaTeX users is
     title = {shiny: Web Application Framework for R},
     author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
     year = {2016},
-    note = {R package version 0.13.2},
-    url = {https://CRAN.R-project.org/package=shiny},
+    note = {R package version 0.13.2.9004},
+    url = {http://shiny.rstudio.com},
   }
 
 
@@ -647,7 +646,7 @@ To cite package &#39;rmarkdown&#39; in publications use:
   JJ Allaire, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston
   Chang, Jeff Allen, Hadley Wickham, Aron Atkins and Rob Hyndman
   (2016). rmarkdown: Dynamic Documents for R. R package version
-  0.9.5. https://CRAN.R-project.org/package=rmarkdown
+  0.9.6.14. http://rmarkdown.rstudio.com
 
 A BibTeX entry for LaTeX users is
 
@@ -655,23 +654,80 @@ A BibTeX entry for LaTeX users is
     title = {rmarkdown: Dynamic Documents for R},
     author = {JJ Allaire and Joe Cheng and Yihui Xie and Jonathan McPherson and Winston Chang and Jeff Allen and Hadley Wickham and Aron Atkins and Rob Hyndman},
     year = {2016},
-    note = {R package version 0.9.5},
-    url = {https://CRAN.R-project.org/package=rmarkdown},
+    note = {R package version 0.9.6.14},
+    url = {http://rmarkdown.rstudio.com},
   }
 
 
-To cite package &#39;shinyAce&#39; in publications use:
+To cite package &#39;shiny&#39; in publications use:
 
-  Trestle Technology, LLC (2016). shinyAce: Ace Editor Bindings
-  for Shiny. R package version 0.2.1.
+  Winston Chang, Joe Cheng, JJ Allaire, Yihui Xie and Jonathan
+  McPherson (2016). shiny: Web Application Framework for R. R
+  package version 0.13.2.9004. http://shiny.rstudio.com
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {shinyAce: Ace Editor Bindings for Shiny},
-    author = {{Trestle Technology, LLC}},
+    title = {shiny: Web Application Framework for R},
+    author = {Winston Chang and Joe Cheng and JJ Allaire and Yihui Xie and Jonathan McPherson},
     year = {2016},
-    note = {R package version 0.2.1},
+    note = {R package version 0.13.2.9004},
+    url = {http://shiny.rstudio.com},
+  }
+
+
+Beck M (2016). _NeuralNetTools: Visualization and Analysis Tools
+for Neural Networks_. R package version 1.4.0, &lt;URL:
+http://CRAN.R-project.org/package=NeuralNetTools&gt;.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {{NeuralNetTools: Visualization and Analysis Tools for Neural Networks}},
+    author = {Marcus Beck},
+    year = {2016},
+    note = {R package version 1.4.0},
+    url = {http://CRAN.R-project.org/package=NeuralNetTools},
+  }
+
+
+To cite package &#39;data.tree&#39; in publications use:
+
+  Christoph Glur (2016). data.tree: General Purpose Hierarchical
+  Data Structure. R package version 0.3.5.
+  https://CRAN.R-project.org/package=data.tree
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {data.tree: General Purpose Hierarchical Data Structure},
+    author = {Christoph Glur},
+    year = {2016},
+    note = {R package version 0.3.5},
+    url = {https://CRAN.R-project.org/package=data.tree},
+  }
+
+ATTENTION: This citation information has been auto-generated from
+the package DESCRIPTION file and may need manual editing, see
+&#39;help(&quot;citation&quot;)&#39;.
+
+
+To cite the nnet package in publications use:
+
+  Venables, W. N. &amp; Ripley, B. D. (2002) Modern Applied Statistics
+  with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
+
+A BibTeX entry for LaTeX users is
+
+  @Book{,
+    title = {Modern Applied Statistics with S},
+    author = {W. N. Venables and B. D. Ripley},
+    publisher = {Springer},
+    edition = {Fourth},
+    address = {New York},
+    year = {2002},
+    note = {ISBN 0-387-95457-0},
+    url = {http://www.stats.ox.ac.uk/pub/MASS4},
   }
 
 
@@ -689,24 +745,6 @@ A BibTeX entry for LaTeX users is
     year = {2015},
     note = {R package version 0.1.56},
     url = {http://rstudio.github.io/DT},
-  }
-
-
-To cite package &#39;radiant&#39; in publications use:
-
-  Vincent Nijs (2016). radiant: Business Analytics using R and
-  Shiny. R package version 0.4.70.
-  https://github.com/vnijs/radiant,
-  http://vnijs.github.io/radiant/
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {radiant: Business Analytics using R and Shiny},
-    author = {Vincent Nijs},
-    year = {2016},
-    note = {R package version 0.4.70},
-    url = {https://github.com/vnijs/radiant, http://vnijs.github.io/radiant/},
   }</code></pre>
 <p></details></p>
 </div>
@@ -716,13 +754,13 @@ A BibTeX entry for LaTeX users is
 </div>
 <div id="license" class="section level2">
 <h2>License</h2>
-<p>Radiant is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation and videos on this site and the radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.</p>
+<p>Radiant is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation and videos on this site as well as the Radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.</p>
 <p>As a summary, the AGPLv3 license requires, attribution, including copyright and license information in copies of the software, stating changes if the code is modified, and disclosure of all source code. Details are in the COPYING file.</p>
 <p>If you are interested in using Radiant please email me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a></p>
 </div>
 
 
-&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
 
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>

@@ -1,0 +1,8 @@
+---
+title: Model > Estimate > Linear regression (OLS)
+---
+
+***
+
+```{r child='app/regress.md'}
+```

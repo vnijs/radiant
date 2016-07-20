@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Design &gt; DOE &gt; Design of Experiments (DOE)</title>
+
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h2 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+.section h3 {
+  padding-top: 55px;
+  margin-top: -55px;
+}
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+	display: inline;
+  color: black;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dropdown-menu .divider {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/textmate.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
+        <li class="dropdown">
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Sample</li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Decide</li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Maps</li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Factor</li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Cluster</li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Conjoint</li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
+          </ul>
+        </li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Design &gt; DOE &gt; Design of Experiments (DOE)</h1>
+
+</div>
+
+
+<hr />
+<blockquote>
+<p>Design of Experiments</p>
+</blockquote>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>Suppose we want to test alternative movie theater designs using three factors.</p>
+<ul>
+<li><strong>Price</strong> at $10, $13, or $16</li>
+<li><strong>Sight</strong> to determine if theater setting should be staggered or not staggered</li>
+<li><strong>Food</strong> to determine if we should offer hot dogs and popcorn, gourmet food, or no food at all</li>
+</ul>
+</div>
+<div id="max-levels" class="section level2">
+<h2>Max levels</h2>
+<p>The factors to include in the analysis have 3, 2, and 3 levels so we enter <code>3</code> in the <code>Max levels</code> input.</p>
+</div>
+<div id="variable-name-level-1-level-2-and-level-3" class="section level2">
+<h2>Variable name, Level 1, Level 2, and Level 3</h2>
+<p>Here we will enter the factors of interest. For example, enter <code>price</code> as the variable name, $10 as level 1, $13, as level 2, and $16 as level 3. Then click the <i title='Add factor' class='fa fa-plus-circle'></i> icon. This will enter the specification details required into the <code>Design factors</code> window in the format Radiant needs for the analysis. To remove a line click the <i title='Add factor' class='fa fa-minus-circle'></i> icon.</p>
+<p>After entering the required information your screen should look as follows:</p>
+<p align="center">
+<img src="figures_design/doe_factors.png">
+</p>
+</div>
+<div id="create" class="section level2">
+<h2>Create</h2>
+<p>You are now ready to create an experimental design by clicking on the <code>Create</code> button. This will generate the following output.</p>
+<p align="center">
+<img src="figures_design/doe_output.png">
+</p>
+<p>For our example, the ideal design has 18 trials. However, this implies that the partial and the full factorial are the same size. We’d like to find out if it is possible to reduce the number of trials. See <code># trials</code> below.</p>
+</div>
+<div id="trials" class="section level2">
+<h2># trials</h2>
+<p>This input can be used to control the number of trials to generate. If left blank Radiant will try to find an appropriate number of trials using the <code>optFederov</code> routine in R.</p>
+<p>Lets review the output in <code>Design efficiency</code>. The goal is to find a design with less than 18 trials that will still allow us to estimate the effects we are interested in (e.g., the main-effects of the different levels of price, sight, and food). Notice that there are several designs that are considered <code>balanced</code> (i.e., each level is included in the same number of trials). We are looking for a design that is (1) balanced, (2) has minimal correlation between factors (i.e., a determinant close to 1), and (3) that has a D-efficiency score above .8. You can think of the D-efficiency score as a measure of how easily we will be able to estimate the effects of interest after running the test/experiment. Again, the ideal D-efficiency score is 1 but a number above .8 is quite reasonable.</p>
+<p>The smallest number of trials with a balanced design is 6. This design is <code>balanced</code> simply because 6 is divisible by 3 and 2 (i.e., the number of levels in our factors). However, although the design has a Determinant close to 1, the D-efficiency score is rather low (.513). The next smallest balanced design has 12 trials and a high value for both the Determinant and D-efficiency. This design is appropriate if we want to be able to estimate the main-effects of each factor level on movie-theater choice or preference.</p>
+</div>
+<div id="rnd.-seed" class="section level2">
+<h2>Rnd. seed:</h2>
+<p>A partial factorial design need not be unique (i.e., there might be multiple combinations of trials or profiles that are equally good). By setting a random seed you ensure you will get the same set of trials each time you press <code>Create</code>. However, to see if there are other options, empty the <code>Rnd. seed</code> box and press <code>Create</code> a few times.</p>
+</div>
+<div id="interactions" class="section level2">
+<h2>Interactions</h2>
+<p>Note that we will not be able to estimate all possible interactions between <code>price</code>, <code>sight</code>, and <code>food</code> if we use a design with 12 trials. This is the trade-off inherent in partial factorial designs! In fact, if we do want to estimate even one interaction (e.g., select <code>price:sight</code>) the appropriate design has 18 trials (i.e., the number in the full factorial design that includes all possible combinations of factor levels).</p>
+</div>
+<div id="create-partial-full" class="section level2">
+<h2>Create, Partial, Full</h2>
+<p>These buttons can be used to <code>Create</code> the full and partial factorial designs. To download the design you want in csv format click on the either the <code>Partial</code> or the <code>Full</code> button.</p>
+</div>
+<div id="upload-and-download" class="section level2">
+<h2>Upload and Download</h2>
+<p>You can download the list of factors you entered by clicking the <code>Download</code> button. To upload a previously entered set of factors click the <code>Upload</code> button.</p>
+</div>
+
+
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
+
+<!-- some extra javascript for older browsers -->
+<script type="text/javascript" src="libs/polyfill.js"></script>
+
+<!-- mathjax -->
+<!-- <script type='text/javascript' src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> -->
+
+<script>
+
+  // manage active state of menu based on current page
+  $(document).ready(function () {
+
+      // active menu
+      href = window.location.pathname
+      href = href.substr(href.lastIndexOf('/') + 1)
+      $('a[href="' + href + '"]').parent().addClass('active');
+
+      // manage active menu header
+      if (href.startsWith('authoring_'))
+        $('a[href="' + 'authoring' + '"]').parent().addClass('active');
+      else if (href.endsWith('_format.html'))
+        $('a[href="' + 'formats' + '"]').parent().addClass('active');
+      else if (href.startsWith('developer_'))
+        $('a[href="' + 'developer' + '"]').parent().addClass('active');
+
+  });
+
+  // Google analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61296577-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

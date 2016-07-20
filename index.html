@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 
 
@@ -51,10 +51,21 @@ body {
 	margin-bottom: 2px;
 }
 
+img {
+  max-width: 85% !important;
+}
+
+/*
+img.center {
+  display: block;
+  margin: 0 auto;
+}
+*/
+
 </style>
 
 <link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
-<link rel="shortcut icon" type="image/png" href="/radiant/images/radiant_red.png"/>
+<link rel="shortcut icon" type="image/png" href="/docs/images/radiant_red.png"/>
 
 <style type="text/css">code{white-space: pre;}</style>
 <link rel="stylesheet"
@@ -76,25 +87,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 
-
-</head>
-
-<body>
-
-<style type = "text/css">
-.main-container {
-  max-width: 940px;
-  margin-left: auto;
-  margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
-}
-img {
-  max-width:100%;
-  height: auto;
-}
+<style type="text/css">
 h1 {
   font-size: 34px;
 }
@@ -116,6 +109,30 @@ h5 {
 h6 {
   font-size: 12px;
 }
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
 .tabbed-pane {
   padding-top: 12px;
 }
@@ -128,7 +145,7 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="libs/navigation-1.0/tabsets.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -150,146 +167,109 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://github.com/vnijs/radiant">Radiant</a>
+      <a class="navbar-brand" href="https://github.com/radiant-rstats/docs">Radiant</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="/radiant/index.html">Home</a></li>
-        <li><a href="/radiant/news.html">News</a></li>
+        <li><a href="/docs/index.html">Home</a></li>
+        <li><a href="/docs/news.html">News</a></li>
         <li class="dropdown">
-          <a href="/radiant/base/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
+          <a href="/docs/data/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li><a href="/radiant/base/manage.html">Manage</a></li>
-             <li><a href="/radiant/base/view.html">View</a></li>
-             <li><a href="/radiant/base/visualize.html">Visualize</a></li>
-             <li><a href="/radiant/base/pivotr.html">Pivot</a></li>
-             <li><a href="/radiant/base/explore.html">Explore</a></li>
-             <li><a href="/radiant/base/transform.html">Transform</a></li>
-             <li><a href="/radiant/base/combine.html">Combine</a></li>
+             <li><a href="/docs/data/manage.html">Manage</a></li>
+             <li><a href="/docs/data/view.html">View</a></li>
+             <li><a href="/docs/data/visualize.html">Visualize</a></li>
+             <li><a href="/docs/data/pivotr.html">Pivot</a></li>
+             <li><a href="/docs/data/explore.html">Explore</a></li>
+             <li><a href="/docs/data/transform.html">Transform</a></li>
+             <li><a href="/docs/data/combine.html">Combine</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/quant/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Quantitative Analysis<span class="caret"></span></a>
+          <a href="/docs/design/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Design<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">DOE</li>
+             <li><a href="/docs/design/doe.html">Design of Experiments (DOE)</a></li>
+             <li class="divider"></li>
              <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportions</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
+             <li><a href="/docs/design/sampling.html">Random sampling</a></li>
+             <li><a href="/docs/design/sample_size.html">Sample size (single)</a></li>
+             <li><a href="/docs/design/sample_size_comp.html">Sample size (compare)</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/marketing/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Marketing Research<span class="caret"></span></a>
+          <a href="/docs/basics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Basics<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
+             <li class="dropdown-header">Probability</li>
+             <li><a href="/docs/basics/prob_calc.html">Probability calculator</a></li>
+             <li><a href="/docs/basics/clt.html">Central Limit Theorem</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
+             <li class="dropdown-header">Means</li>
+             <li><a href="/docs/basics/single_mean.html">Single mean</a></li>
+             <li><a href="/docs/basics/compare_means.html">Compare means</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
+             <li class="dropdown-header">Proportions</li>
+             <li><a href="/docs/basics/single_prop.html">Single proportion</a></li>
+             <li><a href="/docs/basics/compare_props.html">Compare proportions</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Tables</li>
+             <li><a href="/docs/basics/goodness.html">Goodness of fit</a></li>
+             <li><a href="/docs/basics/cross_tabs.html">Cross-tabs</a></li>
+             <li><a href="/docs/basics/correlation.html">Correlation</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/model/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Model<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Estimate</li>
+             <li><a href="/docs/model/regress.html">Linear regression (OLS)</a></li>
+             <li><a href="/docs/model/logistic.html">Logistic regression (GLM)</a></li>
+             <li><a href="/docs/model/ann.html">Neural Network (ANN)</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Evaluate</li>
+             <li><a href="/docs/model/evalreg.html">Evaluate regression</a></li>
+             <li><a href="/docs/model/evalbin.html">Evaluate classification</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Decide</li>
-             <li><a href="/radiant/quant/dtree.html">Decision tree</a></li>
-             <li><a href="/radiant/quant/simulater.html">Simulate</a></li>
-             <li class="divider"></li>
+             <li><a href="/docs/model/dtree.html">Decision analysis</a></li>
+             <li><a href="/docs/model/simulater.html">Simulate</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/docs/multivariate/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Multivariate<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
              <li class="dropdown-header">Maps</li>
-             <li><a href="/radiant/marketing/mds.html">(Dis)similarity</a></li>
-             <li><a href="/radiant/marketing/pmap.html">Attributes</a></li>
+             <li><a href="/docs/multivariate/mds.html">(Dis)similarity</a></li>
+             <li><a href="/docs/multivariate/pmap.html">Attributes</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
+             <li><a href="/docs/multivariate/pre_factor.html">Pre-factor</a></li>
+             <li><a href="/docs/multivariate/full_factor.html">Factor</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li><a href="/docs/multivariate/hier_clus.html">Hierarchical</a></li>
+             <li><a href="/docs/multivariate/kmeans_clus.html">K-means</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Conjoint</li>
-             <li><a href="/radiant/marketing/conjoint_profiles.html">Create profiles</a></li>
-             <li><a href="/radiant/marketing/conjoint.html">Conjoint</a></li>
+             <li><a href="/docs/multivariate/conjoint.html">Conjoint</a></li>
           </ul>
         </li>
 
         <li class="dropdown">
-          <a href="/radiant/analytics/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Customer Analytics<span class="caret"></span></a>
+          <a href="/docs/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-             <li class="dropdown-header">Sample</li>
-             <li><a href="/radiant/quant/sampling.html">Sampling</a></li>
-             <li><a href="/radiant/quant/sample_size.html">Sample size (single)</a></li>
-             <li><a href="/radiant/quant/sample_size_comp.html">Sample size (compare)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Base</li>
-             <li><a href="/radiant/quant/prob_calc.html">Probability calculator</a></li>
-             <li><a href="/radiant/quant/clt.html">Central Limit Theorem</a></li>
-             <li><a href="/radiant/quant/single_mean.html">Single mean</a></li>
-             <li><a href="/radiant/quant/compare_means.html">Compare means</a></li>
-             <li><a href="/radiant/quant/single_prop.html">Single proportion</a></li>
-             <li><a href="/radiant/quant/compare_props.html">Compare proportion</a></li>
-             <li><a href="/radiant/quant/cross_tabs.html">Cross-tabs</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Regression</li>
-             <li><a href="/radiant/quant/correlation.html">Correlation</a></li>
-             <li><a href="/radiant/quant/regression.html">Linear regression (OLS)</a></li>
-             <li><a href="/radiant/quant/glm_reg.html">Logistic regression (GLM)</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Model</li>
-             <li><a href="/radiant/analytics/ann.html">Neural Network (ANN)</a></li>
-             <li><a href="/radiant/analytics/crs.html">Collaborative Filtering</a></li>
-             <li><a href="/radiant/analytics/doe.html">Design of Experiments (DOE)</a></li>
-             <li><a href="/radiant/analytics/performance.html">Model performance</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Factor</li>
-             <li><a href="/radiant/marketing/pre_factor.html">Pre-factor</a></li>
-             <li><a href="/radiant/marketing/full_factor.html">Factor</a></li>
-             <li class="divider"></li>
-             <li class="dropdown-header">Cluster</li>
-             <li><a href="/radiant/marketing/hier_clus.html">Hierarchical</a></li>
-             <li><a href="/radiant/marketing/kmeans_clus.html">K-means</a></li>
+             <li><a href="/docs/data/report.html">Report</a></li>
+             <li><a href="/docs/data/code.html">Code</a></li>
+             <li><a href="/docs/programming.html">Programming</a></li>
+             <li><a href="/docs/resources.html">Resources</a></li>
           </ul>
         </li>
-
-        <li class="dropdown">
-          <a href="/radiant/R/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">R<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-             <li><a href="/radiant/base/report.html">Report</a></li>
-             <li><a href="/radiant/base/code.html">Code</a></li>
-             <li><a href="/radiant/programming.html">Programming</a></li>
-             <li><a href="/radiant/resources.html">Resources</a></li>
-          </ul>
-        </li>
-        <li><a href="/radiant/tutorials.html">Tutorials</a></li>
-        <li><a href="/radiant/about.html">About</a></li>
+        <li><a href="/docs/tutorials.html">Tutorials</a></li>
+        <li><a href="/docs/about.html">About</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -298,31 +278,28 @@ $(document).ready(function () {
 <div class="fluid-row" id="header">
 
 
-<h1 class="title">Radiant – Business analytics using R and Shiny</h1>
+
+<h1 class="title toc-ignore">Radiant – Business analytics using R and Shiny</h1>
 
 </div>
 
+
 <hr />
-
-<blockquote>
-<p>Radiant development has been moved to <a href="https://github.com/radiant-rstats">https://github.com/radiant-rstats</a>. Updated documentation is available at <a href="https://radiant-rstats.github.io/docs/">https://radiant-rstats.github.io/docs/</a></p>
-</blockquote>
-
-<p>Radiant is a platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>, based on the <a href="http://www.rstudio.com/shiny/">Shiny</a> package. Developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: <a href="https://github.com/vnijs/radiant/issues" class="uri">https://github.com/vnijs/radiant/issues</a>. For other questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
+<p>Radiant is an open-source platform-independent browser-based interface for business analytics in <a href="http://www.r-project.org/">R</a>. The application is based on the <a href="http://www.rstudio.com/shiny/">Shiny</a> package and can be run locally or on a server. Radiant was developed by <a href="http://rady.ucsd.edu/faculty/directory/nijs/" target="\_blank">Vincent Nijs</a>. Please use the issue tracker on GitHub to suggest enhancements or report problems: <a href="https://github.com/radiant-rstats/radiant/issues" class="uri">https://github.com/radiant-rstats/radiant/issues</a>. For other questions and comments please use <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a>.</p>
 <div id="key-features" class="section level2">
 <h2>Key features</h2>
 <ul>
 <li>Explore: Quickly and easily summarize, visualize, and analyze your data</li>
 <li>Cross-platform: It runs in a browser on Windows, Mac, and Linux</li>
 <li>Reproducible: Recreate results and share work with others as a state-file or an <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a> report</li>
-<li>Programming: Integrate Radiant’s analysis functions into your own R-code</li>
+<li>Programming: Integrate Radiant’s analysis functions with your own R-code</li>
 <li>Context: Data and examples focus on business applications</li>
 </ul>
-<iframe width="640" height="375" src="https://www.youtube.com/embed/kFVxcpdoKi8" frameborder="0" allowfullscreen>
+<iframe width="640" height="375" src="https://www.youtube.com/embed/7L3hDpLw53I" frameborder="0" allowfullscreen>
 </iframe>
 <div id="explore" class="section level4">
 <h4>Explore</h4>
-<p>Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes) and/or when a button is pressed (e.g., <code>Estimate</code> in <em>Regression &gt; Logistic regression (GLM)</em>). This greatly facilitates exploration and understanding of the data.</p>
+<p>Radiant is interactive. Results update immediately when inputs are changed (i.e., no separate dialog boxes) and/or when a button is pressed (e.g., <code>Estimate</code> in <em>Model &gt; Estimate &gt; Logistic regression (GLM)</em>). This facilitates rapid exploration and understanding of the data.</p>
 </div>
 <div id="cross-platform" class="section level4">
 <h4>Cross-platform</h4>
@@ -333,12 +310,12 @@ $(document).ready(function () {
 </div>
 <div id="reproducible" class="section level4">
 <h4>Reproducible</h4>
-<p>To conduct high-quality analysis, simply saving output is not enough. You need the ability to recreate results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another computer. Share state-files with others and create reproducible reports using <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a>. See also the section on <code>Saving and loading state</code> below</p>
+<p>To conduct high-quality analysis, simply saving output is not enough. You need the ability to reproduce results for the same data and/or when new data become available. Moreover, others may want to review your analysis and results. Save and load the state of the application to continue your work at a later time or on another computer. Share state-files with others and create reproducible reports using <a href="http://rmarkdown.rstudio.com/">Rmarkdown</a>. See also the section on <code>Saving and loading state</code> below</p>
 <p>If you are using Radiant on a server you can even share the url (include the SSUID) with others so they can see what you are working on. Thanks for this feature go to <a href="https://github.com/jcheng5">Joe Cheng</a>.</p>
 </div>
 <div id="programming" class="section level4">
 <h4>Programming</h4>
-<p>Although Radiant’s web-interface can handle quite a few data and analysis tasks, you may prefer to write your own code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis. For more information about programming with Radiant see the <a href="http://vnijs.github.io/radiant/programming.html">programming</a> page on the documentation site.</p>
+<p>Although Radiant’s web-interface can handle quite a few data and analysis tasks, you may prefer to write your own R-code. Radiant provides a bridge to programming in R(studio) by exporting the functions used for analysis (i.e., you can conduct your analysis using the Radiant web-interface or by calling Radiant’s functions directly from R-code). For more information about programming with Radiant see the <a href="http://radiant-rstats.github.io/docs/programming.html">programming</a> page on the documentation site.</p>
 </div>
 <div id="context" class="section level4">
 <h4>Context</h4>
@@ -348,67 +325,80 @@ $(document).ready(function () {
 <div id="how-to-install-radiant" class="section level2">
 <h2>How to install Radiant</h2>
 <ul>
-<li>Required: <a href="http://cran.rstudio.com/">R</a> version 3.2.4 or later</li>
+<li>Required: <a href="https://cran.rstudio.com/">R</a> version 3.3.0 or later</li>
 <li>Required: A modern browser (e.g., <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Chrome</a> or Safari). Internet Explorer (version 11 or higher) should work as well</li>
-<li>Recommended: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
+<li>Required: <a href="http://www.rstudio.com/products/rstudio/download/">Rstudio</a></li>
 </ul>
-<p>If you use Rstudio (version 0.99.893 or later) you can start and update Radiant through the <code>Addins</code> menu at the top of the screen. For Quantitative Analysis or Business Analytics click <code>Radiant - Quant</code>, for Marketing Research click <code>Radiant - Marketing</code>, and for Customer Analytics click <code>Radiant - Analytics</code>:</p>
-<p>To install the latest version of Radiant for Windows or Mac with complete documentation for off-line access open R(studio) and copy-and-paste the command below:</p>
-<pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;http://vnijs.github.io/radiant_miniCRAN/&quot;, type = &#39;binary&#39;)</code></pre>
-<p>Once all packages are installed use the command below to launch the app (use either “base”, “quant”, “marketing”, or “analytics”), or use the <code>Addins</code> menu in Rstudio:</p>
-<pre class="r"><code>radiant::radiant(&quot;analytics&quot;)</code></pre>
-<p>See the <a href="http://vnijs.github.io/radiant/install.html">installing radiant</a> page for more details.</p>
-<p>You can also create a launcher on your Desktop to start Radiant by typing <code>radiant::launcher(&quot;analytics&quot;)</code> in the R(studio) console and pressing return. Again, enter either “base”, “quant”, “marketing” or “analytics” depending on the app you want to use. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
+<p>If you use Rstudio (version 0.99.893 or later) you can start and update Radiant through the <code>Addins</code> menu at the top of the screen. To install the latest version of Radiant for Windows or Mac, with complete documentation for off-line access, open R(studio) and copy-and-paste the command below:</p>
+<pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;https://radiant-rstats.github.io/minicran/&quot;, type = &#39;binary&#39;)</code></pre>
+<p>Once all packages are installed select <code>Radiant</code> from the <code>Addins</code> menu in Rstudio or use the command below to launch the app:</p>
+<pre class="r"><code>radiant::radiant()</code></pre>
+<p>See the <a href="http://radiant-rstats.github.io/docs/install.html">installing radiant</a> page for details.</p>
+<p><strong>Optional:</strong> You can also create a launcher on your Desktop to start Radiant by typing <code>radiant::launcher()</code> in the R(studio) console and pressing return. A file called <code>radiant.bat</code> (windows) or <code>radiant.command</code> (mac) will be created that you can double-click to start Radiant in your default browser. The <code>launcher</code> command will also create a file called <code>update_radiant.bat</code> (windows) or <code>update_radiant.command</code> (mac) that you can double-click to update Radiant to the latest release.</p>
 <p>When Radiant starts you will see data on diamond prices. To close the application click the <i title='Power off' class='fa fa-power-off'></i> icon in the navigation bar and then click <code>Stop</code>. The Radiant process will stop and the browser window will close (Chrome) or gray-out.</p>
 </div>
 <div id="documentation" class="section level2">
 <h2>Documentation</h2>
-<p>Documentation and tutorials are available at <a href="http://vnijs.github.io/radiant/" class="uri">http://vnijs.github.io/radiant/</a> and in the Radiant web interface (the <i title='Help' class='fa fa-question'></i> icons on each page and the <i title='Help' class='fa fa-question-circle'></i> icon in the navigation bar).</p>
-<p>Want some help getting started? Watch the tutorials on the <a href="http://vnijs.github.io/radiant/tutorials.html">documentation site</a>.</p>
+<p>Documentation and tutorials are available at <a href="http://radiant-rstats.github.io/docs/" class="uri">http://radiant-rstats.github.io/docs/</a> and in the Radiant web interface (the <i title='Help' class='fa fa-question'></i> icons on each page and the <i title='Help' class='fa fa-question-circle'></i> icon in the navigation bar).</p>
+<p>Want some help getting started? Watch the tutorials on the <a href="http://radiant-rstats.github.io/docs/tutorials.html">documentation site</a>.</p>
 </div>
 <div id="reporting-issues" class="section level2">
 <h2>Reporting issues</h2>
-<p>Please use the GitHub issue tracker at <a href="https://github.com/vnijs/radiant/issues" target="_blank">github.com/vnijs/radiant/issues</a> if you have any problems using Radiant.</p>
+<p>Please use the GitHub issue tracker at <a href="https://github.com/radiant-rstats/radiant/issues" target="_blank">github.com/radiant-rstats/radiant/issues</a> if you have any problems using Radiant.</p>
+<!--
+## Online
+
+Not ready to install Radiant on your computer? Try it online at the links below:
+
+<a href="https://vnijs.shinyapps.io/analytics" target="_blank">vnijs.shinyapps.io/analytics</a>
+
+<a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a>
+
+<a href="https://vnijs.shinyapps.io/quant" target="_blank">vnijs.shinyapps.io/quant</a>
+
+<a href="https://vnijs.shinyapps.io/base" target="_blank">vnijs.shinyapps.io/base</a>
+
+Please **do not** upload sensitive data to these public servers. Note that data upload for the example applications is has been restricted 5MB for security reseasons.
+
+## Running Radiant on shinyapps.io / shiny-server
+
+You can run Radiant on shinyapps.io or a (linux) server supported by Shiny server.
+
+To run your own server instance copy/fork the repo from github and [deploy to shinyapps.io as usual](http://shiny.rstudio.com/articles/shinyapps.html). Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. If you do run into difficulties, also clone the repo at <a href="https://github.com/vnijs/shinyapps" target="_blank">https://github.com/vnijs/shinyapps</a> and run the deploy2shinyapp.R file in the Radiant/build folder.
+-->
 </div>
-<div id="online" class="section level2">
-<h2>Online</h2>
-<p>Not ready to install Radiant on your computer? Try it online at the links below:</p>
-<p><a href="https://vnijs.shinyapps.io/analytics" target="_blank">vnijs.shinyapps.io/analytics</a></p>
-<p><a href="https://vnijs.shinyapps.io/marketing" target="_blank">vnijs.shinyapps.io/marketing</a></p>
-<p><a href="https://vnijs.shinyapps.io/quant" target="_blank">vnijs.shinyapps.io/quant</a></p>
-<p><a href="https://vnijs.shinyapps.io/base" target="_blank">vnijs.shinyapps.io/base</a></p>
-</div>
-<div id="running-radiant-on-shinyapps.io-shiny-server" class="section level2">
-<h2>Running Radiant on shinyapps.io / shiny-server</h2>
-<p>You can run Radiant on shinyapps.io or a (linux) server supported by Shiny server.</p>
-<p>To run your own server instance copy/fork the repo from github and <a href="http://shiny.rstudio.com/articles/shinyapps.html">deploy to shinyapps.io as usual</a>. Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. If you do run into difficulties, also clone the repo at <a href="https://github.com/vnijs/shinyapps" target="_blank">https://github.com/vnijs/shinyapps</a> and run the deploy2shinyapp.R file in the Radiant/build folder.</p>
-<p>You can also host Radiant using <a href="http://www.rstudio.com/products/rstudio/download-server/">shiny-server</a>. Just point shiny-server to the directory in inst/ you want to use. As a courtesy, please let me know if you intend to use Radiant on a server.</p>
+<div id="running-radiant-on-shiny-server" class="section level2">
+<h2>Running Radiant on shiny-server</h2>
+<p>You can also host Radiant using <a href="http://www.rstudio.com/products/rstudio/download-server/">shiny-server</a>. First, install radiant on the server using the command below:</p>
+<pre class="r"><code>install.packages(&quot;radiant&quot;, repos = &quot;https://radiant-rstats.github.io/minicran/&quot;)</code></pre>
+<p>Then clone the <a href="https://radiant-rstats.github.io/radiant" target="_blank">radiant</a> repo and point shiny-server to the <code>inst/app/</code> directory. As a courtesy, please let me know if you intend to use Radiant on a server.</p>
 </div>
 <div id="saving-and-loading-state" class="section level2">
 <h2>Saving and loading state</h2>
-<p>To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on <code>Save state</code> (see also the <code>Data &gt; Manage</code> tab). You can open this state-file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state_file <a href="https://vnijs.github.io/radiant/examples/radiant-state.rda"><code>radiant-state.rda</code></a> through the Data &gt; Manage tab. Go to <code>Data &gt; View</code>, <code>Data &gt; Visualize</code> to see some of the settings. There is also a report in <code>R &gt; Report</code> that was created using the Radiant interface. The html file <a href="https://vnijs.github.io/radiant/examples/radiant-state.html" target="_blank"><code>radiant-state.html</code></a> contains the output.</p>
-<p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use <code>Reset</code> in the <i title='Power off' class='fa fa-power-off'></i> menu in the navigation bar to return to a clean/new state.</p>
+<p>To save your analyses save the state of the app to a file by clicking on the <i title='Save' class='fa fa-save'></i> icon in the navbar and then on <code>Save state</code> (see also the <code>Data &gt; Manage</code> tab). You can open this state-file at a later time or on another computer to continue where you left off. You can also share the file with others that may want to replicate your analyses. As an example, load the state-file <a href="https://radiant-rstats.github.io/docs/examples/radiant-state.rda"><code>radiant-state.rda</code></a> through the <em>Data &gt; Manage</em> tab. Go to <em>Data &gt; View</em> and <em>Data &gt; Visualize</em> to see some of the settings. There is also a report in <em>R &gt; Report</em> that was created using the Radiant interface. The html file <a href="https://radiant-rstats.github.io/docs/examples/radiant-state.html" target="_blank"><code>radiant-state.html</code></a> contains the output.</p>
+<p>A related feature in Radiant is that state is maintained if you accidentally navigate to another page, close (and reopen) the browser, and/or hit refresh. Use <code>Refresh</code> in the <i title='Power off' class='fa fa-power-off'></i> menu in the navigation bar to return to a clean/new state.</p>
 <p>Loading and saving state also works with Rstudio. If you start Radiant from Rstudio and use <i title='Power off' class='fa fa-power-off'></i> &gt; <code>Stop</code> to stop the app, lists called <code>r_data</code> and <code>r_state</code> will be put into Rstudio’s global workspace. If you start radiant again using <code>radiant()</code> it will use these lists to restore state. This can be convenient if you want to make changes to a data file in Rstudio and load it back into Radiant. Also, if you load a state-file directly into Rstudio it will be used when you start Radiant to recreate a previous state.</p>
-<p><strong>Technical note</strong>: Loading state works as follows in Radiant: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state-file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> list is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to numericInput is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used. <code>sm_args$comp_value</code> is the default value specified in the <code>single_mean</code> function call.</p>
-<pre class="r"><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;,sm_args$comp_value))</code></pre>
+<p><strong>Technical note</strong>: Loading state works as follows in Radiant: When an input is initialized in a Shiny app you set a default value in the call to, for example, numericInput. In Radiant, when a state-file has been loaded and an input is initialized it looks to see if there is a value for an input of that name in a list called <code>r_state</code>. If there is, this value is used. The <code>r_state</code> list is created when saving state using <code>reactiveValuesToList(input)</code>. An example of a call to <code>numericInput</code> is given below where the <code>state_init</code> function from <code>radiant.R</code> is used to check if a value from <code>r_state</code> can be used.</p>
+<pre class="r"><code>numericInput(&quot;sm_comp_value&quot;, &quot;Comparison value:&quot;, state_init(&#39;sm_comp_value&#39;, 0))</code></pre>
 </div>
 <div id="source-code" class="section level2">
 <h2>Source code</h2>
-<p>The source code is available on GitHub at <a href="https://github.com/vnijs/radiant" class="uri">https://github.com/vnijs/radiant</a>. Three (related) apps are included in the inst/ directory. <code>Base</code>, offers data loading, saving, viewing, visualizing, merging, and transforming tools. The <code>quant</code> app sources the code from base and extends it. This app is used in the <em>Quantitative Analysis</em> class at the Rady School of Management (UCSD). Finally, the <code>marketing</code> app sources the code from <code>base</code> and <code>quant</code> and extends it with additional tools. The <code>quant</code> app focuses on (basic) quantitative analysis (e.g., comparing means, regression, etc.). The <code>marketing</code> app focuses on marketing analytics by adding clustering, principle component analysis, conjoint analysis, etc. This app is used in the <em>Business Analytics</em>, <em>Quantitative Analysis</em>, <em>Research for Marketing Decisions</em>, and <em>Customer Analytics</em> classes at the Rady School of Management (UCSD).</p>
+<p>The source code is available on GitHub at <a href="https://github.com/radiant-rstats" class="uri">https://github.com/radiant-rstats</a>. <code>radiant.data</code>, offers data loading, saving, viewing, visualizing, combining, and transforming tools. <code>radiant.design</code> builds on <code>radiant.data</code> and adds tools for experimental design, sampling, and sample size calculation. <code>radiant.basics</code> covers the basics of statistical analysis (e.g., comparing means and proportions, cross-tabs, correlation, etc.) and includes a probability calculator. <code>radiant.model</code> covers model estimation (e.g., logistic regression and neural networks), model evaluation (e.g., gains chart, profit curve, confusion matrix, etc.), and decision tools (e.g., decision analysis and simulation). Finally, <code>radiant.multivariate</code> includes tools to generate brand maps and conduct cluster, factor, and conjoint analysis.</p>
+<p>These tools are used in the <em>Business Analytics</em>, <em>Quantitative Analysis</em>, <em>Research for Marketing Decisions</em>, <em>Consumer behavior</em>, <em>Experiments in firms</em>, and <em>Customer Analytics</em> classes at the Rady School of Management (UCSD).</p>
 </div>
 <div id="credits" class="section level2">
 <h2>Credits</h2>
-<p>Radiant would not be possible without <a href="http://cran.rstudio.com/">R</a> and <a href="http://shiny.rstudio.com/">Shiny</a>. I would like to thank <a href="https://github.com/jcheng5">Joe Cheng</a>, <a href="https://github.com/wch">Winston Chang</a>, and <a href="https://github.com/yihui">Yihui Xie</a> for answering questions, providing suggestions, and creating amazing tools for the R community. Other key components used in Radiant are ggplot2, dplyr, tidyr, magrittr, broom, shinyAce, knitr, and DT. For an overview of other packages that Radiant relies on please see the <a href="http://vnijs.github.io/radiant/about.html" target="_blank">about</a> page.</p>
+<p>Radiant would not be possible without <a href="https://cran.rstudio.com/">R</a> and <a href="http://shiny.rstudio.com/">Shiny</a>. I would like to thank <a href="https://github.com/jcheng5">Joe Cheng</a>, <a href="https://github.com/wch">Winston Chang</a>, and <a href="https://github.com/yihui">Yihui Xie</a> for answering questions, providing suggestions, and creating amazing tools for the R community. Other key components used in Radiant are ggplot2, dplyr, tidyr, magrittr, broom, shinyAce, rmardown, and DT. For an overview of other packages that Radiant relies on please see the <a href="http://radiant-rstats.github.io/docs/about.html" target="_blank">about</a> page.</p>
 </div>
 <div id="license" class="section level2">
 <h2>License</h2>
-<p>Radiant is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation and videos on this site and the radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.</p>
+<p>Radiant is licensed under the <a href="http://www.tldrlegal.com/l/AGPL3" target="\_blank">AGPLv3</a>. The documentation and videos on this site as well as the Radiant help files are licensed under the creative commons attribution, non-commercial, share-alike license <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA</a>.</p>
 <p>As a summary, the AGPLv3 license requires, attribution, including copyright and license information in copies of the software, stating changes if the code is modified, and disclosure of all source code. Details are in the COPYING file.</p>
 <p>If you are interested in using Radiant please email me at <a href="mailto:radiant@rady.ucsd.edu">radiant@rady.ucsd.edu</a></p>
 </div>
 
 
-&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/radiant/images/80x15.png" /></a>
+&copy; Vincent Nijs (2016) <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="/docs/images/80x15.png" /></a>
 
 <!-- some extra javascript for older browsers -->
 <script type="text/javascript" src="libs/polyfill.js"></script>

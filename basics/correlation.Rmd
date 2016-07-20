@@ -1,0 +1,8 @@
+---
+title: Basics > Tables > Correlation
+---
+
+***
+
+```{r child='app/correlation.md'}
+```

@@ -1,8 +1,0 @@
----
-title: Model > Collaborative Filtering
----
-
-***
-
-```{r child='app/crs.md'}
-```

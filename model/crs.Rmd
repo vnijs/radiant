@@ -1,0 +1,8 @@
+---
+title: Model > Recommend > Collaborative Filtering
+---
+
+***
+
+```{r child='app/crs.md'}
+```

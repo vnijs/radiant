@@ -1,8 +1,0 @@
----
-title: Random > Central Limit Theorem
----
-
-***
-
-```{r child='app/clt.md'}
-```

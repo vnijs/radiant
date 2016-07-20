@@ -1,38 +1,56 @@
 library(knitr)
 library(dplyr)
-setwd("~/gh/radiant_gh-pages/")
 
 ## generate (updated) html and md files
+setwd("~/gh/docs/")
 system('make')
-setwd('base/app')
-list.files(pattern = "*.Rmd") %>% sapply(knit)
-setwd('../../base'); system('make')
-setwd('../marketing'); system('make')
-setwd('../analytics'); system('make')
-setwd('../quant/app');
-list.files(pattern = "*.Rmd") %>% sapply(knit)
-setwd('../../quant'); system('make')
-setwd('../')
+
+knit_docs <- function(x) {
+	setwd(file.path("~/gh/docs",x,"app"))
+	list.files(pattern = "*.Rmd") %>% sapply(knit)
+	setwd(file.path("../..",x)); system("make")
+}
+
+sapply(c("data","design","basics","model","multivariate"), knit_docs)
 
 ## making the README.md file after clean-up
+setwd("~/gh/docs/")
 knit("README.Rmd")
-setwd("sub")
+setwd("~/gh/docs/sub")
 knit("README_dev.Rmd")
-file.copy("README_dev.md","../../radiant/README.md",overwrite = TRUE)
-file.copy("README_dev.md","../../radiant/inst/base/tools/app/about.md",overwrite = TRUE)
 knit("tutorials_dev.Rmd")
-file.copy("tutorials_dev.md","../../radiant/inst/base/tools/app/tutorials.md",overwrite = TRUE)
-setwd('../')
+
+file.copy("README_dev.md",file.path("../../radiant.data/inst/app/tools/app/about.md"),overwrite = TRUE)
+file.copy("tutorials_dev.md",file.path("../../radiant.data/inst/app/tools/app/tutorials.md"),overwrite = TRUE)
+
+copy_docs <- function(app) file.copy("README_dev.md",file.path("../..",app,"README.md"),overwrite = TRUE)
+sapply(c("radiant","radiant.data","radiant.design","radiant.basics","radiant.model","radiant.multivariate"), copy_docs)
 
 ## sync (R)md files to gh/radiant
-system('sh rsync_base2app.sh')
+setwd("~/gh/docs")
+system('sh rsync_docs2app.sh')
 
-## create documentation pdf
-unlink('radiant.pdf')
+## create documentation pdfs
+unlink('radiant.data.pdf')
 setwd("~")
-unlink('radiant.pdf')
-system("R CMD Rd2pdf gh/radiant --no-preview")
+unlink('radiant.data.pdf')
+system("R CMD Rd2pdf gh/radiant.data --no-preview")
 system("rm -rf .Rd2pdf*")
-setwd("~/gh/radiant_gh-pages/")
-file.copy("~/radiant.pdf","radiant.pdf",overwrite = TRUE)
+setwd("~/gh/docs/")
+file.copy("~/radiant.data.pdf","radiant.data.pdf",overwrite = TRUE)
 system("rm -rf .Rd2pdf*")
+
+create_manuals <- function(x) {
+	app <- paste0("radiant.",x)
+	man <- paste0(app,".pdf")
+	unlink(man)
+	setwd("~")
+	unlink(man)
+	system(paste0("R CMD Rd2pdf gh/",app," --no-preview"))
+	system("rm -rf .Rd2pdf*")
+	setwd("~/gh/docs/")
+	file.copy(paste0("~/",man), man, overwrite = TRUE)
+	system("rm -rf .Rd2pdf*")
+}
+
+sapply(c("data","design","basics","model","multivariate"), create_manuals)

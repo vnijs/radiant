@@ -1,0 +1,8 @@
+---
+title: Multivariate > Maps > Attributes
+---
+
+***
+
+```{r child='app/pmap.md'}
+```

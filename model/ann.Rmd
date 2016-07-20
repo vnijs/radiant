@@ -1,0 +1,8 @@
+---
+title: Model > Estimate > Neural Network (ANN)
+---
+
+***
+
+```{r child='app/ann.md'}
+```

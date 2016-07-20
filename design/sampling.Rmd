@@ -1,0 +1,8 @@
+---
+title: Design > Sample > Sampling
+---
+
+***
+
+```{r child='app/sampling.md'}
+```

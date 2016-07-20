@@ -1,8 +1,0 @@
----
-title: Decide > Decision tree
----
-
-***
-
-```{r child='app/dtree.md'}
-```
