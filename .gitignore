@@ -1,12 +1,4 @@
-.Rapp.history
-.RData
-.Rhistory
 .Rproj.user
+.Rhistory
+.RData
 .DS_Store
-inst/quant/data/data_rady/
-inst/marketing/data/data_rady/
-*.xls
-inst/base/shinyapps/vnijs/base.dcf
-inst/quant/shinyapps/vnijs/quant.dcf
-inst/marketing/shinyapps/vnijs/marketing.dcf
-.V8history

@@ -4,7 +4,8 @@
 \alias{lin_launcher}
 \title{Create a launcher and updater for Linux (.sh)}
 \usage{
-lin_launcher(app = c("analytics", "marketing", "quant", "base"))
+lin_launcher(app = c("radiant", "radiant.data", "radiant.design",
+  "radiant.basics", "radiant.model", "radiant.multivariate"))
 }
 \arguments{
 \item{app}{App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"}
@@ -14,18 +15,5 @@ Create a launcher and updater for Linux (.sh)
 }
 \details{
 On Linux a file named 'radiant.sh' and one named 'update_radiant.sh' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
-}
-\examples{
-if (interactive()) {
-  if (Sys.info()["sysname"] == "Linux") {
-    lin_launcher()
-    fn <- paste0("/home/",Sys.getenv("USER"),"/Desktop/radiant.sh")
-    if (!file.exists(fn))
-      stop("Linux launcher not created")
-    else
-      unlink(fn)
-  }
-}
-
 }
 

@@ -1,9 +1,0 @@
-language: r
-warnings_are_errors: false
-sudo: required
-
-r_github_packages:
-  - trestletech/shinyAce
-  - jimhester/covr
-  - rstudio/DT
-  - rstudio/shiny

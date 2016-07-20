@@ -4,7 +4,8 @@
 \alias{mac_launcher}
 \title{Create a launcher and updater for Mac (.command)}
 \usage{
-mac_launcher(app = c("analytics", "marketing", "quant", "base"))
+mac_launcher(app = c("radiant", "radiant.data", "radiant.design",
+  "radiant.basics", "radiant.model", "radiant.multivariate"))
 }
 \arguments{
 \item{app}{App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"}
@@ -14,18 +15,5 @@ Create a launcher and updater for Mac (.command)
 }
 \details{
 On Mac a file named 'radiant.command' and one named 'update_radiant.command' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
-}
-\examples{
-if (interactive()) {
-  if (Sys.info()["sysname"] == "Darwin") {
-    mac_launcher()
-    fn <- paste0("/Users/",Sys.getenv("USER"),"/Desktop/radiant.command")
-    if (!file.exists(fn))
-      stop("Mac launcher not created")
-    else
-      unlink(fn)
-  }
-}
-
 }
 
