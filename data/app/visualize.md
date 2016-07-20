@@ -2,7 +2,7 @@
 
 ### Filter
 
-Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="/docs/data/view.html" target="_blank">_Data > View_</a> for details.
+Use the `Filter` box to select (or omit) specific sets of rows from the data. See the helpfile for <a href="/radiant/data/view.html" target="_blank">_Data > View_</a> for details.
 
 ### Pause plotting
 
@@ -37,7 +37,7 @@ To add a linear or non-linear regression line to a scatter plot check the `Line`
 
 ### Axis scale
 
-The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see _<a href="/docs/data/transform.html" target="_blank">Data > Transform</a>_) and easier to estimate using, for example, _<a href="/docs/model/regress.html" target="_blank">Model > Estimate > Linear regression (OLS)</a>_. Perhaps the most common data transformation applied to business data is the (natural) logarithm. To see if log transformation(s) may be appropriate for your data check the `Log X` and/or `Log Y` boxes (e.g., for a scatter or bar plot).
+The relationship between variables depicted in a scatter plot may be non-linear. There are numerous transformations we might apply to the data so this relationship becomes (approximately) linear (see _<a href="/radiant/data/transform.html" target="_blank">Data > Transform</a>_) and easier to estimate using, for example, _<a href="/radiant/model/regress.html" target="_blank">Model > Estimate > Linear regression (OLS)</a>_. Perhaps the most common data transformation applied to business data is the (natural) logarithm. To see if log transformation(s) may be appropriate for your data check the `Log X` and/or `Log Y` boxes (e.g., for a scatter or bar plot).
 
 By default the scale of the Y-axis is the same across sub-plots when using `Facet row`. To allow the Y-axis to be specific to each sub-plot click the `Scale-y` check-box.
 
@@ -55,7 +55,7 @@ The best way to keep/store plots is to generate a `visualize` command by clickin
 
 ### Customizing plots in _R > Report_
 
-To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen. The example below illustrates how to customize a command in the <a href="/docs/data/report.html" target="_blank">_R > Report_</a> tab. Notice that `custom` is set to `TRUE`.
+To customize a plot first generate the `visualize` command by clicking the report (<i title='Report results' class='fa fa-edit'></i>) icon on the bottom left of your screen. The example below illustrates how to customize a command in the <a href="/radiant/data/report.html" target="_blank">_R > Report_</a> tab. Notice that `custom` is set to `TRUE`.
 
 ```r
 visualize("diamonds", yvar = "price", xvar = "carat", type = "scatter", custom = TRUE) +

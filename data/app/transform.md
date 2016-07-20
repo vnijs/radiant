@@ -11,11 +11,11 @@ r_data[['diamonds']] <- mutate_each(r_data[['diamonds']], funs(log), ext = '_log
 
 This is an important feature if you want to re-run a report with new, but similar, data. Even more important is that there is a record of the steps taken to transform the data and to generate results, i.e., your work is now reproducible.
 
-To add commands contained in the command log window to a report in <a href="/docs/data/report.html" target="_blank">_R Report_</a> click the <i title="report results" class="fa fa-edit"></i> icon.
+To add commands contained in the command log window to a report in <a href="/radiant/data/report.html" target="_blank">_R Report_</a> click the <i title="report results" class="fa fa-edit"></i> icon.
 
 ### Filter
 
-Even if a filter has been specified it will be ignored for (most) functions available in _Data > Transform_. To create a new dataset based on a filter navigate to the <a href="/docs/data/view.html" target="_blank">_Data > View_</a> tab and click the `Store` button. Alternatively, to create a new dataset based on a filter, select `Split data > Holdout sample` from the `Transformation type` dropdown.
+Even if a filter has been specified it will be ignored for (most) functions available in _Data > Transform_. To create a new dataset based on a filter navigate to the <a href="/radiant/data/view.html" target="_blank">_Data > View_</a> tab and click the `Store` button. Alternatively, to create a new dataset based on a filter, select `Split data > Holdout sample` from the `Transformation type` dropdown.
 
 ### Hide summaries
 
@@ -72,7 +72,7 @@ lo:20 = 'Low'; else = 'High'
 1:12 = 'A'; 13:24 = 'B'; else = 'C'
 ```
 
-3. Collapse age categories for a <a href="/docs/basics/cross_tabs.html" target="_blank">_Basics > Tables > Cross-tabs_</a> cross-tab analysis. In the example below `<25` and `25-34` are recoded to `<35`, `35-44` and `35-44` are recoded to `35-54`, and `55-64` and `>64` are recoded to `>54`
+3. Collapse age categories for a <a href="/radiant/basics/cross_tabs.html" target="_blank">_Basics > Tables > Cross-tabs_</a> cross-tab analysis. In the example below `<25` and `25-34` are recoded to `<35`, `35-44` and `35-44` are recoded to `35-54`, and `55-64` and `>64` are recoded to `>54`
 
 
 ```r
@@ -96,7 +96,7 @@ lo:20 = 'Low'; else = 'High'
 
 #### Reorder or remove levels
 
-If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter` box (see the help file linked in the <a href="/docs/data/view.html" target="_blank">_Data > View_</a> tab).
+If a (single) variable of type `factor` is selected in `Select variable(s)`, choose `Reorder/Remove levels` from the `Transformation type` drop-down to reorder and/or remove levels. Drag-and-drop levels to reorder them or click the $\times$ to remove them. Press `Store` to commit the changes. To temporarily exclude levels from the data use the `Filter` box (see the help file linked in the <a href="/radiant/data/view.html" target="_blank">_Data > View_</a> tab).
 
 #### Rename
 
@@ -254,13 +254,13 @@ It is common to have one or more variables in a dataset that **should** have onl
 
 #### Show duplicates
 
-If there are duplicates in the data use `Show duplicates` to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the <a href="/docs/basics/cross_tabs.html" target="_blank">_Data > View_</a> tab make sure to `Store` them in a different dataset (i.e., make sure **not** to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are **exactly** the same so showing 2 or 3 isn't helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with **all** similar rows.
+If there are duplicates in the data use `Show duplicates` to get a better sense for the data points that have the same value in multiple rows. If you want to explore duplicates using the <a href="/radiant/basics/cross_tabs.html" target="_blank">_Data > View_</a> tab make sure to `Store` them in a different dataset (i.e., make sure **not** to overwrite the data you are working on). If you choose to show duplicates based on all columns in the data only one of the duplicate rows will be shown. These rows are **exactly** the same so showing 2 or 3 isn't helpful. If, however, we look for duplicates based on a subset of the available variables Radiant will generate a dataset with **all** similar rows.
 
 ### Expand data
 
 #### Expand grid
 
-Create a dataset with all combinations of values for a selection of variables. This is useful to generate datasets for prediction in, for example, <a href="/docs/model/regress.html" target="_blank">_Model > Linear regression (OLS)_</a> or <a href="/docs/model/logistic.html" target="_blank">_Model > Logistic regression (GLM)_</a>. Suppose you want to create a dataset with all possible combinations of values for `cut` and `color` of a diamond. By selecting `Expand grid` from the `Transformation type` dropdown and `cut` and `color` in the `Select variable(s)` box we can see in the screenshot below that there are 35 possible combinations (i.e., `cut` has 5 unique values and `color` has 7 unique values so 5 x 7 combinations are possible). Choose a name for the new dataset (e.g., diamonds\_expand) and click the `Store` button to add it to the `Datasets` dropdown.
+Create a dataset with all combinations of values for a selection of variables. This is useful to generate datasets for prediction in, for example, <a href="/radiant/model/regress.html" target="_blank">_Model > Linear regression (OLS)_</a> or <a href="/radiant/model/logistic.html" target="_blank">_Model > Logistic regression (GLM)_</a>. Suppose you want to create a dataset with all possible combinations of values for `cut` and `color` of a diamond. By selecting `Expand grid` from the `Transformation type` dropdown and `cut` and `color` in the `Select variable(s)` box we can see in the screenshot below that there are 35 possible combinations (i.e., `cut` has 5 unique values and `color` has 7 unique values so 5 x 7 combinations are possible). Choose a name for the new dataset (e.g., diamonds\_expand) and click the `Store` button to add it to the `Datasets` dropdown.
 
 <p align="center"><img src="figures/expand_grid.png"></p>
 

@@ -1,6 +1,6 @@
 > Analyze responses from a conjoint survey
 
-To setup a conjoint study from scratch we need to determine the attributes and attributes levels that should be included. Once that has been done we would typically need to generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected (see <a href="/docs/design/doe.html" target="_blank">_Design > DOE > Design of Experiments_</a>).
+To setup a conjoint study from scratch we need to determine the attributes and attributes levels that should be included. Once that has been done we would typically need to generate a fractional factorial design of conjoint profiles. This is a subset of all possible profiles that could be generated for the set of attributes and levels that were selected (see <a href="/radiant/design/doe.html" target="_blank">_Design > DOE > Design of Experiments_</a>).
 
 Once data is available from respondents their evaluations are analyzed to determine Part Worths (PW) and Importance Weights (IW).
 
@@ -21,7 +21,7 @@ Design characteristics:
 
 Based on the attributes, 108 possible profiles could be created (i.e., 3x3x3x2x2 = 108). The respondent was given a select set of 18 and was asked to rank the profiles from most preferred (rank 1) to least preferred (rank 18).  The first five columns represent the five attributes and the last column is the respondent's ranking.
 
-a. Compute the correlation matrix for the attribute variables (see <a href="/docs/basics/correlation.html" target="_blank">_Basics > Tables > Correlation_</a>). Display the correlation matrix.  What do you notice in the correlation matrix? What does this say about the particular set of 18 profiles that was presented to the respondent?
+a. Compute the correlation matrix for the attribute variables (see <a href="/radiant/basics/correlation.html" target="_blank">_Basics > Tables > Correlation_</a>). Display the correlation matrix.  What do you notice in the correlation matrix? What does this say about the particular set of 18 profiles that was presented to the respondent?
 
 * The correlation matrix is displayed below. Note that the correlations for any two attributes are zero. In the fractional factorial design profiles are deliberately selected such that all attributes are uncorrelated (i.e., orthogonal).
 
