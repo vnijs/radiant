@@ -1,29 +1,9 @@
-Name: Radiant - Base
-Description: Start Radiant - Base app
-Binding: radiant_base
+Name: Radiant
+Description: Start Radiant
+Binding: radiant
 Interactive: true
 
-Name: Radiant - Quant/BA
-Description: Start app used for Quantative Analysis and Business Analytics
-Binding: radiant_quant
-Interactive: true
-
-Name: Radiant - Marketing
-Description: Start app used for Research Methods for Marketing Decisions
-Binding: radiant_marketing
-Interactive: true
-
-Name: Radiant - Analytics
-Description: Start app used for Customer Analytics
-Binding: radiant_analytics
-Interactive: true
-
-Name: Update Radiant
-Description: Update Radiant to the latest version
+Name: Update radiant
+Description: Update radiant to the latest version
 Binding: update_radiant
-Interactive: true
-
-Name: Webshot - Install
-Description: Install Webshot
-Binding: install_webshot
 Interactive: true

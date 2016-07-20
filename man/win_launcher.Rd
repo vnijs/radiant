@@ -4,7 +4,8 @@
 \alias{win_launcher}
 \title{Create a launcher and updater for Windows (.bat)}
 \usage{
-win_launcher(app = c("analytics", "marketing", "quant", "base"))
+win_launcher(app = c("radiant", "radiant.data", "radiant.design",
+  "radiant.basics", "radiant.model", "radiant.multivariate"))
 }
 \arguments{
 \item{app}{App to run when the desktop icon is double-clicked ("analytics", "marketing", "quant", or "base"). Default is "analytics"}
@@ -14,18 +15,5 @@ Create a launcher and updater for Windows (.bat)
 }
 \details{
 On Windows a file named 'radiant.bat' and one named 'update_radiant.bat' will be put on the desktop. Double-click the file to launch the specified Radiant app or update Radiant to the latest version
-}
-\examples{
-if (interactive()) {
-  if (Sys.info()["sysname"] == "Windows") {
-    win_launcher()
-    fn <- paste0(Sys.getenv("USERPROFILE") ,"/Desktop/radiant.bat")
-    if (!file.exists(fn))
-      stop("Windows launcher not created")
-    else
-      unlink(fn)
-  }
-}
-
 }
 

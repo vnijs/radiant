@@ -1,97 +1,31 @@
-## deploy to shinyapps.io
-
-setwd("~/gh/radiant")
 library(devtools)
 library(magrittr)
+setwd("~/gh/radiant.data")
 document(roclets = c('rd', 'collate', 'namespace'))
-# install()
-
-# fn <- "~/gh/radiant/inst/base/www/style.css"
-# readLines(fn) %>%
-#   gsub("top: 95px;", "top: 145px;", .) %>%
-#   cat(file = fn, sep = "\n")
-#
-# Sys.sleep(5)
 
 system("git add --all .")
 system("git commit -m 'Update [ci skip]'")
 system("git push")
 
-# options(repos = "http://cran.rstudio.com")
-# install.packages("rmarkdown"); install.packages("ggvis"); install.packages("testthat")
-# install.packages("jsonlite"); install.packages("RcppEigen")
+devtools::install_github("radiant-rstats/radiant")
+devtools::install_github("radiant-rstats/radiant.data")
+devtools::install_github("radiant-rstats/radiant.design")
+devtools::install_github("radiant-rstats/radiant.basics")
+devtools::install_github("radiant-rstats/radiant.model")
+devtools::install_github("radiant-rstats/radiant.multivariate")
 
-# devtools::install_github(c("smartinsightsfromdata/rpivotTable","trestletech/shinyAce"))
-# devtools::install_github(c("rstudio/shinyapps", "themel/sendmailR", "jimhester/covr"))
-# devtools::install_github(c("vnijs/radiant","rstudio/DT", "vnijs/MathJaxR"))
-# devtools::install_github("vnijs/MathJaxR")
-# devtools::install_github(c("vnijs/radiant","rstudio/DT"))
-# devtools::install_github("vnijs/radiant")
-# remove.packages('dplyr')
-# devtools::install_github(c("hadley/dplyr"))
-# devtools::install_github("trestletech/shinyAce")
-# library(radiant)
-# radiant()
-
-# devtools::install_github(c("vnijs/radiant","rstudio/DT", "gluc/data.tree", "trestletech/shinyAce"))
-# devtools::install_github("rich-iannone/DiagrammeR")
-# install.packages("DiagrammeR")
-# install.packages("NeuralNetTools")
-devtools::install_github("vnijs/radiant")
-#devtools::install_github("fawda123/NeuralNetTools")
-#devtools::install_github("rstudio/shiny")
-#devtools::install_github("rstudio/DT")
-#devtools::install_github("yihui/knitr")
-#devtools::install_github("jeroenooms/rsvg")
-devtools::install_github("rich-iannone/DiagrammeR")
-
-# devtools::install_github("vnijs/MathJaxR")
-# install.packages("NeuralNetTools")
-# devtools::install_github("vnijs/radiant")
-# devtools::install_github("trestletech/shinyAce")
-# devtools::install_github("vnijs/MathJaxR")
-# devtools::install_github("themel/sendmailR")
-
-# devtools::install_github("rstudio/shinyapps")
+devtools::install_github("rstudio/shinyapps")
 library(shinyapps)
-fpath <- "~/gh/radiant/inst/base"
+fpath <- "~/gh/radiant/inst/app"
 setwd(fpath)
 
-for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
-  source(file, local = TRUE)
+# for (file in list.files("../../../shinyapps/R", pattern = "\\.(r|R)$", full.names = TRUE))
+  # source(file, local = TRUE)
 
-source("../../build/deployapp.R", local = TRUE)
+# source("../../build/deployapp.R", local = TRUE)
 
-deployApp(account = "vnijs", launch.browser = FALSE)
-
-setwd(file.path(fpath,"../quant"))
-deployApp(account = "vnijs", launch.browser = FALSE)
-
-setwd(file.path(fpath,"../marketing"))
-deployApp(account = "vnijs", launch.browser = FALSE)
-
-setwd(file.path(fpath,"../analytics"))
-deployApp(account = "vnijs", launch.browser = FALSE)
-
-# fn <- "~/gh/radiant/inst/base/www/style.css"
-# readLines(fn) %>%
-#   gsub("top: 145px;", "top: 95px;", .)
-#   cat(file = fn, sep = "\n")
-
-setwd("~/gh/radiant/")
-
-# answ <- readline("Did you create binary packages for Windows? (y/n) ")
-# if (substr(answ, 1, 1) %in% c("y","Y")) {
-  system("sh build/build_mac_win.sh")
-# }
+shinyapps::deployApp(account = "vnijs", launch.browser = FALSE, lint = FALSE)
+shinyapps::deployApp(account = "vnijs")
 
 ## in case of problems
-# shinyapps::showLogs(entries=1000)
-
-## Uncomment when rsm server has been upgraded to R 3.2.0
-# system("osascript ~/gh/update.scpt")
-
-## for major pull problems
-# git fetch --all
-# git reset --hard origin/master
-# rm(list = ls())
+shinyapps::showLogs(entries=1000)

@@ -1,53 +1,25 @@
 Package: radiant
+Type: Package
 Title: Business Analytics using R and Shiny
-Version: 0.4.71
-Date: 2016-5-12
+Version: 0.5.5
+Date: 2016-7-17
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: A platform-independent browser-based interface for business
     analytics in R, based on the Shiny package.
 Depends:
     R (>= 3.2.0),
-    magrittr (>= 1.5),
-    ggplot2 (>= 2.0.0),
-    lubridate (>= 1.5.0),
-    tidyr (>= 0.4.1),
-    dplyr (>= 0.4.3)
+    radiant.data (>= 0.5.5),
+    radiant.design (>= 0.5.5),
+    radiant.basics (>= 0.5.5),
+    radiant.model (>= 0.5.5),
+    radiant.multivariate (>= 0.5.5)
 Imports:
-    DiagrammeR(>= 0.8.3),
-    car (>= 2.1.1),
-    MASS (>= 7.3),
-    gridExtra (>= 2.0.0),
-    AlgDesign (>= 1.1.7.3),
     psych (>= 1.5.8),
-    GPArotation (>= 2014.11.1),
-    wordcloud (>= 2.5),
-    markdown (>= 0.7.7),
-    knitr (>= 1.12.3),
-    ggdendro (>= 0.1.17),
-    broom (>= 0.4.0),
-    pryr (>= 0.1.2),
-    shiny (>= 0.13.1.9000),
-    jsonlite (>= 0.9.17),
-    shinyAce (>= 0.2.1),
-    DT (>= 0.1.55),
-    readr (>= 0.2.2),
-    data.tree (>= 0.1.9),
-    yaml (>= 2.1.13),
-    scales (>= 0.3.0),
-    curl (>= 0.9.4),
-    stringr (>= 1.0),
-    nnet (>= 7.3.11),
-    NeuralNetTools (>= 1.4.0),
-    rstudioapi (>= 0.5),
-    sandwich (>= 2.3.4),
-    rmarkdown (>= 0.9.5),
-    base64enc
-Suggests:
-    devtools (>= 1.8.0),
-    testthat (>= 0.10.0),
-    covr (>= 1.2.0)
-URL: https://github.com/vnijs/radiant, http://vnijs.github.io/radiant/
-BugReports: https://github.com/vnijs/radiant/issues
+    AlgDesign (>= 1.1.7.3),
+    shiny (>= 0.13.2.9003),
+    import (>= 1.1.0)
+URL: https://github.com/radiant-rstats/radiant
+BugReports: https://github.com/radiant-rstats/radiant/issues
 License: AGPL-3 | file LICENSE
 LazyData: true
 RoxygenNote: 5.0.1

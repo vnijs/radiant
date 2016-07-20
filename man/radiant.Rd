@@ -6,10 +6,7 @@
 \alias{radiant-package}
 \title{radiant}
 \usage{
-radiant(app = c("analytics", "marketing", "quant", "base"))
-}
-\arguments{
-\item{app}{Choose the app to run. One of "base", "quant", "analytics", "marketing". "analytics" is the default}
+radiant()
 }
 \description{
 radiant
@@ -17,14 +14,6 @@ radiant
 Launch Radiant in the default browser
 }
 \details{
-See \url{http://vnijs.github.io/radiant} for documentation and tutorials
-}
-\examples{
-if (interactive()) {
-  radiant("base")
-  radiant("quant")
-  radiant("marketing")
-  radiant("analytics")
-}
+See \url{http://radiant-rstats.github.io/docs} for documentation and tutorials
 }
 
