@@ -93,19 +93,11 @@ You can run Radiant on shinyapps.io or a (linux) server supported by Shiny serve
 
 To run your own server instance copy/fork the repo from github and [deploy to shinyapps.io as usual](http://shiny.rstudio.com/articles/shinyapps.html). Shinyapps.io may complain about paths but you shouldn’t have any trouble if you know how to deploy to shinyapps.io. If you do run into difficulties, also clone the repo at <a href="https://github.com/vnijs/shinyapps" target="_blank">https://github.com/vnijs/shinyapps</a> and run the deploy2shinyapp.R file in the Radiant/build folder.
 -->
-<<<<<<< HEAD
 
 ## Running Radiant on shiny-server
 
 You can also host Radiant using [shiny-server](http://www.rstudio.com/products/rstudio/download-server/). First, install radiant on the server using the command below:
 
-=======
-
-## Running Radiant on shiny-server
-
-You can also host Radiant using [shiny-server](http://www.rstudio.com/products/rstudio/download-server/). First, install radiant on the server using the command below:
-
->>>>>>> d253ee66708b8a3c8a746028f9a2865e7ee0c750
 ```r
 install.packages("radiant", repos = "https://radiant-rstats.github.io/minicran/")
 ```
